@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "vintage-button",
+  "title": "Vintage Button",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Skeuomorphic push button with press animation and LED indicator.",
+  "registryDependencies": [
+    "vintage-theme",
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/vintage/ui/vintage-button.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\ninterface VintageButtonProps {\n  label: string;\n  active?: boolean;\n  accent?: string;\n  onClick?: () => void;\n  className?: string;\n}\n\nexport function VintageButton({\n  label,\n  active = false,\n  accent,\n  onClick,\n  className,\n}: VintageButtonProps) {\n  const [pressed, setPressed] = useState(false);\n\n  const accentColor = accent || \"var(--vintage-accent)\";\n  const glowColor = accent\n    ? `color-mix(in srgb, ${accent} 60%, transparent)`\n    : \"var(--vintage-accent-glow)\";\n\n  return (\n    <button\n      className={cn(\"relative group\", className)}\n      onMouseDown={() => setPressed(true)}\n      onMouseUp={() => setPressed(false)}\n      onMouseLeave={() => setPressed(false)}\n      onClick={onClick}\n      style={{ cursor: \"pointer\" }}\n    >\n      <div\n        className=\"w-20 h-20 rounded-full\"\n        style={{\n          background: pressed\n            ? \"linear-gradient(to bottom, var(--vintage-surface-3), var(--vintage-surface-2))\"\n            : \"linear-gradient(to bottom, var(--vintage-surface-4), var(--vintage-surface-3))\",\n          boxShadow: pressed\n            ? \"inset 0 4px 8px rgba(0,0,0,0.8)\"\n            : \"0 6px 0 var(--vintage-surface-2), 0 8px 12px rgba(0,0,0,0.5)\",\n          transform: pressed ? \"translateY(2px)\" : \"translateY(0)\",\n          transition: \"all 0.075s ease\",\n          outline: active\n            ? `2px solid ${accentColor}`\n            : \"2px solid transparent\",\n          outlineOffset: 2,\n        }}\n      >\n        <div\n          className=\"absolute inset-2 rounded-full flex items-center justify-center\"\n          style={{\n            background: active\n              ? `linear-gradient(to bottom, ${accentColor}, color-mix(in srgb, ${accentColor} 70%, black))`\n              : \"linear-gradient(to bottom, var(--vintage-surface-3a), var(--vintage-surface-3))\",\n            boxShadow: active ? `0 0 20px ${glowColor}` : \"none\",\n            transition: \"all 0.2s ease\",\n          }}\n        >\n          <span\n            className=\"text-xs font-vintage-display font-bold tracking-wider uppercase\"\n            style={{\n              color: active ? \"#fff\" : \"var(--vintage-text-muted)\",\n              transition: \"color 0.2s\",\n            }}\n          >\n            {label}\n          </span>\n        </div>\n      </div>\n\n      {/* Active LED dot */}\n      <div\n        className=\"absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 w-1.5 h-1.5 rounded-full\"\n        style={{\n          background: active ? accentColor : \"transparent\",\n          boxShadow: active ? `0 0 10px ${glowColor}` : \"none\",\n          transition: \"all 0.2s\",\n        }}\n      />\n    </button>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

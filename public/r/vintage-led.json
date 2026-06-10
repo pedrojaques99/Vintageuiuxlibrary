@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "vintage-led",
+  "title": "Vintage LED",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Status LED indicator with glow effect in green, red, yellow, or orange.",
+  "registryDependencies": [
+    "vintage-theme",
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/vintage/ui/vintage-led.tsx",
+      "content": "\"use client\";\n\nimport { cn } from \"@/lib/utils\";\n\ninterface VintageLedProps {\n  color?: \"green\" | \"red\" | \"yellow\" | \"orange\" | string;\n  active?: boolean;\n  label?: string;\n  size?: \"sm\" | \"md\" | \"lg\";\n  pulse?: boolean;\n  className?: string;\n}\n\nconst presetColors: Record<string, { on: string; off: string }> = {\n  green: { on: \"var(--vintage-meter-green)\", off: \"#1a3a1a\" },\n  red: { on: \"var(--vintage-meter-red)\", off: \"#3a1a1a\" },\n  yellow: { on: \"var(--vintage-meter-yellow)\", off: \"#3a3a1a\" },\n  orange: { on: \"var(--vintage-accent)\", off: \"#3a2a1a\" },\n};\n\nconst sizeMap = {\n  sm: { w: 8, h: 8 },\n  md: { w: 12, h: 12 },\n  lg: { w: 16, h: 16 },\n};\n\nexport function VintageLed({\n  color = \"green\",\n  active = false,\n  label,\n  size = \"md\",\n  pulse = false,\n  className,\n}: VintageLedProps) {\n  const preset = presetColors[color];\n  const onColor = preset ? preset.on : color;\n  const offColor = preset ? preset.off : `color-mix(in srgb, ${color} 20%, #1a1a1a)`;\n  const s = sizeMap[size];\n\n  return (\n    <div\n      className={cn(\"inline-flex flex-col items-center gap-1\", className)}\n    >\n      <div\n        className=\"rounded-full border border-[var(--vintage-border)]\"\n        style={{\n          width: s.w,\n          height: s.h,\n          background: active ? onColor : offColor,\n          boxShadow: active\n            ? `0 0 ${s.w}px ${onColor}, 0 0 ${s.w * 2}px ${onColor}`\n            : \"none\",\n          transition: \"all 0.2s\",\n          animation:\n            active && pulse ? \"vtv-rec-blink 1s ease-in-out infinite\" : \"none\",\n        }}\n      />\n      {label && (\n        <span\n          className=\"font-vintage-mono tracking-wider uppercase\"\n          style={{\n            fontSize: Math.max(7, s.w * 0.65),\n            color: active\n              ? \"var(--vintage-text-muted)\"\n              : \"var(--vintage-text-dim)\",\n            transition: \"color 0.2s\",\n          }}\n        >\n          {label}\n        </span>\n      )}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

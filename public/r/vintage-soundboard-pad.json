@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "vintage-soundboard-pad",
+  "title": "Vintage Soundboard Pad",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Trigger pad with color, icon, label, glow effect, and press animation.",
+  "registryDependencies": [
+    "vintage-theme",
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/vintage/ui/vintage-soundboard-pad.tsx",
+      "content": "\"use client\";\n\nimport { useState, useCallback } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\ninterface VintageSoundboardPadProps {\n  label?: string;\n  icon?: string;\n  color?: string;\n  active?: boolean;\n  size?: number;\n  onTrigger?: () => void;\n  onRelease?: () => void;\n  className?: string;\n}\n\nexport function VintageSoundboardPad({\n  label = \"PAD\",\n  icon,\n  color = \"var(--vintage-accent)\",\n  active: controlledActive,\n  size = 96,\n  onTrigger,\n  onRelease,\n  className,\n}: VintageSoundboardPadProps) {\n  const [internalActive, setInternalActive] = useState(false);\n  const isActive =\n    controlledActive !== undefined ? controlledActive : internalActive;\n\n  const handleDown = useCallback(() => {\n    if (controlledActive === undefined) setInternalActive(true);\n    onTrigger?.();\n  }, [controlledActive, onTrigger]);\n\n  const handleUp = useCallback(() => {\n    if (controlledActive === undefined) setInternalActive(false);\n    onRelease?.();\n  }, [controlledActive, onRelease]);\n\n  return (\n    <button\n      className={cn(\n        \"relative flex flex-col items-center justify-center gap-1 rounded-xl cursor-pointer select-none transition-transform active:scale-95\",\n        className\n      )}\n      style={{\n        width: size,\n        height: size,\n        background: isActive\n          ? `linear-gradient(135deg, ${color}, ${color}cc)`\n          : \"var(--vintage-surface-2)\",\n        border: `2px solid ${isActive ? color : \"var(--vintage-border)\"}`,\n        boxShadow: isActive\n          ? `0 0 20px ${color}40, inset 0 1px 0 rgba(255,255,255,0.1)`\n          : \"inset 0 1px 0 rgba(255,255,255,0.05), 0 2px 4px rgba(0,0,0,0.3)\",\n      }}\n      onMouseDown={handleDown}\n      onMouseUp={handleUp}\n      onMouseLeave={() => {\n        if (controlledActive === undefined) setInternalActive(false);\n      }}\n      onTouchStart={handleDown}\n      onTouchEnd={handleUp}\n    >\n      {/* Glow ring when active */}\n      {isActive && (\n        <div\n          className=\"absolute inset-0 rounded-xl pointer-events-none\"\n          style={{\n            boxShadow: `inset 0 0 15px ${color}30`,\n          }}\n        />\n      )}\n\n      {/* Icon / Emoji */}\n      {icon && (\n        <span\n          className=\"leading-none\"\n          style={{\n            fontSize: size * 0.3,\n            filter: isActive ? \"brightness(1.2)\" : \"none\",\n          }}\n        >\n          {icon}\n        </span>\n      )}\n\n      {/* Label */}\n      <span\n        className=\"font-bold uppercase tracking-wider truncate max-w-[90%]\"\n        style={{\n          fontSize: Math.max(9, size * 0.1),\n          color: isActive ? \"rgba(255,255,255,0.95)\" : \"var(--vintage-text-muted)\",\n          fontFamily: \"var(--font-vintage-mono, monospace)\",\n        }}\n      >\n        {label}\n      </span>\n\n      {/* Active dot indicator */}\n      <div\n        className=\"absolute bottom-1.5 rounded-full transition-colors\"\n        style={{\n          width: 6,\n          height: 6,\n          background: isActive ? color : \"var(--vintage-surface-3a)\",\n          boxShadow: isActive ? `0 0 6px ${color}` : \"none\",\n        }}\n      />\n    </button>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

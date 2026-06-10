@@ -63,14 +63,13 @@ export function InteractiveKnob({
       <div
         ref={knobRef}
         onMouseDown={handleMouseDown}
-        className="cursor-pointer transition-transform duration-100 hover:scale-105"
-        style={{ transform: `rotate(${rotation}deg)` }}
+        className="cursor-pointer transition-transform duration-100 hover:brightness-125"
       >
         <div className="w-[81px] h-[75px]">
-          <Knob />
+          <Knob rotation={rotation} />
         </div>
       </div>
-      <div className="text-center mt-2 text-[#f0e68c] text-xs font-['Red_Hat_Mono',monospace]">
+      <div className="text-center mt-4 text-[#ffd700] text-sm font-mono font-bold tracking-widest">
         {currentValue.toFixed(1)}
       </div>
     </div>

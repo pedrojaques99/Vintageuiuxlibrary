@@ -63,18 +63,17 @@ export function InteractiveLargeKnob({
       <div
         ref={knobRef}
         onMouseDown={handleMouseDown}
-        className="cursor-pointer transition-transform duration-100 hover:scale-105"
-        style={{ transform: `rotate(${rotation}deg)` }}
+        className="cursor-pointer transition-transform duration-100 hover:brightness-110"
       >
         <div className="w-[318px] h-[318px]">
-          <Knob />
+          <Knob rotation={rotation} />
         </div>
       </div>
-      <div className="text-center mt-4 space-y-1">
-        <div className="text-[#5c5c5c] text-2xl font-['Helvetica',sans-serif] font-bold">
+      <div className="text-center mt-6 space-y-2">
+        <div className="text-[#ffd700] text-3xl font-heading font-black tracking-widest uppercase">
           {label}
         </div>
-        <div className="text-[#888] text-lg font-['Red_Hat_Mono',monospace]">
+        <div className="text-[#888] text-xl font-mono font-bold tracking-widest">
           {currentValue.toFixed(1)}
         </div>
       </div>

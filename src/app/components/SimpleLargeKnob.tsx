@@ -62,51 +62,52 @@ export function SimpleLargeKnob({
       <div
         ref={knobRef}
         onMouseDown={handleMouseDown}
-        className="cursor-pointer transition-transform duration-100 hover:scale-105 relative"
-        style={{ transform: `rotate(${rotation}deg)` }}
+        className="cursor-pointer transition-transform duration-100 hover:brightness-110 relative w-[300px] h-[300px]"
       >
-        <div className="w-[300px] h-[300px] relative">
-          {/* Outer ring with gradient */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#6a6a6a] via-[#9a9a9a] to-[#5a5a5a] shadow-2xl" />
+        {/* Static Background Ring */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#111] shadow-2xl border border-[#333]" />
+        
+        {/* Static Tick marks */}
+        {[...Array(13)].map((_, i) => {
+          const angle = -135 + (i / 12) * 270;
+          const isMajor = i % 3 === 0;
+          return (
+            <div
+              key={i}
+              className="absolute left-1/2 top-[25px] -ml-px"
+              style={{
+                width: isMajor ? '4px' : '2px',
+                height: isMajor ? '20px' : '12px',
+                backgroundColor: isMajor ? '#ffd700' : '#444',
+                transform: `rotate(${angle}deg)`,
+                transformOrigin: `50% ${150 - 25}px`,
+              }}
+            />
+          );
+        })}
 
-          {/* Inner groove */}
-          <div className="absolute inset-[20px] rounded-full bg-gradient-to-br from-[#2a2a2a] to-[#3a3a3a] shadow-[inset_0_4px_8px_rgba(0,0,0,0.6)]" />
-
+        {/* Rotating Dial Assembly */}
+        <div 
+          className="absolute inset-[35px] transition-transform duration-75"
+          style={{ transform: `rotate(${rotation}deg)` }}
+        >
           {/* Main knob surface */}
-          <div className="absolute inset-[35px] rounded-full bg-gradient-to-br from-[#d0d0d0] via-[#f0f0f0] to-[#b0b0b0] shadow-[0_8px_16px_rgba(0,0,0,0.4)]" />
-
-          {/* Center circle */}
-          <div className="absolute inset-[100px] rounded-full bg-gradient-to-br from-[#e0e0e0] to-[#c0c0c0] shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]" />
-
-          {/* Tick marks */}
-          {[...Array(13)].map((_, i) => {
-            const angle = -135 + (i / 12) * 270;
-            const isMajor = i % 3 === 0;
-            return (
-              <div
-                key={i}
-                className="absolute left-1/2 top-[25px] -ml-px"
-                style={{
-                  width: isMajor ? '4px' : '2px',
-                  height: isMajor ? '20px' : '12px',
-                  backgroundColor: '#5c5c5c',
-                  transform: `rotate(${angle}deg)`,
-                  transformOrigin: `50% ${150 - 25}px`,
-                  opacity: isMajor ? 1 : 0.6
-                }}
-              />
-            );
-          })}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#2a2a2a] via-[#333] to-[#1a1a1a] shadow-[0_8px_16px_rgba(0,0,0,0.6)] border border-[#444]" />
 
           {/* Indicator marker */}
-          <div className="absolute left-1/2 top-[45px] -ml-[7px] w-[14px] h-[14px] rounded-full bg-[#5c5c5c] shadow-md" />
+          <div className="absolute left-1/2 top-[20px] -ml-[7px] w-[14px] h-[14px] rounded-full bg-[#ffd700] shadow-[0_0_10px_rgba(255,215,0,0.3)]" />
+          
+          {/* Center cap piece */}
+          <div className="absolute inset-[65px] rounded-full bg-gradient-to-br from-[#222] to-[#111] shadow-inner border border-[#333]" />
         </div>
       </div>
-      <div className="text-center mt-6 space-y-1">
-        <div className="text-[#5c5c5c] text-2xl font-['Helvetica',sans-serif] font-bold">
+
+      {/* Control Labels (Static) */}
+      <div className="text-center mt-10 space-y-2">
+        <div className="text-[#ffd700] text-3xl font-heading font-black tracking-widest uppercase">
           {label}
         </div>
-        <div className="text-[#888] text-lg font-['Red_Hat_Mono',monospace]">
+        <div className="text-[#888] text-2xl font-mono font-bold tracking-widest">
           {currentValue.toFixed(1)}
         </div>
       </div>

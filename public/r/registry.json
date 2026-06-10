@@ -1,0 +1,340 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "visant",
+  "homepage": "https://ui.visant.com",
+  "items": [
+    {
+      "name": "vintage-theme",
+      "type": "registry:theme",
+      "title": "Vintage Theme",
+      "description": "Dark, warm vintage audio equipment theme with gold accents and metallic surfaces.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "cssVars": {
+        "theme": {
+          "font-vintage-display": "'Orbitron', sans-serif",
+          "font-vintage-mono": "'Red Hat Mono', monospace",
+          "font-vintage-body": "'Helvetica Neue', Helvetica, sans-serif"
+        },
+        "light": {
+          "vintage-surface-1": "#0f0f0f",
+          "vintage-surface-2": "#1a1a1a",
+          "vintage-surface-3": "#2a2a2a",
+          "vintage-surface-3a": "#3a3a3a",
+          "vintage-surface-4": "#4a4a4a",
+          "vintage-border": "#333333",
+          "vintage-label": "#f0e68c",
+          "vintage-value": "#ffd700",
+          "vintage-accent": "#ff6b35",
+          "vintage-accent-deep": "#ff4500",
+          "vintage-accent-glow": "rgba(255, 107, 53, 0.6)",
+          "vintage-needle": "#ff0000",
+          "vintage-needle-glow": "rgba(255, 0, 0, 0.5)",
+          "vintage-text-muted": "#888888",
+          "vintage-text-dim": "#5c5c5c",
+          "vintage-meter-green": "#22c55e",
+          "vintage-meter-yellow": "#eab308",
+          "vintage-meter-orange": "#f97316",
+          "vintage-meter-red": "#ef4444",
+          "vintage-metal-light": "#6a6a6a",
+          "vintage-metal-dark": "#3a3a3a",
+          "vintage-metal-mid": "#9ba0a6",
+          "vintage-metal-channel-light": "#bebebe",
+          "vintage-metal-channel-dark": "#a9a9a9",
+          "vintage-toggle-track": "#403f3f",
+          "vintage-grid": "#bbbaba",
+          "background": "#0f0f0f",
+          "foreground": "#e8e8e8",
+          "card": "#1a1a1a",
+          "card-foreground": "#e8e8e8",
+          "primary": "#ffd700",
+          "primary-foreground": "#0f0f0f",
+          "secondary": "#2a2a2a",
+          "secondary-foreground": "#e8e8e8",
+          "muted": "#2a2a2a",
+          "muted-foreground": "#888888",
+          "accent": "#ff6b35",
+          "accent-foreground": "#ffffff",
+          "destructive": "#ef4444",
+          "destructive-foreground": "#ffffff",
+          "border": "#333333",
+          "input": "#2a2a2a",
+          "ring": "#ffd700"
+        },
+        "dark": {
+          "vintage-surface-1": "#0f0f0f",
+          "vintage-surface-2": "#1a1a1a",
+          "vintage-surface-3": "#2a2a2a",
+          "vintage-surface-3a": "#3a3a3a",
+          "vintage-surface-4": "#4a4a4a",
+          "vintage-border": "#333333",
+          "vintage-label": "#f0e68c",
+          "vintage-value": "#ffd700",
+          "vintage-accent": "#ff6b35",
+          "vintage-accent-deep": "#ff4500",
+          "vintage-accent-glow": "rgba(255, 107, 53, 0.6)",
+          "vintage-needle": "#ff0000",
+          "vintage-needle-glow": "rgba(255, 0, 0, 0.5)",
+          "vintage-text-muted": "#888888",
+          "vintage-text-dim": "#5c5c5c",
+          "vintage-meter-green": "#22c55e",
+          "vintage-meter-yellow": "#eab308",
+          "vintage-meter-orange": "#f97316",
+          "vintage-meter-red": "#ef4444",
+          "vintage-metal-light": "#6a6a6a",
+          "vintage-metal-dark": "#3a3a3a",
+          "vintage-metal-mid": "#9ba0a6",
+          "vintage-metal-channel-light": "#bebebe",
+          "vintage-metal-channel-dark": "#a9a9a9",
+          "vintage-toggle-track": "#403f3f",
+          "vintage-grid": "#bbbaba",
+          "background": "#0f0f0f",
+          "foreground": "#e8e8e8",
+          "card": "#1a1a1a",
+          "card-foreground": "#e8e8e8",
+          "primary": "#ffd700",
+          "primary-foreground": "#0f0f0f",
+          "secondary": "#2a2a2a",
+          "secondary-foreground": "#e8e8e8",
+          "muted": "#2a2a2a",
+          "muted-foreground": "#888888",
+          "accent": "#ff6b35",
+          "accent-foreground": "#ffffff",
+          "destructive": "#ef4444",
+          "destructive-foreground": "#ffffff",
+          "border": "#333333",
+          "input": "#2a2a2a",
+          "ring": "#ffd700"
+        }
+      }
+    },
+    {
+      "name": "vintage-base",
+      "type": "registry:base",
+      "title": "Vintage Base",
+      "description": "Complete vintage audio equipment design system. Dark surfaces, gold labels, metallic hardware, warm accents.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme"],
+      "cssVars": {
+        "theme": {
+          "font-vintage-display": "'Orbitron', sans-serif",
+          "font-vintage-mono": "'Red Hat Mono', monospace",
+          "font-vintage-body": "'Helvetica Neue', Helvetica, sans-serif",
+          "radius": "0.5rem"
+        },
+        "light": {
+          "background": "#0f0f0f",
+          "foreground": "#e8e8e8",
+          "primary": "#ffd700",
+          "primary-foreground": "#0f0f0f",
+          "radius": "0.5rem"
+        },
+        "dark": {
+          "background": "#0f0f0f",
+          "foreground": "#e8e8e8",
+          "primary": "#ffd700",
+          "primary-foreground": "#0f0f0f"
+        }
+      },
+      "css": {
+        "@import \"https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Red+Hat+Mono:wght@400;500;600;700&display=swap\"": {}
+      }
+    },
+    {
+      "name": "use-knob-drag",
+      "type": "registry:hook",
+      "title": "useKnobDrag",
+      "description": "Hook for drag-to-rotate knob interaction with vertical mouse sensitivity.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": ["react"],
+      "files": [
+        {
+          "path": "registry/vintage/hooks/use-knob-drag.ts",
+          "type": "registry:hook",
+          "target": "@hooks/use-knob-drag.ts"
+        }
+      ]
+    },
+    {
+      "name": "vintage-button",
+      "type": "registry:ui",
+      "title": "Vintage Button",
+      "description": "Skeuomorphic push button with press animation and LED indicator.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-slider",
+      "type": "registry:ui",
+      "title": "Vintage Slider",
+      "description": "Horizontal fader with gradient fill bar and metallic thumb.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-meter",
+      "type": "registry:ui",
+      "title": "Vintage Meter",
+      "description": "Analog VU meter with SVG arc, animated needle, and color gradient scale.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-meter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-knob",
+      "type": "registry:ui",
+      "title": "Vintage Knob",
+      "description": "Small rotary knob with drag interaction, tick marks, and value labels.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "use-knob-drag", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-knob.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-large-knob",
+      "type": "registry:ui",
+      "title": "Vintage Large Knob",
+      "description": "Large rotary knob with metallic conic-gradient surface and drag interaction.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "use-knob-drag", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-large-knob.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-toggle",
+      "type": "registry:ui",
+      "title": "Vintage Toggle",
+      "description": "3-position toggle switch (up/middle/down) with metallic housing.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-eq",
+      "type": "registry:ui",
+      "title": "Vintage EQ",
+      "description": "Graphic equalizer with multiple vertical faders and metallic handles.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-eq.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-led",
+      "type": "registry:ui",
+      "title": "Vintage LED",
+      "description": "Status LED indicator with glow effect in green, red, yellow, or orange.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-led.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-command-palette",
+      "type": "registry:ui",
+      "title": "Vintage Command Palette",
+      "description": "Ctrl+K command menu with search, groups, keyboard navigation, and vintage styling.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-command-palette.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-tv-frame",
+      "type": "registry:ui",
+      "title": "Vintage TV Frame",
+      "description": "Retro CRT television frame with bezels, scanlines, vignette, power button, and LED.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-tv-frame.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-soundboard-pad",
+      "type": "registry:ui",
+      "title": "Vintage Soundboard Pad",
+      "description": "Trigger pad with color, icon, label, glow effect, and press animation.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-soundboard-pad.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-xy-pad",
+      "type": "registry:ui",
+      "title": "Vintage XY Pad",
+      "description": "2D controller surface with crosshair cursor, grid lines, and axis readouts.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-xy-pad.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "vintage-oscilloscope",
+      "type": "registry:ui",
+      "title": "Vintage Oscilloscope",
+      "description": "Canvas-based waveform and FFT spectrum display with CRT scanline effect.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": ["vintage-theme", "utils"],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-oscilloscope.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    }
+  ]
+}

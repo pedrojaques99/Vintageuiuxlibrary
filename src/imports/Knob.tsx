@@ -397,53 +397,58 @@ function TopLayers() {
   );
 }
 
-export default function Knob() {
+export default function Knob({ rotation = 0 }: { rotation?: number }) {
   return (
     <div className="relative size-full" data-name="Knob">
       <Ticks />
-      <div className="absolute left-[-24px] size-[366px] top-[-24px]" data-name="Outer">
-        <div className="absolute inset-[0_-1.09%_-2.19%_-1.09%]">
-          <img alt="" className="block max-w-none size-full" height="374" src={imgOuter} width="374" />
+      <div
+        className="absolute inset-0 transition-transform duration-75"
+        style={{ transform: `rotate(${rotation}deg)` }}
+      >
+        <div className="absolute left-[-24px] size-[366px] top-[-24px]" data-name="Outer">
+          <div className="absolute inset-[0_-1.09%_-2.19%_-1.09%]">
+            <img alt="" className="block max-w-none size-full" height="374" src={imgOuter} width="374" />
+          </div>
         </div>
-      </div>
-      <div className="absolute left-[-16px] size-[350px] top-[-16px]" data-name="Groove">
-        <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 350 350">
-          <g filter="url(#filter0_i_1_57)" id="Groove">
-            <circle cx="175" cy="175" fill="var(--fill-0, #323336)" fillOpacity="0.96" r="175" />
-          </g>
-          <defs>
-            <filter colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse" height="354" id="filter0_i_1_57" width="350" x="0" y="0">
-              <feFlood floodOpacity="0" result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" mode="normal" result="shape" />
-              <feColorMatrix in="SourceAlpha" result="hardAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
-              <feOffset dy="4" />
-              <feGaussianBlur stdDeviation="2" />
-              <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
-              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" />
-              <feBlend in2="shape" mode="normal" result="effect1_innerShadow_1_57" />
-            </filter>
-          </defs>
-        </svg>
-      </div>
-      <TopLayers />
-      <div className="absolute left-[146px] size-[27px] top-[13px]" data-name="Knob Marker">
-        <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 27 27">
-          <g filter="url(#filter0_i_1_49)" id="Knob Marker">
-            <circle cx="13.5" cy="13.5" fill="var(--fill-0, #5C5C5C)" r="13.5" />
-          </g>
-          <defs>
-            <filter colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse" height="31" id="filter0_i_1_49" width="27" x="0" y="0">
-              <feFlood floodOpacity="0" result="BackgroundImageFix" />
-              <feBlend in="SourceGraphic" in2="BackgroundImageFix" mode="normal" result="shape" />
-              <feColorMatrix in="SourceAlpha" result="hardAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
-              <feOffset dy="4" />
-              <feGaussianBlur stdDeviation="2" />
-              <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
-              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" />
-              <feBlend in2="shape" mode="normal" result="effect1_innerShadow_1_49" />
-            </filter>
-          </defs>
-        </svg>
+        <div className="absolute left-[-16px] size-[350px] top-[-16px]" data-name="Groove">
+          <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 350 350">
+            <g filter="url(#filter0_i_1_57)" id="Groove">
+              <circle cx="175" cy="175" fill="var(--fill-0, #323336)" fillOpacity="0.96" r="175" />
+            </g>
+            <defs>
+              <filter colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse" height="354" id="filter0_i_1_57" width="350" x="0" y="0">
+                <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                <feBlend in="SourceGraphic" in2="BackgroundImageFix" mode="normal" result="shape" />
+                <feColorMatrix in="SourceAlpha" result="hardAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+                <feOffset dy="4" />
+                <feGaussianBlur stdDeviation="2" />
+                <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" />
+                <feBlend in2="shape" mode="normal" result="effect1_innerShadow_1_57" />
+              </filter>
+            </defs>
+          </svg>
+        </div>
+        <TopLayers />
+        <div className="absolute left-[146px] size-[27px] top-[13px]" data-name="Knob Marker">
+          <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 27 27">
+            <g filter="url(#filter0_i_1_49)" id="Knob Marker">
+              <circle cx="13.5" cy="13.5" fill="var(--fill-0, #5C5C5C)" r="13.5" />
+            </g>
+            <defs>
+              <filter colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse" height="31" id="filter0_i_1_49" width="27" x="0" y="0">
+                <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                <feBlend in="SourceGraphic" in2="BackgroundImageFix" mode="normal" result="shape" />
+                <feColorMatrix in="SourceAlpha" result="hardAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+                <feOffset dy="4" />
+                <feGaussianBlur stdDeviation="2" />
+                <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" />
+                <feBlend in2="shape" mode="normal" result="effect1_innerShadow_1_49" />
+              </filter>
+            </defs>
+          </svg>
+        </div>
       </div>
       <div className="-translate-x-1/2 -translate-y-1/2 absolute flex flex-col font-['Helvetica:Bold',sans-serif] h-[67px] justify-center leading-[0] left-[159px] not-italic text-[#5c5c5c] text-[32px] text-center top-[386.5px] w-[306px]">
         <p className="leading-[normal]">LARGE KNOB</p>

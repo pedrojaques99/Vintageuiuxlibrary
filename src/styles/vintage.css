@@ -1,0 +1,36 @@
+@import "https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Red+Hat+Mono:wght@400;500;600;700&display=swap";
+
+:root {
+  --vintage-surface-1: #0f0f0f;
+  --vintage-surface-2: #1a1a1a;
+  --vintage-surface-3: #2a2a2a;
+  --vintage-surface-3a: #3a3a3a;
+  --vintage-surface-4: #4a4a4a;
+  --vintage-border: #333333;
+  --vintage-label: #f0e68c;
+  --vintage-value: #ffd700;
+  --vintage-accent: #ff6b35;
+  --vintage-accent-deep: #ff4500;
+  --vintage-accent-glow: rgba(255, 107, 53, 0.6);
+  --vintage-needle: #ff0000;
+  --vintage-needle-glow: rgba(255, 0, 0, 0.5);
+  --vintage-text-muted: #888888;
+  --vintage-text-dim: #5c5c5c;
+  --vintage-meter-green: #22c55e;
+  --vintage-meter-yellow: #eab308;
+  --vintage-meter-orange: #f97316;
+  --vintage-meter-red: #ef4444;
+  --vintage-metal-light: #6a6a6a;
+  --vintage-metal-dark: #3a3a3a;
+  --vintage-metal-mid: #9ba0a6;
+  --vintage-metal-channel-light: #bebebe;
+  --vintage-metal-channel-dark: #a9a9a9;
+  --vintage-toggle-track: #403f3f;
+  --vintage-grid: #bbbaba;
+}
+
+@theme inline {
+  --font-vintage-display: "Orbitron", sans-serif;
+  --font-vintage-mono: "Red Hat Mono", monospace;
+  --font-vintage-body: "Helvetica Neue", Helvetica, sans-serif;
+}
