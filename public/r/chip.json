@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "chip",
+  "title": "Chip",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Pastilha de filtro com aria-pressed e contagem que nunca renderiza zero. Aceita um SVG de dado dentro, herdando currentColor.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/chip.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Chip — pastilha de filtro.\n *\n * Colhida do concept Hockey Direct. É o gesto que o comprador de loja grande já\n * tem no dedo: nada de inventar controle novo numa superfície de compra.\n *\n * Duas coisas que parecem detalhe e não são:\n *\n * 1. **`aria-pressed`, não `aria-selected`.** Um filtro é um botão de dois\n *    estados, não um item de lista selecionado. O leitor de tela anuncia\n *    \"pressionado\", que é a verdade.\n * 2. **`count` nunca renderiza zero.** Zero não é informação — um filtro que\n *    mostra \"(0)\" ocupa espaço para dizer que não serve. Ele some.\n *\n * O `icon` existe para o caso em que o dado da loja cabe dentro do controle:\n * no Hockey Direct é a curva do bow desenhada em SVG, herdando `currentColor`,\n * então ela acompanha o estado sem uma linha de CSS a mais.\n */\n\nexport interface ChipProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, \"onSelect\"> {\n  pressed?: boolean;\n  count?: number;\n  icon?: React.ReactNode;\n}\n\nexport function Chip({\n  pressed = false,\n  count,\n  icon,\n  children,\n  className,\n  ...props\n}: ChipProps) {\n  return (\n    <button\n      type=\"button\"\n      aria-pressed={pressed}\n      className={cn(\n        \"inline-flex items-center gap-2 whitespace-nowrap border px-3.5 py-2\",\n        \"text-[13px] font-semibold\",\n        \"border-[var(--border)] text-[var(--foreground)]\",\n        \"transition-[background-color,color,border-color,transform]\",\n        \"[transition-duration:var(--dur-press,120ms)]\",\n        \"[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]\",\n        \"hover:border-[var(--foreground)]\",\n        \"active:scale-[0.97]\",\n        pressed &&\n          \"border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)]\",\n        className,\n      )}\n      {...props}\n    >\n      {icon ? <span className=\"shrink-0 [&_svg]:overflow-visible\">{icon}</span> : null}\n      <span>{children}</span>\n      {/* Zero não é informação. */}\n      {typeof count === \"number\" && count > 0 ? (\n        <span className=\"opacity-60 tabular-nums\">{count}</span>\n      ) : null}\n    </button>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

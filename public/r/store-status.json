@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "store-status",
+  "title": "Store Status",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Aberto/fechado de loja fisica resolvido no fuso DA LOJA. Nao renderiza nada ate o JS confirmar — nada na tela e melhor que horario errado na tela.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/store-status.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * StoreStatus — \"aberto agora\" de loja física.\n *\n * Colhido do concept Hockey Direct, e a razão dele existir é uma regra de\n * honestidade, não de UI:\n *\n * **O visitante pode estar em qualquer fuso.** Se você resolver a hora no\n * relógio do navegador, um cliente em Lisboa vê \"aberto\" com a loja de Londres\n * fechada. A hora é sempre resolvida no fuso DA LOJA, via `Intl`.\n *\n * E o componente **não renderiza nada até o JS confirmar a hora**. Um HTML\n * estático dizendo \"aberto\" é uma afirmação que ninguém verificou — e no\n * primeiro print de tela errado vira reclamação. Nada na tela é melhor que\n * horário errado na tela.\n *\n * Feriado não é calculável com o dado que a maioria dos clientes tem. Diga isso\n * em texto ao lado (`note`) em vez de fingir precisão.\n */\n\nexport interface StoreStatusProps extends React.HTMLAttributes<HTMLParagraphElement> {\n  /** Fuso IANA da loja, ex.: \"Europe/London\". */\n  timeZone: string;\n  openHour?: number;\n  closeHour?: number;\n  /** Dias abertos, 0 = domingo. Padrão: todos. */\n  openDays?: number[];\n  labels?: { open: (close: number) => string; closed: (open: number) => string };\n}\n\nconst fmtHour = (h: number) => (h > 12 ? `${h - 12}pm` : h === 12 ? \"12pm\" : `${h}am`);\n\nexport function StoreStatus({\n  timeZone,\n  openHour = 9,\n  closeHour = 17,\n  openDays,\n  labels = {\n    open: (c) => `Open now until ${fmtHour(c)}`,\n    closed: (o) => `Opens at ${fmtHour(o)}`,\n  },\n  className,\n  ...props\n}: StoreStatusProps) {\n  const [state, setState] = React.useState<\"open\" | \"closed\" | null>(null);\n\n  React.useEffect(() => {\n    const read = () => {\n      const parts = new Intl.DateTimeFormat(\"en-GB\", {\n        timeZone,\n        hour: \"numeric\",\n        hourCycle: \"h23\",\n        weekday: \"short\",\n      }).formatToParts(new Date());\n\n      const hour = Number(parts.find((p) => p.type === \"hour\")?.value);\n      if (!Number.isFinite(hour)) return;\n\n      const wd = parts.find((p) => p.type === \"weekday\")?.value ?? \"\";\n      const dayIdx = [\"Sun\", \"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\"].indexOf(wd);\n      const dayOk = !openDays || openDays.includes(dayIdx);\n\n      setState(dayOk && hour >= openHour && hour < closeHour ? \"open\" : \"closed\");\n    };\n\n    read();\n    const t = setInterval(read, 60_000);\n    return () => clearInterval(t);\n  }, [timeZone, openHour, closeHour, openDays]);\n\n  // Até o JS confirmar, a página não afirma nada.\n  if (state === null) return null;\n\n  return (\n    <p\n      data-state={state}\n      className={cn(\"inline-flex items-center gap-2\", className)}\n      {...props}\n    >\n      <span\n        aria-hidden=\"true\"\n        className={cn(\n          \"size-[7px] shrink-0 rounded-full\",\n          state === \"open\" ? \"bg-[var(--brand)]\" : \"bg-[var(--muted-foreground)]\",\n        )}\n      />\n      <span className=\"text-[12px] font-bold uppercase tracking-[0.1em]\">\n        {state === \"open\" ? labels.open(closeHour) : labels.closed(openHour)}\n      </span>\n    </p>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

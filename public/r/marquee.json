@@ -1,0 +1,42 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "marquee",
+  "title": "Marquee",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Faixa contínua com variantes fade, band, tilt e reverse. Pausa em hover, foco e fora da tela. Sem cor própria: pinta com os tokens da marca.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/marquee.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Marquee — faixa contínua.\n *\n * Colhida do concept Hockey Direct, onde ela nasceu com API em vez de virar\n * um `@keyframes` solto. Nenhuma cor mora aqui: `band` pinta com `--brand` e o\n * texto com `--brand-foreground`, então a mesma faixa sai lime numa marca e\n * âmbar noutra sem fork.\n *\n * Três decisões que valem mais que o código:\n *\n * 1. **`linear`, sempre.** Qualquer easing num loop infinito cria uma pulsação\n *    que o olho lê como defeito.\n * 2. **A lista é duplicada e o track anda exatos 50%**, então a emenda nunca\n *    aparece. A cópia vai com `aria-hidden` — ela é artefato de animação, não\n *    conteúdo, e um leitor de tela não deve ouvir tudo duas vezes.\n * 3. **Fora da tela ela para.** Sem isso o compositor fica ocupado a página\n *    inteira, e num telefone isso é bateria gasta em pixel que ninguém vê.\n */\n\nexport interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {\n  items: React.ReactNode[];\n  /** Segundos para uma volta completa. Mais itens pedem mais tempo. */\n  speed?: number;\n  /** Some nas bordas em vez de ser cortado a faca. */\n  fade?: boolean;\n  /** Faixa de cor sólida com a cor da marca. */\n  band?: boolean;\n  /** Inclina a faixa. Exige um pai com `overflow: hidden`. */\n  tilt?: number;\n  /** Anda para a direita. Duas faixas em sentidos opostos leem como sistema. */\n  reverse?: boolean;\n  gap?: number;\n}\n\nexport function Marquee({\n  items,\n  speed = 46,\n  fade = false,\n  band = false,\n  tilt = 0,\n  reverse = false,\n  gap = 56,\n  className,\n  style,\n  ...props\n}: MarqueeProps) {\n  const trackRef = React.useRef<HTMLUListElement>(null);\n  const [paused, setPaused] = React.useState(false);\n\n  // Fora da tela não anima.\n  React.useEffect(() => {\n    const el = trackRef.current;\n    if (!el || typeof IntersectionObserver === \"undefined\") return;\n    const io = new IntersectionObserver(([e]) => setPaused(!e.isIntersecting));\n    io.observe(el);\n    return () => io.disconnect();\n  }, []);\n\n  const render = (hidden: boolean) =>\n    items.map((item, i) => (\n      <li\n        key={`${hidden ? \"b\" : \"a\"}-${i}`}\n        className=\"whitespace-nowrap\"\n        {...(hidden ? { \"aria-hidden\": true } : {})}\n      >\n        {item}\n      </li>\n    ));\n\n  return (\n    <div\n      className={cn(\n        \"overflow-hidden\",\n        band && \"bg-[var(--brand)] py-3.5 text-[var(--brand-foreground)]\",\n        className,\n      )}\n      style={{\n        ...(fade\n          ? {\n              maskImage:\n                \"linear-gradient(to right, transparent, black 5%, black 95%, transparent)\",\n            }\n          : null),\n        ...(tilt\n          ? { rotate: `${tilt}deg`, width: \"108%\", marginLeft: \"-4%\" }\n          : null),\n        ...style,\n      }}\n      {...props}\n    >\n      <ul\n        ref={trackRef}\n        className=\"marquee-track flex w-max items-center\"\n        style={{\n          gap: `${gap}px`,\n          animationDuration: `${speed}s`,\n          animationDirection: reverse ? \"reverse\" : \"normal\",\n          animationPlayState: paused ? \"paused\" : \"running\",\n        }}\n        onMouseEnter={() => setPaused(true)}\n        onMouseLeave={() => setPaused(false)}\n        onFocus={() => setPaused(true)}\n        onBlur={() => setPaused(false)}\n      >\n        {render(false)}\n        {render(true)}\n      </ul>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "css": {
+    "@layer components": {
+      ".marquee-track": {
+        "animation-name": "visant-marquee",
+        "animation-timing-function": "linear",
+        "animation-iteration-count": "infinite"
+      }
+    },
+    "@keyframes visant-marquee": {
+      "to": {
+        "transform": "translate3d(-50%, 0, 0)"
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".marquee-track": {
+        "animation": "none",
+        "flex-wrap": "wrap",
+        "width": "auto"
+      },
+      ".marquee-track > [aria-hidden=\"true\"]": {
+        "display": "none"
+      }
+    }
+  },
+  "type": "registry:ui"
+}

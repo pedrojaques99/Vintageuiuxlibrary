@@ -1,0 +1,68 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "working-glyph",
+  "title": "Working Glyph",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Icone que bate com faiscas: mostra esforco em vez de pedir paciencia.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils",
+    "https://visant-ui.vercel.app/r/glitch-chars.json"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/working-glyph.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Pickaxe } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\nimport { GlitchChars } from \"@/components/ui/glitch-chars\";\n\n/**\n * Um ícone que \"bate\" com faíscas — trabalho manual acontecendo, não espera.\n *\n * A diferença para um spinner é de narrativa: spinner é o sistema pedindo\n * paciência, isto é o sistema mostrando esforço. Em geração de imagem (20–60s)\n * essa leitura é o que segura o usuário na tela.\n *\n * O ícone entra por prop — a picareta é só o default da casa. Troque por\n * `Hammer`, `Wand`, `Cog` conforme a metáfora do produto; a mecânica (balanço +\n * brilho + faísca) é o que se colhe aqui.\n *\n * Balanço em 0.9s com `transform-origin` em 60%/80%: o pivô fica onde a mão\n * seguraria o cabo. Centralizar o pivô mata o gesto na hora.\n *\n * `prefers-reduced-motion`: ícone parado, faísca congelada (regra no bloco `css`\n * do item — se o glifo não parar, o CSS do registry não foi instalado).\n */\nexport function WorkingGlyph({\n  icon,\n  size = 20,\n  framed = true,\n  className,\n}: {\n  /** Glifo animado. Default: picareta (lucide). */\n  icon?: React.ReactNode;\n  size?: number;\n  /** Moldura discreta atrás do ícone. Desligue ao usar sobre imagem. */\n  framed?: boolean;\n  className?: string;\n}) {\n  return (\n    <div\n      className={cn(\n        \"relative inline-flex items-center justify-center overflow-visible text-brand\",\n        framed &&\n          \"rounded-[var(--r-control)] border border-border bg-background/30 px-3 py-2\",\n        className,\n      )}\n      aria-hidden=\"true\"\n    >\n      <span className=\"working-glyph-swing working-glyph-shine relative z-10 inline-block\">\n        {icon ?? <Pickaxe size={size} />}\n      </span>\n\n      {/* faísca na zona de impacto da ponta, mais rápida que o texto de status */}\n      <GlitchChars\n        length={1}\n        intervalMs={120}\n        className=\"absolute bottom-1 right-1.5 text-[10px] font-bold leading-none opacity-80\"\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "css": {
+    ".working-glyph-swing": {
+      "animation": "visant-glyph-swing .9s ease-in-out infinite",
+      "transform-origin": "60% 80%"
+    },
+    "@keyframes visant-glyph-swing": {
+      "0%": {
+        "transform": "rotate(-8deg) translateY(0)"
+      },
+      "40%": {
+        "transform": "rotate(6deg) translateY(1px)"
+      },
+      "60%": {
+        "transform": "rotate(3deg) translateY(2px)"
+      },
+      "100%": {
+        "transform": "rotate(-8deg) translateY(0)"
+      }
+    },
+    ".working-glyph-shine": {
+      "position": "relative",
+      "overflow": "hidden"
+    },
+    ".working-glyph-shine::before": {
+      "content": "''",
+      "position": "absolute",
+      "inset": "-50%",
+      "background-image": "linear-gradient(115deg, transparent 40%, color-mix(in oklch, currentColor 45%, transparent) 50%, transparent 60%)",
+      "background-size": "250% 250%",
+      "animation": "visant-glyph-shine 2.4s linear infinite",
+      "pointer-events": "none"
+    },
+    "@keyframes visant-glyph-shine": {
+      "0%": {
+        "background-position": "-200% -200%"
+      },
+      "100%": {
+        "background-position": "200% 200%"
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".working-glyph-swing, .working-glyph-shine::before": {
+        "animation": "none"
+      }
+    }
+  },
+  "type": "registry:ui"
+}

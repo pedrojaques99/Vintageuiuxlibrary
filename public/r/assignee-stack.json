@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "assignee-stack",
+  "title": "Assignee Stack",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Pilha de avatares com estouro contado. Componente de time.",
+  "registryDependencies": [
+    "utils",
+    "avatar"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/assignee-stack.tsx",
+      "content": "\"use client\";\r\n\r\nimport { Avatar, AvatarImage, AvatarFallback } from \"@/components/ui/avatar\";\r\nimport { cn } from \"@/lib/utils\";\r\n\r\nexport type Assignee = { id: string; name: string; avatarUrl?: string };\r\n\r\nfunction initials(name: string): string {\r\n  return name\r\n    .trim()\r\n    .split(/\\s+/)\r\n    .slice(0, 2)\r\n    .map((w) => w[0]?.toUpperCase() ?? \"\")\r\n    .join(\"\");\r\n}\r\n\r\n/**\r\n * Stacked avatar group for the team co-owners of an issue. Clean and compact:\r\n * overlapping circles with a ring cutout, capped at `max` with a \"+N\" overflow.\r\n * Render only when it adds signal (the caller decides — e.g. only co-owned tasks).\r\n */\r\nexport function AssigneeStack({\r\n  assignees,\r\n  max = 4,\r\n  size = \"sm\",\r\n  className,\r\n}: {\r\n  assignees: Assignee[];\r\n  max?: number;\r\n  size?: \"sm\" | \"md\";\r\n  className?: string;\r\n}) {\r\n  if (!assignees?.length) return null;\r\n\r\n  const visible = assignees.slice(0, max);\r\n  const extra = assignees.length - visible.length;\r\n  const dim = size === \"sm\" ? \"h-6 w-6\" : \"h-7 w-7\";\r\n\r\n  const names = assignees.map((a) => a.name).join(\", \");\r\n\r\n  return (\r\n    <div\r\n      className={cn(\"flex items-center -space-x-1.5\", className)}\r\n      title={names}\r\n      role=\"img\"\r\n      aria-label={`Colaboradores: ${names}`}\r\n    >\r\n      {visible.map((a) => (\r\n        <Avatar key={a.id} className={cn(dim, \"ring-2 ring-card\")}>\r\n          {a.avatarUrl && <AvatarImage src={a.avatarUrl} alt={a.name} />}\r\n          <AvatarFallback className=\"text-xs font-semibold\">\r\n            {initials(a.name)}\r\n          </AvatarFallback>\r\n        </Avatar>\r\n      ))}\r\n      {extra > 0 && (\r\n        <span\r\n          className={cn(\r\n            dim,\r\n            \"z-10 flex items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground ring-2 ring-card\"\r\n          )}\r\n        >\r\n          +{extra}\r\n        </span>\r\n      )}\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

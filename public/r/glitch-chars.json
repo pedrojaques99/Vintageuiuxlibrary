@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "glitch-chars",
+  "title": "Glitch Chars",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Dois caracteres que trocam sozinhos: o sinal de vida mais barato de um estado de espera.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/glitch-chars.tsx",
+      "content": "\"use client\";\n\nimport { useEffect, useState } from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Dois caracteres que trocam sozinhos — o \"sinal de vida\" mais barato que existe.\n *\n * Nasceu como o ruído ao lado de um texto de status (\"** Processando\"), e é a\n * primitiva por trás de `status-ticker` e `working-glyph`. Um spinner diz\n * \"esperando\"; isso diz \"a máquina está mexendo\", que é outra sensação.\n *\n * 150ms é deliberado: acima de ~200ms lê como piscada quebrada, abaixo de ~100ms\n * vira ruído que cansa. Não é decorativo — é o batimento do sistema.\n *\n * `prefers-reduced-motion`: congela num par fixo (o texto continua legível, e o\n * layout não pula, porque a largura é sempre a mesma em fonte mono).\n */\nexport function GlitchChars({\n  chars = \"*•□./-®\",\n  length = 2,\n  intervalMs = 150,\n  className,\n  style,\n}: {\n  /** Pool de caracteres sorteados. Troque para mudar o \"sotaque\" do ruído. */\n  chars?: string;\n  /** Quantos caracteres por quadro. Fonte mono ⇒ largura estável. */\n  length?: number;\n  /** Milissegundos entre quadros. */\n  intervalMs?: number;\n  className?: string;\n  style?: React.CSSProperties;\n}) {\n  const [text, setText] = useState(() => chars.slice(0, length));\n\n  useEffect(() => {\n    const media =\n      typeof window !== \"undefined\" && window.matchMedia\n        ? window.matchMedia(\"(prefers-reduced-motion: reduce)\")\n        : null;\n    if (media?.matches) return;\n\n    const id = setInterval(() => {\n      setText(\n        Array.from(\n          { length },\n          () => chars[Math.floor(Math.random() * chars.length)],\n        ).join(\"\"),\n      );\n    }, intervalMs);\n    return () => clearInterval(id);\n  }, [chars, length, intervalMs]);\n\n  return (\n    <span\n      aria-hidden=\"true\"\n      className={cn(\n        \"inline-block select-none font-mono tabular-nums\",\n        className,\n      )}\n      style={style}\n    >\n      {text}\n    </span>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

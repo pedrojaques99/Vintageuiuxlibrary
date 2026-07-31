@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "smooth-scroll-provider",
+  "title": "Smooth Scroll Provider",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Lenis + GSAP num relogio so, com bail-out em prefers-reduced-motion. A instancia sai por callback, sem impor store.",
+  "dependencies": [
+    "lenis",
+    "gsap"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/lib/smooth-scroll-provider.tsx",
+      "content": "\"use client\";\n\nimport { useEffect } from \"react\";\nimport Lenis from \"lenis\";\nimport \"lenis/dist/lenis.css\";\nimport { gsap } from \"gsap\";\nimport { ScrollTrigger } from \"gsap/ScrollTrigger\";\n// O visant-board publicava a instância num store Zustand próprio. Aqui isso é\n// um callback opcional: o consumidor guarda onde quiser, e o componente não\n// arrasta uma dependência de estado que só existia naquele app.\n\n/**\n * Smooth-scroll layer for the homepage scroll narrative.\n *\n * - Lenis drives a single RAF loop (via GSAP's ticker, so Lenis + ScrollTrigger\n *   share one clock and never fight each other).\n * - `lenis.on('scroll', ScrollTrigger.update)` keeps ScrollTrigger in sync with\n *   the smoothed scroll position.\n * - `prefers-reduced-motion` → bail out entirely: native scroll, no smoothing,\n *   no plugin registration. The 3D stage independently falls back to a static\n *   render in that mode.\n *\n * Scoped to the homepage (mounted inside `app/page.tsx`), so Lenis never\n * hijacks scrolling on admin/dashboard routes.\n */\nexport function SmoothScrollProvider({\n    children,\n    onReady,\n}: {\n    children: React.ReactNode;\n    /**\n     * Recebe a instância do Lenis (e `null` na desmontagem).\n     *\n     * Existe para que seções que reagem ao scroll se pendurem NA MESMA\n     * instância em vez de criarem uma concorrente — duas instâncias de Lenis\n     * na mesma página brigam pelo wheel e o scroll fica com soluço.\n     * Guarde onde o seu app guarda estado; o componente não impõe store.\n     */\n    onReady?: (lenis: Lenis | null) => void;\n}) {\n    useEffect(() => {\n        const prefersReduced =\n            typeof window !== \"undefined\" &&\n            window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches;\n\n        if (prefersReduced) return;\n\n        gsap.registerPlugin(ScrollTrigger);\n\n        const lenis = new Lenis({\n            duration: 1.1,\n            // expo-out: fast start, soft landing — the AWWWARDS \"butter\" feel.\n            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),\n            smoothWheel: true,\n            touchMultiplier: 1.5,\n        });\n\n        lenis.on(\"scroll\", ScrollTrigger.update);\n\n        // Publish the instance so scroll-aware sections (Hero3DStage snap) can\n        // attach to the SAME Lenis instead of spawning a competing one.\n        onReady?.(lenis);\n\n        const raf = (time: number) => lenis.raf(time * 1000);\n        gsap.ticker.add(raf);\n        gsap.ticker.lagSmoothing(0);\n\n        // Recompute pin/trigger positions once layout settles and on resize.\n        const refresh = () => ScrollTrigger.refresh();\n        const refreshTimer = window.setTimeout(refresh, 300);\n        window.addEventListener(\"resize\", refresh);\n\n        return () => {\n            window.clearTimeout(refreshTimer);\n            window.removeEventListener(\"resize\", refresh);\n            gsap.ticker.remove(raf);\n            onReady?.(null);\n            lenis.destroy();\n            ScrollTrigger.getAll().forEach((st) => st.kill());\n        };\n    }, [onReady]);\n\n    return <>{children}</>;\n}\n",
+      "type": "registry:lib"
+    }
+  ],
+  "type": "registry:lib"
+}

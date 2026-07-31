@@ -1,0 +1,97 @@
+/*
+ * Kanban primitive — tokens + estilos base.
+ *
+ * TODO visual sai daqui via CSS custom properties `--kanban-*`. Cada token cai
+ * primeiro no token equivalente do design system Visant (`--t-*`, `--accent`) e,
+ * se ele não existir (projeto de cliente sem o design system Visant), num valor
+ * neutro embutido. Trocar a marca = sobrescrever `--kanban-*` (ou `--accent`),
+ * nunca o componente.
+ */
+.kanban-root {
+  --kanban-gap: 1rem;
+  --kanban-col-min: 280px;
+  --kanban-col-max: 480px;
+  --kanban-card-gap: 0.75rem;
+  --kanban-card-radius: var(--t-card-radius, 0.75rem);
+  --kanban-column-radius: var(--t-card-radius, 0.75rem);
+  --kanban-column-min-h: 120px;
+  /* Accent do realce: UM token de COR COMPLETA que o primitivo consome. Cada app
+     seta `--kanban-accent` (qualquer espaço de cor) num wrapper ancestral; o
+     default mora no fallback do var(), NO PONTO DE USO. NÃO declarar
+     `--kanban-accent` aqui em `.kanban-root`: custom-prop declarada no elemento
+     vence a herdada, então o valor do wrapper ancestral seria sombreado e o
+     bridge do app não pintaria. NÃO usar `hsl(var(--accent))`: quebra em silêncio
+     quando o host guarda --accent como cor oklch em vez de triplet HSL. */
+  --kanban-drop-ring: color-mix(in oklch, var(--kanban-accent, oklch(0.62 0.02 240)) 45%, transparent);
+  --kanban-drop-bg: color-mix(in oklch, var(--kanban-accent, oklch(0.62 0.02 240)) 8%, transparent);
+
+  display: flex;
+  gap: var(--kanban-gap);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .kanban-root {
+    --kanban-col-min: 320px;
+  }
+}
+
+.kanban-column {
+  flex: 1 1 0%;
+  min-width: var(--kanban-col-min);
+  max-width: var(--kanban-col-max);
+  border-radius: var(--kanban-column-radius);
+  /* Inerte sem um snap container — o wrapper mobile do KanbanBoard liga
+     `snap-x`; no desktop (sm:snap-none) isto não faz nada. */
+  scroll-snap-align: start;
+  transition:
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.kanban-column.is-drop-target {
+  background: var(--kanban-drop-bg);
+  box-shadow: inset 0 0 0 2px var(--kanban-drop-ring);
+}
+
+.kanban-column-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kanban-card-gap);
+  min-height: var(--kanban-column-min-h);
+}
+
+/* Mobile: a coluna rola internamente (Trello-like) — o header da coluna fica
+   sempre visível e uma coluna longa não vira um page-scroll infinito. O dnd-kit
+   auto-rola ancestrais scrolláveis, então drag dentro da coluna segue ok.
+   Desktop (≥640px) intocado: page scroll como sempre. */
+@media (max-width: 639px) {
+  .kanban-column-body {
+    max-height: calc(100dvh - 15rem);
+    overflow-y: auto;
+    padding-bottom: 0.25rem;
+  }
+}
+
+/* Mobile: long-press no card é gesto de DRAG (250ms no TouchSensor) — sem
+   isto o browser responde primeiro com seleção de texto + callout do iOS e
+   quebra o gesto no meio. Desktop mantém seleção normal. */
+@media (max-width: 639px) {
+  .kanban-card {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
+
+/* O card fantasma que segue o cursor/dedo. */
+.kanban-card-overlay {
+  cursor: grabbing;
+}
+
+/* Card na seleção múltipla — anel no accent da marca (fallback neutro). O ring
+   fica no wrapper; o conteúdo (card do consumidor) mantém o próprio raio. */
+.kanban-card[data-selected] {
+  border-radius: var(--kanban-card-radius);
+  box-shadow: 0 0 0 2px var(--kanban-accent, oklch(0.62 0.02 240));
+}

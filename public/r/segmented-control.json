@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "segmented-control",
+  "title": "Segmented Control",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Alternador de poucas opcoes. Substitui um select quando as opcoes cabem na tela.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/segmented-control.tsx",
+      "content": "\"use client\";\r\n\r\nimport type { LucideIcon } from \"lucide-react\";\r\nimport { cn } from \"@/lib/utils\";\r\n\r\nexport interface SegmentedOption<T extends string> {\r\n  value: T;\r\n  label?: string;\r\n  icon?: LucideIcon;\r\n  ariaLabel?: string;\r\n}\r\n\r\ninterface SegmentedControlProps<T extends string> {\r\n  value: T;\r\n  onChange: (value: T) => void;\r\n  options: SegmentedOption<T>[];\r\n  /** \"fill\" = itens crescem igualmente (com label); \"compact\" = botões de ícone. */\r\n  variant?: \"fill\" | \"compact\";\r\n  className?: string;\r\n  \"aria-label\"?: string;\r\n}\r\n\r\n/**\r\n * Apple-like segmented control (trilho + pill ativo). Fonte única reusada pelo\r\n * ViewModeToggle e pelo painel de preferências (densidade / visão padrão).\r\n */\r\nexport function SegmentedControl<T extends string>({\r\n  value,\r\n  onChange,\r\n  options,\r\n  variant = \"fill\",\r\n  className,\r\n  \"aria-label\": ariaLabel,\r\n}: SegmentedControlProps<T>) {\r\n  return (\r\n    <div\r\n      role=\"group\"\r\n      aria-label={ariaLabel}\r\n      className={cn(\"flex items-center gap-1 rounded-xl bg-muted/50 p-1\", className)}\r\n    >\r\n      {options.map((opt) => {\r\n        const Icon = opt.icon;\r\n        const active = value === opt.value;\r\n        return (\r\n          <button\r\n            key={opt.value}\r\n            type=\"button\"\r\n            onClick={() => onChange(opt.value)}\r\n            aria-pressed={active}\r\n            aria-label={opt.ariaLabel || opt.label}\r\n            className={cn(\r\n              \"flex items-center justify-center gap-1.5 rounded-lg text-xs font-medium transition-[color,background-color,box-shadow] active:scale-[0.97]\",\r\n              variant === \"fill\" ? \"flex-1 px-3 py-1.5\" : \"h-7 w-8\",\r\n              active\r\n                ? \"bg-background text-foreground shadow-sm\"\r\n                : \"text-muted-foreground hover:text-foreground\"\r\n            )}\r\n          >\r\n            {Icon && <Icon className=\"h-3.5 w-3.5\" />}\r\n            {opt.label && <span>{opt.label}</span>}\r\n          </button>\r\n        );\r\n      })}\r\n    </div>\r\n  );\r\n}\r\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

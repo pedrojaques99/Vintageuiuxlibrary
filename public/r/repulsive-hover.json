@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "repulsive-hover",
+  "title": "Repulsive Hover",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Elemento que foge do cursor. Interacao pura, zero dado.",
+  "dependencies": [
+    "framer-motion"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/repulsive-hover.tsx",
+      "content": "'use client';\r\n\r\nimport { useRef, useState, useEffect } from 'react';\r\nimport { motion, useSpring, useMotionValue } from 'framer-motion';\r\n\r\ninterface RepulsiveHoverProps {\r\n    children: React.ReactNode;\r\n    strength?: number; // How far it moves (max distance)\r\n    radius?: number;   // Interaction radius\r\n    className?: string;\r\n}\r\n\r\nexport function RepulsiveHover({\r\n    children,\r\n    strength = 5,\r\n    radius = 2,\r\n    className = \"\"\r\n}: RepulsiveHoverProps) {\r\n    const ref = useRef<HTMLDivElement>(null);\r\n    const x = useSpring(0, { stiffness: 15, damping: 1 });\r\n    const y = useSpring(0, { stiffness: 15, damping: 1 });\r\n\r\n    // Use state to track if we should be listening to mouse events\r\n    // (optimization: only listen when element is visible/relevant?)\r\n    // For now, simpler to just listen on window or document when mounted\r\n\r\n    useEffect(() => {\r\n        const handleMouseMove = (e: MouseEvent) => {\r\n            if (!ref.current) return;\r\n\r\n            const rect = ref.current.getBoundingClientRect();\r\n            const centerX = rect.left + rect.width / 2;\r\n            const centerY = rect.top + rect.height / 2;\r\n\r\n            const mouseX = e.clientX;\r\n            const mouseY = e.clientY;\r\n\r\n            const dist = Math.sqrt(\r\n                Math.pow(mouseX - centerX, 2) + Math.pow(mouseY - centerY, 2)\r\n            );\r\n\r\n            if (dist < radius) {\r\n                // Calculate repulsion\r\n                // The closer the mouse, the stronger the push\r\n                const force = (radius - dist) / radius; // 0 to 1\r\n\r\n                const dx = mouseX - centerX;\r\n                const dy = mouseY - centerY;\r\n\r\n                // Push away (negative direction of delta)\r\n                // Normalize direction and multiply by strength * force\r\n                const moveX = -(dx / dist) * force * strength;\r\n                const moveY = -(dy / dist) * force * strength;\r\n\r\n                x.set(moveX);\r\n                y.set(moveY);\r\n            } else {\r\n                // Reset if out of radius\r\n                x.set(0);\r\n                y.set(0);\r\n            }\r\n        };\r\n\r\n        window.addEventListener('mousemove', handleMouseMove);\r\n        return () => {\r\n            window.removeEventListener('mousemove', handleMouseMove);\r\n        };\r\n    }, [radius, strength, x, y]);\r\n\r\n    return (\r\n        <motion.div\r\n            ref={ref}\r\n            style={{ x, y }}\r\n            className={className}\r\n        >\r\n            {children}\r\n        </motion.div>\r\n    );\r\n}\r\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

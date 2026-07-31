@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "grid-dots",
+  "title": "Grid Dots",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Malha de pontos de fundo em um gradiente repetido. Zero nos no DOM, inverte sozinha com o tema.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/grid-dots.tsx",
+      "content": "import { cn } from \"@/lib/utils\";\n\n/**\n * Malha de pontos de fundo — o \"papel milimetrado\" das telas de ferramenta.\n *\n * Um `radial-gradient` repetido, não SVG e não canvas: zero nós no DOM, zero\n * requisição, e o navegador desenha no compositor. Numa página com sidebar,\n * canvas e grade de resultados, isso é a diferença entre textura de graça e mais\n * um elemento para o layout engine resolver.\n *\n * A cor vem de `currentColor` (default: `--foreground`), então inverte sozinha\n * entre tema claro e escuro sem hook de tema nem prop de cor.\n *\n * Opacidade default 0.07 é o teto útil: acima disso a malha compete com o\n * conteúdo em vez de dar profundidade.\n */\nexport function GridDots({\n  opacity = 0.07,\n  dotSize = 1.5,\n  spacing = 20,\n  className,\n}: {\n  /** 0–1. Acima de ~0.1 vira ruído. */\n  opacity?: number;\n  /** Raio do ponto, em px. */\n  dotSize?: number;\n  /** Distância entre pontos, em px. */\n  spacing?: number;\n  className?: string;\n}) {\n  return (\n    <div\n      aria-hidden=\"true\"\n      className={cn(\"pointer-events-none absolute inset-0 text-foreground\", className)}\n      style={{\n        opacity,\n        backgroundImage: `radial-gradient(circle, currentColor ${dotSize}px, transparent ${dotSize}px)`,\n        backgroundSize: `${spacing}px ${spacing}px`,\n      }}\n    />\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

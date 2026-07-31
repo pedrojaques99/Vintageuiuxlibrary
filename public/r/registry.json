@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "visant",
-  "homepage": "https://ui.visant.com",
+  "homepage": "https://ui.visantlabs.com",
   "items": [
     {
       "name": "vintage-theme",
@@ -113,7 +113,9 @@
       "title": "Vintage Base",
       "description": "Complete vintage audio equipment design system. Dark surfaces, gold labels, metallic hardware, warm accents.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme"],
+      "registryDependencies": [
+        "vintage-theme"
+      ],
       "cssVars": {
         "theme": {
           "font-vintage-display": "'Orbitron', sans-serif",
@@ -145,7 +147,9 @@
       "title": "useKnobDrag",
       "description": "Hook for drag-to-rotate knob interaction with vertical mouse sensitivity.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "dependencies": ["react"],
+      "dependencies": [
+        "react"
+      ],
       "files": [
         {
           "path": "registry/vintage/hooks/use-knob-drag.ts",
@@ -160,7 +164,10 @@
       "title": "Vintage Button",
       "description": "Skeuomorphic push button with press animation and LED indicator.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-button.tsx",
@@ -174,7 +181,10 @@
       "title": "Vintage Slider",
       "description": "Horizontal fader with gradient fill bar and metallic thumb.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-slider.tsx",
@@ -188,7 +198,10 @@
       "title": "Vintage Meter",
       "description": "Analog VU meter with SVG arc, animated needle, and color gradient scale.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-meter.tsx",
@@ -202,7 +215,11 @@
       "title": "Vintage Knob",
       "description": "Small rotary knob with drag interaction, tick marks, and value labels.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "use-knob-drag", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "use-knob-drag",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-knob.tsx",
@@ -216,7 +233,11 @@
       "title": "Vintage Large Knob",
       "description": "Large rotary knob with metallic conic-gradient surface and drag interaction.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "use-knob-drag", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "use-knob-drag",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-large-knob.tsx",
@@ -230,7 +251,10 @@
       "title": "Vintage Toggle",
       "description": "3-position toggle switch (up/middle/down) with metallic housing.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-toggle.tsx",
@@ -244,7 +268,10 @@
       "title": "Vintage EQ",
       "description": "Graphic equalizer with multiple vertical faders and metallic handles.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-eq.tsx",
@@ -258,7 +285,10 @@
       "title": "Vintage LED",
       "description": "Status LED indicator with glow effect in green, red, yellow, or orange.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-led.tsx",
@@ -272,7 +302,10 @@
       "title": "Vintage Command Palette",
       "description": "Ctrl+K command menu with search, groups, keyboard navigation, and vintage styling.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-command-palette.tsx",
@@ -286,7 +319,10 @@
       "title": "Vintage TV Frame",
       "description": "Retro CRT television frame with bezels, scanlines, vignette, power button, and LED.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-tv-frame.tsx",
@@ -300,7 +336,10 @@
       "title": "Vintage Soundboard Pad",
       "description": "Trigger pad with color, icon, label, glow effect, and press animation.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-soundboard-pad.tsx",
@@ -314,7 +353,10 @@
       "title": "Vintage XY Pad",
       "description": "2D controller surface with crosshair cursor, grid lines, and axis readouts.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-xy-pad.tsx",
@@ -328,10 +370,600 @@
       "title": "Vintage Oscilloscope",
       "description": "Canvas-based waveform and FFT spectrum display with CRT scanline effect.",
       "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": ["vintage-theme", "utils"],
+      "registryDependencies": [
+        "vintage-theme",
+        "utils"
+      ],
       "files": [
         {
           "path": "registry/vintage/ui/vintage-oscilloscope.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "marquee",
+      "type": "registry:ui",
+      "title": "Marquee",
+      "description": "Faixa contínua com variantes fade, band, tilt e reverse. Pausa em hover, foco e fora da tela. Sem cor própria: pinta com os tokens da marca.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/marquee.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".marquee-track": {
+            "animation-name": "visant-marquee",
+            "animation-timing-function": "linear",
+            "animation-iteration-count": "infinite"
+          }
+        },
+        "@keyframes visant-marquee": {
+          "to": {
+            "transform": "translate3d(-50%, 0, 0)"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".marquee-track": {
+            "animation": "none",
+            "flex-wrap": "wrap",
+            "width": "auto"
+          },
+          ".marquee-track > [aria-hidden=\"true\"]": {
+            "display": "none"
+          }
+        }
+      }
+    },
+    {
+      "name": "rail",
+      "type": "registry:ui",
+      "title": "Rail",
+      "description": "Trilho horizontal com scroll-snap nativo e setas que desabilitam nas pontas. Zero biblioteca, arrasta no toque.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/rail.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "plate",
+      "type": "registry:ui",
+      "title": "Plate",
+      "description": "Placa para foto de catálogo recortada sobre branco. Multiply casa a foto com o fundo sem recorte novo.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/plate.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chip",
+      "type": "registry:ui",
+      "title": "Chip",
+      "description": "Pastilha de filtro com aria-pressed e contagem que nunca renderiza zero. Aceita um SVG de dado dentro, herdando currentColor.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/chip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sticky-filterbar",
+      "type": "registry:ui",
+      "title": "Sticky Filterbar",
+      "description": "Barra de filtro que gruda e condensa. Mede a altura real do cabeçalho em --header-h, porque ela muda com o viewport e com o carregamento da fonte.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/sticky-filterbar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "store-status",
+      "type": "registry:ui",
+      "title": "Store Status",
+      "description": "Aberto/fechado de loja fisica resolvido no fuso DA LOJA. Nao renderiza nada ate o JS confirmar — nada na tela e melhor que horario errado na tela.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/store-status.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "measure-picker",
+      "type": "registry:ui",
+      "title": "Measure Picker",
+      "description": "Pergunte a medida que o cliente SABE (altura) e devolva o codigo do produto (tamanho). input[type=range] de verdade: teclado e leitor de tela de graca.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/measure-picker.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".measure-range::-webkit-slider-runnable-track": {
+            "height": "4px",
+            "background": "var(--foreground)",
+            "border-radius": "999px"
+          },
+          ".measure-range::-webkit-slider-thumb": {
+            "-webkit-appearance": "none",
+            "appearance": "none",
+            "width": "46px",
+            "height": "46px",
+            "margin-top": "-21px",
+            "border-radius": "999px",
+            "border": "3px solid var(--foreground)",
+            "background": "var(--background)",
+            "box-shadow": "3px 3px 0 0 var(--foreground)",
+            "transition": "transform var(--dur-press,120ms) var(--ease-out,ease)"
+          },
+          ".measure-range:active::-webkit-slider-thumb": {
+            "transform": "scale(0.94)",
+            "box-shadow": "0 0 0 0 var(--foreground)"
+          },
+          ".measure-range::-moz-range-track": {
+            "height": "4px",
+            "background": "var(--foreground)",
+            "border-radius": "999px"
+          },
+          ".measure-range::-moz-range-thumb": {
+            "width": "46px",
+            "height": "46px",
+            "border-radius": "999px",
+            "border": "3px solid var(--foreground)",
+            "background": "var(--background)"
+          }
+        }
+      }
+    },
+    {
+      "name": "motion-layer",
+      "type": "registry:lib",
+      "title": "Motion Layer",
+      "description": "Camada de movimento ligada por data-* (reveal, parallax, magnetic) com o ciclo de vida do editor de tema Shopify. GSAP + ScrollTrigger.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "gsap"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/motion-layer.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "kanban",
+      "type": "registry:block",
+      "title": "Kanban",
+      "description": "Board com drag-and-drop, selecao por marquee sobre o vazio e multi-selecao com shift/ctrl. Colhido do visant-board.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "dependencies": [
+        "@dnd-kit/core",
+        "@dnd-kit/sortable",
+        "@dnd-kit/utilities",
+        "@air/react-drag-to-select",
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/blocks/kanban/Kanban.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/visant/blocks/kanban/KanbanColumn.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/visant/blocks/kanban/KanbanCard.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/visant/blocks/kanban/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/blocks/kanban/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/blocks/kanban/kanban.css",
+          "type": "registry:file",
+          "target": "~/styles/kanban.css"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "Data Table",
+      "description": "Tabela densa para superficie de trabalho: ordenacao, selecao e edicao inline. 800 linhas ja resolvidas.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/data-table.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-table"
+      ]
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "Segmented Control",
+      "description": "Alternador de poucas opcoes. Substitui um select quando as opcoes cabem na tela.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/segmented-control.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "octahedron-loader",
+      "type": "registry:ui",
+      "title": "Octahedron Loader",
+      "description": "Loader geometrico da casa. Distintivo sem virar mascote.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/octahedron-loader.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "inline-edit",
+      "type": "registry:ui",
+      "title": "Inline Edit",
+      "description": "Editar no lugar em vez de abrir modal. Menos clique por item numa fila.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/inline-edit.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "type": "registry:ui",
+      "title": "Timeline",
+      "description": "Linha do tempo de eventos, densa e sem enfeite.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/timeline.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "assignee-stack",
+      "type": "registry:ui",
+      "title": "Assignee Stack",
+      "description": "Pilha de avatares com estouro contado. Componente de time.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils",
+        "avatar"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/assignee-stack.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "repulsive-hover",
+      "type": "registry:ui",
+      "title": "Repulsive Hover",
+      "description": "Elemento que foge do cursor. Interacao pura, zero dado.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/repulsive-hover.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "dependencies": [
+        "framer-motion"
+      ]
+    },
+    {
+      "name": "smooth-scroll-provider",
+      "type": "registry:lib",
+      "title": "Smooth Scroll Provider",
+      "description": "Lenis + GSAP num relogio so, com bail-out em prefers-reduced-motion. A instancia sai por callback, sem impor store.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "lenis",
+        "gsap"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/smooth-scroll-provider.tsx",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "glitch-chars",
+      "type": "registry:ui",
+      "title": "Glitch Chars",
+      "description": "Dois caracteres que trocam sozinhos: o sinal de vida mais barato de um estado de espera.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/glitch-chars.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "status-ticker",
+      "type": "registry:ui",
+      "title": "Status Ticker",
+      "description": "Linha de status para espera longa: ruido, verbo que gira e cronometro. Para quando nao existe progresso real para medir.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils",
+        "https://visant-ui.vercel.app/r/glitch-chars.json"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/status-ticker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "turbulence-field",
+      "type": "registry:ui",
+      "title": "Turbulence Field",
+      "description": "Nevoa procedural em SVG feTurbulence. Escala para grades inteiras sem gastar contexto WebGL.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/turbulence-field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "working-glyph",
+      "type": "registry:ui",
+      "title": "Working Glyph",
+      "description": "Icone que bate com faiscas: mostra esforco em vez de pedir paciencia.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://visant-ui.vercel.app/r/glitch-chars.json"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/working-glyph.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        ".working-glyph-swing": {
+          "animation": "visant-glyph-swing .9s ease-in-out infinite",
+          "transform-origin": "60% 80%"
+        },
+        "@keyframes visant-glyph-swing": {
+          "0%": {
+            "transform": "rotate(-8deg) translateY(0)"
+          },
+          "40%": {
+            "transform": "rotate(6deg) translateY(1px)"
+          },
+          "60%": {
+            "transform": "rotate(3deg) translateY(2px)"
+          },
+          "100%": {
+            "transform": "rotate(-8deg) translateY(0)"
+          }
+        },
+        ".working-glyph-shine": {
+          "position": "relative",
+          "overflow": "hidden"
+        },
+        ".working-glyph-shine::before": {
+          "content": "''",
+          "position": "absolute",
+          "inset": "-50%",
+          "background-image": "linear-gradient(115deg, transparent 40%, color-mix(in oklch, currentColor 45%, transparent) 50%, transparent 60%)",
+          "background-size": "250% 250%",
+          "animation": "visant-glyph-shine 2.4s linear infinite",
+          "pointer-events": "none"
+        },
+        "@keyframes visant-glyph-shine": {
+          "0%": {
+            "background-position": "-200% -200%"
+          },
+          "100%": {
+            "background-position": "200% 200%"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".working-glyph-swing, .working-glyph-shine::before": {
+            "animation": "none"
+          }
+        }
+      }
+    },
+    {
+      "name": "paper-shuttle",
+      "type": "registry:ui",
+      "title": "Paper Shuttle",
+      "description": "Loader de transferencia: papeis voando de uma pasta para outra. Conta a operacao sem uma palavra.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://visant-ui.vercel.app/r/glitch-chars.json"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/paper-shuttle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "generating-tile",
+      "type": "registry:ui",
+      "title": "Generating Tile",
+      "description": "A superficie canonica de isto esta sendo gerado. Tres variantes: tile, inline e overlay.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils",
+        "https://visant-ui.vercel.app/r/status-ticker.json",
+        "https://visant-ui.vercel.app/r/turbulence-field.json",
+        "https://visant-ui.vercel.app/r/working-glyph.json"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/generating-tile.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "masonry-gallery",
+      "type": "registry:ui",
+      "title": "Masonry Gallery",
+      "description": "Masonry round-robin: anexar pagina nunca reflui o que ja esta na tela. Para feed infinito de aspect ratio misto.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/masonry-gallery.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scrub-input",
+      "type": "registry:ui",
+      "title": "Scrub Input",
+      "description": "Campo numerico que se arrasta. Arrasto, roda, setas e duplo-clique no mesmo valor, com shift para passo fino.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/scrub-input.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "grid-dots",
+      "type": "registry:ui",
+      "title": "Grid Dots",
+      "description": "Malha de pontos de fundo em um gradiente repetido. Zero nos no DOM, inverte sozinha com o tema.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/grid-dots.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "drop-overlay",
+      "type": "registry:ui",
+      "title": "Drop Overlay",
+      "description": "Alvo de soltar arquivo. O estado que todo mundo esquece de desenhar no drag-and-drop.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/drop-overlay.tsx",
           "type": "registry:ui"
         }
       ]

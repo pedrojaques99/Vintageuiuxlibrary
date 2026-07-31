@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "drop-overlay",
+  "title": "Drop Overlay",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Alvo de soltar arquivo. O estado que todo mundo esquece de desenhar no drag-and-drop.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/drop-overlay.tsx",
+      "content": "import { cn } from \"@/lib/utils\";\n\n/**\n * Alvo de soltar arquivo — a confirmação visual do drag-and-drop.\n *\n * Pequeno, mas não opcional: sem ele o usuário arrasta um arquivo sobre a área e\n * não tem sinal nenhum de que a página aceita, então solta fora e acha que o\n * upload está quebrado. É o estado que todo mundo esquece de desenhar.\n *\n * `pointer-events-none` é o detalhe que faz funcionar: o overlay aparece POR\n * CIMA da zona, e se ele capturasse o ponteiro dispararia o `dragleave` do\n * próprio pai — o overlay piscaria infinitamente e o `drop` nunca chegaria.\n *\n * A borda tracejada é a convenção de \"solte aqui\" desde sempre; trocar por sólida\n * lê como estado de erro.\n */\nexport function DropOverlay({\n  visible,\n  message = \"Solte o arquivo aqui\",\n  className,\n}: {\n  visible: boolean;\n  message?: string;\n  className?: string;\n}) {\n  if (!visible) return null;\n\n  return (\n    <div\n      className={cn(\n        \"pointer-events-none absolute inset-0 z-50 flex items-center justify-center\",\n        \"border-2 border-dashed border-ring/50 bg-background/70 backdrop-blur-sm\",\n        \"rounded-[var(--r-surface)]\",\n        className,\n      )}\n    >\n      <span className=\"font-mono text-sm uppercase tracking-widest text-muted-foreground\">\n        {message}\n      </span>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}
