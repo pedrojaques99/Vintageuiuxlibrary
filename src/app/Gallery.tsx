@@ -40,6 +40,7 @@ import {
   fold,
   matches,
   previewOf,
+  stageSurfaceOf,
   type CatalogItem,
   type Family,
 } from "./catalog";
@@ -97,7 +98,10 @@ const Card = React.memo(function Card({
     >
       {/* palco: a demo é interativa aqui dentro, então nada de overlay clicável
           por cima dela — abrir o foco é o botão do canto e o nome no rodapé. */}
-      <div className="relative overflow-hidden border-b border-border bg-background">
+      <div
+        className="relative overflow-hidden border-b border-border bg-background"
+        style={stageSurfaceOf(item)}
+      >
         {Demo ? (
           // O palco existe desde o primeiro quadro, com a altura final; só o que
           // está dentro dele é que chega quando o card entra na tela. Assim a

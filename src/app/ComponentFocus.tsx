@@ -25,7 +25,7 @@ import { ChevronLeft, ChevronRight, Monitor, Smartphone, Tablet, X } from "lucid
 import { cn } from "@/lib/utils";
 import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import { FitStage, useElementWidth } from "./stage";
-import { TYPE_LABEL, familyLabel, previewOf, type CatalogItem } from "./catalog";
+import { TYPE_LABEL, familyLabel, previewOf, stageSurfaceOf, type CatalogItem } from "./catalog";
 import { installCommand } from "./registry-meta";
 import { CopyCommand } from "./copy-command";
 
@@ -164,7 +164,10 @@ export function ComponentFocus({
                   >
                     <div
                       className="overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card"
-                      style={{ width: Math.min(frameW, available || frameW) }}
+                      style={{
+                        width: Math.min(frameW, available || frameW),
+                        ...stageSurfaceOf(item),
+                      }}
                     >
                       {/* Escala só entra quando o preset não cabe — nunca amplia. */}
                       <FitStage w={frameW} h={frameH} maxScale={1}>

@@ -86,6 +86,26 @@ export const DEFAULT_PREVIEW = { w: 380, h: 190 };
 export const previewOf = (item: CatalogItem) => item.preview ?? DEFAULT_PREVIEW;
 
 /**
+ * O fundo do palco.
+ *
+ * O kit vintage é skeuomórfico: knob de alumínio, LED com halo, fader gravado
+ * no metal. Essas peças foram desenhadas para viver sobre um painel escuro, e
+ * sobre o papel claro da marca elas viram adesivo recortado — sem sombra que
+ * feche, sem o contraste que faz o LED acender. Aqui elas ganham a superfície
+ * onde fazem sentido, a mesma da bancada.
+ *
+ * O resto do registry é o contrário: lê o token da marca e tem de aparecer
+ * exatamente sobre o fundo do projeto de quem instala. Esse é o palco neutro.
+ */
+export const stageSurfaceOf = (item: CatalogItem) =>
+  item.family === "vintage"
+    ? {
+        background:
+          "radial-gradient(120% 100% at 50% 0%, var(--vintage-surface-2), var(--vintage-surface-1))",
+      }
+    : undefined;
+
+/**
  * Como cada tipo se escreve na tela. Fonte única: a grade, a lista e a ficha de
  * foco mostram o mesmo rótulo porque leem daqui, não porque alguém lembrou.
  */
@@ -906,6 +926,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Potenciômetro com arraste vertical e trava de curso.",
     tags: ["áudio", "knob"],
     demo: KnobDemo,
+    preview: { w: 340, h: 200 },
   },
   {
     name: "vintage-large-knob",
@@ -915,7 +936,7 @@ export const CATALOG: CatalogItem[] = [
     description: "O irmão grande: marcação de escala e leitura de valor.",
     tags: ["áudio", "knob"],
     demo: LargeKnobDemo,
-    preview: { w: 380, h: 410 },
+    preview: { w: 540, h: 470 },
   },
   {
     name: "vintage-meter",
@@ -925,6 +946,7 @@ export const CATALOG: CatalogItem[] = [
     description: "VU analógico com balística de ponteiro.",
     tags: ["áudio", "medidor"],
     demo: MeterDemo,
+    preview: { w: 440, h: 230 },
   },
   {
     name: "vintage-slider",
@@ -934,6 +956,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Fader de console com curso e trilho gravados.",
     tags: ["áudio", "fader"],
     demo: SliderDemo,
+    preview: { w: 440, h: 300 },
   },
   {
     name: "vintage-button",
@@ -948,6 +971,7 @@ export const CATALOG: CatalogItem[] = [
         <VintageButton label="MUTE" onClick={() => {}} />
       </Frame>
     ),
+    preview: { w: 440, h: 210 },
   },
   {
     name: "vintage-toggle",
@@ -961,7 +985,7 @@ export const CATALOG: CatalogItem[] = [
         <VintageToggle />
       </Frame>
     ),
-    preview: { w: 380, h: 285 },
+    preview: { w: 440, h: 330 },
   },
   {
     name: "vintage-led",
@@ -977,6 +1001,7 @@ export const CATALOG: CatalogItem[] = [
         <VintageLed color="red" label="CLIP" />
       </Frame>
     ),
+    preview: { w: 440, h: 190 },
   },
   {
     name: "vintage-eq",
@@ -990,7 +1015,7 @@ export const CATALOG: CatalogItem[] = [
         <VintageEQ />
       </Frame>
     ),
-    preview: { w: 420, h: 470 },
+    preview: { w: 560, h: 540 },
   },
   {
     name: "vintage-oscilloscope",
@@ -1000,7 +1025,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Traço de osciloscópio alimentado por um buffer de amostras.",
     tags: ["áudio", "canvas"],
     demo: OscilloscopeDemo,
-    preview: { w: 520, h: 200 },
+    preview: { w: 580, h: 240 },
     span: 2,
   },
   {
@@ -1011,7 +1036,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Pad de disparo com estado aceso e retorno tátil.",
     tags: ["áudio", "pad"],
     demo: PadDemo,
-    preview: { w: 380, h: 230 },
+    preview: { w: 440, h: 265 },
   },
   {
     name: "vintage-xy-pad",
@@ -1025,7 +1050,7 @@ export const CATALOG: CatalogItem[] = [
         <VintageXYPad size={150} labelX="FILTER" labelY="REVERB" color="var(--vintage-accent)" />
       </Frame>
     ),
-    preview: { w: 380, h: 230 },
+    preview: { w: 440, h: 275 },
   },
   {
     name: "vintage-tv-frame",
@@ -1045,7 +1070,7 @@ export const CATALOG: CatalogItem[] = [
         </div>
       </Frame>
     ),
-    preview: { w: 380, h: 290 },
+    preview: { w: 460, h: 335 },
   },
   {
     name: "vintage-command-palette",
@@ -1054,12 +1079,27 @@ export const CATALOG: CatalogItem[] = [
     family: "vintage",
     description: "Paleta de comandos no vocabulário do painel.",
     tags: ["comando", "teclado"],
+    /*
+     * Cartão de recado, não demo.
+     *
+     * A paleta monta em `fixed inset-0` e rouba o foco do input assim que
+     * aparece: dentro de um card ela escaparia da moldura e sequestraria o
+     * teclado de quem está só rolando o catálogo. O lugar de usá-la é a bancada.
+     *
+     * O texto lê token vintage porque este palco é escuro — `muted-foreground`
+     * aqui é cinza-escuro sobre preto, ilegível.
+     */
     demo: () => (
       <Frame className="flex-col gap-2 text-center">
-        <span className="font-mono text-[11px] text-muted-foreground">abre no rig vintage</span>
-        <span className="font-mono text-[11px]">⌘K</span>
+        <span className="font-mono text-[11px] text-[var(--vintage-text-muted)]">
+          abre na bancada, em tela cheia
+        </span>
+        <kbd className="rounded border border-[var(--vintage-border)] px-2 py-0.5 font-mono text-[12px] text-[var(--vintage-label)]">
+          ⌘K
+        </kbd>
       </Frame>
     ),
+    preview: { w: 440, h: 190 },
   },
 
   // ---- fundação
