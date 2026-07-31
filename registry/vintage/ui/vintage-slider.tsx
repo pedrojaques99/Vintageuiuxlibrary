@@ -65,17 +65,34 @@ export function VintageSlider({
     [min, max, onChange]
   );
 
-  useEffect(() => {
-    if (!dragging) return;
-    const onMove = (e: MouseEvent) => update(e.clientX, e.shiftKey);
-    const onUp = () => setDragging(false);
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseup", onUp);
-    return () => {
-      document.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseup", onUp);
-    };
-  }, [dragging, update]);
+  // Pointer events com captura, e não listener de mouse no `document`.
+  //
+  // O motivo é um bug que aparece no primeiro arraste: sem `preventDefault` no
+  // mousedown o browser começa uma SELEÇÃO DE TEXTO junto, e arrastar o slider
+  // vai pintando de azul tudo que o cursor cruza. A captura resolve o outro
+  // lado do mesmo problema — os eventos continuam chegando aqui mesmo com o
+  // cursor fora do trilho, sem precisar ouvir o documento inteiro.
+  //
+  // É o mesmo desenho que o `scrub-input` já usa, e de quebra o controle passa
+  // a funcionar no toque, que o caminho de mouse nunca cobriu.
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setDragging(true);
+    update(e.clientX, e.shiftKey);
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (dragging) update(e.clientX, e.shiftKey);
+  };
+
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    setDragging(false);
+  };
 
   const handleWheel = (e: React.WheelEvent) => {
     e.stopPropagation();
@@ -97,7 +114,10 @@ export function VintageSlider({
   return (
     <div
       className={cn(
-        "relative w-[220px] bg-gradient-to-b from-[var(--vintage-surface-3)] to-[var(--vintage-surface-2)] rounded-lg border-2 border-[var(--vintage-surface-4)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.5),0_4px_8px_rgba(0,0,0,0.3)]",
+        // `select-none` no container inteiro: o rótulo e a faixa min/max ficam
+        // no caminho do arraste, e texto selecionável ali é o que faz o
+        // controle "piscar azul" enquanto o usuário mexe nele.
+        "relative w-[220px] select-none bg-gradient-to-b from-[var(--vintage-surface-3)] to-[var(--vintage-surface-2)] rounded-lg border-2 border-[var(--vintage-surface-4)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.5),0_4px_8px_rgba(0,0,0,0.3)]",
         dense ? "p-2.5" : "p-4",
         className
       )}
@@ -123,13 +143,15 @@ export function VintageSlider({
       <div
         ref={trackRef}
         className={cn(
-          "relative cursor-pointer",
+          // `touch-none` impede o navegador de interpretar o arraste como
+          // rolagem da página no toque — sem isso o slider não anda no celular.
+          "relative cursor-ew-resize touch-none",
           dense ? "h-5 mb-1.5" : "h-8 mb-3"
         )}
-        onMouseDown={(e) => {
-          setDragging(true);
-          update(e.clientX, e.shiftKey);
-        }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
       >
         <div className="absolute inset-0 bg-[var(--vintage-surface-2)] rounded border border-[var(--vintage-border)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
           <div

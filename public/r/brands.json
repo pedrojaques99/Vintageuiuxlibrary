@@ -1,6 +1,6 @@
 {
   "$schema": "https://visant-ui.vercel.app/schema/brands.json",
-  "generatedAt": "2026-07-31T19:38:58.591Z",
+  "generatedAt": "2026-07-31T22:01:53.792Z",
   "source": "https://api.visantlabs.com/api/brand-guidelines",
   "engine": "@visant/brand-tokens",
   "count": 22,
