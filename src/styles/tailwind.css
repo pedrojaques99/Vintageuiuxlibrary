@@ -19,6 +19,19 @@
  * Aqui é o único lugar onde esses três números existem.
  */
 @layer base {
+  /*
+   * Sem ancoragem de scroll na página.
+   *
+   * O Chrome tenta manter na tela o elemento "âncora" quando o conteúdo acima
+   * muda de tamanho. Isso serve para um comentário que carrega no topo de um
+   * feed; não serve para um catálogo que TROCA a lista inteira ao filtrar —
+   * ali a âncora agarra o fim do documento e leva a rolagem junto, deixando a
+   * pessoa parada num vazio abaixo do último card.
+   */
+  body {
+    overflow-anchor: none;
+  }
+
   :root {
     --header-h: 3.5rem;
     --shell-max: 90rem;

@@ -20,5 +20,28 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "registry"]
+  "include": ["src", "registry"],
+  // Duas exclusões, cada uma com motivo escrito. Exclusão sem motivo é erro
+  // escondido, não configuração.
+  "exclude": [
+    // 1. Item acoplado ao Next (next-auth, next/navigation, @/hooks/use-media-query).
+    //    É a natureza do item — ele roda num app Next, não nesta vitrine, e a
+    //    descrição dele no catálogo já avisa. Typecheckar aqui exigiria instalar
+    //    o Next inteiro como devDependency para verificar um arquivo.
+    "registry/visant/ui/data-table.tsx",
+
+    // 2. Sobra do export do Figma Make (commit "Add files from Figma Make"):
+    //    `src/imports/*` e os wrappers soltos em `src/app/components/` que os
+    //    importam. Está MORTO — nada no app referencia — e quebrado: `Knob.tsx`
+    //    importa um `./svg-xf56mq2vgt` que não existe no disco. Fica excluído em
+    //    vez de apagado porque apagar arquivo é decisão do dono do repo.
+    //    Para remover de vez:
+    //      git rm -r src/imports 'src/app/components/Interactive*' 'src/app/components/Simple*' 'src/app/components/Vintage*'
+    //    NÃO apague `src/app/components/ui` nem `figma/`: são os primitivos do
+    //    shadcn que `src/components/ui/*` reexporta e o registry usa de verdade.
+    "src/imports",
+    "src/app/components/Interactive*.tsx",
+    "src/app/components/Simple*.tsx",
+    "src/app/components/Vintage*.tsx"
+  ]
 }

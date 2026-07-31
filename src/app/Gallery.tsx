@@ -184,6 +184,7 @@ export function Gallery({
   const [mode, setMode] = React.useState<Mode>("grade");
   const inputRef = React.useRef<HTMLInputElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
+  const heroRef = React.useRef<HTMLElement>(null);
   const { brands } = useBrandTheme();
 
   const results = React.useMemo(() => {
@@ -192,6 +193,45 @@ export function Gallery({
       (i) => (family === "todos" || i.family === family) && matches(i, needle),
     );
   }, [q, family]);
+
+  /*
+   * Filtrar encolhe a página embaixo de quem está rolando.
+   *
+   * Sair de "Todos" (46 itens, ~5100px) para uma família de 9 corta o documento
+   * para ~1500px. O navegador prende o scroll no novo fim e a pessoa fica
+   * centenas de pixels ABAIXO do primeiro resultado, olhando um vazio — parece
+   * bug de layout e é só posição de scroll órfã. Então, quando o resultado muda
+   * e a barra de controle já saiu por cima, a página volta para ela (não para o
+   * topo absoluto: o herói já foi lido, os controles é que precisam estar à mão).
+   */
+  const first = React.useRef(true);
+  React.useLayoutEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    /*
+     * `useLayoutEffect`, e não `useEffect` + `requestAnimationFrame`.
+     *
+     * Roda depois de o DOM novo existir e ANTES da pintura, então a pessoa nunca
+     * vê o quadro errado. A versão com rAF parecia equivalente e não é: quadro
+     * não é entregue em aba de segundo plano, e o corretivo simplesmente não
+     * acontecia (foi assim que o bug sobreviveu ao primeiro conserto).
+     *
+     * Medimos o HERÓI, não a barra de controle: a barra é `sticky`, e no Chrome
+     * tanto o `getBoundingClientRect` quanto o `offsetTop` dela já vêm deslocados
+     * pela grudada — a conta se anulava e o alvo saía igual ao scroll atual. O
+     * fim do herói é onde a barra começa no layout, e ele não gruda.
+     */
+    const headerH = document.querySelector("header")?.offsetHeight ?? 0;
+    const target = Math.max(0, hero.getBoundingClientRect().bottom + window.scrollY - headerH);
+    // Salto seco: a lista mudou inteira, rolagem suave aqui só atrasaria o que a
+    // pessoa pediu — e ainda seria cancelada pelo reflow do próprio filtro.
+    if (window.scrollY > target) window.scrollTo({ top: target, behavior: "auto" });
+  }, [family, mode, results.length]);
 
   const focusIndex = focus ? results.findIndex((i) => i.name === focus) : -1;
   const focusItem = focusIndex >= 0 ? results[focusIndex] : CATALOG.find((i) => i.name === focus);
@@ -253,7 +293,7 @@ export function Gallery({
 
   return (
     <div className="shell pb-24">
-      <section className="pt-10 pb-7 sm:pt-14 sm:pb-8">
+      <section ref={heroRef} className="pt-10 pb-7 sm:pt-14 sm:pb-8">
         <h1
           className="text-[clamp(1.75rem,5vw,3.2rem)] font-semibold leading-[1.02] tracking-[-0.03em]"
           style={{ fontFamily: "var(--font-display, inherit)" }}
@@ -340,6 +380,12 @@ export function Gallery({
         mode === "grade" ? (
           <div
             ref={listRef}
+            // `overflow-anchor: none`: o Chrome tenta manter na tela o elemento
+            // "âncora" quando o conteúdo acima muda, e ao filtrar ele desfaz a
+            // reposição logo depois de nós a fazermos — a página voltava para o
+            // fim do documento novo. Aqui a âncora não ajuda: os itens de cima
+            // não mudaram de tamanho, sumiram.
+            style={{ overflowAnchor: "none" }}
             className="mt-6 grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {results.map((item, i) => (
@@ -347,7 +393,7 @@ export function Gallery({
             ))}
           </div>
         ) : (
-          <div ref={listRef} className="mt-6 border-t border-border">
+          <div ref={listRef} style={{ overflowAnchor: "none" }} className="mt-6 border-t border-border">
             {results.map((item, i) => (
               <Row key={item.name} item={item} index={i} onOpen={() => onFocus(item.name)} />
             ))}

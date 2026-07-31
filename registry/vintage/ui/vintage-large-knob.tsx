@@ -70,8 +70,10 @@ function LargeKnobBody({ rotation }: { rotation: number }) {
         <circle cx="159" cy="159" r="145" fill="#323336" fillOpacity="0.96" />
 
         <foreignObject x="20" y="20" width="278" height="278">
+          {/* Sem `xmlns` no div: sobra do export do Figma. Dentro de um SVG
+              inline o conteúdo do foreignObject já é parseado como HTML, e o
+              atributo só existia para o React reclamar e o tsc barrar. */}
           <div
-            xmlns="http://www.w3.org/1999/xhtml"
             style={{
               width: "100%",
               height: "100%",
