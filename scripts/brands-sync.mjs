@@ -26,6 +26,27 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 const outDir = join(root, "public/r");
 
+/*
+ * O que pode ser PUBLICADO.
+ *
+ * O vault é a conta pessoal do dono do repo: nome, tagline, logo, paleta e
+ * completude de cliente pagante. Isto aqui vira arquivo estático num domínio
+ * público, com `Access-Control-Allow-Origin: *` — qualquer um lia a carteira de
+ * clientes inteira. Não é uma feature faltando, é dado que não devia sair.
+ *
+ * A partir daqui o sync só escreve em `public/r` o que estiver nesta lista. As
+ * outras marcas continuam sendo compiladas para o cache local (`.brands-local/`,
+ * fora do git e fora do deploy), que é o que faz o dev na máquina do dono
+ * funcionar sem publicar nada.
+ *
+ * A vitrine pública demonstra multi-marca com as fictícias de
+ * `scripts/demo-brands.mjs`. Marca real de cliente só aparece para quem entrar
+ * com a própria conta.
+ */
+const PUBLICAVEIS = new Set(["visant"]);
+
+const localDir = join(root, ".brands-local");
+
 // --- env ---------------------------------------------------------------------
 // Sem dotenv: o parse de KEY=valor é trivial e uma dependência a menos no build.
 function loadEnvLocal() {
@@ -206,8 +227,11 @@ for (const g of raw) {
     const itemSlug = item.name.replace(/^theme-/, "");
 
     if (!dry) {
-      mkdirSync(outDir, { recursive: true });
-      writeFileSync(join(outDir, `${item.name}.json`), JSON.stringify(item, null, 2) + "\n", "utf8");
+      // Público só o que está na lista; o resto vai para o cache local, fora do
+      // git e fora do deploy.
+      const destino = PUBLICAVEIS.has(itemSlug) ? outDir : localDir;
+      mkdirSync(destino, { recursive: true });
+      writeFileSync(join(destino, `${item.name}.json`), JSON.stringify(item, null, 2) + "\n", "utf8");
     }
 
     brands.push({
@@ -259,7 +283,26 @@ const index = {
 };
 
 if (!dry) {
-  writeFileSync(join(outDir, "brands.json"), JSON.stringify(index, null, 2) + "\n", "utf8");
+  /*
+   * Dois índices, e só um sai de casa.
+   *
+   * `public/r/brands.json` é o que o site publicado serve: a casa mais as
+   * fictícias. `.brands-local/brands.json` é o índice completo, para desenvolver
+   * na máquina do dono contra as marcas de verdade.
+   */
+  const publicas = brands.filter((b) => PUBLICAVEIS.has(b.slug));
+  const demo = existsSync(join(outDir, "demo-brands.json"))
+    ? JSON.parse(readFileSync(join(outDir, "demo-brands.json"), "utf8"))
+    : [];
+
+  writeFileSync(
+    join(outDir, "brands.json"),
+    JSON.stringify({ ...index, count: publicas.length + demo.length, brands: [...publicas, ...demo] }, null, 2) + "\n",
+    "utf8",
+  );
+
+  mkdirSync(localDir, { recursive: true });
+  writeFileSync(join(localDir, "brands.json"), JSON.stringify(index, null, 2) + "\n", "utf8");
 }
 
 // --- relatório ---------------------------------------------------------------

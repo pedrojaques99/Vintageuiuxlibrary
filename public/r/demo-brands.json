@@ -1,0 +1,248 @@
+[
+  {
+    "id": "demo-norte-verde",
+    "slug": "norte-verde",
+    "name": "Norte Verde",
+    "tagline": "Cultivo de precisão",
+    "logo": null,
+    "palette": [
+      {
+        "hex": "#0F6B3F",
+        "name": null,
+        "role": "primary"
+      },
+      {
+        "hex": "#F3F6F1",
+        "name": null,
+        "role": "background"
+      },
+      {
+        "hex": "#111813",
+        "name": null,
+        "role": "foreground"
+      },
+      {
+        "hex": "#C6E36B",
+        "name": null,
+        "role": "accent"
+      }
+    ],
+    "fonts": {
+      "display": "Archivo",
+      "sans": "Inter"
+    },
+    "preview": {
+      "light": {
+        "background": "oklch(0.9695 0.0073 132.41)",
+        "foreground": "oklch(0.2407 0.016 129.23)",
+        "card": "oklch(0.9454 0.0074 132.42)",
+        "card-foreground": "oklch(0.2407 0.016 129.23)",
+        "popover": "oklch(0.9454 0.0074 132.42)",
+        "popover-foreground": "oklch(0.2407 0.016 129.23)",
+        "muted": "oklch(0.9243 0.0074 132.42)",
+        "muted-foreground": "oklch(0.536 0.0118 131.46)",
+        "secondary": "oklch(0.9243 0.0074 132.42)",
+        "secondary-foreground": "oklch(0.2407 0.016 129.23)",
+        "accent": "oklch(0.9243 0.0074 132.42)",
+        "accent-foreground": "oklch(0.2407 0.016 129.23)",
+        "border": "oklch(0.8713 0.0092 134.88)",
+        "input": "oklch(0.838 0.0088 128.58)",
+        "brand": "oklch(0.87 0.15 120.89)",
+        "brand-foreground": "oklch(0.1448 0 0)",
+        "accent-ink": "oklch(0.5263 0.1098 149.76)",
+        "ring": "oklch(0.87 0.15 120.89)",
+        "shadow": "132 30% 12%"
+      },
+      "dark": {
+        "background": "oklch(0.2371 0.0058 121.89)",
+        "foreground": "oklch(0.9878 0.0013 106.42)",
+        "card": "oklch(0.2856 0.0077 128.76)",
+        "card-foreground": "oklch(0.9878 0.0013 106.42)",
+        "popover": "oklch(0.2856 0.0077 128.76)",
+        "popover-foreground": "oklch(0.9878 0.0013 106.42)",
+        "muted": "oklch(0.3373 0.0074 128.71)",
+        "muted-foreground": "oklch(0.6269 0.0077 124.52)",
+        "secondary": "oklch(0.3373 0.0074 128.71)",
+        "secondary-foreground": "oklch(0.9878 0.0013 106.42)",
+        "accent": "oklch(0.3373 0.0074 128.71)",
+        "accent-foreground": "oklch(0.9878 0.0013 106.42)",
+        "border": "oklch(0.4133 0.007 128.65)",
+        "input": "oklch(0.4569 0.0083 124.61)",
+        "brand": "oklch(0.87 0.15 120.89)",
+        "brand-foreground": "oklch(0.1448 0 0)",
+        "accent-ink": "oklch(0.6228 0.0885 120)",
+        "ring": "oklch(0.87 0.15 120.89)",
+        "shadow": "0 0% 0%"
+      }
+    },
+    "theme": "theme-norte-verde",
+    "themeUrl": "/r/theme-norte-verde.json",
+    "version": 1,
+    "completeness": 100,
+    "updatedAt": null
+  },
+  {
+    "id": "demo-grao-editora",
+    "slug": "grao-editora",
+    "name": "Grão Editora",
+    "tagline": "Livros que pesam na mão",
+    "logo": null,
+    "palette": [
+      {
+        "hex": "#8C3B1E",
+        "name": null,
+        "role": "primary"
+      },
+      {
+        "hex": "#FAF4EA",
+        "name": null,
+        "role": "background"
+      },
+      {
+        "hex": "#1E1712",
+        "name": null,
+        "role": "foreground"
+      },
+      {
+        "hex": "#D9A441",
+        "name": null,
+        "role": "accent"
+      }
+    ],
+    "fonts": {
+      "display": "Fraunces",
+      "sans": "Karla"
+    },
+    "preview": {
+      "light": {
+        "background": "oklch(0.9716 0.0131 82.4)",
+        "foreground": "oklch(0.2442 0.0209 76.35)",
+        "card": "oklch(0.9508 0.016 82.79)",
+        "card-foreground": "oklch(0.2442 0.0209 76.35)",
+        "popover": "oklch(0.9508 0.016 82.79)",
+        "popover-foreground": "oklch(0.2442 0.0209 76.35)",
+        "muted": "oklch(0.9236 0.0161 82.79)",
+        "muted-foreground": "oklch(0.5378 0.0189 79.27)",
+        "secondary": "oklch(0.9236 0.0161 82.79)",
+        "secondary-foreground": "oklch(0.2442 0.0209 76.35)",
+        "accent": "oklch(0.9236 0.0161 82.79)",
+        "accent-foreground": "oklch(0.2442 0.0209 76.35)",
+        "border": "oklch(0.8719 0.0151 80.7)",
+        "input": "oklch(0.8408 0.0165 82.79)",
+        "brand": "oklch(0.7507 0.1295 79.85)",
+        "brand-foreground": "oklch(0.1448 0 0)",
+        "accent-ink": "oklch(0.5468 0.1164 50.95)",
+        "ring": "oklch(0.7507 0.1295 79.85)",
+        "shadow": "81 30% 12%"
+      },
+      "dark": {
+        "background": "oklch(0.2375 0.0127 78.01)",
+        "foreground": "oklch(0.9875 0.0026 106.45)",
+        "card": "oklch(0.2877 0.0158 79.56)",
+        "card-foreground": "oklch(0.9875 0.0026 106.45)",
+        "popover": "oklch(0.2877 0.0158 79.56)",
+        "popover-foreground": "oklch(0.9875 0.0026 106.45)",
+        "muted": "oklch(0.3396 0.0138 76.4)",
+        "muted-foreground": "oklch(0.6284 0.0145 82.39)",
+        "secondary": "oklch(0.3396 0.0138 76.4)",
+        "secondary-foreground": "oklch(0.9875 0.0026 106.45)",
+        "accent": "oklch(0.3396 0.0138 76.4)",
+        "accent-foreground": "oklch(0.9875 0.0026 106.45)",
+        "border": "oklch(0.4124 0.0153 75.18)",
+        "input": "oklch(0.459 0.0142 79.72)",
+        "brand": "oklch(0.7507 0.1295 79.85)",
+        "brand-foreground": "oklch(0.1448 0 0)",
+        "accent-ink": "oklch(0.6305 0.099 79.53)",
+        "ring": "oklch(0.7507 0.1295 79.85)",
+        "shadow": "0 0% 0%"
+      }
+    },
+    "theme": "theme-grao-editora",
+    "themeUrl": "/r/theme-grao-editora.json",
+    "version": 1,
+    "completeness": 100,
+    "updatedAt": null
+  },
+  {
+    "id": "demo-vega-noturno",
+    "slug": "vega-noturno",
+    "name": "Vega Noturno",
+    "tagline": "Som para a madrugada",
+    "logo": null,
+    "palette": [
+      {
+        "hex": "#6C4BF6",
+        "name": null,
+        "role": "primary"
+      },
+      {
+        "hex": "#0E0E14",
+        "name": null,
+        "role": "background"
+      },
+      {
+        "hex": "#F2F0FF",
+        "name": null,
+        "role": "foreground"
+      },
+      {
+        "hex": "#25E5C1",
+        "name": null,
+        "role": "accent"
+      }
+    ],
+    "fonts": {
+      "display": "Space Grotesk",
+      "sans": "IBM Plex Sans"
+    },
+    "preview": {
+      "light": {
+        "background": "oklch(0.283 0.0091 285.81)",
+        "foreground": "oklch(1 0 0)",
+        "card": "oklch(0.2996 0.0107 285.73)",
+        "card-foreground": "oklch(1 0 0)",
+        "popover": "oklch(0.2996 0.0107 285.73)",
+        "popover-foreground": "oklch(1 0 0)",
+        "muted": "oklch(0.323 0.0088 285.9)",
+        "muted-foreground": "oklch(0.663 0.0032 264.54)",
+        "secondary": "oklch(0.323 0.0088 285.9)",
+        "secondary-foreground": "oklch(1 0 0)",
+        "accent": "oklch(0.323 0.0088 285.9)",
+        "accent-foreground": "oklch(1 0 0)",
+        "border": "oklch(0.3657 0.0085 285.97)",
+        "input": "oklch(0.3889 0.01 285.92)",
+        "brand": "oklch(0.8259 0.1499 175.31)",
+        "brand-foreground": "oklch(0.1448 0 0)",
+        "accent-ink": "oklch(0.6597 0.0821 246.98)",
+        "ring": "oklch(0.8259 0.1499 175.31)",
+        "shadow": "285 30% 12%"
+      },
+      "dark": {
+        "background": "oklch(0.2408 0.0115 278.01)",
+        "foreground": "oklch(0.9894 0.0028 308.43)",
+        "card": "oklch(0.2879 0.0127 285.58)",
+        "card-foreground": "oklch(0.9894 0.0028 308.43)",
+        "popover": "oklch(0.2879 0.0127 285.58)",
+        "popover-foreground": "oklch(0.9894 0.0028 308.43)",
+        "muted": "oklch(0.3434 0.0121 285.74)",
+        "muted-foreground": "oklch(0.63 0.0148 285.97)",
+        "secondary": "oklch(0.3434 0.0121 285.74)",
+        "secondary-foreground": "oklch(0.9894 0.0028 308.43)",
+        "accent": "oklch(0.3434 0.0121 285.74)",
+        "accent-foreground": "oklch(0.9894 0.0028 308.43)",
+        "border": "oklch(0.4158 0.0132 285.81)",
+        "input": "oklch(0.46 0.0145 285.82)",
+        "brand": "oklch(0.8259 0.1499 175.31)",
+        "brand-foreground": "oklch(0.1448 0 0)",
+        "accent-ink": "oklch(0.6182 0.0882 175.46)",
+        "ring": "oklch(0.8259 0.1499 175.31)",
+        "shadow": "0 0% 0%"
+      }
+    },
+    "theme": "theme-vega-noturno",
+    "themeUrl": "/r/theme-vega-noturno.json",
+    "version": 1,
+    "completeness": 100,
+    "updatedAt": null
+  }
+]

@@ -97,6 +97,12 @@ if (missing.length)
   die(`Arquivos declarados que não existem:\n  ${missing.join("\n  ")}`);
 ok(`${registry.items.length} itens, todos os arquivos no lugar`);
 
+// ── Portão 0: nada de cliente no que vai para o ar ───────────────────────────
+// Primeiro de todos de propósito: build quebrado se conserta, carteira de
+// clientes publicada num domínio aberto não se despublica da cabeça de ninguém.
+say("Portão de privacidade");
+run("node scripts/privacy-check.mjs");
+
 // ── Portão 2: componente não tem cor própria ─────────────────────────────────
 say("Portão de hex em registry/visant/");
 const HEX = /#[0-9a-fA-F]{6}\b/;

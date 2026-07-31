@@ -3,753 +3,8 @@
   "generatedAt": "2026-07-31T22:01:53.792Z",
   "source": "https://api.visantlabs.com/api/brand-guidelines",
   "engine": "@visant/brand-tokens",
-  "count": 22,
+  "count": 4,
   "brands": [
-    {
-      "id": "69e7c4af3f7d1be9a660a658",
-      "slug": "sports-248",
-      "name": "Sports 248",
-      "tagline": "MADE FOR THE GAME.",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69e7c4af3f7d1be9a660a658/14427642-6908-4227-8120-41f2a508bb3c.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69e7c4af3f7d1be9a660a658/14427642-6908-4227-8120-41f2a508bb3c.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#3DBEE9",
-          "name": "Action Blue",
-          "role": "primary"
-        },
-        {
-          "hex": "#0A1B33",
-          "name": "Deep Navy",
-          "role": "text"
-        },
-        {
-          "hex": "#F1F1F1",
-          "name": "Cloud Grey",
-          "role": "background"
-        },
-        {
-          "hex": "#041527",
-          "name": "Dark Navy",
-          "role": "primary"
-        },
-        {
-          "hex": "#38B6FF",
-          "name": "Cyan",
-          "role": "accent"
-        },
-        {
-          "hex": "#DFF1F9",
-          "name": "Pale Blue",
-          "role": "background"
-        }
-      ],
-      "fonts": {
-        "display": "Krona One",
-        "sans": "Archivo"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9642 0 0)",
-          "foreground": "oklch(0.2356 0.0128 26.43)",
-          "brand": "oklch(0.741 0.1499 239.59)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5291 0.0768 241.32)",
-          "card": "oklch(0.9461 0 0)",
-          "border": "oklch(0.8646 0.0011 17.18)",
-          "muted-foreground": "oklch(0.5323 0.0063 17.35)"
-        },
-        "dark": {
-          "background": "oklch(0.2396 0.0062 17.59)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.741 0.1499 239.59)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6259 0.1059 239.5)",
-          "card": "oklch(0.2864 0.0074 17.59)",
-          "border": "oklch(0.4146 0.0082 28.9)",
-          "muted-foreground": "oklch(0.6295 0.0084 17.38)"
-        }
-      },
-      "theme": "theme-sports-248",
-      "themeUrl": "/r/theme-sports-248.json",
-      "version": 17,
-      "completeness": 100,
-      "updatedAt": "2026-07-13T20:07:57.896Z"
-    },
-    {
-      "id": "69c5da5777ba4ec27bd788e8",
-      "slug": "feira-2026",
-      "name": "Feira 2026",
-      "tagline": "Estabilidade e Transformação",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69c5da5777ba4ec27bd788e8/logo-cff9cc76-e61b-49cc-946e-015fa46971d9.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69c5da5777ba4ec27bd788e8/logo-cff9cc76-e61b-49cc-946e-015fa46971d9.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#F2EAD7",
-          "name": "OFF",
-          "role": "text"
-        },
-        {
-          "hex": "#D34C12",
-          "name": "LAVA",
-          "role": "background"
-        },
-        {
-          "hex": "#EAC277",
-          "name": "Colors/Areia",
-          "role": "secondary"
-        },
-        {
-          "hex": "#A46B35",
-          "name": "Colors/Terra",
-          "role": "surface"
-        },
-        {
-          "hex": "#783A18",
-          "name": "Bown",
-          "role": null
-        }
-      ],
-      "fonts": {
-        "display": "Barlow",
-        "sans": "Barlow Condensed"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.6576 0.1513 41.72)",
-          "foreground": "oklch(0 0 0)",
-          "brand": "oklch(0.833 0.1041 82.2)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.2579 0.0156 84.52)",
-          "card": "oklch(0.6433 0.158 41.35)",
-          "border": "oklch(0.5872 0.1777 39.44)",
-          "muted-foreground": "oklch(0.2612 0.0458 39.14)"
-        },
-        "dark": {
-          "background": "oklch(0.2393 0.0108 60.93)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.833 0.1041 82.2)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6293 0.0677 81.12)",
-          "card": "oklch(0.2873 0.0127 51.67)",
-          "border": "oklch(0.4157 0.0126 48.4)",
-          "muted-foreground": "oklch(0.631 0.0135 43.21)"
-        }
-      },
-      "theme": "theme-feira-2026",
-      "themeUrl": "/r/theme-feira-2026.json",
-      "version": 190,
-      "completeness": 91,
-      "updatedAt": "2026-07-13T20:16:50.828Z"
-    },
-    {
-      "id": "69b83b0b9e936bae56381560",
-      "slug": "mizz",
-      "name": "Mizz",
-      "tagline": "Mizz Dermocosméticos®",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69b83b0b9e936bae56381560/2aa8b993-2cf7-48c4-a33c-91710531bafd.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69b83b0b9e936bae56381560/2aa8b993-2cf7-48c4-a33c-91710531bafd.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#F2EEEA",
-          "name": "White",
-          "role": null
-        },
-        {
-          "hex": "#146160",
-          "name": "Aqua",
-          "role": null
-        },
-        {
-          "hex": "#D6DEDE",
-          "name": "Espuma",
-          "role": null
-        },
-        {
-          "hex": "#2C9493",
-          "name": "Brisa",
-          "role": null
-        },
-        {
-          "hex": "#EE6F3C",
-          "name": "Grape",
-          "role": null
-        },
-        {
-          "hex": "#0D0D0D",
-          "name": "Carvão",
-          "role": null
-        },
-        {
-          "hex": "#A9D2D1",
-          "name": "Off",
-          "role": null
-        }
-      ],
-      "fonts": {
-        "display": "Instrument Serif",
-        "sans": "Helvetica Now Display"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9533 0.0062 75.41)",
-          "foreground": "oklch(0.2231 0.0134 61.86)",
-          "brand": "oklch(0.9511 0.0069 67.74)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5255 0.004 67.74)",
-          "card": "oklch(0.933 0.0069 67.74)",
-          "border": "oklch(0.8574 0.0078 61.44)",
-          "muted-foreground": "oklch(0.5247 0.0108 62.44)"
-        },
-        "dark": {
-          "background": "oklch(0.2376 0.006 56.09)",
-          "foreground": "oklch(0.9866 0.0021 17.19)",
-          "brand": "oklch(0.9511 0.0069 67.74)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6287 0.0047 56.33)",
-          "card": "oklch(0.2871 0.007 67.55)",
-          "border": "oklch(0.413 0.0083 53.27)",
-          "muted-foreground": "oklch(0.6265 0.0085 61.38)"
-        }
-      },
-      "theme": "theme-mizz",
-      "themeUrl": "/r/theme-mizz.json",
-      "version": 55,
-      "completeness": 91,
-      "updatedAt": "2026-06-17T22:52:05.853Z"
-    },
-    {
-      "id": "69ead33ab16c054e2ffdbebf",
-      "slug": "movitera",
-      "name": "Movitera",
-      "tagline": "O segundo organismo da sua tecnologia",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69ead33ab16c054e2ffdbebf/logo-320b038f-c2ff-4319-bf24-f61462b3e5d7.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69ead33ab16c054e2ffdbebf/logo-320b038f-c2ff-4319-bf24-f61462b3e5d7.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#FFFFA8",
-          "name": "Alvéolo",
-          "role": "accent"
-        },
-        {
-          "hex": "#141414",
-          "name": "Matriz",
-          "role": "background"
-        },
-        {
-          "hex": "#F9F9F9",
-          "name": "Membrana",
-          "role": "surface-light"
-        },
-        {
-          "hex": "#0A0A0A",
-          "name": "Núcleo",
-          "role": "base"
-        },
-        {
-          "hex": "#1C1C1C",
-          "name": "Trama",
-          "role": "surface-dark"
-        },
-        {
-          "hex": "#262626",
-          "name": "Fibra",
-          "role": "card"
-        }
-      ],
-      "fonts": {
-        "display": "Golos Text",
-        "sans": "Golos Text"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.2982 0.0014 17.24)",
-          "foreground": "oklch(1 0 0)",
-          "brand": "oklch(0.9807 0.1081 108.24)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6739 0.0624 109.03)",
-          "card": "oklch(0.3132 0 0)",
-          "border": "oklch(0.3753 0 0)",
-          "muted-foreground": "oklch(0.6764 0 0)"
-        },
-        "dark": {
-          "background": "oklch(0.2396 0.0062 17.59)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.9807 0.1081 108.24)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6257 0.0605 108.03)",
-          "card": "oklch(0.2864 0.0074 17.59)",
-          "border": "oklch(0.4146 0.0082 28.9)",
-          "muted-foreground": "oklch(0.6295 0.0084 17.38)"
-        }
-      },
-      "theme": "theme-movitera",
-      "themeUrl": "/r/theme-movitera.json",
-      "version": 52,
-      "completeness": 82,
-      "updatedAt": "2026-07-13T20:16:21.227Z"
-    },
-    {
-      "id": "6a208050eef4e1276e8bce39",
-      "slug": "kastrup",
-      "name": "Kastrup®",
-      "tagline": "Advocacia orientada à decisão. O jurídico que pensa como gestor.",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a208050eef4e1276e8bce39/logo-54677b3e-0f6b-443b-a802-4b1ca15b4c27.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a208050eef4e1276e8bce39/logo-54677b3e-0f6b-443b-a802-4b1ca15b4c27.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#20201F",
-          "name": "SÓLIDO",
-          "role": "primary"
-        },
-        {
-          "hex": "#F6F6F6",
-          "name": "CLAREZA",
-          "role": "background/text"
-        },
-        {
-          "hex": "#FAF3DC",
-          "name": "EQUILÍBRIO",
-          "role": "accent/background"
-        },
-        {
-          "hex": "#50202E",
-          "name": "GOVERNANÇA",
-          "role": "secondary"
-        },
-        {
-          "hex": "#7B1F28",
-          "name": "VIGOR",
-          "role": "accent/cta"
-        },
-        {
-          "hex": "#CCE5FF",
-          "name": "PERSPECTIVA",
-          "role": "accent"
-        }
-      ],
-      "fonts": {
-        "display": "Termina",
-        "sans": "Funnel Sans"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9731 0 0)",
-          "foreground": "oklch(0.2441 0.0127 26.41)",
-          "brand": "oklch(0.3922 0.1257 19.95)",
-          "brand-foreground": "oklch(1 0 0)",
-          "accent-ink": "oklch(0.5489 0.0921 18.69)",
-          "card": "oklch(0.9521 0 0)",
-          "border": "oklch(0.8738 0.0011 17.18)",
-          "muted-foreground": "oklch(0.5393 0.0062 17.35)"
-        },
-        "dark": {
-          "background": "oklch(0.2396 0.0062 17.59)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.3922 0.1257 19.95)",
-          "brand-foreground": "oklch(1 0 0)",
-          "accent-ink": "oklch(0.641 0.0961 20.06)",
-          "card": "oklch(0.2864 0.0074 17.59)",
-          "border": "oklch(0.4146 0.0082 28.9)",
-          "muted-foreground": "oklch(0.6295 0.0084 17.38)"
-        }
-      },
-      "theme": "theme-kastrup",
-      "themeUrl": "/r/theme-kastrup.json",
-      "version": 4,
-      "completeness": 79,
-      "updatedAt": "2026-06-18T01:19:21.509Z"
-    },
-    {
-      "id": "6a1f7e72d738c5c42c39067b",
-      "slug": "lola",
-      "name": "Lola®",
-      "tagline": "VOCÊ É A NOSSA OBRA DE ARTE.",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a1f7e72d738c5c42c39067b/5ccc993f-3cb8-4304-9b68-3107f08b9fe4.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a1f7e72d738c5c42c39067b/5ccc993f-3cb8-4304-9b68-3107f08b9fe4.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#111111",
-          "name": "esmalte preto",
-          "role": "primary"
-        },
-        {
-          "hex": "#3B2931",
-          "name": "rosa-roxo escuro",
-          "role": "secondary"
-        },
-        {
-          "hex": "#331D60",
-          "name": "roxo profundidade",
-          "role": "secondary"
-        },
-        {
-          "hex": "#403D59",
-          "name": "lilás pintura escuro",
-          "role": "secondary"
-        },
-        {
-          "hex": "#9470C5",
-          "name": "lilás pintura médio",
-          "role": "accent"
-        },
-        {
-          "hex": "#766CFF",
-          "name": "lilás lola",
-          "role": "accent"
-        },
-        {
-          "hex": "#E0DAFF",
-          "name": "off-white lilás",
-          "role": "background"
-        },
-        {
-          "hex": "#EFEFEF",
-          "name": "off-white",
-          "role": "background"
-        }
-      ],
-      "fonts": {
-        "display": "Geist",
-        "sans": "Open Sans"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9551 0 0)",
-          "foreground": "oklch(0.2258 0.0113 27.56)",
-          "brand": "oklch(0.6193 0.2111 281.34)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5412 0.1822 283.64)",
-          "card": "oklch(0.934 0 0)",
-          "border": "oklch(0.8584 0.0011 17.18)",
-          "muted-foreground": "oklch(0.5254 0.0063 17.36)"
-        },
-        "dark": {
-          "background": "oklch(0.2396 0.0062 17.59)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.6193 0.2111 281.34)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6428 0.1855 281.23)",
-          "card": "oklch(0.2864 0.0074 17.59)",
-          "border": "oklch(0.4146 0.0082 28.9)",
-          "muted-foreground": "oklch(0.6295 0.0084 17.38)"
-        }
-      },
-      "theme": "theme-lola",
-      "themeUrl": "/r/theme-lola.json",
-      "version": 43,
-      "completeness": 71,
-      "updatedAt": "2026-07-16T12:36:57.963Z"
-    },
-    {
-      "id": "69d5152dac90acfb875bc26d",
-      "slug": "oz",
-      "name": "OZ®",
-      "tagline": "Feito no Brasil com ingredientes brasileiros",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69d5152dac90acfb875bc26d/logo-083d9857-79b7-4289-943f-e1305b8fd1c2.svg",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69d5152dac90acfb875bc26d/logo-083d9857-79b7-4289-943f-e1305b8fd1c2.svg",
-        "variant": "custom"
-      },
-      "palette": [
-        {
-          "hex": "#12100A",
-          "name": "Preto",
-          "role": "secondary"
-        },
-        {
-          "hex": "#EEEEEE",
-          "name": "Branco",
-          "role": "primary"
-        },
-        {
-          "hex": "#CA6119",
-          "name": "Accent",
-          "role": "accent"
-        },
-        {
-          "hex": "#EEEEEE",
-          "name": "Branco",
-          "role": "background"
-        },
-        {
-          "hex": "#12100A",
-          "name": "Preto",
-          "role": "surface"
-        },
-        {
-          "hex": "#EEEEEE",
-          "name": "Branco",
-          "role": "text"
-        }
-      ],
-      "fonts": {
-        "display": "Neugen",
-        "sans": "Gotham"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9551 0 0)",
-          "foreground": "oklch(0.2258 0.0113 27.56)",
-          "brand": "oklch(0.6102 0.154 48.85)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5375 0.1234 50.19)",
-          "card": "oklch(0.9348 0.0011 17.18)",
-          "border": "oklch(0.8584 0.0011 17.18)",
-          "muted-foreground": "oklch(0.5254 0.0063 17.36)"
-        },
-        "dark": {
-          "background": "oklch(0.2396 0.0062 17.59)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.6102 0.154 48.85)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6418 0.1468 50.65)",
-          "card": "oklch(0.2864 0.0074 17.59)",
-          "border": "oklch(0.4146 0.0082 28.9)",
-          "muted-foreground": "oklch(0.6295 0.0084 17.38)"
-        }
-      },
-      "theme": "theme-oz",
-      "themeUrl": "/r/theme-oz.json",
-      "version": 20,
-      "completeness": 67,
-      "updatedAt": "2026-07-13T20:15:58.036Z"
-    },
-    {
-      "id": "6a14f9c1d738c5c42c390675",
-      "slug": "comunicart",
-      "name": "Comunicart®",
-      "tagline": "Sua essência projetada.",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a14f9c1d738c5c42c390675/logo-27edccda-f8bd-4fc5-9517-c13ee2b9b3ea.svg",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a14f9c1d738c5c42c390675/logo-27edccda-f8bd-4fc5-9517-c13ee2b9b3ea.svg",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#FF6038",
-          "name": "Laranja Energia",
-          "role": "primary"
-        },
-        {
-          "hex": "#FFF4E1",
-          "name": "Branco Projeto",
-          "role": "background"
-        },
-        {
-          "hex": "#FFEAC6",
-          "name": "Off-white Desenho",
-          "role": "background"
-        },
-        {
-          "hex": "#733635",
-          "name": "Marrom Base",
-          "role": "secondary"
-        },
-        {
-          "hex": "#8F3735",
-          "name": "Vermelho Paixão",
-          "role": "secondary"
-        },
-        {
-          "hex": "#B9322F",
-          "name": "Terracota Abraço",
-          "role": "secondary"
-        }
-      ],
-      "fonts": {
-        "display": "Funnel Display",
-        "sans": "Funnel Sans"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9707 0.0277 81.48)",
-          "foreground": "oklch(0.2427 0.0216 82.37)",
-          "brand": "oklch(0.6911 0.2014 35.11)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5581 0.1784 28.35)",
-          "card": "oklch(0.9469 0.0266 80.25)",
-          "border": "oklch(0.8729 0.0279 83.53)",
-          "muted-foreground": "oklch(0.5354 0.024 78.96)"
-        },
-        "dark": {
-          "background": "oklch(0.2375 0.0127 78.01)",
-          "foreground": "oklch(0.9875 0.0026 106.45)",
-          "brand": "oklch(0.6911 0.2014 35.11)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6479 0.1812 35.14)",
-          "card": "oklch(0.2877 0.0158 79.56)",
-          "border": "oklch(0.4124 0.0153 75.18)",
-          "muted-foreground": "oklch(0.6284 0.0145 82.39)"
-        }
-      },
-      "theme": "theme-comunicart",
-      "themeUrl": "/r/theme-comunicart.json",
-      "version": 64,
-      "completeness": 64,
-      "updatedAt": "2026-07-13T20:17:14.403Z"
-    },
-    {
-      "id": "69f0c958c238db133a364810",
-      "slug": "days-n-days",
-      "name": "Days n' Days",
-      "tagline": "Feito em público.",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69f0c958c238db133a364810/logo-2d434476-78f7-464a-9f8b-24f8e71e732c.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69f0c958c238db133a364810/logo-2d434476-78f7-464a-9f8b-24f8e71e732c.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#343434",
-          "name": "#343434",
-          "role": "text"
-        },
-        {
-          "hex": "#EEE9E3",
-          "name": "#EEE9E3",
-          "role": "accent"
-        },
-        {
-          "hex": "#0D0D0D",
-          "name": "#0D0D0D",
-          "role": "text"
-        }
-      ],
-      "fonts": {
-        "display": "Helvetica Neue LT",
-        "sans": "Helvetica Neue LT"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.4202 0 0)",
-          "foreground": "oklch(1 0 0)",
-          "brand": "oklch(0.9363 0.0097 72.66)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.8107 0.0079 61.43)",
-          "card": "oklch(0.4349 0 0)",
-          "border": "oklch(0.4926 0 0)",
-          "muted-foreground": "oklch(0.8109 0 0)"
-        },
-        "dark": {
-          "background": "oklch(0.2396 0.0062 17.59)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.9363 0.0097 72.66)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6284 0.0057 67.72)",
-          "card": "oklch(0.2864 0.0074 17.59)",
-          "border": "oklch(0.4146 0.0082 28.9)",
-          "muted-foreground": "oklch(0.6295 0.0084 17.38)"
-        }
-      },
-      "theme": "theme-days-n-days",
-      "themeUrl": "/r/theme-days-n-days.json",
-      "version": 8,
-      "completeness": 64,
-      "updatedAt": "2026-07-13T20:16:38.683Z"
-    },
-    {
-      "id": "6a2a16b62dad41bb87a40be8",
-      "slug": "soccer-248",
-      "name": "Soccer 248",
-      "tagline": "EVERY MATCH STARTS HERE",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a2a16b62dad41bb87a40be8/logo-403f4c09-368c-408d-9b30-adcff7aa50a5.webp",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a2a16b62dad41bb87a40be8/logo-403f4c09-368c-408d-9b30-adcff7aa50a5.webp",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#0A131F",
-          "name": "Off Season",
-          "role": "primary"
-        },
-        {
-          "hex": "#061B38",
-          "name": "Game Night",
-          "role": "secondary"
-        },
-        {
-          "hex": "#0157AA",
-          "name": "Match Blue",
-          "role": "accent"
-        },
-        {
-          "hex": "#39BCEB",
-          "name": "Open Play",
-          "role": "accent"
-        },
-        {
-          "hex": "#DCF5FE",
-          "name": "Clear Field",
-          "role": "background"
-        },
-        {
-          "hex": "#F1F1F1",
-          "name": "Neutral Ground",
-          "role": "background"
-        },
-        {
-          "hex": "#F2F858",
-          "name": "Kick Off",
-          "role": "cta"
-        },
-        {
-          "hex": "#FFFFA5",
-          "name": "Extra Time",
-          "role": "text"
-        }
-      ],
-      "fonts": {
-        "display": "Mont",
-        "sans": "Inter"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9642 0 0)",
-          "foreground": "oklch(0.2356 0.0128 26.43)",
-          "brand": "oklch(0.7455 0.1283 226.99)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.529 0.0909 236.32)",
-          "card": "oklch(0.9461 0 0)",
-          "border": "oklch(0.8646 0.0011 17.18)",
-          "muted-foreground": "oklch(0.5323 0.0063 17.35)"
-        },
-        "dark": {
-          "background": "oklch(0.2396 0.0062 17.59)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.7455 0.1283 226.99)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6233 0.0899 226.73)",
-          "card": "oklch(0.2864 0.0074 17.59)",
-          "border": "oklch(0.4146 0.0082 28.9)",
-          "muted-foreground": "oklch(0.6295 0.0084 17.38)"
-        }
-      },
-      "theme": "theme-soccer-248",
-      "themeUrl": "/r/theme-soccer-248.json",
-      "version": 11,
-      "completeness": 64,
-      "updatedAt": "2026-07-13T20:18:17.504Z"
-    },
     {
       "id": "69b4709a694d7c824cbc8060",
       "slug": "visant",
@@ -820,802 +75,250 @@
       "updatedAt": "2026-07-13T20:09:33.600Z"
     },
     {
-      "id": "6a6cf51b970191a7dc083f4f",
-      "slug": "arbolt",
-      "name": "Arbolt®",
-      "tagline": "Construímos a base sólida para sustentar o futuro.",
+      "id": "demo-norte-verde",
+      "slug": "norte-verde",
+      "name": "Norte Verde",
+      "tagline": "Cultivo de precisão",
       "logo": null,
       "palette": [
         {
-          "hex": "#2C352F",
-          "name": "Verde Industrial",
-          "role": "background"
-        },
-        {
-          "hex": "#CDD4C7",
-          "name": "Sage",
+          "hex": "#0F6B3F",
+          "name": null,
           "role": "primary"
         },
         {
-          "hex": "#EEEEEE",
-          "name": "Concreto",
-          "role": "background-light"
-        },
-        {
-          "hex": "#1A1B1F",
-          "name": "Grafite",
-          "role": "text"
-        },
-        {
-          "hex": "#545C55",
-          "name": "Verde Profundo",
-          "role": "secondary"
-        },
-        {
-          "hex": "#7C847B",
-          "name": "Verde Médio",
-          "role": "neutral"
-        },
-        {
-          "hex": "#90988E",
-          "name": "Verde Neutro",
-          "role": "neutral"
-        },
-        {
-          "hex": "#FFFFFF",
-          "name": "Traço",
-          "role": "neutral"
-        }
-      ],
-      "fonts": {
-        "display": "Mona Sans",
-        "sans": "Rethink Sans"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.411 0.0143 153.27)",
-          "foreground": "oklch(1 0 0)",
-          "brand": "oklch(0.8609 0.0192 130.21)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.801 0.02 133.11)",
-          "card": "oklch(0.4258 0.0142 153.3)",
-          "border": "oklch(0.4813 0.0118 154.83)",
-          "muted-foreground": "oklch(0.8017 0.0043 157.16)"
-        },
-        "dark": {
-          "background": "oklch(0.2359 0.0116 156.22)",
-          "foreground": "oklch(0.9871 0.0017 145.56)",
-          "brand": "oklch(0.8609 0.0192 130.21)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6276 0.0127 128.69)",
-          "card": "oklch(0.2845 0.0134 154.39)",
-          "border": "oklch(0.411 0.0143 153.27)",
-          "muted-foreground": "oklch(0.6253 0.0119 158.67)"
-        }
-      },
-      "theme": "theme-arbolt",
-      "themeUrl": "/r/theme-arbolt.json",
-      "version": 1,
-      "completeness": 57,
-      "updatedAt": "2026-07-31T19:20:59.864Z"
-    },
-    {
-      "id": "69f93e1fb2008c6eb8449008",
-      "slug": "build-partners",
-      "name": "Build + Partners®",
-      "tagline": "Decisão antes da forma.",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69f93e1fb2008c6eb8449008/logo-8fa0b52f-bf55-4856-b806-7b996d739839.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69f93e1fb2008c6eb8449008/logo-8fa0b52f-bf55-4856-b806-7b996d739839.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#0D0D0D",
-          "name": "Foundation",
-          "role": "primary"
-        },
-        {
-          "hex": "#A3A3A3",
-          "name": "Structure",
-          "role": "secondary"
-        },
-        {
-          "hex": "#F2EEEA",
-          "name": "Signal",
+          "hex": "#F3F6F1",
+          "name": null,
           "role": "background"
         },
         {
-          "hex": "#F2F0E9",
-          "name": "Architectural Beige",
-          "role": "background"
+          "hex": "#111813",
+          "name": null,
+          "role": "foreground"
         },
         {
-          "hex": "#6C6861",
-          "name": "Concrete Grey",
-          "role": "primary"
-        }
-      ],
-      "fonts": {
-        "display": "Mozilla Text",
-        "sans": "JetBrains Mono"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9547 0.0095 93.57)",
-          "foreground": "oklch(0.2237 0.0176 86.8)",
-          "brand": "oklch(0.5188 0.0119 81.78)",
-          "brand-foreground": "oklch(1 0 0)",
-          "accent-ink": "oklch(0.526 0.0105 78.24)",
-          "card": "oklch(0.9364 0.0109 95.17)",
-          "border": "oklch(0.8569 0.0111 95.18)",
-          "muted-foreground": "oklch(0.5242 0.0143 91.62)"
-        },
-        "dark": {
-          "background": "oklch(0.2386 0.0094 97.75)",
-          "foreground": "oklch(0.9886 0.0017 67.8)",
-          "brand": "oklch(0.5188 0.0119 81.78)",
-          "brand-foreground": "oklch(1 0 0)",
-          "accent-ink": "oklch(0.6311 0.0127 84.59)",
-          "card": "oklch(0.2877 0.0124 100.45)",
-          "border": "oklch(0.4125 0.0117 93.74)",
-          "muted-foreground": "oklch(0.6291 0.0134 96.53)"
-        }
-      },
-      "theme": "theme-build-partners",
-      "themeUrl": "/r/theme-build-partners.json",
-      "version": 67,
-      "completeness": 57,
-      "updatedAt": "2026-05-21T19:38:49.198Z"
-    },
-    {
-      "id": "6a0266d5a8fe73604d681dc3",
-      "slug": "clube-influencia",
-      "name": "Clube Influência®",
-      "tagline": "Influência em Movimento.",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a0266d5a8fe73604d681dc3/logo-5aedffe8-1580-45f8-bbd8-0cdb488dedd4.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a0266d5a8fe73604d681dc3/logo-5aedffe8-1580-45f8-bbd8-0cdb488dedd4.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#0D0D0D",
-          "name": "Asfalto",
-          "role": "primary"
-        },
-        {
-          "hex": "#D8DCCE",
-          "name": "Box",
-          "role": "secondary"
-        },
-        {
-          "hex": "#F0F0F0",
-          "name": "Flag",
-          "role": "background"
-        },
-        {
-          "hex": "#D2FF00",
-          "name": "DRS",
+          "hex": "#C6E36B",
+          "name": null,
           "role": "accent"
-        },
-        {
-          "hex": "#85AF37",
-          "name": "Apex",
-          "role": "text"
-        },
-        {
-          "hex": "#AFD26F",
-          "name": "Grid Lime",
-          "role": "cta"
-        }
-      ],
-      "fonts": {
-        "display": "Big Shoulders",
-        "sans": "JetBrains Mono"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9642 0 0)",
-          "foreground": "oklch(0.2356 0.0128 26.43)",
-          "brand": "oklch(0.9347 0.226 121.71)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.532 0.0093 114.39)",
-          "card": "oklch(0.9401 0 0)",
-          "border": "oklch(0.8646 0.0011 17.18)",
-          "muted-foreground": "oklch(0.5323 0.0063 17.35)"
-        },
-        "dark": {
-          "background": "oklch(0.2396 0.0062 17.59)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.9347 0.226 121.71)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.625 0.0619 122.17)",
-          "card": "oklch(0.2864 0.0074 17.59)",
-          "border": "oklch(0.4146 0.0082 28.9)",
-          "muted-foreground": "oklch(0.6295 0.0084 17.38)"
-        }
-      },
-      "theme": "theme-clube-influencia",
-      "themeUrl": "/r/theme-clube-influencia.json",
-      "version": 27,
-      "completeness": 57,
-      "updatedAt": "2026-07-13T20:16:00.600Z"
-    },
-    {
-      "id": "6a308f83fb7cf8ec87a69395",
-      "slug": "padoo",
-      "name": "Padoo®",
-      "tagline": "A vó mais descolada do bairro",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a308f83fb7cf8ec87a69395/logo-486e61ce-fbb9-40ca-a0b6-af43663121bc-thumb.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a308f83fb7cf8ec87a69395/logo-486e61ce-fbb9-40ca-a0b6-af43663121bc-thumb.png",
-        "variant": null
-      },
-      "palette": [
-        {
-          "hex": "#ECA43D",
-          "name": "Honey Gold",
-          "role": "primary"
-        },
-        {
-          "hex": "#733D1F",
-          "name": "Crust Brown",
-          "role": "secondary"
-        },
-        {
-          "hex": "#FDF5E6",
-          "name": "Cream",
-          "role": "background"
-        },
-        {
-          "hex": "#1C1A14",
-          "name": "Carvão",
-          "role": "text"
-        },
-        {
-          "hex": "#4D8F8F",
-          "name": "Teal Accent",
-          "role": "accent"
-        },
-        {
-          "hex": "#FF6B35",
-          "name": "Faísca",
-          "role": "cta"
-        }
-      ],
-      "fonts": {
-        "display": "Unbounded",
-        "sans": "Kumbh sans"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9723 0.0216 83.26)",
-          "foreground": "oklch(0.2429 0.0201 80.23)",
-          "brand": "oklch(0.6066 0.0675 195.52)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.536 0.019 156.52)",
-          "card": "oklch(0.9513 0.0217 83.26)",
-          "border": "oklch(0.8753 0.0221 83.26)",
-          "muted-foreground": "oklch(0.5373 0.0215 83.03)"
-        },
-        "dark": {
-          "background": "oklch(0.2375 0.0127 78.01)",
-          "foreground": "oklch(0.9875 0.0026 106.45)",
-          "brand": "oklch(0.6066 0.0675 195.52)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6202 0.0667 195.57)",
-          "card": "oklch(0.2877 0.0158 79.56)",
-          "border": "oklch(0.4124 0.0153 75.18)",
-          "muted-foreground": "oklch(0.6284 0.0145 82.39)"
-        }
-      },
-      "theme": "theme-padoo",
-      "themeUrl": "/r/theme-padoo.json",
-      "version": 46,
-      "completeness": 57,
-      "updatedAt": "2026-07-13T20:16:15.025Z"
-    },
-    {
-      "id": "69d0229b3186347f7eb2f16d",
-      "slug": "quadraclub",
-      "name": "QUADRACLUB®",
-      "tagline": "Test Tagline for Identity",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69d0229b3186347f7eb2f16d/logo-7fec1bf4-dc7d-4655-adbb-40cb0642951c.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/69d0229b3186347f7eb2f16d/logo-7fec1bf4-dc7d-4655-adbb-40cb0642951c.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#D2E62F",
-          "name": "Lime Green",
-          "role": "primary"
-        },
-        {
-          "hex": "#A5B600",
-          "name": "Olive Green",
-          "role": "secondary"
-        },
-        {
-          "hex": "#1E2D3E",
-          "name": "Navy Blue",
-          "role": "secondary"
-        },
-        {
-          "hex": "#4B798A",
-          "name": "Teal Blue",
-          "role": "secondary"
-        },
-        {
-          "hex": "#ECF1DC",
-          "name": "Cream",
-          "role": "secondary"
-        },
-        {
-          "hex": "#000000",
-          "name": "Black",
-          "role": "background"
-        },
-        {
-          "hex": "#FFFFFF",
-          "name": "White",
-          "role": "text"
-        }
-      ],
-      "fonts": {
-        "display": "Zalando 100",
-        "sans": "Zalando 70"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0 0 0)",
-          "foreground": "oklch(0.8869 0.0022 17.2)",
-          "brand": "oklch(0.8807 0.1901 116.14)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5637 0.1109 115.64)",
-          "card": "oklch(0.1541 0.0127 28.18)",
-          "border": "oklch(0.2637 0.0108 27.48)",
-          "muted-foreground": "oklch(0.5703 0.0061 17.34)"
-        },
-        "dark": {
-          "background": "oklch(0.2396 0.0062 17.59)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.8807 0.1901 116.14)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6229 0.1112 115.84)",
-          "card": "oklch(0.2864 0.0074 17.59)",
-          "border": "oklch(0.4146 0.0082 28.9)",
-          "muted-foreground": "oklch(0.6295 0.0084 17.38)"
-        }
-      },
-      "theme": "theme-quadraclub",
-      "themeUrl": "/r/theme-quadraclub.json",
-      "version": 25,
-      "completeness": 50,
-      "updatedAt": "2026-07-13T20:05:05.442Z"
-    },
-    {
-      "id": "6a218025fb572814b22d380a",
-      "slug": "ysa",
-      "name": "YSA",
-      "tagline": "O essencial que cria o extraordinário",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a218025fb572814b22d380a/logo-7ae2e1c3-bee0-45f5-927c-9a7df22860d4.png",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a218025fb572814b22d380a/logo-7ae2e1c3-bee0-45f5-927c-9a7df22860d4.png",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#161616",
-          "name": "Noite Marítima",
-          "role": "primary"
-        },
-        {
-          "hex": "#262626",
-          "name": "Concreto Portuário",
-          "role": "secondary"
-        },
-        {
-          "hex": "#AF9F8A",
-          "name": "Areia Dourada",
-          "role": "accent"
-        },
-        {
-          "hex": "#B0AFAD",
-          "name": "Névoa Costeira",
-          "role": "accent"
-        },
-        {
-          "hex": "#78797A",
-          "name": "Rocha Sedimentar",
-          "role": "accent"
-        },
-        {
-          "hex": "#F5F1ED",
-          "name": "Vela Branca",
-          "role": "background"
-        },
-        {
-          "hex": "#D0D0D0",
-          "name": "Areia Clara",
-          "role": "accent"
-        },
-        {
-          "hex": "#565C61",
-          "name": "Oceano Profundo",
-          "role": "accent"
-        }
-      ],
-      "fonts": {
-        "display": "Zalando Sans",
-        "sans": "Zalando Sans"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9624 0.0062 75.41)",
-          "foreground": "oklch(0.2317 0.0133 61.9)",
-          "brand": "oklch(0.7106 0.035 74.65)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5321 0.0183 73.52)",
-          "card": "oklch(0.939 0.0069 67.74)",
-          "border": "oklch(0.8635 0.0078 61.44)",
-          "muted-foreground": "oklch(0.5314 0.0119 67.57)"
-        },
-        "dark": {
-          "background": "oklch(0.2376 0.006 56.09)",
-          "foreground": "oklch(0.9866 0.0021 17.19)",
-          "brand": "oklch(0.7106 0.035 74.65)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6278 0.03 72.6)",
-          "card": "oklch(0.2871 0.007 67.55)",
-          "border": "oklch(0.413 0.0083 53.27)",
-          "muted-foreground": "oklch(0.6265 0.0085 61.38)"
-        }
-      },
-      "theme": "theme-ysa",
-      "themeUrl": "/r/theme-ysa.json",
-      "version": 1,
-      "completeness": 50,
-      "updatedAt": "2026-07-13T20:16:01.299Z"
-    },
-    {
-      "id": "6a56b9bc2fba948b46347dab",
-      "slug": "urban-stay",
-      "name": "Urban Stay®",
-      "tagline": "A pulsação da cidade em cada detalhe.",
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a56b9bc2fba948b46347dab/e07bf10a-a086-48c9-a79a-8690b5ef02ae.webp",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a56b9bc2fba948b46347dab/e07bf10a-a086-48c9-a79a-8690b5ef02ae.webp",
-        "variant": "primary"
-      },
-      "palette": [
-        {
-          "hex": "#F8F4E2",
-          "name": "Areia",
-          "role": "background"
-        },
-        {
-          "hex": "#BFD9E3",
-          "name": "Céu",
-          "role": "accent"
-        },
-        {
-          "hex": "#1A3E56",
-          "name": "Maré",
-          "role": "primary"
-        },
-        {
-          "hex": "#CE3A00",
-          "name": "Accent Red",
-          "role": "cta"
-        },
-        {
-          "hex": "#020608",
-          "name": "Fundo Noturno",
-          "role": "text"
-        }
-      ],
-      "fonts": {
-        "display": "Clash Grotesk",
-        "sans": "Clash Grotesk"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9706 0.0199 100.58)",
-          "foreground": "oklch(0.243 0.0218 95.77)",
-          "brand": "oklch(0.8692 0.031 222.93)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5354 0.0466 235.7)",
-          "card": "oklch(0.9474 0.0242 96.57)",
-          "border": "oklch(0.8716 0.0234 95.99)",
-          "muted-foreground": "oklch(0.5374 0.0232 94.72)"
-        },
-        "dark": {
-          "background": "oklch(0.2376 0.0147 101.53)",
-          "foreground": "oklch(0.9886 0.0017 67.8)",
-          "brand": "oklch(0.8692 0.031 222.93)",
-          "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6274 0.0186 225.36)",
-          "card": "oklch(0.2871 0.0159 102.1)",
-          "border": "oklch(0.4143 0.0162 102.4)",
-          "muted-foreground": "oklch(0.6285 0.0163 98.42)"
-        }
-      },
-      "theme": "theme-urban-stay",
-      "themeUrl": "/r/theme-urban-stay.json",
-      "version": 7,
-      "completeness": 43,
-      "updatedAt": "2026-07-16T00:26:29.704Z"
-    },
-    {
-      "id": "6a4e6eeb77ccdc0e58ec4b8c",
-      "slug": "aurora-coffee",
-      "name": "Aurora Coffee",
-      "tagline": "Slow mornings, bright ideas.",
-      "logo": null,
-      "palette": [
-        {
-          "hex": "#D97706",
-          "name": "Aurora Amber",
-          "role": "primary"
-        },
-        {
-          "hex": "#3F2A1D",
-          "name": "Roast Brown",
-          "role": "secondary"
-        },
-        {
-          "hex": "#FAF3E7",
-          "name": "Morning Cream",
-          "role": "background"
-        },
-        {
-          "hex": "#4D7C4A",
-          "name": "Leaf Green",
-          "role": "accent"
-        },
-        {
-          "hex": "#1F1B16",
-          "name": "Charcoal",
-          "role": "text"
-        }
-      ],
-      "fonts": {
-        "display": "Fraunces",
-        "sans": "Inter"
-      },
-      "preview": {
-        "light": {
-          "background": "oklch(0.9713 0.0143 84.58)",
-          "foreground": "oklch(0.2439 0.0223 78.67)",
-          "brand": "oklch(0.539 0.0918 142.85)",
-          "brand-foreground": "oklch(1 0 0)",
-          "accent-ink": "oklch(0.5308 0.0891 141.9)",
-          "card": "oklch(0.9483 0.0177 81.33)",
-          "border": "oklch(0.8722 0.018 81.33)",
-          "muted-foreground": "oklch(0.5375 0.0202 81.27)"
-        },
-        "dark": {
-          "background": "oklch(0.2375 0.0127 78.01)",
-          "foreground": "oklch(0.9875 0.0026 106.45)",
-          "brand": "oklch(0.539 0.0918 142.85)",
-          "brand-foreground": "oklch(1 0 0)",
-          "accent-ink": "oklch(0.6185 0.0915 143.01)",
-          "card": "oklch(0.2877 0.0158 79.56)",
-          "border": "oklch(0.4124 0.0153 75.18)",
-          "muted-foreground": "oklch(0.6284 0.0145 82.39)"
-        }
-      },
-      "theme": "theme-aurora-coffee",
-      "themeUrl": "/r/theme-aurora-coffee.json",
-      "version": 3,
-      "completeness": 36,
-      "updatedAt": "2026-07-09T17:58:27.886Z"
-    },
-    {
-      "id": "6a35570c13ded9555a7435d7",
-      "slug": "hockey-direct",
-      "name": "Hockey Direct",
-      "tagline": null,
-      "logo": {
-        "url": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a35570c13ded9555a7435d7/logo-685329ec-6017-41e2-a328-fb23f9d4df3f-thumb.webp",
-        "thumbnailUrl": "https://pub-0acbd500af3b4beaa8b93b07f6490d58.r2.dev/brands/691e123b304058681621b711/6a35570c13ded9555a7435d7/logo-685329ec-6017-41e2-a328-fb23f9d4df3f-thumb.webp",
-        "variant": null
-      },
-      "palette": [
-        {
-          "hex": "#011301",
-          "name": "Pitch Black",
-          "role": "background"
-        },
-        {
-          "hex": "#1C2D1B",
-          "name": "Turf Deep",
-          "role": "surface"
-        },
-        {
-          "hex": "#145132",
-          "name": "Goal Green",
-          "role": "secondary"
-        },
-        {
-          "hex": "#BFFF53",
-          "name": "Astro Lime",
-          "role": "accent"
-        },
-        {
-          "hex": "#85D2A0",
-          "name": "Final Whistle",
-          "role": "accent-secondary"
-        },
-        {
-          "hex": "#CCF1BD",
-          "name": "Ball Mint",
-          "role": "text-on-dark"
-        },
-        {
-          "hex": "#DCE0DC",
-          "name": "Line Grey",
-          "role": "muted"
-        },
-        {
-          "hex": "#F1F1F1",
-          "name": "Ball White",
-          "role": "text"
         }
       ],
       "fonts": {
         "display": "Archivo",
-        "sans": "Archivo"
+        "sans": "Inter"
       },
       "preview": {
         "light": {
-          "background": "oklch(0.2689 0.0487 141.2)",
-          "foreground": "oklch(1 0 0)",
-          "brand": "oklch(0.9256 0.2066 127.69)",
+          "background": "oklch(0.9695 0.0073 132.41)",
+          "foreground": "oklch(0.2407 0.016 129.23)",
+          "card": "oklch(0.9454 0.0074 132.42)",
+          "card-foreground": "oklch(0.2407 0.016 129.23)",
+          "popover": "oklch(0.9454 0.0074 132.42)",
+          "popover-foreground": "oklch(0.2407 0.016 129.23)",
+          "muted": "oklch(0.9243 0.0074 132.42)",
+          "muted-foreground": "oklch(0.536 0.0118 131.46)",
+          "secondary": "oklch(0.9243 0.0074 132.42)",
+          "secondary-foreground": "oklch(0.2407 0.016 129.23)",
+          "accent": "oklch(0.9243 0.0074 132.42)",
+          "accent-foreground": "oklch(0.2407 0.016 129.23)",
+          "border": "oklch(0.8713 0.0092 134.88)",
+          "input": "oklch(0.838 0.0088 128.58)",
+          "brand": "oklch(0.87 0.15 120.89)",
           "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6419 0.1316 137.72)",
-          "card": "oklch(0.2889 0.0482 141.23)",
-          "border": "oklch(0.3531 0.0424 141.01)",
-          "muted-foreground": "oklch(0.6518 0.0198 142.77)"
+          "accent-ink": "oklch(0.5263 0.1098 149.76)",
+          "ring": "oklch(0.87 0.15 120.89)",
+          "shadow": "132 30% 12%"
         },
         "dark": {
-          "background": "oklch(0.2365 0.012 145.18)",
-          "foreground": "oklch(0.989 0.0034 145.55)",
-          "brand": "oklch(0.9256 0.2066 127.69)",
+          "background": "oklch(0.2371 0.0058 121.89)",
+          "foreground": "oklch(0.9878 0.0013 106.42)",
+          "card": "oklch(0.2856 0.0077 128.76)",
+          "card-foreground": "oklch(0.9878 0.0013 106.42)",
+          "popover": "oklch(0.2856 0.0077 128.76)",
+          "popover-foreground": "oklch(0.9878 0.0013 106.42)",
+          "muted": "oklch(0.3373 0.0074 128.71)",
+          "muted-foreground": "oklch(0.6269 0.0077 124.52)",
+          "secondary": "oklch(0.3373 0.0074 128.71)",
+          "secondary-foreground": "oklch(0.9878 0.0013 106.42)",
+          "accent": "oklch(0.3373 0.0074 128.71)",
+          "accent-foreground": "oklch(0.9878 0.0013 106.42)",
+          "border": "oklch(0.4133 0.007 128.65)",
+          "input": "oklch(0.4569 0.0083 124.61)",
+          "brand": "oklch(0.87 0.15 120.89)",
           "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6225 0.0597 127.19)",
-          "card": "oklch(0.2864 0.0114 145.27)",
-          "border": "oklch(0.4127 0.0125 145.34)",
-          "muted-foreground": "oklch(0.6263 0.0125 141.24)"
+          "accent-ink": "oklch(0.6228 0.0885 120)",
+          "ring": "oklch(0.87 0.15 120.89)",
+          "shadow": "0 0% 0%"
         }
       },
-      "theme": "theme-hockey-direct",
-      "themeUrl": "/r/theme-hockey-direct.json",
-      "version": 10,
-      "completeness": 36,
-      "updatedAt": "2026-07-27T18:02:55.589Z"
+      "theme": "theme-norte-verde",
+      "themeUrl": "/r/theme-norte-verde.json",
+      "version": 1,
+      "completeness": 100,
+      "updatedAt": null
     },
     {
-      "id": "6a26ed3544460478379c7b68",
-      "slug": "acme-corp",
-      "name": "Acme Corp",
-      "tagline": "Innovation that works.",
+      "id": "demo-grao-editora",
+      "slug": "grao-editora",
+      "name": "Grão Editora",
+      "tagline": "Livros que pesam na mão",
       "logo": null,
       "palette": [
         {
-          "hex": "#635BFF",
-          "name": "Primary Purple",
+          "hex": "#8C3B1E",
+          "name": null,
           "role": "primary"
         },
         {
-          "hex": "#0A2540",
-          "name": "Midnight Blue",
-          "role": "secondary"
+          "hex": "#FAF4EA",
+          "name": null,
+          "role": "background"
         },
         {
-          "hex": "#00D4AA",
-          "name": "Mint Green",
+          "hex": "#1E1712",
+          "name": null,
+          "role": "foreground"
+        },
+        {
+          "hex": "#D9A441",
+          "name": null,
           "role": "accent"
-        },
-        {
-          "hex": "#F6F9FC",
-          "name": "Cloud White",
-          "role": "background"
-        },
-        {
-          "hex": "#425466",
-          "name": "Slate",
-          "role": "text"
         }
       ],
       "fonts": {
-        "display": "Inter",
-        "sans": "Inter"
+        "display": "Fraunces",
+        "sans": "Karla"
       },
       "preview": {
         "light": {
-          "background": "oklch(0.9807 0.0051 247.88)",
-          "foreground": "oklch(0.2528 0.0105 242.13)",
-          "brand": "oklch(0.7747 0.1507 171.66)",
+          "background": "oklch(0.9716 0.0131 82.4)",
+          "foreground": "oklch(0.2442 0.0209 76.35)",
+          "card": "oklch(0.9508 0.016 82.79)",
+          "card-foreground": "oklch(0.2442 0.0209 76.35)",
+          "popover": "oklch(0.9508 0.016 82.79)",
+          "popover-foreground": "oklch(0.2442 0.0209 76.35)",
+          "muted": "oklch(0.9236 0.0161 82.79)",
+          "muted-foreground": "oklch(0.5378 0.0189 79.27)",
+          "secondary": "oklch(0.9236 0.0161 82.79)",
+          "secondary-foreground": "oklch(0.2442 0.0209 76.35)",
+          "accent": "oklch(0.9236 0.0161 82.79)",
+          "accent-foreground": "oklch(0.2442 0.0209 76.35)",
+          "border": "oklch(0.8719 0.0151 80.7)",
+          "input": "oklch(0.8408 0.0165 82.79)",
+          "brand": "oklch(0.7507 0.1295 79.85)",
           "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5335 0.0725 193.97)",
-          "card": "oklch(0.9567 0.0052 247.88)",
-          "border": "oklch(0.8808 0.0053 247.88)",
-          "muted-foreground": "oklch(0.5439 0.0072 255.51)"
+          "accent-ink": "oklch(0.5468 0.1164 50.95)",
+          "ring": "oklch(0.7507 0.1295 79.85)",
+          "shadow": "81 30% 12%"
         },
         "dark": {
-          "background": "oklch(0.2376 0.0036 228.95)",
-          "foreground": "oklch(0.9884 0.0013 286.38)",
-          "brand": "oklch(0.7747 0.1507 171.66)",
+          "background": "oklch(0.2375 0.0127 78.01)",
+          "foreground": "oklch(0.9875 0.0026 106.45)",
+          "card": "oklch(0.2877 0.0158 79.56)",
+          "card-foreground": "oklch(0.9875 0.0026 106.45)",
+          "popover": "oklch(0.2877 0.0158 79.56)",
+          "popover-foreground": "oklch(0.9875 0.0026 106.45)",
+          "muted": "oklch(0.3396 0.0138 76.4)",
+          "muted-foreground": "oklch(0.6284 0.0145 82.39)",
+          "secondary": "oklch(0.3396 0.0138 76.4)",
+          "secondary-foreground": "oklch(0.9875 0.0026 106.45)",
+          "accent": "oklch(0.3396 0.0138 76.4)",
+          "accent-foreground": "oklch(0.9875 0.0026 106.45)",
+          "border": "oklch(0.4124 0.0153 75.18)",
+          "input": "oklch(0.459 0.0142 79.72)",
+          "brand": "oklch(0.7507 0.1295 79.85)",
           "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.616 0.0985 171.04)",
-          "card": "oklch(0.2878 0.0046 247.99)",
-          "border": "oklch(0.4145 0.0052 236.61)",
-          "muted-foreground": "oklch(0.6285 0.0057 247.92)"
+          "accent-ink": "oklch(0.6305 0.099 79.53)",
+          "ring": "oklch(0.7507 0.1295 79.85)",
+          "shadow": "0 0% 0%"
         }
       },
-      "theme": "theme-acme-corp",
-      "themeUrl": "/r/theme-acme-corp.json",
+      "theme": "theme-grao-editora",
+      "themeUrl": "/r/theme-grao-editora.json",
       "version": 1,
-      "completeness": 0,
-      "updatedAt": "2026-06-08T16:26:29.769Z"
+      "completeness": 100,
+      "updatedAt": null
     },
     {
-      "id": "69f38f34b2008c6eb8449002",
-      "slug": "teste-mcp",
-      "name": "Teste MCP",
-      "tagline": "Apenas um teste.",
+      "id": "demo-vega-noturno",
+      "slug": "vega-noturno",
+      "name": "Vega Noturno",
+      "tagline": "Som para a madrugada",
       "logo": null,
       "palette": [
         {
-          "hex": "#FF5733",
-          "name": "Laranja Teste",
+          "hex": "#6C4BF6",
+          "name": null,
           "role": "primary"
         },
         {
-          "hex": "#1A1A1A",
-          "name": "Preto",
-          "role": "text"
+          "hex": "#0E0E14",
+          "name": null,
+          "role": "background"
         },
         {
-          "hex": "#FFFFFF",
-          "name": "Branco",
-          "role": "background"
+          "hex": "#F2F0FF",
+          "name": null,
+          "role": "foreground"
+        },
+        {
+          "hex": "#25E5C1",
+          "name": null,
+          "role": "accent"
         }
       ],
       "fonts": {
-        "display": "Inter",
-        "sans": "Inter"
+        "display": "Space Grotesk",
+        "sans": "IBM Plex Sans"
       },
       "preview": {
         "light": {
-          "background": "oklch(1 0 0)",
-          "foreground": "oklch(0.272 0.0107 27.46)",
-          "brand": "oklch(0.6804 0.21 33.69)",
+          "background": "oklch(0.283 0.0091 285.81)",
+          "foreground": "oklch(1 0 0)",
+          "card": "oklch(0.2996 0.0107 285.73)",
+          "card-foreground": "oklch(1 0 0)",
+          "popover": "oklch(0.2996 0.0107 285.73)",
+          "popover-foreground": "oklch(1 0 0)",
+          "muted": "oklch(0.323 0.0088 285.9)",
+          "muted-foreground": "oklch(0.663 0.0032 264.54)",
+          "secondary": "oklch(0.323 0.0088 285.9)",
+          "secondary-foreground": "oklch(1 0 0)",
+          "accent": "oklch(0.323 0.0088 285.9)",
+          "accent-foreground": "oklch(1 0 0)",
+          "border": "oklch(0.3657 0.0085 285.97)",
+          "input": "oklch(0.3889 0.01 285.92)",
+          "brand": "oklch(0.8259 0.1499 175.31)",
           "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5743 0.156 34.41)",
-          "card": "oklch(0.9761 0 0)",
-          "border": "oklch(0.8983 0.0011 17.18)",
-          "muted-foreground": "oklch(0.5566 0.0062 17.34)"
+          "accent-ink": "oklch(0.6597 0.0821 246.98)",
+          "ring": "oklch(0.8259 0.1499 175.31)",
+          "shadow": "285 30% 12%"
         },
         "dark": {
-          "background": "oklch(0.2396 0.0062 17.59)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
-          "brand": "oklch(0.6804 0.21 33.69)",
+          "background": "oklch(0.2408 0.0115 278.01)",
+          "foreground": "oklch(0.9894 0.0028 308.43)",
+          "card": "oklch(0.2879 0.0127 285.58)",
+          "card-foreground": "oklch(0.9894 0.0028 308.43)",
+          "popover": "oklch(0.2879 0.0127 285.58)",
+          "popover-foreground": "oklch(0.9894 0.0028 308.43)",
+          "muted": "oklch(0.3434 0.0121 285.74)",
+          "muted-foreground": "oklch(0.63 0.0148 285.97)",
+          "secondary": "oklch(0.3434 0.0121 285.74)",
+          "secondary-foreground": "oklch(0.9894 0.0028 308.43)",
+          "accent": "oklch(0.3434 0.0121 285.74)",
+          "accent-foreground": "oklch(0.9894 0.0028 308.43)",
+          "border": "oklch(0.4158 0.0132 285.81)",
+          "input": "oklch(0.46 0.0145 285.82)",
+          "brand": "oklch(0.8259 0.1499 175.31)",
           "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.6511 0.1948 34.02)",
-          "card": "oklch(0.2864 0.0074 17.59)",
-          "border": "oklch(0.4146 0.0082 28.9)",
-          "muted-foreground": "oklch(0.6295 0.0084 17.38)"
+          "accent-ink": "oklch(0.6182 0.0882 175.46)",
+          "ring": "oklch(0.8259 0.1499 175.31)",
+          "shadow": "0 0% 0%"
         }
       },
-      "theme": "theme-teste-mcp",
-      "themeUrl": "/r/theme-teste-mcp.json",
+      "theme": "theme-vega-noturno",
+      "themeUrl": "/r/theme-vega-noturno.json",
       "version": 1,
-      "completeness": 0,
-      "updatedAt": "2026-04-30T17:20:16.814Z"
+      "completeness": 100,
+      "updatedAt": null
     }
   ]
 }
