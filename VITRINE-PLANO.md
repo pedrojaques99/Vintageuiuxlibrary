@@ -62,6 +62,40 @@ Duas armadilhas que custaram caro e estão comentadas no código para não volta
 
 `typescript`, `@types/react` e `@types/react-dom` entraram como devDependency e `npm run typecheck` está **verde**. Foram 1013 erros no primeiro `tsc` (quase todos por falta de `@types/react`) até zero. Duas exclusões documentadas no `tsconfig.json`: o `data-table` (acoplado ao Next por natureza) e a sobra morta do Figma Make.
 
+## Parte 5 — a rodada "nível shadcn/Apple"
+
+### Credibilidade
+
+**O registry nunca tinha sido instalado.** `npm run test:install` cria um projeto Vite+TS+Tailwind do zero num diretório temporário, sobe um servidor sobre `public/r` (prova os itens desta máquina, antes do deploy), roda `shadcn add` item por item e compila. Achou, na primeira execução:
+
+| Defeito | Alcance |
+|---|---|
+| `registryDependencies` sem namespace (`vintage-theme` em vez de `@visant/vintage-theme`) | **14 itens não instalavam para ninguém** — o CLI procurava no registry do shadcn |
+| `types.ts` do kanban declarado como `registry:lib` | ia para `src/lib/`, e os componentes importavam `./types` do lado deles |
+| `lucide-react`, `framer-motion`, `@lottiefiles/dotlottie-react`, `cva` não declarados | arquivo chega, import falha, culpa parece do consumidor |
+| `data-table` sem `inline-edit`, `input`, `use-media-query`, `checkbox`, `table`, `context-menu` | item publicado que nunca compilou fora daqui |
+| `use-media-query` importado e nunca publicado | arquivo inexistente |
+
+Hoje: **47/47 instalam e o projeto limpo compila.** E virou portão: `npm run check:deps` compara os imports reais de cada arquivo com o que o item declara, e roda no `ship`.
+
+**Regressão visual** (`npm test`, Playwright): 9 testes que travam invariantes, não pixels — altura do documento estável no scroll, filtro que não deixa rolagem órfã, nenhuma demo cortada, zero overflow horizontal em 390/768/1024/1440, console limpo, foco abrindo por URL e voltando com Esc. Os testes acharam três bugs enquanto eram escritos, incluindo o pior de todos:
+
+> O demo do `sticky-filterbar` monta o componente real, que **mede o cabeçalho da página e escreve `--header-h` na raiz do documento**. Como a casca da vitrine dimensionava o header com essa mesma variável, cada medição o fazia crescer, o ResizeObserver disparava de novo, e a página inchava alguns pixels por segundo, para sempre. A regra que ficou: nada na casca lê variável que um componente publicado escreve.
+
+### Documentação
+
+- **Props** extraídas do TypeScript dos itens com `react-docgen-typescript` (`npm run build:props`): 288 props em 43 itens, em `props.generated.json`, versionado — o diff do git mostra quando a API pública muda.
+- **Código** lido do próprio JSON do registry em runtime: é literalmente o arquivo que o `add` copia, com seletor de arquivo e botão de copiar.
+- **Rotas reais** (`/c/kanban`), um HTML por item gerado no build, com `title`, `description`, canonical e OG. **47 imagens de prévia** 1200×630 desenhadas no Chromium dos testes (`npm run build:og`). O hash antigo continua abrindo e se corrige sozinho na URL.
+- As descrições do `registry.json` estavam sem acento e com recado interno ("colhido do visant-board") — e é esse texto que aparece no `add`, na meta tag e na imagem. Agora o portão de catálogo compara as duas fontes e `--fix` sincroniza.
+
+### Acabamento
+
+- **Escala tipográfica**: 74 tamanhos arbitrários (9/10/11/12/13/14/15/19px) viraram seis degraus com nome de uso — `micro`, `rotulo`, `apoio`, `corpo`, `destaque`, `titulo`.
+- **Motion**: os tokens `--dur-*`/`--ease-*` eram lidos por metade dos componentes e **não existiam em lugar nenhum** — cada peça caía no próprio fallback. Agora existem uma vez, com as curvas da skill `visant-motion`, mais o guarda de `prefers-reduced-motion`.
+- **Toque e foco**: área clicável de 44px sem mudar o desenho (pseudo-elemento), um anel de foco só para tudo (`:where()`, especificidade zero), e a afordância que só aparecia no hover passou a existir em touch.
+- **Peso**: studio, bancada e a demo do kanban saem do carregamento inicial; vendor separado por ritmo de mudança. De um arquivo de 638KB para 304+140+132KB paralelos e cacheáveis em separado.
+
 ## Pendência que não é minha de resolver
 
 **`ui.visantlabs.com` não resolve (NXDOMAIN)** — e é o `homepage` publicado dentro do `registry.json`, ou seja, quem seguir o manifesto bate num endereço morto. O domínio já está registrado no projeto da Vercel; falta o registro no DNS de `visantlabs.com` (CNAME `ui` → `cname.vercel-dns.com`). O ship agora **testa o DNS do homepage** e, quando ele não resolve, avisa e imprime a URL que funciona em vez de anunciar a morta.
