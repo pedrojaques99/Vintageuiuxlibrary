@@ -146,6 +146,37 @@ test.describe("catálogo", () => {
     await expect(page.locator(CARD).filter({ hasText: "scrub-input" })).toHaveCount(1);
   });
 
+  /*
+   * Texto da cor do fundo.
+   *
+   * O chip de filtro ativo ficou ilegível porque o `tailwind-merge` achou que
+   * `text-apoio` (um degrau de tamanho da casa) era uma cor, e descartou a cor
+   * real do componente. Nada disso quebra build, typecheck ou portão: só a tela
+   * mostra, e só se alguém olhar.
+   */
+  test("nada é escrito na cor do próprio fundo", async ({ page }) => {
+    await page.goto("/");
+    await esperarGrade(page);
+
+    const invisiveis = await page.evaluate(() => {
+      const cor = (el: Element, prop: string) => getComputedStyle(el).getPropertyValue(prop);
+      const fundoReal = (el: Element): string => {
+        for (let n: Element | null = el; n; n = n.parentElement) {
+          const bg = cor(n, "background-color");
+          if (bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") return bg;
+        }
+        return "rgb(255, 255, 255)";
+      };
+      return [...document.querySelectorAll<HTMLElement>("[aria-pressed], button, a")]
+        .filter((el) => el.textContent?.trim())
+        .filter((el) => cor(el, "color") === fundoReal(el))
+        .slice(0, 5)
+        .map((el) => el.textContent!.trim().slice(0, 30));
+    });
+
+    expect(invisiveis, "texto com a mesma cor do fundo").toEqual([]);
+  });
+
   test("o console fica limpo", async ({ page }) => {
     const erros: string[] = [];
     page.on("console", (m) => m.type() === "error" && erros.push(m.text()));

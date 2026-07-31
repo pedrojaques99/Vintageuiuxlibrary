@@ -555,7 +555,7 @@ export const CATALOG: CatalogItem[] = [
     type: "theme",
     family: "marca",
     description:
-      "21 temas compilados do vault do Visant Labs: cor com contraste AA por construção, par tipográfico e o esqueleto de craft invariante.",
+      "Tema compilado de uma brand guideline: cor com contraste AA por construção, par tipográfico e o esqueleto de craft invariante. O da casa é público; os de cliente saem do vault de cada conta.",
     tags: ["tema", "tokens", "oklch", "aa"],
   },
 

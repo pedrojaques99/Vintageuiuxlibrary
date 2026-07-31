@@ -318,8 +318,8 @@ export function Gallery({
             com a pessoa já lendo.
           */}
           <span className="inline-block min-w-[1.6ch] tabular-nums">{brands.length || "…"}</span>{" "}
-          temas compilados do vault. Nenhum componente sabe a cor de um cliente — trocar a marca no
-          seletor repinta esta página inteira.
+          marcas de demonstração. Nenhum componente sabe a cor de um cliente — trocar a marca no
+          seletor repinta esta página inteira. As marcas reais ficam na conta de quem entra.
         </p>
       </section>
 
