@@ -39,6 +39,8 @@ const BrandStudioBody = React.lazy(() =>
 );
 const VintageRig = React.lazy(() => import("./VintageRig"));
 import { DEFAULT_BRAND, REGISTRY_URL } from "./registry-meta";
+import { VisantAuthProvider } from "./visant-auth";
+import { MinhasMarcas } from "./MinhasMarcas";
 
 type View = "catalogo" | "marca" | "rig";
 
@@ -189,13 +191,18 @@ function Shell() {
           </div>
 
           <div className="ml-auto flex items-center gap-2">
-            <SegmentedControl
-              value={density}
-              onChange={setDensity}
-              variant="compact"
-              aria-label="Densidade"
-              options={DENSITIES}
-            />
+            {/* A densidade sai no celular: lá a grade é de uma coluna, onde
+                densidade quase não muda nada — e o espaço que ela ocupava é o
+                que faltava para o botão de entrar caber sem estourar a linha. */}
+            <div className="hidden sm:block">
+              <SegmentedControl
+                value={density}
+                onChange={setDensity}
+                variant="compact"
+                aria-label="Densidade"
+                options={DENSITIES}
+              />
+            </div>
             <button
               type="button"
               onClick={() => setDark(!dark)}
@@ -205,6 +212,7 @@ function Shell() {
               {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
             </button>
             <BrandSelector />
+            <MinhasMarcas />
           </div>
         </div>
 
@@ -233,8 +241,10 @@ function Shell() {
 
 export default function App() {
   return (
-    <BrandThemeProvider registryUrl={REGISTRY_URL} defaultBrand={DEFAULT_BRAND}>
-      <Shell />
-    </BrandThemeProvider>
+    <VisantAuthProvider>
+      <BrandThemeProvider registryUrl={REGISTRY_URL} defaultBrand={DEFAULT_BRAND}>
+        <Shell />
+      </BrandThemeProvider>
+    </VisantAuthProvider>
   );
 }
