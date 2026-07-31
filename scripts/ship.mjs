@@ -20,6 +20,7 @@
  * skeuomórfico (madeira, LED, metal), onde a cor é a peça, não o tema.
  */
 import { execSync } from "node:child_process";
+import { promises as dns } from "node:dns";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -123,6 +124,13 @@ ok("zero hex — os componentes trocam de marca junto com o tema");
 say("Portão de catálogo");
 run("node scripts/catalog-check.mjs");
 
+// ── Portão 4: tipos ──────────────────────────────────────────────────────────
+// O `vite build` NÃO checa tipos (esbuild só apaga as anotações). Sem este
+// portão, `strict: true` no tsconfig é decoração: o erro passa pelo build,
+// entra no registry e só aparece no editor de quem instalou o item.
+say("Portão de tipos (tsc)");
+run("npx tsc --noEmit");
+
 // ── Builds ───────────────────────────────────────────────────────────────────
 say("Build do registry (shadcn)");
 run("npx shadcn@latest build");
@@ -166,7 +174,39 @@ if (!DEPLOY) {
 say("Deploy (Vercel, produção)");
 run("npx vercel deploy --prod --yes");
 
-const base = registry.homepage?.replace(/\/$/, "") ?? "";
+/*
+ * O manifesto anuncia um domínio. Ele resolve?
+ *
+ * `registry.json.homepage` é o endereço que vai no `components.json` de quem
+ * consome — se o DNS dele não existe, o `shadcn add` falha na casa do cliente e
+ * o problema aparece lá, não aqui. Já aconteceu: `ui.visantlabs.com` estava
+ * registrado como domínio do projeto na Vercel e sem registro no DNS, e o ship
+ * anunciava esse endereço a cada publicação como se estivesse no ar.
+ *
+ * Avisa, não mata: o deploy já aconteceu e o site está no ar pelo *.vercel.app.
+ */
+const homepage = registry.homepage?.replace(/\/$/, "") ?? "";
+const host = homepage.replace(/^https?:\/\//, "");
+const projectName = existsSync(join(ROOT, ".vercel", "project.json"))
+  ? JSON.parse(readFileSync(join(ROOT, ".vercel", "project.json"), "utf8")).projectName
+  : null;
+const fallback = projectName ? `https://${projectName}.vercel.app` : "";
+
+let base = homepage;
+if (host && !DRY) {
+  try {
+    await dns.resolve(host);
+  } catch {
+    base = fallback || homepage;
+    console.log(`
+${c.yellow(`⚠ ${host} não resolve no DNS (NXDOMAIN).`)}
+${c.dim(`  O domínio está registrado no projeto da Vercel, mas falta o registro no
+  provedor de DNS de visantlabs.com — aponte um CNAME de "ui" para
+  cname.vercel-dns.com. Até lá, quem seguir o \`homepage\` do registry.json
+  bate num endereço morto; use o de baixo.`)}`);
+  }
+}
+
 console.log(`
 ${c.green("Publicado.")}
 

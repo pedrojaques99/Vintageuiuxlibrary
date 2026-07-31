@@ -39,6 +39,29 @@ Alterados: `Gallery.tsx`, `catalog.tsx`, `App.tsx`, `BrandStudio.tsx`, `VintageR
 
 **Nenhum arquivo de `registry/` foi tocado** — a vitrine mudou, os componentes publicados não.
 
-## Pendência conhecida
+## Parte 3 — bugs achados depois, e o que os causava
 
-O repo tem `tsconfig.json` em `strict` e **não tem o TypeScript instalado**, então não existe `npm run typecheck` — os erros de tipo só apareceriam no editor. Instalar `typescript` como devDependency e adicionar o script resolve; ficou de fora por mexer em dependência.
+| Sintoma | Causa real | Correção |
+|---|---|---|
+| Faixas em branco no scroll, cabeçalho "solto" no meio da página | duas mentiras sobre altura: `contain-intrinsic-size` declarava só o palco (sem rodapé nem escala) e o esqueleto do lazy mount tinha outra altura ainda | o palco nasce com a altura final e só o conteúdo dele chega depois; `content-visibility` removido. Medido: **0px de variação** de altura do documento no scroll inteiro |
+| Filtrar por família deixava a tela num vazio | ir de 46 para 9 itens corta o documento de 5100 para 1500px; o navegador prende o scroll no novo fim e a pessoa fica 585px abaixo do primeiro card | `useLayoutEffect` reposiciona na primeira linha de resultados + `overflow-anchor: none` no body |
+
+Duas armadilhas que custaram caro e estão comentadas no código para não voltarem:
+
+- **Medir um elemento `sticky`.** No Chrome, `getBoundingClientRect` **e** `offsetTop` de um elemento grudado já vêm deslocados. Medindo pela barra de filtro, o alvo dava exatamente o scroll atual e o corretivo nunca rodava. A medição é feita pelo herói, que não gruda.
+- **`requestAnimationFrame` não é entregue em aba de segundo plano.** A primeira versão do corretivo dependia de um quadro e simplesmente não acontecia. Virou `useLayoutEffect`.
+
+## Parte 4 — portões
+
+`npm run ship` agora roda quatro portões antes de qualquer commit:
+
+1. `registry.json` parseia e todo `files[].path` existe
+2. zero hex em `registry/visant/`
+3. **catálogo × registry** batem (`npm run check:catalog`)
+4. **tipos** (`npx tsc --noEmit`) — o `vite build` não checa tipo nenhum; sem este portão, `strict: true` era decoração
+
+`typescript`, `@types/react` e `@types/react-dom` entraram como devDependency e `npm run typecheck` está **verde**. Foram 1013 erros no primeiro `tsc` (quase todos por falta de `@types/react`) até zero. Duas exclusões documentadas no `tsconfig.json`: o `data-table` (acoplado ao Next por natureza) e a sobra morta do Figma Make.
+
+## Pendência que não é minha de resolver
+
+**`ui.visantlabs.com` não resolve (NXDOMAIN)** — e é o `homepage` publicado dentro do `registry.json`, ou seja, quem seguir o manifesto bate num endereço morto. O domínio já está registrado no projeto da Vercel; falta o registro no DNS de `visantlabs.com` (CNAME `ui` → `cname.vercel-dns.com`). O ship agora **testa o DNS do homepage** e, quando ele não resolve, avisa e imprime a URL que funciona em vez de anunciar a morta.
