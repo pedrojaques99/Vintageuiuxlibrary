@@ -1,349 +1,201 @@
-import { useState, useEffect, useRef } from "react";
-import { VintageKnob } from "../../registry/vintage/ui/vintage-knob";
-import { VintageLargeKnob } from "../../registry/vintage/ui/vintage-large-knob";
-import { VintageMeter } from "../../registry/vintage/ui/vintage-meter";
-import { VintageButton } from "../../registry/vintage/ui/vintage-button";
-import { VintageSlider } from "../../registry/vintage/ui/vintage-slider";
-import { VintageToggle } from "../../registry/vintage/ui/vintage-toggle";
-import { VintageEQ } from "../../registry/vintage/ui/vintage-eq";
-import { VintageLed } from "../../registry/vintage/ui/vintage-led";
-import { VintageCommandPalette } from "../../registry/vintage/ui/vintage-command-palette";
-import { VintageTvFrame } from "../../registry/vintage/ui/vintage-tv-frame";
-import { VintageSoundboardPad } from "../../registry/vintage/ui/vintage-soundboard-pad";
-import { VintageXYPad } from "../../registry/vintage/ui/vintage-xy-pad";
-import { VintageOscilloscope } from "../../registry/vintage/ui/vintage-oscilloscope";
+"use client";
 
-export default function App() {
-  const [bassValue, setBassValue] = useState(5);
-  const [trebleValue, setTrebleValue] = useState(5);
-  const [gainValue, setGainValue] = useState(5);
-  const [meterValue, setMeterValue] = useState(5);
-  const [activeButton, setActiveButton] = useState<string | null>(null);
-  const [volumeValue, setVolumeValue] = useState(5);
-  const [showPalette, setShowPalette] = useState(false);
-  const [activePads, setActivePads] = useState<Set<number>>(new Set());
-  const waveDataRef = useRef<Float32Array>(new Float32Array(256));
+/**
+ * A casa do @visant/ui.
+ *
+ * Antes, a home era a bancada de áudio vintage — 13 dos 45 itens. Quem chegava
+ * concluía que a library era um kit de knobs e ia reescrever o resto. Agora a
+ * home é o catálogo inteiro, e a bancada virou uma das abas: continua sendo a
+ * melhor demo do kit, só não é mais a fachada.
+ *
+ * O `BrandThemeProvider` fica na raiz de propósito: as três abas leem os mesmos
+ * tokens, então trocar de marca no seletor repinta catálogo, studio e bancada
+ * ao mesmo tempo. Se só o studio respondesse, a promessa seria demo, não sistema.
+ *
+ * **A URL é a fonte da verdade da navegação.** Aba e item em foco moram no hash,
+ * e o estado do React é derivado dele — não o contrário. É o que faz o botão
+ * voltar do navegador funcionar de dentro da vista de foco e o que torna
+ * `#/c/kanban` um link que pode ser mandado no chat.
+ */
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMeterValue((prev) => {
-        const random = Math.random() * 2 - 1;
-        return Math.max(0, Math.min(10, prev + random));
-      });
-    }, 100);
-    return () => clearInterval(interval);
-  }, []);
+import * as React from "react";
+import { Moon, Sun, Rows3, Rows4 } from "lucide-react";
+import { BrandThemeProvider } from "@/lib/brand-theme";
+import { BrandSelector } from "../../registry/visant/ui/brand-selector";
+import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
+import { Gallery } from "./Gallery";
+import { BrandStudioBody } from "./BrandStudio";
+import VintageRig from "./VintageRig";
+import { DEFAULT_BRAND, REGISTRY_URL } from "./registry-meta";
 
-  // Generate fake waveform data for the oscilloscope demo
-  useEffect(() => {
-    let t = 0;
-    const interval = setInterval(() => {
-      t += 0.05;
-      const data = new Float32Array(256);
-      for (let i = 0; i < 256; i++) {
-        data[i] =
-          Math.sin((i / 256) * Math.PI * 4 + t) * 0.4 +
-          Math.sin((i / 256) * Math.PI * 7 + t * 1.3) * 0.2 +
-          Math.sin((i / 256) * Math.PI * 11 + t * 0.7) * 0.1;
-      }
-      waveDataRef.current = data;
-    }, 33);
-    return () => clearInterval(interval);
-  }, []);
+type View = "catalogo" | "marca" | "rig";
 
-  // Ctrl+K shortcut
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setShowPalette((v) => !v);
-      }
+interface Route {
+  view: View;
+  /** Item aberto em foco. Só existe no catálogo. */
+  focus: string | null;
+}
+
+const VIEWS: { value: View; label: string; short: string }[] = [
+  { value: "catalogo", label: "Catálogo", short: "Catálogo" },
+  { value: "marca", label: "Marca", short: "Marca" },
+  { value: "rig", label: "Rig vintage", short: "Rig" },
+];
+
+const DENSITIES = [
+  { value: "comfortable" as const, icon: Rows3, ariaLabel: "Densidade confortável" },
+  { value: "compact" as const, icon: Rows4, ariaLabel: "Densidade compacta" },
+];
+
+// --- rota --------------------------------------------------------------------
+
+function parseHash(hash: string): Route {
+  if (hash.startsWith("#/c/")) {
+    return { view: "catalogo", focus: decodeURIComponent(hash.slice(4)) || null };
+  }
+  const view = VIEWS.find((v) => v.value !== "catalogo" && hash.startsWith(`#/${v.value}`));
+  return { view: view?.value ?? "catalogo", focus: null };
+}
+
+function formatHash({ view, focus }: Route): string {
+  if (focus) return `#/c/${encodeURIComponent(focus)}`;
+  return view === "catalogo" ? "" : `#/${view}`;
+}
+
+function useHashRoute() {
+  const [route, setRoute] = React.useState<Route>(() => parseHash(window.location.hash));
+
+  // O navegador manda: voltar/avançar e link colado atualizam o estado.
+  React.useEffect(() => {
+    const sync = () => setRoute(parseHash(window.location.hash));
+    window.addEventListener("hashchange", sync);
+    window.addEventListener("popstate", sync);
+    return () => {
+      window.removeEventListener("hashchange", sync);
+      window.removeEventListener("popstate", sync);
     };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
   }, []);
+
+  /*
+   * `pushState`, e não `location.hash = …`.
+   *
+   * Fechar o foco a partir de `#/c/kanban` precisa voltar para a URL *sem* hash;
+   * atribuir string vazia ao `location.hash` deixa um `#` pendurado e nem sempre
+   * dispara o evento. Com `pushState` a URL fica limpa, cada passo entra no
+   * histórico (é o que faz o botão voltar significar "voltar pra grade") e o
+   * estado é atualizado na hora, sem depender do round-trip do evento.
+   */
+  const navigate = React.useCallback((next: Route) => {
+    const hash = formatHash(next);
+    if ((window.location.hash || "") !== hash) {
+      window.history.pushState(null, "", hash || window.location.pathname + window.location.search);
+    }
+    setRoute(next);
+  }, []);
+
+  return [route, navigate] as const;
+}
+
+function useDarkMode() {
+  const [dark, setDark] = React.useState(() =>
+    document.documentElement.classList.contains("dark"),
+  );
+  React.useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
+  return [dark, setDark] as const;
+}
+
+// --- casca -------------------------------------------------------------------
+
+function Shell() {
+  const [route, navigate] = useHashRoute();
+  const [dark, setDark] = useDarkMode();
+  const [density, setDensity] = React.useState<"comfortable" | "compact">("comfortable");
+
+  React.useEffect(() => {
+    document.documentElement.dataset.density = density;
+  }, [density]);
+
+  const setView = React.useCallback(
+    (view: View) => navigate({ view, focus: null }),
+    [navigate],
+  );
+  const setFocus = React.useCallback(
+    (focus: string | null) => navigate({ view: "catalogo", focus }),
+    [navigate],
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[var(--vintage-surface-1)] via-[var(--vintage-surface-2)] to-[#0a0a0a] p-8">
-      <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-12">
-          <h1 className="text-6xl font-vintage-display font-black text-transparent bg-clip-text bg-gradient-to-r from-[var(--vintage-label)] via-[var(--vintage-value)] to-[var(--vintage-label)] mb-2 tracking-wider">
-            VINTAGE UI
-          </h1>
-          <p className="text-[var(--vintage-text-muted)] font-vintage-mono text-sm tracking-widest">
-            @VISANT/UI — RETRO AUDIO CONTROL REGISTRY
-          </p>
-          <div className="mt-2 flex justify-center gap-3">
-            <VintageLed color="green" active label="PWR" />
-            <VintageLed color="yellow" active={activeButton === "bypass"} label="BYP" />
-            <VintageLed color="red" active={meterValue > 8} label="CLIP" />
-            <VintageLed color="orange" active={activeButton === "mute"} label="MUTE" />
-          </div>
-          <div className="mt-4 flex justify-center gap-1">
-            {[...Array(20)].map((_, i) => (
-              <div key={i} className="w-1 h-1 bg-[var(--vintage-border)] rounded-full" />
-            ))}
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <h2 className="text-xl font-vintage-display text-[var(--vintage-label)] mb-6 tracking-wider">
-              ROTARY CONTROLS
-            </h2>
-            <div className="flex justify-around items-center gap-8">
-              <div className="text-center">
-                <VintageKnob label="BASS" value={bassValue} onChange={setBassValue} />
-                <p className="text-[var(--vintage-text-dim)] text-xs mt-2 font-vintage-mono">
-                  -10dB to +10dB
-                </p>
-              </div>
-              <div className="text-center">
-                <VintageKnob label="TREBLE" value={trebleValue} onChange={setTrebleValue} />
-                <p className="text-[var(--vintage-text-dim)] text-xs mt-2 font-vintage-mono">
-                  -10dB to +10dB
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <h2 className="text-xl font-vintage-display text-[var(--vintage-label)] mb-6 tracking-wider">
-              VU METER
-            </h2>
-            <div className="flex justify-center">
-              <VintageMeter label="SIGNAL" value={meterValue} />
-            </div>
-          </section>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <h2 className="text-xl font-vintage-display text-[var(--vintage-label)] mb-6 tracking-wider">
-              PUSH BUTTONS
-            </h2>
-            <div className="flex justify-around items-center">
-              <VintageButton
-                label="POWER"
-                active={activeButton === "power"}
-                onClick={() => setActiveButton(activeButton === "power" ? null : "power")}
-              />
-              <VintageButton
-                label="BYPASS"
-                active={activeButton === "bypass"}
-                onClick={() => setActiveButton(activeButton === "bypass" ? null : "bypass")}
-              />
-              <VintageButton
-                label="MUTE"
-                active={activeButton === "mute"}
-                onClick={() => setActiveButton(activeButton === "mute" ? null : "mute")}
-              />
-            </div>
-          </section>
-
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <h2 className="text-xl font-vintage-display text-[var(--vintage-label)] mb-6 tracking-wider">
-              FADER CONTROL
-            </h2>
-            <div className="flex justify-center">
-              <VintageSlider label="GAIN" value={gainValue} onChange={setGainValue} />
-            </div>
-          </section>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-12">
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <h2 className="text-xl font-vintage-display text-[var(--vintage-label)] mb-6 tracking-wider">
-              LARGE KNOB
-            </h2>
-            <div className="flex justify-center">
-              <VintageLargeKnob label="VOLUME" value={volumeValue} onChange={setVolumeValue} />
-            </div>
-          </section>
-
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <h2 className="text-xl font-vintage-display text-[var(--vintage-label)] mb-6 tracking-wider">
-              3-WAY TOGGLE
-            </h2>
-            <div className="flex justify-center items-center h-full">
-              <VintageToggle />
-            </div>
-          </section>
-        </div>
-
-        <div className="mt-12">
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <div className="flex justify-center">
-              <VintageEQ />
-            </div>
-          </section>
-        </div>
-
-        {/* ─── NEW: 7panel_studio Components ─── */}
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-12">
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <h2 className="text-xl font-vintage-display text-[var(--vintage-label)] mb-6 tracking-wider">
-              RETRO TV FRAME
-            </h2>
-            <div className="flex justify-center">
-              <VintageTvFrame
-                title="VISANT TV"
-                width={420}
-                showTimecode="00:12:34"
-                signalActive
-              >
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background:
-                      "radial-gradient(ellipse at 50% 40%, rgba(51,255,102,0.05), transparent 70%)",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontFamily: "var(--font-vintage-mono, monospace)",
-                      fontSize: 13,
-                      fontWeight: 700,
-                      letterSpacing: "0.15em",
-                      color: "#33ff66",
-                      textShadow: "0 0 8px rgba(51,255,102,0.6)",
-                      textTransform: "uppercase",
-                      marginBottom: 4,
-                    }}
-                  >
-                    SIGNAL ACTIVE
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "monospace",
-                      fontSize: 10,
-                      color: "rgba(51,255,102,0.35)",
-                      letterSpacing: "0.1em",
-                    }}
-                  >
-                    CH 01 — 720p — CLICK POWER TO TEST CRT ANIMATION
-                  </div>
-                </div>
-              </VintageTvFrame>
-            </div>
-          </section>
-
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <h2 className="text-xl font-vintage-display text-[var(--vintage-label)] mb-6 tracking-wider">
-              OSCILLOSCOPE
-            </h2>
-            <div className="flex justify-center">
-              <VintageOscilloscope
-                data={waveDataRef.current}
-                color="#33ff66"
-                width={320}
-                height={160}
-              />
-            </div>
-          </section>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-12">
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <h2 className="text-xl font-vintage-display text-[var(--vintage-label)] mb-6 tracking-wider">
-              SOUNDBOARD PADS
-            </h2>
-            <div className="grid grid-cols-4 gap-2.5 justify-items-center">
-              {[
-                { label: "KICK", icon: "🥁", color: "#00b860" },
-                { label: "SNARE", icon: "🪘", color: "#3b82f6" },
-                { label: "HAT", icon: "🎩", color: "#f59e0b" },
-                { label: "CLAP", icon: "👏", color: "#ec4899" },
-                { label: "BASS", icon: "🎸", color: "#8b5cf6" },
-                { label: "SYNTH", icon: "🎹", color: "#06b6d4" },
-                { label: "FX", icon: "💥", color: "#f97316" },
-                { label: "VOX", icon: "🎤", color: "#84cc16" },
-              ].map((pad, i) => (
-                <VintageSoundboardPad
-                  key={i}
-                  label={pad.label}
-                  icon={pad.icon}
-                  color={pad.color}
-                  size={80}
-                  active={activePads.has(i)}
-                  onTrigger={() => setActivePads((s) => new Set(s).add(i))}
-                  onRelease={() => {
-                    setActivePads((s) => {
-                      const next = new Set(s);
-                      next.delete(i);
-                      return next;
-                    });
-                  }}
-                />
-              ))}
-            </div>
-          </section>
-
-          <section className="bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)] shadow-2xl">
-            <h2 className="text-xl font-vintage-display text-[var(--vintage-label)] mb-6 tracking-wider">
-              XY PAD
-            </h2>
-            <div className="flex justify-center">
-              <VintageXYPad
-                size={200}
-                labelX="FILTER"
-                labelY="REVERB"
-                color="var(--vintage-accent)"
-              />
-            </div>
-          </section>
-        </div>
-
-        <div className="mt-12 text-center">
+    <div
+      className="min-h-screen bg-background text-foreground"
+      style={{ fontFamily: "var(--font-sans, ui-sans-serif, system-ui)" }}
+    >
+      <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
+        <div className="shell flex h-[var(--header-h)] items-center gap-3">
           <button
-            onClick={() => setShowPalette(true)}
-            className="bg-[var(--vintage-surface-3)] border border-[var(--vintage-border)] rounded-lg px-6 py-3 text-[var(--vintage-text-muted)] font-vintage-mono text-sm tracking-wider hover:bg-[var(--vintage-surface-3a)] transition-colors cursor-pointer"
+            type="button"
+            onClick={() => setView("catalogo")}
+            className="flex items-center gap-2"
           >
-            PRESS CTRL+K — COMMAND PALETTE
+            <span
+              className="h-5 w-5 rounded-[6px]"
+              style={{ background: "var(--brand, var(--foreground))" }}
+            />
+            <span className="font-mono text-[12px] tracking-tight">@visant/ui</span>
           </button>
+
+          <div className="ml-2 hidden sm:block">
+            <SegmentedControl
+              value={route.view}
+              onChange={setView}
+              aria-label="Seção"
+              options={VIEWS.map(({ value, label }) => ({ value, label }))}
+            />
+          </div>
+
+          <div className="ml-auto flex items-center gap-2">
+            <SegmentedControl
+              value={density}
+              onChange={setDensity}
+              variant="compact"
+              aria-label="Densidade"
+              options={DENSITIES}
+            />
+            <button
+              type="button"
+              onClick={() => setDark(!dark)}
+              aria-label={dark ? "Tema claro" : "Tema escuro"}
+              className="grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            </button>
+            <BrandSelector />
+          </div>
         </div>
 
-        {showPalette && (
-          <VintageCommandPalette
-            items={[
-              { id: "knobs", label: "Rotary Controls", icon: "🎛", group: "Controls", active: true },
-              { id: "meter", label: "VU Meter", icon: "📊", group: "Controls", active: true },
-              { id: "buttons", label: "Push Buttons", icon: "🔘", group: "Controls" },
-              { id: "slider", label: "Fader Control", icon: "🎚", group: "Controls" },
-              { id: "eq", label: "Graphic EQ", icon: "📈", group: "Audio" },
-              { id: "tv", label: "Retro TV", icon: "📺", group: "Visuals" },
-              { id: "scope", label: "Oscilloscope", icon: "〰️", group: "Visuals" },
-              { id: "pads", label: "Soundboard", icon: "🥁", group: "Audio" },
-              { id: "xy", label: "XY Pad", icon: "✛", group: "Controls" },
-            ]}
-            groups={[
-              { label: "Controls", ids: ["knobs", "meter", "buttons", "slider", "xy"] },
-              { label: "Audio", ids: ["eq", "pads"] },
-              { label: "Visuals", ids: ["tv", "scope"] },
-            ]}
-            onSelect={(id) => {
-              const el = document.getElementById(id);
-              el?.scrollIntoView({ behavior: "smooth" });
-            }}
-            onClose={() => setShowPalette(false)}
-            placeholder="Search components..."
+        {/* no celular as abas descem para uma segunda linha em vez de sumirem */}
+        <div className="shell pb-2 sm:hidden">
+          <SegmentedControl
+            value={route.view}
+            onChange={setView}
+            aria-label="Seção"
+            options={VIEWS.map(({ value, short }) => ({ value, label: short }))}
           />
-        )}
+        </div>
+      </header>
 
-        <footer className="mt-16 text-center">
-          <div className="inline-block bg-[var(--vintage-surface-2)] border border-[var(--vintage-border)] rounded-lg px-8 py-4">
-            <p className="text-[var(--vintage-text-dim)] font-vintage-mono text-xs tracking-widest">
-              @VISANT/UI REGISTRY | npx shadcn add @visant/vintage-knob | DRAG KNOBS & SLIDERS TO ADJUST
-            </p>
-          </div>
-        </footer>
-      </div>
+      {route.view === "catalogo" && <Gallery focus={route.focus} onFocus={setFocus} />}
+      {route.view === "marca" && <BrandStudioBody />}
+      {route.view === "rig" && <VintageRig />}
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrandThemeProvider registryUrl={REGISTRY_URL} defaultBrand={DEFAULT_BRAND}>
+      <Shell />
+    </BrandThemeProvider>
   );
 }

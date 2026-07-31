@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-urban-stay",
+  "type": "registry:theme",
+  "title": "Urban Stay® — brand theme",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Tokens gerados de brand guideline 6a56b9bc2fba948b46347dab v7. Contraste AA garantido por construção. Não editar à mão — regenerar.",
+  "cssVars": {
+    "theme": {
+      "font-sans": "'Clash Grotesk', ui-sans-serif, system-ui, sans-serif",
+      "font-display": "'Clash Grotesk', ui-sans-serif, system-ui, sans-serif",
+      "r-control": "0.5rem",
+      "r-surface": "0.875rem",
+      "r-pill": "9999px",
+      "e-flat": "none",
+      "e-raised": "0 1px 2px hsl(var(--shadow) / 0.06), 0 6px 16px hsl(var(--shadow) / 0.10)",
+      "e-overlay": "0 2px 6px hsl(var(--shadow) / 0.12), 0 12px 32px hsl(var(--shadow) / 0.14)",
+      "e-modal": "0 8px 40px hsl(var(--shadow) / 0.22)",
+      "focus": "0 0 0 2px var(--background), 0 0 0 4px var(--brand)",
+      "ease-out": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "ease-in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
+      "ease-drawer": "cubic-bezier(0.32, 0.72, 0, 1)",
+      "dur-press": "120ms",
+      "dur-fast": "160ms",
+      "dur-base": "200ms",
+      "dur-slow": "300ms",
+      "pad-card": "1.25rem",
+      "control-h": "2.25rem",
+      "gap-zone": "1rem"
+    },
+    "light": {
+      "background": "oklch(0.9706 0.0199 100.58)",
+      "foreground": "oklch(0.243 0.0218 95.77)",
+      "card": "oklch(0.9474 0.0242 96.57)",
+      "card-foreground": "oklch(0.243 0.0218 95.77)",
+      "popover": "oklch(0.9474 0.0242 96.57)",
+      "popover-foreground": "oklch(0.243 0.0218 95.77)",
+      "muted": "oklch(0.9232 0.0243 96.58)",
+      "muted-foreground": "oklch(0.5374 0.0232 94.72)",
+      "secondary": "oklch(0.9232 0.0243 96.58)",
+      "secondary-foreground": "oklch(0.243 0.0218 95.77)",
+      "accent": "oklch(0.9232 0.0243 96.58)",
+      "accent-foreground": "oklch(0.243 0.0218 95.77)",
+      "border": "oklch(0.8716 0.0234 95.99)",
+      "input": "oklch(0.8375 0.0236 96.01)",
+      "brand": "oklch(0.8692 0.031 222.93)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.5354 0.0466 235.7)",
+      "ring": "oklch(0.8692 0.031 222.93)",
+      "shadow": "97 30% 12%"
+    },
+    "dark": {
+      "background": "oklch(0.2376 0.0147 101.53)",
+      "foreground": "oklch(0.9886 0.0017 67.8)",
+      "card": "oklch(0.2871 0.0159 102.1)",
+      "card-foreground": "oklch(0.9886 0.0017 67.8)",
+      "popover": "oklch(0.2871 0.0159 102.1)",
+      "popover-foreground": "oklch(0.9886 0.0017 67.8)",
+      "muted": "oklch(0.3384 0.0169 102.55)",
+      "muted-foreground": "oklch(0.6285 0.0163 98.42)",
+      "secondary": "oklch(0.3384 0.0169 102.55)",
+      "secondary-foreground": "oklch(0.9886 0.0017 67.8)",
+      "accent": "oklch(0.3384 0.0169 102.55)",
+      "accent-foreground": "oklch(0.9886 0.0017 67.8)",
+      "border": "oklch(0.4143 0.0162 102.4)",
+      "input": "oklch(0.4582 0.0158 102.33)",
+      "brand": "oklch(0.8692 0.031 222.93)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.6274 0.0186 225.36)",
+      "ring": "oklch(0.8692 0.031 222.93)",
+      "shadow": "0 0% 0%"
+    }
+  },
+  "css": {
+    "[data-density=\"compact\"]": {
+      "--pad-card": "0.875rem",
+      "--control-h": "2rem",
+      "--gap-zone": "0.75rem"
+    }
+  },
+  "meta": {
+    "brandId": "6a56b9bc2fba948b46347dab",
+    "brandName": "Urban Stay®",
+    "brandVersion": 7,
+    "completeness": 43,
+    "engine": "@visant/brand-tokens"
+  }
+}

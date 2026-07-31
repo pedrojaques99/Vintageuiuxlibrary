@@ -1,0 +1,227 @@
+"use client";
+
+/**
+ * A vista de foco: um item, tela cheia, tamanho real.
+ *
+ * O card da grade responde "isso existe?". Ele não responde "isso serve pro meu
+ * caso?" — pra isso a pessoa precisa *usar* a peça: arrastar o knob, largar um
+ * card no board, ver o que acontece a 360px de largura. É o que esta vista faz.
+ *
+ * Três decisões que valem explicação:
+ *
+ * - **Presets de viewport.** A pergunta que mais aparece sobre um componente de
+ *   library é se ele aguenta o celular. Aqui a resposta é um clique, não um
+ *   devtools — e a peça é escalada, nunca cortada, quando o preset não cabe.
+ * - **`←` `→` navegam sem fechar.** Percorrer o catálogo é o gesto principal;
+ *   obrigar a fechar e reabrir mataria o ritmo.
+ * - **Rota no hash (`#/c/<nome>`), decidida pelo App.** Dá link compartilhável e
+ *   faz o botão voltar do navegador significar "voltar pra grade", que é o que a
+ *   pessoa espera. Esta vista não conhece a URL: recebe o item e devolve eventos.
+ */
+
+import * as React from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { ChevronLeft, ChevronRight, Monitor, Smartphone, Tablet, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
+import { FitStage, useElementWidth } from "./stage";
+import { TYPE_LABEL, familyLabel, previewOf, type CatalogItem } from "./catalog";
+import { installCommand } from "./registry-meta";
+import { CopyCommand } from "./copy-command";
+
+/** Larguras de teste. `0` = o que couber na tela. */
+const VIEWPORTS = [
+  { value: "sm" as const, px: 360, icon: Smartphone, ariaLabel: "Largura de celular (360px)" },
+  { value: "md" as const, px: 768, icon: Tablet, ariaLabel: "Largura de tablet (768px)" },
+  { value: "full" as const, px: 0, icon: Monitor, ariaLabel: "Largura cheia" },
+];
+
+type ViewportKey = (typeof VIEWPORTS)[number]["value"];
+
+/** Altura mínima do palco em foco: abaixo disso a peça encosta nas bordas. */
+const MIN_STAGE_H = 340;
+
+export function ComponentFocus({
+  item,
+  index,
+  total,
+  onClose,
+  onPrev,
+  onNext,
+}: {
+  item: CatalogItem;
+  index: number;
+  total: number;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
+  const [viewport, setViewport] = React.useState<ViewportKey>("full");
+  const [stageRef, available] = useElementWidth<HTMLDivElement>();
+  const Demo = item.demo;
+  const natural = previewOf(item);
+
+  // Setas percorrem o catálogo. Ignoradas enquanto alguém digita dentro da demo —
+  // várias peças aqui têm input, e roubar a seta do cursor seria hostil.
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = document.activeElement;
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) return;
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        onPrev();
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        onNext();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onPrev, onNext]);
+
+  const preset = VIEWPORTS.find((v) => v.value === viewport)!;
+  const frameW = preset.px || Math.max(available, 320);
+  const frameH = Math.max(natural.h, MIN_STAGE_H);
+
+  return (
+    <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-background/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0" />
+        <Dialog.Content
+          aria-describedby={undefined}
+          className={cn(
+            "fixed inset-0 z-50 flex flex-col bg-background outline-none",
+            "sm:inset-4 sm:rounded-[var(--r-surface,0.875rem)] sm:border sm:border-border sm:shadow-2xl",
+            "data-[state=open]:animate-in data-[state=open]:fade-in-0",
+          )}
+        >
+          {/* cabeçalho */}
+          <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border px-4 py-3 sm:px-5">
+            <Dialog.Title className="font-mono text-[13px]">{item.name}</Dialog.Title>
+            <span className="rounded-full border border-border px-1.5 py-px font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+              {TYPE_LABEL[item.type]}
+            </span>
+            <span className="hidden text-[11px] text-muted-foreground sm:inline">
+              {familyLabel(item.family)}
+            </span>
+
+            <div className="ml-auto flex items-center gap-1">
+              <span className="mr-1 hidden font-mono text-[11px] tabular-nums text-muted-foreground sm:inline">
+                {index + 1}/{total}
+              </span>
+              <button
+                type="button"
+                onClick={onPrev}
+                aria-label="Item anterior"
+                className="grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={onNext}
+                aria-label="Próximo item"
+                className="grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+              <Dialog.Close
+                aria-label="Fechar"
+                className="ml-1 grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </Dialog.Close>
+            </div>
+          </div>
+
+          <div className="flex min-h-0 flex-1 flex-col overflow-auto lg:flex-row">
+            {/* palco */}
+            <div className="flex min-w-0 flex-1 flex-col">
+              {Demo ? (
+                <>
+                  <div className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-2 sm:px-5">
+                    <SegmentedControl
+                      value={viewport}
+                      onChange={setViewport}
+                      variant="compact"
+                      aria-label="Largura de teste"
+                      options={VIEWPORTS}
+                    />
+                    <span className="ml-auto font-mono text-[10px] tabular-nums text-muted-foreground">
+                      {Math.round(Math.min(frameW, available || frameW))}px
+                    </span>
+                  </div>
+
+                  <div
+                    ref={stageRef}
+                    className="flex flex-1 items-start justify-center overflow-auto p-4 sm:p-8"
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0)",
+                      backgroundSize: "18px 18px",
+                    }}
+                  >
+                    <div
+                      className="overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card"
+                      style={{ width: Math.min(frameW, available || frameW) }}
+                    >
+                      {/* Escala só entra quando o preset não cabe — nunca amplia. */}
+                      <FitStage w={frameW} h={frameH} maxScale={1}>
+                        <Demo />
+                      </FitStage>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="grid flex-1 place-items-center p-10 text-center">
+                  <p className="max-w-sm text-[13px] leading-relaxed text-muted-foreground">
+                    Este item não tem superfície visual própria — é{" "}
+                    <span className="font-mono">{TYPE_LABEL[item.type]}</span>. O que ele entrega
+                    está na descrição ao lado e no arquivo que o{" "}
+                    <span className="font-mono">add</span> copia.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* ficha */}
+            <aside className="shrink-0 space-y-4 border-t border-border p-4 sm:p-5 lg:w-[300px] lg:border-l lg:border-t-0">
+              <div>
+                <h2
+                  className="text-[19px] font-semibold tracking-[-0.02em]"
+                  style={{ fontFamily: "var(--font-display, inherit)" }}
+                >
+                  {item.title}
+                </h2>
+                <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+                  {item.description}
+                </p>
+              </div>
+
+              <CopyCommand text={installCommand(item.name)} />
+
+              <div className="flex flex-wrap gap-1.5">
+                {item.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-[var(--r-pill,9999px)] border border-border px-2 py-0.5 text-[11px] text-muted-foreground"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              <p className="text-[11px] leading-relaxed text-muted-foreground">
+                <kbd className="rounded border border-border px-1 font-mono">←</kbd>{" "}
+                <kbd className="rounded border border-border px-1 font-mono">→</kbd> percorre o
+                catálogo · <kbd className="rounded border border-border px-1 font-mono">Esc</kbd>{" "}
+                volta pra grade
+              </p>
+            </aside>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}

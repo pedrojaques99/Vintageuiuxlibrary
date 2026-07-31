@@ -1,4 +1,50 @@
 @import 'tailwindcss' source(none);
 @source '../**/*.{js,ts,jsx,tsx}';
+/* Os componentes do registry moram FORA de src/. Sem esta linha, classe usada só
+   lá (ex.: `top-[12vh]` do BrandSelector) não é gerada — o componente monta,
+   não quebra nada no console, e aparece no lugar errado da tela. */
+@source '../../registry/**/*.{ts,tsx}';
 
 @import 'tw-animate-css';
+
+/*
+ * Tokens de casca da vitrine.
+ *
+ * Três páginas (catálogo, studio, rig) e uma barra fixa precisam concordar sobre
+ * a mesma largura, o mesmo respiro lateral e a mesma altura de cabeçalho. Antes
+ * isso era `max-w-6xl px-6` copiado em cada arquivo e um `top-14` que só ficava
+ * certo por coincidência — mudar a altura do header desalinhava a barra de
+ * filtro e ninguém descobria até ver no celular.
+ *
+ * Aqui é o único lugar onde esses três números existem.
+ */
+@layer base {
+  :root {
+    --header-h: 3.5rem;
+    --shell-max: 90rem;
+    --shell-pad: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    :root {
+      --shell-pad: 1.5rem;
+    }
+  }
+}
+
+@layer components {
+  /* Container das páginas. */
+  .shell {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--shell-max);
+    padding-inline: var(--shell-pad);
+  }
+
+  /* Faixa que sangra até a borda do container e devolve o respiro por dentro —
+     é o que a barra de filtro fixa precisa para o fundo cobrir a largura toda. */
+  .shell-bleed {
+    margin-inline: calc(var(--shell-pad) * -1);
+    padding-inline: var(--shell-pad);
+  }
+}

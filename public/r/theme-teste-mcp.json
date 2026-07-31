@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-teste-mcp",
+  "type": "registry:theme",
+  "title": "Teste MCP — brand theme",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Tokens gerados de brand guideline 69f38f34b2008c6eb8449002 v1. Contraste AA garantido por construção. Não editar à mão — regenerar.",
+  "cssVars": {
+    "theme": {
+      "font-sans": "'Inter', ui-sans-serif, system-ui, sans-serif",
+      "font-display": "'Inter', ui-sans-serif, system-ui, sans-serif",
+      "r-control": "0.5rem",
+      "r-surface": "0.875rem",
+      "r-pill": "9999px",
+      "e-flat": "none",
+      "e-raised": "0 1px 2px hsl(var(--shadow) / 0.06), 0 6px 16px hsl(var(--shadow) / 0.10)",
+      "e-overlay": "0 2px 6px hsl(var(--shadow) / 0.12), 0 12px 32px hsl(var(--shadow) / 0.14)",
+      "e-modal": "0 8px 40px hsl(var(--shadow) / 0.22)",
+      "focus": "0 0 0 2px var(--background), 0 0 0 4px var(--brand)",
+      "ease-out": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "ease-in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
+      "ease-drawer": "cubic-bezier(0.32, 0.72, 0, 1)",
+      "dur-press": "120ms",
+      "dur-fast": "160ms",
+      "dur-base": "200ms",
+      "dur-slow": "300ms",
+      "pad-card": "1.25rem",
+      "control-h": "2.25rem",
+      "gap-zone": "1rem"
+    },
+    "light": {
+      "background": "oklch(1 0 0)",
+      "foreground": "oklch(0.272 0.0107 27.46)",
+      "card": "oklch(0.9761 0 0)",
+      "card-foreground": "oklch(0.272 0.0107 27.46)",
+      "popover": "oklch(0.9761 0 0)",
+      "popover-foreground": "oklch(0.272 0.0107 27.46)",
+      "muted": "oklch(0.9521 0 0)",
+      "muted-foreground": "oklch(0.5566 0.0062 17.34)",
+      "secondary": "oklch(0.9521 0 0)",
+      "secondary-foreground": "oklch(0.272 0.0107 27.46)",
+      "accent": "oklch(0.9521 0 0)",
+      "accent-foreground": "oklch(0.272 0.0107 27.46)",
+      "border": "oklch(0.8983 0.0011 17.18)",
+      "input": "oklch(0.8646 0.0011 17.18)",
+      "brand": "oklch(0.6804 0.21 33.69)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.5743 0.156 34.41)",
+      "ring": "oklch(0.6804 0.21 33.69)",
+      "shadow": "30 30% 12%"
+    },
+    "dark": {
+      "background": "oklch(0.2396 0.0062 17.59)",
+      "foreground": "oklch(0.9896 0.0021 17.19)",
+      "card": "oklch(0.2864 0.0074 17.59)",
+      "card-foreground": "oklch(0.9896 0.0021 17.19)",
+      "popover": "oklch(0.2864 0.0074 17.59)",
+      "popover-foreground": "oklch(0.9896 0.0021 17.19)",
+      "muted": "oklch(0.3419 0.007 17.5)",
+      "muted-foreground": "oklch(0.6295 0.0084 17.38)",
+      "secondary": "oklch(0.3419 0.007 17.5)",
+      "secondary-foreground": "oklch(0.9896 0.0021 17.19)",
+      "accent": "oklch(0.3419 0.007 17.5)",
+      "accent-foreground": "oklch(0.9896 0.0021 17.19)",
+      "border": "oklch(0.4146 0.0082 28.9)",
+      "input": "oklch(0.4598 0.0091 17.49)",
+      "brand": "oklch(0.6804 0.21 33.69)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.6511 0.1948 34.02)",
+      "ring": "oklch(0.6804 0.21 33.69)",
+      "shadow": "0 0% 0%"
+    }
+  },
+  "css": {
+    "[data-density=\"compact\"]": {
+      "--pad-card": "0.875rem",
+      "--control-h": "2rem",
+      "--gap-zone": "0.75rem"
+    }
+  },
+  "meta": {
+    "brandId": "69f38f34b2008c6eb8449002",
+    "brandName": "Teste MCP",
+    "brandVersion": 1,
+    "completeness": 0,
+    "engine": "@visant/brand-tokens"
+  }
+}

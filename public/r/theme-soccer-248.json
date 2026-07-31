@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-soccer-248",
+  "type": "registry:theme",
+  "title": "Soccer 248 — brand theme",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Tokens gerados de brand guideline 6a2a16b62dad41bb87a40be8 v11. Contraste AA garantido por construção. Não editar à mão — regenerar.",
+  "cssVars": {
+    "theme": {
+      "font-sans": "'Inter', ui-sans-serif, system-ui, sans-serif",
+      "font-display": "'Mont', ui-sans-serif, system-ui, sans-serif",
+      "r-control": "0.5rem",
+      "r-surface": "0.875rem",
+      "r-pill": "9999px",
+      "e-flat": "none",
+      "e-raised": "0 1px 2px hsl(var(--shadow) / 0.06), 0 6px 16px hsl(var(--shadow) / 0.10)",
+      "e-overlay": "0 2px 6px hsl(var(--shadow) / 0.12), 0 12px 32px hsl(var(--shadow) / 0.14)",
+      "e-modal": "0 8px 40px hsl(var(--shadow) / 0.22)",
+      "focus": "0 0 0 2px var(--background), 0 0 0 4px var(--brand)",
+      "ease-out": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "ease-in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
+      "ease-drawer": "cubic-bezier(0.32, 0.72, 0, 1)",
+      "dur-press": "120ms",
+      "dur-fast": "160ms",
+      "dur-base": "200ms",
+      "dur-slow": "300ms",
+      "pad-card": "1.25rem",
+      "control-h": "2.25rem",
+      "gap-zone": "1rem"
+    },
+    "light": {
+      "background": "oklch(0.9642 0 0)",
+      "foreground": "oklch(0.2356 0.0128 26.43)",
+      "card": "oklch(0.9461 0 0)",
+      "card-foreground": "oklch(0.2356 0.0128 26.43)",
+      "popover": "oklch(0.9461 0 0)",
+      "popover-foreground": "oklch(0.2356 0.0128 26.43)",
+      "muted": "oklch(0.9219 0 0)",
+      "muted-foreground": "oklch(0.5323 0.0063 17.35)",
+      "secondary": "oklch(0.9219 0 0)",
+      "secondary-foreground": "oklch(0.2356 0.0128 26.43)",
+      "accent": "oklch(0.9219 0 0)",
+      "accent-foreground": "oklch(0.2356 0.0128 26.43)",
+      "border": "oklch(0.8646 0.0011 17.18)",
+      "input": "oklch(0.8336 0.0011 17.18)",
+      "brand": "oklch(0.7455 0.1283 226.99)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.529 0.0909 236.32)",
+      "ring": "oklch(0.7455 0.1283 226.99)",
+      "shadow": "30 30% 12%"
+    },
+    "dark": {
+      "background": "oklch(0.2396 0.0062 17.59)",
+      "foreground": "oklch(0.9896 0.0021 17.19)",
+      "card": "oklch(0.2864 0.0074 17.59)",
+      "card-foreground": "oklch(0.9896 0.0021 17.19)",
+      "popover": "oklch(0.2864 0.0074 17.59)",
+      "popover-foreground": "oklch(0.9896 0.0021 17.19)",
+      "muted": "oklch(0.3419 0.007 17.5)",
+      "muted-foreground": "oklch(0.6295 0.0084 17.38)",
+      "secondary": "oklch(0.3419 0.007 17.5)",
+      "secondary-foreground": "oklch(0.9896 0.0021 17.19)",
+      "accent": "oklch(0.3419 0.007 17.5)",
+      "accent-foreground": "oklch(0.9896 0.0021 17.19)",
+      "border": "oklch(0.4146 0.0082 28.9)",
+      "input": "oklch(0.4598 0.0091 17.49)",
+      "brand": "oklch(0.7455 0.1283 226.99)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.6233 0.0899 226.73)",
+      "ring": "oklch(0.7455 0.1283 226.99)",
+      "shadow": "0 0% 0%"
+    }
+  },
+  "css": {
+    "[data-density=\"compact\"]": {
+      "--pad-card": "0.875rem",
+      "--control-h": "2rem",
+      "--gap-zone": "0.75rem"
+    }
+  },
+  "meta": {
+    "brandId": "6a2a16b62dad41bb87a40be8",
+    "brandName": "Soccer 248",
+    "brandVersion": 11,
+    "completeness": 64,
+    "engine": "@visant/brand-tokens"
+  }
+}

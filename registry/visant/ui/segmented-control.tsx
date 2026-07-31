@@ -57,7 +57,7 @@ export function SegmentedControl<T extends string>({
             )}
           >
             {Icon && <Icon className="h-3.5 w-3.5" />}
-            {opt.label && <span>{opt.label}</span>}
+            {opt.label && <span className="whitespace-nowrap">{opt.label}</span>}
           </button>
         );
       })}

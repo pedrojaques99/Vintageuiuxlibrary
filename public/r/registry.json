@@ -967,6 +967,40 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "brand-theme",
+      "type": "registry:lib",
+      "title": "Brand Theme Runtime",
+      "description": "Aplica em runtime o tema compilado de uma brand guideline do Visant Labs. Provider, hook e a folha de estilo unica que troca a marca sem recarregar.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "files": [
+        {
+          "path": "registry/visant/lib/brand-theme.tsx",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "brand-selector",
+      "type": "registry:ui",
+      "title": "Brand Selector",
+      "description": "Seletor de marca com previa ao percorrer: paleta, par tipografico e completude do vault na propria linha. Le /r/brands.json e aplica o tema da marca escolhida.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils",
+        "https://visant-ui.vercel.app/r/brand-theme.json"
+      ],
+      "dependencies": [
+        "cmdk",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/brand-selector.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

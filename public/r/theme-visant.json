@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "theme-visant",
   "type": "registry:theme",
-  "title": "Visant — brand theme",
+  "title": "Visant® — brand theme",
   "author": "Visant Labs <visantsupply@gmail.com>",
   "description": "Tokens gerados de brand guideline 69b4709a694d7c824cbc8060 v27. Contraste AA garantido por construção. Não editar à mão — regenerar.",
   "cssVars": {
@@ -80,7 +80,7 @@
   },
   "meta": {
     "brandId": "69b4709a694d7c824cbc8060",
-    "brandName": "Visant",
+    "brandName": "Visant®",
     "brandVersion": 27,
     "completeness": 64,
     "engine": "@visant/brand-tokens"

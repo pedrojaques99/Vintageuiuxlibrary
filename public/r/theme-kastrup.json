@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-kastrup",
+  "type": "registry:theme",
+  "title": "Kastrup® — brand theme",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Tokens gerados de brand guideline 6a208050eef4e1276e8bce39 v4. Contraste AA garantido por construção. Não editar à mão — regenerar.",
+  "cssVars": {
+    "theme": {
+      "font-sans": "'Funnel Sans', ui-sans-serif, system-ui, sans-serif",
+      "font-display": "'Termina', ui-sans-serif, system-ui, sans-serif",
+      "r-control": "0.5rem",
+      "r-surface": "0.875rem",
+      "r-pill": "9999px",
+      "e-flat": "none",
+      "e-raised": "0 1px 2px hsl(var(--shadow) / 0.06), 0 6px 16px hsl(var(--shadow) / 0.10)",
+      "e-overlay": "0 2px 6px hsl(var(--shadow) / 0.12), 0 12px 32px hsl(var(--shadow) / 0.14)",
+      "e-modal": "0 8px 40px hsl(var(--shadow) / 0.22)",
+      "focus": "0 0 0 2px var(--background), 0 0 0 4px var(--brand)",
+      "ease-out": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "ease-in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
+      "ease-drawer": "cubic-bezier(0.32, 0.72, 0, 1)",
+      "dur-press": "120ms",
+      "dur-fast": "160ms",
+      "dur-base": "200ms",
+      "dur-slow": "300ms",
+      "pad-card": "1.25rem",
+      "control-h": "2.25rem",
+      "gap-zone": "1rem"
+    },
+    "light": {
+      "background": "oklch(0.9731 0 0)",
+      "foreground": "oklch(0.2441 0.0127 26.41)",
+      "card": "oklch(0.9521 0 0)",
+      "card-foreground": "oklch(0.2441 0.0127 26.41)",
+      "popover": "oklch(0.9521 0 0)",
+      "popover-foreground": "oklch(0.2441 0.0127 26.41)",
+      "muted": "oklch(0.9287 0.0011 17.18)",
+      "muted-foreground": "oklch(0.5393 0.0062 17.35)",
+      "secondary": "oklch(0.9287 0.0011 17.18)",
+      "secondary-foreground": "oklch(0.2441 0.0127 26.41)",
+      "accent": "oklch(0.9287 0.0011 17.18)",
+      "accent-foreground": "oklch(0.2441 0.0127 26.41)",
+      "border": "oklch(0.8738 0.0011 17.18)",
+      "input": "oklch(0.8398 0.0011 17.18)",
+      "brand": "oklch(0.3922 0.1257 19.95)",
+      "brand-foreground": "oklch(1 0 0)",
+      "accent-ink": "oklch(0.5489 0.0921 18.69)",
+      "ring": "oklch(0.3922 0.1257 19.95)",
+      "shadow": "30 30% 12%"
+    },
+    "dark": {
+      "background": "oklch(0.2396 0.0062 17.59)",
+      "foreground": "oklch(0.9896 0.0021 17.19)",
+      "card": "oklch(0.2864 0.0074 17.59)",
+      "card-foreground": "oklch(0.9896 0.0021 17.19)",
+      "popover": "oklch(0.2864 0.0074 17.59)",
+      "popover-foreground": "oklch(0.9896 0.0021 17.19)",
+      "muted": "oklch(0.3419 0.007 17.5)",
+      "muted-foreground": "oklch(0.6295 0.0084 17.38)",
+      "secondary": "oklch(0.3419 0.007 17.5)",
+      "secondary-foreground": "oklch(0.9896 0.0021 17.19)",
+      "accent": "oklch(0.3419 0.007 17.5)",
+      "accent-foreground": "oklch(0.9896 0.0021 17.19)",
+      "border": "oklch(0.4146 0.0082 28.9)",
+      "input": "oklch(0.4598 0.0091 17.49)",
+      "brand": "oklch(0.3922 0.1257 19.95)",
+      "brand-foreground": "oklch(1 0 0)",
+      "accent-ink": "oklch(0.641 0.0961 20.06)",
+      "ring": "oklch(0.3922 0.1257 19.95)",
+      "shadow": "0 0% 0%"
+    }
+  },
+  "css": {
+    "[data-density=\"compact\"]": {
+      "--pad-card": "0.875rem",
+      "--control-h": "2rem",
+      "--gap-zone": "0.75rem"
+    }
+  },
+  "meta": {
+    "brandId": "6a208050eef4e1276e8bce39",
+    "brandName": "Kastrup®",
+    "brandVersion": 4,
+    "completeness": 79,
+    "engine": "@visant/brand-tokens"
+  }
+}

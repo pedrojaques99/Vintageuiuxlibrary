@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-oz",
+  "type": "registry:theme",
+  "title": "OZ® — brand theme",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Tokens gerados de brand guideline 69d5152dac90acfb875bc26d v20. Contraste AA garantido por construção. Não editar à mão — regenerar.",
+  "cssVars": {
+    "theme": {
+      "font-sans": "'Gotham', ui-sans-serif, system-ui, sans-serif",
+      "font-display": "'Neugen', ui-sans-serif, system-ui, sans-serif",
+      "r-control": "0.5rem",
+      "r-surface": "0.875rem",
+      "r-pill": "9999px",
+      "e-flat": "none",
+      "e-raised": "0 1px 2px hsl(var(--shadow) / 0.06), 0 6px 16px hsl(var(--shadow) / 0.10)",
+      "e-overlay": "0 2px 6px hsl(var(--shadow) / 0.12), 0 12px 32px hsl(var(--shadow) / 0.14)",
+      "e-modal": "0 8px 40px hsl(var(--shadow) / 0.22)",
+      "focus": "0 0 0 2px var(--background), 0 0 0 4px var(--brand)",
+      "ease-out": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "ease-in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
+      "ease-drawer": "cubic-bezier(0.32, 0.72, 0, 1)",
+      "dur-press": "120ms",
+      "dur-fast": "160ms",
+      "dur-base": "200ms",
+      "dur-slow": "300ms",
+      "pad-card": "1.25rem",
+      "control-h": "2.25rem",
+      "gap-zone": "1rem"
+    },
+    "light": {
+      "background": "oklch(0.9551 0 0)",
+      "foreground": "oklch(0.2258 0.0113 27.56)",
+      "card": "oklch(0.9348 0.0011 17.18)",
+      "card-foreground": "oklch(0.2258 0.0113 27.56)",
+      "popover": "oklch(0.9348 0.0011 17.18)",
+      "popover-foreground": "oklch(0.2258 0.0113 27.56)",
+      "muted": "oklch(0.9128 0 0)",
+      "muted-foreground": "oklch(0.5254 0.0063 17.36)",
+      "secondary": "oklch(0.9128 0 0)",
+      "secondary-foreground": "oklch(0.2258 0.0113 27.56)",
+      "accent": "oklch(0.9128 0 0)",
+      "accent-foreground": "oklch(0.2258 0.0113 27.56)",
+      "border": "oklch(0.8584 0.0011 17.18)",
+      "input": "oklch(0.8271 0.0018 67.8)",
+      "brand": "oklch(0.6102 0.154 48.85)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.5375 0.1234 50.19)",
+      "ring": "oklch(0.6102 0.154 48.85)",
+      "shadow": "30 30% 12%"
+    },
+    "dark": {
+      "background": "oklch(0.2396 0.0062 17.59)",
+      "foreground": "oklch(0.9896 0.0021 17.19)",
+      "card": "oklch(0.2864 0.0074 17.59)",
+      "card-foreground": "oklch(0.9896 0.0021 17.19)",
+      "popover": "oklch(0.2864 0.0074 17.59)",
+      "popover-foreground": "oklch(0.9896 0.0021 17.19)",
+      "muted": "oklch(0.3419 0.007 17.5)",
+      "muted-foreground": "oklch(0.6295 0.0084 17.38)",
+      "secondary": "oklch(0.3419 0.007 17.5)",
+      "secondary-foreground": "oklch(0.9896 0.0021 17.19)",
+      "accent": "oklch(0.3419 0.007 17.5)",
+      "accent-foreground": "oklch(0.9896 0.0021 17.19)",
+      "border": "oklch(0.4146 0.0082 28.9)",
+      "input": "oklch(0.4598 0.0091 17.49)",
+      "brand": "oklch(0.6102 0.154 48.85)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.6418 0.1468 50.65)",
+      "ring": "oklch(0.6102 0.154 48.85)",
+      "shadow": "0 0% 0%"
+    }
+  },
+  "css": {
+    "[data-density=\"compact\"]": {
+      "--pad-card": "0.875rem",
+      "--control-h": "2rem",
+      "--gap-zone": "0.75rem"
+    }
+  },
+  "meta": {
+    "brandId": "69d5152dac90acfb875bc26d",
+    "brandName": "OZ®",
+    "brandVersion": 20,
+    "completeness": 67,
+    "engine": "@visant/brand-tokens"
+  }
+}

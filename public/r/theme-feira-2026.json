@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-feira-2026",
+  "type": "registry:theme",
+  "title": "Feira 2026 — brand theme",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Tokens gerados de brand guideline 69c5da5777ba4ec27bd788e8 v190. Contraste AA garantido por construção. Não editar à mão — regenerar.",
+  "cssVars": {
+    "theme": {
+      "font-sans": "'Barlow Condensed', ui-sans-serif, system-ui, sans-serif",
+      "font-display": "'Barlow', ui-sans-serif, system-ui, sans-serif",
+      "r-control": "0.5rem",
+      "r-surface": "0.875rem",
+      "r-pill": "9999px",
+      "e-flat": "none",
+      "e-raised": "0 1px 2px hsl(var(--shadow) / 0.06), 0 6px 16px hsl(var(--shadow) / 0.10)",
+      "e-overlay": "0 2px 6px hsl(var(--shadow) / 0.12), 0 12px 32px hsl(var(--shadow) / 0.14)",
+      "e-modal": "0 8px 40px hsl(var(--shadow) / 0.22)",
+      "focus": "0 0 0 2px var(--background), 0 0 0 4px var(--brand)",
+      "ease-out": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "ease-in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
+      "ease-drawer": "cubic-bezier(0.32, 0.72, 0, 1)",
+      "dur-press": "120ms",
+      "dur-fast": "160ms",
+      "dur-base": "200ms",
+      "dur-slow": "300ms",
+      "pad-card": "1.25rem",
+      "control-h": "2.25rem",
+      "gap-zone": "1rem"
+    },
+    "light": {
+      "background": "oklch(0.6576 0.1513 41.72)",
+      "foreground": "oklch(0 0 0)",
+      "card": "oklch(0.6433 0.158 41.35)",
+      "card-foreground": "oklch(0 0 0)",
+      "popover": "oklch(0.6433 0.158 41.35)",
+      "popover-foreground": "oklch(0 0 0)",
+      "muted": "oklch(0.6249 0.1659 40.9)",
+      "muted-foreground": "oklch(0.2612 0.0458 39.14)",
+      "secondary": "oklch(0.6249 0.1659 40.9)",
+      "secondary-foreground": "oklch(0 0 0)",
+      "accent": "oklch(0.6249 0.1659 40.9)",
+      "accent-foreground": "oklch(0 0 0)",
+      "border": "oklch(0.5872 0.1777 39.44)",
+      "input": "oklch(0.5605 0.1635 40)",
+      "brand": "oklch(0.833 0.1041 82.2)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.2579 0.0156 84.52)",
+      "ring": "oklch(0.833 0.1041 82.2)",
+      "shadow": "39 30% 12%"
+    },
+    "dark": {
+      "background": "oklch(0.2393 0.0108 60.93)",
+      "foreground": "oklch(0.9896 0.0021 17.19)",
+      "card": "oklch(0.2873 0.0127 51.67)",
+      "card-foreground": "oklch(0.9896 0.0021 17.19)",
+      "popover": "oklch(0.2873 0.0127 51.67)",
+      "popover-foreground": "oklch(0.9896 0.0021 17.19)",
+      "muted": "oklch(0.3424 0.0131 57.83)",
+      "muted-foreground": "oklch(0.631 0.0135 43.21)",
+      "secondary": "oklch(0.3424 0.0131 57.83)",
+      "secondary-foreground": "oklch(0.9896 0.0021 17.19)",
+      "accent": "oklch(0.3424 0.0131 57.83)",
+      "accent-foreground": "oklch(0.9896 0.0021 17.19)",
+      "border": "oklch(0.4157 0.0126 48.4)",
+      "input": "oklch(0.4595 0.0123 48.44)",
+      "brand": "oklch(0.833 0.1041 82.2)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.6293 0.0677 81.12)",
+      "ring": "oklch(0.833 0.1041 82.2)",
+      "shadow": "0 0% 0%"
+    }
+  },
+  "css": {
+    "[data-density=\"compact\"]": {
+      "--pad-card": "0.875rem",
+      "--control-h": "2rem",
+      "--gap-zone": "0.75rem"
+    }
+  },
+  "meta": {
+    "brandId": "69c5da5777ba4ec27bd788e8",
+    "brandName": "Feira 2026",
+    "brandVersion": 190,
+    "completeness": 91,
+    "engine": "@visant/brand-tokens"
+  }
+}

@@ -119,6 +119,10 @@ if (offenders.length)
   );
 ok("zero hex — os componentes trocam de marca junto com o tema");
 
+// ── Portão 3: vitrine e registry falam do mesmo conjunto ─────────────────────
+say("Portão de catálogo");
+run("node scripts/catalog-check.mjs");
+
 // ── Builds ───────────────────────────────────────────────────────────────────
 say("Build do registry (shadcn)");
 run("npx shadcn@latest build");
