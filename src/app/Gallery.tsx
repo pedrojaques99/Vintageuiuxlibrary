@@ -45,7 +45,7 @@ import {
 } from "./catalog";
 import { REGISTRY_PUBLIC_LABEL, installCommand } from "./registry-meta";
 import { CopyCommand } from "./copy-command";
-import { FitStage, LazyMount } from "./stage";
+import { FitStage, useLazyDemo } from "./stage";
 import { ComponentFocus } from "./ComponentFocus";
 
 type Mode = "grade" | "lista";
@@ -82,9 +82,11 @@ const Card = React.memo(function Card({
 }) {
   const Demo = item.demo;
   const { w, h } = previewOf(item);
+  const { ref, mounted, active } = useLazyDemo<HTMLElement>();
 
   return (
     <article
+      ref={ref}
       className={cn(
         "group flex flex-col overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
         "transition-[border-color,box-shadow] duration-[var(--dur-fast,160ms)] ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
@@ -92,23 +94,17 @@ const Card = React.memo(function Card({
         "hover:shadow-[var(--e-raised,0_1px_2px_rgba(0,0,0,0.06))]",
         SPAN_CLASS[item.span ?? 1],
       )}
-      // O navegador pula a pintura do que está fora da tela; com 45 cards de
-      // altura variável é isso que mantém o scroll liso.
-      style={{ contentVisibility: "auto", containIntrinsicSize: `${h}px` }}
     >
       {/* palco: a demo é interativa aqui dentro, então nada de overlay clicável
           por cima dela — abrir o foco é o botão do canto e o nome no rodapé. */}
       <div className="relative overflow-hidden border-b border-border bg-background">
         {Demo ? (
-          <LazyMount
-            fallback={<div className="animate-pulse bg-muted/40" style={{ height: h * 0.5 }} />}
-          >
-            {(active) => (
-              <FitStage w={w} h={h} active={active}>
-                <Demo />
-              </FitStage>
-            )}
-          </LazyMount>
+          // O palco existe desde o primeiro quadro, com a altura final; só o que
+          // está dentro dele é que chega quando o card entra na tela. Assim a
+          // grade não muda de tamanho embaixo do dedo de quem está rolando.
+          <FitStage w={w} h={h} active={active}>
+            {mounted ? <Demo /> : <div className="h-full w-full animate-pulse bg-muted/40" />}
+          </FitStage>
         ) : (
           <div className="grid h-[120px] place-items-center px-6 text-center">
             <p className="text-[11px] leading-relaxed text-muted-foreground">

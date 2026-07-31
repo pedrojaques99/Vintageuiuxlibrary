@@ -181,32 +181,26 @@ export function FitStage({
 }
 
 /**
- * Monta o filho na primeira vez que ele aparece — e não desmonta depois.
+ * Monta na primeira vez que aparece e nunca mais desmonta; `active` acompanha
+ * a visibilidade.
  *
  * Desmontar ao sair da tela zeraria o estado da demo (o knob voltaria ao 5 a
- * cada scroll). O ganho de CPU vem do `active`, que o `FitStage` propaga.
+ * cada scroll). O ganho de CPU vem de `active`, que o `FitStage` propaga para
+ * os relógios das demos.
+ *
+ * Devolve o *ref do card inteiro*, não do palco: quem decide montar é a chegada
+ * do card na tela, e o palco precisa existir desde o primeiro quadro com a
+ * altura final. Palco que só nasce depois muda a altura do documento no meio do
+ * scroll — foi assim que a página ganhou faixas em branco e o cabeçalho
+ * aparentemente solto no meio do nada.
  */
-export function LazyMount({
-  children,
-  fallback,
-  className,
-  rootMargin = "300px",
-}: {
-  children: (active: boolean) => React.ReactNode;
-  fallback?: React.ReactNode;
-  className?: string;
-  rootMargin?: string;
-}) {
-  const [ref, inView] = useInView<HTMLDivElement>(rootMargin);
+export function useLazyDemo<T extends HTMLElement>(rootMargin = "300px") {
+  const [ref, inView] = useInView<T>(rootMargin);
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     if (inView) setMounted(true);
   }, [inView]);
 
-  return (
-    <div ref={ref} className={className}>
-      {mounted ? children(inView) : fallback}
-    </div>
-  );
+  return { ref, mounted, active: inView };
 }
