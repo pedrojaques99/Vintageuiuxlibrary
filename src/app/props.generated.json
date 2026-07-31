@@ -112,6 +112,13 @@
           "descricao": null
         },
         {
+          "nome": "dense",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Aperta a caixa de ~124px para ~75px, sem tirar nada: rótulo, trilho e faixa\nmin/valor/max continuam lá.\n\nExiste porque o rig nasceu para uma bancada larga, com poucos controles\ngrandes. Num painel de parâmetros — dez ou quinze sliders empilhados numa\ncoluna de 300px — a folga do rig vira rolagem, e o operador perde de vista\nmetade dos controles que precisa comparar entre si.\n\nA LARGURA não é assunto desta prop: `cn` roda tailwind-merge, então\n`className=\"w-full\"` já ganha do w-[220px] padrão."
+        },
+        {
           "nome": "fmt",
           "tipo": "(v: number) => string",
           "obrigatoria": false,

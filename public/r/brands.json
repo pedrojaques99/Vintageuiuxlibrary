@@ -1,9 +1,9 @@
 {
   "$schema": "https://visant-ui.vercel.app/schema/brands.json",
-  "generatedAt": "2026-07-31T01:04:19.937Z",
+  "generatedAt": "2026-07-31T19:38:58.591Z",
   "source": "https://api.visantlabs.com/api/brand-guidelines",
   "engine": "@visant/brand-tokens",
-  "count": 21,
+  "count": 22,
   "brands": [
     {
       "id": "69e7c4af3f7d1be9a660a658",
@@ -818,6 +818,86 @@
       "version": 27,
       "completeness": 64,
       "updatedAt": "2026-07-13T20:09:33.600Z"
+    },
+    {
+      "id": "6a6cf51b970191a7dc083f4f",
+      "slug": "arbolt",
+      "name": "Arbolt®",
+      "tagline": "Construímos a base sólida para sustentar o futuro.",
+      "logo": null,
+      "palette": [
+        {
+          "hex": "#2C352F",
+          "name": "Verde Industrial",
+          "role": "background"
+        },
+        {
+          "hex": "#CDD4C7",
+          "name": "Sage",
+          "role": "primary"
+        },
+        {
+          "hex": "#EEEEEE",
+          "name": "Concreto",
+          "role": "background-light"
+        },
+        {
+          "hex": "#1A1B1F",
+          "name": "Grafite",
+          "role": "text"
+        },
+        {
+          "hex": "#545C55",
+          "name": "Verde Profundo",
+          "role": "secondary"
+        },
+        {
+          "hex": "#7C847B",
+          "name": "Verde Médio",
+          "role": "neutral"
+        },
+        {
+          "hex": "#90988E",
+          "name": "Verde Neutro",
+          "role": "neutral"
+        },
+        {
+          "hex": "#FFFFFF",
+          "name": "Traço",
+          "role": "neutral"
+        }
+      ],
+      "fonts": {
+        "display": "Mona Sans",
+        "sans": "Rethink Sans"
+      },
+      "preview": {
+        "light": {
+          "background": "oklch(0.411 0.0143 153.27)",
+          "foreground": "oklch(1 0 0)",
+          "brand": "oklch(0.8609 0.0192 130.21)",
+          "brand-foreground": "oklch(0.1448 0 0)",
+          "accent-ink": "oklch(0.801 0.02 133.11)",
+          "card": "oklch(0.4258 0.0142 153.3)",
+          "border": "oklch(0.4813 0.0118 154.83)",
+          "muted-foreground": "oklch(0.8017 0.0043 157.16)"
+        },
+        "dark": {
+          "background": "oklch(0.2359 0.0116 156.22)",
+          "foreground": "oklch(0.9871 0.0017 145.56)",
+          "brand": "oklch(0.8609 0.0192 130.21)",
+          "brand-foreground": "oklch(0.1448 0 0)",
+          "accent-ink": "oklch(0.6276 0.0127 128.69)",
+          "card": "oklch(0.2845 0.0134 154.39)",
+          "border": "oklch(0.411 0.0143 153.27)",
+          "muted-foreground": "oklch(0.6253 0.0119 158.67)"
+        }
+      },
+      "theme": "theme-arbolt",
+      "themeUrl": "/r/theme-arbolt.json",
+      "version": 1,
+      "completeness": 57,
+      "updatedAt": "2026-07-31T19:20:59.864Z"
     },
     {
       "id": "69f93e1fb2008c6eb8449008",

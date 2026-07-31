@@ -11,6 +11,19 @@ interface VintageSliderProps {
   accent?: string;
   fmt?: (v: number) => string;
   onChange?: (value: number) => void;
+  /**
+   * Aperta a caixa de ~124px para ~75px, sem tirar nada: rótulo, trilho e faixa
+   * min/valor/max continuam lá.
+   *
+   * Existe porque o rig nasceu para uma bancada larga, com poucos controles
+   * grandes. Num painel de parâmetros — dez ou quinze sliders empilhados numa
+   * coluna de 300px — a folga do rig vira rolagem, e o operador perde de vista
+   * metade dos controles que precisa comparar entre si.
+   *
+   * A LARGURA não é assunto desta prop: `cn` roda tailwind-merge, então
+   * `className="w-full"` já ganha do w-[220px] padrão.
+   */
+  dense?: boolean;
   className?: string;
 }
 
@@ -22,6 +35,7 @@ export function VintageSlider({
   accent,
   fmt,
   onChange,
+  dense = false,
   className,
 }: VintageSliderProps) {
   const [currentValue, setCurrentValue] = useState(value);
@@ -83,7 +97,8 @@ export function VintageSlider({
   return (
     <div
       className={cn(
-        "relative w-[220px] bg-gradient-to-b from-[var(--vintage-surface-3)] to-[var(--vintage-surface-2)] rounded-lg border-2 border-[var(--vintage-surface-4)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.5),0_4px_8px_rgba(0,0,0,0.3)] p-4",
+        "relative w-[220px] bg-gradient-to-b from-[var(--vintage-surface-3)] to-[var(--vintage-surface-2)] rounded-lg border-2 border-[var(--vintage-surface-4)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.5),0_4px_8px_rgba(0,0,0,0.3)]",
+        dense ? "p-2.5" : "p-4",
         className
       )}
       onMouseEnter={() => setHover(true)}
@@ -96,13 +111,21 @@ export function VintageSlider({
         transition: "opacity 0.15s",
       }}
     >
-      <div className="text-center text-[var(--vintage-label)] text-xs font-vintage-mono tracking-widest mb-5 opacity-80">
+      <div
+        className={cn(
+          "text-center text-[var(--vintage-label)] font-vintage-mono tracking-widest opacity-80",
+          dense ? "text-[10px] mb-1.5" : "text-xs mb-5"
+        )}
+      >
         {label}
       </div>
 
       <div
         ref={trackRef}
-        className="relative h-8 mb-3 cursor-pointer"
+        className={cn(
+          "relative cursor-pointer",
+          dense ? "h-5 mb-1.5" : "h-8 mb-3"
+        )}
         onMouseDown={(e) => {
           setDragging(true);
           update(e.clientX, e.shiftKey);
@@ -117,7 +140,12 @@ export function VintageSlider({
 
         {/* Thumb */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-3 h-10 rounded pointer-events-none transition-[left] duration-75"
+          className={cn(
+            "absolute top-1/2 -translate-y-1/2 w-3 rounded pointer-events-none transition-[left] duration-75",
+            // O punho continua mais alto que o trilho: é o que dá o alvo de
+            // arraste e a leitura de peça física. Encolhe junto, não some.
+            dense ? "h-7" : "h-10"
+          )}
           style={{
             left: `calc(${percentage}% - 6px)`,
             background:
