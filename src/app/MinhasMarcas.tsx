@@ -8,21 +8,51 @@
  * para todo visitante); isto é da SESSÃO. Misturar os dois faria a pessoa
  * deslogar e ver a lista encolher sem entender por quê.
  *
- * O que este painel NÃO faz ainda: aplicar o tema. Compilar guideline em tokens
- * é trabalho do `@visant/brand-tokens`, que hoje só existe como pacote local do
- * `visantlabs-os` e roda no build. Enquanto ele não for publicado, o botão
- * mostra o porquê em vez de fingir que funciona — vitrine que mente é pior que
- * vitrine nenhuma, e vale para a nossa também.
+ * Aplicar compila a guideline aqui mesmo, no browser, com o MESMO motor que o
+ * build usa para publicar os temas (`@visant/brand-tokens`). Não é uma segunda
+ * implementação "de preview": é a de verdade, então o que se vê na tela é
+ * exatamente o que o `shadcn add` instalaria. E o vault não passa por servidor
+ * nenhum nosso — a guideline vai da API do Visant direto para a memória da aba.
  */
 
 import * as React from "react";
-import { LogIn, LogOut, RefreshCw } from "lucide-react";
+import { Check, LogIn, LogOut, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useVisantAuth } from "./visant-auth";
+import { applyBrandThemeAnimated, loadBrandFonts } from "@/lib/brand-theme";
+import { useVisantAuth, type MarcaDoUsuario } from "./visant-auth";
 
 export function MinhasMarcas() {
   const { estado, erro, marcas, carregandoMarcas, entrar, sair, buscarMarcas } = useVisantAuth();
   const [aberto, setAberto] = React.useState(false);
+  const [aplicada, setAplicada] = React.useState<string | null>(null);
+  const [falhaAoAplicar, setFalhaAoAplicar] = React.useState<string | null>(null);
+
+  /*
+   * O motor entra sob demanda.
+   *
+   * São ~90KB entre Leonardo e culori, para uma função que só interessa a quem
+   * fez login e clicou em aplicar. Quem chega para ver o catálogo não paga por
+   * isso.
+   */
+  const aplicar = React.useCallback(async (marca: MarcaDoUsuario) => {
+    setFalhaAoAplicar(null);
+    try {
+      const { buildBrandThemeItem } = await import("@visant/brand-tokens/registry-item");
+      const item = buildBrandThemeItem({
+        id: marca.id,
+        name: marca.name,
+        colors: marca.colors,
+        typography: marca.typography,
+      });
+      loadBrandFonts([marca.typography[0]?.family, marca.typography[1]?.family].filter(Boolean) as string[]);
+      applyBrandThemeAnimated(item, item.name.replace(/^theme-/, ""));
+      setAplicada(marca.id);
+    } catch (e) {
+      // Guideline incompleta falha alto no motor (sem cor de fundo, sem
+      // tipografia). É informação, não bug: a marca precisa ser preenchida.
+      setFalhaAoAplicar(e instanceof Error ? e.message : String(e));
+    }
+  }, []);
 
   // A lista só é buscada quando o painel abre: ninguém precisa do vault de
   // ninguém para ler o catálogo.
@@ -143,20 +173,28 @@ export function MinhasMarcas() {
                   </span>
                   <button
                     type="button"
-                    disabled
-                    title="Aplicar exige o motor de tokens publicado (@visant/brand-tokens)"
-                    className="shrink-0 rounded-[var(--r-control,0.5rem)] border border-border px-2 py-1 font-mono text-micro text-muted-foreground opacity-50"
+                    onClick={() => void aplicar(m)}
+                    className="flex shrink-0 items-center gap-1 rounded-[var(--r-control,0.5rem)] border border-border px-2 py-1 font-mono text-micro text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground"
                   >
-                    aplicar
+                    {aplicada === m.id ? <Check className="h-3 w-3" /> : null}
+                    {aplicada === m.id ? "no ar" : "aplicar"}
                   </button>
                 </div>
               ))}
             </div>
 
-            <p className="border-t border-border px-3 py-2 text-micro leading-relaxed text-muted-foreground">
-              Aplicar o tema depende do compilador de tokens rodar no browser — ele ainda mora no
-              build. Estas marcas nunca chegam ao servidor desta vitrine.
-            </p>
+            {falhaAoAplicar ? (
+              <p className="border-t border-border px-3 py-2 text-micro leading-relaxed text-muted-foreground">
+                Essa marca não compila ainda: <span className="font-mono">{falhaAoAplicar}</span>.
+                Falta preencher a guideline no vault — o motor recusa em vez de inventar a cor que
+                falta.
+              </p>
+            ) : (
+              <p className="border-t border-border px-3 py-2 text-micro leading-relaxed text-muted-foreground">
+                Compilado no seu navegador, com o mesmo motor do build. Estas marcas não passam por
+                servidor nenhum desta vitrine.
+              </p>
+            )}
           </div>
         </>
       ) : null}
