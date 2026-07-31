@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "build:registry": "npx shadcn@latest build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ship": "node scripts/ship.mjs",
+    "verify": "node scripts/ship.mjs --dry --no-deploy"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
