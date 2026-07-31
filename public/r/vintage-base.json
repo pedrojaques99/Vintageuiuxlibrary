@@ -3,9 +3,9 @@
   "name": "vintage-base",
   "title": "Vintage Base",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Complete vintage audio equipment design system. Dark surfaces, gold labels, metallic hardware, warm accents.",
+  "description": "A fundação do kit: variáveis de painel, texturas e as regras em @layer.",
   "registryDependencies": [
-    "vintage-theme"
+    "@visant/vintage-theme"
   ],
   "cssVars": {
     "theme": {

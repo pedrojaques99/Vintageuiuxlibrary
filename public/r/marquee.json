@@ -3,7 +3,7 @@
   "name": "marquee",
   "title": "Marquee",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Faixa contínua com variantes fade, band, tilt e reverse. Pausa em hover, foco e fora da tela. Sem cor própria: pinta com os tokens da marca.",
+  "description": "Faixa infinita com duplicação medida, pausa no hover e bail-out em prefers-reduced-motion.",
   "registryDependencies": [
     "utils"
   ],

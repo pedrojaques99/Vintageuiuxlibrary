@@ -28,6 +28,7 @@ import { FitStage, useElementWidth } from "./stage";
 import { TYPE_LABEL, familyLabel, previewOf, stageSurfaceOf, type CatalogItem } from "./catalog";
 import { installCommand } from "./registry-meta";
 import { CopyCommand } from "./copy-command";
+import { CodigoDoItem, TabelaDeProps } from "./ItemDocs";
 
 /** Larguras de teste. `0` = o que couber na tela. */
 const VIEWPORTS = [
@@ -37,6 +38,18 @@ const VIEWPORTS = [
 ];
 
 type ViewportKey = (typeof VIEWPORTS)[number]["value"];
+
+/**
+ * As três perguntas que se faz sobre um item, na ordem em que se fazem: como é,
+ * como se escreve, o que aceita.
+ */
+const ABAS = [
+  { value: "demo" as const, label: "Demo" },
+  { value: "codigo" as const, label: "Código" },
+  { value: "props" as const, label: "Props" },
+];
+
+type Aba = (typeof ABAS)[number]["value"];
 
 /** Altura mínima do palco em foco: abaixo disso a peça encosta nas bordas. */
 const MIN_STAGE_H = 340;
@@ -56,6 +69,7 @@ export function ComponentFocus({
   onPrev: () => void;
   onNext: () => void;
 }) {
+  const [aba, setAba] = React.useState<Aba>(() => (item.demo ? "demo" : "codigo"));
   const [viewport, setViewport] = React.useState<ViewportKey>("full");
   const [stageRef, available] = useElementWidth<HTMLDivElement>();
   const Demo = item.demo;
@@ -87,34 +101,35 @@ export function ComponentFocus({
   return (
     <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-background/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-background/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0" />
         <Dialog.Content
           aria-describedby={undefined}
           className={cn(
             "fixed inset-0 z-50 flex flex-col bg-background outline-none",
             "sm:inset-4 sm:rounded-[var(--r-surface,0.875rem)] sm:border sm:border-border sm:shadow-2xl",
-            "data-[state=open]:animate-in data-[state=open]:fade-in-0",
+            "origin-center data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+            "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           )}
         >
           {/* cabeçalho */}
           <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border px-4 py-3 sm:px-5">
-            <Dialog.Title className="font-mono text-[13px]">{item.name}</Dialog.Title>
-            <span className="rounded-full border border-border px-1.5 py-px font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+            <Dialog.Title className="font-mono text-corpo">{item.name}</Dialog.Title>
+            <span className="rounded-full border border-border px-1.5 py-px font-mono text-micro uppercase tracking-wider text-muted-foreground">
               {TYPE_LABEL[item.type]}
             </span>
-            <span className="hidden text-[11px] text-muted-foreground sm:inline">
+            <span className="hidden text-rotulo text-muted-foreground sm:inline">
               {familyLabel(item.family)}
             </span>
 
             <div className="ml-auto flex items-center gap-1">
-              <span className="mr-1 hidden font-mono text-[11px] tabular-nums text-muted-foreground sm:inline">
+              <span className="mr-1 hidden font-mono text-rotulo tabular-nums text-muted-foreground sm:inline">
                 {index + 1}/{total}
               </span>
               <button
                 type="button"
                 onClick={onPrev}
                 aria-label="Item anterior"
-                className="grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors hover:text-foreground"
+                className="alvo-toque grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -122,13 +137,13 @@ export function ComponentFocus({
                 type="button"
                 onClick={onNext}
                 aria-label="Próximo item"
-                className="grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors hover:text-foreground"
+                className="alvo-toque grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
               <Dialog.Close
                 aria-label="Fechar"
-                className="ml-1 grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors hover:text-foreground"
+                className="alvo-toque ml-1 grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </Dialog.Close>
@@ -136,9 +151,26 @@ export function ComponentFocus({
           </div>
 
           <div className="flex min-h-0 flex-1 flex-col overflow-auto lg:flex-row">
-            {/* palco */}
+            {/* palco / código / props */}
             <div className="flex min-w-0 flex-1 flex-col">
-              {Demo ? (
+              <div className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-2 sm:px-5">
+                <SegmentedControl
+                  value={aba}
+                  onChange={setAba}
+                  aria-label="O que ver deste item"
+                  className="w-full max-w-[300px]"
+                  options={ABAS}
+                />
+              </div>
+
+              {aba === "codigo" ? <CodigoDoItem name={item.name} /> : null}
+              {aba === "props" ? (
+                <div className="min-h-0 flex-1 overflow-auto">
+                  <TabelaDeProps name={item.name} />
+                </div>
+              ) : null}
+
+              {aba === "demo" && Demo ? (
                 <>
                   <div className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-2 sm:px-5">
                     <SegmentedControl
@@ -148,7 +180,7 @@ export function ComponentFocus({
                       aria-label="Largura de teste"
                       options={VIEWPORTS}
                     />
-                    <span className="ml-auto font-mono text-[10px] tabular-nums text-muted-foreground">
+                    <span className="ml-auto font-mono text-micro tabular-nums text-muted-foreground">
                       {Math.round(Math.min(frameW, available || frameW))}px
                     </span>
                   </div>
@@ -176,28 +208,29 @@ export function ComponentFocus({
                     </div>
                   </div>
                 </>
-              ) : (
+              ) : null}
+
+              {aba === "demo" && !Demo ? (
                 <div className="grid flex-1 place-items-center p-10 text-center">
-                  <p className="max-w-sm text-[13px] leading-relaxed text-muted-foreground">
+                  <p className="max-w-sm text-corpo leading-relaxed text-muted-foreground">
                     Este item não tem superfície visual própria — é{" "}
                     <span className="font-mono">{TYPE_LABEL[item.type]}</span>. O que ele entrega
-                    está na descrição ao lado e no arquivo que o{" "}
-                    <span className="font-mono">add</span> copia.
+                    está na aba de código.
                   </p>
                 </div>
-              )}
+              ) : null}
             </div>
 
             {/* ficha */}
             <aside className="shrink-0 space-y-4 border-t border-border p-4 sm:p-5 lg:w-[300px] lg:border-l lg:border-t-0">
               <div>
                 <h2
-                  className="text-[19px] font-semibold tracking-[-0.02em]"
+                  className="text-titulo font-semibold tracking-[-0.02em]"
                   style={{ fontFamily: "var(--font-display, inherit)" }}
                 >
                   {item.title}
                 </h2>
-                <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+                <p className="mt-2 text-corpo leading-relaxed text-muted-foreground">
                   {item.description}
                 </p>
               </div>
@@ -208,14 +241,14 @@ export function ComponentFocus({
                 {item.tags.map((t) => (
                   <span
                     key={t}
-                    className="rounded-[var(--r-pill,9999px)] border border-border px-2 py-0.5 text-[11px] text-muted-foreground"
+                    className="rounded-[var(--r-pill,9999px)] border border-border px-2 py-0.5 text-rotulo text-muted-foreground"
                   >
                     {t}
                   </span>
                 ))}
               </div>
 
-              <p className="text-[11px] leading-relaxed text-muted-foreground">
+              <p className="text-rotulo leading-relaxed text-muted-foreground">
                 <kbd className="rounded border border-border px-1 font-mono">←</kbd>{" "}
                 <kbd className="rounded border border-border px-1 font-mono">→</kbd> percorre o
                 catálogo · <kbd className="rounded border border-border px-1 font-mono">Esc</kbd>{" "}

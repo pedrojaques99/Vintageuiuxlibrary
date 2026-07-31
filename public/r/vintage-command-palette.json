@@ -3,9 +3,9 @@
   "name": "vintage-command-palette",
   "title": "Vintage Command Palette",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Ctrl+K command menu with search, groups, keyboard navigation, and vintage styling.",
+  "description": "Paleta de comandos no vocabulário do painel.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

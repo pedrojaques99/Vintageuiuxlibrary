@@ -3,9 +3,9 @@
   "name": "vintage-soundboard-pad",
   "title": "Vintage Soundboard Pad",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Trigger pad with color, icon, label, glow effect, and press animation.",
+  "description": "Pad de disparo com estado aceso e retorno tátil.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

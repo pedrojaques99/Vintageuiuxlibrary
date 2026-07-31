@@ -3,9 +3,9 @@
   "name": "vintage-tv-frame",
   "title": "Vintage TV Frame",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Retro CRT television frame with bezels, scanlines, vignette, power button, and LED.",
+  "description": "Moldura de tubo com curvatura e brilho de varredura.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

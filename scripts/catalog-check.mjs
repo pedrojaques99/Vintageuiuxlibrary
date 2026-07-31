@@ -19,7 +19,7 @@
  * Exceções conscientes vão em ALLOW_UNPUBLISHED, com o porquê escrito.
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -33,6 +33,8 @@ const ALLOW_UNPUBLISHED = {
   "theme-visant": "cartão-guarda-chuva dos 21 temas de marca, publicados um a um pelo sync",
 };
 
+const FIX = process.argv.includes("--fix");
+
 const registry = JSON.parse(readFileSync(join(ROOT, "registry.json"), "utf8"));
 const catalogSrc = readFileSync(join(ROOT, "src", "app", "catalog.tsx"), "utf8");
 
@@ -40,6 +42,36 @@ const catalogSrc = readFileSync(join(ROOT, "src", "app", "catalog.tsx"), "utf8")
 const catalogBlock = catalogSrc.slice(catalogSrc.indexOf("export const CATALOG"));
 const catalogNames = [...catalogBlock.matchAll(/^\s{4}name: "([^"]+)"/gm)].map((m) => m[1]);
 const registryNames = registry.items.map((i) => i.name);
+
+/*
+ * A descrição é a mesma frase em dois arquivos — e divergiu.
+ *
+ * O `registry.json` é o que o mundo lê: aparece no `shadcn add`, na meta tag da
+ * página do item e na imagem de prévia que circula no chat. O `catalog.tsx` é o
+ * que a vitrine mostra. Escrever a frase duas vezes fez o público ficar com a
+ * versão pior — sem acento e com recado interno ("colhido do visant-board").
+ *
+ * Aqui a versão do catálogo manda, porque é a escrita para gente ler. `--fix`
+ * copia para o registry.
+ */
+const descricaoDoCatalogo = new Map(
+  [...catalogBlock.matchAll(/^\s{4}name: "([^"]+)",[\s\S]*?^\s{4}description:\s*\n?\s*"((?:[^"\\]|\\.)*)"/gm)].map(
+    (m) => [m[1], m[2].replace(/\\"/g, '"')],
+  ),
+);
+
+const divergentes = [];
+for (const item of registry.items) {
+  const doCatalogo = descricaoDoCatalogo.get(item.name);
+  if (!doCatalogo || doCatalogo === item.description) continue;
+  if (FIX) item.description = doCatalogo;
+  else divergentes.push(`${item.name}\n        registry: ${item.description}\n        catálogo: ${doCatalogo}`);
+}
+
+if (FIX && descricaoDoCatalogo.size) {
+  writeFileSync(join(ROOT, "registry.json"), JSON.stringify(registry, null, 2) + "\n");
+  console.log("descrições sincronizadas do catálogo para o registry.");
+}
 
 const dupes = catalogNames.filter((n, i) => catalogNames.indexOf(n) !== i);
 const missingFromCatalog = registryNames.filter((n) => !catalogNames.includes(n));
@@ -57,6 +89,8 @@ const problems = [];
 if (dupes.length) problems.push(["Nome repetido no catálogo", dupes]);
 if (missingFromCatalog.length)
   problems.push(["No registry, invisível na vitrine (falta entrada em catalog.tsx)", missingFromCatalog]);
+if (divergentes.length)
+  problems.push(["Descrição diferente entre catálogo e registry", divergentes]) && null;
 if (missingFromRegistry.length)
   problems.push(["Na vitrine, sem item no registry (o `add` vai falhar)", missingFromRegistry]);
 

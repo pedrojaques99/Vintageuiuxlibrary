@@ -3,10 +3,11 @@
   "name": "status-ticker",
   "title": "Status Ticker",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Linha de status para espera longa: ruido, verbo que gira e cronometro. Para quando nao existe progresso real para medir.",
+  "description": "O texto que segura a pessoa durante uma espera longa: passo atual, cronômetro e glitch de máquina.",
   "registryDependencies": [
     "utils",
-    "https://visant-ui.vercel.app/r/glitch-chars.json"
+    "https://visant-ui.vercel.app/r/glitch-chars.json",
+    "@visant/glitch-chars"
   ],
   "files": [
     {

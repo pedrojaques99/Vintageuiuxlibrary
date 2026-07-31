@@ -3,14 +3,15 @@
   "name": "brand-selector",
   "title": "Brand Selector",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Seletor de marca com previa ao percorrer: paleta, par tipografico e completude do vault na propria linha. Le /r/brands.json e aplica o tema da marca escolhida.",
+  "description": "Seletor de marca com prévia ao percorrer: paleta, par tipográfico e completude do vault na linha. Aplica o tema da marca escolhida ao app inteiro.",
   "dependencies": [
     "cmdk",
     "lucide-react"
   ],
   "registryDependencies": [
     "utils",
-    "https://visant-ui.vercel.app/r/brand-theme.json"
+    "https://visant-ui.vercel.app/r/brand-theme.json",
+    "@visant/brand-theme"
   ],
   "files": [
     {

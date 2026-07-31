@@ -3,9 +3,9 @@
   "name": "vintage-meter",
   "title": "Vintage Meter",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Analog VU meter with SVG arc, animated needle, and color gradient scale.",
+  "description": "VU analógico com balística de ponteiro.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

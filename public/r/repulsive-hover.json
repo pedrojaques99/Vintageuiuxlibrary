@@ -3,7 +3,7 @@
   "name": "repulsive-hover",
   "title": "Repulsive Hover",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Elemento que foge do cursor. Interacao pura, zero dado.",
+  "description": "O elemento foge do cursor com mola. Gesto de hero, não de formulário.",
   "dependencies": [
     "framer-motion"
   ],

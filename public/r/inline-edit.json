@@ -3,7 +3,10 @@
   "name": "inline-edit",
   "title": "Inline Edit",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Editar no lugar em vez de abrir modal. Menos clique por item numa fila.",
+  "description": "Editar onde se lê. Enter salva, Esc cancela, o valor só troca depois que a promessa resolve.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "utils"
   ],

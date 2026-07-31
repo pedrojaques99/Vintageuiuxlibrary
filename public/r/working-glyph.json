@@ -3,13 +3,14 @@
   "name": "working-glyph",
   "title": "Working Glyph",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Icone que bate com faiscas: mostra esforco em vez de pedir paciencia.",
+  "description": "Ícone que bate com faísca — o sistema mostrando esforço em vez de pedir paciência.",
   "dependencies": [
     "lucide-react"
   ],
   "registryDependencies": [
     "utils",
-    "https://visant-ui.vercel.app/r/glitch-chars.json"
+    "https://visant-ui.vercel.app/r/glitch-chars.json",
+    "@visant/glitch-chars"
   ],
   "files": [
     {

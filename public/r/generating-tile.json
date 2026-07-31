@@ -3,12 +3,15 @@
   "name": "generating-tile",
   "title": "Generating Tile",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "A superficie canonica de isto esta sendo gerado. Tres variantes: tile, inline e overlay.",
+  "description": "O quadro que ocupa o lugar do resultado enquanto ele não existe.",
   "registryDependencies": [
     "utils",
     "https://visant-ui.vercel.app/r/status-ticker.json",
     "https://visant-ui.vercel.app/r/turbulence-field.json",
-    "https://visant-ui.vercel.app/r/working-glyph.json"
+    "https://visant-ui.vercel.app/r/working-glyph.json",
+    "@visant/status-ticker",
+    "@visant/turbulence-field",
+    "@visant/working-glyph"
   ],
   "files": [
     {

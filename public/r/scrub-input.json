@@ -3,7 +3,7 @@
   "name": "scrub-input",
   "title": "Scrub Input",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Campo numerico que se arrasta. Arrasto, roda, setas e duplo-clique no mesmo valor, com shift para passo fino.",
+  "description": "Número que se arrasta na horizontal, como nos editores gráficos. Teclado continua funcionando.",
   "registryDependencies": [
     "utils"
   ],

@@ -93,16 +93,27 @@ export function useElementWidth<T extends HTMLElement>() {
  * precisam de `h-full`), então o observador só reporta a altura que nós mesmos
  * demos. O que interessa é o transbordo — quanto a peça pede a mais.
  */
-function useContentHeight<T extends HTMLElement>() {
+function useContentHeight<T extends HTMLElement>(label: string) {
   const [height, setHeight] = React.useState(0);
   const node = React.useRef<T | null>(null);
   const observer = React.useRef<ResizeObserver | null>(null);
+  /*
+   * A medição fecha depois do primeiro meio segundo.
+   *
+   * Sem isso, demo que troca de texto sozinha (o ticker de status, o glitch, o
+   * progresso) empurra o palco a cada frase mais longa. O card cresce, a página
+   * cresce junto, e tudo que está abaixo escorrega debaixo do cursor — o
+   * Playwright chegou a desistir de clicar num filtro dizendo que o elemento
+   * "nunca fica estável". Medir serve para caber a peça, não para segui-la.
+   */
+  const locked = React.useRef(false);
 
   const measure = React.useCallback(() => {
     const el = node.current;
+    if (!el || locked.current) return;
     // Só cresce: encolher de volta na mesma medição faria o palco pulsar entre
     // dois valores a cada quadro.
-    if (el) setHeight((prev) => Math.max(prev, el.scrollHeight));
+    setHeight((prev) => Math.max(prev, el.scrollHeight));
   }, []);
 
   const ref = React.useCallback(
@@ -116,6 +127,12 @@ function useContentHeight<T extends HTMLElement>() {
       observer.current = new ResizeObserver(measure);
       observer.current.observe(el);
       for (const child of Array.from(el.children)) observer.current.observe(child);
+      // Meio segundo é o bastante para a demo montar e assentar; daí em diante
+      // o palco tem um tamanho e mantém.
+      setTimeout(() => {
+        locked.current = true;
+        observer.current?.disconnect();
+      }, 500);
     },
     [measure],
   );
@@ -136,19 +153,22 @@ export function FitStage({
   h,
   active = true,
   maxScale = 1,
+  label = "palco",
   className,
   children,
 }: {
   w: number;
   h: number;
   active?: boolean;
+  /** Nome do item — aparece no aviso de dev quando a peça pede mais altura. */
+  label?: string;
   /** 1 = nunca amplia. A vista de foco usa >1 para ocupar a tela. */
   maxScale?: number;
   className?: string;
   children: React.ReactNode;
 }) {
   const [outer, width] = useElementWidth<HTMLDivElement>();
-  const [inner, overflowH] = useContentHeight<HTMLDivElement>();
+  const [inner, overflowH] = useContentHeight<HTMLDivElement>(label);
   const pageVisible = usePageVisible();
 
   // O `h` do catálogo é um piso, não uma promessa: se a peça desenhar mais alto
@@ -157,6 +177,20 @@ export function FitStage({
   // vitrine nasceu para corrigir — e errar em 45 itens é questão de tempo.
   const naturalH = Math.max(h, overflowH);
   const scale = width ? Math.min(maxScale, width / w) : maxScale;
+
+  /*
+   * Crescer é conserto de emergência, não recurso.
+   *
+   * Toda vez que uma peça pede mais do que foi declarado, o card muda de tamanho
+   * depois de a demo montar — e a página inteira escorrega alguns pixels a cada
+   * card que aparece durante o scroll. Este aviso existe para a correção virar
+   * número no catálogo em vez de comportamento permanente.
+   */
+  const avisado = React.useRef(false);
+  if (import.meta.env?.DEV && overflowH > h && !avisado.current) {
+    avisado.current = true;
+    console.warn(`[palco] "${label}" pediu ${overflowH}px, declarado ${h}px`);
+  }
 
   return (
     <div ref={outer} className={className} style={{ height: naturalH * scale }}>

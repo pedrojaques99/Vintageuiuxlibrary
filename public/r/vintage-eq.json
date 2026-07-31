@@ -3,9 +3,9 @@
   "name": "vintage-eq",
   "title": "Vintage EQ",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Graphic equalizer with multiple vertical faders and metallic handles.",
+  "description": "Banco de faders com curva desenhada.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

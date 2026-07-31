@@ -6,7 +6,7 @@
   "author": "Visant Labs <visantsupply@gmail.com>",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.mjs",
     "build:registry": "npx shadcn@latest build",
     "preview": "vite preview",
     "check:catalog": "node scripts/catalog-check.mjs",
@@ -14,7 +14,13 @@
     "verify": "node scripts/ship.mjs --dry --no-deploy",
     "sync:brands": "node scripts/brands-sync.mjs",
     "brand:theme": "node scripts/brand-theme-item.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:install": "node scripts/install-smoke.mjs",
+    "test": "playwright test",
+    "build:props": "node scripts/props-extract.mjs",
+    "check:deps": "node scripts/deps-check.mjs",
+    "build:og": "node scripts/og-images.mjs",
+    "build:pages": "node scripts/prerender.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -78,7 +84,10 @@
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@fontsource-variable/manrope": "5.2.5",
+    "@fontsource/oswald": "5.2.5",
     "@lottiefiles/dotlottie-react": "^0.19.12",
+    "@playwright/test": "1.56.0",
     "@tailwindcss/vite": "4.1.12",
     "@tanstack/react-table": "^8.21.3",
     "@types/react": "18.3.12",
@@ -87,6 +96,7 @@
     "framer-motion": "^12.43.0",
     "gsap": "^3.15.0",
     "lenis": "^1.3.25",
+    "react-docgen-typescript": "2.4.0",
     "tailwindcss": "4.1.12",
     "typescript": "5.9.3",
     "vite": "6.3.5"

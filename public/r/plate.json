@@ -3,7 +3,7 @@
   "name": "plate",
   "title": "Plate",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Placa para foto de catálogo recortada sobre branco. Multiply casa a foto com o fundo sem recorte novo.",
+  "description": "A placa onde a foto de catálogo senta. Resolve o recorte branco sobre fundo colorido.",
   "registryDependencies": [
     "utils"
   ],

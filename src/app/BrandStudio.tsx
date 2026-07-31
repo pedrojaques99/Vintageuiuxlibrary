@@ -75,11 +75,11 @@ function Section({
   return (
     <section className="border-t border-border py-14">
       <div className="mb-7 flex items-baseline gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+        <span className="font-mono text-micro uppercase tracking-[0.18em] text-muted-foreground">
           {label}
         </span>
         <h2
-          className="text-[15px] font-medium"
+          className="text-destaque font-medium"
           style={{ fontFamily: "var(--font-display, inherit)" }}
         >
           {title}
@@ -103,7 +103,7 @@ export function BrandStudioBody() {
     <main className="shell pb-24">
         {/* hero */}
         <section className="py-16">
-          <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+          <p className="mb-4 font-mono text-micro uppercase tracking-[0.18em] text-muted-foreground">
             {status === "loading"
               ? "lendo o vault…"
               : shown
@@ -116,20 +116,20 @@ export function BrandStudioBody() {
           >
             {shown?.name ?? "Escolha uma marca"}
           </h1>
-          <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
+          <p className="mt-5 max-w-2xl text-destaque leading-relaxed text-muted-foreground">
             {shown?.tagline ??
               "Os componentes abaixo não sabem a cor de ninguém. Trocar a marca no seletor troca só os tokens — e a interface inteira responde."}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <span
-              className="inline-flex items-center gap-2 rounded-[var(--r-pill,9999px)] px-4 py-2 text-[13px] font-medium"
+              className="inline-flex items-center gap-2 rounded-[var(--r-pill,9999px)] px-4 py-2 text-corpo font-medium"
               style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
             >
               Ação principal
             </span>
             <span
-              className="inline-flex items-center gap-2 rounded-[var(--r-pill,9999px)] border border-border px-4 py-2 text-[13px] font-medium"
+              className="inline-flex items-center gap-2 rounded-[var(--r-pill,9999px)] border border-border px-4 py-2 text-corpo font-medium"
               style={{ color: "var(--accent-ink)" }}
             >
               Ação secundária
@@ -151,8 +151,8 @@ export function BrandStudioBody() {
                   style={{ background: `var(--${t})` }}
                 />
                 <div className="px-3 py-2.5">
-                  <div className="font-mono text-[11px]">--{t}</div>
-                  <div className="truncate font-mono text-[10px] text-muted-foreground">
+                  <div className="font-mono text-rotulo">--{t}</div>
+                  <div className="truncate font-mono text-micro text-muted-foreground">
                     {tokens[t] || "—"}
                   </div>
                 </div>
@@ -165,7 +165,7 @@ export function BrandStudioBody() {
         <Section label="02" title="Par tipográfico da marca">
           <div className="grid gap-8 md:grid-cols-2">
             <div>
-              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="mb-3 font-mono text-micro uppercase tracking-[0.14em] text-muted-foreground">
                 display · {shown?.fonts.display ?? "—"}
               </p>
               <p
@@ -176,10 +176,10 @@ export function BrandStudioBody() {
               </p>
             </div>
             <div>
-              <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="mb-3 font-mono text-micro uppercase tracking-[0.14em] text-muted-foreground">
                 sans · {shown?.fonts.sans ?? "—"}
               </p>
-              <p className="text-[15px] leading-relaxed text-muted-foreground">
+              <p className="text-destaque leading-relaxed text-muted-foreground">
                 O corpo de texto herda a face de leitura da guideline. Quando a face é
                 licenciada fora do Google Fonts, a pilha de fallback do token assume e a
                 hierarquia continua de pé — muda o desenho da letra, não a estrutura.
@@ -218,12 +218,12 @@ export function BrandStudioBody() {
                 <div className="flex h-full flex-col items-start justify-end p-5">
                   <WorkingGlyph size={18} />
                   <p
-                    className="mt-3 text-[15px] font-medium"
+                    className="mt-3 text-destaque font-medium"
                     style={{ fontFamily: "var(--font-display, inherit)" }}
                   >
                     {c.t}
                   </p>
-                  <p className="text-[11px] text-muted-foreground">{c.d}</p>
+                  <p className="text-rotulo text-muted-foreground">{c.d}</p>
                 </div>
               </Plate>
             ))}
@@ -239,7 +239,7 @@ export function BrandStudioBody() {
                     className="h-3 w-3 rounded-full ring-1 ring-background"
                     style={{ background: c.hex }}
                   />
-                  <span className="font-mono text-[11px] uppercase tracking-[0.1em]">
+                  <span className="font-mono text-rotulo uppercase tracking-[0.1em]">
                     {c.name ?? c.hex}
                   </span>
                 </span>
@@ -254,7 +254,7 @@ export function BrandStudioBody() {
             <CopyCommand text={installCommand(`theme-${shown?.slug ?? DEFAULT_BRAND}`)} />
             <CopyCommand text={installCommand("brand-selector")} />
           </div>
-          <p className="mt-4 max-w-2xl text-[12px] leading-relaxed text-muted-foreground">
+          <p className="mt-4 max-w-2xl text-apoio leading-relaxed text-muted-foreground">
             O primeiro escreve os tokens da marca no <code>globals.css</code> — é o caminho
             de quem tem um cliente só. O segundo instala este seletor e o runtime, para o
             app trocar de marca com ele no ar.

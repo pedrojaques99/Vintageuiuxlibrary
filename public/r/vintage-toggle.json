@@ -3,9 +3,9 @@
   "name": "vintage-toggle",
   "title": "Vintage Toggle",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "3-position toggle switch (up/middle/down) with metallic housing.",
+  "description": "Chave de duas posições com estalo visual.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

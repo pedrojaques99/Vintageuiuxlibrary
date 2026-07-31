@@ -3,12 +3,24 @@
   "name": "data-table",
   "title": "Data Table",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Tabela densa para superficie de trabalho: ordenacao, selecao e edicao inline. 800 linhas ja resolvidas.",
+  "description": "Tabela densa: ordenação, seleção, edição inline e menu de contexto. Hoje acoplada a Next (next-auth + next/navigation) — roda em app Next, não nesta vitrine.",
   "dependencies": [
-    "@tanstack/react-table"
+    "@tanstack/react-table",
+    "class-variance-authority",
+    "lucide-react",
+    "next",
+    "next-auth"
   ],
   "registryDependencies": [
-    "utils"
+    "utils",
+    "button",
+    "checkbox",
+    "context-menu",
+    "input",
+    "skeleton",
+    "table",
+    "@visant/inline-edit",
+    "@visant/use-media-query"
   ],
   "files": [
     {

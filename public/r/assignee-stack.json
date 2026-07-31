@@ -3,7 +3,7 @@
   "name": "assignee-stack",
   "title": "Assignee Stack",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Pilha de avatares com estouro contado. Componente de time.",
+  "description": "Pilha de responsáveis com excedente contado. Iniciais quando não há avatar.",
   "registryDependencies": [
     "utils",
     "avatar"

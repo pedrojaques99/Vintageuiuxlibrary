@@ -3,7 +3,7 @@
   "name": "brand-theme",
   "title": "Brand Theme Runtime",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Aplica em runtime o tema compilado de uma brand guideline do Visant Labs. Provider, hook e a folha de estilo unica que troca a marca sem recarregar.",
+  "description": "Provider e hook que aplicam em runtime o tema compilado de uma brand guideline. Uma folha de estilo só, trocada sem recarregar a página.",
   "files": [
     {
       "path": "registry/visant/lib/brand-theme.tsx",

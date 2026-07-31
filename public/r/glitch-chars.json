@@ -3,7 +3,7 @@
   "name": "glitch-chars",
   "title": "Glitch Chars",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Dois caracteres que trocam sozinhos: o sinal de vida mais barato de um estado de espera.",
+  "description": "Caracteres que trocam sozinhos. Textura de máquina trabalhando, em duas letras.",
   "registryDependencies": [
     "utils"
   ],

@@ -3,7 +3,11 @@
   "name": "octahedron-loader",
   "title": "Octahedron Loader",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Loader geometrico da casa. Distintivo sem virar mascote.",
+  "description": "Carregamento com sólido girando — a marca da casa em espera curta.",
+  "dependencies": [
+    "@lottiefiles/dotlottie-react",
+    "framer-motion"
+  ],
   "registryDependencies": [
     "utils"
   ],

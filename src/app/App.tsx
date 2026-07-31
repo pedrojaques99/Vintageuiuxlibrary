@@ -12,10 +12,10 @@
  * tokens, então trocar de marca no seletor repinta catálogo, studio e bancada
  * ao mesmo tempo. Se só o studio respondesse, a promessa seria demo, não sistema.
  *
- * **A URL é a fonte da verdade da navegação.** Aba e item em foco moram no hash,
- * e o estado do React é derivado dele — não o contrário. É o que faz o botão
- * voltar do navegador funcionar de dentro da vista de foco e o que torna
- * `#/c/kanban` um link que pode ser mandado no chat.
+ * **A URL é a fonte da verdade da navegação.** Aba e item em foco moram no
+ * caminho, e o estado do React é derivado dele — não o contrário. É o que faz o
+ * botão voltar do navegador funcionar de dentro da vista de foco e o que torna
+ * `/c/kanban` um link que pode ser mandado no chat e abrir com prévia.
  */
 
 import * as React from "react";
@@ -24,8 +24,20 @@ import { BrandThemeProvider } from "@/lib/brand-theme";
 import { BrandSelector } from "../../registry/visant/ui/brand-selector";
 import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import { Gallery } from "./Gallery";
-import { BrandStudioBody } from "./BrandStudio";
-import VintageRig from "./VintageRig";
+
+/*
+ * Studio e bancada chegam quando alguém abre a aba.
+ *
+ * Eram 620KB num arquivo só: quem entrava para ver o catálogo baixava também o
+ * kit vintage inteiro (13 peças skeuomórficas, canvas de osciloscópio, lottie) e
+ * o studio de marca, sem nunca abrir nenhum dos dois. O catálogo é a porta de
+ * entrada de praticamente todo mundo; ele não pode pagar o pedágio das outras
+ * duas seções.
+ */
+const BrandStudioBody = React.lazy(() =>
+  import("./BrandStudio").then((m) => ({ default: m.BrandStudioBody })),
+);
+const VintageRig = React.lazy(() => import("./VintageRig"));
 import { DEFAULT_BRAND, REGISTRY_URL } from "./registry-meta";
 
 type View = "catalogo" | "marca" | "rig";
@@ -49,7 +61,29 @@ const DENSITIES = [
 
 // --- rota --------------------------------------------------------------------
 
-function parseHash(hash: string): Route {
+/*
+ * Caminho de verdade, não hash.
+ *
+ * `#/c/kanban` funcionava para navegar e não servia para mais nada: servidor
+ * nenhum vê o que vem depois do `#`, então não havia como entregar título,
+ * descrição ou imagem por item — link colado no Slack aparecia como "Vintage UI
+ * UX Library" para os 47 itens. Com `/c/kanban` o build gera um HTML por item
+ * (`scripts/prerender.mjs`) e a página passa a existir para quem não é browser.
+ *
+ * O hash antigo continua entrando: quem tem link salvo é redirecionado.
+ */
+function parsePath(loc: Location): Route {
+  if (loc.hash.startsWith("#/")) return parseLegacyHash(loc.hash);
+
+  const partes = loc.pathname.split("/").filter(Boolean);
+  if (partes[0] === "c" && partes[1]) {
+    return { view: "catalogo", focus: decodeURIComponent(partes[1]) };
+  }
+  const view = VIEWS.find((v) => v.value === partes[0]);
+  return { view: view?.value ?? "catalogo", focus: null };
+}
+
+function parseLegacyHash(hash: string): Route {
   if (hash.startsWith("#/c/")) {
     return { view: "catalogo", focus: decodeURIComponent(hash.slice(4)) || null };
   }
@@ -57,38 +91,38 @@ function parseHash(hash: string): Route {
   return { view: view?.value ?? "catalogo", focus: null };
 }
 
-function formatHash({ view, focus }: Route): string {
-  if (focus) return `#/c/${encodeURIComponent(focus)}`;
-  return view === "catalogo" ? "" : `#/${view}`;
+function formatPath({ view, focus }: Route): string {
+  if (focus) return `/c/${encodeURIComponent(focus)}`;
+  return view === "catalogo" ? "/" : `/${view}`;
 }
 
-function useHashRoute() {
-  const [route, setRoute] = React.useState<Route>(() => parseHash(window.location.hash));
+function useRoute() {
+  const [route, setRoute] = React.useState<Route>(() => parsePath(window.location));
+
+  // Link antigo com hash entra e sai limpo, sem entulhar o histórico.
+  React.useEffect(() => {
+    if (window.location.hash.startsWith("#/")) {
+      window.history.replaceState(null, "", formatPath(parseLegacyHash(window.location.hash)));
+    }
+  }, []);
 
   // O navegador manda: voltar/avançar e link colado atualizam o estado.
   React.useEffect(() => {
-    const sync = () => setRoute(parseHash(window.location.hash));
-    window.addEventListener("hashchange", sync);
+    const sync = () => setRoute(parsePath(window.location));
     window.addEventListener("popstate", sync);
+    window.addEventListener("hashchange", sync);
     return () => {
-      window.removeEventListener("hashchange", sync);
       window.removeEventListener("popstate", sync);
+      window.removeEventListener("hashchange", sync);
     };
   }, []);
 
-  /*
-   * `pushState`, e não `location.hash = …`.
-   *
-   * Fechar o foco a partir de `#/c/kanban` precisa voltar para a URL *sem* hash;
-   * atribuir string vazia ao `location.hash` deixa um `#` pendurado e nem sempre
-   * dispara o evento. Com `pushState` a URL fica limpa, cada passo entra no
-   * histórico (é o que faz o botão voltar significar "voltar pra grade") e o
-   * estado é atualizado na hora, sem depender do round-trip do evento.
-   */
   const navigate = React.useCallback((next: Route) => {
-    const hash = formatHash(next);
-    if ((window.location.hash || "") !== hash) {
-      window.history.pushState(null, "", hash || window.location.pathname + window.location.search);
+    const caminho = formatPath(next);
+    if (window.location.pathname !== caminho) {
+      // Cada passo vira entrada no histórico — é o que faz o botão voltar
+      // significar "voltar pra grade" de dentro da vista de foco.
+      window.history.pushState(null, "", caminho);
     }
     setRoute(next);
   }, []);
@@ -109,7 +143,7 @@ function useDarkMode() {
 // --- casca -------------------------------------------------------------------
 
 function Shell() {
-  const [route, navigate] = useHashRoute();
+  const [route, navigate] = useRoute();
   const [dark, setDark] = useDarkMode();
   const [density, setDensity] = React.useState<"comfortable" | "compact">("comfortable");
 
@@ -132,7 +166,7 @@ function Shell() {
       style={{ fontFamily: "var(--font-sans, ui-sans-serif, system-ui)" }}
     >
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
-        <div className="shell flex h-[var(--header-h)] items-center gap-3">
+        <div className="shell flex h-[var(--shell-header-h)] items-center gap-3">
           <button
             type="button"
             onClick={() => setView("catalogo")}
@@ -142,7 +176,7 @@ function Shell() {
               className="h-5 w-5 rounded-[6px]"
               style={{ background: "var(--brand, var(--foreground))" }}
             />
-            <span className="font-mono text-[12px] tracking-tight">@visant/ui</span>
+            <span className="font-mono text-apoio tracking-tight">@visant/ui</span>
           </button>
 
           <div className="ml-2 hidden sm:block">
@@ -166,7 +200,7 @@ function Shell() {
               type="button"
               onClick={() => setDark(!dark)}
               aria-label={dark ? "Tema claro" : "Tema escuro"}
-              className="grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors hover:text-foreground"
+              className="alvo-toque grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
             >
               {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
             </button>
@@ -186,8 +220,13 @@ function Shell() {
       </header>
 
       {route.view === "catalogo" && <Gallery focus={route.focus} onFocus={setFocus} />}
-      {route.view === "marca" && <BrandStudioBody />}
-      {route.view === "rig" && <VintageRig />}
+
+      {/* A espera é a altura de uma tela, não um "carregando…": trocar de aba não
+          deve fazer a página encolher e voltar a crescer. */}
+      <React.Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
+        {route.view === "marca" && <BrandStudioBody />}
+        {route.view === "rig" && <VintageRig />}
+      </React.Suspense>
     </div>
   );
 }

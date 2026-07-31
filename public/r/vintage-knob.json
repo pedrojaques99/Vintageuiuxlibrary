@@ -3,10 +3,10 @@
   "name": "vintage-knob",
   "title": "Vintage Knob",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Small rotary knob with drag interaction, tick marks, and value labels.",
+  "description": "Potenciômetro com arraste vertical e trava de curso.",
   "registryDependencies": [
-    "vintage-theme",
-    "use-knob-drag",
+    "@visant/vintage-theme",
+    "@visant/use-knob-drag",
     "utils"
   ],
   "files": [

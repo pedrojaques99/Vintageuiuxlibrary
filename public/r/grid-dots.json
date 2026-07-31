@@ -3,7 +3,7 @@
   "name": "grid-dots",
   "title": "Grid Dots",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Malha de pontos de fundo em um gradiente repetido. Zero nos no DOM, inverte sozinha com o tema.",
+  "description": "Malha de pontos de fundo — o papel milimetrado que dá profundidade sem competir.",
   "registryDependencies": [
     "utils"
   ],

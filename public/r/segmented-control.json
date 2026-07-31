@@ -3,7 +3,10 @@
   "name": "segmented-control",
   "title": "Segmented Control",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Alternador de poucas opcoes. Substitui um select quando as opcoes cabem na tela.",
+  "description": "Alternador de poucas opções. Substitui um select quando as opções cabem na tela.",
+  "dependencies": [
+    "lucide-react"
+  ],
   "registryDependencies": [
     "utils"
   ],

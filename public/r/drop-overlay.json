@@ -3,7 +3,7 @@
   "name": "drop-overlay",
   "title": "Drop Overlay",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Alvo de soltar arquivo. O estado que todo mundo esquece de desenhar no drag-and-drop.",
+  "description": "A camada que aparece quando um arquivo está sendo arrastado sobre a área.",
   "registryDependencies": [
     "utils"
   ],

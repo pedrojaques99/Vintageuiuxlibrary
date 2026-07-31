@@ -59,15 +59,15 @@ export function CopyCommand({
         copy();
       }}
       className={cn(
-        "group flex items-center gap-2 rounded-[var(--r-control,0.5rem)] border border-border text-left transition-colors hover:border-[var(--brand)]",
+        "group flex items-center gap-2 rounded-[var(--r-control,0.5rem)] border border-border text-left transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)]",
         variant === "line"
           ? "w-full bg-card px-3 py-2"
-          : "shrink-0 px-2 py-1 font-mono text-[10px] text-muted-foreground hover:text-foreground",
+          : "shrink-0 px-2 py-1 font-mono text-micro text-muted-foreground hover:text-foreground",
         className,
       )}
     >
       {variant === "line" ? (
-        <code className="min-w-0 flex-1 truncate font-mono text-[11px] text-muted-foreground">
+        <code className="min-w-0 flex-1 truncate font-mono text-rotulo text-muted-foreground">
           {text}
         </code>
       ) : null}

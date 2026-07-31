@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-media-query",
+  "title": "useMediaQuery",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Media query como estado de React, via useSyncExternalStore: leitura síncrona no primeiro render, sem piscar, e segura em SSR.",
+  "dependencies": [
+    "react"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/hooks/use-media-query.ts",
+      "content": "\"use client\";\n\n/**\n * useMediaQuery — media query como estado de React.\n *\n * Existe porque o `data-table` já dependia dele: o item era publicado importando\n * `@/hooks/use-media-query` sem declarar de onde isso vinha, então o `shadcn add`\n * entregava um arquivo que não compilava na casa de quem instalou. Este é o\n * arquivo que faltava.\n *\n * Três detalhes que separam esta versão de um `useState` + `addEventListener`:\n *\n * 1. **Estado inicial lido de forma síncrona**, no `useState`, e não num efeito.\n *    Ler depois faz o componente pintar uma vez com a resposta errada — a tabela\n *    monta em desktop e pisca para mobile no quadro seguinte.\n * 2. **`useSyncExternalStore`**, que é a API do React para exatamente isto:\n *    fonte externa que muda sozinha. Resolve o rasgo de concorrência que a dupla\n *    `useState`/`useEffect` deixa em renderização interrompível.\n * 3. **Guarda de SSR.** No servidor não existe `matchMedia`; o hook devolve\n *    `false` em vez de explodir, e o cliente corrige na hidratação.\n */\n\nimport * as React from \"react\";\n\nexport function useMediaQuery(query: string): boolean {\n  const subscribe = React.useCallback(\n    (onChange: () => void) => {\n      if (typeof window === \"undefined\" || !window.matchMedia) return () => {};\n      const list = window.matchMedia(query);\n      list.addEventListener(\"change\", onChange);\n      return () => list.removeEventListener(\"change\", onChange);\n    },\n    [query],\n  );\n\n  const getSnapshot = React.useCallback(() => {\n    if (typeof window === \"undefined\" || !window.matchMedia) return false;\n    return window.matchMedia(query).matches;\n  }, [query]);\n\n  // No servidor, nada casa: quem decide é o cliente, na hidratação.\n  const getServerSnapshot = React.useCallback(() => false, []);\n\n  return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);\n}\n",
+      "type": "registry:hook",
+      "target": "@hooks/use-media-query.ts"
+    }
+  ],
+  "type": "registry:hook"
+}

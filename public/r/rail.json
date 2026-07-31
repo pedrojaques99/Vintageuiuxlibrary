@@ -3,7 +3,7 @@
   "name": "rail",
   "title": "Rail",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Trilho horizontal com scroll-snap nativo e setas que desabilitam nas pontas. Zero biblioteca, arrasta no toque.",
+  "description": "Trilho horizontal com snap, setas que somem nas pontas e scroll por teclado.",
   "registryDependencies": [
     "utils"
   ],

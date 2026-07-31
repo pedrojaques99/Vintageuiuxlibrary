@@ -3,10 +3,10 @@
   "name": "vintage-large-knob",
   "title": "Vintage Large Knob",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Large rotary knob with metallic conic-gradient surface and drag interaction.",
+  "description": "O irmão grande: marcação de escala e leitura de valor.",
   "registryDependencies": [
-    "vintage-theme",
-    "use-knob-drag",
+    "@visant/vintage-theme",
+    "@visant/use-knob-drag",
     "utils"
   ],
   "files": [

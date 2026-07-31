@@ -3,7 +3,7 @@
   "name": "masonry-gallery",
   "title": "Masonry Gallery",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Masonry round-robin: anexar pagina nunca reflui o que ja esta na tela. Para feed infinito de aspect ratio misto.",
+  "description": "Mosaico por round-robin: anexar página nova não reordena o que já estava na tela.",
   "registryDependencies": [
     "utils"
   ],

@@ -3,7 +3,7 @@
   "name": "use-knob-drag",
   "title": "useKnobDrag",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Hook for drag-to-rotate knob interaction with vertical mouse sensitivity.",
+  "description": "O gesto de arrastar um knob isolado do desenho: pointer capture, trava de curso e passo fino com shift.",
   "dependencies": [
     "react"
   ],

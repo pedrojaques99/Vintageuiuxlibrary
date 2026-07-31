@@ -3,7 +3,7 @@
   "name": "store-status",
   "title": "Store Status",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Aberto/fechado de loja fisica resolvido no fuso DA LOJA. Nao renderiza nada ate o JS confirmar — nada na tela e melhor que horario errado na tela.",
+  "description": "Aberto/fechado calculado no fuso da loja, não no do visitante — a resposta certa para quem está do outro lado do mundo.",
   "registryDependencies": [
     "utils"
   ],

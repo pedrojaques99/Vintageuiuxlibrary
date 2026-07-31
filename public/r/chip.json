@@ -3,7 +3,7 @@
   "name": "chip",
   "title": "Chip",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Pastilha de filtro com aria-pressed e contagem que nunca renderiza zero. Aceita um SVG de dado dentro, herdando currentColor.",
+  "description": "Pastilha de filtro com contagem que nunca renderiza zero.",
   "registryDependencies": [
     "utils"
   ],

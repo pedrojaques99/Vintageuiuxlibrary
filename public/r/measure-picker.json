@@ -3,7 +3,7 @@
   "name": "measure-picker",
   "title": "Measure Picker",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Pergunte a medida que o cliente SABE (altura) e devolva o codigo do produto (tamanho). input[type=range] de verdade: teclado e leitor de tela de graca.",
+  "description": "Escolher por medida e receber a recomendação — a faixa traduz o número em produto.",
   "registryDependencies": [
     "utils"
   ],

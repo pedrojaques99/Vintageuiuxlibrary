@@ -3,9 +3,9 @@
   "name": "vintage-led",
   "title": "Vintage LED",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Status LED indicator with glow effect in green, red, yellow, or orange.",
+  "description": "LED de painel com halo. Quatro cores, estado on/off.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

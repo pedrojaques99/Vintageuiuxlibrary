@@ -1,0 +1,2427 @@
+{
+  "use-knob-drag": [
+    {
+      "nome": "useKnobDrag",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "log",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "10",
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(value: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "sensitivity",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.022",
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-button": [
+    {
+      "nome": "VintageButton",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "accent",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "active",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onClick",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-slider": [
+    {
+      "nome": "VintageSlider",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "accent",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "fmt",
+          "tipo": "(v: number) => string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "GAIN",
+          "descricao": null
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "10",
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(value: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-meter": [
+    {
+      "nome": "VintageMeter",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "LEVEL",
+          "descricao": null
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "10",
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-knob": [
+    {
+      "nome": "VintageKnob",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "accent",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--vintage-value)",
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "fmt",
+          "tipo": "(v: number) => string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "BASS",
+          "descricao": null
+        },
+        {
+          "nome": "log",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "10",
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(value: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "81",
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-large-knob": [
+    {
+      "nome": "VintageLargeKnob",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "accent",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--vintage-value)",
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "fmt",
+          "tipo": "(v: number) => string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "VOLUME",
+          "descricao": null
+        },
+        {
+          "nome": "log",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "10",
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(value: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-toggle": [
+    {
+      "nome": "VintageToggle",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "accent",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "labels",
+          "tipo": "[string, string, string]",
+          "obrigatoria": false,
+          "padrao": "[\"U\", \"M\", \"D\"]",
+          "descricao": null
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(position: TogglePosition) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "position",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "TOGGLE",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-eq": [
+    {
+      "nome": "VintageEQ",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "accent",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "labels",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": "[\"63Hz\", \"125Hz\", \"250Hz\", \"500Hz\", \"1kHz\", \"2kHz\"]",
+          "descricao": null
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(values: number[]) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "GRAPHIC EQ",
+          "descricao": null
+        },
+        {
+          "nome": "values",
+          "tipo": "number[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-led": [
+    {
+      "nome": "VintageLed",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "active",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "color",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "green",
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "pulse",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "size",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "md",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-command-palette": [
+    {
+      "nome": "VintageCommandPalette",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "CommandItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onClose",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onSelect",
+          "tipo": "(id: string) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "groups",
+          "tipo": "CommandGroup[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "placeholder",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Search...",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-tv-frame": [
+    {
+      "nome": "VintageTvFrame",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "isOn",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onPowerToggle",
+          "tipo": "(on: boolean) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "showScanlines",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": null
+        },
+        {
+          "nome": "showTimecode",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "signalActive",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "VISANT",
+          "descricao": null
+        },
+        {
+          "nome": "width",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "480",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-soundboard-pad": [
+    {
+      "nome": "VintageSoundboardPad",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "active",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "color",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--vintage-accent)",
+          "descricao": null
+        },
+        {
+          "nome": "icon",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "PAD",
+          "descricao": null
+        },
+        {
+          "nome": "onRelease",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onTrigger",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "96",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-xy-pad": [
+    {
+      "nome": "VintageXYPad",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "color",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--vintage-accent)",
+          "descricao": null
+        },
+        {
+          "nome": "labelX",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "X",
+          "descricao": null
+        },
+        {
+          "nome": "labelY",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Y",
+          "descricao": null
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(x: number, y: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "160",
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "{ x: number; y: number; }",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "vintage-oscilloscope": [
+    {
+      "nome": "VintageOscilloscope",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "color",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--vintage-meter-green)",
+          "descricao": null
+        },
+        {
+          "nome": "data",
+          "tipo": "Float32Array<ArrayBuffer> | number[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "height",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "120",
+          "descricao": null
+        },
+        {
+          "nome": "mode",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "wave",
+          "descricao": null
+        },
+        {
+          "nome": "width",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "320",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "marquee": [
+    {
+      "nome": "Marquee",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "any[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "band",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Faixa de cor sólida com a cor da marca."
+        },
+        {
+          "nome": "fade",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Some nas bordas em vez de ser cortado a faca."
+        },
+        {
+          "nome": "gap",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "56",
+          "descricao": null
+        },
+        {
+          "nome": "reverse",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Anda para a direita. Duas faixas em sentidos opostos leem como sistema."
+        },
+        {
+          "nome": "speed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "46",
+          "descricao": "Segundos para uma volta completa. Mais itens pedem mais tempo."
+        },
+        {
+          "nome": "tilt",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Inclina a faixa. Exige um pai com `overflow: hidden`."
+        }
+      ]
+    }
+  ],
+  "rail": [
+    {
+      "nome": "Rail",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "arrows",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Setas de navegação (só aparecem onde há ponteiro)."
+        },
+        {
+          "nome": "gap",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "20",
+          "descricao": null
+        },
+        {
+          "nome": "itemWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "240",
+          "descricao": "Largura mínima de cada item."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Scrollable list",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "plate": [
+    {
+      "nome": "Plate",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "as",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "div",
+          "descricao": null
+        },
+        {
+          "nome": "inset",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "20",
+          "descricao": "Respiro entre o produto e a borda da placa."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "4 / 5",
+          "descricao": "Proporção da placa. Produto alto (stick, garrafa) pede 4/5 ou 3/4."
+        },
+        {
+          "nome": "zoomOnGroupHover",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Cresce um degrau no hover do card em volta."
+        }
+      ]
+    }
+  ],
+  "chip": [
+    {
+      "nome": "Chip",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "count",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "icon",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "pressed",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "sticky-filterbar": [
+    {
+      "nome": "StickyFilterbar",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "headerSelector",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "header",
+          "descricao": "Seletor do cabeçalho grudado a medir."
+        }
+      ]
+    },
+    {
+      "nome": "FilterRow",
+      "descricao": "Uma linha da barra. `collapsible` some quando grudada — use nas facetas\nsecundárias, nunca no eixo principal.",
+      "props": [
+        {
+          "nome": "collapsible",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "store-status": [
+    {
+      "nome": "StoreStatus",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "timeZone",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Fuso IANA da loja, ex.: \"Europe/London\"."
+        },
+        {
+          "nome": "closeHour",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "17",
+          "descricao": null
+        },
+        {
+          "nome": "labels",
+          "tipo": "{ open: (close: number) => string; closed: (open: number) => string; }",
+          "obrigatoria": false,
+          "padrao": "{\n    open: (c) => `Open now until ${fmtHour(c)}`,\n    closed: (o) => `Opens at ${fmtHour(o)}`,\n  }",
+          "descricao": null
+        },
+        {
+          "nome": "openDays",
+          "tipo": "number[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Dias abertos, 0 = domingo. Padrão: todos."
+        },
+        {
+          "nome": "openHour",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "9",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "measure-picker": [
+    {
+      "nome": "MeasurePicker",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "bands",
+          "tipo": "MeasureBand<T>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Faixas em ordem crescente de `max`. A última costuma ser `Infinity`."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onValueChange",
+          "tipo": "(v: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "edgeLabels",
+          "tipo": "[string, string]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Rótulo mostrado nas pontas da trilha."
+        },
+        {
+          "nome": "formatValue",
+          "tipo": "(v: number) => string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Formata o valor de entrada (ex.: 175 → \"175cm · 5ft 9in\")."
+        },
+        {
+          "nome": "step",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "motion-layer": [
+    {
+      "nome": "enterItems",
+      "descricao": "Entrada imediata, sem gancho de scroll.\n\nPara conteúdo RE-renderizado por ação do usuário (trocar um filtro e ver a\ngrade se refazer). Aqui um trigger de scroll seria errado: o usuário já está\nolhando para o lugar, e a animação é a resposta ao clique dele.",
+      "props": []
+    },
+    {
+      "nome": "mount",
+      "descricao": "Idempotente: pode ser chamado de novo quando a seção é recriada.",
+      "props": []
+    },
+    {
+      "nome": "bindShopifyLifecycle",
+      "descricao": "Liga o ciclo de vida do editor de tema. Fora do Shopify é inofensivo.",
+      "props": []
+    },
+    {
+      "nome": "isDesignMode",
+      "descricao": "No design mode do Shopify o editor rola a página sozinho — não brigue.",
+      "props": []
+    }
+  ],
+  "kanban": [
+    {
+      "nome": "Kanban",
+      "descricao": "Kanban primitive — headless, data-agnostic, dirigido por design tokens.\n\nDnD robusto via dnd-kit (Pointer + Touch + Keyboard sensors, DragOverlay,\nmulti-container sortable): substitui o HTML5 drag nativo (sem touch, ghost\nfeio, casos de borda bugados). Reordena dentro da coluna E move entre colunas.\n\nTheming: lê só `--kanban-*` (com fallback pros tokens do design system) — troca\no arquivo de tokens da marca e o mesmo componente se veste. Ver kanban.css.\n\nSeleção múltipla (opt-in via `selectable`): marquee \"select by area\" (arrastar\nsobre o vazio, via",
+      "props": [
+        {
+          "nome": "columns",
+          "tipo": "KanbanColumn<C>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "items",
+          "tipo": "KanbanItem<T>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "renderCard",
+          "tipo": "(args: KanbanRenderCardArgs<T>) => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Slot obrigatório: o consumidor desenha o card (mantém o core de DnD genérico)."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "columnClassName",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Classe extra por coluna (largura, etc.)."
+        },
+        {
+          "nome": "enabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "DnD ligado. Off = board somente-leitura (ex.: board do cliente)."
+        },
+        {
+          "nome": "onMove",
+          "tipo": "(move: KanbanMove) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Disparado ao soltar: mover entre colunas E reordenar dentro da mesma. O\nconsumidor persiste (status + ordem) e/ou revalida."
+        },
+        {
+          "nome": "onSelectionChange",
+          "tipo": "(ids: string[]) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Notifica a nova seleção — SSoT do consumidor + gatilho da barra de batch."
+        },
+        {
+          "nome": "renderColumnEmpty",
+          "tipo": "(column: KanbanColumn<C>) => any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Slot opcional do vazio da coluna."
+        },
+        {
+          "nome": "renderColumnHeader",
+          "tipo": "(column: KanbanColumn<C>) => any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Slot opcional do cabeçalho da coluna."
+        },
+        {
+          "nome": "selectable",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Liga a seleção múltipla: marquee \"select by area\" (arrastar sobre o vazio) +\nshift/ctrl/cmd-clique num card. Só faz efeito com `enabled` (board editável).\nO consumidor desenha a UI de batch a partir de `onSelectionChange`."
+        },
+        {
+          "nome": "selectedIds",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Ids selecionados (controlado). Se omitido, o Kanban mantém a seleção interna."
+        }
+      ]
+    },
+    {
+      "nome": "KanbanColumn",
+      "descricao": "Coluna droppable + SortableContext. Também aceita drop quando vazia (o\nuseDroppable no corpo inteiro), senão colunas sem card não seriam alvo.",
+      "props": [
+        {
+          "nome": "column",
+          "tipo": "KanbanColumn<C>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "enabled",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "isOver",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "items",
+          "tipo": "KanbanItem<T>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "render",
+          "tipo": "(args: KanbanRenderCardArgs<T>) => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onSelectToggle",
+          "tipo": "(id: string) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "renderEmpty",
+          "tipo": "(column: KanbanColumn<C>) => any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "renderHeader",
+          "tipo": "(column: KanbanColumn<C>) => any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "selectable",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "selectedIds",
+          "tipo": "Set<string>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "KanbanCard",
+      "descricao": "Card arrastável (useSortable). O card inteiro é a alça — a distância de\nativação do sensor (no <Kanban>) garante que um CLIQUE simples ainda passe\npara o onClick do conteúdo; só vira arraste depois de mover alguns px.",
+      "props": [
+        {
+          "nome": "enabled",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "item",
+          "tipo": "KanbanItem<T>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "render",
+          "tipo": "(args: KanbanRenderCardArgs<T>) => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onSelectToggle",
+          "tipo": "(id: string) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "selectable",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Seleção múltipla ligada — habilita o shift/ctrl/cmd-clique de toggle."
+        },
+        {
+          "nome": "selected",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "Kanban",
+      "descricao": "Kanban primitive — headless, data-agnostic, dirigido por design tokens.\n\nDnD robusto via dnd-kit (Pointer + Touch + Keyboard sensors, DragOverlay,\nmulti-container sortable): substitui o HTML5 drag nativo (sem touch, ghost\nfeio, casos de borda bugados). Reordena dentro da coluna E move entre colunas.\n\nTheming: lê só `--kanban-*` (com fallback pros tokens do design system) — troca\no arquivo de tokens da marca e o mesmo componente se veste. Ver kanban.css.\n\nSeleção múltipla (opt-in via `selectable`): marquee \"select by area\" (arrastar\nsobre o vazio, via",
+      "props": [
+        {
+          "nome": "columns",
+          "tipo": "KanbanColumn<C>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "items",
+          "tipo": "KanbanItem<T>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "renderCard",
+          "tipo": "(args: KanbanRenderCardArgs<T>) => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Slot obrigatório: o consumidor desenha o card (mantém o core de DnD genérico)."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "columnClassName",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Classe extra por coluna (largura, etc.)."
+        },
+        {
+          "nome": "enabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "DnD ligado. Off = board somente-leitura (ex.: board do cliente)."
+        },
+        {
+          "nome": "onMove",
+          "tipo": "(move: KanbanMove) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Disparado ao soltar: mover entre colunas E reordenar dentro da mesma. O\nconsumidor persiste (status + ordem) e/ou revalida."
+        },
+        {
+          "nome": "onSelectionChange",
+          "tipo": "(ids: string[]) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Notifica a nova seleção — SSoT do consumidor + gatilho da barra de batch."
+        },
+        {
+          "nome": "renderColumnEmpty",
+          "tipo": "(column: KanbanColumn<C>) => any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Slot opcional do vazio da coluna."
+        },
+        {
+          "nome": "renderColumnHeader",
+          "tipo": "(column: KanbanColumn<C>) => any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Slot opcional do cabeçalho da coluna."
+        },
+        {
+          "nome": "selectable",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Liga a seleção múltipla: marquee \"select by area\" (arrastar sobre o vazio) +\nshift/ctrl/cmd-clique num card. Só faz efeito com `enabled` (board editável).\nO consumidor desenha a UI de batch a partir de `onSelectionChange`."
+        },
+        {
+          "nome": "selectedIds",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Ids selecionados (controlado). Se omitido, o Kanban mantém a seleção interna."
+        }
+      ]
+    }
+  ],
+  "data-table": [
+    {
+      "nome": "DataTable",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "columns",
+          "tipo": "ColumnDef<TData, TValue>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "data",
+          "tipo": "TData[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "batchBarInFlow",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Render the batch action bar in normal flow (full-width, wraps and pushes the\ntable down) instead of the default absolute overlay. Only safe when the\ntoolbar search is hidden; otherwise the bar collides with the search box.\nDefault false (absolute overlay)."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "compact",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Compact style (px-3 py-2) for admin tables. Default true."
+        },
+        {
+          "nome": "disableSorting",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Desliga a ordenação por cabeçalho. Use quando a tela já tem um controle de\nordenação próprio — dois eixos de ordenação sobre a mesma tabela se\ncontradizem (o controle externo continua dizendo \"Prazo\" enquanto a tabela\njá reordenou por outra coluna)."
+        },
+        {
+          "nome": "emptyMessage",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Nenhum resultado.",
+          "descricao": null
+        },
+        {
+          "nome": "enableRowSelection",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Enable a leading checkbox column with shift-click range selection."
+        },
+        {
+          "nome": "footer",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Optional footer (e.g. <TableRow>...</TableRow>)"
+        },
+        {
+          "nome": "getRowId",
+          "tipo": "(row: TData) => string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Stable row id (e.g. the issue id) so selection survives re-sorts/refetches."
+        },
+        {
+          "nome": "hidePagination",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Hide pagination controls. Default false."
+        },
+        {
+          "nome": "hideToolbarSearch",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Hide the built-in toolbar search box. Use when the parent already provides\nits own search input feeding the data (avoids two competing search fields).\nDefault false."
+        },
+        {
+          "nome": "initialColumnPinning",
+          "tipo": "ColumnPinningState",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Initial column pinning (e.g. `{ right: ['actions'] }` to freeze an actions\ncolumn to the right edge). Opt-in — admin tables are unaffected when omitted."
+        },
+        {
+          "nome": "initialColumnVisibility",
+          "tipo": "VisibilityState",
+          "obrigatoria": false,
+          "padrao": "{}",
+          "descricao": null
+        },
+        {
+          "nome": "isLoading",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "onCellUpdate",
+          "tipo": "(row: TData, columnId: string, value: any) => Promise<void>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Optional callback for updating a cell value inline (only for admins)"
+        },
+        {
+          "nome": "onDeleteRow",
+          "tipo": "(row: TData) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Optional callback for deleting a row via context menu"
+        },
+        {
+          "nome": "onDuplicateRow",
+          "tipo": "(row: TData) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onRowClick",
+          "tipo": "(row: TData) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "pageSize",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "20",
+          "descricao": "Optional initial page size. Default 20."
+        },
+        {
+          "nome": "primaryColumnId",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "The ID of the column that should be treated as \"primary\".\nThis column will have width: auto (hug content/fill) and take remaining space."
+        },
+        {
+          "nome": "renderBatchBar",
+          "tipo": "(selected: TData[], clear: () => void) => any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Rendered above the table when ≥1 row is selected."
+        },
+        {
+          "nome": "renderRowContextMenu",
+          "tipo": "(row: TData) => any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Optional extra context-menu items rendered at the top of the row menu."
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Title for the table toolbar (optional)"
+        }
+      ]
+    }
+  ],
+  "segmented-control": [
+    {
+      "nome": "SegmentedControl",
+      "descricao": "Apple-like segmented control (trilho + pill ativo). Fonte única reusada pelo\nViewModeToggle e pelo painel de preferências (densidade / visão padrão).",
+      "props": [
+        {
+          "nome": "onChange",
+          "tipo": "(value: T) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "options",
+          "tipo": "SegmentedOption<T>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "aria-label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "fill",
+          "descricao": "\"fill\" = itens crescem igualmente (com label); \"compact\" = botões de ícone."
+        }
+      ]
+    }
+  ],
+  "octahedron-loader": [
+    {
+      "nome": "OctahedronLoader",
+      "descricao": "Loader de rota da marca — o Octahedron Visant no centro da tela.\n\nSubstitui os `loading.tsx` genéricos (spinner cru / skeleton chutado). NÃO\nsubstitui os skeletons internos dos componentes-cliente (SWR `isLoading`,\ndata-table), que refletem o dado real chegando — esses são a inteligência de\ncada página e ficam intactos.\n\n`prefers-reduced-motion`: mostra o símbolo parado (sem loop/autoplay).\n\nUsa a variante de linha do símbolo (`-lines`), gerada do original por\n`scripts/lottie-outline.js` — o arquivo de marca fica intacto.",
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "96",
+          "descricao": "Lado do símbolo em px."
+        }
+      ]
+    }
+  ],
+  "inline-edit": [
+    {
+      "nome": "InlineEdit",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "isEditing",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onCancel",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onSave",
+          "tipo": "() => Promise<void>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onStartEdit",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "showButtons",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "triggerClassName",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "nome": "Timeline",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "data",
+          "tipo": "TimelineEntry[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "assignee-stack": [
+    {
+      "nome": "AssigneeStack",
+      "descricao": "Stacked avatar group for the team co-owners of an issue. Clean and compact:\noverlapping circles with a ring cutout, capped at `max` with a \"+N\" overflow.\nRender only when it adds signal (the caller decides — e.g. only co-owned tasks).",
+      "props": [
+        {
+          "nome": "assignees",
+          "tipo": "Assignee[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "4",
+          "descricao": null
+        },
+        {
+          "nome": "size",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "sm",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "repulsive-hover": [
+    {
+      "nome": "RepulsiveHover",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "",
+          "descricao": null
+        },
+        {
+          "nome": "radius",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2",
+          "descricao": null
+        },
+        {
+          "nome": "strength",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "smooth-scroll-provider": [
+    {
+      "nome": "SmoothScrollProvider",
+      "descricao": "Smooth-scroll layer for the homepage scroll narrative.\n\n- Lenis drives a single RAF loop (via GSAP's ticker, so Lenis + ScrollTrigger\n  share one clock and never fight each other).\n- `lenis.on('scroll', ScrollTrigger.update)` keeps ScrollTrigger in sync with\n  the smoothed scroll position.\n- `prefers-reduced-motion` → bail out entirely: native scroll, no smoothing,\n  no plugin registration. The 3D stage independently falls back to a static\n  render in that mode.\n\nScoped to the homepage (mounted inside `app/page.tsx`), so Lenis never\nhijacks scrolling on admin/dashboard routes.",
+      "props": [
+        {
+          "nome": "onReady",
+          "tipo": "(lenis: Lenis) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Recebe a instância do Lenis (e `null` na desmontagem).\n\nExiste para que seções que reagem ao scroll se pendurem NA MESMA\ninstância em vez de criarem uma concorrente — duas instâncias de Lenis\nna mesma página brigam pelo wheel e o scroll fica com soluço.\nGuarde onde o seu app guarda estado; o componente não impõe store."
+        }
+      ]
+    }
+  ],
+  "glitch-chars": [
+    {
+      "nome": "GlitchChars",
+      "descricao": "Dois caracteres que trocam sozinhos — o \"sinal de vida\" mais barato que existe.\n\nNasceu como o ruído ao lado de um texto de status (\"** Processando\"), e é a\nprimitiva por trás de `status-ticker` e `working-glyph`. Um spinner diz\n\"esperando\"; isso diz \"a máquina está mexendo\", que é outra sensação.\n\n150ms é deliberado: acima de ~200ms lê como piscada quebrada, abaixo de ~100ms\nvira ruído que cansa. Não é decorativo — é o batimento do sistema.\n\n`prefers-reduced-motion`: congela num par fixo (o texto continua legível, e o\nlayout não pula, porque a largura é sempre a mesma em fonte mono).",
+      "props": [
+        {
+          "nome": "chars",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "*•□./-®",
+          "descricao": "Pool de caracteres sorteados. Troque para mudar o \"sotaque\" do ruído."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "intervalMs",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "150",
+          "descricao": "Milissegundos entre quadros."
+        },
+        {
+          "nome": "length",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2",
+          "descricao": "Quantos caracteres por quadro. Fonte mono ⇒ largura estável."
+        },
+        {
+          "nome": "style",
+          "tipo": "CSSProperties",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "status-ticker": [
+    {
+      "nome": "StatusTicker",
+      "descricao": "Linha de status para espera longa: ruído + verbo que gira + cronômetro.\n\nO problema que resolve não é técnico, é de percepção. Numa geração de 20–60s\numa barra de progresso mente (não existe progresso real para medir) e um\nspinner some da consciência em 5s. Uma palavra que TROCA — \"Criando\",\n\"Refinando\", \"Lapidando\" — mantém a leitura de que há trabalho acontecendo, e\no cronômetro dá ao usuário o direito de decidir se vale esperar.\n\nOs verbos entram por prop de propósito: são a voz da marca, não do componente.\n\nA troca é revelada caractere a caractere (7 passos de 50ms) em vez de cortar\nseco — o corte seco lê como bug de render, a revelação lê como escrita.\n\n`prefers-reduced-motion`: sem ruído, sem revelação; a palavra troca direto e o\ncronômetro continua (informação, não animação).",
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "rotateEverySec",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "3",
+          "descricao": "Segundos em cada verbo antes de trocar."
+        },
+        {
+          "nome": "showTimer",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Cronômetro à direita — o que dá ao usuário a decisão de esperar."
+        },
+        {
+          "nome": "steps",
+          "tipo": "readonly string[]",
+          "obrigatoria": false,
+          "padrao": "[\"Criando\", \"Desenhando\", \"Refinando\", \"Compondo\", \"Lapidando\"]",
+          "descricao": "Verbos rotativos. A voz da marca entra aqui."
+        }
+      ]
+    }
+  ],
+  "turbulence-field": [
+    {
+      "nome": "TurbulenceField",
+      "descricao": "Névoa procedural para estados de espera — SVG `feTurbulence` puro.\n\nA alternativa óbvia (shader/WebGL) morre no caso real: uma grade de 12 tiles\ngerando ao mesmo tempo estoura o limite de contextos WebGL do browser e os\nprimeiros tiles apagam. Isto é filtro SVG animado pelo compositor — escala\npara qualquer número de instâncias e não gasta um frame de JS.\n\nA cor vem de `currentColor`, então herda o token da marca sem hex próprio.\n\n`baseFrequency` animada em 14s: devagar o bastante para ler como fluido, não\ncomo ruído de TV. Encurtar isso é a tentação errada.\n\n`prefers-reduced-motion`: congela a turbulência (a textura fica, o movimento sai).",
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "intensity",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.18",
+          "descricao": "Alpha total da névoa (0–1). Sutil — acima de ~0.3 come o conteúdo."
+        }
+      ]
+    }
+  ],
+  "working-glyph": [
+    {
+      "nome": "WorkingGlyph",
+      "descricao": "Um ícone que \"bate\" com faíscas — trabalho manual acontecendo, não espera.\n\nA diferença para um spinner é de narrativa: spinner é o sistema pedindo\npaciência, isto é o sistema mostrando esforço. Em geração de imagem (20–60s)\nessa leitura é o que segura o usuário na tela.\n\nO ícone entra por prop — a picareta é só o default da casa. Troque por\n`Hammer`, `Wand`, `Cog` conforme a metáfora do produto; a mecânica (balanço +\nbrilho + faísca) é o que se colhe aqui.\n\nBalanço em 0.9s com `transform-origin` em 60%/80%: o pivô fica onde a mão\nseguraria o cabo. Centralizar o pivô mata o gesto na hora.\n\n`prefers-reduced-motion`: ícone parado, faísca congelada (regra no bloco `css`\ndo item — se o glifo não parar, o CSS do registry não foi instalado).",
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "framed",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Moldura discreta atrás do ícone. Desligue ao usar sobre imagem."
+        },
+        {
+          "nome": "icon",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Glifo animado. Default: picareta (lucide)."
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "20",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "paper-shuttle": [
+    {
+      "nome": "PaperShuttle",
+      "descricao": "Papéis voando de uma pasta para outra — o loader de transferência.\n\nExiste para uma classe específica de espera: quando o sistema está MOVENDO\nalgo (importar, extrair, converter, sincronizar). Um spinner nesse caso não\nconta nada; a metáfora da pasta conta a operação inteira sem uma palavra, e o\nusuário entende que fechar a aba interrompe algo.\n\nTrês papéis com delay escalonado (0 / .35 / .7 de um loop de 1.2s) dão fluxo\ncontínuo com uma única animação declarada. Mais que três vira confete.\n\nA parábola (`y` sobe e volta) importa: linha reta lê como barra de progresso\ndisfarçada; o arco lê como objeto atravessando espaço.\n\nSem cor própria — a pasta usa `currentColor` (default: `--brand`) e o papel os\ntokens de superfície, então o loader troca de marca junto com o tema.\n\n`prefers-reduced-motion`: papéis parados no meio do trajeto, texto e barra\n(que são informação real) intactos.",
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Texto sob a animação. Default: a porcentagem, ou \"Processando…\"."
+        },
+        {
+          "nome": "progress",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "0–100. Omitido ⇒ modo indeterminado, só o rótulo."
+        }
+      ]
+    }
+  ],
+  "generating-tile": [
+    {
+      "nome": "GeneratingTile",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "isLoading",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "aspectRatio",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Renderizado quando `isLoading` é false (o resultado)."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "intensity",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.18",
+          "descricao": "Opacidade da névoa (0–1)."
+        },
+        {
+          "nome": "onCancel",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Cancelar discreto — só faz sentido em `overlay`."
+        },
+        {
+          "nome": "showFrame",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "false quando o pai já dá a moldura/aspecto."
+        },
+        {
+          "nome": "steps",
+          "tipo": "readonly string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Verbos rotativos do ticker. A voz da marca entra aqui."
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "tile",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "masonry-gallery": [
+    {
+      "nome": "useMasonryColumns",
+      "descricao": "Contagem de colunas responsiva. Exportada porque o call site às vezes precisa\nsaber quantas colunas existem (ex.: pedir a próxima página em múltiplos dela).",
+      "props": [
+        {
+          "nome": "base",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "< 640px"
+        },
+        {
+          "nome": "lg",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "< 1280px"
+        },
+        {
+          "nome": "sm",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "< 1024px"
+        },
+        {
+          "nome": "xl",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "≥ 1280px"
+        }
+      ]
+    },
+    {
+      "nome": "MasonryGallery",
+      "descricao": "Masonry por round-robin (`i % cols`) — colunas de flex, não CSS `columns`.\n\nA escolha do round-robin é a coisa que importa aqui, e ela é contra-intuitiva:\na distribuição \"certa\" (sempre na coluna mais curta) exige medir as alturas, e\nmedir significa que ANEXAR uma página reordena o que já estava na tela. Num\nfeed infinito isso é o pior bug possível — o usuário perde o item que estava\nolhando. Round-robin por índice é levemente menos equilibrado e perfeitamente\nestável: item que entrou numa coluna nunca sai dela.\n\nTambém é o motivo de não usar CSS `columns`: lá o navegador reflui a ordem\ninteira e a leitura vira vertical-serpenteante, que quebra ordem cronológica.\n\nNão sabe o que renderiza: `renderItem` decide. Serve thumbnail, card, vídeo,\nnó vivo — aspect ratios misturados são o caso normal, não a exceção.",
+      "props": [
+        {
+          "nome": "getKey",
+          "tipo": "(item: T, index: number) => Key",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "items",
+          "tipo": "T[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "renderItem",
+          "tipo": "(item: T, index: number) => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "breakpoints",
+          "tipo": "MasonryBreakpoints",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "cols",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Colunas fixas. Omita para responsivo."
+        },
+        {
+          "nome": "gap",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "12",
+          "descricao": "Espaço entre itens e colunas, em px."
+        }
+      ]
+    }
+  ],
+  "scrub-input": [
+    {
+      "nome": "ScrubInput",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(value: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "hint",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Vira `title` — bom lugar para explicar o parâmetro."
+        },
+        {
+          "nome": "icon",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "step",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "suffix",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "grid-dots": [
+    {
+      "nome": "GridDots",
+      "descricao": "Malha de pontos de fundo — o \"papel milimetrado\" das telas de ferramenta.\n\nUm `radial-gradient` repetido, não SVG e não canvas: zero nós no DOM, zero\nrequisição, e o navegador desenha no compositor. Numa página com sidebar,\ncanvas e grade de resultados, isso é a diferença entre textura de graça e mais\num elemento para o layout engine resolver.\n\nA cor vem de `currentColor` (default: `--foreground`), então inverte sozinha\nentre tema claro e escuro sem hook de tema nem prop de cor.\n\nOpacidade default 0.07 é o teto útil: acima disso a malha compete com o\nconteúdo em vez de dar profundidade.",
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "dotSize",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1.5",
+          "descricao": "Raio do ponto, em px."
+        },
+        {
+          "nome": "opacity",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.07",
+          "descricao": "0–1. Acima de ~0.1 vira ruído."
+        },
+        {
+          "nome": "spacing",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "20",
+          "descricao": "Distância entre pontos, em px."
+        }
+      ]
+    }
+  ],
+  "drop-overlay": [
+    {
+      "nome": "DropOverlay",
+      "descricao": "Alvo de soltar arquivo — a confirmação visual do drag-and-drop.\n\nPequeno, mas não opcional: sem ele o usuário arrasta um arquivo sobre a área e\nnão tem sinal nenhum de que a página aceita, então solta fora e acha que o\nupload está quebrado. É o estado que todo mundo esquece de desenhar.\n\n`pointer-events-none` é o detalhe que faz funcionar: o overlay aparece POR\nCIMA da zona, e se ele capturasse o ponteiro dispararia o `dragleave` do\npróprio pai — o overlay piscaria infinitamente e o `drop` nunca chegaria.\n\nA borda tracejada é a convenção de \"solte aqui\" desde sempre; trocar por sólida\nlê como estado de erro.",
+      "props": [
+        {
+          "nome": "visible",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "message",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Solte o arquivo aqui",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "brand-theme": [
+    {
+      "nome": "brandThemeCss",
+      "descricao": "Item de tema → texto CSS.\n\nUm `<style>` único, e não `style.setProperty` no root: o item separa `light`\nde `dark`, e escrever inline no elemento achataria os dois num só. Com uma\nfolha de estilo, alternar tema continua sendo trocar a classe `.dark`, igual\nao que o shadcn instala — o runtime não inventa um segundo mecanismo.\n\nEspecificidade: `:root:not(.dark)` empata com `.dark` em peso, então a ordem\nno arquivo decide, e as regras da marca vêm depois das do projeto por estarem\nnum `<style>` injetado no fim do `<head>`.",
+      "props": [
+        {
+          "nome": "cssVars",
+          "tipo": "{ theme?: Record<string, string>; light?: Record<string, string>; dark?: Record<string, string>; }",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "name",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "css",
+          "tipo": "Record<string, Record<string, string>>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "meta",
+          "tipo": "Record<string, unknown>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "applyBrandTheme",
+      "descricao": "Escreve (ou substitui) a folha da marca e marca o `<html>` com o slug.",
+      "props": []
+    },
+    {
+      "nome": "applyBrandThemeAnimated",
+      "descricao": "Troca de marca com View Transition quando o browser tem, direto quando não.\n\nA transição é o que faz a troca parecer uma decisão e não um flash. Respeita\n`prefers-reduced-motion` — para quem pediu menos movimento, o corte seco é a\nresposta certa, não uma versão mais lenta.",
+      "props": []
+    },
+    {
+      "nome": "loadBrandFonts",
+      "descricao": "Carrega as faces da marca pelo Google Fonts.\n\nBest-effort por natureza: parte do acervo das marcas é licenciada fora do\nGoogle (Termina, Clash Grotesk, Helvetica Now). Quando a face não existe lá,\no link 404 e a pilha de fallback do token assume — a UI continua correta, só\nnão fica na face exata. Um `@font-face` próprio do projeto, se existir, ganha\nde qualquer jeito por já estar declarado.",
+      "props": []
+    },
+    {
+      "nome": "BrandThemeProvider",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "defaultBrand",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Slug aplicado no primeiro carregamento se nada estiver salvo."
+        },
+        {
+          "nome": "registryUrl",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "https://visant-ui.vercel.app/r",
+          "descricao": "Base do registry. Em dev, `/r` serve os JSONs deste repo."
+        },
+        {
+          "nome": "storageKey",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "visant-brand",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "brand-selector": [
+    {
+      "nome": "BrandSelector",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "align",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "shortcut",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "b",
+          "descricao": "Atalho de teclado. `null` desliga. Padrão: ⌘/Ctrl + B."
+        }
+      ]
+    }
+  ]
+}

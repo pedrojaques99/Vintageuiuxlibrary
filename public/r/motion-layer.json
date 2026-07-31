@@ -3,7 +3,7 @@
   "name": "motion-layer",
   "title": "Motion Layer",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Camada de movimento ligada por data-* (reveal, parallax, magnetic) com o ciclo de vida do editor de tema Shopify. GSAP + ScrollTrigger.",
+  "description": "O ciclo de scroll do editor Shopify em GSAP/ScrollTrigger, com limpeza de instância.",
   "dependencies": [
     "gsap"
   ],

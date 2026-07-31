@@ -3,13 +3,14 @@
   "name": "paper-shuttle",
   "title": "Paper Shuttle",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Loader de transferencia: papeis voando de uma pasta para outra. Conta a operacao sem uma palavra.",
+  "description": "Progresso com narrativa de papel passando pela máquina.",
   "dependencies": [
     "framer-motion"
   ],
   "registryDependencies": [
     "utils",
-    "https://visant-ui.vercel.app/r/glitch-chars.json"
+    "https://visant-ui.vercel.app/r/glitch-chars.json",
+    "@visant/glitch-chars"
   ],
   "files": [
     {

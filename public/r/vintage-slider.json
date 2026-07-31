@@ -3,9 +3,9 @@
   "name": "vintage-slider",
   "title": "Vintage Slider",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Horizontal fader with gradient fill bar and metallic thumb.",
+  "description": "Fader de console com curso e trilho gravados.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

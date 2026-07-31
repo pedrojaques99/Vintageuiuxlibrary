@@ -66,7 +66,7 @@ const MODES = [
 
 function TypeBadge({ type }: { type: CatalogItem["type"] }) {
   return (
-    <span className="shrink-0 rounded-full border border-border px-1.5 py-px font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+    <span className="shrink-0 rounded-full border border-border px-1.5 py-px font-mono text-micro uppercase tracking-wider text-muted-foreground">
       {TYPE_LABEL[type]}
     </span>
   );
@@ -106,12 +106,12 @@ const Card = React.memo(function Card({
           // O palco existe desde o primeiro quadro, com a altura final; só o que
           // está dentro dele é que chega quando o card entra na tela. Assim a
           // grade não muda de tamanho embaixo do dedo de quem está rolando.
-          <FitStage w={w} h={h} active={active}>
+          <FitStage w={w} h={h} active={active} label={item.name}>
             {mounted ? <Demo /> : <div className="h-full w-full animate-pulse bg-muted/40" />}
           </FitStage>
         ) : (
           <div className="grid h-[120px] place-items-center px-6 text-center">
-            <p className="text-[11px] leading-relaxed text-muted-foreground">
+            <p className="text-rotulo leading-relaxed text-muted-foreground">
               sem superfície visual própria
               <br />
               <span className="font-mono">{TYPE_LABEL[item.type]}</span>
@@ -123,7 +123,7 @@ const Card = React.memo(function Card({
           type="button"
           onClick={onOpen}
           aria-label={`Abrir ${item.title} em foco`}
-          className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-[var(--r-control,0.5rem)] border border-border bg-background/85 text-muted-foreground opacity-0 backdrop-blur transition-opacity hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100"
+          className="alvo-toque absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-[var(--r-control,0.5rem)] border border-border bg-background/85 text-muted-foreground opacity-0 backdrop-blur transition-opacity hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100"
         >
           <Expand className="h-3.5 w-3.5" />
         </button>
@@ -135,16 +135,16 @@ const Card = React.memo(function Card({
             type="button"
             data-card-index={index}
             onClick={onOpen}
-            className="truncate font-mono text-[12px] outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline"
+            className="truncate font-mono text-apoio outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline"
           >
             {item.name}
           </button>
           <TypeBadge type={item.type} />
-          <span className="ml-auto opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+          <span className="no-hover ml-auto">
             <CopyCommand variant="chip" text={installCommand(item.name)} />
           </span>
         </div>
-        <p className="text-[12px] leading-relaxed text-muted-foreground">{item.description}</p>
+        <p className="text-apoio leading-relaxed text-muted-foreground">{item.description}</p>
       </div>
     </article>
   );
@@ -152,7 +152,7 @@ const Card = React.memo(function Card({
 
 function Row({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; index: number }) {
   return (
-    <div className="group flex items-center gap-3 border-b border-border px-2 py-2.5 transition-colors hover:bg-muted/40">
+    <div className="group flex items-center gap-3 border-b border-border px-2 py-2.5 transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:bg-muted/40">
       <button
         type="button"
         data-card-index={index}
@@ -160,17 +160,17 @@ function Row({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; i
         className="min-w-0 flex-1 text-left outline-none"
       >
         <span className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-[12px] group-hover:text-[var(--brand)]">{item.name}</span>
+          <span className="font-mono text-apoio group-hover:text-[var(--brand)]">{item.name}</span>
           <TypeBadge type={item.type} />
         </span>
-        <span className="mt-0.5 line-clamp-1 block text-[12px] text-muted-foreground">
+        <span className="mt-0.5 line-clamp-1 block text-apoio text-muted-foreground">
           {item.description}
         </span>
       </button>
       <CopyCommand
         variant="chip"
         text={installCommand(item.name)}
-        className="opacity-0 focus-visible:opacity-100 group-hover:opacity-100"
+        className="no-hover"
       />
     </div>
   );
@@ -304,22 +304,27 @@ export function Gallery({
         >
           A library da Visant
         </h1>
-        <p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-muted-foreground sm:text-[15px]">
+        <p className="mt-4 max-w-2xl text-corpo leading-relaxed text-muted-foreground sm:text-destaque">
           {/* Conta a lista que está na tela, e não um número escrito à mão que
               envelhece: o portão `npm run check:catalog` garante que esta lista
               e o registry.json não divergem. */}
           {CATALOG.length} peças nesta vitrine, servidas por{" "}
-          <code className="font-mono text-[13px]">{REGISTRY_PUBLIC_LABEL}</code>
-          {/* O número de temas vem do índice do vault, não de um número escrito
-              aqui — o sync publica marca nova e esta frase acompanha sozinha. */}
-          {brands.length ? `, mais ${brands.length} temas compilados do vault` : null}. Nenhum
-          componente sabe a cor de um cliente — trocar a marca no seletor repinta esta página
-          inteira.
+          <code className="font-mono text-corpo">{REGISTRY_PUBLIC_LABEL}</code>, mais{" "}
+          {/*
+            O número de temas vem do índice do vault — o sync publica marca nova e
+            a frase acompanha sozinha. A frase inteira fica no ar desde o primeiro
+            quadro, com o número reservado num slot de largura fixa: antes ela
+            APARECIA quando o vault respondia, e o parágrafo ganhava uma linha
+            com a pessoa já lendo.
+          */}
+          <span className="inline-block min-w-[1.6ch] tabular-nums">{brands.length || "…"}</span>{" "}
+          temas compilados do vault. Nenhum componente sabe a cor de um cliente — trocar a marca no
+          seletor repinta esta página inteira.
         </p>
       </section>
 
       {/* controles */}
-      <div className="shell-bleed sticky top-[var(--header-h)] z-30 border-b border-border bg-background/85 py-3 backdrop-blur-xl">
+      <div className="shell-bleed sticky top-[var(--shell-header-h)] z-30 border-b border-border bg-background/85 py-3 backdrop-blur-xl">
         <div className="flex items-center gap-2">
           <div className="relative flex min-w-0 flex-1 items-center gap-2 rounded-[var(--r-pill,9999px)] border border-border bg-card px-3 py-1.5">
             <Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
@@ -329,7 +334,7 @@ export function Gallery({
               onChange={(e) => setQ(e.target.value)}
               placeholder="Buscar por nome, uso ou tag…"
               aria-label="Buscar no catálogo"
-              className="w-full min-w-0 bg-transparent text-[13px] outline-none placeholder:text-muted-foreground"
+              className="w-full min-w-0 bg-transparent text-corpo outline-none placeholder:text-muted-foreground"
             />
             {q ? (
               <button
@@ -341,7 +346,7 @@ export function Gallery({
                 <X className="h-3.5 w-3.5" />
               </button>
             ) : (
-              <kbd className="hidden rounded border border-border px-1.5 font-mono text-[10px] text-muted-foreground sm:block">
+              <kbd className="hidden rounded border border-border px-1.5 font-mono text-micro text-muted-foreground sm:block">
                 /
               </kbd>
             )}
@@ -362,7 +367,7 @@ export function Gallery({
             pressed={family === "todos"}
             count={CATALOG.length}
             onClick={() => setFamily("todos")}
-            className="rounded-[var(--r-pill,9999px)] py-1.5 text-[12px]"
+            className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
           >
             Todos
           </Chip>
@@ -372,7 +377,7 @@ export function Gallery({
               pressed={family === f.key}
               count={COUNT_BY_FAMILY[f.key] ?? 0}
               onClick={() => setFamily(f.key)}
-              className="rounded-[var(--r-pill,9999px)] py-1.5 text-[12px]"
+              className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
             >
               {f.label}
             </Chip>
@@ -405,8 +410,8 @@ export function Gallery({
         )
       ) : (
         <div className="mt-16 text-center">
-          <p className="text-[15px]">Nada com “{q}”.</p>
-          <p className="mx-auto mt-2 max-w-md text-[13px] text-muted-foreground">
+          <p className="text-destaque">Nada com “{q}”.</p>
+          <p className="mx-auto mt-2 max-w-md text-corpo text-muted-foreground">
             Se a peça não existe aqui e você está prestes a escrevê-la, ela provavelmente deveria
             virar item — é assim que o registry cresce.
           </p>

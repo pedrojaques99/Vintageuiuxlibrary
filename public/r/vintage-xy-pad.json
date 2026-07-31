@@ -3,9 +3,9 @@
   "name": "vintage-xy-pad",
   "title": "Vintage XY Pad",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "2D controller surface with crosshair cursor, grid lines, and axis readouts.",
+  "description": "Campo de dois eixos para controlar dois parâmetros num gesto só.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

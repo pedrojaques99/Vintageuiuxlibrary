@@ -3,7 +3,7 @@
   "name": "sticky-filterbar",
   "title": "Sticky Filterbar",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Barra de filtro que gruda e condensa. Mede a altura real do cabeçalho em --header-h, porque ela muda com o viewport e com o carregamento da fonte.",
+  "description": "Barra de filtro que gruda abaixo do cabeçalho sem medir altura na mão e sem pular no scroll.",
   "registryDependencies": [
     "utils"
   ],

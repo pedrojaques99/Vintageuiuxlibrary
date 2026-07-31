@@ -3,9 +3,9 @@
   "name": "vintage-button",
   "title": "Vintage Button",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Skeuomorphic push button with press animation and LED indicator.",
+  "description": "Botão de painel com afundamento real no clique.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

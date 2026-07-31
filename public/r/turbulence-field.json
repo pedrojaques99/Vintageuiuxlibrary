@@ -3,7 +3,7 @@
   "name": "turbulence-field",
   "title": "Turbulence Field",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Nevoa procedural em SVG feTurbulence. Escala para grades inteiras sem gastar contexto WebGL.",
+  "description": "Ruído animado em SVG para dar vida a uma superfície parada.",
   "registryDependencies": [
     "utils"
   ],

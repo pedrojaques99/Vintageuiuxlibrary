@@ -124,7 +124,14 @@ ok("zero hex — os componentes trocam de marca junto com o tema");
 say("Portão de catálogo");
 run("node scripts/catalog-check.mjs");
 
-// ── Portão 4: tipos ──────────────────────────────────────────────────────────
+// ── Portão 4: item declara o que importa ─────────────────────────────────────
+// Sem isto, o `add` entrega arquivo que não compila na casa de quem instalou —
+// e o erro parece do consumidor. Foi assim que 14 itens vintage ficaram
+// ininstaláveis por semanas sem ninguém saber.
+say("Portão de dependências");
+run("node scripts/deps-check.mjs");
+
+// ── Portão 5: tipos ──────────────────────────────────────────────────────────
 // O `vite build` NÃO checa tipos (esbuild só apaga as anotações). Sem este
 // portão, `strict: true` no tsconfig é decoração: o erro passa pelo build,
 // entra no registry e só aparece no editor de quem instalou o item.
@@ -134,6 +141,11 @@ run("npx tsc --noEmit");
 // ── Builds ───────────────────────────────────────────────────────────────────
 say("Build do registry (shadcn)");
 run("npx shadcn@latest build");
+
+// A tabela de props sai do TypeScript dos itens — regerar aqui é o que impede a
+// documentação de descrever uma API que já mudou.
+say("Extração de props");
+run("node scripts/props-extract.mjs");
 
 say("Build do site (vite)");
 run("npx vite build");

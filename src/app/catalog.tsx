@@ -42,8 +42,6 @@ import { InlineEdit } from "../../registry/visant/ui/inline-edit";
 import { RepulsiveHover } from "../../registry/visant/ui/repulsive-hover";
 import { Timeline } from "../../registry/visant/ui/timeline";
 import { StickyFilterbar, FilterRow } from "../../registry/visant/ui/sticky-filterbar";
-import { Kanban } from "../../registry/visant/blocks/kanban";
-import type { KanbanItem } from "../../registry/visant/blocks/kanban/types";
 
 import { VintageKnob } from "../../registry/vintage/ui/vintage-knob";
 import { VintageLargeKnob } from "../../registry/vintage/ui/vintage-large-knob";
@@ -133,9 +131,33 @@ export const familyLabel = (key: Family) => FAMILIES.find((f) => f.key === key)?
 export const fold = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
+/**
+ * Corta a terminação da palavra em português.
+ *
+ * O arquivo da vitrine promete que quem procura "arrastar" acha o `scrub-input`
+ * sem saber o nome dele. A descrição da peça diz "número que se **arrasta**" —
+ * e busca por substring não liga uma forma à outra: "arrastar" não está dentro
+ * de "arrasta". A promessa era falsa até o teste de regressão flagrar.
+ *
+ * Isto não é um stemmer de verdade e não precisa ser: corta infinitivo, gerúndio,
+ * particípio e plural, que é o que separa a forma digitada da forma escrita num
+ * catálogo de 47 itens. Cortar demais só aumenta o recall numa lista pequena;
+ * cortar de menos é o que fazia a peça sumir.
+ */
+const stem = (palavra: string) =>
+  palavra.length <= 4
+    ? palavra
+    : palavra.replace(/(ando|endo|indo|acao|coes|ar|er|ir|as|es|os|am|em|a|e|o|s)$/, "");
+
+const tokens = (texto: string) => fold(texto).split(/[^a-z0-9]+/).filter(Boolean).map(stem);
+
 /** O texto que a busca varre de um item. Um lugar só decide o que é buscável. */
-export const haystack = (i: CatalogItem) =>
-  fold([i.name, i.title, i.description, i.type, familyLabel(i.family), ...i.tags].join(" "));
+export const haystack = (i: CatalogItem) => {
+  const bruto = [i.name, i.title, i.description, i.type, familyLabel(i.family), ...i.tags].join(" ");
+  // Os dois: o texto cru (para casar "scrub-in" enquanto se digita) e os radicais
+  // (para casar "arrastar" com "arrasta").
+  return `${fold(bruto)} ${tokens(bruto).join(" ")}`;
+};
 
 // --- utilitários de demo -----------------------------------------------------
 
@@ -233,7 +255,7 @@ function MeasureDemo() {
         ]}
       >
         {(band) => (
-          <span className="text-[12px] text-muted-foreground">
+          <span className="text-apoio text-muted-foreground">
             taco sugerido: <strong className="text-foreground">{String(band.value)}</strong>
           </span>
         )}
@@ -270,7 +292,7 @@ function InlineEditDemo() {
     <Frame>
       <InlineEdit
         isEditing={editing}
-        value={<span className="text-[15px] font-medium">{value}</span>}
+        value={<span className="text-destaque font-medium">{value}</span>}
         onStartEdit={() => {
           setDraft(value);
           setEditing(true);
@@ -285,52 +307,24 @@ function InlineEditDemo() {
           autoFocus
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          className="w-full rounded-[var(--r-control,0.5rem)] border border-border bg-background px-2 py-1 text-[15px] outline-none"
+          className="w-full rounded-[var(--r-control,0.5rem)] border border-border bg-background px-2 py-1 text-destaque outline-none"
         />
       </InlineEdit>
     </Frame>
   );
 }
 
+const KanbanBoard = React.lazy(() => import("./demos/kanban-demo"));
+
+/**
+ * Sob demanda: o @dnd-kit que este board usa pesa mais que o resto da grade
+ * inteira e serve um card só. Chega quando o card chega.
+ */
 function KanbanDemo() {
-  const columns = React.useMemo(
-    () => [
-      { id: "fila", data: { label: "Fila" } },
-      { id: "fazendo", data: { label: "Fazendo" } },
-    ],
-    [],
-  );
-  const [items, setItems] = React.useState<KanbanItem<{ t: string }>[]>([
-    { id: "a", columnId: "fila", data: { t: "Colher marquee" } },
-    { id: "b", columnId: "fila", data: { t: "Tema Kastrup" } },
-    { id: "c", columnId: "fazendo", data: { t: "Brand selector" } },
-  ]);
   return (
-    <div className="h-full w-full overflow-auto p-2 text-[11px]">
-      <Kanban
-        columns={columns}
-        items={items}
-        onMove={({ itemId, toColumnId }) =>
-          setItems((prev) =>
-            prev.map((it) => (it.id === itemId ? { ...it, columnId: toColumnId } : it)),
-          )
-        }
-        renderColumnHeader={(c) => (
-          <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-            {(c.data as { label: string }).label}
-          </span>
-        )}
-        renderCard={({ item, dragging }) => (
-          <div
-            className={`rounded-[var(--r-control,0.5rem)] border border-border bg-card px-2.5 py-2 ${
-              dragging ? "opacity-40" : ""
-            }`}
-          >
-            {item.data.t}
-          </div>
-        )}
-      />
-    </div>
+    <React.Suspense fallback={<div className="h-full w-full animate-pulse bg-muted/30" />}>
+      <KanbanBoard />
+    </React.Suspense>
   );
 }
 
@@ -426,7 +420,7 @@ function DropDemo() {
       onMouseEnter={() => setOver(true)}
       onMouseLeave={() => setOver(false)}
     >
-      <div className="grid h-full place-items-center rounded-[var(--r-control,0.5rem)] border border-dashed border-border text-[11px] text-muted-foreground">
+      <div className="grid h-full place-items-center rounded-[var(--r-control,0.5rem)] border border-dashed border-border text-rotulo text-muted-foreground">
         passe o mouse
       </div>
       <DropOverlay visible={over} message="Solte os arquivos" />
@@ -446,7 +440,7 @@ function GeneratingDemo() {
     <Frame>
       <div className="w-[160px]">
         <GeneratingTile isLoading={loading} aspectRatio="1/1">
-          <div className="grid h-full place-items-center bg-muted text-[11px] text-muted-foreground">
+          <div className="grid h-full place-items-center bg-muted text-rotulo text-muted-foreground">
             resultado
           </div>
         </GeneratingTile>
@@ -490,8 +484,13 @@ function MasonryDemo() {
 
 function FilterbarDemo() {
   return (
+    // O componente MEDE um cabeçalho e publica a altura em `--header-h`. Dentro
+    // do card ele apontaria para o cabeçalho da vitrine e escreveria na raiz do
+    // documento — demo não pode mexer na página que a hospeda. Aqui ele mede um
+    // cabeçalho de mentira, que é justamente o que a demo tem de mostrar.
     <div className="h-full w-full overflow-hidden">
-      <StickyFilterbar>
+      <div data-demo-header className="h-6 border-b border-border bg-muted/40" />
+      <StickyFilterbar headerSelector="[data-demo-header]">
         <FilterRow>
           <Chip pressed>Todos</Chip>
           <Chip count={12}>Em produção</Chip>
@@ -510,8 +509,8 @@ function FilterbarDemo() {
 function TimelineDemo() {
   const data = React.useMemo(
     () => [
-      { title: "Briefing", content: <p className="text-[12px] text-muted-foreground">Guideline lida do vault.</p> },
-      { title: "Tokens", content: <p className="text-[12px] text-muted-foreground">Cor e tipo compilados.</p> },
+      { title: "Briefing", content: <p className="text-apoio text-muted-foreground">Guideline lida do vault.</p> },
+      { title: "Tokens", content: <p className="text-apoio text-muted-foreground">Cor e tipo compilados.</p> },
     ],
     [],
   );
@@ -536,8 +535,8 @@ export const CATALOG: CatalogItem[] = [
     tags: ["marca", "tema", "cmdk", "vault"],
     demo: () => (
       <Frame className="flex-col gap-2 text-center">
-        <span className="text-[11px] text-muted-foreground">está na barra do topo →</span>
-        <span className="font-mono text-[11px]">⌘B</span>
+        <span className="text-rotulo text-muted-foreground">está na barra do topo →</span>
+        <span className="font-mono text-rotulo">⌘B</span>
       </Frame>
     ),
   },
@@ -673,7 +672,7 @@ export const CATALOG: CatalogItem[] = [
           band
           speed={40}
           items={["FRETE GRÁTIS", "NOVA COLEÇÃO", "ESTOQUE REAL", "TROCA EM 30 DIAS"].map((t, i) => (
-            <span key={i} className="font-mono text-[11px] tracking-[0.14em]">
+            <span key={i} className="font-mono text-rotulo tracking-[0.14em]">
               {t}
             </span>
           ))}
@@ -697,7 +696,7 @@ export const CATALOG: CatalogItem[] = [
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div
               key={i}
-              className="grid h-24 place-items-center rounded-[var(--r-control,0.5rem)] border border-border bg-muted text-[11px] text-muted-foreground"
+              className="grid h-24 place-items-center rounded-[var(--r-control,0.5rem)] border border-border bg-muted text-rotulo text-muted-foreground"
             >
               item {i}
             </div>
@@ -720,7 +719,7 @@ export const CATALOG: CatalogItem[] = [
       <Frame>
         <div className="w-[150px]">
           <Plate ratio="4/5">
-            <div className="grid h-full place-items-center text-[11px] text-muted-foreground">
+            <div className="grid h-full place-items-center text-rotulo text-muted-foreground">
               foto do produto
             </div>
           </Plate>
@@ -748,7 +747,7 @@ export const CATALOG: CatalogItem[] = [
     demo: () => (
       <Frame className="flex-col gap-1 text-center">
         <StoreStatus timeZone="America/Sao_Paulo" openHour={9} closeHour={18} />
-        <span className="text-[10px] text-muted-foreground">America/Sao_Paulo · 9h–18h</span>
+        <span className="text-micro text-muted-foreground">America/Sao_Paulo · 9h–18h</span>
       </Frame>
     ),
   },
@@ -774,7 +773,7 @@ export const CATALOG: CatalogItem[] = [
       <Frame>
         <RepulsiveHover strength={8} radius={160}>
           <span
-            className="rounded-[var(--r-pill,9999px)] px-5 py-2.5 text-[13px] font-medium"
+            className="rounded-[var(--r-pill,9999px)] px-5 py-2.5 text-corpo font-medium"
             style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
           >
             tente clicar
@@ -1063,7 +1062,7 @@ export const CATALOG: CatalogItem[] = [
       <Frame>
         <div className="w-[190px]">
           <VintageTvFrame title="VISANT TV" width={190} showTimecode="00:12:34" signalActive>
-            <div className="grid h-full place-items-center font-mono text-[10px] text-white/70">
+            <div className="grid h-full place-items-center font-mono text-micro text-white/70">
               NO SIGNAL
             </div>
           </VintageTvFrame>
@@ -1091,10 +1090,10 @@ export const CATALOG: CatalogItem[] = [
      */
     demo: () => (
       <Frame className="flex-col gap-2 text-center">
-        <span className="font-mono text-[11px] text-[var(--vintage-text-muted)]">
+        <span className="font-mono text-rotulo text-[var(--vintage-text-muted)]">
           abre na bancada, em tela cheia
         </span>
-        <kbd className="rounded border border-[var(--vintage-border)] px-2 py-0.5 font-mono text-[12px] text-[var(--vintage-label)]">
+        <kbd className="rounded border border-[var(--vintage-border)] px-2 py-0.5 font-mono text-apoio text-[var(--vintage-label)]">
           ⌘K
         </kbd>
       </Frame>
@@ -1120,6 +1119,15 @@ export const CATALOG: CatalogItem[] = [
     tags: ["tema", "css"],
   },
   {
+    name: "use-media-query",
+    title: "useMediaQuery",
+    type: "hook",
+    family: "fundacao",
+    description:
+      "Media query como estado de React, via useSyncExternalStore: leitura síncrona no primeiro render, sem piscar, e segura em SSR.",
+    tags: ["hook", "responsivo", "ssr"],
+  },
+  {
     name: "use-knob-drag",
     title: "useKnobDrag",
     type: "hook",
@@ -1136,9 +1144,21 @@ export const CATALOG: CatalogItem[] = [
  */
 const SEARCH_INDEX = new Map(CATALOG.map((i) => [i.name, haystack(i)] as const));
 
-/** `needle` já vem passado por `fold`. */
-export const matches = (item: CatalogItem, needle: string) =>
-  !needle || (SEARCH_INDEX.get(item.name) ?? haystack(item)).includes(needle);
+/**
+ * `needle` já vem passado por `fold`.
+ *
+ * Cada palavra digitada precisa aparecer — crua ou pelo radical. Exigir todas
+ * é o que faz "knob vintage" e "vintage knob" darem o mesmo resultado sem
+ * inventar ordenação por relevância que ninguém pediu.
+ */
+export const matches = (item: CatalogItem, needle: string) => {
+  if (!needle) return true;
+  const alvo = SEARCH_INDEX.get(item.name) ?? haystack(item);
+  return needle
+    .split(/\s+/)
+    .filter(Boolean)
+    .every((palavra) => alvo.includes(palavra) || alvo.includes(stem(palavra)));
+};
 
 /** Quantos itens cada família tem — o número que aparece no filtro. */
 export const COUNT_BY_FAMILY = CATALOG.reduce<Record<string, number>>((acc, i) => {

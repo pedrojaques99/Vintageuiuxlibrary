@@ -3,7 +3,7 @@
   "name": "smooth-scroll-provider",
   "title": "Smooth Scroll Provider",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Lenis + GSAP num relogio so, com bail-out em prefers-reduced-motion. A instancia sai por callback, sem impor store.",
+  "description": "Lenis + GSAP num relógio só, com bail-out em prefers-reduced-motion. A instância sai por callback.",
   "dependencies": [
     "lenis",
     "gsap"

@@ -3,9 +3,9 @@
   "name": "vintage-oscilloscope",
   "title": "Vintage Oscilloscope",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Canvas-based waveform and FFT spectrum display with CRT scanline effect.",
+  "description": "Traço de osciloscópio alimentado por um buffer de amostras.",
   "registryDependencies": [
-    "vintage-theme",
+    "@visant/vintage-theme",
     "utils"
   ],
   "files": [

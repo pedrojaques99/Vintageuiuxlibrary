@@ -20,6 +20,48 @@
  */
 @layer base {
   /*
+   * Os tokens de movimento — que estavam faltando.
+   *
+   * Metade dos componentes do registry escreve
+   * `[transition-duration:var(--dur-fast,160ms)]` e
+   * `ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]`, ou seja, todos leem uma
+   * SSoT de motion. Só que ela não existia em lugar nenhum do projeto: cada peça
+   * caía no próprio fallback, e "mudar o tempo da casa" seria editar 20 arquivos.
+   * Aqui os valores existem uma vez.
+   *
+   * Escala e curvas vêm da skill `visant-motion`: `ease-out` para entrar e sair,
+   * `ease-in-out` para mover na tela, `drawer` para gaveta. Nada de `ease-in` em
+   * UI, e nada acima de 300ms num gesto de interface.
+   */
+  :root {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+    --dur-press: 120ms;
+    --dur-fast: 160ms;
+    --dur-base: 200ms;
+    --dur-slow: 300ms;
+  }
+
+  /*
+   * Quem pediu menos movimento recebe o resultado, não a viagem.
+   *
+   * Zera a duração em vez de desligar a animação: o estado final continua
+   * acontecendo (a linha some, o painel abre), só não há percurso.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /*
    * Sem ancoragem de scroll na página.
    *
    * O Chrome tenta manter na tela o elemento "âncora" quando o conteúdo acima
@@ -33,7 +75,21 @@
   }
 
   :root {
-    --header-h: 3.5rem;
+    /*
+     * `--shell-header-h`, e NÃO `--header-h`.
+     *
+     * `--header-h` é território do item `@visant/sticky-filterbar`: ele MEDE o
+     * cabeçalho da página e publica a altura nessa variável, para a barra de
+     * filtro grudar no lugar certo. A vitrine mostra esse item numa demo viva —
+     * então o componente rodava aqui dentro, media o nosso cabeçalho e escrevia
+     * `--header-h`. Como o cabeçalho tinha a altura definida por essa mesma
+     * variável, cada medição o fazia crescer, o ResizeObserver disparava de novo
+     * e a página inteira inchava alguns pixels por segundo, para sempre.
+     *
+     * A regra que fica: nada nesta casca lê uma variável que um componente
+     * publicado escreve. Quem mede, publica; quem monta, define a sua.
+     */
+    --shell-header-h: 3.5rem;
     --shell-max: 90rem;
     --shell-pad: 1rem;
   }
@@ -45,7 +101,90 @@
   }
 }
 
+/*
+ * Escala tipográfica da vitrine.
+ *
+ * Antes existiam oito tamanhos escritos à mão — 9, 10, 11, 12, 13, 14, 15, 19px
+ * — escolhidos um a um, no olho, ao longo de meses. De longe ninguém percebe; a
+ * dois palmos é exatamente o que separa "bonito" de "desenhado", porque nada
+ * rima com nada. Aqui viram seis degraus com nome e papel.
+ *
+ * Os nomes dizem o USO, não o tamanho: quem escreve `text-rotulo` não precisa
+ * decidir pixel nenhum, e mudar a escala inteira depois é mexer aqui.
+ */
+@theme {
+  --text-micro: 0.625rem;
+  --text-micro--line-height: 1.4;
+  --text-rotulo: 0.6875rem;
+  --text-rotulo--line-height: 1.45;
+  --text-apoio: 0.75rem;
+  --text-apoio--line-height: 1.5;
+  --text-corpo: 0.8125rem;
+  --text-corpo--line-height: 1.6;
+  --text-destaque: 0.9375rem;
+  --text-destaque--line-height: 1.6;
+  --text-titulo: 1.1875rem;
+  --text-titulo--line-height: 1.25;
+}
+
+@layer base {
+  /*
+   * Um anel de foco só, para tudo.
+   *
+   * Antes cada botão resolvia o seu: uns sublinhavam, outros trocavam de cor,
+   * a maioria não fazia nada — quem navega por teclado ficava sem saber onde
+   * está. `:where()` mantém especificidade zero, então qualquer componente do
+   * registry continua podendo definir o seu por cima sem `!important`.
+   */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--brand, currentColor);
+    outline-offset: 2px;
+    border-radius: inherit;
+  }
+}
+
 @layer components {
+  /*
+   * Área de toque de 44px sem mudar o desenho.
+   *
+   * Os botões de ícone têm 28–32px, que é o tamanho certo para o olho e o
+   * errado para o dedo (a recomendação de acessibilidade é 44). Em vez de
+   * inchar o botão, um pseudo-elemento estende só a região clicável.
+   */
+  .alvo-toque {
+    position: relative;
+  }
+  .alvo-toque::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+
+  /*
+   * Afordância que aparece no hover — e que existe em touch.
+   *
+   * O botão de copiar o comando só surgia com o mouse em cima. No celular não
+   * há hover: a função simplesmente não existia para metade das visitas.
+   */
+  .no-hover {
+    opacity: 0;
+    transition: opacity var(--dur-fast, 160ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+  }
+  .group:hover .no-hover,
+  .no-hover:focus-within,
+  .no-hover:has(:focus-visible) {
+    opacity: 1;
+  }
+  @media (pointer: coarse) {
+    .no-hover {
+      opacity: 1;
+    }
+  }
+
   /* Container das páginas. */
   .shell {
     margin-inline: auto;

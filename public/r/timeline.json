@@ -3,7 +3,10 @@
   "name": "timeline",
   "title": "Timeline",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Linha do tempo de eventos, densa e sem enfeite.",
+  "description": "Linha do tempo com progresso amarrado ao scroll.",
+  "dependencies": [
+    "framer-motion"
+  ],
   "registryDependencies": [
     "utils"
   ],
