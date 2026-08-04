@@ -55,11 +55,34 @@ const indice = existsSync(join(R_DIR, "brands.json"))
 
 const noIndice = (indice.brands ?? []).map((b) => b.slug).filter((slug) => !PERMITIDOS(slug));
 
-if (!vazando.length && !noIndice.length) {
+/*
+ * A direção oposta, que já quebrou app de cliente em produção.
+ *
+ * O índice é montado juntando as publicáveis do vault com `demo-brands.json`,
+ * mas os `theme-<slug>.json` das fictícias são escritos por outro script
+ * (`demo-brands.mjs`). Publicar o índice sem os arquivos deixa quatro marcas
+ * no seletor e um tema no ar: clicar em qualquer outra devolve 404 e derruba
+ * o provider do lado de lá.
+ *
+ * Aqui é o lugar de barrar: roda antes do build, lê os dois lados e não
+ * depende de ninguém lembrar de rodar o gerador.
+ */
+const semArquivo = (indice.brands ?? [])
+  .filter((b) => !existsSync(join(R_DIR, `${b.theme}.json`)))
+  .map((b) => `${b.slug} (${b.theme}.json)`);
+
+if (!vazando.length && !noIndice.length && !semArquivo.length) {
   console.log(
     c.green(`✓ público limpo — ${(indice.brands ?? []).length} marca(s), nenhuma de cliente`),
   );
   process.exit(0);
+}
+
+if (semArquivo.length) {
+  console.error(c.red("✗ marca no índice sem o tema publicado:"));
+  console.error(`    ${semArquivo.join(", ")}`);
+  console.error(c.dim("\n  Rode `node scripts/demo-brands.mjs` (fictícias) ou `npm run sync:brands`."));
+  if (!vazando.length && !noIndice.length) process.exit(1);
 }
 
 console.error(c.red("✗ dado de cliente em public/:"));

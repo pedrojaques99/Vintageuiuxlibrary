@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-norte-verde",
+  "type": "registry:theme",
+  "title": "Norte Verde — brand theme",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Tokens gerados de brand guideline demo-norte-verde v1. Contraste AA garantido por construção. Não editar à mão — regenerar.",
+  "cssVars": {
+    "theme": {
+      "font-sans": "'Inter', ui-sans-serif, system-ui, sans-serif",
+      "font-display": "'Archivo', ui-sans-serif, system-ui, sans-serif",
+      "r-control": "0.5rem",
+      "r-surface": "0.875rem",
+      "r-pill": "9999px",
+      "e-flat": "none",
+      "e-raised": "0 1px 2px hsl(var(--shadow) / 0.06), 0 6px 16px hsl(var(--shadow) / 0.10)",
+      "e-overlay": "0 2px 6px hsl(var(--shadow) / 0.12), 0 12px 32px hsl(var(--shadow) / 0.14)",
+      "e-modal": "0 8px 40px hsl(var(--shadow) / 0.22)",
+      "focus": "0 0 0 2px var(--background), 0 0 0 4px var(--brand)",
+      "ease-out": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "ease-in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
+      "ease-drawer": "cubic-bezier(0.32, 0.72, 0, 1)",
+      "dur-press": "120ms",
+      "dur-fast": "160ms",
+      "dur-base": "200ms",
+      "dur-slow": "300ms",
+      "pad-card": "1.25rem",
+      "control-h": "2.25rem",
+      "gap-zone": "1rem"
+    },
+    "light": {
+      "background": "oklch(0.9695 0.0073 132.41)",
+      "foreground": "oklch(0.2407 0.016 129.23)",
+      "card": "oklch(0.9454 0.0074 132.42)",
+      "card-foreground": "oklch(0.2407 0.016 129.23)",
+      "popover": "oklch(0.9454 0.0074 132.42)",
+      "popover-foreground": "oklch(0.2407 0.016 129.23)",
+      "muted": "oklch(0.9243 0.0074 132.42)",
+      "muted-foreground": "oklch(0.536 0.0118 131.46)",
+      "secondary": "oklch(0.9243 0.0074 132.42)",
+      "secondary-foreground": "oklch(0.2407 0.016 129.23)",
+      "accent": "oklch(0.9243 0.0074 132.42)",
+      "accent-foreground": "oklch(0.2407 0.016 129.23)",
+      "border": "oklch(0.8713 0.0092 134.88)",
+      "input": "oklch(0.838 0.0088 128.58)",
+      "brand": "oklch(0.87 0.15 120.89)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.5263 0.1098 149.76)",
+      "ring": "oklch(0.87 0.15 120.89)",
+      "shadow": "132 30% 12%"
+    },
+    "dark": {
+      "background": "oklch(0.2371 0.0058 121.89)",
+      "foreground": "oklch(0.9878 0.0013 106.42)",
+      "card": "oklch(0.2856 0.0077 128.76)",
+      "card-foreground": "oklch(0.9878 0.0013 106.42)",
+      "popover": "oklch(0.2856 0.0077 128.76)",
+      "popover-foreground": "oklch(0.9878 0.0013 106.42)",
+      "muted": "oklch(0.3373 0.0074 128.71)",
+      "muted-foreground": "oklch(0.6269 0.0077 124.52)",
+      "secondary": "oklch(0.3373 0.0074 128.71)",
+      "secondary-foreground": "oklch(0.9878 0.0013 106.42)",
+      "accent": "oklch(0.3373 0.0074 128.71)",
+      "accent-foreground": "oklch(0.9878 0.0013 106.42)",
+      "border": "oklch(0.4133 0.007 128.65)",
+      "input": "oklch(0.4569 0.0083 124.61)",
+      "brand": "oklch(0.87 0.15 120.89)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.6228 0.0885 120)",
+      "ring": "oklch(0.87 0.15 120.89)",
+      "shadow": "0 0% 0%"
+    }
+  },
+  "css": {
+    "[data-density=\"compact\"]": {
+      "--pad-card": "0.875rem",
+      "--control-h": "2rem",
+      "--gap-zone": "0.75rem"
+    }
+  },
+  "meta": {
+    "brandId": "demo-norte-verde",
+    "brandName": "Norte Verde",
+    "brandVersion": 1,
+    "completeness": 100,
+    "engine": "@visant/brand-tokens"
+  }
+}

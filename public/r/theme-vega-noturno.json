@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-vega-noturno",
+  "type": "registry:theme",
+  "title": "Vega Noturno — brand theme",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Tokens gerados de brand guideline demo-vega-noturno v1. Contraste AA garantido por construção. Não editar à mão — regenerar.",
+  "cssVars": {
+    "theme": {
+      "font-sans": "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif",
+      "font-display": "'Space Grotesk', ui-sans-serif, system-ui, sans-serif",
+      "r-control": "0.5rem",
+      "r-surface": "0.875rem",
+      "r-pill": "9999px",
+      "e-flat": "none",
+      "e-raised": "0 1px 2px hsl(var(--shadow) / 0.06), 0 6px 16px hsl(var(--shadow) / 0.10)",
+      "e-overlay": "0 2px 6px hsl(var(--shadow) / 0.12), 0 12px 32px hsl(var(--shadow) / 0.14)",
+      "e-modal": "0 8px 40px hsl(var(--shadow) / 0.22)",
+      "focus": "0 0 0 2px var(--background), 0 0 0 4px var(--brand)",
+      "ease-out": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "ease-in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
+      "ease-drawer": "cubic-bezier(0.32, 0.72, 0, 1)",
+      "dur-press": "120ms",
+      "dur-fast": "160ms",
+      "dur-base": "200ms",
+      "dur-slow": "300ms",
+      "pad-card": "1.25rem",
+      "control-h": "2.25rem",
+      "gap-zone": "1rem"
+    },
+    "light": {
+      "background": "oklch(0.283 0.0091 285.81)",
+      "foreground": "oklch(1 0 0)",
+      "card": "oklch(0.2996 0.0107 285.73)",
+      "card-foreground": "oklch(1 0 0)",
+      "popover": "oklch(0.2996 0.0107 285.73)",
+      "popover-foreground": "oklch(1 0 0)",
+      "muted": "oklch(0.323 0.0088 285.9)",
+      "muted-foreground": "oklch(0.663 0.0032 264.54)",
+      "secondary": "oklch(0.323 0.0088 285.9)",
+      "secondary-foreground": "oklch(1 0 0)",
+      "accent": "oklch(0.323 0.0088 285.9)",
+      "accent-foreground": "oklch(1 0 0)",
+      "border": "oklch(0.3657 0.0085 285.97)",
+      "input": "oklch(0.3889 0.01 285.92)",
+      "brand": "oklch(0.8259 0.1499 175.31)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.6597 0.0821 246.98)",
+      "ring": "oklch(0.8259 0.1499 175.31)",
+      "shadow": "285 30% 12%"
+    },
+    "dark": {
+      "background": "oklch(0.2408 0.0115 278.01)",
+      "foreground": "oklch(0.9894 0.0028 308.43)",
+      "card": "oklch(0.2879 0.0127 285.58)",
+      "card-foreground": "oklch(0.9894 0.0028 308.43)",
+      "popover": "oklch(0.2879 0.0127 285.58)",
+      "popover-foreground": "oklch(0.9894 0.0028 308.43)",
+      "muted": "oklch(0.3434 0.0121 285.74)",
+      "muted-foreground": "oklch(0.63 0.0148 285.97)",
+      "secondary": "oklch(0.3434 0.0121 285.74)",
+      "secondary-foreground": "oklch(0.9894 0.0028 308.43)",
+      "accent": "oklch(0.3434 0.0121 285.74)",
+      "accent-foreground": "oklch(0.9894 0.0028 308.43)",
+      "border": "oklch(0.4158 0.0132 285.81)",
+      "input": "oklch(0.46 0.0145 285.82)",
+      "brand": "oklch(0.8259 0.1499 175.31)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.6182 0.0882 175.46)",
+      "ring": "oklch(0.8259 0.1499 175.31)",
+      "shadow": "0 0% 0%"
+    }
+  },
+  "css": {
+    "[data-density=\"compact\"]": {
+      "--pad-card": "0.875rem",
+      "--control-h": "2rem",
+      "--gap-zone": "0.75rem"
+    }
+  },
+  "meta": {
+    "brandId": "demo-vega-noturno",
+    "brandName": "Vega Noturno",
+    "brandVersion": 1,
+    "completeness": 100,
+    "engine": "@visant/brand-tokens"
+  }
+}

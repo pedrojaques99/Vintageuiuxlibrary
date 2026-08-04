@@ -1,0 +1,88 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "theme-grao-editora",
+  "type": "registry:theme",
+  "title": "Grão Editora — brand theme",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Tokens gerados de brand guideline demo-grao-editora v1. Contraste AA garantido por construção. Não editar à mão — regenerar.",
+  "cssVars": {
+    "theme": {
+      "font-sans": "'Karla', ui-sans-serif, system-ui, sans-serif",
+      "font-display": "'Fraunces', ui-sans-serif, system-ui, sans-serif",
+      "r-control": "0.5rem",
+      "r-surface": "0.875rem",
+      "r-pill": "9999px",
+      "e-flat": "none",
+      "e-raised": "0 1px 2px hsl(var(--shadow) / 0.06), 0 6px 16px hsl(var(--shadow) / 0.10)",
+      "e-overlay": "0 2px 6px hsl(var(--shadow) / 0.12), 0 12px 32px hsl(var(--shadow) / 0.14)",
+      "e-modal": "0 8px 40px hsl(var(--shadow) / 0.22)",
+      "focus": "0 0 0 2px var(--background), 0 0 0 4px var(--brand)",
+      "ease-out": "cubic-bezier(0.23, 1, 0.32, 1)",
+      "ease-in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
+      "ease-drawer": "cubic-bezier(0.32, 0.72, 0, 1)",
+      "dur-press": "120ms",
+      "dur-fast": "160ms",
+      "dur-base": "200ms",
+      "dur-slow": "300ms",
+      "pad-card": "1.25rem",
+      "control-h": "2.25rem",
+      "gap-zone": "1rem"
+    },
+    "light": {
+      "background": "oklch(0.9716 0.0131 82.4)",
+      "foreground": "oklch(0.2442 0.0209 76.35)",
+      "card": "oklch(0.9508 0.016 82.79)",
+      "card-foreground": "oklch(0.2442 0.0209 76.35)",
+      "popover": "oklch(0.9508 0.016 82.79)",
+      "popover-foreground": "oklch(0.2442 0.0209 76.35)",
+      "muted": "oklch(0.9236 0.0161 82.79)",
+      "muted-foreground": "oklch(0.5378 0.0189 79.27)",
+      "secondary": "oklch(0.9236 0.0161 82.79)",
+      "secondary-foreground": "oklch(0.2442 0.0209 76.35)",
+      "accent": "oklch(0.9236 0.0161 82.79)",
+      "accent-foreground": "oklch(0.2442 0.0209 76.35)",
+      "border": "oklch(0.8719 0.0151 80.7)",
+      "input": "oklch(0.8408 0.0165 82.79)",
+      "brand": "oklch(0.7507 0.1295 79.85)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.5468 0.1164 50.95)",
+      "ring": "oklch(0.7507 0.1295 79.85)",
+      "shadow": "81 30% 12%"
+    },
+    "dark": {
+      "background": "oklch(0.2375 0.0127 78.01)",
+      "foreground": "oklch(0.9875 0.0026 106.45)",
+      "card": "oklch(0.2877 0.0158 79.56)",
+      "card-foreground": "oklch(0.9875 0.0026 106.45)",
+      "popover": "oklch(0.2877 0.0158 79.56)",
+      "popover-foreground": "oklch(0.9875 0.0026 106.45)",
+      "muted": "oklch(0.3396 0.0138 76.4)",
+      "muted-foreground": "oklch(0.6284 0.0145 82.39)",
+      "secondary": "oklch(0.3396 0.0138 76.4)",
+      "secondary-foreground": "oklch(0.9875 0.0026 106.45)",
+      "accent": "oklch(0.3396 0.0138 76.4)",
+      "accent-foreground": "oklch(0.9875 0.0026 106.45)",
+      "border": "oklch(0.4124 0.0153 75.18)",
+      "input": "oklch(0.459 0.0142 79.72)",
+      "brand": "oklch(0.7507 0.1295 79.85)",
+      "brand-foreground": "oklch(0.1448 0 0)",
+      "accent-ink": "oklch(0.6305 0.099 79.53)",
+      "ring": "oklch(0.7507 0.1295 79.85)",
+      "shadow": "0 0% 0%"
+    }
+  },
+  "css": {
+    "[data-density=\"compact\"]": {
+      "--pad-card": "0.875rem",
+      "--control-h": "2rem",
+      "--gap-zone": "0.75rem"
+    }
+  },
+  "meta": {
+    "brandId": "demo-grao-editora",
+    "brandName": "Grão Editora",
+    "brandVersion": 1,
+    "completeness": 100,
+    "engine": "@visant/brand-tokens"
+  }
+}
