@@ -266,7 +266,14 @@ export function BrandThemeProvider({
       const initial = index.brands.find((b) => b.slug === (saved ?? defaultBrand));
       if (initial) {
         setSlug(initial.slug);
-        await apply(initial, false);
+        // Mesma separação do `setBrand`: um tema que não baixa é uma marca sem
+        // pintura, não um vault fora do ar. `status` continua "ready" — o
+        // seletor lista as marcas e a próxima escolha funciona.
+        try {
+          await apply(initial, false);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : String(err));
+        }
       }
     } catch (err) {
       setStatus("error");
@@ -289,9 +296,30 @@ export function BrandThemeProvider({
       }
       const target = byId.get(next);
       if (!target) return;
+
+      /*
+       * Aplicar PRIMEIRO, registrar depois — e nunca rejeitar.
+       *
+       * O índice promete um tema por marca, mas quem serve os dois arquivos é o
+       * deploy, e eles já saíram dessincronizados: `brands.json` com quatro
+       * marcas e um único `theme-*.json` no ar. Como o consumidor natural é um
+       * `onSelect` (`void setBrand(slug)`), a rejeição virava unhandled e
+       * derrubava a tela inteira — um 404 de tema tirando do ar um app que só
+       * queria continuar na marca anterior.
+       *
+       * Falhando: a marca antiga continua pintada, a escolha não é gravada (não
+       * se persiste um estado que a tela não reflete, nem se recarrega nele) e o
+       * motivo vai para `error`.
+       */
+      try {
+        await apply(target, true);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+        return;
+      }
       setSlug(next);
+      setError(null);
       localStorage.setItem(storageKey, next);
-      await apply(target, true);
     },
     [byId, apply, storageKey],
   );
