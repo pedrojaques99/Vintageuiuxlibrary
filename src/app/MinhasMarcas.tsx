@@ -81,7 +81,10 @@ export function MinhasMarcas() {
         <LogIn className="h-3.5 w-3.5" />
         {/* Sem `nowrap` o rótulo quebrava em três linhas na barra apertada e
             esticava a altura do cabeçalho inteiro. */}
-        <span className="hidden md:inline">Entrar com Visant</span>
+        {/* Só a partir de `lg`: em 768 o cabeçalho já carrega logo, seções,
+            densidade, tema e seletor de marca — o rótulo era o que estourava a
+            linha (a suíte pega isso em 768 exato, onde `md:` já vale). */}
+        <span className="hidden lg:inline">Entrar com Visant</span>
       </button>
     );
   }
@@ -112,7 +115,7 @@ export function MinhasMarcas() {
             onClick={() => setAberto(false)}
             className="fixed inset-0 z-40 cursor-default"
           />
-          <div className="absolute right-0 z-50 mt-2 w-[min(92vw,340px)] overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card shadow-[var(--e-overlay,0_12px_32px_rgba(0,0,0,0.14))]">
+          <div className="absolute right-0 z-50 mt-2 w-[min(92vw,340px)] overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card [box-shadow:var(--e-overlay)]">
             <div className="flex items-center gap-2 border-b border-border px-3 py-2">
               <span className="text-rotulo text-muted-foreground">vault da sua conta</span>
               <button

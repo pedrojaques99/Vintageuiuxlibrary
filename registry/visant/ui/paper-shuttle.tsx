@@ -93,7 +93,7 @@ export function PaperShuttle({
           </div>
         )}
         <p className="mt-1.5 text-center font-mono text-[10px] tabular-nums text-muted-foreground">
-          <GlitchChars className="mr-1 text-brand opacity-60" />
+          <GlitchChars className="mr-1 text-[var(--accent-ink,var(--muted-foreground))]" />
           {label ??
             (progress != null ? `${Math.round(progress)}%` : "Processando…")}
         </p>

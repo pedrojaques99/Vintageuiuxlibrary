@@ -21,6 +21,7 @@
 import * as React from "react";
 import { Moon, Sun, Rows3, Rows4 } from "lucide-react";
 import { BrandThemeProvider } from "@/lib/brand-theme";
+import { Solo, fundoDoSolo } from "./Solo";
 import { BrandSelector } from "../../registry/visant/ui/brand-selector";
 import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import { Gallery } from "./Gallery";
@@ -239,11 +240,55 @@ function Shell() {
   );
 }
 
+/**
+ * `?solo=1` corta a casca inteira: cabeçalho, abas, grade, tudo.
+ *
+ * É a rota que roda dentro do iframe do preset de viewport. Ela precisa do
+ * `BrandThemeProvider` (a peça lê `--brand`) e de nada mais — e a marca e o tema
+ * chegam por query, porque iframe é outro documento e não herda o que o pai
+ * aplicou no `<html>` dele.
+ */
+function useSolo() {
+  const [solo, setSolo] = React.useState(() => new URLSearchParams(window.location.search));
+  React.useEffect(() => {
+    const sync = () => setSolo(new URLSearchParams(window.location.search));
+    window.addEventListener("popstate", sync);
+    return () => window.removeEventListener("popstate", sync);
+  }, []);
+  return solo;
+}
+
+function Raiz() {
+  const params = useSolo();
+  const ehSolo = params.get("solo") === "1";
+
+  React.useEffect(() => {
+    if (ehSolo) document.documentElement.classList.toggle("dark", params.get("dark") === "1");
+  }, [ehSolo, params]);
+
+  if (ehSolo) {
+    const nome = decodeURIComponent(window.location.pathname.split("/").filter(Boolean)[1] ?? "");
+    const fundo = fundoDoSolo(params);
+    return (
+      <div
+        className={fundo ? "text-foreground" : "bg-background text-foreground"}
+        style={{ fontFamily: "var(--font-sans, ui-sans-serif, system-ui)", background: fundo }}
+      >
+        <Solo name={nome} />
+      </div>
+    );
+  }
+
+  return <Shell />;
+}
+
 export default function App() {
+  const marca = new URLSearchParams(window.location.search).get("brand");
+
   return (
     <VisantAuthProvider>
-      <BrandThemeProvider registryUrl={REGISTRY_URL} defaultBrand={DEFAULT_BRAND}>
-        <Shell />
+      <BrandThemeProvider registryUrl={REGISTRY_URL} defaultBrand={marca || DEFAULT_BRAND}>
+        <Raiz />
       </BrandThemeProvider>
     </VisantAuthProvider>
   );

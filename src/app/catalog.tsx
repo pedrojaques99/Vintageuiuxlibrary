@@ -1187,9 +1187,10 @@ export const CATALOG: CatalogItem[] = [
       "Card de serviço: mídia com selo de seta, título que cobre o card inteiro e a lista do que está incluso como texto, não como filtro.",
     tags: ["serviço", "card", "vitrine"],
     demo: () => (
-      // Largura fixa de propósito: o card ocupa o que o pai der, e sem trava ele
-      // cresce até a mídia estourar a altura declarada do palco.
-      <div className="w-[360px]">
+      // Largura travada, mas não fixa: sem o teto o card cresce até a mídia
+      // estourar a altura declarada do palco; com largura FIXA ele estoura a tela
+      // de 360px — foi o que a suíte de responsivo pegou.
+      <div className="w-full max-w-[360px]">
         <ShowcaseCard
           href="#/c/showcase-card"
           title="Identidade que quer dizer alguma coisa"

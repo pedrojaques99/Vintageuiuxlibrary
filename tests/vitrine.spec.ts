@@ -94,7 +94,16 @@ test.describe("catálogo", () => {
     await page.goto("/");
     await esperarGrade(page);
 
-    for (const familia of ["Superfície de trabalho", "Kit vintage", "Fundação"]) {
+    /*
+     * "Fundação" saiu desta lista de propósito, não porque quebrou.
+     *
+     * A vitrine passou a separar quem tem demo de quem não tem: `lib`, `hook`,
+     * `theme` e `base` foram para a aba "Sem interface", e o filtro de família
+     * mostra só as famílias que existem na aba aberta. Fundação é inteira sem
+     * interface, então o chip não existe mais aqui — e chip que promete um
+     * número e leva a nada é pior do que chip nenhum.
+     */
+    for (const familia of ["Superfície de trabalho", "Kit vintage", "Aquisição"]) {
       await page.evaluate(() => window.scrollTo(0, 3000));
       await page.waitForTimeout(700); // o scroll monta demos; deixa a página assentar
       await page.locator(CHIP(familia)).first().click();

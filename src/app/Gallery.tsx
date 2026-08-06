@@ -110,8 +110,11 @@ const Showcase = React.memo(function Showcase({
       ref={ref}
       className={cn(
         "overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
-        "transition-[border-color] duration-[var(--dur-fast,160ms)] ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+        "transition-[border-color,box-shadow] [transition-duration:var(--dur-fast,160ms)] [transition-timing-function:var(--ease-out)]",
         "focus-within:border-[var(--brand)] hover:border-[var(--brand)]",
+        // A placa levanta um degrau no hover. Sem mover nada: a peça viva lá
+        // dentro é que manda no palco, e um card que desliza rouba a cena dela.
+        "hover:[box-shadow:var(--e-raised)]",
       )}
     >
       {/*
@@ -140,15 +143,18 @@ const Showcase = React.memo(function Showcase({
         <div className="flex items-center gap-2 sm:shrink-0">
           {/* `min-w-0` + `truncate` no código: o comando é longo e, sem isso, ele
               empurra o botão de foco para fora da tela em vez de encurtar. */}
+          {/* Borda transparente em repouso: o comando precisa estar à mão, mas
+              não pode brigar com o nome da peça pela primeira leitura. Ele ganha
+              contorno quando a mão chega perto. */}
           <CopyCommand
             variant="line"
             text={installCommand(item.name)}
-            className="min-w-0 flex-1 sm:w-[min(22rem,26vw)] sm:flex-none"
+            className="min-w-0 flex-1 border-transparent bg-muted/60 hover:border-[var(--brand)] sm:w-[min(22rem,26vw)] sm:flex-none"
           />
           <button
             type="button"
             onClick={onOpen}
-            className="alvo-toque inline-flex shrink-0 items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2.5 py-1.5 text-apoio text-muted-foreground outline-none transition-colors hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:text-foreground"
+            className="alvo-toque inline-flex shrink-0 items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2.5 py-1.5 text-apoio text-muted-foreground outline-none transition-[color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:text-foreground active:scale-[0.97] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
           >
             <Expand className="h-3.5 w-3.5" />
             Focar

@@ -141,9 +141,9 @@ export function BrandSelector({ className, shortcut = "b" }: BrandSelectorProps)
         aria-haspopup="dialog"
         className={cn(
           "group flex items-center gap-2.5 rounded-[var(--r-pill,9999px)] border border-border bg-card/80 py-1.5 pl-1.5 pr-3 text-left backdrop-blur",
-          "transition-[background-color,border-color,box-shadow,transform] duration-[var(--dur-fast,160ms)] ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
-          "hover:border-[var(--brand,var(--border))] hover:shadow-[var(--e-raised,0_1px_2px_rgba(0,0,0,0.06))] active:scale-[0.985]",
-          "focus-visible:outline-none focus-visible:shadow-[var(--focus,0_0_0_2px_var(--background),0_0_0_4px_var(--brand))]",
+          "transition-[background-color,border-color,box-shadow,transform] [transition-duration:var(--dur-fast)] ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+          "hover:border-[var(--brand,var(--border))] hover:[box-shadow:var(--e-raised)] active:scale-[0.985]",
+          "focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]",
           "disabled:opacity-60",
           className,
         )}
@@ -185,7 +185,7 @@ export function BrandSelector({ className, shortcut = "b" }: BrandSelectorProps)
         overlayClassName="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=open]:fade-in-0"
         contentClassName={cn(
           "fixed left-1/2 top-[12vh] z-50 w-[min(92vw,560px)] -translate-x-1/2 overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-popover text-popover-foreground",
-          "shadow-[var(--e-modal,0_8px_40px_rgba(0,0,0,0.22))]",
+          "[box-shadow:var(--e-modal)]",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
         )}
       >
@@ -218,7 +218,7 @@ export function BrandSelector({ className, shortcut = "b" }: BrandSelectorProps)
               onMouseEnter={() => previewBrand(b.slug)}
               className={cn(
                 "group flex cursor-pointer items-center gap-3 rounded-[var(--r-control,0.5rem)] px-2.5 py-2",
-                "transition-colors duration-[var(--dur-press,120ms)]",
+                "transition-colors [transition-duration:var(--dur-press)]",
                 "data-[selected=true]:bg-muted",
               )}
             >

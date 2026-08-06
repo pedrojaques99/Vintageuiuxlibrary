@@ -115,14 +115,14 @@ export function StatusTicker({
         className,
       )}
     >
-      <GlitchChars className="text-brand opacity-60" />
+      <GlitchChars className="text-[var(--accent-ink,var(--muted-foreground))]" />
       {/* min-w impede o bloco inteiro de pular a cada troca de palavra */}
       <span className="min-w-[120px] text-foreground">
         {word}
         {dots}
       </span>
       {showTimer && (
-        <span className="ml-auto text-[10px] tabular-nums opacity-60">
+        <span className="ml-auto text-[10px] tabular-nums text-[var(--muted-foreground)]">
           {timer}
         </span>
       )}

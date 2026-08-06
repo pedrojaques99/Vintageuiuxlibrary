@@ -20,7 +20,8 @@
     "build:props": "node scripts/props-extract.mjs",
     "check:deps": "node scripts/deps-check.mjs",
     "build:og": "node scripts/og-images.mjs",
-    "build:pages": "node scripts/prerender.mjs"
+    "build:pages": "node scripts/prerender.mjs",
+    "check:css-tokens": "node scripts/css-tokens-check.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

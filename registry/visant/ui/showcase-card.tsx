@@ -51,11 +51,15 @@ export function ShowcaseCard({
           "relative isolate overflow-hidden rounded-[var(--r-surface,1rem)] bg-[var(--muted)]",
           "[&_img]:size-full [&_img]:object-cover [&_video]:size-full [&_video]:object-cover",
           "[&_img]:transition-transform [&_video]:transition-transform",
-          "[&_img]:duration-[var(--dur-slow,600ms)] [&_video]:duration-[var(--dur-slow,600ms)]",
+          "[&_img]:[transition-duration:var(--dur-slow)] [&_video]:[transition-duration:var(--dur-slow)]",
           "[&_img]:ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
           "group-hover:[&_img]:scale-[1.03] group-hover:[&_video]:scale-[1.03]",
           // Quem prefere menos movimento não paga o zoom.
           "motion-reduce:group-hover:[&_img]:scale-100 motion-reduce:group-hover:[&_video]:scale-100",
+          // O foco de teclado desenha NA PLACA, não só no título: o alvo de
+          // clique é o card inteiro, então é o card que precisa acender.
+          "transition-shadow [transition-duration:var(--dur-fast,160ms)]",
+          "group-focus-within:[box-shadow:var(--focus)]",
         )}
         style={{ aspectRatio: ratio }}
       >
@@ -69,7 +73,10 @@ export function ShowcaseCard({
               "bg-[var(--brand)] text-[var(--brand-foreground)]",
               "transition-transform [transition-duration:var(--dur-fast,180ms)]",
               "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+              // Teclado recebe o mesmo aceno que o mouse — o selo é a única
+              // pista de que o card leva a algum lugar.
               "group-hover:-translate-y-0.5 group-hover:translate-x-0.5",
+              "group-focus-within:-translate-y-0.5 group-focus-within:translate-x-0.5",
               "motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0",
             )}
           >
@@ -87,9 +94,10 @@ export function ShowcaseCard({
               href={href}
               className={cn(
                 "text-[var(--foreground)] no-underline outline-none",
-                // O card inteiro é o alvo, mas o foco desenha no título.
+                // O card inteiro é o alvo de clique — daí o `::after`. O foco
+                // acende a placa (acima), e não também aqui: dois sinais para o
+                // mesmo evento é ruído, não reforço.
                 "after:absolute after:inset-0 after:content-['']",
-                "focus-visible:underline focus-visible:decoration-[var(--brand)] focus-visible:decoration-2 focus-visible:underline-offset-4",
               )}
             >
               {title}

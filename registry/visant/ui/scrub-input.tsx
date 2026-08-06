@@ -172,7 +172,7 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
     <div
       className={cn(
         "group flex flex-col gap-1 rounded-[var(--r-control)] border border-border bg-card px-2 py-1.5",
-        "transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]",
+        "transition-colors [transition-duration:var(--dur-fast)] ease-[var(--ease-out)]",
         "hover:border-ring/40 focus-within:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         className,
       )}

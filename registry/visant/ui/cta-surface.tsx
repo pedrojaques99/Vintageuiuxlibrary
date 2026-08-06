@@ -169,21 +169,28 @@ export function CtaAction({
         "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--r-pill,9999px)]",
         "px-6 text-[15px] font-semibold no-underline",
         "min-h-[var(--control-h,2.75rem)] py-2.5",
-        "transition-[background-color,color,border-color,transform]",
-        "[transition-duration:var(--dur-press,120ms)]",
+        // Só transform, sombra e cor — nada de `transition-all`, que arrasta
+        // layout junto e engasga.
+        "transition-[transform,box-shadow,background-color,border-color,color]",
+        "[transition-duration:var(--dur-fast,160ms)]",
         "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
-        "focus-visible:outline-none focus-visible:shadow-[var(--focus,0_0_0_2px_var(--background),0_0_0_4px_var(--brand))]",
-        "active:scale-[0.98]",
+        "focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]",
+        // O toque responde antes da cor: `--dur-press` é mais curto que o hover
+        // de propósito, porque afundar tem de parecer instantâneo.
+        "active:scale-[0.98] active:[transition-duration:var(--dur-press,120ms)]",
+        "motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100",
         variant === "solid" && [
           // Em fundo de marca ou tinta, o sólido é o fundo da página.
           "bg-[var(--background)] text-[var(--foreground)]",
           // Em superfície neutra não há contraste a tomar emprestado: usa a marca.
           "[[data-tone=surface]_&]:bg-[var(--brand)] [[data-tone=surface]_&]:text-[var(--brand-foreground)]",
-          "hover:opacity-90",
+          // Levanta em vez de desbotar. `hover:opacity` num botão sólido lava o
+          // texto e faz a peça parecer desabilitada bem na hora do convite.
+          "hover:-translate-y-px hover:[box-shadow:var(--e-raised)]",
         ],
         variant === "outline" && [
           "border border-current bg-transparent",
-          "hover:bg-current/10",
+          "hover:bg-current/10 hover:-translate-y-px",
         ],
         className,
       )}

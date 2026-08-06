@@ -32,6 +32,20 @@ export default defineConfig({
     },
   },
 
+  /*
+   * Porta fixa, e fora da 5173.
+   *
+   * A 5173 é o padrão do Vite, então ela é de quem chegar primeiro — e é a porta
+   * declarada do jaques-os no ports.json. Com esta vitrine de pé, o supervisor do
+   * Jaques Studio encontrava a 5173 ocupada, ADOTAVA o processo achando que era a
+   * interface dele, e a janela do Studio abria mostrando esta library.
+   *
+   * strictPort porque cair pra 5183 em silêncio traria o problema de volta pela
+   * porta dos fundos: o endereço que você tem aberto deixaria de ser este app.
+   */
+  server: { port: 5182, strictPort: true },
+  preview: { port: 5182, strictPort: true },
+
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
 

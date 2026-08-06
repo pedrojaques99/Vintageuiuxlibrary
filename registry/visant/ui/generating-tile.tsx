@@ -79,7 +79,7 @@ export function GeneratingTile({
             <button
               type="button"
               onClick={onCancel}
-              className="relative z-10 mt-1 rounded-[var(--r-control)] border border-border px-3 py-1 font-mono text-[10px] text-muted-foreground transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="relative z-10 mt-1 rounded-[var(--r-control)] border border-border px-3 py-1 font-mono text-[10px] text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] ease-[var(--ease-out)] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Cancelar
             </button>

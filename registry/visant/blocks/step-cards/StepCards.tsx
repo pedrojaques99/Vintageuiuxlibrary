@@ -68,7 +68,7 @@ export function StepCards({
             key={i}
             className={cn(
               "flex flex-col overflow-hidden rounded-[var(--r-surface,1rem)] border border-[var(--border)] bg-[var(--card,var(--background))]",
-              "shadow-[var(--e-flat,none)]",
+              "[box-shadow:var(--e-flat)]",
               orphan && last && "sm:col-span-full lg:flex-row lg:items-center",
             )}
           >
@@ -94,7 +94,7 @@ export function StepCards({
                 {/* O <ol> já numera para quem ouve; este é só o eco visual. */}
                 <span
                   aria-hidden="true"
-                  className="text-[13px] font-semibold tabular-nums text-[var(--brand)]"
+                  className="text-[13px] font-semibold tabular-nums text-[var(--accent-ink,var(--foreground))]"
                 >
                   {step.label ?? String(i + 1).padStart(2, "0")}
                 </span>

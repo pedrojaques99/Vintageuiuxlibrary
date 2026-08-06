@@ -156,6 +156,14 @@ run("node scripts/props-extract.mjs");
 say("Build do site (vite)");
 run("npx vite build");
 
+// ── Portão 6: token vira estilo de verdade ───────────────────────────────────
+// Roda DEPOIS do build de propósito: metade da checagem compara a fonte com o
+// CSS construído, e comparar com o CSS da rodada anterior é comparar com nada.
+// Pega a classe que compila limpo e mesmo assim não desenha — o defeito que
+// deixou o anel de foco do `brand-selector` morto desde a colheita.
+say("Portão de tokens no CSS");
+run("node scripts/css-tokens-check.mjs");
+
 // ── Commit ───────────────────────────────────────────────────────────────────
 say("Commit");
 const branch = quiet("git rev-parse --abbrev-ref HEAD") || "main";

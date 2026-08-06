@@ -141,10 +141,21 @@ function Card({ item }: { item: TestimonialItem }) {
   if (item.kind === "portrait") {
     return (
       <figure
-        className={cn(shell, "relative isolate")}
+        // `group` só quando há vídeo: card que não faz nada não deve reagir ao
+        // mouse — hover em coisa inerte promete um clique que não existe.
+        className={cn(shell, "relative isolate", item.onPlay && "group")}
         style={{ aspectRatio: item.ratio ?? "3 / 4" }}
       >
-        <div className="absolute inset-0 -z-10 [&_img]:size-full [&_img]:object-cover">
+        <div
+          className={cn(
+            "absolute inset-0 -z-10 [&_img]:size-full [&_img]:object-cover",
+            item.onPlay && [
+              "[&_img]:transition-transform [&_img]:[transition-duration:var(--dur-slow)]",
+              "[&_img]:ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+              "group-hover:[&_img]:scale-[1.04] motion-reduce:group-hover:[&_img]:scale-100",
+            ],
+          )}
+        >
           {item.media}
         </div>
 
@@ -156,10 +167,12 @@ function Card({ item }: { item: TestimonialItem }) {
             className={cn(
               "absolute right-3 top-3 grid size-11 place-items-center rounded-[var(--r-pill,9999px)]",
               "bg-[var(--background)] text-[var(--foreground)]",
-              "transition-transform [transition-duration:var(--dur-press,120ms)]",
+              "transition-[transform,box-shadow] [transition-duration:var(--dur-press,120ms)]",
               "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
-              "hover:scale-105 active:scale-95 motion-reduce:hover:scale-100",
-              "focus-visible:outline-none focus-visible:shadow-[var(--focus,0_0_0_2px_var(--background),0_0_0_4px_var(--brand))]",
+              // Cresce junto com a foto: um gesto só, dois elementos.
+              "group-hover:scale-105 group-hover:[box-shadow:var(--e-raised)]",
+              "active:scale-95 motion-reduce:group-hover:scale-100",
+              "focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]",
             )}
           >
             <svg viewBox="0 0 16 16" className="size-4 translate-x-px" fill="currentColor">

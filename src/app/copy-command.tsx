@@ -59,7 +59,13 @@ export function CopyCommand({
         copy();
       }}
       className={cn(
-        "group flex items-center gap-2 rounded-[var(--r-control,0.5rem)] border border-border text-left transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)]",
+        "group flex items-center gap-2 rounded-[var(--r-control,0.5rem)] border border-border text-left",
+        "transition-[color,background-color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+        "active:scale-[0.98] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100",
+        "hover:border-[var(--brand)]",
+        // Confirmar é uma mudança de ESTADO, não um ícone que troca sozinho: a
+        // borda acende junto para o "copiado" ser visto sem olhar para o ícone.
+        done && "border-[var(--brand)]",
         variant === "line"
           ? "w-full bg-card px-3 py-2"
           : "shrink-0 px-2 py-1 font-mono text-micro text-muted-foreground hover:text-foreground",
