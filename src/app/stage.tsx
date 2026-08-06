@@ -153,6 +153,7 @@ export function FitStage({
   h,
   active = true,
   maxScale = 1,
+  minScale = 0,
   label = "palco",
   className,
   children,
@@ -164,6 +165,15 @@ export function FitStage({
   label?: string;
   /** 1 = nunca amplia. A vista de foco usa >1 para ocupar a tela. */
   maxScale?: number;
+  /**
+   * Piso da escala. Abaixo dele a peça para de encolher e **transborda** — cabe
+   * ao pai rolar na horizontal.
+   *
+   * Uma parede de 760px espremida em 340px de celular sai a 0,45: o texto do
+   * depoimento fica com 6px e a peça deixa de ser julgável. Rolar de lado é
+   * chato; ilegível é inútil.
+   */
+  minScale?: number;
   className?: string;
   children: React.ReactNode;
 }) {
@@ -176,7 +186,7 @@ export function FitStage({
   // altura de um item por 20px volta a produzir exatamente o defeito que esta
   // vitrine nasceu para corrigir — e errar em 45 itens é questão de tempo.
   const naturalH = Math.max(h, overflowH);
-  const scale = width ? Math.min(maxScale, width / w) : maxScale;
+  const scale = width ? Math.max(minScale, Math.min(maxScale, width / w)) : maxScale;
 
   /*
    * Crescer é conserto de emergência, não recurso.

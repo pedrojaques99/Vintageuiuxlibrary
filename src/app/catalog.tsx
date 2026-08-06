@@ -79,8 +79,6 @@ export interface CatalogItem {
    * caber — declarar aqui é o que impede a peça grande de aparecer cortada.
    */
   preview?: { w: number; h: number };
-  /** Colunas que o card ocupa na grade larga (1–3). Degrada nos breakpoints menores. */
-  span?: 1 | 2 | 3;
 }
 
 /** Palco padrão de quem não declara tamanho: cabe knob, chip, badge, loader. */
@@ -584,7 +582,6 @@ export const CATALOG: CatalogItem[] = [
     tags: ["board", "dnd", "seleção"],
     demo: KanbanDemo,
     preview: { w: 520, h: 300 },
-    span: 2,
   },
   {
     name: "inline-edit",
@@ -649,7 +646,6 @@ export const CATALOG: CatalogItem[] = [
     tags: ["slider", "recomendação"],
     demo: MeasureDemo,
     preview: { w: 560, h: 240 },
-    span: 2,
   },
   {
     name: "timeline",
@@ -685,7 +681,6 @@ export const CATALOG: CatalogItem[] = [
       </div>
     ),
     preview: { w: 640, h: 150 },
-    span: 2,
   },
   {
     name: "rail",
@@ -710,7 +705,6 @@ export const CATALOG: CatalogItem[] = [
       </div>
     ),
     preview: { w: 620, h: 210 },
-    span: 2,
   },
   {
     name: "plate",
@@ -1030,7 +1024,6 @@ export const CATALOG: CatalogItem[] = [
     tags: ["áudio", "canvas"],
     demo: OscilloscopeDemo,
     preview: { w: 580, h: 240 },
-    span: 2,
   },
   {
     name: "vintage-soundboard-pad",
@@ -1157,7 +1150,6 @@ export const CATALOG: CatalogItem[] = [
       />
     ),
     preview: { w: 620, h: 300 },
-    span: 2,
   },
   {
     name: "cta-surface",
@@ -1185,7 +1177,6 @@ export const CATALOG: CatalogItem[] = [
       </div>
     ),
     preview: { w: 640, h: 480 },
-    span: 2,
   },
   {
     name: "showcase-card",
@@ -1207,7 +1198,7 @@ export const CATALOG: CatalogItem[] = [
         />
       </div>
     ),
-    preview: { w: 380, h: 480 },
+    preview: { w: 380, h: 400 },
   },
   {
     name: "step-cards",
@@ -1240,8 +1231,7 @@ export const CATALOG: CatalogItem[] = [
         ]}
       />
     ),
-    preview: { w: 720, h: 380 },
-    span: 3,
+    preview: { w: 720, h: 250 },
   },
   {
     name: "testimonial-wall",
@@ -1261,8 +1251,8 @@ export const CATALOG: CatalogItem[] = [
             headline: "Rápido e fácil de trabalhar junto",
             quote:
               "Entenderam o que a gente precisava e entregaram no padrão em projetos bem diferentes entre si.",
-            author: "Andrei Tiburca",
-            role: "Co-fundador @ Video Deck",
+            author: PEOPLE[1].name,
+            role: "Marketing @ Estúdio Ribalta",
             rating: 5,
           },
           { id: "b", kind: "stat", tone: "brand", value: "1.291+", label: "Projetos entregues em 6 anos" },
@@ -1270,8 +1260,8 @@ export const CATALOG: CatalogItem[] = [
             id: "c",
             kind: "portrait",
             media: <DemoSurface />,
-            name: "Larissa Meester",
-            role: "Marketing @ MySolution",
+            name: PEOPLE[3].name,
+            role: "Produto @ Casa Vinte",
             onPlay: () => {},
           },
           {
@@ -1279,15 +1269,14 @@ export const CATALOG: CatalogItem[] = [
             kind: "quote",
             tone: "muted",
             quote: "O time é atento e responde rápido quando entram revisão e projeto novo no mesmo dia.",
-            author: "Grady Fitzgerald",
-            role: "Perfectus Labs",
+            author: PEOPLE[2].name,
+            role: "Oficina Bandeira",
           },
           { id: "e", kind: "stat", tone: "muted", value: "4,9/5", label: "Nota média de quem já contratou" },
         ]}
       />
     ),
-    preview: { w: 760, h: 760 },
-    span: 3,
+    preview: { w: 760, h: 360 },
   },
 ];
 

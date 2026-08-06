@@ -76,10 +76,12 @@ export function MinhasMarcas() {
       <button
         type="button"
         onClick={() => void entrar()}
-        className="alvo-toque flex h-8 items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2.5 text-rotulo text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
+        className="alvo-toque flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[var(--r-control,0.5rem)] border border-border px-2.5 text-rotulo text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
       >
         <LogIn className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Entrar com Visant</span>
+        {/* Sem `nowrap` o rótulo quebrava em três linhas na barra apertada e
+            esticava a altura do cabeçalho inteiro. */}
+        <span className="hidden md:inline">Entrar com Visant</span>
       </button>
     );
   }

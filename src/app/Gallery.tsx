@@ -27,14 +27,13 @@
  */
 
 import * as React from "react";
-import { Expand, LayoutGrid, List, Search, X } from "lucide-react";
+import { Expand, List, Rows3, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useBrandTheme } from "@/lib/brand-theme";
 import { Chip } from "../../registry/visant/ui/chip";
 import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import {
   CATALOG,
-  COUNT_BY_FAMILY,
   FAMILIES,
   TYPE_LABEL,
   fold,
@@ -49,20 +48,27 @@ import { CopyCommand } from "./copy-command";
 import { FitStage, useLazyDemo } from "./stage";
 import { ComponentFocus } from "./ComponentFocus";
 
-type Mode = "grade" | "lista";
+type Mode = "vitrine" | "lista";
 type FamilyFilter = Family | "todos";
-
-/** Spans degradam por breakpoint: no celular ninguém tem duas colunas pra dar. */
-const SPAN_CLASS: Record<number, string> = {
-  1: "",
-  2: "sm:col-span-2",
-  3: "sm:col-span-2 xl:col-span-3",
-};
+type Tab = "interface" | "sem-interface";
 
 const MODES = [
-  { value: "grade" as const, icon: LayoutGrid, ariaLabel: "Ver em grade" },
+  { value: "vitrine" as const, icon: Rows3, ariaLabel: "Ver uma peça por linha" },
   { value: "lista" as const, icon: List, ariaLabel: "Ver em lista" },
 ];
+
+/**
+ * Quem tem demo aparece na vitrine; quem não tem, na outra aba.
+ *
+ * A grade de quatro colunas misturava as duas coisas, e o resultado era uma peça
+ * desenhada ao lado de um cartão escrito "sem superfície visual própria" — o
+ * mesmo peso visual para o que se olha e para o que só se instala. Um hook não
+ * fica melhor num palco vazio: ele fica melhor numa lista onde o que importa é
+ * o nome e o comando.
+ */
+const TEM_INTERFACE = (i: CatalogItem) => Boolean(i.demo);
+
+const SEM_INTERFACE_COUNT = CATALOG.filter((i) => !TEM_INTERFACE(i)).length;
 
 function TypeBadge({ type }: { type: CatalogItem["type"] }) {
   return (
@@ -72,7 +78,21 @@ function TypeBadge({ type }: { type: CatalogItem["type"] }) {
   );
 }
 
-const Card = React.memo(function Card({
+/**
+ * A placa da vitrine: uma peça por linha, e nada disputando a linha com ela.
+ *
+ * A grade de quatro colunas tratava 52 itens como resultado de busca — três ou
+ * quatro peças na mesma linha, cada uma escalada até caber numa coluna, e as de
+ * `span` maior deixando buracos entre as vizinhas. Peça de biblioteca não é
+ * resultado de busca: ou ela aparece no tamanho em que foi desenhada, ou não
+ * dá para julgar se serve.
+ *
+ * Os dois botões ficam **sempre visíveis**, não no hover. Focar e copiar o
+ * comando são as duas únicas coisas que se faz aqui; esconder as duas atrás de
+ * um `group-hover` custa uma descoberta e não devolve nada — e no toque não
+ * existe hover nenhum.
+ */
+const Showcase = React.memo(function Showcase({
   item,
   onOpen,
   index,
@@ -81,7 +101,7 @@ const Card = React.memo(function Card({
   onOpen: () => void;
   index: number;
 }) {
-  const Demo = item.demo;
+  const Demo = item.demo!;
   const { w, h } = previewOf(item);
   const { ref, mounted, active } = useLazyDemo<HTMLElement>();
 
@@ -89,62 +109,68 @@ const Card = React.memo(function Card({
     <article
       ref={ref}
       className={cn(
-        "group flex flex-col overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
-        "transition-[border-color,box-shadow] duration-[var(--dur-fast,160ms)] ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
-        "hover:border-[var(--brand)] focus-within:border-[var(--brand)]",
-        "hover:shadow-[var(--e-raised,0_1px_2px_rgba(0,0,0,0.06))]",
-        SPAN_CLASS[item.span ?? 1],
+        "overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
+        "transition-[border-color] duration-[var(--dur-fast,160ms)] ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+        "focus-within:border-[var(--brand)] hover:border-[var(--brand)]",
       )}
     >
-      {/* palco: a demo é interativa aqui dentro, então nada de overlay clicável
-          por cima dela — abrir o foco é o botão do canto e o nome no rodapé. */}
-      <div
-        className="relative overflow-hidden border-b border-border bg-background"
-        style={stageSurfaceOf(item)}
-      >
-        {Demo ? (
-          // O palco existe desde o primeiro quadro, com a altura final; só o que
-          // está dentro dele é que chega quando o card entra na tela. Assim a
-          // grade não muda de tamanho embaixo do dedo de quem está rolando.
-          <FitStage w={w} h={h} active={active} label={item.name}>
-            {mounted ? <Demo /> : <div className="h-full w-full animate-pulse bg-muted/40" />}
-          </FitStage>
-        ) : (
-          <div className="grid h-[120px] place-items-center px-6 text-center">
-            <p className="text-rotulo leading-relaxed text-muted-foreground">
-              sem superfície visual própria
-              <br />
-              <span className="font-mono">{TYPE_LABEL[item.type]}</span>
-            </p>
+      {/*
+        No celular o cabeçalho é uma coluna: identificação em cima, ações
+        embaixo em linha cheia. Espremer nome, descrição, comando e botão na
+        mesma linha de 390px reduz os dois alvos de toque a nada.
+      */}
+      <header className="flex flex-col gap-3 border-b border-border px-4 py-3 sm:flex-row sm:items-start sm:gap-4 sm:px-5">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              data-card-index={index}
+              onClick={onOpen}
+              className="truncate font-mono text-destaque outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline"
+            >
+              {item.name}
+            </button>
+            <TypeBadge type={item.type} />
           </div>
-        )}
+          <p className="mt-1 max-w-[74ch] text-apoio leading-relaxed text-muted-foreground">
+            {item.description}
+          </p>
+        </div>
 
-        <button
-          type="button"
-          onClick={onOpen}
-          aria-label={`Abrir ${item.title} em foco`}
-          className="alvo-toque absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-[var(--r-control,0.5rem)] border border-border bg-background/85 text-muted-foreground opacity-0 backdrop-blur transition-opacity hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100"
-        >
-          <Expand className="h-3.5 w-3.5" />
-        </button>
-      </div>
-
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:shrink-0">
+          {/* `min-w-0` + `truncate` no código: o comando é longo e, sem isso, ele
+              empurra o botão de foco para fora da tela em vez de encurtar. */}
+          <CopyCommand
+            variant="line"
+            text={installCommand(item.name)}
+            className="min-w-0 flex-1 sm:w-[min(22rem,26vw)] sm:flex-none"
+          />
           <button
             type="button"
-            data-card-index={index}
             onClick={onOpen}
-            className="truncate font-mono text-apoio outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline"
+            className="alvo-toque inline-flex shrink-0 items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2.5 py-1.5 text-apoio text-muted-foreground outline-none transition-colors hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:text-foreground"
           >
-            {item.name}
+            <Expand className="h-3.5 w-3.5" />
+            Focar
           </button>
-          <TypeBadge type={item.type} />
-          <span className="no-hover ml-auto">
-            <CopyCommand variant="chip" text={installCommand(item.name)} />
-          </span>
         </div>
-        <p className="text-apoio leading-relaxed text-muted-foreground">{item.description}</p>
+      </header>
+
+      {/* O palco: a peça desenha no tamanho declarado e só encolhe se não couber.
+          `mx-auto` com `maxWidth` centraliza a peça estreita em vez de deixá-la
+          encostada na margem esquerda de uma faixa de 1200px. */}
+      {/* `overflow-x-auto`: a peça grande para de encolher no piso da escala e
+          passa a transbordar — quem está no celular rola de lado e continua
+          conseguindo LER o depoimento, em vez de olhar texto de 6px. */}
+      <div
+        className="overflow-x-auto bg-background px-3 py-4 sm:px-6 sm:py-6"
+        style={stageSurfaceOf(item)}
+      >
+        <div className="mx-auto w-full" style={{ maxWidth: w }}>
+          <FitStage w={w} h={h} minScale={0.62} active={active} label={item.name}>
+            {mounted ? <Demo /> : <div className="h-full w-full animate-pulse bg-muted/40" />}
+          </FitStage>
+        </div>
       </div>
     </article>
   );
@@ -167,11 +193,12 @@ function Row({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; i
           {item.description}
         </span>
       </button>
-      <CopyCommand
-        variant="chip"
-        text={installCommand(item.name)}
-        className="no-hover"
-      />
+      {/*
+        Sem `no-hover`: numa linha de item que não tem o que mostrar, copiar o
+        comando é a ÚNICA ação que existe. Escondê-la atrás do hover é esconder
+        a linha inteira — e no toque não há hover para revelar nada.
+      */}
+      <CopyCommand variant="chip" text={installCommand(item.name)} />
     </div>
   );
 }
@@ -185,18 +212,43 @@ export function Gallery({
 }) {
   const [q, setQ] = React.useState("");
   const [family, setFamily] = React.useState<FamilyFilter>("todos");
-  const [mode, setMode] = React.useState<Mode>("grade");
+  const [mode, setMode] = React.useState<Mode>("vitrine");
+  const [tab, setTab] = React.useState<Tab>("interface");
   const inputRef = React.useRef<HTMLInputElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
   const heroRef = React.useRef<HTMLElement>(null);
   const { brands } = useBrandTheme();
 
+  const pool = React.useMemo(
+    () => CATALOG.filter((i) => (tab === "interface" ? TEM_INTERFACE(i) : !TEM_INTERFACE(i))),
+    [tab],
+  );
+
   const results = React.useMemo(() => {
     const needle = fold(q.trim());
-    return CATALOG.filter(
-      (i) => (family === "todos" || i.family === family) && matches(i, needle),
-    );
-  }, [q, family]);
+    return pool.filter((i) => (family === "todos" || i.family === family) && matches(i, needle));
+  }, [q, family, pool]);
+
+  /*
+   * A contagem do filtro é da aba, não do catálogo inteiro.
+   *
+   * Um chip escrito "Fundação 4" numa aba onde só existe 1 é uma promessa que a
+   * própria tela desmente no clique seguinte — e some com a confiança no resto
+   * dos números.
+   */
+  const countByFamily = React.useMemo(
+    () =>
+      pool.reduce<Record<string, number>>((acc, i) => {
+        acc[i.family] = (acc[i.family] ?? 0) + 1;
+        return acc;
+      }, {}),
+    [pool],
+  );
+
+  /* Família vazia na aba nova deixaria a pessoa olhando um nada que ela não pediu. */
+  React.useEffect(() => {
+    if (family !== "todos" && !countByFamily[family]) setFamily("todos");
+  }, [countByFamily, family]);
 
   /*
    * Filtrar encolhe a página embaixo de quem está rolando.
@@ -272,11 +324,6 @@ export function Gallery({
       const cards = Array.from(listRef.current.querySelectorAll<HTMLElement>("[data-card-index]"));
       if (!cards.length) return;
       const current = cards.findIndex((b) => b === el);
-      const cols =
-        mode === "lista"
-          ? 1
-          : getComputedStyle(listRef.current).gridTemplateColumns.split(" ").filter(Boolean)
-              .length || 1;
 
       const move = (delta: number) => {
         e.preventDefault();
@@ -286,10 +333,10 @@ export function Gallery({
         cards[target]?.scrollIntoView({ block: "nearest" });
       };
 
-      if (e.key === "ArrowRight") move(1);
-      else if (e.key === "ArrowLeft") move(-1);
-      else if (e.key === "ArrowDown") move(cols);
-      else if (e.key === "ArrowUp") move(-cols);
+      // Uma peça por linha nos dois modos: percorrer é sempre para cima e para
+      // baixo, e não há mais coluna para ler do grid.
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") move(1);
+      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") move(-1);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -352,41 +399,59 @@ export function Gallery({
             )}
           </div>
 
-          <SegmentedControl
-            value={mode}
-            onChange={setMode}
-            variant="compact"
-            aria-label="Modo de visualização"
-            options={MODES}
-          />
+          {tab === "interface" ? (
+            <SegmentedControl
+              value={mode}
+              onChange={setMode}
+              variant="compact"
+              aria-label="Modo de visualização"
+              options={MODES}
+            />
+          ) : null}
         </div>
 
         {/* famílias: rolam na horizontal no celular em vez de virar quatro linhas */}
         <div className="shell-bleed mt-2 flex gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
           <Chip
             pressed={family === "todos"}
-            count={CATALOG.length}
+            count={pool.length}
             onClick={() => setFamily("todos")}
             className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
           >
             Todos
           </Chip>
-          {FAMILIES.map((f) => (
+          {FAMILIES.filter((f) => countByFamily[f.key]).map((f) => (
             <Chip
               key={f.key}
               pressed={family === f.key}
-              count={COUNT_BY_FAMILY[f.key] ?? 0}
+              count={countByFamily[f.key] ?? 0}
               onClick={() => setFamily(f.key)}
               className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
             >
               {f.label}
             </Chip>
           ))}
+
+          {/*
+            A aba do que não tem interface fica na mesma barra, à direita e
+            separada: é o mesmo gesto de filtrar, e promovê-la a aba de topo
+            faria a library parecer dois produtos.
+          */}
+          <span className="shrink-0 sm:ml-auto sm:pl-3">
+            <Chip
+              pressed={tab === "sem-interface"}
+              count={SEM_INTERFACE_COUNT}
+              onClick={() => setTab(tab === "interface" ? "sem-interface" : "interface")}
+              className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
+            >
+              Sem interface
+            </Chip>
+          </span>
         </div>
       </div>
 
       {results.length ? (
-        mode === "grade" ? (
+        mode === "vitrine" && tab === "interface" ? (
           <div
             ref={listRef}
             // `overflow-anchor: none`: o Chrome tenta manter na tela o elemento
@@ -395,10 +460,10 @@ export function Gallery({
             // fim do documento novo. Aqui a âncora não ajuda: os itens de cima
             // não mudaram de tamanho, sumiram.
             style={{ overflowAnchor: "none" }}
-            className="mt-6 grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            className="mt-6 flex flex-col gap-5"
           >
             {results.map((item, i) => (
-              <Card key={item.name} item={item} index={i} onOpen={() => onFocus(item.name)} />
+              <Showcase key={item.name} item={item} index={i} onOpen={() => onFocus(item.name)} />
             ))}
           </div>
         ) : (
