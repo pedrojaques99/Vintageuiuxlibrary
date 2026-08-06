@@ -95,6 +95,25 @@ for (const item of registry.items ?? []) {
 if (dupes.length) die(`Nomes duplicados no registry:\n  ${dupes.join("\n  ")}`);
 if (missing.length)
   die(`Arquivos declarados que não existem:\n  ${missing.join("\n  ")}`);
+/*
+ * Arquivo de bloco PRECISA dizer onde mora.
+ *
+ * Sem `target`, os arquivos de um bloco caem soltos na raiz de `components/` do
+ * projeto de quem instala — e dois blocos que tenham um `index.ts` cada se
+ * SOBRESCREVEM em silêncio, com o `add` reportando sucesso. Aconteceu na
+ * primeira instalação real do `step-cards` + `testimonial-wall` na visant-board:
+ * ficou um `components/index.ts` só, exportando a parede, e os passos sumiram.
+ * `types.ts` e `index.ts` são os nomes mais genéricos que existem; é questão de
+ * tempo até colidirem com arquivo do próprio projeto.
+ */
+const semDestino = registry.items
+  .filter((i) => i.type === "registry:block")
+  .flatMap((i) => i.files.filter((f) => !f.target).map((f) => `${i.name} → ${f.path}`));
+if (semDestino.length)
+  die(
+    `Arquivo de bloco sem \`target\` (colide na pasta de quem instala):\n  ${semDestino.join("\n  ")}`,
+  );
+
 ok(`${registry.items.length} itens, todos os arquivos no lugar`);
 
 // ── Portão 0: nada de cliente no que vai para o ar ───────────────────────────

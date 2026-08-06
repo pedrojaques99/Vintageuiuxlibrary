@@ -606,23 +606,28 @@
       "files": [
         {
           "path": "registry/visant/blocks/kanban/Kanban.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "~/components/kanban/Kanban.tsx"
         },
         {
           "path": "registry/visant/blocks/kanban/KanbanColumn.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "~/components/kanban/KanbanColumn.tsx"
         },
         {
           "path": "registry/visant/blocks/kanban/KanbanCard.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "~/components/kanban/KanbanCard.tsx"
         },
         {
           "path": "registry/visant/blocks/kanban/types.ts",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "~/components/kanban/types.ts"
         },
         {
           "path": "registry/visant/blocks/kanban/index.ts",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "~/components/kanban/index.ts"
         },
         {
           "path": "registry/visant/blocks/kanban/kanban.css",
@@ -1111,11 +1116,13 @@
       "files": [
         {
           "path": "registry/visant/blocks/step-cards/StepCards.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "~/components/step-cards/StepCards.tsx"
         },
         {
           "path": "registry/visant/blocks/step-cards/index.ts",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "~/components/step-cards/index.ts"
         }
       ]
     },
@@ -1131,11 +1138,13 @@
       "files": [
         {
           "path": "registry/visant/blocks/testimonial-wall/TestimonialWall.tsx",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "~/components/testimonial-wall/TestimonialWall.tsx"
         },
         {
           "path": "registry/visant/blocks/testimonial-wall/index.ts",
-          "type": "registry:component"
+          "type": "registry:component",
+          "target": "~/components/testimonial-wall/index.ts"
         }
       ]
     }
