@@ -1050,6 +1050,94 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "section-intro",
+      "type": "registry:ui",
+      "title": "Section Intro",
+      "description": "Abertura de dobra: rótulo, título grande e linha de contexto, com duas medidas de linha em vez de uma.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/section-intro.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "cta-surface",
+      "type": "registry:ui",
+      "title": "CTA Surface",
+      "description": "A superfície de conversão em três proporções (barra, painel, card). O botão herda o contraste do tom em vez de receber cor.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/cta-surface.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "showcase-card",
+      "type": "registry:ui",
+      "title": "Showcase Card",
+      "description": "Card de serviço: mídia com selo de seta, título que cobre o card inteiro e a lista do que está incluso como texto, não como filtro.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/showcase-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "step-cards",
+      "type": "registry:block",
+      "title": "Step Cards",
+      "description": "Como funciona, em passos numerados. Lista ordenada de verdade e a arte de cada passo por slot.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/blocks/step-cards/StepCards.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/visant/blocks/step-cards/index.ts",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "testimonial-wall",
+      "type": "registry:block",
+      "title": "Testimonial Wall",
+      "description": "Parede de prova social com tipos misturados: citação, número, retrato e depoimento em vídeo na mesma malha.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/blocks/testimonial-wall/TestimonialWall.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/visant/blocks/testimonial-wall/index.ts",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

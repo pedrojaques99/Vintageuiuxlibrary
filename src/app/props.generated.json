@@ -2430,5 +2430,334 @@
         }
       ]
     }
+  ],
+  "section-intro": [
+    {
+      "nome": "SectionIntro",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "title",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "actions",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Ações abaixo do lead — botão, link, o que o projeto quiser."
+        },
+        {
+          "nome": "align",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "center",
+          "descricao": null
+        },
+        {
+          "nome": "as",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "h2",
+          "descricao": null
+        },
+        {
+          "nome": "eyebrow",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O texto da pílula. Some quando ausente."
+        },
+        {
+          "nome": "lead",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A linha de contexto abaixo do título."
+        },
+        {
+          "nome": "leadWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "62",
+          "descricao": "Medida do parágrafo, em ch. Acima de ~70 o olho perde a volta da linha."
+        },
+        {
+          "nome": "titleWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "20",
+          "descricao": "Medida do título, em ch. Título mais longo pede mais."
+        }
+      ]
+    }
+  ],
+  "cta-surface": [
+    {
+      "nome": "CtaSurface",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "title",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "actions",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Botões. Use `CtaAction` para herdar o contraste do tom."
+        },
+        {
+          "nome": "backdrop",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Camada decorativa atrás do conteúdo (gradiente, foto, ruído)."
+        },
+        {
+          "nome": "footnote",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A linha miúda embaixo: prazo de resposta, \"sem cartão\", e afins."
+        },
+        {
+          "nome": "lead",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Linha de contexto. A barra ignora — de propósito: barra é uma frase só."
+        },
+        {
+          "nome": "mark",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Marca, ícone ou pilha de avatares acima do título."
+        },
+        {
+          "nome": "tone",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "brand",
+          "descricao": null
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "panel",
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "CtaAction",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "href",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Vira `<a>` quando presente. Um CTA que navega precisa ser link."
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "solid",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "showcase-card": [
+    {
+      "nome": "ShowcaseCard",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "title",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "description",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Linha de contexto entre título e tags."
+        },
+        {
+          "nome": "href",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "media",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A imagem ou vídeo do topo. Recebe o recorte e a proporção daqui."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "4 / 3",
+          "descricao": "Proporção da mídia. Card de site pede paisagem; de app, quadrado."
+        },
+        {
+          "nome": "tags",
+          "tipo": "any[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O que está incluso. Texto, não controle."
+        }
+      ]
+    }
+  ],
+  "step-cards": [
+    {
+      "nome": "StepCards",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "steps",
+          "tipo": "Step[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "columns",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "3",
+          "descricao": null
+        },
+        {
+          "nome": "visualHeight",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "240",
+          "descricao": "Altura da área de visual. Abaixo de ~180px o mockup não se lê."
+        },
+        {
+          "nome": "wideLast",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "O último passo ocupa a linha inteira quando sobrar sozinho."
+        }
+      ]
+    },
+    {
+      "nome": "StepCards",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "steps",
+          "tipo": "Step[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "columns",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "3",
+          "descricao": null
+        },
+        {
+          "nome": "visualHeight",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "240",
+          "descricao": "Altura da área de visual. Abaixo de ~180px o mockup não se lê."
+        },
+        {
+          "nome": "wideLast",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "O último passo ocupa a linha inteira quando sobrar sozinho."
+        }
+      ]
+    },
+    {
+      "nome": "Step",
+      "descricao": "StepCards — \"como funciona\" em passos numerados, com o visual por slot.\n\nDuas referências viraram este bloco: os três cards de gradiente\n(assinar/pedir/receber) e os quatro passos com mini-telas do produto dentro.\nO que elas têm em comum e o que separa uma da outra:\n\n- **Comum:** número, título, uma frase, e uma área grande de visual em cima.\n- **Diferente:** a arte. Numa é gradiente de marca, na outra é screenshot do\n  app. Por isso `visual` é slot e o componente não desenha nada lá dentro —\n  um bloco que embute a arte de um cliente só serve para aquele cliente.\n\nDecisões:\n\n1. **É `<ol>`, não uma grade de `<div>`.** A ordem é a informação. Quem navega\n   por leitor de tela ouve \"lista de 4 itens\" e sabe que existe uma sequência.\n2. **O número é `aria-hidden`.** O `<ol>` já numera; o \"01\" na tela é o eco\n   visual disso, e anunciar os dois faz \"um, um, envie seu pedido\".\n3. **`columns` aceita o passo órfão.** Quatro passos em três colunas deixam um\n   sozinho na segunda linha — a referência resolve deitando o último\n   (`wideLast`), e é isso que a prop faz.",
+      "props": []
+    }
+  ],
+  "testimonial-wall": [
+    {
+      "nome": "TestimonialWall",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "TestimonialItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "columns",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "4",
+          "descricao": null
+        },
+        {
+          "nome": "empty",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O que aparece quando ainda não há depoimento nenhum."
+        }
+      ]
+    },
+    {
+      "nome": "TestimonialWall",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "TestimonialItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "columns",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "4",
+          "descricao": null
+        },
+        {
+          "nome": "empty",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O que aparece quando ainda não há depoimento nenhum."
+        }
+      ]
+    }
   ]
 }

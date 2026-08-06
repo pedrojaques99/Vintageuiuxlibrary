@@ -42,6 +42,11 @@ import { InlineEdit } from "../../registry/visant/ui/inline-edit";
 import { RepulsiveHover } from "../../registry/visant/ui/repulsive-hover";
 import { Timeline } from "../../registry/visant/ui/timeline";
 import { StickyFilterbar, FilterRow } from "../../registry/visant/ui/sticky-filterbar";
+import { SectionIntro } from "../../registry/visant/ui/section-intro";
+import { CtaSurface, CtaAction } from "../../registry/visant/ui/cta-surface";
+import { ShowcaseCard } from "../../registry/visant/ui/showcase-card";
+import { StepCards } from "../../registry/visant/blocks/step-cards";
+import { TestimonialWall } from "../../registry/visant/blocks/testimonial-wall";
 
 import { VintageKnob } from "../../registry/vintage/ui/vintage-knob";
 import { VintageLargeKnob } from "../../registry/vintage/ui/vintage-large-knob";
@@ -1136,7 +1141,166 @@ export const CATALOG: CatalogItem[] = [
       "O gesto de arrastar um knob isolado do desenho: pointer capture, trava de curso e passo fino com shift.",
     tags: ["hook", "gesto"],
   },
+  {
+    name: "section-intro",
+    title: "Section Intro",
+    type: "ui",
+    family: "aquisicao",
+    description:
+      "Abertura de dobra: rótulo, título grande e linha de contexto, com duas medidas de linha em vez de uma.",
+    tags: ["dobra", "título", "landing"],
+    demo: () => (
+      <SectionIntro
+        eyebrow="Serviços"
+        title="Um time só. Todo serviço que a marca precisa."
+        lead="Da estratégia de marca ao desenvolvimento — sem repassar o trabalho para fora no meio do caminho."
+      />
+    ),
+    preview: { w: 620, h: 300 },
+    span: 2,
+  },
+  {
+    name: "cta-surface",
+    title: "CTA Surface",
+    type: "ui",
+    family: "aquisicao",
+    description:
+      "A superfície de conversão em três proporções (barra, painel, card). O botão herda o contraste do tom em vez de receber cor.",
+    tags: ["cta", "conversão", "dobra"],
+    demo: () => (
+      <div className="flex w-full flex-col gap-4">
+        <CtaSurface
+          variant="bar"
+          tone="brand"
+          title="Tudo isso em um plano só. Sem lacuna."
+          actions={<CtaAction>Agendar conversa</CtaAction>}
+        />
+        <CtaSurface
+          variant="panel"
+          tone="ink"
+          title="Vamos construir algo que compete"
+          lead="Marca, site e produto por um time sênior. Começa por uma conversa de estratégia."
+          actions={<CtaAction>Agendar conversa</CtaAction>}
+        />
+      </div>
+    ),
+    preview: { w: 640, h: 480 },
+    span: 2,
+  },
+  {
+    name: "showcase-card",
+    title: "Showcase Card",
+    type: "ui",
+    family: "aquisicao",
+    description:
+      "Card de serviço: mídia com selo de seta, título que cobre o card inteiro e a lista do que está incluso como texto, não como filtro.",
+    tags: ["serviço", "card", "vitrine"],
+    demo: () => (
+      // Largura fixa de propósito: o card ocupa o que o pai der, e sem trava ele
+      // cresce até a mídia estourar a altura declarada do palco.
+      <div className="w-[360px]">
+        <ShowcaseCard
+          href="#/c/showcase-card"
+          title="Identidade que quer dizer alguma coisa"
+          media={<DemoSurface />}
+          tags={["Estratégia", "Naming", "Logo", "Identidade visual"]}
+        />
+      </div>
+    ),
+    preview: { w: 380, h: 480 },
+  },
+  {
+    name: "step-cards",
+    title: "Step Cards",
+    type: "block",
+    family: "aquisicao",
+    description:
+      "Como funciona, em passos numerados. Lista ordenada de verdade e a arte de cada passo por slot.",
+    tags: ["passos", "como funciona", "onboarding"],
+    demo: () => (
+      <StepCards
+        columns={3}
+        visualHeight={140}
+        steps={[
+          {
+            title: "Envie o pedido",
+            description: "Conte o que precisa e suba os arquivos da marca.",
+            visual: <DemoSurface />,
+          },
+          {
+            title: "O time entra",
+            description: "Cruzamos o projeto com quem tem a mão certa para ele.",
+            visual: <DemoSurface />,
+          },
+          {
+            title: "Você comenta",
+            description: "Feedback direto na plataforma até ficar de pé.",
+            visual: <DemoSurface />,
+          },
+        ]}
+      />
+    ),
+    preview: { w: 720, h: 380 },
+    span: 3,
+  },
+  {
+    name: "testimonial-wall",
+    title: "Testimonial Wall",
+    type: "block",
+    family: "aquisicao",
+    description:
+      "Parede de prova social com tipos misturados: citação, número, retrato e depoimento em vídeo na mesma malha.",
+    tags: ["depoimento", "prova social", "masonry"],
+    demo: () => (
+      <TestimonialWall
+        columns={3}
+        items={[
+          {
+            id: "a",
+            kind: "quote",
+            headline: "Rápido e fácil de trabalhar junto",
+            quote:
+              "Entenderam o que a gente precisava e entregaram no padrão em projetos bem diferentes entre si.",
+            author: "Andrei Tiburca",
+            role: "Co-fundador @ Video Deck",
+            rating: 5,
+          },
+          { id: "b", kind: "stat", tone: "brand", value: "1.291+", label: "Projetos entregues em 6 anos" },
+          {
+            id: "c",
+            kind: "portrait",
+            media: <DemoSurface />,
+            name: "Larissa Meester",
+            role: "Marketing @ MySolution",
+            onPlay: () => {},
+          },
+          {
+            id: "d",
+            kind: "quote",
+            tone: "muted",
+            quote: "O time é atento e responde rápido quando entram revisão e projeto novo no mesmo dia.",
+            author: "Grady Fitzgerald",
+            role: "Perfectus Labs",
+          },
+          { id: "e", kind: "stat", tone: "muted", value: "4,9/5", label: "Nota média de quem já contratou" },
+        ]}
+      />
+    ),
+    preview: { w: 760, h: 760 },
+    span: 3,
+  },
 ];
+
+/**
+ * O lugar da foto nas demos de aquisição.
+ *
+ * Foto de verdade traria peso e uma dependência de rede que a vitrine não deve
+ * ter. E colocar cor de exemplo aqui esconderia o ponto: essas peças leem o
+ * token da marca. Isto é o `--muted` do tema ativo, e nada mais.
+ */
+function DemoSurface() {
+  return <div className="size-full bg-[var(--muted)]" />;
+}
 
 /**
  * Índice de busca montado uma vez. A lista é estática; normalizar 45 strings a
