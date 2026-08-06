@@ -6,3 +6,6 @@ dist
 .vercel
 .env*
 .brands-local/
+
+# Referências visuais de trabalho: entram pra estudar, não pro repo.
+.refs/
