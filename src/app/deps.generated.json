@@ -1,0 +1,65 @@
+{
+  "use-knob-drag": [
+    "react"
+  ],
+  "use-media-query": [
+    "react"
+  ],
+  "vintage-knob": [
+    "react"
+  ],
+  "vintage-large-knob": [
+    "react"
+  ],
+  "motion-layer": [
+    "gsap"
+  ],
+  "kanban": [
+    "@air/react-drag-to-select",
+    "@dnd-kit/core",
+    "@dnd-kit/sortable",
+    "@dnd-kit/utilities",
+    "framer-motion"
+  ],
+  "data-table": [
+    "@tanstack/react-table",
+    "class-variance-authority",
+    "lucide-react",
+    "next",
+    "next-auth",
+    "react"
+  ],
+  "segmented-control": [
+    "lucide-react"
+  ],
+  "octahedron-loader": [
+    "@lottiefiles/dotlottie-react",
+    "framer-motion"
+  ],
+  "inline-edit": [
+    "lucide-react"
+  ],
+  "timeline": [
+    "framer-motion"
+  ],
+  "repulsive-hover": [
+    "framer-motion"
+  ],
+  "smooth-scroll-provider": [
+    "gsap",
+    "lenis"
+  ],
+  "working-glyph": [
+    "lucide-react"
+  ],
+  "paper-shuttle": [
+    "framer-motion"
+  ],
+  "generating-tile": [
+    "lucide-react"
+  ],
+  "brand-selector": [
+    "cmdk",
+    "lucide-react"
+  ]
+}

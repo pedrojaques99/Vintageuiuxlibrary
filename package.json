@@ -18,6 +18,7 @@
     "test:install": "node scripts/install-smoke.mjs",
     "test": "playwright test",
     "build:props": "node scripts/props-extract.mjs",
+    "build:deps": "node scripts/deps-extract.mjs",
     "check:deps": "node scripts/deps-check.mjs",
     "build:og": "node scripts/og-images.mjs",
     "build:pages": "node scripts/prerender.mjs",

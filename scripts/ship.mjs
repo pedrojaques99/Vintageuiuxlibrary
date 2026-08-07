@@ -156,6 +156,11 @@ run("node scripts/catalog-check.mjs");
 say("Portão de dependências");
 run("node scripts/deps-check.mjs");
 
+// Logo depois do portão, e ANTES do tsc: a vitrine importa o JSON gerado aqui,
+// então rodar isto no fim significaria checar tipo contra um arquivo velho.
+say("Extração de dependências");
+run("node scripts/deps-extract.mjs");
+
 // ── Portão 5: tipos ──────────────────────────────────────────────────────────
 // O `vite build` NÃO checa tipos (esbuild só apaga as anotações). Sem este
 // portão, `strict: true` no tsconfig é decoração: o erro passa pelo build,

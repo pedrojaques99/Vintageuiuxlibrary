@@ -45,6 +45,8 @@ import {
 } from "./catalog";
 import { REGISTRY_PUBLIC_LABEL, installCommand } from "./registry-meta";
 import { CopyCommand } from "./copy-command";
+import { DepBadges, DepLogo } from "./dep-badges";
+import { SEM_DEPS, allDeps, matchesDep } from "./deps";
 import { FitStage, useLazyDemo } from "./stage";
 import { ComponentFocus } from "./ComponentFocus";
 
@@ -95,10 +97,12 @@ function TypeBadge({ type }: { type: CatalogItem["type"] }) {
 const Showcase = React.memo(function Showcase({
   item,
   onOpen,
+  onPickDep,
   index,
 }: {
   item: CatalogItem;
   onOpen: () => void;
+  onPickDep: (dep: string) => void;
   index: number;
 }) {
   const Demo = item.demo!;
@@ -134,6 +138,14 @@ const Showcase = React.memo(function Showcase({
               {item.name}
             </button>
             <TypeBadge type={item.type} />
+            {/* Ao lado do tipo, não embaixo da descrição: "o que é" e "o que
+                custa" são a mesma leitura, feita antes de olhar a peça. */}
+            <DepBadges
+              name={item.name}
+              variant="icones"
+              onPick={onPickDep}
+              className="ml-0.5 border-l border-border pl-2"
+            />
           </div>
           <p className="mt-1 max-w-[74ch] text-apoio leading-relaxed text-muted-foreground">
             {item.description}
@@ -194,6 +206,9 @@ function Row({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; i
         <span className="flex flex-wrap items-center gap-2">
           <span className="font-mono text-apoio group-hover:text-[var(--brand)]">{item.name}</span>
           <TypeBadge type={item.type} />
+          {/* Sem `onPick` aqui: a linha inteira já é um botão, e um botão dentro
+              de outro é HTML inválido antes de ser problema de teclado. */}
+          <DepBadges name={item.name} variant="icones" />
         </span>
         <span className="mt-0.5 line-clamp-1 block text-apoio text-muted-foreground">
           {item.description}
@@ -218,6 +233,8 @@ export function Gallery({
 }) {
   const [q, setQ] = React.useState("");
   const [family, setFamily] = React.useState<FamilyFilter>("todos");
+  /** `null` = não filtra por dependência. `SEM_DEPS` = só o que não puxa nada. */
+  const [dep, setDep] = React.useState<string | null>(null);
   const [mode, setMode] = React.useState<Mode>("vitrine");
   const [tab, setTab] = React.useState<Tab>("interface");
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -232,8 +249,47 @@ export function Gallery({
 
   const results = React.useMemo(() => {
     const needle = fold(q.trim());
-    return pool.filter((i) => (family === "todos" || i.family === family) && matches(i, needle));
-  }, [q, family, pool]);
+    return pool.filter(
+      (i) =>
+        (family === "todos" || i.family === family) && matchesDep(i.name, dep) && matches(i, needle),
+    );
+  }, [q, family, dep, pool]);
+
+  /*
+   * O filtro de dependência se monta do que EXISTE ali, com a contagem junto.
+   *
+   * A alternativa era uma lista fixa de libs escrita à mão — e ela envelheceria
+   * no dia em que alguém colhesse a primeira peça com `three`, oferecendo um
+   * filtro que não existe e escondendo o que passou a existir.
+   *
+   * O escopo é a aba MAIS a família escolhida, pelo mesmo motivo que a contagem
+   * de família não olha o catálogo inteiro: número de chip que o clique seguinte
+   * desmente contamina a confiança em todos os outros.
+   */
+  const escopoDep = React.useMemo(
+    () => pool.filter((i) => family === "todos" || i.family === family),
+    [pool, family],
+  );
+  const depsDoEscopo = React.useMemo(() => allDeps(escopoDep.map((i) => i.name)), [escopoDep]);
+  const semDepsCount = React.useMemo(
+    () => escopoDep.filter((i) => matchesDep(i.name, SEM_DEPS)).length,
+    [escopoDep],
+  );
+
+  /* Dependência que sumiu do escopo deixaria a pessoa olhando lista vazia sem pedir. */
+  React.useEffect(() => {
+    if (!dep) return;
+    const existe =
+      dep === SEM_DEPS ? semDepsCount > 0 : depsDoEscopo.some((d) => d.info.key === dep);
+    if (!existe) setDep(null);
+  }, [depsDoEscopo, semDepsCount, dep]);
+
+  const pickDep = React.useCallback(
+    // Clicar de novo na mesma dependência desfaz: o ícone do card é o mesmo
+    // controle, ligado e desligado, e não um caminho só de ida.
+    (chave: string) => setDep((atual) => (atual === chave ? null : chave)),
+    [],
+  );
 
   /*
    * A contagem do filtro é da aba, não do catálogo inteiro.
@@ -242,13 +298,18 @@ export function Gallery({
    * própria tela desmente no clique seguinte — e some com a confiança no resto
    * dos números.
    */
+  const escopoFamilia = React.useMemo(
+    () => pool.filter((i) => matchesDep(i.name, dep)),
+    [pool, dep],
+  );
+
   const countByFamily = React.useMemo(
     () =>
-      pool.reduce<Record<string, number>>((acc, i) => {
+      escopoFamilia.reduce<Record<string, number>>((acc, i) => {
         acc[i.family] = (acc[i.family] ?? 0) + 1;
         return acc;
       }, {}),
-    [pool],
+    [escopoFamilia],
   );
 
   /* Família vazia na aba nova deixaria a pessoa olhando um nada que ela não pediu. */
@@ -293,7 +354,7 @@ export function Gallery({
     // Salto seco: a lista mudou inteira, rolagem suave aqui só atrasaria o que a
     // pessoa pediu — e ainda seria cancelada pelo reflow do próprio filtro.
     if (window.scrollY > target) window.scrollTo({ top: target, behavior: "auto" });
-  }, [family, mode, results.length]);
+  }, [family, dep, mode, results.length]);
 
   const focusIndex = focus ? results.findIndex((i) => i.name === focus) : -1;
   const focusItem = focusIndex >= 0 ? results[focusIndex] : CATALOG.find((i) => i.name === focus);
@@ -420,7 +481,10 @@ export function Gallery({
         <div className="shell-bleed mt-2 flex gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
           <Chip
             pressed={family === "todos"}
-            count={pool.length}
+            // A contagem do "Todos" também obedece ao filtro de npm — senão ele
+            // anuncia 43 e entrega 5, que é o tipo de número que ensina a pessoa
+            // a não confiar em nenhum outro na barra.
+            count={escopoFamilia.length}
             onClick={() => setFamily("todos")}
             className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
           >
@@ -454,6 +518,45 @@ export function Gallery({
             </Chip>
           </span>
         </div>
+
+        {/*
+          Segunda linha: o que a peça CUSTA.
+
+          Fica separada da família de propósito — são duas perguntas diferentes
+          ("onde isso se usa?" e "isso pesa no meu bundle?") e misturá-las numa
+          barra só faria a pessoa ler quinze pastilhas para achar as seis dela.
+          A linha inteira só existe quando há o que filtrar.
+        */}
+        {depsDoEscopo.length ? (
+          <div className="shell-bleed mt-1.5 flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <span className="shrink-0 pr-0.5 font-mono text-micro uppercase tracking-wider text-muted-foreground">
+              npm
+            </span>
+            {semDepsCount ? (
+              <Chip
+                pressed={dep === SEM_DEPS}
+                count={semDepsCount}
+                onClick={() => pickDep(SEM_DEPS)}
+                className="rounded-[var(--r-pill,9999px)] px-2.5 py-1 text-micro font-normal"
+              >
+                Nenhuma
+              </Chip>
+            ) : null}
+            {depsDoEscopo.map(({ info, count }) => (
+              <Chip
+                key={info.key}
+                pressed={dep === info.key}
+                count={count}
+                onClick={() => pickDep(info.key)}
+                icon={info.icon ? <DepLogo icon={info.icon} className="h-3 w-3" /> : undefined}
+                title={info.packages.join(" · ")}
+                className="gap-1.5 rounded-[var(--r-pill,9999px)] px-2.5 py-1 text-micro font-normal"
+              >
+                {info.label}
+              </Chip>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       {results.length ? (
@@ -469,7 +572,13 @@ export function Gallery({
             className="mt-6 flex flex-col gap-5"
           >
             {results.map((item, i) => (
-              <Showcase key={item.name} item={item} index={i} onOpen={() => onFocus(item.name)} />
+              <Showcase
+                key={item.name}
+                item={item}
+                index={i}
+                onOpen={() => onFocus(item.name)}
+                onPickDep={pickDep}
+              />
             ))}
           </div>
         ) : (

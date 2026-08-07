@@ -30,6 +30,7 @@ import { useBrandTheme } from "@/lib/brand-theme";
 import { TYPE_LABEL, familyLabel, previewOf, stageSurfaceOf, type CatalogItem } from "./catalog";
 import { installCommand } from "./registry-meta";
 import { CopyCommand } from "./copy-command";
+import { DepResumo } from "./dep-badges";
 import { CodigoDoItem, TabelaDeProps } from "./ItemDocs";
 
 /** Larguras de teste. `0` = o que couber na tela. */
@@ -332,6 +333,11 @@ export function ComponentFocus({
               </div>
 
               <CopyCommand text={installCommand(item.name)} />
+
+              {/* Logo abaixo do comando, de propósito: a conta do que esse `add`
+                  traz junto tem de estar do lado do gesto de instalar, não no
+                  fim da ficha, depois das tags. */}
+              <DepResumo name={item.name} className="border-t border-border pt-4" />
 
               <div className="flex flex-wrap gap-1.5">
                 {item.tags.map((t) => (

@@ -239,3 +239,48 @@ test.describe("vista de foco", () => {
     }
   });
 });
+
+/*
+ * A conta do que a peça custa.
+ *
+ * O dado sai do `registry.json` por um script (`deps-extract.mjs`), e um JSON
+ * gerado é exatamente o tipo de coisa que envelhece em silêncio: ninguém regera,
+ * a vitrine passa a anunciar dependência de uma versão anterior do item, e tudo
+ * — build, tipos, portões — continua verde. Estes testes olham a tela.
+ */
+test.describe("dependências npm", () => {
+  test("a peça sem dependência diz isso em voz alta", async ({ page }) => {
+    await page.goto("/c/marquee");
+    await page.waitForTimeout(400);
+
+    const ficha = page.locator('[role="dialog"]');
+    await expect(ficha.getByText("Dependências npm")).toBeVisible();
+    await expect(ficha.getByText(/^Nenhuma\./)).toBeVisible();
+  });
+
+  test("a peça com dependência mostra o pacote, e ele aponta pra fora", async ({ page }) => {
+    await page.goto("/c/timeline");
+    await page.waitForTimeout(400);
+
+    // `timeline` importa framer-motion, que na tela se chama pelo nome de hoje.
+    const pill = page.locator('[role="dialog"] a[title*="framer-motion"]');
+    await expect(pill).toHaveCount(1);
+    expect(await pill.getAttribute("href")).toMatch(/^https?:\/\//);
+  });
+
+  test("filtrar por dependência encolhe a grade e a contagem não mente", async ({ page }) => {
+    await page.goto("/");
+    await esperarGrade(page);
+
+    const todos = page.locator("[aria-pressed]", { hasText: /^Todos\s*\d+$/ });
+    const antes = Number((await todos.textContent())?.match(/\d+/)?.[0]);
+
+    await page.locator("[aria-pressed]", { hasText: /^motion\s*\d+$/ }).click();
+    await page.waitForTimeout(400);
+
+    const depois = Number((await todos.textContent())?.match(/\d+/)?.[0]);
+    expect(depois, "o filtro de npm não encolheu nada").toBeLessThan(antes);
+    // O número do chip é a promessa; os cards na tela são a entrega.
+    expect(await page.locator(CARD).count()).toBe(depois);
+  });
+});

@@ -17,6 +17,7 @@ import * as React from "react";
 import { Filter, Layers, Ruler, SlidersHorizontal } from "lucide-react";
 
 import { useStageActive } from "./stage";
+import { depKeysOf } from "./deps";
 import { PAD_VOICES, PEOPLE, SCOPE_PHOSPHOR, SCOPE_SAMPLES } from "./demo-fixtures";
 
 import { Chip } from "../../registry/visant/ui/chip";
@@ -156,7 +157,17 @@ const tokens = (texto: string) => fold(texto).split(/[^a-z0-9]+/).filter(Boolean
 
 /** O texto que a busca varre de um item. Um lugar só decide o que é buscável. */
 export const haystack = (i: CatalogItem) => {
-  const bruto = [i.name, i.title, i.description, i.type, familyLabel(i.family), ...i.tags].join(" ");
+  // As dependências entram na busca junto com o resto: quem digita "gsap" está
+  // perguntando o que puxa gsap, e essa pergunta não tem outra porta na página.
+  const bruto = [
+    i.name,
+    i.title,
+    i.description,
+    i.type,
+    familyLabel(i.family),
+    ...i.tags,
+    ...depKeysOf(i.name),
+  ].join(" ");
   // Os dois: o texto cru (para casar "scrub-in" enquanto se digita) e os radicais
   // (para casar "arrastar" com "arrasta").
   return `${fold(bruto)} ${tokens(bruto).join(" ")}`;
