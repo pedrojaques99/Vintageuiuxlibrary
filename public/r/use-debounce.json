@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-debounce",
+  "title": "useDebounce",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Atrasa um valor até ele parar de mudar. Só borda de saída, e o valor inicial não é atrasado.",
+  "dependencies": [
+    "react"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/hooks/use-debounce.ts",
+      "content": "\"use client\";\n\n/**\n * useDebounce — atrasa um valor até ele parar de mudar.\n *\n * Existe para os campos de busca do registry (`search-field`, `command-search`):\n * a cada tecla o consumidor filtraria uma tabela inteira ou dispararia uma\n * requisição. Aqui o valor só \"fecha\" depois de `delay` sem digitação.\n *\n * Dois detalhes que parecem preciosismo e não são:\n *\n * 1. **Só borda de saída (trailing).** Não emite na primeira tecla. Quem precisa\n *    de resposta imediata na primeira letra não quer debounce, quer outra coisa.\n * 2. **`delay` está nas dependências.** Trocar o atraso em tempo de execução\n *    (ex.: 300ms digitando, 0 ao colar) reprograma o timer em vez de continuar\n *    com o antigo até a próxima tecla.\n *\n * O valor inicial NÃO é atrasado: no primeiro render `debounced === value`, então\n * um campo pré-preenchido por URL ou por preset já entra filtrado.\n */\n\nimport * as React from \"react\";\n\nexport function useDebounce<T>(value: T, delay: number = 300): T {\n  const [debounced, setDebounced] = React.useState<T>(value);\n\n  React.useEffect(() => {\n    const id = setTimeout(() => setDebounced(value), delay);\n    return () => clearTimeout(id);\n  }, [value, delay]);\n\n  return debounced;\n}\n",
+      "type": "registry:hook",
+      "target": "@hooks/use-debounce.ts"
+    }
+  ],
+  "type": "registry:hook"
+}

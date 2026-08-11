@@ -939,6 +939,13 @@
           "descricao": null
         },
         {
+          "nome": "onRemove",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Torna o chip removível: renderiza o `×` e o clique inteiro remove."
+        },
+        {
           "nome": "pressed",
           "tipo": "boolean",
           "obrigatoria": false,
@@ -983,6 +990,452 @@
       ]
     }
   ],
+  "search-field": [
+    {
+      "nome": "SearchField",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "onChange",
+          "tipo": "(value: string) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "clearLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Limpar busca",
+          "descricao": null
+        },
+        {
+          "nome": "delay",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "300",
+          "descricao": "Milissegundos até o valor \"fechar\" e subir. `0` emite a cada tecla."
+        },
+        {
+          "nome": "placeholder",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Buscar...",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "filter-menu": [
+    {
+      "nome": "FilterMenu",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "groups",
+          "tipo": "FilterGroup[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onToggle",
+          "tipo": "(groupKey: string, optionId: string) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "selected",
+          "tipo": "Record<string, string[]>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Por chave de grupo, os `id` marcados. Em `single`, use array de um item."
+        },
+        {
+          "nome": "align",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "end",
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "clearLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Limpar filtros",
+          "descricao": null
+        },
+        {
+          "nome": "emptyLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Nada para filtrar aqui.",
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Filtros",
+          "descricao": null
+        },
+        {
+          "nome": "onClear",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "filter-bar": [
+    {
+      "nome": "FilterBar",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "chips",
+          "tipo": "FilterBarChip[]",
+          "obrigatoria": false,
+          "padrao": "[]",
+          "descricao": "Filtros já aplicados. Já vêm formatados: a barra não traduz domínio."
+        },
+        {
+          "nome": "clearAllLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Limpar tudo",
+          "descricao": null
+        },
+        {
+          "nome": "countLabel",
+          "tipo": "(filtered: number, total: number) => string",
+          "obrigatoria": false,
+          "padrao": "(filtered, total) => `${filtered} de ${total}`",
+          "descricao": "`(filtrados, total) => texto`. Trocável para plural, idioma ou substantivo."
+        },
+        {
+          "nome": "extras",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "filteredCount",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "filters",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onClearAll",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "search",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "sort",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "totalCount",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "view",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "searchable-select": [
+    {
+      "nome": "SearchableSelect",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "onValueChange",
+          "tipo": "(value: string) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "autoSelect",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Seleciona sozinho quando sobra exatamente uma opção. Para edição em célula."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "createEntityLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Substantivo do que se cria: \"task\", \"projeto\", \"cliente\"."
+        },
+        {
+          "nome": "createLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Criar",
+          "descricao": null
+        },
+        {
+          "nome": "creatingLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Criando",
+          "descricao": null
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "emptyLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Nenhum",
+          "descricao": null
+        },
+        {
+          "nome": "groups",
+          "tipo": "{ label: string; options: SearchableOption[]; }[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "hideEmptyOption",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Esconde o item \"nenhum\" — use quando toda opção real já é um valor válido."
+        },
+        {
+          "nome": "iconPosition",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "trailing",
+          "descricao": "\"trailing\" (padrão) é selo esmaecido; \"leading\" é para avatar e thumbnail."
+        },
+        {
+          "nome": "noneValue",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "__none__",
+          "descricao": "Valor sentinela do item \"nenhum\". Trocável se colidir com um valor real."
+        },
+        {
+          "nome": "noResultsLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Nenhum resultado encontrado",
+          "descricao": null
+        },
+        {
+          "nome": "onCreate",
+          "tipo": "(label: string) => Promise<string>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Cria de verdade a partir do texto buscado. `null` = falhou, popover fica aberto."
+        },
+        {
+          "nome": "onOpenChange",
+          "tipo": "(open: boolean) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "options",
+          "tipo": "SearchableOption[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "placeholder",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Selecione...",
+          "descricao": null
+        },
+        {
+          "nome": "searchPlaceholder",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Buscar...",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "command-search": [
+    {
+      "nome": "CommandSearch",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "onSearch",
+          "tipo": "(query: string, signal: AbortSignal) => Promise<CommandSearchResult[]>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onSelect",
+          "tipo": "(result: CommandSearchResult) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "compact",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Só o ícone, sem rótulo nem atalho. Para barras estreitas e sidebar recolhida."
+        },
+        {
+          "nome": "delay",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "300",
+          "descricao": null
+        },
+        {
+          "nome": "emptyLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Nenhum resultado encontrado.",
+          "descricao": null
+        },
+        {
+          "nome": "errorLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Não foi possível buscar agora.",
+          "descricao": null
+        },
+        {
+          "nome": "minChars",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2",
+          "descricao": null
+        },
+        {
+          "nome": "placeholder",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "O que você está procurando?",
+          "descricao": null
+        },
+        {
+          "nome": "quickLinks",
+          "tipo": "CommandSearchResult[]",
+          "obrigatoria": false,
+          "padrao": "[]",
+          "descricao": "Mostrados com a busca vazia — o \"acesso rápido\"."
+        },
+        {
+          "nome": "quickLinksLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Acesso rápido",
+          "descricao": null
+        },
+        {
+          "nome": "resultsLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Resultados",
+          "descricao": null
+        },
+        {
+          "nome": "shortcut",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "k",
+          "descricao": "Tecla do atalho global, combinada com ⌘/Ctrl. `null` desliga o atalho e\ndeixa só o clique no gatilho.\n\nExiste porque o atalho é registrado no `document`: duas instâncias montadas\nna mesma página disputam o ⌘K e as duas abrem. Acontece de verdade quando um\napp tem busca no cabeçalho e busca dentro de um painel — e aconteceria nesta\nprópria vitrine, onde montar a demo roubaria o ⌘K de quem só está navegando."
+        },
+        {
+          "nome": "triggerLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Buscar",
+          "descricao": null
+        }
+      ]
+    }
+  ],
   "store-status": [
     {
       "nome": "StoreStatus",
@@ -1006,7 +1459,7 @@
           "nome": "labels",
           "tipo": "{ open: (close: number) => string; closed: (open: number) => string; }",
           "obrigatoria": false,
-          "padrao": "{\n    open: (c) => `Open now until ${fmtHour(c)}`,\n    closed: (o) => `Opens at ${fmtHour(o)}`,\n  }",
+          "padrao": "{\r\n    open: (c) => `Open now until ${fmtHour(c)}`,\r\n    closed: (o) => `Opens at ${fmtHour(o)}`,\r\n  }",
           "descricao": null
         },
         {

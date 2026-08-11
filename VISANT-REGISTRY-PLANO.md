@@ -388,6 +388,49 @@ O que foi **desacoplado** na colheita (a origem continua funcionando; os headers
 - `VHSText` — depende de `PersistentShaderRenderer` e carrega altura fixa de
   1710px. É peça de campanha, não primitiva.
 
+### De `visant-board` — COLHIDO em 11/08/2026
+
+Busca e filtro. Vieram juntos porque são uma peça só na tela: a barra não serve sem
+o campo, o campo não serve sem o menu, e o chip é o que amarra os três. O `data-table`
+já era item — o que faltava era tudo que fica **em cima** dele.
+
+| Item | Origem | Por que vale |
+|---|---|---|
+| `use-debounce` | `hooks/use-debounce.ts` | Dependência de `search-field` e `command-search`. Só borda de saída |
+| `search-field` | `IssueSearchBar.tsx` | A referência `agreedValue`: o campo para de se limpar sozinho no commit em que o debounce fecha |
+| `filter-menu` | `IssueFiltersMenu.tsx` | Facetas por `groups`. O contador conta **grupos**, não opções |
+| `filter-bar` | `IssueFiltersBar.tsx` | Controles por slot — a única API de barra que não cresce em props booleanas |
+| `searchable-select` | `ui/searchable-select.tsx` | Combobox que digita dentro de Dialog, com `keywords` ocultos e criação que sobrevive à falha |
+| `command-search` | `admin/GlobalSearch.tsx` | ⌘K sem saber buscar nem navegar. Ganhou guarda de corrida que o original não tinha |
+| `chip` (prop `onRemove`) | `linear/FilterChip.tsx` | Não virou item: era o mesmo chip com outra semântica |
+| `data-table` (sync) | `ui/data-table.tsx` | 44 linhas de correção que o item publicado não tinha: undo em célula, botão dentro de botão, a11y da coluna de ações |
+
+O que foi **desacoplado** na colheita:
+
+- `useI18n` do `search-field` e do `filter-menu` → toda string é prop com default
+- `FilterState` / `LinearState` / `PRIORITY_LABELS` / `dateFilter` → `groups` e `chips`
+  genéricos. Metade desta colheita reprovou na pergunta 4 do portão como estava
+- `fetch('/api/admin/search')`, `useRouter` e `useSidebar` do `command-search` →
+  `onSearch` e `onSelect` por prop. É o que faz a peça rodar fora do Next
+- prioridade 0–4 em português cravada no arquivo → dado do consumidor
+
+O que foi **acrescentado**, e não existia em nenhum original:
+
+- **guarda de corrida** no `command-search`: resposta que chega fora de ordem não
+  repovoa a lista. Sem isso a busca "é ruim" e ninguém sabe dizer por quê
+- **`shortcut={null}`**: o atalho é registrado no `document`, então duas buscas na
+  mesma página disputavam o ⌘K e abriam as duas
+- **erro como estado** na busca — em branco, servidor fora parece "não achei"
+- **`aria-live`** na contagem da barra: filtrar muda a lista longe do foco
+- **`RadioGroup` de verdade** para faceta excludente, no lugar de checkbox que finge
+
+**Rejeitados como item próprio**, e por quê:
+
+- `FilterChip` — é o `chip` com outra semântica. Dois componentes quase idênticos é
+  como se garante que alguém vai corrigir um bug só de um lado.
+- `IssueSorting` e `ViewModeToggle` — não auditados, e o `segmented-control` já
+  publicado provavelmente resolve o segundo.
+
 ### Dos outros repos (levantamento raso — confirmar antes de colher)
 
 - **visantlabs-os** → `packages/brand-tokens` é candidato natural a `registry:theme`

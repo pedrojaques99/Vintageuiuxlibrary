@@ -227,6 +227,24 @@ export function DataTable<TData, TValue>({
     if (!onCellUpdate) return;
     const onKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        // Digitando numa célula, Ctrl+Z é do TEXTO. Sem esta guarda a tabela
+        // roubava o undo nativo do campo e revertia a célula anterior inteira
+        // no lugar de apagar a última letra. (O GlobalUndoListener já tinha a
+        // guarda; esta pilha local não.)
+        const focado = document.activeElement;
+        if (
+          focado?.tagName === 'INPUT' ||
+          focado?.tagName === 'TEXTAREA' ||
+          (focado as HTMLElement | null)?.isContentEditable
+        ) {
+          return;
+        }
+        // Só consome o atalho se HÁ o que desfazer aqui. Com a pilha vazia o
+        // preventDefault incondicional roubava o Ctrl+Z do GlobalUndoListener
+        // (que escuta em `window`, depois deste `document` no bubbling) e o
+        // usuário perdia o undo da seção. Undo mais local vence, mas só quando
+        // tem o que desfazer.
+        if (undoStack.current.length === 0) return;
         e.preventDefault();
         handleUndo();
       }
@@ -422,7 +440,54 @@ export function DataTable<TData, TValue>({
                 key={headerGroup.id}
                 className="bg-background hover:bg-background group/row"
               >
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers.map((header) => {
+                  /*
+                    O invólucro do header só é <button> quando a coluna ORDENA.
+                    Era sempre botão, e isso punha um <button> em volta do
+                    header da coluna de seleção — cujo conteúdo é um <Checkbox>,
+                    que no Radix também é <button>. Botão dentro de botão é HTML
+                    inválido: o React derrubava um "hydration error" no console
+                    de toda tela com DataTable + seleção, e o navegador é livre
+                    para remontar a árvore como quiser.
+
+                    De quebra, a coluna de ações parava de se anunciar como
+                    botão para o leitor de tela — botão que não faz nada.
+                  */
+                  const canSort = header.column.getCanSort();
+                  const triggerClass = cn(
+                    'group flex w-full items-center gap-1 text-xs font-medium text-muted-foreground transition-colors',
+                    canSort && 'cursor-pointer hover:text-foreground'
+                  );
+                  const headerBody = (
+                    <>
+                      <span className="truncate">
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                      </span>
+                      {canSort && (
+                        <span
+                          className={cn(
+                            'ml-1 inline-flex h-3.5 w-3.5 items-center justify-center text-xs transition-[color,opacity]',
+                            header.column.getIsSorted()
+                              ? 'text-foreground opacity-100'
+                              : 'text-muted-foreground/40 opacity-0 group-hover:opacity-100'
+                          )}
+                        >
+                          {header.column.getIsSorted() === 'asc' && <ArrowUp className="h-3 w-3" />}
+                          {header.column.getIsSorted() === 'desc' && (
+                            <ArrowDown className="h-3 w-3" />
+                          )}
+                          {!header.column.getIsSorted() && (
+                            <ArrowUpDown className="h-3 w-3 opacity-60" />
+                          )}
+                        </span>
+                      )}
+                      {header.column.getIsPinned() && (
+                        <Pin className="h-3 w-3 ml-1 text-primary opacity-60" fill="currentColor" />
+                      )}
+                    </>
+                  );
+
+                  return (
                   <TableHead
                     key={header.id}
                     className={cn(
@@ -443,39 +508,17 @@ export function DataTable<TData, TValue>({
                       <ContextMenu>
                         <ContextMenuTrigger asChild>
                           <div className="flex h-full items-center">
-                            <button
-                              type="button"
-                              onClick={header.column.getToggleSortingHandler()}
-                              className={cn(
-                                'group flex w-full items-center gap-1 text-xs font-medium text-muted-foreground transition-colors',
-                                header.column.getCanSort() && 'cursor-pointer hover:text-foreground'
-                              )}
-                            >
-                              <span className="truncate">
-                                {flexRender(header.column.columnDef.header, header.getContext())}
-                              </span>
-                              {header.column.getCanSort() && (
-                                <span
-                                  className={cn(
-                                    'ml-1 inline-flex h-3.5 w-3.5 items-center justify-center text-xs transition-[color,opacity]',
-                                    header.column.getIsSorted()
-                                      ? 'text-foreground opacity-100'
-                                      : 'text-muted-foreground/40 opacity-0 group-hover:opacity-100'
-                                  )}
-                                >
-                                  {header.column.getIsSorted() === 'asc' && <ArrowUp className="h-3 w-3" />}
-                                  {header.column.getIsSorted() === 'desc' && (
-                                    <ArrowDown className="h-3 w-3" />
-                                  )}
-                                  {!header.column.getIsSorted() && (
-                                    <ArrowUpDown className="h-3 w-3 opacity-60" />
-                                  )}
-                                </span>
-                              )}
-                              {header.column.getIsPinned() && (
-                                <Pin className="h-3 w-3 ml-1 text-primary opacity-60" fill="currentColor" />
-                              )}
-                            </button>
+                            {canSort ? (
+                              <button
+                                type="button"
+                                onClick={header.column.getToggleSortingHandler()}
+                                className={triggerClass}
+                              >
+                                {headerBody}
+                              </button>
+                            ) : (
+                              <div className={triggerClass}>{headerBody}</div>
+                            )}
                           </div>
                         </ContextMenuTrigger>
                         <ContextMenuContent>
@@ -542,7 +585,8 @@ export function DataTable<TData, TValue>({
                       </ContextMenu>
                     )}
                   </TableHead>
-                ))}
+                  );
+                })}
               </TableRow>
             ))}
           </TableHeader>

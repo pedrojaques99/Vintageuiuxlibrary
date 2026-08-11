@@ -176,6 +176,23 @@
       ]
     },
     {
+      "name": "use-debounce",
+      "type": "registry:hook",
+      "title": "useDebounce",
+      "description": "Atrasa um valor até ele parar de mudar. Só borda de saída, e o valor inicial não é atrasado.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "react"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/hooks/use-debounce.ts",
+          "type": "registry:hook",
+          "target": "@hooks/use-debounce.ts"
+        }
+      ]
+    },
+    {
       "name": "vintage-button",
       "type": "registry:ui",
       "title": "Vintage Button",
@@ -474,7 +491,7 @@
       "name": "chip",
       "type": "registry:ui",
       "title": "Chip",
-      "description": "Pastilha de filtro com contagem que nunca renderiza zero.",
+      "description": "Pastilha de filtro com contagem que nunca renderiza zero. Com onRemove vira o chip do filtro já aplicado, sem aria-pressed.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -500,6 +517,108 @@
           "path": "registry/visant/ui/sticky-filterbar.tsx",
           "type": "registry:ui"
         }
+      ]
+    },
+    {
+      "name": "search-field",
+      "type": "registry:ui",
+      "title": "Search Field",
+      "description": "Campo de busca com debounce que não se limpa sozinho: negocia o texto local com o valor de fora por referência acordada.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils",
+        "@visant/use-debounce"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/search-field.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "dependencies": [
+        "react"
+      ]
+    },
+    {
+      "name": "filter-menu",
+      "type": "registry:ui",
+      "title": "Filter Menu",
+      "description": "Menu de facetas que não conhece o domínio: grupos múltiplos ou excludentes, e o contador conta grupos, não opções.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/filter-menu.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-dropdown-menu",
+        "react"
+      ]
+    },
+    {
+      "name": "filter-bar",
+      "type": "registry:ui",
+      "title": "Filter Bar",
+      "description": "Esqueleto da barra de filtro: controles por slot, chips aplicados embaixo, e a contagem que some quando nada foi filtrado.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils",
+        "@visant/chip"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/filter-bar.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "dependencies": [
+        "react"
+      ]
+    },
+    {
+      "name": "searchable-select",
+      "type": "registry:ui",
+      "title": "Searchable Select",
+      "description": "Combobox com busca em rótulo e keywords ocultos, grupos, e criação no lugar que sobrevive à falha. Digita dentro de Dialog.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/searchable-select.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-popover",
+        "cmdk",
+        "react"
+      ]
+    },
+    {
+      "name": "command-search",
+      "type": "registry:ui",
+      "title": "Command Search",
+      "description": "Busca ⌘K que não sabe buscar nem navegar: onSearch entra por prop, e resposta fora de ordem não repovoa a lista.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils",
+        "@visant/use-debounce"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/command-search.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "dependencies": [
+        "cmdk",
+        "react"
       ]
     },
     {

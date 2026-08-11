@@ -1,0 +1,32 @@
+# Fim de linha travado em LF. Não é preferência de editor — é correção de bug.
+#
+# O `shadcn build` embute o CONTEÚDO de cada arquivo dentro do JSON publicado em
+# `public/r/`. Num Windows com `core.autocrlf=true` (o padrão do Git for Windows),
+# um clone ou worktree novo materializa os fontes com CRLF, e o build carimba
+# `\r\n` literal dentro do JSON. A partir daí, todo `shadcn add` na casa de quem
+# instala escreve arquivos com fim de linha do Windows — e o próximo build feito
+# numa máquina LF reverte tudo, produzindo um diff de 50 arquivos que não tem
+# nenhuma mudança de código dentro.
+#
+# Aconteceu de verdade: `timeline`, `assignee-stack`, `inline-edit`, `kanban`,
+# `octahedron-loader`, `repulsive-hover` e `segmented-control` foram publicados
+# com `\r\n` gravado no conteúdo por um build assim.
+#
+# `eol=lf` força a árvore de trabalho a LF em qualquer sistema, então o build sai
+# igual em qualquer máquina.
+* text=auto eol=lf
+
+# Binário não passa por normalização nenhuma. Sem estas linhas, uma conversão de
+# fim de linha rodada por engano sobre a árvore inteira corrompe PNG e fonte —
+# `\r\n` vira `\n` no meio dos bytes e a imagem encolhe alguns bytes em silêncio.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.pdf   binary

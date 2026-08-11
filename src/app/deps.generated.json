@@ -5,10 +5,32 @@
   "use-media-query": [
     "react"
   ],
+  "use-debounce": [
+    "react"
+  ],
   "vintage-knob": [
     "react"
   ],
   "vintage-large-knob": [
+    "react"
+  ],
+  "search-field": [
+    "react"
+  ],
+  "filter-menu": [
+    "@radix-ui/react-dropdown-menu",
+    "react"
+  ],
+  "filter-bar": [
+    "react"
+  ],
+  "searchable-select": [
+    "@radix-ui/react-popover",
+    "cmdk",
+    "react"
+  ],
+  "command-search": [
+    "cmdk",
     "react"
   ],
   "motion-layer": [

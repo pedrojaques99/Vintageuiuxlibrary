@@ -43,6 +43,11 @@ import { InlineEdit } from "../../registry/visant/ui/inline-edit";
 import { RepulsiveHover } from "../../registry/visant/ui/repulsive-hover";
 import { Timeline } from "../../registry/visant/ui/timeline";
 import { StickyFilterbar, FilterRow } from "../../registry/visant/ui/sticky-filterbar";
+import { SearchField } from "../../registry/visant/ui/search-field";
+import { FilterMenu } from "../../registry/visant/ui/filter-menu";
+import { FilterBar } from "../../registry/visant/ui/filter-bar";
+import { SearchableSelect } from "../../registry/visant/ui/searchable-select";
+import { CommandSearch } from "../../registry/visant/ui/command-search";
 import { SectionIntro } from "../../registry/visant/ui/section-intro";
 import { CtaSurface, CtaAction } from "../../registry/visant/ui/cta-surface";
 import { ShowcaseCard } from "../../registry/visant/ui/showcase-card";
@@ -535,6 +540,220 @@ function TimelineDemo() {
   );
 }
 
+// --- busca e filtro ----------------------------------------------------------
+
+/**
+ * Uma fila de trabalho de mentira, mas com a forma da de verdade: é o mínimo
+ * para a demo mostrar filtro FILTRANDO. Barra de filtro sobre lista estática
+ * mostra o controle e esconde o que ele faz, que é o ponto inteiro da peça.
+ */
+const FILA = [
+  { id: "1", nome: "Identidade Hockey Direct", status: "producao", prioridade: "urgente" },
+  { id: "2", nome: "Landing Days n' Days", status: "revisao", prioridade: "alta" },
+  { id: "3", nome: "Kit de mockups Visant", status: "producao", prioridade: "media" },
+  { id: "4", nome: "Guideline Arbolt", status: "backlog", prioridade: "alta" },
+  { id: "5", nome: "Catálogo de peças", status: "backlog", prioridade: "media" },
+];
+
+// A cor da bolinha vem do dado, como viria de uma API — por isso ela é token da
+// marca aqui, e não hexadecimal cravado no componente.
+const GRUPOS_FILTRO = [
+  {
+    key: "status",
+    label: "Status",
+    options: [
+      { id: "backlog", label: "Backlog", dot: "var(--muted-foreground)" },
+      { id: "producao", label: "Em produção", dot: "var(--brand, var(--foreground))" },
+      { id: "revisao", label: "Em revisão", dot: "var(--accent-ink, var(--foreground))" },
+    ],
+  },
+  {
+    key: "prioridade",
+    label: "Prioridade",
+    mode: "single" as const,
+    options: [
+      { id: "urgente", label: "Urgente" },
+      { id: "alta", label: "Alta" },
+      { id: "media", label: "Média" },
+    ],
+  },
+];
+
+const ROTULO_FILTRO = Object.fromEntries(
+  GRUPOS_FILTRO.flatMap((g) => g.options.map((o) => [o.id, o.label])),
+);
+
+function useFilaFiltrada() {
+  const [busca, setBusca] = React.useState("");
+  const [marcado, setMarcado] = React.useState<Record<string, string[]>>({});
+
+  const alternar = React.useCallback((grupo: string, id: string) => {
+    setMarcado((atual) => {
+      const single = GRUPOS_FILTRO.find((g) => g.key === grupo)?.mode === "single";
+      const antes = atual[grupo] ?? [];
+      if (single) return { ...atual, [grupo]: antes[0] === id ? [] : [id] };
+      return {
+        ...atual,
+        [grupo]: antes.includes(id) ? antes.filter((x) => x !== id) : [...antes, id],
+      };
+    });
+  }, []);
+
+  const filtrada = React.useMemo(() => {
+    const needle = busca.toLowerCase().trim();
+    return FILA.filter((linha) => {
+      if (needle && !linha.nome.toLowerCase().includes(needle)) return false;
+      return GRUPOS_FILTRO.every((g) => {
+        const sel = marcado[g.key] ?? [];
+        return sel.length === 0 || sel.includes(linha[g.key as "status" | "prioridade"]);
+      });
+    });
+  }, [busca, marcado]);
+
+  return { busca, setBusca, marcado, setMarcado, alternar, filtrada };
+}
+
+function SearchFieldDemo() {
+  const { busca, setBusca, filtrada } = useFilaFiltrada();
+  return (
+    <div className="flex h-full w-full flex-col gap-2 p-3">
+      <SearchField value={busca} onChange={setBusca} placeholder="Buscar na fila..." />
+      <ul className="space-y-1">
+        {filtrada.slice(0, 3).map((linha) => (
+          <li key={linha.id} className="truncate rounded bg-muted px-2 py-1 text-apoio">
+            {linha.nome}
+          </li>
+        ))}
+        {filtrada.length === 0 && (
+          <li className="px-2 py-1 text-apoio text-muted-foreground">Nada com esse texto.</li>
+        )}
+      </ul>
+    </div>
+  );
+}
+
+function FilterMenuDemo() {
+  const { marcado, setMarcado, alternar } = useFilaFiltrada();
+  return (
+    <div className="flex h-full w-full items-start justify-center p-3">
+      <FilterMenu
+        groups={GRUPOS_FILTRO}
+        selected={marcado}
+        onToggle={alternar}
+        onClear={() => setMarcado({})}
+        align="start"
+      />
+    </div>
+  );
+}
+
+function FilterBarKitDemo() {
+  const { busca, setBusca, marcado, setMarcado, alternar, filtrada } = useFilaFiltrada();
+
+  const chips = Object.entries(marcado).flatMap(([grupo, ids]) =>
+    ids.map((id) => ({
+      key: `${grupo}-${id}`,
+      label: ROTULO_FILTRO[id] ?? id,
+      onRemove: () => alternar(grupo, id),
+    })),
+  );
+
+  return (
+    <div className="flex h-full w-full flex-col gap-3 p-3">
+      <FilterBar
+        chips={chips}
+        search={<SearchField value={busca} onChange={setBusca} placeholder="Buscar..." />}
+        filters={
+          <FilterMenu
+            groups={GRUPOS_FILTRO}
+            selected={marcado}
+            onToggle={alternar}
+            onClear={() => setMarcado({})}
+          />
+        }
+        filteredCount={filtrada.length}
+        totalCount={FILA.length}
+        onClearAll={() => setMarcado({})}
+      />
+      <ul className="space-y-1">
+        {filtrada.map((linha) => (
+          <li key={linha.id} className="truncate rounded bg-muted px-2 py-1 text-apoio">
+            {linha.nome}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function SearchableSelectDemo() {
+  const [valor, setValor] = React.useState("");
+  const [extras, setExtras] = React.useState<{ value: string; label: string }[]>([]);
+
+  const grupos = React.useMemo(
+    () => [
+      {
+        label: "Clientes",
+        options: [
+          { value: "hockey", label: "Hockey Direct", keywords: "esporte loja" },
+          { value: "days", label: "Days n' Days", keywords: "moda" },
+        ],
+      },
+      { label: "Internos", options: [{ value: "visant", label: "Visant Labs" }, ...extras] },
+    ],
+    [extras],
+  );
+
+  return (
+    <div className="flex h-full w-full items-start p-3">
+      <SearchableSelect
+        value={valor}
+        onValueChange={setValor}
+        groups={grupos}
+        placeholder="Escolher cliente..."
+        createEntityLabel="cliente"
+        onCreate={async (label) => {
+          const value = label.toLowerCase().replace(/\s+/g, "-");
+          setExtras((atual) => [...atual, { value, label }]);
+          return value;
+        }}
+      />
+    </div>
+  );
+}
+
+function CommandSearchDemo() {
+  /*
+   * `shortcut={null}`: o componente registra o atalho no `document`. Montado
+   * aqui, ele roubaria o ⌘K de quem está só rolando o catálogo — e a peça tem a
+   * prop justamente porque o mesmo choque acontece num app com duas buscas.
+   * O gatilho continua sendo o de verdade, e abre o diálogo de verdade.
+   */
+  const buscar = React.useCallback(async (q: string) => {
+    const needle = q.toLowerCase();
+    return FILA.filter((l) => l.nome.toLowerCase().includes(needle)).map((l) => ({
+      id: l.id,
+      title: l.nome,
+      subtitle: ROTULO_FILTRO[l.status],
+      type: "job",
+    }));
+  }, []);
+
+  return (
+    <div className="flex h-full w-full items-start p-3">
+      <CommandSearch
+        shortcut={null}
+        onSearch={buscar}
+        onSelect={() => {}}
+        quickLinks={[
+          { id: "q1", title: "Fila de produção", subtitle: "Tudo que está aberto" },
+          { id: "q2", title: "Criar job", subtitle: "Novo job com cliente" },
+        ]}
+      />
+    </div>
+  );
+}
+
 // --- catálogo ----------------------------------------------------------------
 
 export const CATALOG: CatalogItem[] = [
@@ -648,6 +867,61 @@ export const CATALOG: CatalogItem[] = [
     preview: { w: 420, h: 240 },
   },
   {
+    name: "filter-bar",
+    title: "Filter Bar",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Esqueleto da barra de filtro: controles por slot, chips aplicados embaixo, e a contagem que some quando nada foi filtrado.",
+    tags: ["filtro", "busca", "chips"],
+    demo: FilterBarKitDemo,
+    preview: { w: 520, h: 300 },
+  },
+  {
+    name: "search-field",
+    title: "Search Field",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Campo de busca com debounce que não se limpa sozinho: negocia o texto local com o valor de fora por referência acordada.",
+    tags: ["busca", "debounce", "formulário"],
+    demo: SearchFieldDemo,
+    preview: { w: 420, h: 220 },
+  },
+  {
+    name: "filter-menu",
+    title: "Filter Menu",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Menu de facetas que não conhece o domínio: grupos múltiplos ou excludentes, e o contador conta grupos, não opções.",
+    tags: ["filtro", "menu", "facetas"],
+    demo: FilterMenuDemo,
+    preview: { w: 420, h: 240 },
+  },
+  {
+    name: "searchable-select",
+    title: "Searchable Select",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Combobox com busca em rótulo e keywords ocultos, grupos, e criação no lugar que sobrevive à falha. Digita dentro de Dialog.",
+    tags: ["combobox", "busca", "formulário"],
+    demo: SearchableSelectDemo,
+    preview: { w: 420, h: 240 },
+  },
+  {
+    name: "command-search",
+    title: "Command Search",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Busca ⌘K que não sabe buscar nem navegar: onSearch entra por prop, e resposta fora de ordem não repovoa a lista.",
+    tags: ["busca", "comando", "teclado"],
+    demo: CommandSearchDemo,
+    preview: { w: 420, h: 200 },
+  },
+  {
     name: "measure-picker",
     title: "Measure Picker",
     type: "ui",
@@ -742,7 +1016,8 @@ export const CATALOG: CatalogItem[] = [
     title: "Chip",
     type: "ui",
     family: "aquisicao",
-    description: "Pastilha de filtro com contagem que nunca renderiza zero.",
+    description:
+      "Pastilha de filtro com contagem que nunca renderiza zero. Com onRemove vira o chip do filtro já aplicado, sem aria-pressed.",
     tags: ["filtro", "loja"],
     demo: ChipsDemo,
   },
@@ -1135,6 +1410,15 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Media query como estado de React, via useSyncExternalStore: leitura síncrona no primeiro render, sem piscar, e segura em SSR.",
     tags: ["hook", "responsivo", "ssr"],
+  },
+  {
+    name: "use-debounce",
+    title: "useDebounce",
+    type: "hook",
+    family: "fundacao",
+    description:
+      "Atrasa um valor até ele parar de mudar. Só borda de saída, e o valor inicial não é atrasado.",
+    tags: ["hook", "busca", "debounce"],
   },
   {
     name: "use-knob-drag",
