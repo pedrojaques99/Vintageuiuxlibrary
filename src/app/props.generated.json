@@ -1459,7 +1459,7 @@
           "nome": "labels",
           "tipo": "{ open: (close: number) => string; closed: (open: number) => string; }",
           "obrigatoria": false,
-          "padrao": "{\r\n    open: (c) => `Open now until ${fmtHour(c)}`,\r\n    closed: (o) => `Opens at ${fmtHour(o)}`,\r\n  }",
+          "padrao": "{\n    open: (c) => `Open now until ${fmtHour(c)}`,\n    closed: (o) => `Opens at ${fmtHour(o)}`,\n  }",
           "descricao": null
         },
         {
