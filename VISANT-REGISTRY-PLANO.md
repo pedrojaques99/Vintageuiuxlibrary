@@ -517,3 +517,31 @@ a 390px. É a colheita mais barata que existe.
   é justamente o acoplamento fraco que dispensa isso.
 - **Não colher tudo de uma vez.** Doze itens bons valem mais que oitenta itens
   que ninguém confia.
+
+## 8. Colher em worktree — as duas armadilhas
+
+Worktree é o jeito certo de colher com outra sessão mexendo no checkout principal.
+Duas coisas quebram nele, e as duas quebram **em silêncio**.
+
+**1. `.vercel/` não vem junto.** É ignorado pelo git, então o worktree nasce sem
+`project.json`. O `ship` termina em `npx vercel deploy --prod --yes`, e sem o
+vínculo o `--yes` não pergunta: ele resolve sozinho. Um deploy de produção pode ir
+parar num projeto que não é o `visant-ui`. Antes de qualquer `ship` a partir de um
+worktree:
+
+```bash
+cp -r Z:/Cursor/Vintageuiuxlibrary/.vercel <worktree>/.vercel
+```
+
+**2. Fim de linha.** Coberto pelo `.gitattributes` com `eol=lf` — que existe por
+causa disto: o `shadcn build` embute o **conteúdo** dos arquivos no JSON publicado,
+e um worktree criado com `core.autocrlf=true` carimba `\r\n` em todos os itens,
+inclusive nos que a colheita não tocou. O sintoma é um `git diff` de 50 arquivos
+sem uma linha de código diferente.
+
+E o portão que fecha os dois, **depois** do deploy:
+
+```bash
+python -c "import glob;print(sum(open(p,'rb').read().count(rb'\r\n') for p in glob.glob('public/r/*.json')))"
+# tem que imprimir 0
+```
