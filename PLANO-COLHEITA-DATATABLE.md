@@ -1,4 +1,15 @@
-# Colheita — data-table, busca e filtros
+# Colheita — data-table, busca e filtro
+
+> **Estado: publicado em 11/08/2026.** Os 6 itens novos e o `chip` atualizado estão
+> em `https://ui.visantlabs.com/r/`, com página em `/c/<nome>`. Auditoria pós-deploy:
+> zero CRLF embutido em qualquer item do registry.
+>
+> **Pendente, e não é meu para resolver:** o merge de `colheita/data-table-search`
+> em `main`. O checkout principal está com trabalho não commitado de outra sessão
+> (`erase-field.tsx`, `COLHEITA-VISANTISMO-CLUB.md`, e edições em `marquee.tsx`,
+> `registry.json`, `catalog.tsx`) — e `registry.json` e `catalog.tsx` são arquivos
+> que as duas colheitas tocam. Um fast-forward apagaria o trabalho de lá.
+> A branch está empurrada para `origin`; o merge sai quando aquela sessão commitar.s
 
 **Worktree:** `Z:\Cursor\.worktrees\registry-datatable` · branch `colheita/data-table-search`
 **Origem:** `Z:\Jobs 2.0\2026\@Automations\gpt-image-generator\visant-board`
