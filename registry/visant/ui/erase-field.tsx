@@ -56,17 +56,50 @@ import { cn } from "@/lib/utils";
  * desenhando UM quadro: o fundo continua existindo, o movimento é que não.
  */
 
-const CANAL = /(-?[\d.]+)/g;
+/* Um canvas 1×1 é o conversor: `fillStyle` engole qualquer notação de CSS Color
+   4 (oklch, color(), hsl…) e `getImageData` devolve os canais já em sRGB.
 
-/** Resolve qualquer notação de cor para [r,g,b] usando o próprio navegador. */
+   Aqui morava o defeito de "cor de fundo fora do tema". A sonda estava certa —
+   ela lê a var a partir do HOST, então pega o tema de um container `.dark` —
+   mas o que vinha depois não: um regex de números em cima da string. E
+   `getComputedStyle().backgroundColor` só serializa em `rgb()` o que já é sRGB;
+   token em OKLCH volta como `oklch(0.145 0 0)`, e o regex lia isso como
+   `rgb(0.145, 0, 0)` — preto, em qualquer tema. O tema claro deste repo usa hex
+   (`#717182`), que o regex acertava; o escuro usa OKLCH, que ele destruía. Daí
+   "funciona no claro, some no escuro". Sem regex, isso não volta a acontecer
+   quando alguém trocar o token para `color-mix()` ou `lab()`.
+
+   O sentinela é o teste de recusa: `fillStyle` inválido é IGNORADO em silêncio
+   pela spec, então se o valor continuar magenta o navegador não entendeu, e o
+   fallback é honesto em vez de pintar magenta na tela. */
+// Hex cru de propósito: não é cor de UI, é o valor-marcador do teste de recusa
+// do `fillStyle`. Nunca chega à tela.
+const SENTINELA = "#ff00ff";
+let pipeta: CanvasRenderingContext2D | null | undefined;
+
+function paraRGB(valor: string, fallback: [number, number, number]): [number, number, number] {
+  if (pipeta === undefined) {
+    const cv = document.createElement("canvas");
+    cv.width = cv.height = 1;
+    pipeta = cv.getContext("2d", { willReadFrequently: true });
+  }
+  if (!pipeta || !valor) return fallback;
+  pipeta.fillStyle = SENTINELA;
+  pipeta.fillStyle = valor;
+  if (pipeta.fillStyle === SENTINELA) return fallback;
+  pipeta.fillRect(0, 0, 1, 1);
+  const d = pipeta.getImageData(0, 0, 1, 1).data;
+  return [d[0], d[1], d[2]];
+}
+
+/** Resolve a var a partir do HOST — o tema pode estar num container, não no `<html>`. */
 function sonda(host: HTMLElement, custom: string, fallback: [number, number, number]) {
   const el = document.createElement("span");
   el.style.cssText = `position:absolute;width:0;height:0;background-color:var(${custom})`;
   host.appendChild(el);
   const lido = getComputedStyle(el).backgroundColor;
   host.removeChild(el);
-  const n = lido.match(CANAL)?.map(Number);
-  return n && n.length >= 3 ? ([n[0], n[1], n[2]] as [number, number, number]) : fallback;
+  return paraRGB(lido, fallback);
 }
 
 export interface EraseFieldProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -199,7 +232,11 @@ export function EraseField({
         const jx = (Math.random() - 0.5) * base * 0.5;
         const jy = (Math.random() - 0.5) * base * 0.5;
         const r = base * (0.62 + Math.random() * 0.6);
-        pctx!.globalAlpha = 0.4 * forca;
+        // 0.62, não 0.4: com 0.4 cada carimbo mal marcava, o rasgo dependia de
+        // sobreposição e o gesto lia como "quase não aconteceu nada". A borda
+        // continua morrendo devagar — quem faz a maciez é a queda do gradiente
+        // do sprite, não este alpha.
+        pctx!.globalAlpha = 0.62 * forca;
         pctx!.drawImage(pincel, x0 + (x1 - x0) * u + jx - r, y0 + (y1 - y0) * u + jy - r, r * 2, r * 2);
       }
       pctx!.globalAlpha = 1;
@@ -267,8 +304,10 @@ export function EraseField({
       const ay = py;
       px += (x - px) * 0.12; // inércia: persegue, não teletransporta
       py += (y - py) * 0.12;
-      if (Math.hypot(px - ax, py - ay) > 0.4) raspar(ax, ay, px, py, temPonteiro ? 1 : 0.45);
-      repor(now, 0.011);
+      // 0.62 no passeio ocioso (era 0.45): quem nunca leva o ponteiro até aqui
+      // — celular inteiro — só vê o passeio, e ele não pode ser o irmão fraco.
+      if (Math.hypot(px - ax, py - ay) > 0.4) raspar(ax, ay, px, py, temPonteiro ? 1 : 0.62);
+      repor(now, 0.008); // a poeira volta mais devagar, senão ela come o rasgo
 
       ctx!.clearRect(0, 0, w, h);
       luz(now);
@@ -293,6 +332,23 @@ export function EraseField({
     ro.observe(host);
     medir();
 
+    /* Trocar de tema não muda tamanho nenhum, então o ResizeObserver não acorda
+       e o campo ficaria com a cor do tema anterior até alguém redimensionar a
+       janela — o "relido no resize" acima só valia por acidente. Vigiar a classe
+       do `<html>` (é lá que o botão de tema escreve) custa um observer. */
+    const mo = new MutationObserver(() => {
+      luzRGB = sonda(host, lightVar, luzRGB);
+      dustRGB = sonda(host, dustVar, dustRGB);
+      // A poeira é um BUFFER: os pixels dela já estão pintados na cor do tema
+      // anterior, e `repor` só sobrepõe 0.011 de alpha por quadro. Sem apagar,
+      // o campo ficava com o fundo claro de antes por segundos dentro do tema
+      // escuro — que é literalmente a queixa de "cor de fundo fora do tema".
+      pctx!.clearRect(0, 0, w, h);
+      repor(0, 1);
+      if (reduzido) quadroEstatico(); // sem laço, o repinte tem que ser pedido
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
     let io: IntersectionObserver | undefined;
     if (!reduzido) {
       io = new IntersectionObserver(
@@ -315,6 +371,7 @@ export function EraseField({
       rodando = false;
       cancelAnimationFrame(raf);
       ro.disconnect();
+      mo.disconnect();
       io?.disconnect();
       host.removeEventListener("pointermove", aoMover);
       host.removeEventListener("pointerleave", aoSair);

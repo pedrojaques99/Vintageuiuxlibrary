@@ -59,6 +59,28 @@ import { cn } from "@/lib/utils";
  * A imagem entra por **slot** (`cover`), não por `src`: cada app tem o seu
  * componente de imagem otimizada, e um item que impõe `<img>` cru obriga o
  * consumidor a abrir mão dele.
+ *
+ * ── 5. Por que as quatro decisões acima moram AQUI, e não num bloco de CSS ──
+ *
+ * Elas moravam. O item do registry trazia um `css` com `.spine-card`,
+ * `.spine-card::before` e o filtro do duotone — e bloco de `css` do registry só
+ * existe depois que alguém roda o `shadcn add`. Na vitrine, que importa o arquivo
+ * direto, nada disso chegava: medido no navegador, `transform` voltava `none` e
+ * `::before` voltava `content: none`. Ou seja, a peça inteira que este cabeçalho
+ * descreve renderizava como um retângulo com borda — sem lombada, sem tombo, sem
+ * duotone, e sem largura própria. Era esse o "tamanho quebrado".
+ *
+ * Agora a anatomia é do componente. As classes `.spine-card` e
+ * `.spine-card-cover` continuam no lugar, então o CSS do registry segue casando
+ * em quem instalou; as utilitárias ganham dele por camada e repetem o mesmo
+ * valor, então o desenho é um só nos dois caminhos.
+ *
+ * ── 6. A régua é o card, não a janela ──────────────────────────────────────
+ *
+ * `@container` + `cqi`: numa estante de 150px, 24px de respiro de cada lado
+ * comiam um terço da linha e o título quebrava em duas. O respiro e o corpo do
+ * título agora saem da largura do próprio objeto — um card largo respira, um
+ * card estreito aperta, sem media query e sem prop nova.
  */
 
 // `title` aqui é o título do objeto (ReactNode), não a tooltip nativa do DOM.
@@ -93,14 +115,52 @@ export function SpineCard({
     <Tag
       {...(href ? { href } : {})}
       data-full-color={fullColor ? "" : undefined}
-      style={{ ["--tilt" as string]: TOMBOS[index % TOMBOS.length] }}
+      // O ângulo do item entra como `--tilt-base`, e o `--tilt` que o transform
+      // lê é uma utilitária. Se o ângulo viesse direto em `--tilt`, o estilo
+      // inline venceria o `:hover` sempre — inline ganha de qualquer folha — e o
+      // card nunca endireitaria.
+      style={{ ["--tilt-base" as string]: TOMBOS[index % TOMBOS.length] }}
       className={cn(
-        "spine-card group relative flex min-w-0 flex-col border border-border bg-card text-inherit no-underline",
+        "spine-card group @container relative flex w-full min-w-0 flex-col",
+        "border border-border bg-card text-inherit no-underline",
+        // ── o tombo, e o gesto de pegar
+        "[--tilt:var(--tilt-base,-5deg)] [--lift:0px]",
+        "[transform:rotate(var(--tilt))_translateY(var(--lift))] [transform-origin:bottom_center]",
+        "transition-[transform,border-color] [transition-duration:var(--dur-slow,700ms)]",
+        "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+        "hover:[--tilt:0deg] hover:[--lift:-10px]",
+        "focus-visible:[--tilt:0deg] focus-visible:[--lift:-10px]",
+        // Sem hover não existe "o que a pessoa está olhando": no toque o objeto
+        // nasce a prumo, senão o tombo vira defeito permanente.
+        "[@media(hover:none)]:[--tilt:0deg]",
+        "motion-reduce:transition-none",
+        // ── a lombada: 12px de luz com vinco, POR CIMA da capa e do texto
+        "before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:z-[1]",
+        "before:w-3 before:border-r before:border-border before:content-['']",
+        "before:[background:linear-gradient(90deg,color-mix(in_oklch,var(--foreground)_7%,transparent),transparent)]",
         className,
       )}
       {...props}
     >
-      {cover && <div className="spine-card-cover border-b border-border">{cover}</div>}
+      {cover && (
+        <div
+          className={cn(
+            "spine-card-cover border-b border-border",
+            "[&_:is(img,svg,video)]:block [&_:is(img,svg,video)]:h-auto [&_:is(img,svg,video)]:w-full",
+            "[&_:is(img,svg,video)]:object-cover [&_:is(img,svg,video)]:transition-[filter]",
+            "[&_:is(img,svg,video)]:[transition-duration:var(--dur-slow,700ms)]",
+            // ── o duotone, e a cor como ponteiro
+            !fullColor && [
+              "[&_:is(img,svg,video)]:[filter:grayscale(1)_sepia(0.5)_hue-rotate(155deg)_saturate(1.3)_brightness(0.92)_contrast(1.06)]",
+              "group-hover:[&_:is(img,svg,video)]:[filter:none]",
+              "group-focus-visible:[&_:is(img,svg,video)]:[filter:none]",
+              "[@media(hover:none)]:[&_:is(img,svg,video)]:[filter:none]",
+            ],
+          )}
+        >
+          {cover}
+        </div>
+      )}
 
       {/* Título e ação, e nada mais. O corpo tinha kicker, parágrafo de três
           linhas e rodapé com gancho — e três blocos de texto embaixo de uma capa
@@ -112,8 +172,12 @@ export function SpineCard({
           ação 13px pra fora do card num viewport de 360px. Pego pelo teste de
           peça-sozinha-no-celular, não na grade — na grade o palco escala e a
           media query continua lendo o viewport grande. */}
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-6 pb-6 pt-[22px]">
-        <h3 className="m-0 min-w-0 text-[1.05rem] font-semibold leading-[1.3]">{title}</h3>
+      {/* O respiro sai da largura do card (`cqi`), e a esquerda ganha um degrau
+          a mais porque os 12px da lombada passam por cima do texto. */}
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-[clamp(0.75rem,6cqi,1.5rem)] pb-[clamp(0.75rem,6cqi,1.5rem)] pl-[clamp(1rem,7.5cqi,1.75rem)] pt-[clamp(0.85rem,5.5cqi,1.375rem)]">
+        <h3 className="m-0 min-w-0 text-[clamp(0.9rem,5.5cqi,1.05rem)] font-semibold leading-[1.3]">
+          {title}
+        </h3>
         {action && (
           <span className="shrink-0 text-[0.78rem] tracking-[0.04em] text-muted-foreground">
             {action}

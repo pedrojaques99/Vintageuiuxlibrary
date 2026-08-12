@@ -3,9 +3,33 @@
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
+/**
+ * VintageTvFrame — o chassi de tubo, e o motivo de ele ser proporcional.
+ *
+ * O defeito relatado ("responsividade quebrada e botão saindo fora") tinha duas
+ * causas, e as duas eram a mesma ideia errada: **medida fixa dentro de uma peça
+ * de largura variável**.
+ *
+ * 1. `width` era uma largura CRAVADA em px no corpo, no console, na aresta e nos
+ *    pés. Uma TV de 480px num viewport de 390 não encolhe: ela sai pela direita
+ *    da página. Agora `width` é a largura NATURAL (um teto), e a peça ocupa
+ *    100% do que o pai der até esse teto.
+ * 2. O console era `space-between` com filhos de tamanho fixo — botão de 44px,
+ *    dois LEDs, dois dials de 28px, mais 32px de respiro. Isso pede ~190px só de
+ *    cromo: numa TV de 190px o segundo dial ficava literalmente do lado de fora
+ *    da barra. Agora o console é um container e todo o cromo sai de `cqi` (1% da
+ *    largura da TV) preso entre piso e teto, do mesmo jeito que o tubo já era
+ *    proporcional pelo `padding-bottom: 80%`. O cromo encolhe junto com o móvel,
+ *    que é o que um móvel faz.
+ *
+ * O rótulo da marca é o único que pode sumir: ele tem `min-width: 0` e corta com
+ * reticências, porque letra espremida em duas linhas dentro do console é pior do
+ * que letra cortada.
+ */
 interface VintageTvFrameProps {
   children?: React.ReactNode;
   title?: string;
+  /** Largura natural em px — vira teto, não trava: a peça encolhe abaixo dela. */
   width?: number;
   isOn?: boolean;
   onPowerToggle?: (on: boolean) => void;
@@ -15,6 +39,9 @@ interface VintageTvFrameProps {
   className?: string;
 }
 
+// Hex cru aqui é exceção declarada: isto não é superfície de tema, é a pintura
+// de um objeto — plástico bege queimado, alumínio do dial, fósforo do LED. Ligar
+// esses valores ao token da marca faria a TV mudar de material a cada cliente.
 const RETRO = {
   bodyGradient:
     "linear-gradient(180deg, rgba(230,219,209,0.75) 0%, rgba(153,146,140,0.75) 100%), #676665",
@@ -146,7 +173,26 @@ export function VintageTvFrame({
     }
   };
 
-  const dialStyle = (size: number): React.CSSProperties => ({
+  /*
+   * O cromo do console, em função da largura da TV.
+   *
+   * `cqi` = 1% da largura do container (o console). Os pisos são o menor
+   * desenho que ainda lê como o objeto; os tetos são o desenho original de
+   * 480px, então uma TV em tamanho natural continua idêntica ao que era.
+   */
+  const CROMO = {
+    pad: "clamp(6px, 3.4cqi, 16px)",
+    gap: "clamp(3px, 1.3cqi, 6px)",
+    powerW: "clamp(30px, 9.2cqi, 44px)",
+    powerH: "clamp(18px, 5cqi, 24px)",
+    ledW: "clamp(6px, 2.1cqi, 10px)",
+    ledH: "clamp(5px, 1.7cqi, 8px)",
+    dial: "clamp(16px, 5.8cqi, 28px)",
+    rotulo: "clamp(6px, 2.1cqi, 10px)",
+    pe: "clamp(26px, 13cqi, 52px)",
+  } as const;
+
+  const dialStyle = (size: string): React.CSSProperties => ({
     width: size,
     height: size,
     borderRadius: "50%",
@@ -160,10 +206,7 @@ export function VintageTvFrame({
     transition: "transform 0.12s ease, box-shadow 0.15s ease",
   });
 
-  const dialInnerStyle = (
-    color: string,
-    size: number
-  ): React.CSSProperties => ({
+  const dialInnerStyle = (color: string): React.CSSProperties => ({
     width: "67%",
     height: "67%",
     borderRadius: "50%",
@@ -171,15 +214,22 @@ export function VintageTvFrame({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: Math.round(size * 0.36),
+    // A letra do dial acompanha o dial: em px fixo ela estourava o botão assim
+    // que a TV encolhia.
+    fontSize: "clamp(5px, 2cqi, 8px)",
     color: "#000",
     fontWeight: 900,
+    lineHeight: 1,
     transition: "background 0.25s ease",
   });
 
   return (
     <div
-      className={cn("inline-flex flex-col items-center select-none", className)}
+      className={cn("flex flex-col items-center select-none", className)}
+      // `width: 100%` com teto em `width`: a TV ocupa o que o pai der e nunca
+      // passa da largura natural. Era `inline-flex` com px cravado — num
+      // viewport de 390 uma TV de 480 saía pela direita da página.
+      style={{ width: "100%", maxWidth: width }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -187,7 +237,7 @@ export function VintageTvFrame({
       <div
         style={{
           position: "relative",
-          width,
+          width: "100%",
           paddingBottom: "80%",
           background: RETRO.bodyGradient,
           borderRadius: RETRO.radiusBody,
@@ -337,23 +387,34 @@ export function VintageTvFrame({
       <div
         style={{
           position: "relative",
-          width,
+          width: "100%",
+          // O console é o container que todo o cromo mede. Sem isto, `cqi` cairia
+          // na largura da janela e a TV pequena voltaria a estourar.
+          containerType: "inline-size",
           background: RETRO.consoleSurface,
           borderRadius: "0 0 4px 4px",
-          padding: "10px 16px",
+          padding: `clamp(6px, 2.2cqi, 10px) ${CROMO.pad}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          gap: CROMO.gap,
         }}
       >
         {/* Left: Power + LEDs */}
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: CROMO.gap, flexShrink: 0 }}>
           {/* Power button */}
           <button
+            type="button"
             onClick={togglePower}
+            aria-pressed={isOn}
+            aria-label={isOn ? "Desligar a TV" : "Ligar a TV"}
+            // `alvo-toque` estende só a região clicável: o botão desenhado tem
+            // 24px de altura (é o desenho do móvel), o dedo recebe 44.
+            className="alvo-toque"
             style={{
-              width: 44,
-              height: 24,
+              width: CROMO.powerW,
+              height: CROMO.powerH,
+              flexShrink: 0,
               borderRadius: 3,
               background: isOn ? RETRO.powerOn : RETRO.powerOff,
               boxShadow: isOn
@@ -361,7 +422,7 @@ export function VintageTvFrame({
                 : RETRO.powerShadowOff,
               border: "none",
               cursor: "pointer",
-              fontSize: 10,
+              fontSize: "clamp(7px, 2.2cqi, 10px)",
               color: RETRO.textOnChassis,
               display: "flex",
               alignItems: "center",
@@ -377,8 +438,9 @@ export function VintageTvFrame({
           {/* Power LED */}
           <div
             style={{
-              width: 10,
-              height: 8,
+              width: CROMO.ledW,
+              height: CROMO.ledH,
+              flexShrink: 0,
               borderRadius: 1,
               background: isOn ? RETRO.ledPowerOn : RETRO.ledPowerOff,
               boxShadow: isOn
@@ -391,8 +453,9 @@ export function VintageTvFrame({
           {/* Signal LED */}
           <div
             style={{
-              width: 10,
-              height: 8,
+              width: CROMO.ledW,
+              height: CROMO.ledH,
+              flexShrink: 0,
               borderRadius: 1,
               background: hasSignal
                 ? RETRO.ledSignalOn
@@ -405,10 +468,15 @@ export function VintageTvFrame({
           />
         </div>
 
-        {/* Center: Brand label */}
+        {/* Center: Brand label — o único que pode encolher e cortar. */}
         <span
           style={{
-            fontSize: 10,
+            minWidth: 0,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            textAlign: "center",
+            fontSize: CROMO.rotulo,
             fontWeight: 800,
             textTransform: "uppercase",
             letterSpacing: "0.15em",
@@ -421,22 +489,18 @@ export function VintageTvFrame({
         </span>
 
         {/* Right: Dials */}
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: CROMO.gap, flexShrink: 0 }}>
           {/* Channel dial (decorative) */}
-          <div style={dialStyle(28)}>
-            <div style={dialInnerStyle(RETRO.dialGreen, 28)}>
-              <span style={{ fontSize: 8, color: "#000", fontWeight: 900 }}>
-                CH
-              </span>
+          <div style={dialStyle(CROMO.dial)}>
+            <div style={dialInnerStyle(RETRO.dialGreen)}>
+              <span style={{ fontWeight: 900 }}>CH</span>
             </div>
           </div>
 
           {/* Volume dial (decorative) */}
-          <div style={dialStyle(28)}>
-            <div style={dialInnerStyle(RETRO.dialRed, 28)}>
-              <span style={{ fontSize: 8, color: "#000", fontWeight: 900 }}>
-                V
-              </span>
+          <div style={dialStyle(CROMO.dial)}>
+            <div style={dialInnerStyle(RETRO.dialRed)}>
+              <span style={{ fontWeight: 900 }}>V</span>
             </div>
           </div>
         </div>
@@ -445,7 +509,7 @@ export function VintageTvFrame({
       {/* ── Bottom edge ── */}
       <div
         style={{
-          width,
+          width: "100%",
           height: 4,
           background: RETRO.consoleBottomEdge,
           borderRadius: "0 0 4px 4px",
@@ -457,25 +521,23 @@ export function VintageTvFrame({
         style={{
           display: "flex",
           justifyContent: "space-between",
-          width: width * 0.85,
+          width: "85%",
+          containerType: "inline-size",
         }}
       >
-        <div
-          style={{
-            width: 52,
-            height: 6,
-            borderRadius: "0 0 3px 3px",
-            background: RETRO.footGradient,
-          }}
-        />
-        <div
-          style={{
-            width: 52,
-            height: 6,
-            borderRadius: "0 0 3px 3px",
-            background: RETRO.footGradient,
-          }}
-        />
+        {/* Dois pés iguais, e o pé também encolhe: em 52px fixo, numa TV de
+            190px eles se encostavam no meio e viravam uma barra só. */}
+        {[0, 1].map((i) => (
+          <div
+            key={i}
+            style={{
+              width: CROMO.pe,
+              height: 6,
+              borderRadius: "0 0 3px 3px",
+              background: RETRO.footGradient,
+            }}
+          />
+        ))}
       </div>
     </div>
   );

@@ -20,6 +20,31 @@ import { cn } from "@/lib/utils";
  * O trilho é **uma** parada de Tab: dentro dele, ←/→ e Home/End andam pelos
  * itens. Sem isso, três trilhos numa página viram vinte e uma paradas de
  * teclado antes do primeiro campo útil. Ver a nota no `ancorar()`.
+ *
+ * ── O que faltava, e por que era a mesma falta três vezes ──────────────────
+ *
+ * O trilho sabia rolar e não sabia mais nada. Três buracos, todos de anatomia:
+ *
+ * 1. **Não sabia sangrar.** Trilho de vitrine encosta na borda — é o corte na
+ *    borda que promete continuação. Quem quisesse isso tinha que escrever margem
+ *    negativa à mão do lado de fora e, junto, perder o alinhamento do primeiro
+ *    item com a coluna de texto. Que a falta é real está provado no vizinho: o
+ *    `@visant/marquee` já carregava `width: 108%; marginLeft: -4%` cravado no
+ *    código pra resolver a mesma coisa. Agora é `bleed`, e ele sangra a caixa
+ *    SEM desalinhar o conteúdo, porque a sangria vira `padding` e
+ *    `scroll-padding` de volta pra dentro.
+ * 2. **O estado das pontas era calculado e escondido.** `edge` já sabia se havia
+ *    mais lista de cada lado, e o único consumidor era o `disabled` das setas —
+ *    que só existem a partir de `lg`. Abaixo disso a informação era computada a
+ *    cada rolagem e jogada fora, e num telefone nada dizia que a lista continua.
+ *    `fade` liga a máscara nas pontas, e ela lê o MESMO `edge`: some quando
+ *    acaba de verdade, em vez de fingir corte permanente.
+ * 3. **Não tinha cabeça.** Um trilho é uma lista, e lista sem nome nem contagem
+ *    é uma fileira de retângulos. `heading` e `hint` dão o rótulo e o qualificador
+ *    na mesma fileira das setas.
+ *
+ * As três entram como prop nova, e as três nascem desligadas: quem já usava o
+ * trilho recebe o mesmo pixel de antes.
  */
 
 export interface RailProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -30,6 +55,26 @@ export interface RailProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Setas de navegação (só aparecem onde há ponteiro). */
   arrows?: boolean;
   label?: string;
+  /**
+   * Quantos px o trilho sangra pra fora do container, de cada lado.
+   *
+   * Passe o mesmo respiro lateral do pai (`px-6` → `bleed={24}`) e a fileira
+   * encosta na borda da tela enquanto o primeiro item continua alinhado com o
+   * texto acima. `false` (padrão) é o trilho contido de sempre.
+   */
+  bleed?: number | false;
+  /** Esmaece as pontas onde a lista continua. Segue o estado real das bordas. */
+  fade?: boolean;
+  /**
+   * O nome da lista, na fileira das setas.
+   *
+   * `heading` e não `title` de propósito: `title` já é atributo de HTML e vira
+   * o tooltip nativo do navegador. Aceitar o mesmo nome pros dois faria quem
+   * instala escrever um e receber o outro — e o tooltip sumiria sem explicação.
+   */
+  heading?: React.ReactNode;
+  /** O qualificador ao lado do nome: "12 peças", "atualizado hoje". */
+  hint?: React.ReactNode;
 }
 
 export function Rail({
@@ -38,6 +83,10 @@ export function Rail({
   gap = 20,
   arrows = true,
   label = "Scrollable list",
+  bleed = false,
+  fade = false,
+  heading,
+  hint,
   className,
   ...props
 }: RailProps) {
@@ -53,12 +102,37 @@ export function Rail({
     });
   }, []);
 
+  /*
+   * Quem avisa que as pontas mudaram é o SCROLLER, não a janela.
+   *
+   * Era `window.addEventListener("resize", sync)`, e o furo aparece assim:
+   * estreite o container sem mexer na janela — painel que abre, sidebar que
+   * colapsa, split que a pessoa arrasta, container query — e a lista passa a
+   * transbordar sem que ninguém remeça. Medido: com o trilho já transbordando
+   * (`scrollWidth > clientWidth`), a seta "próximo" continuava `disabled` e a
+   * máscara continuava opaca dos dois lados. Ou seja, o controle mentia sobre o
+   * estado da lista, que é exatamente o que a nota lá em cima promete não fazer.
+   *
+   * O `ResizeObserver` no scroller é o que passa a mandar. O listener de janela
+   * FICA, e não por medo: `sync` é uma leitura de três números e um `setState`
+   * que quase sempre devolve o mesmo estado, então o custo de mantê-lo é zero, e
+   * ele é a rede pra ambiente onde o RO não entrega — aba em segundo plano
+   * entrega as observações só quando volta a renderizar, e navegador antigo não
+   * tem RO nenhum. Dois avisos redundantes de uma medida idempotente é barato;
+   * um controle mentindo sobre a lista não é.
+   */
   React.useEffect(() => {
-    sync();
     const el = ref.current;
     if (!el) return;
+    sync();
     window.addEventListener("resize", sync);
-    return () => window.removeEventListener("resize", sync);
+    const ro =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(sync);
+    ro?.observe(el);
+    return () => {
+      window.removeEventListener("resize", sync);
+      ro?.disconnect();
+    };
   }, [sync]);
 
   /**
@@ -135,7 +209,12 @@ export function Rail({
 
   React.useEffect(() => {
     ancorar(0);
-  }, [ancorar, children]);
+    // Remedir as pontas quando a lista muda: sem isto um trilho que recebe
+    // itens depois (filtro, fetch) fica com a seta "próximo" desabilitada
+    // apontando pro estado da lista anterior — e agora que `fade` lê o mesmo
+    // estado, o erro apareceria como uma ponta esmaecida sem lista embaixo.
+    sync();
+  }, [ancorar, children, sync]);
 
   const irPara = (i: number) => {
     const lista = itens();
@@ -171,12 +250,58 @@ export function Rail({
     if (i > 0) ancorar(i);
   };
 
+  const temCabeca = Boolean(heading || hint);
+  const sangra = typeof bleed === "number" && bleed > 0 ? bleed : 0;
+
+  /*
+   * A máscara nasce do `edge`, não de "tem overflow".
+   *
+   * Uma faixa esmaecida fixa nas duas pontas mente duas vezes: promete lista no
+   * começo quando já se está no começo, e continua prometendo depois do último
+   * item. Aqui cada ponta só existe enquanto há lista daquele lado — o mesmo
+   * estado que desabilita as setas, agora com um segundo consumidor.
+   */
+  const mascara = React.useMemo(() => {
+    if (!fade) return undefined;
+    const ini = edge.start ? "black 0" : "transparent 0, black 40px";
+    const fim = edge.end ? "black 100%" : "black calc(100% - 40px), transparent 100%";
+    return `linear-gradient(to right, ${ini}, ${fim})`;
+  }, [fade, edge.start, edge.end]);
+
   return (
     <div className={cn("relative", className)} {...props}>
-      {arrows && (
-        <div className="mb-3 hidden justify-end gap-2 lg:flex">
-          <RailButton dir="prev" disabled={edge.start} onClick={() => nudge(-1)} />
-          <RailButton dir="next" disabled={edge.end} onClick={() => nudge(1)} />
+      {(arrows || temCabeca) && (
+        <div
+          className={cn(
+            "mb-3 items-end gap-3",
+            /* Sem cabeça o class string é EXATAMENTE o de antes — `hidden` até
+               `lg`. Isso não é apego: abaixo de `lg` a fileira precisa continuar
+               sem ocupar altura nem a margem de 12px, senão todo trilho já
+               publicado ganha um degrau no celular e o `@visant/skeleton-rail`,
+               que copia estas medidas pra não pular na troca, passa a errar. */
+            temCabeca ? "flex justify-between" : "hidden justify-end lg:flex",
+          )}
+        >
+          {temCabeca && (
+            <div className="flex min-w-0 items-baseline gap-2">
+              {heading && (
+                <span className="truncate text-[length:var(--text-destaque,0.9375rem)] font-semibold tracking-tight text-foreground">
+                  {heading}
+                </span>
+              )}
+              {hint && (
+                <span className="shrink-0 font-mono text-[length:var(--text-micro,0.625rem)] uppercase tracking-[0.14em] text-muted-foreground">
+                  {hint}
+                </span>
+              )}
+            </div>
+          )}
+          {arrows && (
+            <div className={cn("gap-2", temCabeca ? "hidden lg:flex" : "flex")}>
+              <RailButton dir="prev" disabled={edge.start} onClick={() => nudge(-1)} />
+              <RailButton dir="next" disabled={edge.end} onClick={() => nudge(1)} />
+            </div>
+          )}
         </div>
       )}
 
@@ -197,6 +322,26 @@ export function Rail({
           gridAutoColumns: `minmax(${itemWidth}px, 1fr)`,
           gap: `${gap}px`,
           scrollbarColor: "var(--border) transparent",
+          /*
+           * Sangria em três partes, e as três são obrigatórias.
+           *
+           * A margem negativa tira a caixa pra fora do container; o padding
+           * devolve o CONTEÚDO pro lugar, então o primeiro item continua na
+           * mesma vertical do texto de cima; e o `scroll-padding` faz o encaixe
+           * parar nessa mesma vertical. Sem a terceira, o snap ancora na borda
+           * crua do scroller e o primeiro card encosta na tela toda vez que a
+           * pessoa volta pro começo — o defeito clássico de trilho sangrado.
+           */
+          ...(sangra
+            ? {
+                marginInline: `-${sangra}px`,
+                paddingInline: `${sangra}px`,
+                scrollPaddingInline: `${sangra}px`,
+              }
+            : null),
+          ...(mascara
+            ? { maskImage: mascara, WebkitMaskImage: mascara }
+            : null),
         }}
       >
         {children}

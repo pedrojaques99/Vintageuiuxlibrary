@@ -26,7 +26,38 @@ import { cn } from "@/lib/utils";
  * Listeners vão no `document`, não no elemento: o ponteiro sai do campo em
  * qualquer arrasto real. Por isso o cleanup no unmount existe — sem ele um
  * unmount no meio do arrasto deixa o cursor `ew-resize` preso na página inteira.
+ *
+ * ── O que faltava (o "simples demais") ──────────────────────────────────────
+ * Duas coisas, e nenhuma delas era enfeite.
+ *
+ * 1. **Não havia evidência.** O campo mostrava o número e escondia a régua: não
+ *    dava para saber, olhando, se 64 estava perto do teto ou do chão. Num painel
+ *    com doze parâmetros isso vira doze perguntas sem resposta. Agora um fio no
+ *    pé do campo mostra a posição dentro de `min…max` — é a mesma anatomia dos
+ *    outros medidores da casa (rótulo · valor · qualificador · evidência).
+ *
+ * 2. **Rótulo e valor gastavam duas linhas** para uma informação de uma linha.
+ *    `layout="row"` põe os dois lado a lado e o campo encolhe quase pela metade,
+ *    que é o que permite montar a coluna dupla de um painel de edição de
+ *    verdade. O padrão continua `stack` porque quem já usa o item conta com a
+ *    altura atual.
+ *
+ * `kind` é o vocabulário do painel de design: porcentagem, ângulo, pixel e
+ * múltiplo só mudam o sufixo e o passo padrão — é a mesma peça, não uma peça
+ * nova. Passar `suffix` ou `step` na mão continua vencendo o `kind`.
  */
+
+/** Sufixo e passo que cada tipo de campo assume quando não recebe os seus. */
+const KINDS = {
+  number: { suffix: "", step: 1 },
+  percent: { suffix: "%", step: 1 },
+  angle: { suffix: "°", step: 1 },
+  px: { suffix: "px", step: 1 },
+  multiple: { suffix: "×", step: 0.1 },
+} as const;
+
+export type ScrubKind = keyof typeof KINDS;
+
 export interface ScrubInputProps {
   label: string;
   value: number;
@@ -37,6 +68,11 @@ export interface ScrubInputProps {
   icon?: React.ReactNode;
   /** Vira `title` — bom lugar para explicar o parâmetro. */
   hint?: string;
+  /** Vocabulário do painel de design. Só define sufixo e passo padrão. */
+  kind?: ScrubKind;
+  /** "row" = rótulo e valor na mesma linha (campo metade da altura). */
+  layout?: "stack" | "row";
+  disabled?: boolean;
   onChange: (value: number) => void;
   className?: string;
 }
@@ -46,14 +82,21 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
   value,
   min,
   max,
-  step = 1,
-  suffix = "",
+  step: stepProp,
+  suffix: suffixProp,
   icon,
   hint,
+  kind = "number",
+  layout = "stack",
+  disabled = false,
   onChange,
   className,
 }) {
+  const step = stepProp ?? KINDS[kind].step;
+  const suffix = suffixProp ?? KINDS[kind].suffix;
+
   const [editing, setEditing] = React.useState(false);
+  const [scrubbing, setScrubbing] = React.useState(false);
   const [draft, setDraft] = React.useState("");
   const inputRef = React.useRef<HTMLInputElement>(null);
   const scrub = React.useRef<{ startX: number; startValue: number } | null>(null);
@@ -93,9 +136,10 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
 
   const onScrubDown = React.useCallback(
     (e: React.PointerEvent) => {
-      if (editing) return;
+      if (editing || disabled) return;
       if (e.pointerType === "mouse" && e.button !== 0) return;
       e.preventDefault();
+      setScrubbing(true);
       scrub.current = { startX: e.clientX, startValue: value };
       const sensitivity = (max - min) / 300;
 
@@ -108,6 +152,7 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
       };
       const onUp = () => {
         scrub.current = null;
+        setScrubbing(false);
         document.removeEventListener("pointermove", onMove);
         document.removeEventListener("pointerup", onUp);
         document.removeEventListener("pointercancel", onUp);
@@ -123,7 +168,7 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
       document.body.style.cursor = "ew-resize";
       document.body.style.userSelect = "none";
     },
-    [editing, value, min, max, onChange, clamp],
+    [editing, disabled, value, min, max, onChange, clamp],
   );
 
   React.useEffect(
@@ -155,46 +200,76 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
         if (e.key === "Escape") setEditing(false);
         return;
       }
+      if (disabled) return;
       const mult = e.shiftKey ? 0.1 : 1;
-      if (e.key === "ArrowUp") {
+      // Setas ←→ também: no painel o gesto é horizontal, então quem tabula até
+      // o campo tenta a seta que combina com o arrasto antes de tentar ↑↓.
+      if (e.key === "ArrowUp" || e.key === "ArrowRight") {
         e.preventDefault();
         onChange(clamp(value + step * mult));
       }
-      if (e.key === "ArrowDown") {
+      if (e.key === "ArrowDown" || e.key === "ArrowLeft") {
         e.preventDefault();
         onChange(clamp(value - step * mult));
       }
+      // Home/End: as pontas em uma tecla. O `role="spinbutton"` promete isso.
+      if (e.key === "Home") {
+        e.preventDefault();
+        onChange(clamp(min));
+      }
+      if (e.key === "End") {
+        e.preventDefault();
+        onChange(clamp(max));
+      }
     },
-    [editing, value, step, onChange, clamp, commitEdit],
+    [editing, disabled, value, step, min, max, onChange, clamp, commitEdit],
   );
+
+  // Posição do valor dentro da faixa: a evidência que faltava.
+  const ratio = max === min ? 0 : (Math.min(max, Math.max(min, value)) - min) / (max - min);
 
   return (
     <div
+      data-scrubbing={scrubbing || undefined}
       className={cn(
-        "group flex flex-col gap-1 rounded-[var(--r-control)] border border-border bg-card px-2 py-1.5",
+        "group relative isolate overflow-hidden rounded-[var(--r-control)] border border-border bg-card px-2 py-1.5",
         "transition-colors [transition-duration:var(--dur-fast)] ease-[var(--ease-out)]",
         "hover:border-ring/40 focus-within:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        // Repouso · hover · foco · arrastando · desabilitado, os cinco
+        // distinguíveis: enquanto arrasta a borda vira a cor da marca, que é o
+        // único estado que o cursor sozinho não conta (o ponteiro já saiu do
+        // campo faz tempo).
+        "data-[scrubbing]:border-[var(--brand)]",
+        disabled && "pointer-events-none opacity-50",
+        layout === "row"
+          ? "flex items-center justify-between gap-2"
+          : "flex flex-col gap-1",
         className,
       )}
-      onWheel={onWheel}
+      onWheel={disabled ? undefined : onWheel}
       onKeyDown={onKeyDown}
       // tabIndex sai do container enquanto edita: o foco pertence ao input.
-      tabIndex={editing ? -1 : 0}
+      tabIndex={editing || disabled ? -1 : 0}
       role="spinbutton"
       aria-label={label}
       aria-valuenow={value}
       aria-valuemin={min}
       aria-valuemax={max}
+      aria-valuetext={display}
+      aria-disabled={disabled || undefined}
       title={hint}
     >
       <span
-        className="cursor-ew-resize touch-none select-none truncate font-mono text-[10px] uppercase leading-none tracking-widest text-muted-foreground"
+        className={cn(
+          "cursor-ew-resize touch-none select-none truncate font-mono text-[10px] uppercase leading-none tracking-widest text-muted-foreground",
+          layout === "row" && "min-w-0 flex-1",
+        )}
         onPointerDown={onScrubDown}
       >
         {icon && <span className="mr-1 inline-flex align-middle opacity-70">{icon}</span>}
         {label}
       </span>
-      <div className="flex min-w-0 items-center">
+      <div className={cn("flex min-w-0 items-center", layout === "row" && "shrink-0")}>
         {editing ? (
           <input
             ref={inputRef}
@@ -203,7 +278,10 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
             onChange={(e) => setDraft(e.target.value)}
             onBlur={commitEdit}
             onKeyDown={onKeyDown}
-            className="w-full bg-transparent font-mono text-[12px] tabular-nums text-foreground outline-none"
+            className={cn(
+              "w-full bg-transparent font-mono text-[12px] tabular-nums text-foreground outline-none",
+              layout === "row" && "w-16 text-right",
+            )}
             autoFocus
           />
         ) : (
@@ -216,6 +294,17 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
           </span>
         )}
       </div>
+
+      {/*
+       * A régua. Fio no pé do campo, só `transform` (nada de largura animada) e
+       * SEM transição: o valor está sendo produzido pela mão da pessoa, então
+       * ele segue o dedo. Transição aqui seria latência com boa aparência.
+       */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-[var(--brand)] opacity-40 transition-opacity [transition-duration:var(--dur-fast)] ease-[var(--ease-out)] group-hover:opacity-100 group-focus-within:opacity-100 group-data-[scrubbing]:opacity-100"
+        style={{ transform: `scaleX(${ratio})` }}
+      />
     </div>
   );
 });

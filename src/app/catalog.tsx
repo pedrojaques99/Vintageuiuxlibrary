@@ -290,19 +290,45 @@ function MeasureDemo() {
 }
 
 function ScrubDemo() {
-  const [v, setV] = React.useState(64);
+  // Um campo sozinho não mostra o que a peça é: ela existe para a COLUNA de
+  // parâmetros de um painel de edição, e é ali que `layout="row"` paga — dois
+  // por linha, quatro na altura que antes cabia um.
+  const [p, setP] = React.useState(64);
+  const [ang, setAng] = React.useState(45);
+  const [raio, setRaio] = React.useState(12);
+  const [esc, setEsc] = React.useState(1.5);
   return (
     <Frame>
-      <div className="w-full max-w-[240px]">
+      <div className="grid w-full max-w-[420px] grid-cols-1 gap-1.5 sm:grid-cols-2">
         <ScrubInput
           label="Intensidade"
-          value={v}
+          kind="percent"
+          layout="row"
+          value={p}
           min={0}
           max={100}
-          suffix="%"
           hint="arraste na horizontal"
           icon={<SlidersHorizontal className="h-3.5 w-3.5" />}
-          onChange={setV}
+          onChange={setP}
+        />
+        <ScrubInput
+          label="Ângulo"
+          kind="angle"
+          layout="row"
+          value={ang}
+          min={0}
+          max={360}
+          onChange={setAng}
+        />
+        <ScrubInput label="Raio" kind="px" layout="row" value={raio} min={0} max={64} onChange={setRaio} />
+        <ScrubInput
+          label="Escala"
+          kind="multiple"
+          layout="row"
+          value={esc}
+          min={0.5}
+          max={4}
+          onChange={setEsc}
         />
       </div>
     </Frame>
@@ -532,17 +558,37 @@ function FilterbarDemo() {
     // do card ele apontaria para o cabeçalho da vitrine e escreveria na raiz do
     // documento — demo não pode mexer na página que a hospeda. Aqui ele mede um
     // cabeçalho de mentira, que é justamente o que a demo tem de mostrar.
-    <div className="h-full w-full overflow-hidden">
-      <div data-demo-header className="h-6 border-b border-border bg-muted/40" />
+    // A demo antiga não rolava: três linhas curtas num card sem scroll. A peça
+    // inteira é sobre o que acontece AO ROLAR — grudar, condensar, mostrar o
+    // quanto da lista já passou — e nada disso podia acontecer. Vitrine que não
+    // deixa mexer na peça é captura de tela com passos extras.
+    <div className="h-full w-full overflow-y-auto">
+      <div
+        data-demo-header
+        className="sticky top-0 z-40 h-6 border-b border-border bg-background"
+      />
+      {/* Respiro entre o cabeçalho e a barra. Sem ele a barra já nasce na
+          própria linha de grude, e a demo abre no estado condensado — ou seja,
+          nunca se vê a barra SOLTA nem o momento em que ela gruda, que é a
+          peça inteira. */}
+      <p className="px-3 py-3 text-apoio text-muted-foreground">
+        Ao rolar, a barra encosta no cabeçalho, a linha secundária recolhe e o fio embaixo
+        conta quanto da lista já passou.
+      </p>
       <StickyFilterbar headerSelector="[data-demo-header]">
         <FilterRow>
           <Chip pressed>Todos</Chip>
           <Chip count={12}>Em produção</Chip>
           <Chip count={3}>Rascunho</Chip>
         </FilterRow>
+        <FilterRow label="Cor" collapsible>
+          <Chip>Quente</Chip>
+          <Chip>Fria</Chip>
+          <Chip>Neutra</Chip>
+        </FilterRow>
       </StickyFilterbar>
       <div className="space-y-2 p-3">
-        {[0, 1, 2].map((i) => (
+        {Array.from({ length: 14 }, (_, i) => (
           <div key={i} className="h-6 rounded bg-muted" />
         ))}
       </div>
@@ -553,14 +599,18 @@ function FilterbarDemo() {
 function TimelineDemo() {
   const data = React.useMemo(
     () => [
-      { title: "Briefing", content: <p className="text-apoio text-muted-foreground">Guideline lida do vault.</p> },
-      { title: "Tokens", content: <p className="text-apoio text-muted-foreground">Cor e tipo compilados.</p> },
+      { meta: "seg 04", title: "Briefing", content: <p className="text-apoio text-muted-foreground">Guideline lida do vault.</p> },
+      { meta: "qua 06", title: "Tokens", content: <p className="text-apoio text-muted-foreground">Cor e tipo compilados.</p> },
+      { meta: "sex 08", title: "Entrega", content: <p className="text-apoio text-muted-foreground">Tema publicado no registry.</p> },
     ],
     [],
   );
+  /* Sem o `[&_h2]:text-base` que morava aqui: ele existia pra domar um título
+     que a peça escrevia sozinha, em inglês e de outra marca. Agora a cabeça é
+     slot, então a demo passa a dela e a caixa não precisa desmentir a peça. */
   return (
-    <div className="h-full w-full overflow-hidden [&_h2]:text-base">
-      <Timeline data={data} />
+    <div className="h-full w-full overflow-hidden">
+      <Timeline data={data} title="A semana do projeto" />
     </div>
   );
 }
@@ -645,10 +695,38 @@ function FoldDemo() {
         <FoldPart>
           <h3 className="text-[1.1rem] font-semibold tracking-tight">A dobra que decide</h3>
           <p className="mt-2 text-[length:var(--text-apoio,0.82rem)] text-muted-foreground">
-            Trinta entradas idênticas não são trinta entradas.
+            Trinta entradas idênticas o olho lê como uma.
           </p>
         </FoldPart>
       </Fold>
+    </div>
+  );
+}
+
+/**
+ * A contagem acontece UMA vez, quando o número entra em tela — que é o certo no
+ * produto e péssimo na vitrine: quem chega no card depois da primeira rolagem
+ * nunca vê o efeito, e não tinha como pedir de novo.
+ *
+ * O replay remonta a peça por `key`, em vez de expor um método imperativo que
+ * não existe no componente publicado. E o botão é um `Chip` de verdade, com
+ * `alvo-toque` pra fechar os 44px do dedo: gesto de demonstração não pode ser
+ * um alvo que só o mouse acerta.
+ */
+function CountUpDemo() {
+  const [n, setN] = React.useState(0);
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-5">
+      <div className="flex items-center justify-center gap-8" key={n}>
+        <CountUp className="text-[2rem] font-semibold tracking-tight">R$450k</CountUp>
+        <CountUp className="text-[2rem] font-semibold tracking-tight" delay={120}>
+          1.200
+        </CountUp>
+        <span className="text-[2rem] font-semibold tracking-tight text-muted-foreground">—</span>
+      </div>
+      <Chip className="alvo-toque" onClick={() => setN((x) => x + 1)}>
+        contar de novo
+      </Chip>
     </div>
   );
 }
@@ -685,7 +763,7 @@ export const CATALOG: CatalogItem[] = [
     type: "theme",
     family: "marca",
     description:
-      "Tema compilado de uma brand guideline: cor com contraste AA por construção, par tipográfico e o esqueleto de craft invariante. O da casa é público; os de cliente saem do vault de cada conta.",
+      "Tema compilado de uma brand guideline: cor com contraste AA por construção, par tipográfico e o esqueleto de craft invariante. O da casa é público. Os de cliente saem do vault de cada conta.",
     tags: ["tema", "tokens", "oklch", "aa"],
   },
 
@@ -772,7 +850,7 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "trabalho",
     description:
-      "Escolher por medida e receber a recomendação — a faixa traduz o número em produto.",
+      "Escolher por medida e receber a recomendação. A faixa traduz o número em produto.",
     tags: ["slider", "recomendação"],
     demo: MeasureDemo,
     preview: { w: 560, h: 240 },
@@ -808,21 +886,46 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Trilho horizontal com snap, setas que somem nas pontas e scroll por teclado.",
     tags: ["carrossel", "snap"],
+    /*
+     * Foto do acervo, e não seis caixas cinzas escritas "item 1".
+     *
+     * Trilho é peça de vitrine: o que ele resolve — o card cortado na borda que
+     * promete que a gama continua, o encaixe que para no item inteiro, a ponta
+     * que esmaece enquanto há lista — só se julga com imagem de verdade dentro.
+     * Com retângulo cinza a demo mostrava que o scroll funciona, que é a única
+     * coisa que ninguém duvidava.
+     *
+     * `bleed={12}` casa com o `px-3` do palco: a fileira encosta na borda e o
+     * título continua alinhado com o primeiro card.
+     */
     demo: () => (
       <div className="w-full px-3">
-        <Rail itemWidth={110} gap={10} label="Coleção">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className="grid h-24 place-items-center rounded-[var(--r-control,0.5rem)] border border-border bg-muted text-rotulo text-muted-foreground"
-            >
-              item {i}
-            </div>
+        <Rail
+          itemWidth={116}
+          gap={10}
+          label="Coleção"
+          bleed={12}
+          fade
+          heading="Coleção"
+          hint="8 peças"
+        >
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+            <figure key={i} className="min-w-0">
+              <Media
+                papel="cena"
+                indice={i}
+                ratio="4/5"
+                className="rounded-[var(--r-control,0.5rem)] border border-border"
+              />
+              <figcaption className="mt-1.5 truncate text-rotulo text-muted-foreground">
+                Peça {String(i + 1).padStart(2, "0")}
+              </figcaption>
+            </figure>
           ))}
         </Rail>
       </div>
     ),
-    preview: { w: 620, h: 210 },
+    preview: { w: 620, h: 240 },
   },
   {
     name: "plate",
@@ -832,17 +935,47 @@ export const CATALOG: CatalogItem[] = [
     description:
       "A placa onde a foto de catálogo senta. Resolve o recorte branco sobre fundo colorido.",
     tags: ["produto", "foto"],
+    /*
+     * A demo mostrava uma caixa cinza escrita "foto do produto" — numa peça
+     * cujo trabalho inteiro é o que acontece ENTRE a foto e a placa. Sem foto
+     * não dá pra ver o multiply casar o recorte com o fundo, nem o chão fazer o
+     * produto pousar, nem a etiqueta sobreviver ao blend. Agora são duas placas
+     * com arte de verdade e a diferença entre elas é a decisão que a peça pede:
+     * recorte sobre branco (multiply, com chão) contra foto de cena (normal).
+     */
     demo: () => (
       <Frame>
-        <div className="w-[150px]">
-          <Plate ratio="4/5">
-            <div className="grid h-full place-items-center text-rotulo text-muted-foreground">
-              foto do produto
+        <div className="flex items-end gap-4">
+          {(
+            [
+              { blend: "multiply", ground: true, nota: "multiply, com chão", i: 0 },
+              { blend: "normal", ground: false, nota: "normal, etiqueta", i: 5 },
+            ] as const
+          ).map((p) => (
+            <div key={p.nota} className="w-[132px]">
+              <Plate
+                ratio="4/5"
+                blend={p.blend}
+                ground={p.ground}
+                badge={
+                  p.blend === "normal" ? (
+                    <span className="rounded-[var(--r-pill,9999px)] bg-[var(--brand)] px-2 py-0.5 font-mono text-micro uppercase tracking-[0.12em] text-[var(--brand-foreground)]">
+                      novo
+                    </span>
+                  ) : undefined
+                }
+              >
+                <Media papel="cena" indice={p.i} className="h-full w-full" />
+              </Plate>
+              <p className="mt-1.5 font-mono text-micro uppercase tracking-wider text-muted-foreground">
+                {p.nota}
+              </p>
             </div>
-          </Plate>
+          ))}
         </div>
       </Frame>
     ),
+    preview: { w: 420, h: 260 },
   },
   {
     name: "chip",
@@ -859,12 +992,12 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "aquisicao",
     description:
-      "Aberto/fechado calculado no fuso da loja, não no do visitante — a resposta certa para quem está do outro lado do mundo.",
+      "Aberto/fechado calculado no fuso da loja, não no do visitante. Quem está do outro lado do mundo vê a resposta certa.",
     tags: ["loja", "fuso"],
     demo: () => (
       <Frame className="flex-col gap-1 text-center">
         <StoreStatus timeZone="America/Sao_Paulo" openHour={9} closeHour={18} />
-        <span className="text-micro text-muted-foreground">America/Sao_Paulo · 9h–18h</span>
+        <span className="text-micro text-muted-foreground">America/Sao_Paulo, 9h às 18h</span>
       </Frame>
     ),
   },
@@ -888,7 +1021,7 @@ export const CATALOG: CatalogItem[] = [
     title: "Repulsive Hover",
     type: "ui",
     family: "aquisicao",
-    description: "O elemento foge do cursor com mola. Gesto de hero, não de formulário.",
+    description: "O elemento foge do cursor com mola. Gesto de hero, fora de formulário.",
     tags: ["hover", "mola"],
     demo: () => (
       <Frame>
@@ -925,7 +1058,7 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "motion",
     description:
-      "Ícone que bate com faísca — o sistema mostrando esforço em vez de pedir paciência.",
+      "Ícone que bate com faísca. O sistema mostra esforço em vez de pedir paciência.",
     tags: ["espera", "ícone"],
     demo: () => (
       <Frame>
@@ -957,11 +1090,16 @@ export const CATALOG: CatalogItem[] = [
     title: "Octahedron Loader",
     type: "ui",
     family: "motion",
-    description: "Carregamento com sólido girando — a marca da casa em espera curta.",
+    description: "Carregamento com sólido girando. A marca da casa em espera curta.",
     tags: ["loader", "lottie"],
     // O loader é de tela cheia por contrato (`min-h-screen` — ele ocupa a rota
     // inteira enquanto ela carrega). Dentro do card isso viraria um palco de 600px,
     // então a regra é desfeita aqui, na vitrine, e não no componente publicado.
+    //
+    // Sem `src`: o `.lottie` do símbolo é ativo de marca e não é versionado
+    // neste repo, então a vitrine mostra de propósito o estado de espera
+    // genérico — que é exatamente o que quem instalar sem passar o arquivo vai
+    // ver. O aviso no console faz parte da demonstração.
     demo: () => (
       <Frame className="[&>[role=status]]:min-h-0">
         <OctahedronLoader size={72} />
@@ -1001,7 +1139,7 @@ export const CATALOG: CatalogItem[] = [
     title: "Grid Dots",
     type: "ui",
     family: "motion",
-    description: "Malha de pontos de fundo — o papel milimetrado que dá profundidade sem competir.",
+    description: "Malha de pontos de fundo, o papel milimetrado que dá profundidade sem competir.",
     tags: ["fundo", "grid"],
     demo: () => (
       <div className="relative h-full w-full">
@@ -1083,7 +1221,7 @@ export const CATALOG: CatalogItem[] = [
     title: "Vintage Button",
     type: "ui",
     family: "vintage",
-    description: "Botão de painel com afundamento real no clique.",
+    description: "Botão de painel que afunda no clique.",
     tags: ["áudio", "botão"],
     demo: () => (
       <Frame className="gap-2">
@@ -1180,8 +1318,11 @@ export const CATALOG: CatalogItem[] = [
     tags: ["moldura", "crt"],
     demo: () => (
       <Frame>
-        <div className="w-[190px]">
-          <VintageTvFrame title="VISANT TV" width={190} showTimecode="00:12:34" signalActive>
+        {/* 240px em vez de 190: abaixo disso o rótulo da marca corta, e a demo
+            existe pra mostrar o console inteiro. Que a peça AGUENTE 190 é outra
+            coisa — isso o teste de 390px prova. */}
+        <div className="w-[240px]">
+          <VintageTvFrame title="VISANT TV" width={240} showTimecode="00:12:34" signalActive>
             <div className="grid h-full place-items-center font-mono text-micro text-white/70">
               NO SIGNAL
             </div>
@@ -1189,7 +1330,7 @@ export const CATALOG: CatalogItem[] = [
         </div>
       </Frame>
     ),
-    preview: { w: 460, h: 335 },
+    preview: { w: 440, h: 300 },
   },
   {
     name: "vintage-command-palette",
@@ -1235,7 +1376,7 @@ export const CATALOG: CatalogItem[] = [
     title: "Vintage Theme",
     type: "theme",
     family: "fundacao",
-    description: "O tema do kit de áudio — o contraponto escuro aos temas de marca.",
+    description: "O tema do kit de áudio, o contraponto escuro aos temas de marca.",
     tags: ["tema", "css"],
   },
   {
@@ -1268,7 +1409,7 @@ export const CATALOG: CatalogItem[] = [
       <SectionIntro
         eyebrow="Serviços"
         title="Um time só. Todo serviço que a marca precisa."
-        lead="Da estratégia de marca ao desenvolvimento — sem repassar o trabalho para fora no meio do caminho."
+        lead="Da estratégia de marca ao desenvolvimento, sem repassar o trabalho para fora no meio do caminho."
       />
     ),
     preview: { w: 620, h: 300 },
@@ -1329,7 +1470,7 @@ export const CATALOG: CatalogItem[] = [
     type: "block",
     family: "aquisicao",
     description:
-      "Como funciona, em passos numerados. Lista ordenada de verdade e a arte de cada passo por slot.",
+      "Como funciona, em passos numerados. Sai como lista ordenada no HTML, e a arte de cada passo entra por slot.",
     tags: ["passos", "como funciona", "onboarding"],
     demo: () => (
       <StepCards
@@ -1399,7 +1540,10 @@ export const CATALOG: CatalogItem[] = [
         ]}
       />
     ),
-    preview: { w: 760, h: 360 },
+    // 700 e não 360: a parede agora escolhe a contagem de colunas pela largura
+    // do container, e num palco de 760px cabem duas — o que dobra a altura. O
+    // número declarado é medido, não chutado (696px a 760 de largura).
+    preview: { w: 760, h: 700 },
   },
 
   /* ══════════════════════════════════════════════════════════════════════
@@ -1468,15 +1612,7 @@ export const CATALOG: CatalogItem[] = [
     description:
       "O número que se apura em vez de aparecer pronto: lê o valor final do próprio texto, trava a largura antes do primeiro quadro e não anima o que não dá pra parsear.",
     tags: ["número", "contagem", "prova", "estatística", "animar"],
-    demo: () => (
-      <div className="flex h-full items-center justify-center gap-8">
-        <CountUp className="text-[2rem] font-semibold tracking-tight">R$450k</CountUp>
-        <CountUp className="text-[2rem] font-semibold tracking-tight" delay={120}>
-          1.200
-        </CountUp>
-        <span className="text-[2rem] font-semibold tracking-tight text-muted-foreground">—</span>
-      </div>
-    ),
+    demo: () => <CountUpDemo />,
   },
   {
     name: "use-pointer-parallax",
@@ -1506,7 +1642,7 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "aquisicao",
     description:
-      "Nenhum número sem régua: valor, qualificador, evidência e rótulo nessa ordem. Sem denominador honesto a barra não desenha, e o estado desconhecido fica tracejado em vez de zerado.",
+      "Nenhum número sem régua: valor, qualificador, evidência e rótulo nessa ordem. Sem denominador a barra não desenha, e o estado desconhecido fica tracejado em vez de zerado.",
     tags: ["número", "régua", "evidência", "prova", "métrica"],
     demo: () => (
       <div className="flex h-full items-center justify-center gap-10">
@@ -1528,7 +1664,12 @@ export const CATALOG: CatalogItem[] = [
     demo: () => (
       // `flex-wrap`: a estante tem que caber no celular também — a demo roda
       // sozinha num viewport de 360px no teste de peça responsiva.
-      <div className="flex h-full flex-wrap items-end justify-center gap-5 pb-2">
+      //
+      // Sem `h-full`: com ele a estante colava no rodapé de um palco que cresce
+      // (a vista de foco dá 1500px de largura ao palco), e a linha do título
+      // ficava cortada embaixo. A altura da demo agora é a da estante, e o palco
+      // se ajusta a ela — que é o contrato do FitStage.
+      <div className="flex flex-wrap items-end justify-center gap-5 py-2">
         {["Marca em 9 etapas", "O método do lote", "Imersão"].map((t, i) => (
           <SpineCard
             key={t}
@@ -1546,7 +1687,7 @@ export const CATALOG: CatalogItem[] = [
         ))}
       </div>
     ),
-    preview: { w: 560, h: 340 },
+    preview: { w: 540, h: 330 },
   },
   {
     name: "cover-art",
@@ -1557,7 +1698,10 @@ export const CATALOG: CatalogItem[] = [
       "Capa determinística em CSS pra item sem arte: três famílias (livro, app, placa), monograma, e rampa tonal derivada da marca por color-mix. Zero byte de imagem, SSR igual ao cliente.",
     tags: ["capa", "placeholder", "catálogo", "determinístico", "sem imagem"],
     demo: () => (
-      <div className="flex h-full items-center justify-center gap-4">
+      // Retrato, e não paisagem: numa caixa 4/3 de 150px sobravam 112px de
+      // altura pro título, e a capa aparecia mais como faixa do que como capa.
+      // Sem `h-full`, a demo tem a altura das capas e o palco acompanha.
+      <div className="flex flex-wrap items-center justify-center gap-[18px] py-1">
         {(
           [
             ["Marca em 9 etapas", "book"],
@@ -1565,13 +1709,13 @@ export const CATALOG: CatalogItem[] = [
             ["Live de outubro", "plate"],
           ] as const
         ).map(([t, f]) => (
-          <div key={t} className="relative aspect-[4/3] w-[150px] overflow-hidden rounded">
+          <div key={t} className="relative aspect-[3/4] w-[160px] overflow-hidden rounded">
             <CoverArt title={t} seed={t} family={f} />
           </div>
         ))}
       </div>
     ),
-    preview: { w: 540, h: 200 },
+    preview: { w: 550, h: 240 },
   },
   {
     name: "empty-state",
@@ -1583,15 +1727,19 @@ export const CATALOG: CatalogItem[] = [
     tags: ["vazio", "empty", "onboarding", "primeiro uso"],
     demo: () => (
       <EmptyState
-        className="w-[340px]"
+        /* `w-full max-w-[340px]` e não `w-[340px]`: medido, a largura cravada
+           estourava 80px numa coluna de 260px — e coluna estreita é justamente
+           onde estado vazio mora. O teto continua, o piso deixa de existir. */
+        className="mx-auto w-full max-w-[340px]"
         eyebrow="Biblioteca"
         title="Nada por aqui ainda."
         action={<Chip pressed>Importar acervo</Chip>}
-        art={
-          <div className="relative h-[110px] w-full">
-            <CoverArt title="Acervo" seed="acervo-vazio" family="plate" titleless />
-          </div>
-        }
+        /* Foto de verdade no slot, e não a capa tonal que estava aqui: o véu
+           existe pra garantir contraste sobre imagem com luz de janela, e uma
+           rampa de duas cores nunca ameaça o texto. Com a foto dá pra ver se o
+           véu está fazendo o trabalho ou só apagando a arte — era exatamente
+           esse o defeito. */
+        art={<Media papel="cena" indice={2} className="h-[120px] w-full" />}
       >
         O que você salvar aparece aqui, com o trecho e o minuto do vídeo.
       </EmptyState>

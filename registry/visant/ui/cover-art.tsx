@@ -40,6 +40,20 @@ import { coverLook, mix, monogram, type CoverFamily, type CoverLook } from "@/li
  *
  * Zero hex: a rampa tonal é `color-mix` entre `--card` e `--foreground`, então
  * a capa nasce da paleta de quem instalou e o tema escuro sai de graça.
+ *
+ * ── 4. A capa se mede pela CAIXA que a recebe ──────────────────────────────
+ *
+ * O desenho era todo em px fixo: título de 22px, 40px de folga no topo, janela
+ * com 20px de recuo, linha de 7px. Só que esta peça é um slot — a mesma capa
+ * entra num card de 90px na grade e num herói de 600px. Numa caixa de 150×112 o
+ * título de 22px em quatro linhas pedia 100px depois de 40px de folga: sobrava
+ * pela borda e o `overflow-hidden` cortava a palavra no meio ("Marca em 9 eta").
+ * Era esse o "estourado".
+ *
+ * Agora a raiz é um container de tamanho (`container-type: size`) e cada medida
+ * sai de `cqmin` — 1% do MENOR lado da caixa — presa entre um piso e um teto. É
+ * o único jeito de a mesma arte funcionar em 90px e em 600px sem prop de
+ * tamanho, sem media query e sem medir nada em JS.
  */
 
 const TRACO = "color-mix(in oklch, var(--foreground) 18%, transparent)";
@@ -61,8 +75,26 @@ function Espessura() {
   );
 }
 
+/**
+ * As medidas da capa, todas em função do menor lado da caixa.
+ *
+ * Ficam num objeto e não espalhadas pelo JSX porque as três famílias precisam
+ * combinar entre si na mesma prateleira: mudar o piso do título num lugar só é
+ * como o desenho perde o conjunto.
+ */
+const M = {
+  /** Respiro geral. */
+  pad: "clamp(0.625rem,6cqmin,1.25rem)",
+  /** Folga de topo do livro: o canto é território da etiqueta de formato. */
+  padTopo: "clamp(1rem,15cqmin,2.5rem)",
+  gap: "clamp(0.25rem,3.5cqmin,0.75rem)",
+  regua: "clamp(1rem,10cqmin,2.25rem)",
+  tituloLivro: "clamp(0.6875rem,12.5cqmin,1.375rem)",
+  tituloPlaca: "clamp(0.625rem,11cqmin,1.25rem)",
+} as const;
+
 function Regua() {
-  return <span className="block h-px w-9 bg-border" />;
+  return <span className="block h-px bg-border" style={{ width: M.regua }} />;
 }
 
 function Book({ title, look, titleless }: { title: string; look: CoverLook; titleless?: boolean }) {
@@ -78,12 +110,25 @@ function Book({ title, look, titleless }: { title: string; look: CoverLook; titl
       {!titleless && (
         <div
           className={cn(
-            "relative flex h-full flex-col gap-3 pb-5 pl-7 pr-5",
-            look.titleOnTop ? "justify-start pt-10" : "justify-end pt-5",
+            "relative flex h-full flex-col",
+            look.titleOnTop ? "justify-start" : "justify-end",
           )}
+          style={{
+            gap: M.gap,
+            padding: M.pad,
+            // A lombada desenhada mora à esquerda: o texto começa depois dela.
+            paddingLeft: `calc(${M.pad} * 1.4)`,
+            paddingTop: look.titleOnTop ? M.padTopo : M.pad,
+          }}
         >
           <Regua />
-          <span className="line-clamp-4 text-[22px] font-extrabold leading-[1.06] tracking-tight">
+          {/* Três linhas, não quatro: em caixa pequena a quarta linha era o que
+              transbordava, e capa de catálogo não é lugar de ler o título todo —
+              é lugar de reconhecer o item. */}
+          <span
+            className="line-clamp-3 font-extrabold leading-[1.06] tracking-tight"
+            style={{ fontSize: M.tituloLivro }}
+          >
             {title}
           </span>
         </div>
@@ -102,18 +147,28 @@ function App({ title, look }: { title: string; look: CoverLook }) {
     >
       <Espessura />
       <div
-        className="absolute inset-x-5 inset-y-6 flex flex-col overflow-hidden rounded-[var(--r-control)]"
-        style={{ border: `1px solid ${BORDA_JANELA}`, background: mix(look.light) }}
+        className="absolute flex flex-col overflow-hidden rounded-[var(--r-control)]"
+        style={{
+          inset: M.pad,
+          border: `1px solid ${BORDA_JANELA}`,
+          background: mix(look.light),
+        }}
       >
         {/* A barra de topo com o monograma é o que dá identidade a cada uma. */}
         <div
-          className="flex h-8 shrink-0 items-center gap-2 px-3"
+          className="flex shrink-0 items-center"
           style={{
+            height: "clamp(0.875rem,13cqmin,2rem)",
+            gap: M.gap,
+            paddingInline: `calc(${M.pad} * 0.7)`,
             borderBottom: `1px solid ${BORDA_JANELA}`,
             background: "color-mix(in oklch, var(--foreground) 4%, transparent)",
           }}
         >
-          <span className="text-[11px] font-bold tracking-[0.08em] text-foreground">
+          <span
+            className="font-bold tracking-[0.08em] text-foreground"
+            style={{ fontSize: "clamp(0.4375rem,5cqmin,0.6875rem)" }}
+          >
             {monogram(title)}
           </span>
           <span className="ml-auto flex gap-1" aria-hidden="true">
@@ -130,12 +185,19 @@ function App({ title, look }: { title: string; look: CoverLook }) {
               background: "color-mix(in oklch, var(--background) 22%, transparent)",
             }}
           />
-          <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 px-3">
+          <div
+            className="flex min-w-0 flex-1 flex-col justify-center"
+            style={{ gap: M.gap, paddingInline: `calc(${M.pad} * 0.7)` }}
+          >
             {Array.from({ length: look.lines }).map((_, i) => (
               <span
                 key={i}
-                className="block h-[7px] rounded-full"
-                style={{ width: LARGURAS[(i + look.spin) % LARGURAS.length], background: TRACO }}
+                className="block rounded-full"
+                style={{
+                  height: "clamp(2px,3.5cqmin,7px)",
+                  width: LARGURAS[(i + look.spin) % LARGURAS.length],
+                  background: TRACO,
+                }}
               />
             ))}
           </div>
@@ -153,9 +215,15 @@ function Plate({ title, look, titleless }: { title: string; look: CoverLook; tit
     >
       <Espessura />
       {!titleless && (
-        <div className="relative flex h-full flex-col justify-end gap-3 p-5">
+        <div
+          className="relative flex h-full flex-col justify-end"
+          style={{ gap: M.gap, padding: M.pad }}
+        >
           <Regua />
-          <span className="line-clamp-4 text-[20px] font-bold uppercase leading-[1.1] tracking-tight">
+          <span
+            className="line-clamp-3 font-bold uppercase leading-[1.1] tracking-tight"
+            style={{ fontSize: M.tituloPlaca }}
+          >
             {title}
           </span>
         </div>
@@ -183,7 +251,13 @@ export function CoverArt({
 }: CoverArtProps) {
   const look = coverLook(seed);
   return (
-    <div className={cn("absolute inset-0", className)} aria-hidden="true">
+    // `container-type: size` e não `inline-size`: as medidas usam `cqmin`, que
+    // precisa dos DOIS lados da caixa. É seguro aqui porque a raiz é
+    // `absolute inset-0` — o tamanho vem do slot, nunca do conteúdo.
+    <div
+      className={cn("absolute inset-0 [container-type:size]", className)}
+      aria-hidden="true"
+    >
       {family === "book" ? (
         <Book title={title} look={look} titleless={titleless} />
       ) : family === "app" ? (

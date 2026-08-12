@@ -19,11 +19,26 @@ import { cn } from "@/lib/utils";
  * 2. **Colunas de CSS, não grade calculada.** A ordem do DOM é a ordem de
  *    leitura, e depoimento tem altura imprevisível — `columns` + `break-inside`
  *    resolve sem medir nada em JS e sem reordenar quando a lista cresce.
- * 3. **O vídeo não autoplay.** É um `<button>` sobre o pôster: cabe teclado,
- *    tem rótulo acessível e não come banda de quem não pediu.
+ * 3. **O vídeo é um controle de verdade.** O botão sobre o pôster dá play e
+ *    pause no `<video>` do próprio slot, aparece no hover e existe no toque.
  * 4. **O tom vem do token.** As cores pastel da referência são da marca de lá;
  *    aqui são `muted`, `brand` e `card` — a parede muda de marca sem tocar no
  *    componente.
+ *
+ * ── O que estava quebrado no auto-layout, e por quê ────────────────────────
+ *
+ * A contagem de colunas vinha de `sm:` e `lg:`, que leem a LARGURA DA JANELA.
+ * Bloco de página não sabe onde vai ser montado: numa coluna de 700px dentro de
+ * uma tela de 1600, a parede abria em três colunas de 230px e o depoimento saía
+ * com seis palavras por linha. Agora a régua é `column-width`: a parede pede um
+ * mínimo de 17rem por coluna e `columns` vira **teto**, não promessa. O navegador
+ * escolhe pela largura real do container, sem media query e sem medir em JS.
+ *
+ * O segundo defeito era o buraco. Numa parede de colunas, **nenhuma coluna pode
+ * ser mais baixa que o item mais alto** — e o retrato em 3/4 numa coluna de
+ * 500px pedia 667px de altura, o que deixava as outras duas com 300px de vazio
+ * embaixo. O retrato agora tem teto de altura e a foto corta por `object-cover`:
+ * um retrato é reconhecível cortado, e uma parede com buraco não é parede.
  */
 
 type Tone = "card" | "muted" | "brand";
@@ -74,16 +89,24 @@ export type TestimonialItem = QuoteItem | StatItem | PortraitItem;
 
 export interface TestimonialWallProps extends React.HTMLAttributes<HTMLDivElement> {
   items: TestimonialItem[];
+  /** Teto de colunas. A largura do container é quem decide quantas cabem. */
   columns?: 2 | 3 | 4;
   /** O que aparece quando ainda não há depoimento nenhum. */
   empty?: React.ReactNode;
 }
 
-const COLS: Record<2 | 3 | 4, string> = {
-  2: "sm:columns-2",
-  3: "sm:columns-2 lg:columns-3",
-  4: "sm:columns-2 lg:columns-3 xl:columns-4",
-};
+/** Piso de largura de coluna: abaixo disso o depoimento vira poesia concreta. */
+const COL_MIN = "15rem";
+
+/**
+ * Teto de altura do retrato.
+ *
+ * Não é gosto, é aritmética de parede: o item mais alto define a altura de TODAS
+ * as colunas, então um retrato sem teto compra vazio para os vizinhos. 26rem é a
+ * altura em que o retrato ainda é o maior item da parede sem ser o dobro do
+ * segundo maior.
+ */
+const RETRATO_MAX = "26rem";
 
 export function TestimonialWall({
   items,
@@ -108,13 +131,163 @@ export function TestimonialWall({
   }
 
   return (
-    <div className={cn("columns-1 gap-4", COLS[columns], className)} {...props}>
+    <div
+      className={cn("gap-4", className)}
+      {...props}
+      // `columns: <largura> <teto>` — o navegador cabe quantas colunas de pelo
+      // menos `COL_MIN` couberem, até o teto. É o mesmo resultado que a media
+      // query dava numa página cheia, e o resultado CERTO dentro de container.
+      // Depois do spread, e espalhando o `style` de quem usa: a contagem de
+      // colunas é do componente, o resto continua sendo de quem chamou.
+      style={{ columns: `${COL_MIN} ${columns}`, ...props.style }}
+    >
       {items.map((item) => (
         <div key={item.id} className="mb-4 break-inside-avoid">
           <Card item={item} />
         </div>
       ))}
     </div>
+  );
+}
+
+/**
+ * O retrato, e o botão que finalmente faz alguma coisa.
+ *
+ * O que havia antes era um botão que só existia se `onPlay` fosse passado e que
+ * chamava `onPlay` e mais nada. Nas paredes reais desta casa `onPlay` é
+ * `() => {}` — ou seja, o controle estava lá, ficava sempre visível por cima da
+ * foto, e apertar não fazia NADA. Botão que não faz nada é pior que botão
+ * nenhum: gasta a confiança de todos os outros.
+ *
+ * Agora ele acha o `<video>` que veio no slot e dá play e pause nele de verdade,
+ * com o desenho seguindo o estado. `onPlay` continua sendo chamado no play, pra
+ * quem usa o evento pra abrir um lightbox ou marcar analytics — nada de
+ * assinatura mudou.
+ *
+ * Aparecer só no hover é o pedido, e `no-hover` é a classe que sabe fazer isso
+ * sem apagar o controle no celular: fica invisível no ponteiro fino, aparece no
+ * hover e no foco de teclado, e é **sempre** visível em ponteiro grosso, onde
+ * hover não existe.
+ */
+function Portrait({ item, shell }: { item: PortraitItem; shell: string }) {
+  const caixa = React.useRef<HTMLDivElement>(null);
+  const [video, setVideo] = React.useState<HTMLVideoElement | null>(null);
+  const [tocando, setTocando] = React.useState(false);
+
+  React.useEffect(() => {
+    const v = caixa.current?.querySelector("video") ?? null;
+    setVideo(v);
+    if (!v) return;
+    // O estado vem do elemento, nunca de uma variável nossa: o vídeo pode
+    // pausar sozinho (aba escondida, economia de bateria do iOS) e aí o ícone
+    // passaria a mentir sobre o que está acontecendo.
+    const sincronizar = () => setTocando(!v.paused);
+    sincronizar();
+    v.addEventListener("play", sincronizar);
+    v.addEventListener("pause", sincronizar);
+    return () => {
+      v.removeEventListener("play", sincronizar);
+      v.removeEventListener("pause", sincronizar);
+    };
+  }, [item.id]);
+
+  const temControle = !!video || !!item.onPlay;
+
+  const alternar = () => {
+    if (!video) {
+      item.onPlay?.();
+      return;
+    }
+    if (video.paused) {
+      // `play()` devolve promessa e ela REJEITA quando o navegador barra a
+      // reprodução. Sem o catch isso vira "unhandled rejection" no console de
+      // quem instalou, por um clique que a pessoa nem viu falhar.
+      void video.play().catch(() => undefined);
+      item.onPlay?.();
+    } else {
+      video.pause();
+    }
+  };
+
+  return (
+    <figure
+      // `group` só quando há controle: card que não faz nada não deve reagir ao
+      // mouse — hover em coisa inerte promete um clique que não existe.
+      // `w-full` não é enfeite: com `aspect-ratio` e `max-height` juntos numa
+      // caixa de largura automática, o navegador prefere ENCOLHER a largura pra
+      // manter a proporção — e o retrato saía 100px mais estreito que a coluna,
+      // com uma canaleta vazia do lado. Largura fixada, quem cede é a altura, e
+      // o corte fica por conta do `object-cover`.
+      className={cn(shell, "relative isolate w-full", temControle && "group")}
+      style={{
+        aspectRatio: item.ratio ?? "3 / 4",
+        // Ver a nota do cabeçalho: sem teto, o retrato define a altura das
+        // colunas todas e abre buraco nas vizinhas.
+        maxHeight: RETRATO_MAX,
+      }}
+    >
+      <div
+        ref={caixa}
+        className={cn(
+          "absolute inset-0 -z-10",
+          "[&_img]:size-full [&_img]:object-cover [&_video]:size-full [&_video]:object-cover",
+          temControle && [
+            "[&_img]:transition-transform [&_img]:[transition-duration:var(--dur-slow)]",
+            "[&_img]:ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+            "group-hover:[&_img]:scale-[1.04] motion-reduce:group-hover:[&_img]:scale-100",
+          ],
+        )}
+      >
+        {item.media}
+      </div>
+
+      {temControle ? (
+        <button
+          type="button"
+          onClick={alternar}
+          aria-label={
+            video
+              ? tocando
+                ? `Pausar o depoimento de ${item.name}`
+                : `Tocar o depoimento de ${item.name}`
+              : `Ver o depoimento de ${item.name}`
+          }
+          className={cn(
+            "no-hover",
+            "absolute right-3 top-3 grid size-11 place-items-center rounded-[var(--r-pill,9999px)]",
+            "bg-[var(--background)] text-[var(--foreground)] [box-shadow:var(--e-raised)]",
+            "transition-transform [transition-duration:var(--dur-press,120ms)]",
+            "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+            // Só o afundar do clique. O crescer no hover saiu: o botão já
+            // ENTRA no hover, e duas coisas acontecendo no mesmo gesto viram
+            // ruído em vez de resposta.
+            "active:scale-95",
+            "focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]",
+          )}
+        >
+          {tocando ? (
+            <svg viewBox="0 0 16 16" className="size-4" fill="currentColor" aria-hidden="true">
+              <path d="M4.5 3h2.2v10H4.5zM9.3 3h2.2v10H9.3z" />
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 16 16"
+              className="size-4 translate-x-px"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M5 3.5 12.5 8 5 12.5z" />
+            </svg>
+          )}
+        </button>
+      ) : null}
+
+      {/* A legenda paga o próprio contraste: a foto atrás é imprevisível. */}
+      <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 pt-10 text-white">
+        <p className="text-[1.0625rem] font-semibold leading-[1.2]">{item.name}</p>
+        {item.role ? <p className="text-[12px] leading-[1.4] opacity-85">{item.role}</p> : null}
+      </figcaption>
+    </figure>
   );
 }
 
@@ -139,55 +312,7 @@ function Card({ item }: { item: TestimonialItem }) {
   }
 
   if (item.kind === "portrait") {
-    return (
-      <figure
-        // `group` só quando há vídeo: card que não faz nada não deve reagir ao
-        // mouse — hover em coisa inerte promete um clique que não existe.
-        className={cn(shell, "relative isolate", item.onPlay && "group")}
-        style={{ aspectRatio: item.ratio ?? "3 / 4" }}
-      >
-        <div
-          className={cn(
-            "absolute inset-0 -z-10 [&_img]:size-full [&_img]:object-cover",
-            item.onPlay && [
-              "[&_img]:transition-transform [&_img]:[transition-duration:var(--dur-slow)]",
-              "[&_img]:ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
-              "group-hover:[&_img]:scale-[1.04] motion-reduce:group-hover:[&_img]:scale-100",
-            ],
-          )}
-        >
-          {item.media}
-        </div>
-
-        {item.onPlay ? (
-          <button
-            type="button"
-            onClick={item.onPlay}
-            aria-label={`Ver o depoimento de ${item.name}`}
-            className={cn(
-              "absolute right-3 top-3 grid size-11 place-items-center rounded-[var(--r-pill,9999px)]",
-              "bg-[var(--background)] text-[var(--foreground)]",
-              "transition-[transform,box-shadow] [transition-duration:var(--dur-press,120ms)]",
-              "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
-              // Cresce junto com a foto: um gesto só, dois elementos.
-              "group-hover:scale-105 group-hover:[box-shadow:var(--e-raised)]",
-              "active:scale-95 motion-reduce:group-hover:scale-100",
-              "focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]",
-            )}
-          >
-            <svg viewBox="0 0 16 16" className="size-4 translate-x-px" fill="currentColor">
-              <path d="M5 3.5 12.5 8 5 12.5z" />
-            </svg>
-          </button>
-        ) : null}
-
-        {/* A legenda paga o próprio contraste: a foto atrás é imprevisível. */}
-        <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 pt-10 text-white">
-          <p className="text-[1.0625rem] font-semibold leading-[1.2]">{item.name}</p>
-          {item.role ? <p className="text-[12px] leading-[1.4] opacity-85">{item.role}</p> : null}
-        </figcaption>
-      </figure>
-    );
+    return <Portrait item={item} shell={shell} />;
   }
 
   return (

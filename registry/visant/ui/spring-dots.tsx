@@ -30,21 +30,50 @@ import { cn } from "@/lib/utils";
  *
  * Como no `erase-field`, a cor sai de uma sonda e não de um parser de hex — o
  * registry emite OKLCH, e parser de `#rrggbb` cairia num fallback em silêncio.
+ * A sonda **não** termina em regex, e a razão é um bug de verdade: o navegador
+ * moderno devolve `getComputedStyle().backgroundColor` ainda em `oklch(...)`
+ * quando a var é OKLCH — só serializa em `rgb()` o que já é sRGB. Um regex de
+ * números lia `oklch(0.708 0 0)` como `rgb(0.708, 0, 0)`, ou seja PRETO. Dentro
+ * de uma sala com `.dark` isso era ponto preto sobre fundo preto: a malha
+ * simplesmente sumia. Quem converte é o próprio canvas, que aceita CSS Color 4.
  *
  * Contratos: DPR com teto de 2, `ResizeObserver`, rAF parado fora da tela e
  * `prefers-reduced-motion` desenhando UM quadro — a malha fica, a mola não.
  */
 
-const CANAL = /(-?[\d.]+)/g;
+/* Um canvas 1×1 é o conversor: `fillStyle` engole qualquer notação de CSS Color
+   4 (oklch, color(), hsl…) e `getImageData` devolve os canais já em sRGB. O
+   sentinela é o teste de recusa — `fillStyle` inválido é IGNORADO em silêncio
+   pela spec, então se o valor continuar magenta é porque o navegador não
+   entendeu, e aí o fallback é honesto em vez de pintar magenta na tela. */
+// Hex cru de propósito: não é cor de UI, é o valor-marcador do teste de recusa
+// do `fillStyle`. Nunca chega à tela.
+const SENTINELA = "#ff00ff";
+let pipeta: CanvasRenderingContext2D | null | undefined;
 
+function paraRGB(valor: string, fallback: [number, number, number]): [number, number, number] {
+  if (pipeta === undefined) {
+    const cv = document.createElement("canvas");
+    cv.width = cv.height = 1;
+    pipeta = cv.getContext("2d", { willReadFrequently: true });
+  }
+  if (!pipeta || !valor) return fallback;
+  pipeta.fillStyle = SENTINELA;
+  pipeta.fillStyle = valor;
+  if (pipeta.fillStyle === SENTINELA) return fallback;
+  pipeta.fillRect(0, 0, 1, 1);
+  const d = pipeta.getImageData(0, 0, 1, 1).data;
+  return [d[0], d[1], d[2]];
+}
+
+/** Resolve a var a partir do HOST — o tema pode estar num container, não no `<html>`. */
 function sonda(host: HTMLElement, custom: string, fallback: [number, number, number]) {
   const el = document.createElement("span");
   el.style.cssText = `position:absolute;width:0;height:0;background-color:var(${custom})`;
   host.appendChild(el);
   const lido = getComputedStyle(el).backgroundColor;
   host.removeChild(el);
-  const n = lido.match(CANAL)?.map(Number);
-  return n && n.length >= 3 ? ([n[0], n[1], n[2]] as [number, number, number]) : fallback;
+  return paraRGB(lido, fallback);
 }
 
 export interface SpringDotsProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -90,6 +119,12 @@ export function SpringDots({
     let ultimo = 0;
     let raf = 0;
     const p = { x: -9999, y: -9999, dentro: false };
+
+    function recolherCor() {
+      aceso = sonda(host!, activeVar, aceso);
+      parado = sonda(host!, restVar, parado);
+      if (reduzido) quadro(0); // sem loop, o repinte tem que ser pedido
+    }
 
     function medir() {
       const r = host!.getBoundingClientRect();
@@ -162,6 +197,13 @@ export function SpringDots({
     ro.observe(host);
     medir();
 
+    /* Trocar de tema não muda tamanho nenhum, então o ResizeObserver não acorda
+       e a malha ficaria com a cor do tema anterior até alguém redimensionar a
+       janela. Vigiar a classe do `<html>` (é lá que o botão de lua escreve)
+       custa um observer e resolve. Só re-sonda cor — não remonta a malha. */
+    const mo = new MutationObserver(recolherCor);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
     let io: IntersectionObserver | undefined;
     if (!reduzido) {
       io = new IntersectionObserver(
@@ -185,6 +227,7 @@ export function SpringDots({
       rodando = false;
       cancelAnimationFrame(raf);
       ro.disconnect();
+      mo.disconnect();
       io?.disconnect();
       document.removeEventListener("pointermove", mover);
       document.removeEventListener("pointerleave", sair);

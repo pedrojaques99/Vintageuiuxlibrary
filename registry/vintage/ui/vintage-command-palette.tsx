@@ -17,6 +17,27 @@ export interface CommandGroup {
   ids: string[];
 }
 
+/**
+ * VintageCommandPalette — a paleta de comandos no vocabulário do painel.
+ *
+ * O que estava quebrado, e por quê ("mt pequeno e não dá pra clicar"):
+ *
+ * 1. **A linha era um `<div onClick>`.** Div não recebe foco, não responde a
+ *    Enter, não aparece pro leitor de tela e não tem estado pressionado. A
+ *    navegação por seta existia, mas quem tentasse chegar na lista pelo Tab
+ *    caía direto no fim do documento. Agora cada linha é `<button>` dentro de um
+ *    `listbox`, com `aria-selected` seguindo a seta.
+ * 2. **A linha tinha ~40px de altura.** O piso de alvo de toque é 44. Quarenta
+ *    px é o tamanho em que o dedo erra a linha vizinha — e errar comando é pior
+ *    do que não achar.
+ * 3. **O painel tinha 480px CRAVADOS.** Num celular de 390 ele sangrava 45px de
+ *    cada lado: metade do rótulo e o selo de ON/OFF ficavam fora da tela. Agora
+ *    é `min(480px, 100vw - 2rem)`.
+ * 4. **A seta andava mas a lista não.** Descer além da dobra selecionava um item
+ *    invisível. O item selecionado agora se traz pra vista.
+ *
+ * O `backdrop-blur` fica: isto é diálogo modal, que é a exceção da regra.
+ */
 interface VintageCommandPaletteProps {
   items: CommandItem[];
   groups?: CommandGroup[];
@@ -83,15 +104,33 @@ export function VintageCommandPalette({
   }, [query]);
 
   const renderItems = (list: CommandItem[]) =>
-    list.map((item, i) => {
+    list.map((item) => {
       const globalIndex = filtered.indexOf(item);
+      const selecionado = globalIndex === selectedIndex;
       return (
-        <div
+        <button
           key={item.id}
+          id={`vcp-${item.id}`}
+          type="button"
+          role="option"
+          aria-selected={selecionado}
+          // Fora do Tab de propósito: quem manda na lista é a seta, e o foco
+          // fica no campo de busca. Botão tabulável aqui tiraria o foco do
+          // input e a seta pararia de funcionar no meio da navegação.
+          tabIndex={-1}
+          // A linha selecionada se traz pra vista: sem isto a seta descia além
+          // da dobra e a pessoa escolhia um comando que não estava na tela.
+          ref={(el) => {
+            if (el && selecionado) el.scrollIntoView({ block: "nearest" });
+          }}
           onClick={() => handleSelect(item.id)}
           className={cn(
-            "flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors",
-            globalIndex === selectedIndex
+            // `min-h-11` = 44px, o piso de alvo de toque. Antes eram ~40px de
+            // `py-2.5`, que é onde o dedo acerta a linha de cima.
+            "flex w-full min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 text-left",
+            "cursor-pointer transition-colors",
+            "[transition-duration:var(--dur-fast,160ms)]",
+            selecionado
               ? "bg-[var(--vintage-surface-3)]"
               : "hover:bg-[var(--vintage-surface-2)]",
             item.active && "bg-[var(--vintage-accent)]/10"
@@ -124,30 +163,42 @@ export function VintageCommandPalette({
               {item.active ? "ON" : "OFF"}
             </span>
           )}
-        </div>
+        </button>
       );
     });
 
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[9999] flex items-start justify-center pt-[10vh]",
+        "fixed inset-0 z-[9999] flex items-start justify-center",
+        // `10vh` de topo num celular deitado é quase toda a tela; o piso de 2rem
+        // é o que mantém a paleta acima da dobra em qualquer altura.
+        "px-4 pb-4 pt-[max(2rem,10vh)]",
         className
       )}
       style={{
-        background: "rgba(0,0,0,0.7)",
+        // Token, não `rgba` cru: o véu tem de escurecer o painel da casa, e o
+        // painel muda de tom por tema.
+        background: "color-mix(in srgb, var(--vintage-surface-1) 82%, transparent)",
+        // Exceção declarada à regra do backdrop-blur: isto é diálogo modal, que
+        // é justamente onde o desfoque paga o próprio custo de composição.
         backdropFilter: "blur(8px)",
       }}
       onMouseDown={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Paleta de comandos"
         onMouseDown={(e) => e.stopPropagation()}
-        className="w-[480px] max-h-[70vh] flex flex-col overflow-hidden rounded-2xl border border-[var(--vintage-border)]"
+        // Largura natural de 480, teto na tela: era `w-[480px]` cravado e num
+        // celular de 390 o painel sangrava 45px de cada lado.
+        className="flex max-h-[70vh] w-[min(480px,100%)] flex-col overflow-hidden rounded-2xl border border-[var(--vintage-border)]"
         style={{
           background:
             "linear-gradient(160deg, var(--vintage-surface-2), var(--vintage-surface-1))",
           boxShadow:
-            "0 40px 120px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.05)",
+            "0 40px 120px color-mix(in srgb, var(--vintage-surface-1) 90%, transparent), 0 0 0 1px color-mix(in srgb, var(--vintage-label) 8%, transparent)",
         }}
       >
         {/* Search */}
@@ -168,6 +219,10 @@ export function VintageCommandPalette({
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
+            role="combobox"
+            aria-expanded
+            aria-controls="vcp-lista"
+            aria-activedescendant={filtered[selectedIndex] ? `vcp-${filtered[selectedIndex].id}` : undefined}
             className="flex-1 bg-transparent border-none outline-none text-[var(--vintage-label)] text-base"
             style={{ fontFamily: "var(--font-vintage-body)" }}
           />
@@ -177,7 +232,12 @@ export function VintageCommandPalette({
         </div>
 
         {/* Items */}
-        <div className="overflow-y-auto flex-1 min-h-0 p-2">
+        <div
+          id="vcp-lista"
+          role="listbox"
+          aria-label="Comandos"
+          className="overflow-y-auto flex-1 min-h-0 p-2"
+        >
           {filtered.length === 0 && (
             <div className="py-8 text-center text-sm text-[var(--vintage-text-dim)]">
               No results found
@@ -191,7 +251,7 @@ export function VintageCommandPalette({
                   .filter(Boolean) as CommandItem[];
                 if (groupItems.length === 0) return null;
                 return (
-                  <div key={group.label}>
+                  <div key={group.label} role="group" aria-label={group.label}>
                     <div
                       className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--vintage-text-dim)]"
                       style={{ fontFamily: "var(--font-vintage-mono)" }}

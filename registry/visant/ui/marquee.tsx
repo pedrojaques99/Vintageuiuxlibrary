@@ -73,6 +73,21 @@ export interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
   laps?: number;
   /** Pausa no hover/foco. Desligue em faixa puramente decorativa. */
   pauseOnHover?: boolean;
+  /**
+   * Quantos px a faixa sangra pra fora do container, de cada lado.
+   *
+   * Faixa contida por um `px-6` de página não é faixa: o corte nas duas pontas
+   * denuncia a caixa e mata a ilusão de que o texto vem de fora e vai pra fora.
+   * Passe o mesmo respiro do pai (`px-6` → `bleed={24}`) e ela encosta na borda.
+   *
+   * Isto não é conveniência: hoje quem consome resolve por fora e resolve mal.
+   * Na sala "Página que vende" a faixa precisou de um `className="px-0 py-1
+   * sm:px-0"` no wrapper só pra desfazer o respiro do bloco — e isso deixa de
+   * funcionar no dia em que o bloco mudar de respiro. Aqui a peça sabe sozinha.
+   *
+   * `false` (padrão) é a faixa contida de sempre.
+   */
+  bleed?: number | false;
 }
 
 const useIsomorphicLayoutEffect =
@@ -90,6 +105,7 @@ export function Marquee({
   boost = 4,
   laps = 1,
   pauseOnHover = true,
+  bleed = false,
   className,
   style,
   ...props
@@ -362,8 +378,24 @@ export function Marquee({
                 "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
             }
           : null),
+        /*
+         * Sangria, e a ordem aqui importa.
+         *
+         * `tilt` sempre teve a sangria dele cravada em `width: 108%` +
+         * `marginLeft: -4%`: caixa girada mostra canto vazio nas pontas, e os 4%
+         * são o mínimo pra cobrir. Isso é sangria por necessidade geométrica, e
+         * é medida em % porque acompanha a largura.
+         *
+         * `bleed` é sangria por decisão de layout, e é medida em px porque casa
+         * com o respiro do pai, que também é px. Quando os dois existem, o
+         * `bleed` vem depois e manda no eixo horizontal — quem escreveu um
+         * número explícito quer aquele número.
+         */
         ...(tilt
           ? { rotate: `${tilt}deg`, width: "108%", marginLeft: "-4%" }
+          : null),
+        ...(typeof bleed === "number" && bleed > 0
+          ? { marginInline: `-${bleed}px`, width: `calc(100% + ${bleed * 2}px)` }
           : null),
         ...style,
       }}

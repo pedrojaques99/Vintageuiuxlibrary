@@ -1137,7 +1137,21 @@
           "type": "registry:component",
           "target": "~/components/testimonial-wall/index.ts"
         }
-      ]
+      ],
+      "css": {
+        ".no-hover": {
+          "opacity": "0",
+          "transition": "opacity var(--dur-fast, 160ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1))"
+        },
+        ".group:hover .no-hover, .no-hover:focus-within, .no-hover:has(:focus-visible)": {
+          "opacity": "1"
+        },
+        "@media (pointer: coarse)": {
+          ".no-hover": {
+            "opacity": "1"
+          }
+        }
+      }
     },
     {
       "name": "erase-field",
