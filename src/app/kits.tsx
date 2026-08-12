@@ -62,7 +62,8 @@ export const KITS: Kit[] = [
     familias: ["trabalho"],
     Composicao: React.lazy(() => import("./kits/mesa-de-trabalho")),
     ausentes: {
-      "data-table": "acoplada a Next (next-auth + next/navigation) — roda em app Next, não aqui",
+      "data-table":
+        "acoplada a Next (next-auth + next/navigation). Só roda dentro de um app Next",
     },
   },
   {
@@ -82,12 +83,18 @@ export const KITS: Kit[] = [
     escura: true,
     Composicao: React.lazy(() => import("./kits/motion-e-estado")),
     ausentes: {
-      "motion-layer": "biblioteca de scroll — sustenta o marquee da página que vende",
-      "smooth-scroll-provider": "provider de página inteira; não cabe dentro de um painel",
+      "motion-layer": "biblioteca de scroll que sustenta o marquee da página que vende",
+      "smooth-scroll-provider": "provider de página inteira. Não cabe dentro de um painel",
+      /*
+       * Estes dois estavam aqui por defeito, e o defeito foi consertado. O que
+       * os mantém fora da composição agora é outra coisa, e o motivo precisa
+       * dizer qual — motivo desatualizado é pior que motivo nenhum, porque
+       * descreve à pessoa um problema que ela não vai encontrar.
+       */
       "octahedron-loader":
-        "quebrado: o .lottie da marca não está no repo (ver bugs/REPORTS.md)",
+        "consertado (o src virou prop); sem o .lottie da marca no repo ele mostra a forma genérica, que não vale como demo",
       "spring-dots":
-        "sonda a cor no documento, não no host: nesta sala escura o ponto sai quase preto (ver bugs/REPORTS.md)",
+        "consertado (a sonda lia oklch como se fosse rgb); ainda não entrou na composição desta sala",
     },
   },
   {
@@ -109,9 +116,9 @@ export const KITS: Kit[] = [
     familias: ["marca", "fundacao"],
     Composicao: React.lazy(() => import("./kits/marca-viva")),
     ausentes: {
-      "vintage-base": "fundação do rig — as variáveis de painel vivem na sala vintage",
+      "vintage-base": "fundação do rig: as variáveis de painel vivem na sala vintage",
       "vintage-theme": "idem: é o tema que a sala vintage aplica",
-      "use-knob-drag": "o gesto do knob; se vê arrastando um knob na sala vintage",
+      "use-knob-drag": "o gesto do knob. Se vê arrastando um knob na sala vintage",
       "sfx-bus": "o barramento por trás do botão de som ao lado",
     },
   },

@@ -24,7 +24,7 @@
  */
 
 import * as React from "react";
-import { ArrowLeft, ArrowRight, Package } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { KITS, pecasDoKit, type Kit } from "./kits";
 import { TYPE_LABEL } from "./catalog";
@@ -69,21 +69,46 @@ function Seta({
  */
 function Tira({
   kit,
+  deps,
   onFocus,
 }: {
   kit: Kit;
+  /** O que o kit puxa de npm. Desceu do cabeçalho para cá, ver `KitRoom`. */
+  deps: ReturnType<typeof allDeps>;
   onFocus: (name: string) => void;
 }) {
   const pecas = pecasDoKit(kit);
   return (
-    <div className="border-t border-border px-4 py-4 sm:px-6">
-      <div className="flex items-baseline gap-2">
-        <h3 className="font-mono text-micro uppercase tracking-wider text-muted-foreground">
-          as {pecas.length} peças
-        </h3>
-        <span className="text-micro text-muted-foreground">
-          clique para abrir a ficha no catálogo
-        </span>
+    <div className="shell py-5">
+      {/* Saiu o "clique para abrir a ficha no catálogo": chip com borda e
+          cursor de mão não precisa de manual, e a frase ocupava a mesma linha
+          do único rótulo que a tira precisa.
+
+          "Zero dependência npm" é a informação mais cara desta linha para quem
+          decide instalar, e ela é calculada, não escrita. Os logos ficam porque
+          se leem de relance; o nome de cada pacote mora no `title`. */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-apoio text-muted-foreground">
+        <h3>as {pecas.length} peças</h3>
+        <span aria-hidden>·</span>
+        {deps.length ? (
+          <span
+            className="inline-flex items-center gap-2"
+            title={deps.flatMap(({ info }) => info.packages).join(", ")}
+          >
+            <span className="flex items-center gap-1.5">
+              {deps
+                .filter(({ info }) => info.icon)
+                .map(({ info }) => (
+                  <DepLogo key={info.key} icon={info.icon!} className="h-3.5 w-3.5" />
+                ))}
+            </span>
+            <span className="tabular-nums">
+              {deps.length} {deps.length === 1 ? "dependência" : "dependências"} npm
+            </span>
+          </span>
+        ) : (
+          <span>zero dependência npm</span>
+        )}
       </div>
       <div className="mt-2.5 flex flex-wrap gap-1.5">
         {pecas.map((p) => {
@@ -102,7 +127,7 @@ function Tira({
               )}
             >
               <span className="font-mono text-micro group-hover:text-[var(--brand)]">{p.name}</span>
-              <span className="font-mono text-micro uppercase tracking-wider text-muted-foreground">
+              <span className="font-mono text-micro text-muted-foreground">
                 {TYPE_LABEL[p.type]}
               </span>
             </button>
@@ -165,28 +190,36 @@ export function KitRoom({
   }, [passo]);
 
   return (
-    <div className="shell pb-20">
+    <div className="pb-20">
       {/*
         A barra das salas. Fica grudada abaixo do cabeçalho porque atravessar
         kits é a ação principal desta página — se ela sobe com o scroll, a
         pessoa que chegou ao fim da landing tem de rolar de volta para ver que
         existem outras quatro.
+
+        Os chips rolam; as setas NÃO. Antes as duas coisas dividiam o mesmo
+        container com `overflow-x-auto`, e no celular as setas ficavam a uma
+        rolagem lateral de distância — que é o mesmo que não existirem. Por isso
+        elas também sumiam do celular e apareciam duplicadas lá embaixo, no
+        cabeçalho da sala: três cópias do mesmo par de botões na mesma tela.
+        Agora existe um par só, sempre visível, em qualquer largura.
       */}
-      <div className="shell-bleed sticky top-[var(--shell-header-h)] z-30 border-b border-border bg-background/85 py-3 backdrop-blur-xl">
-        <div className="flex items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <Package className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-          {KITS.map((k, i) => (
-            <Chip
-              key={k.slug}
-              pressed={i === indice}
-              count={pecasDoKit(k).length}
-              onClick={() => onSlug(k.slug)}
-              className="shrink-0 rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
-            >
-              {k.label}
-            </Chip>
-          ))}
-          <span className="ml-auto hidden shrink-0 items-center gap-2 pl-3 sm:flex">
+      <div className="sticky top-[var(--shell-header-h)] z-30 border-b border-border bg-background/85 backdrop-blur-xl">
+        <div className="shell flex items-center gap-2 py-3">
+          <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {KITS.map((k, i) => (
+              <Chip
+                key={k.slug}
+                pressed={i === indice}
+                count={pecasDoKit(k).length}
+                onClick={() => onSlug(k.slug)}
+                className="shrink-0 rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
+              >
+                {k.label}
+              </Chip>
+            ))}
+          </div>
+          <span className="flex shrink-0 items-center gap-2 pl-1 sm:pl-3">
             <SfxToggle />
             <Seta dir="prev" onClick={() => passo(-1)} label="Kit anterior (←)" />
             <Seta dir="next" onClick={() => passo(1)} label="Próximo kit (→)" />
@@ -195,7 +228,16 @@ export function KitRoom({
       </div>
 
       {/*
-        A sala.
+        A sala — uma FAIXA, não um card.
+
+        Ela era um card arredondado com borda, e dentro dele o palco tinha outra
+        borda, e a composição se embrulhava numa terceira: quatro molduras antes
+        da peça. Numa página assim o olho conta borda, não componente.
+
+        Aqui a sala sangra até a borda da viewport e pinta a superfície do tema.
+        Quem separa a sala da página é o CHÃO mudando, mais o filete de `border-y`
+        — uma moldura, a mesma que uma dobra de landing usa. A profundidade que
+        faltava vira degrau de superfície dentro da composição (`sala.tsx`).
 
         `key={kit.slug}` desmonta a anterior inteira: as salas têm relógio,
         canvas e estado próprios, e reaproveitar a árvore entre dois kits
@@ -204,93 +246,83 @@ export function KitRoom({
         `.dark` no container, nunca no documento: é o que mantém o cabeçalho da
         página no tema da pessoa enquanto a sala escura acontece dentro dele.
       */}
-      <div
+      <section
         key={kit.slug}
         className={cn(
-          "mt-6 overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border",
+          "border-b border-border",
           kit.escura ? "dark text-foreground" : "bg-card",
         )}
-        style={kit.fundo ? { background: kit.fundo } : kit.escura ? { background: "var(--background)" } : undefined}
+        style={
+          kit.fundo
+            ? { background: kit.fundo }
+            : kit.escura
+              ? { background: "var(--background)" }
+              : undefined
+        }
       >
         {/* `group`: o botão de bug só aparece quando a mão chega ao cabeçalho. */}
-        <header className="group flex flex-col gap-4 px-4 py-5 sm:px-6 sm:py-6">
+        <header className="shell group flex flex-col gap-5 pb-7 pt-8 sm:pb-9 sm:pt-12">
           <div className="flex items-start gap-4">
             <div className="min-w-0 flex-1">
-              <p className="font-mono text-micro uppercase tracking-wider text-muted-foreground">
-                kit {String(indice + 1).padStart(2, "0")} de {String(KITS.length).padStart(2, "0")}
-              </p>
+              {/*
+                Saiu daqui o "KIT 01 DE 05".
+                A barra de chips logo acima já mostra os cinco kits com o atual
+                aceso — a etiqueta repetia, em caixa-alta, o que a pessoa acabou
+                de ver e de clicar.
+              */}
               <h2
-                className="mt-1.5 text-[clamp(1.5rem,3.6vw,2.4rem)] font-semibold leading-[1.05] tracking-[-0.03em]"
+                className="text-[clamp(1.75rem,4.2vw,2.9rem)] font-semibold leading-[1.02] tracking-[-0.03em]"
                 style={{ fontFamily: "var(--font-display, inherit)" }}
               >
                 {kit.title}
               </h2>
-              <p className="mt-2.5 max-w-2xl text-corpo leading-relaxed text-muted-foreground">
+              <p className="mt-3 max-w-2xl text-destaque leading-relaxed text-muted-foreground">
                 {kit.tese}
               </p>
             </div>
-            {/* No celular as setas somem daqui de cima (ficam na barra); no
-                desktop elas acompanham o título, que é onde o olho está. */}
-            <span className="hidden shrink-0 items-center gap-2 sm:flex">
+            <span className="shrink-0">
               <BugButton item={kit.slug} />
-              <Seta dir="prev" onClick={() => passo(-1)} label="Kit anterior (←)" />
-              <Seta dir="next" onClick={() => passo(1)} label="Próximo kit (→)" />
             </span>
           </div>
 
           {/*
-            O que se leva, em números que não mentem: a contagem de peças sai do
-            catálogo e a de npm sai do extrator de dependências. "Zero
-            dependência" é a informação mais cara deste cabeçalho para quem
-            decide instalar, e ela é calculada, não escrita.
-          */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-apoio text-muted-foreground">
-            <span className="font-mono">{pecas.length} peças</span>
-            <span aria-hidden>·</span>
-            {deps.length ? (
-              <span className="flex flex-wrap items-center gap-2">
-                {deps.map(({ info, count }) => (
-                  <span key={info.key} className="inline-flex items-center gap-1.5" title={info.packages.join(" · ")}>
-                    {info.icon ? <DepLogo icon={info.icon} className="h-3 w-3" /> : null}
-                    <span className="font-mono text-micro">
-                      {info.label} <span className="tabular-nums">{count}</span>
-                    </span>
-                  </span>
-                ))}
-              </span>
-            ) : (
-              <span className="font-mono">zero dependência npm</span>
-            )}
-          </div>
+            A linha de contagem desceu para a tira das peças.
 
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Um comando com os N nomes. Fica truncado na tela e vai inteiro
-                para a área de transferência — é longo porque é verdadeiro. */}
-            <CopyCommand
-              variant="line"
-              text={kitInstallCommand(pecas.map((p) => p.name))}
-              className="min-w-0 flex-1 bg-muted/50 sm:max-w-[28rem] sm:flex-none"
-            />
-            <span className="text-apoio text-muted-foreground">
-              um comando, as {pecas.length} peças
-            </span>
-            <span className="ml-auto flex items-center gap-2 sm:hidden">
-              <SfxToggle />
-              <Seta dir="prev" onClick={() => passo(-1)} label="Kit anterior" />
-              <Seta dir="next" onClick={() => passo(1)} label="Próximo kit" />
-            </span>
-          </div>
+            Ela dizia "11 peças · [seis logos] 9 dependências npm" entre a tese e
+            o comando — o lugar mais caro da página, gasto com a resposta de uma
+            pergunta que ninguém faz nos primeiros dois segundos. Quem chega
+            quer saber o que o kit É; "isso pesa no meu bundle?" é pergunta de
+            quem já decidiu olhar por dentro, e por isso agora ela mora ao lado
+            da lista de peças, embaixo, onde a decisão de instalar acontece.
+          */}
+
+          {/*
+            O comando, sozinho.
+
+            Ele vinha com uma legenda ao lado ("um comando com as 11 peças. Ou
+            uma de cada vez, pelo nome, lá embaixo.") que explicava o que a
+            própria linha já mostra: o `add` com os nomes está escrito ali. E a
+            segunda metade da frase ensinava a usar a página, que é o tipo de
+            texto que só existe quando a página não se explica sozinha — os
+            nomes das peças ficam clicáveis embaixo, e descobrir isso custa um
+            hover, não um parágrafo.
+          */}
+          <CopyCommand
+            variant="line"
+            text={kitInstallCommand(pecas.map((p) => p.name))}
+            className="w-full min-w-0 bg-muted/50 sm:max-w-[30rem]"
+          />
         </header>
 
         {/*
-          O palco. Sem escala e sem moldura própria: a composição divide a
-          superfície da sala, porque ela É a tela — não uma peça exposta dentro
-          de uma.
+          O palco. Sem escala, sem moldura e sem fundo próprios: a composição
+          divide a superfície da sala, porque ela É a tela — não uma peça
+          exposta dentro de uma.
 
           A espera tem a altura de uma tela cheia. Trocar de sala não pode fazer
           a página encolher e voltar a crescer embaixo do dedo de quem clicou.
         */}
-        <div className="border-t border-border px-3 pb-6 pt-4 sm:px-6 sm:pb-8">
+        <div className="shell pb-14 sm:pb-20">
           <React.Suspense
             fallback={
               <div
@@ -302,14 +334,14 @@ export function KitRoom({
             <kit.Composicao />
           </React.Suspense>
         </div>
+      </section>
 
-        <Tira kit={kit} onFocus={onFocus} />
-      </div>
+      <Tira kit={kit} deps={deps} onFocus={onFocus} />
 
       {/* A saída para o outro modo de olhar. Não é um filtro nem uma aba
           escondida: é a frase que reconhece que existe gente que já sabe o
           nome da peça que quer. */}
-      <p className="mt-6 text-center text-apoio text-muted-foreground">
+      <p className="shell mt-2 text-center text-apoio text-muted-foreground">
         Procurando uma peça específica?{" "}
         <button
           type="button"
