@@ -6,7 +6,7 @@
   "author": "Visant Labs <visantsupply@gmail.com>",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/prerender.mjs",
+    "build": "node scripts/registry-css.mjs && vite build && node scripts/prerender.mjs",
     "build:registry": "npx shadcn@latest build",
     "preview": "vite preview",
     "check:catalog": "node scripts/catalog-check.mjs",
@@ -24,7 +24,8 @@
     "build:media": "node scripts/media-bank.mjs",
     "build:pages": "node scripts/prerender.mjs",
     "check:css-tokens": "node scripts/css-tokens-check.mjs",
-    "bugs": "node scripts/bugs.mjs"
+    "bugs": "node scripts/bugs.mjs",
+    "build:registry-css": "node scripts/registry-css.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

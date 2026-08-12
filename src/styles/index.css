@@ -2,3 +2,8 @@
 @import './tailwind.css';
 @import './theme.css';
 @import './vintage.css';
+/* O bloco `css` de TODO item publicado, gerado de public/r/*.json por
+   `npm run build:registry-css`. Sem ele a vitrine mostra as peças sem o CSS que
+   o `shadcn add` entrega — foi assim que o fold-motion virou bug reportado como
+   "muito simples" quando na verdade não animava nada. Não edite à mão. */
+@import './registry.generated.css';
