@@ -61,10 +61,42 @@ export function Rail({
     return () => window.removeEventListener("resize", sync);
   }, [sync]);
 
+  /**
+   * Avança até o próximo ITEM, não por uma distância.
+   *
+   * Era `scrollBy(clientWidth * 0.8)`, e o defeito só aparece com encaixe
+   * ligado: o navegador resolve rolagem programática por delta contra os
+   * pontos de encaixe, e o resultado pode ser desfeito no mesmo quadro — no
+   * app onde isto foi colhido, o botão devolvia o `scrollLeft` a 0 e parecia
+   * morto. Com destino explícito o encaixe deixa de ser adversário e vira o
+   * mecanismo: o alvo JÁ é um ponto de encaixe, então não há o que corrigir.
+   *
+   * A medida é por `getBoundingClientRect`, não por `offsetLeft`: este último
+   * encadeia por `offsetParent`, que quase nunca é o scroller, e devolve
+   * posição de layout cega à rolagem atual.
+   *
+   * De quebra o gesto melhora — a seta anda um item inteiro e nunca deixa meio
+   * card na borda, que é o que uma fração de viewport fazia.
+   */
   const nudge = (dir: -1 | 1) => {
     const el = ref.current;
     if (!el) return;
-    el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: "smooth" });
+    const itens = Array.from(el.children) as HTMLElement[];
+    if (!itens.length) return;
+
+    const pad = parseFloat(getComputedStyle(el).paddingLeft) || 0;
+    const base = el.getBoundingClientRect().left + pad;
+    // 4px de tolerância: sub-pixel de layout não é "outro item".
+    const desvio = (c: HTMLElement) => c.getBoundingClientRect().left - base;
+    const alvo =
+      dir === 1
+        ? itens.find((c) => desvio(c) > 4)
+        : [...itens].reverse().find((c) => desvio(c) < -4);
+
+    el.scrollTo({
+      left: alvo ? el.scrollLeft + desvio(alvo) : dir === 1 ? el.scrollWidth : 0,
+      behavior: "smooth",
+    });
   };
 
   /**
