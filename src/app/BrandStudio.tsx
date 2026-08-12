@@ -107,7 +107,7 @@ export function BrandStudioBody() {
             {status === "loading"
               ? "lendo o vault…"
               : shown
-                ? `brand guideline · v${shown.version ?? "?"} · vault ${shown.completeness ?? "?"}%`
+                ? `brand guideline v${shown.version ?? "?"}, vault ${shown.completeness ?? "?"}%`
                 : "nenhuma marca aplicada"}
           </p>
           <h1
@@ -118,7 +118,7 @@ export function BrandStudioBody() {
           </h1>
           <p className="mt-5 max-w-2xl text-destaque leading-relaxed text-muted-foreground">
             {shown?.tagline ??
-              "Os componentes abaixo não sabem a cor de ninguém. Trocar a marca no seletor troca só os tokens — e a interface inteira responde."}
+              "Os componentes abaixo não sabem a cor de ninguém. Trocar a marca no seletor troca só os tokens, e a interface inteira responde."}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -166,7 +166,7 @@ export function BrandStudioBody() {
           <div className="grid gap-8 md:grid-cols-2">
             <div>
               <p className="mb-3 font-mono text-micro uppercase tracking-[0.14em] text-muted-foreground">
-                display · {shown?.fonts.display ?? "—"}
+                display: {shown?.fonts.display ?? "—"}
               </p>
               <p
                 className="text-[2.6rem] leading-[1.05] tracking-[-0.02em]"
@@ -177,12 +177,12 @@ export function BrandStudioBody() {
             </div>
             <div>
               <p className="mb-3 font-mono text-micro uppercase tracking-[0.14em] text-muted-foreground">
-                sans · {shown?.fonts.sans ?? "—"}
+                sans: {shown?.fonts.sans ?? "—"}
               </p>
               <p className="text-destaque leading-relaxed text-muted-foreground">
                 O corpo de texto herda a face de leitura da guideline. Quando a face é
                 licenciada fora do Google Fonts, a pilha de fallback do token assume e a
-                hierarquia continua de pé — muda o desenho da letra, não a estrutura.
+                hierarquia continua de pé. Muda o desenho da letra. A estrutura fica igual.
               </p>
             </div>
           </div>
@@ -255,7 +255,7 @@ export function BrandStudioBody() {
             <CopyCommand text={installCommand("brand-selector")} />
           </div>
           <p className="mt-4 max-w-2xl text-apoio leading-relaxed text-muted-foreground">
-            O primeiro escreve os tokens da marca no <code>globals.css</code> — é o caminho
+            O primeiro escreve os tokens da marca no <code>globals.css</code>. É o caminho
             de quem tem um cliente só. O segundo instala este seletor e o runtime, para o
             app trocar de marca com ele no ar.
           </p>

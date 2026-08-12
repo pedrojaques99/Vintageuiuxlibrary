@@ -173,7 +173,7 @@ export function MinhasMarcas() {
                     <span className="block truncate text-apoio">{m.name}</span>
                     <span className="block truncate text-micro text-muted-foreground">
                       {m.typography[0]?.family ?? "sem tipografia"}
-                      {m.completeness != null ? ` · vault ${m.completeness}%` : ""}
+                      {m.completeness != null ? `, vault ${m.completeness}%` : ""}
                     </span>
                   </span>
                   <button
@@ -191,7 +191,7 @@ export function MinhasMarcas() {
             {falhaAoAplicar ? (
               <p className="border-t border-border px-3 py-2 text-micro leading-relaxed text-muted-foreground">
                 Essa marca não compila ainda: <span className="font-mono">{falhaAoAplicar}</span>.
-                Falta preencher a guideline no vault — o motor recusa em vez de inventar a cor que
+                Falta preencher a guideline no vault. O motor recusa em vez de inventar a cor que
                 falta.
               </p>
             ) : (

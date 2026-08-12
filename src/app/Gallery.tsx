@@ -80,9 +80,14 @@ const MODES = [
  */
 const TEM_INTERFACE = (i: CatalogItem) => Boolean(i.demo);
 
+/*
+ * Sem `uppercase tracking-wider`: o selo de tipo aparece uma vez por linha numa
+ * lista de 65, e caixa-alta com tracking transforma a coluna inteira em
+ * textura. O mono miúdo já separa o selo do nome da peça.
+ */
 function TypeBadge({ type }: { type: CatalogItem["type"] }) {
   return (
-    <span className="shrink-0 rounded-full border border-border px-1.5 py-px font-mono text-micro uppercase tracking-wider text-muted-foreground">
+    <span className="shrink-0 rounded-full border border-border px-1.5 py-px font-mono text-micro text-muted-foreground">
       {TYPE_LABEL[type]}
     </span>
   );
@@ -488,7 +493,7 @@ export function Gallery({
             com a pessoa já lendo.
           */}
           <span className="inline-block min-w-[1.6ch] tabular-nums">{brands.length || "…"}</span>{" "}
-          marcas. Nenhum componente sabe a cor de um cliente — trocar a marca no seletor repinta
+          marcas. Nenhum componente sabe a cor de um cliente. Trocar a marca no seletor repinta
           esta página inteira.
         </p>
       </section>
@@ -591,7 +596,7 @@ export function Gallery({
         {abertos ? (
           <div className="shell-bleed mt-2 space-y-1.5 border-t border-border pt-2">
             <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <span className="w-8 shrink-0 font-mono text-micro uppercase tracking-wider text-muted-foreground">
+              <span className="w-8 shrink-0 font-mono text-micro text-muted-foreground">
                 tipo
               </span>
               {(Object.keys(TYPE_LABEL) as CatalogItem["type"][])
@@ -613,7 +618,7 @@ export function Gallery({
 
             {depsDoEscopo.length ? (
               <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                <span className="w-8 shrink-0 font-mono text-micro uppercase tracking-wider text-muted-foreground">
+                <span className="w-8 shrink-0 font-mono text-micro text-muted-foreground">
                   npm
                 </span>
                 {semDepsCount ? (
@@ -633,7 +638,7 @@ export function Gallery({
                     count={count}
                     onClick={() => pickDep(info.key)}
                     icon={info.icon ? <DepLogo icon={info.icon} className="h-3 w-3" /> : undefined}
-                    title={info.packages.join(" · ")}
+                    title={info.packages.join(", ")}
                     className="gap-1.5 rounded-[var(--r-pill,9999px)] px-2.5 py-1 text-micro font-normal"
                   >
                     {info.label}
@@ -688,7 +693,7 @@ export function Gallery({
           <p className="text-destaque">Nada com “{q}”.</p>
           <p className="mx-auto mt-2 max-w-md text-corpo text-muted-foreground">
             Se a peça não existe aqui e você está prestes a escrevê-la, ela provavelmente deveria
-            virar item — é assim que o registry cresce.
+            virar item. É assim que o registry cresce.
           </p>
         </div>
       )}

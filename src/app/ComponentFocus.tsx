@@ -310,7 +310,7 @@ export function ComponentFocus({
               {aba === "demo" && !Demo ? (
                 <div className="grid flex-1 place-items-center p-10 text-center">
                   <p className="max-w-sm text-corpo leading-relaxed text-muted-foreground">
-                    Este item não tem superfície visual própria — é{" "}
+                    Este item não tem superfície visual própria. É{" "}
                     <span className="font-mono">{TYPE_LABEL[item.type]}</span>. O que ele entrega
                     está na aba de código.
                   </p>

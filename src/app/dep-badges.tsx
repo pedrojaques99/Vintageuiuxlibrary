@@ -115,7 +115,7 @@ export function DepBadges({
           ) : (
             <span
               key={dep.key}
-              title={dep.packages.join(" · ")}
+              title={dep.packages.join(", ")}
               className="inline-flex items-center"
             >
               <Marca dep={dep} compacto />
