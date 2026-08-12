@@ -129,18 +129,26 @@ marcas apareceu preenchida no cabeçalho, que é a marca de hidratação desta c
 
 ## O que NÃO foi verificado
 
-**390px real, em nenhuma sala.** O `resize_window` desta máquina devolve sucesso
-e o viewport continua reportando 1920 (`window.innerWidth`), tanto para mim
-quanto para os cinco agentes que trabalharam nas salas. Todos mediram por iframe
-de 390px apontando para a mesma URL, que dá o `scrollWidth` verdadeiro do
-documento filho — e todos deram estouro zero. Mas iframe **não** é a mesma coisa:
-a barra de rolagem do sistema, o teclado virtual e o comportamento de `100vh` no
-celular ficam de fora, e num caso o próprio agente notou que as classes `sm:`
-continuavam ativas no teste dele.
+**390px em viewport real, em nenhuma sala.** O `resize_window` desta máquina
+devolve sucesso e o `window.innerWidth` continua em 1920, tanto para mim quanto
+para os cinco agentes. Sem `innerWidth`, nenhuma media query muda, e a medida
+sairia do layout desktop com nome de mobile — que é pior que não medir.
 
-Fica como pendência de olho humano, em DevTools com emulação de dispositivo ou
-num telefone de verdade. Medido de fato: **1920px, as seis rotas com estouro
-horizontal zero** e nenhum elemento cruzando a borda do documento.
+O caminho usado foi o iframe de 390px, e ele **é o método sancionado da casa**
+para exatamente este caso: está documentado em
+`visant-killer/references/ambiente.md`, seção "Quando a janela MENTE que
+redimensionou", com as três armadilhas conhecidas (X-Frame-Options, `<base
+href>` para os chunks, e confirmar hidratação antes de acreditar no número).
+Media query responde à largura do iframe, não à da janela. A hidratação foi
+confirmada: as 24 peças e as 6 rotas foram medidas com contagem de nós e de
+texto, não com esqueleto na tela.
+
+Resultado: **estouro horizontal zero** em 390px nas seis rotas e nas 24 peças, e
+zero também em 1920px.
+
+O que o iframe ainda não cobre, e por isso continua como pendência de olho
+humano num telefone: barra de rolagem do sistema, teclado virtual e o
+comportamento de `100vh` no mobile real.
 
 ## Nota: 91/100
 
