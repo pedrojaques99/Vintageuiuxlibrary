@@ -33,7 +33,7 @@ test.describe("catálogo", () => {
   test("não rola na horizontal em nenhum tamanho de tela", async ({ page }) => {
     for (const width of [390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto("/");
+      await page.goto("/catalogo");
       await esperarGrade(page);
 
       const { scrollW, clientW, culpados } = await page.evaluate(() => {
@@ -74,7 +74,7 @@ test.describe("catálogo", () => {
    */
   test("a altura do documento não muda durante o scroll", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
+    await page.goto("/catalogo");
     await esperarGrade(page);
 
     const alturas = await page.evaluate(async () => {
@@ -101,7 +101,7 @@ test.describe("catálogo", () => {
    */
   test("filtrar leva aos resultados, mesmo com a página rolada", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
+    await page.goto("/catalogo");
     await esperarGrade(page);
 
     /*
@@ -130,7 +130,7 @@ test.describe("catálogo", () => {
    */
   test("nenhuma demo aparece cortada", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
+    await page.goto("/catalogo");
 
     // Passa por toda a página para montar todas as demos.
     await page.evaluate(async () => {
@@ -156,7 +156,7 @@ test.describe("catálogo", () => {
   });
 
   test("a busca acha por uso, não só por nome", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/catalogo");
     await esperarGrade(page);
 
     await page.getByLabel("Buscar no catálogo").fill("arrastar");
@@ -174,7 +174,7 @@ test.describe("catálogo", () => {
    * mostra, e só se alguém olhar.
    */
   test("nada é escrito na cor do próprio fundo", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/catalogo");
     await esperarGrade(page);
 
     const invisiveis = await page.evaluate(() => {
@@ -201,7 +201,7 @@ test.describe("catálogo", () => {
     page.on("console", (m) => m.type() === "error" && erros.push(m.text()));
     page.on("pageerror", (e) => erros.push(String(e)));
 
-    await page.goto("/");
+    await page.goto("/catalogo");
     await esperarGrade(page);
     expect(erros).toEqual([]);
   });
@@ -230,7 +230,9 @@ test.describe("vista de foco", () => {
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
     // Fechar tem de voltar para a grade: senão o botão voltar do navegador mente.
-    expect(new URL(page.url()).pathname).toBe("/");
+    // A grade mudou de endereço quando os kits viraram a home — `/` hoje é a
+    // primeira sala de kit, e o catálogo mora em `/catalogo`.
+    expect(new URL(page.url()).pathname).toBe("/catalogo");
   });
 
   test("a peça cabe inteira em cada preset de viewport", async ({ page }) => {
@@ -282,7 +284,7 @@ test.describe("dependências npm", () => {
   });
 
   test("filtrar por dependência encolhe a grade e a contagem não mente", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/catalogo");
     await esperarGrade(page);
 
     const todos = page.locator("[aria-pressed]", { hasText: /^Todos\s*\d+$/ });
@@ -302,7 +304,7 @@ test.describe("dependências npm", () => {
   });
 
   test("recolhido nunca esconde filtro ativo, e o eixo de tipo filtra", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/catalogo");
     await esperarGrade(page);
 
     const botao = page.locator("[aria-pressed]", { hasText: /Tipo e peso/ });

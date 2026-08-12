@@ -58,7 +58,7 @@ async function pxPorSegundo(page: Page, ms = 900, faixa = 0) {
  * scroll passar perto — daí o laço em vez de um `scrollIntoView` direto.
  */
 async function centralizarFaixa(page: Page) {
-  await page.goto("/");
+  await page.goto("/catalogo");
   for (let i = 0; i < 200; i++) {
     if (await page.evaluate(() => !!document.querySelector(".marquee-track"))) break;
     await page.evaluate(() => window.scrollBy(0, 400));

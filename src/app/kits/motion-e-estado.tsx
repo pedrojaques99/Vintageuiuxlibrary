@@ -22,12 +22,10 @@ import { StatusTicker } from "../../../registry/visant/ui/status-ticker";
 import { WorkingGlyph } from "../../../registry/visant/ui/working-glyph";
 import { GeneratingTile } from "../../../registry/visant/ui/generating-tile";
 import { PaperShuttle } from "../../../registry/visant/ui/paper-shuttle";
-import { OctahedronLoader } from "../../../registry/visant/ui/octahedron-loader";
 import { GlitchChars } from "../../../registry/visant/ui/glitch-chars";
 import { TurbulenceField } from "../../../registry/visant/ui/turbulence-field";
 import { GridDots } from "../../../registry/visant/ui/grid-dots";
 import { DropOverlay } from "../../../registry/visant/ui/drop-overlay";
-import { SpringDots } from "../../../registry/visant/ui/spring-dots";
 import { Fold, FoldPart } from "../../../registry/visant/lib/fold-motion";
 import { usePointerParallax } from "../../../registry/visant/hooks/use-pointer-parallax";
 import { Media } from "../media";
@@ -64,9 +62,11 @@ function Painel({
 function Colagem() {
   const ref = React.useRef<HTMLDivElement>(null);
   usePointerParallax(ref);
+  /* Índices escolhidos pelo BRILHO, não pela variedade: numa sala preta, foto
+     escura vira retângulo cinza e a paralaxe deixa de existir para quem olha. */
   const objetos = [
-    { d: 30, cls: "left-[8%] top-[14%] w-24", papel: "cena" as const, i: 0 },
-    { d: 16, cls: "right-[10%] top-[22%] w-32", papel: "retrato" as const, i: 1 },
+    { d: 30, cls: "left-[8%] top-[14%] w-24", papel: "cena" as const, i: 3 },
+    { d: 16, cls: "right-[10%] top-[22%] w-32", papel: "retrato" as const, i: 4 },
     { d: 44, cls: "left-[36%] bottom-[10%] w-20", papel: "textura" as const, i: 2 },
   ];
   return (
@@ -153,19 +153,37 @@ export default function MotionEEstado() {
               </GeneratingTile>
             ))}
           </div>
-          <div className="mt-3.5">
-            <StatusTicker />
-          </div>
         </Painel>
 
-        <Painel titulo="rota carregando" nota="octahedron-loader">
-          <div className="grid min-h-[200px] place-items-center [&>[role=status]]:min-h-0">
-            <OctahedronLoader size={78} />
+        {/*
+          Duas peças saíram desta coluna, e nenhuma por escolha de composição:
+
+          · `octahedron-loader` aponta para `/assets/brand/Octahedron-vsn-lines.lottie`,
+            que não existe no repositório — o dev server devolve o index.html no
+            lugar e o dotlottie recusa ("Invalid Lottie JSON string").
+          · `spring-dots` resolve a cor do ponto sondando o token no DOCUMENTO,
+            não no próprio host. Dentro desta sala (que é escura por classe, e
+            não por tema global) a sonda volta com o valor do tema claro e
+            desenha ponto quase preto sobre preto.
+
+          As duas estão em `bugs/REPORTS.md` e listadas como ausentes no kit,
+          com o motivo visível na tira. Painel preto e vazio na sala principal
+          seria pior do que a ausência declarada.
+        */}
+        <Painel titulo="o que a espera diz" nota="status-ticker">
+          <div className="grid min-h-[218px] place-items-center">
+            <div className="w-full space-y-4">
+              <StatusTicker />
+              <p className="text-apoio leading-relaxed text-muted-foreground">
+                Passo atual, cronômetro e ruído de máquina. É o texto que segura
+                a pessoa quando a resposta demora mais que a paciência.
+              </p>
+            </div>
           </div>
         </Painel>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-2">
         <Painel titulo="exportando" nota="paper-shuttle">
           <div className="grid min-h-[130px] place-items-center">
             <PaperShuttle progress={progresso} label="exportando" />
@@ -183,10 +201,6 @@ export default function MotionEEstado() {
             </div>
             <DropOverlay visible={sobre} message="Solte os arquivos" />
           </div>
-        </Painel>
-
-        <Painel titulo="campo com mola" nota="spring-dots">
-          <SpringDots className="h-[130px] w-full rounded-[var(--r-control,0.5rem)]" />
         </Painel>
       </div>
 

@@ -30,6 +30,22 @@ export const REGISTRY_PUBLIC_LABEL = REGISTRY_PUBLIC_URL.replace(/^https?:\/\//,
 export const installCommand = (name: string) =>
   `npx shadcn@latest add ${REGISTRY_NAMESPACE}/${name}`;
 
+/**
+ * O comando de um kit — as N peças em um `add` só.
+ *
+ * O `shadcn add` aceita vários nomes de uma vez, e é por isso que a sala do kit
+ * pode prometer "um comando" sem que exista um item `@visant/mesa-de-trabalho`
+ * no registry. A alternativa era publicar um item guarda-chuva agora e mostrar
+ * um comando mais curto — mas ele instalaria as peças SEM a composição, que é
+ * justamente o que o kit vende. Comando comprido e verdadeiro é melhor que
+ * comando curto que entrega menos do que a tela mostrou.
+ *
+ * Quando a composição virar arquivo publicável (ela hoje importa o banco de
+ * mídia da vitrine, que não vai para o consumidor), isto colapsa num nome só.
+ */
+export const kitInstallCommand = (names: string[]) =>
+  `npx shadcn@latest add ${names.map((n) => `${REGISTRY_NAMESPACE}/${n}`).join(" ")}`;
+
 export const registryItemUrl = (name: string, base = REGISTRY_URL) => `${base}/${name}.json`;
 
 /** Marca aplicada quando não há nada salvo no navegador. */

@@ -72,7 +72,17 @@ export default function PaginaQueVende() {
         apareça sobre algo que reage à mão. Peça de fundo dentro de um card de
         vitrine parecia efeito solto; aqui ela faz o trabalho dela.
       */}
-      <EraseField className="relative grid min-h-[380px] place-items-center px-6 py-14 text-center">
+      {/*
+        `dark` no hero, e não no documento.
+
+        O `erase-field` pinta poeira escura sobre luz de marca — ele nasceu numa
+        dobra de CTA preta e é lá que funciona. Com os tokens claros do papel, a
+        promessa saía preta sobre preto e só aparecia depois que a pessoa
+        raspasse: uma headline invisível no primeiro quadro, que é o pior
+        defeito possível numa dobra de hero. Invertendo os tokens só aqui, o
+        texto é claro sobre a poeira e o resto da página segue no tema da marca.
+      */}
+      <EraseField className="dark relative grid min-h-[380px] place-items-center bg-[var(--background)] px-6 py-14 text-center text-foreground">
         <div className="relative z-10 mx-auto max-w-2xl">
           <div className="mb-5 flex justify-center">
             <StoreStatus timeZone="America/Sao_Paulo" openHour={9} closeHour={18} />

@@ -38,23 +38,34 @@ import { Gallery } from "./Gallery";
 const BrandStudioBody = React.lazy(() =>
   import("./BrandStudio").then((m) => ({ default: m.BrandStudioBody })),
 );
-const VintageRig = React.lazy(() => import("./VintageRig"));
+import { KitRoom } from "./KitRoom";
+import { KITS } from "./kits";
 import { DEFAULT_BRAND, REGISTRY_URL } from "./registry-meta";
 import { VisantAuthProvider } from "./visant-auth";
 import { MinhasMarcas } from "./MinhasMarcas";
 
-type View = "catalogo" | "marca" | "rig";
+type View = "kits" | "catalogo" | "marca";
 
 interface Route {
   view: View;
   /** Item aberto em foco. Só existe no catálogo. */
   focus: string | null;
+  /** Sala aberta. Só existe nos kits. */
+  kit: string | null;
 }
 
+/*
+ * Kits primeiro, e não por ordem alfabética.
+ *
+ * A home era o catálogo: 65 peças soltas numa coluna, que é a organização do
+ * repositório e não a da decisão de quem chega. Ninguém instala um `chip` — se
+ * instala uma mesa de trabalho inteira. O catálogo continua a um clique, para
+ * quem já sabe o nome do que quer.
+ */
 const VIEWS: { value: View; label: string; short: string }[] = [
+  { value: "kits", label: "Kits", short: "Kits" },
   { value: "catalogo", label: "Catálogo", short: "Catálogo" },
   { value: "marca", label: "Marca", short: "Marca" },
-  { value: "rig", label: "Rig vintage", short: "Rig" },
 ];
 
 const DENSITIES = [
@@ -80,23 +91,31 @@ function parsePath(loc: Location): Route {
 
   const partes = loc.pathname.split("/").filter(Boolean);
   if (partes[0] === "c" && partes[1]) {
-    return { view: "catalogo", focus: decodeURIComponent(partes[1]) };
+    return { view: "catalogo", focus: decodeURIComponent(partes[1]), kit: null };
   }
+  if (partes[0] === "kit" && partes[1]) {
+    return { view: "kits", focus: null, kit: decodeURIComponent(partes[1]) };
+  }
+  /* `/rig` era a aba da bancada. Hoje a bancada é uma sala, e o link antigo
+     entra nela em vez de dar 404 em quem tinha o endereço salvo. */
+  if (partes[0] === "rig") return { view: "kits", focus: null, kit: "rig-vintage" };
   const view = VIEWS.find((v) => v.value === partes[0]);
-  return { view: view?.value ?? "catalogo", focus: null };
+  return { view: view?.value ?? "kits", focus: null, kit: null };
 }
 
 function parseLegacyHash(hash: string): Route {
   if (hash.startsWith("#/c/")) {
-    return { view: "catalogo", focus: decodeURIComponent(hash.slice(4)) || null };
+    return { view: "catalogo", focus: decodeURIComponent(hash.slice(4)) || null, kit: null };
   }
-  const view = VIEWS.find((v) => v.value !== "catalogo" && hash.startsWith(`#/${v.value}`));
-  return { view: view?.value ?? "catalogo", focus: null };
+  if (hash.startsWith("#/rig")) return { view: "kits", focus: null, kit: "rig-vintage" };
+  const view = VIEWS.find((v) => v.value !== "kits" && hash.startsWith(`#/${v.value}`));
+  return { view: view?.value ?? "kits", focus: null, kit: null };
 }
 
-function formatPath({ view, focus }: Route): string {
+function formatPath({ view, focus, kit }: Route): string {
   if (focus) return `/c/${encodeURIComponent(focus)}`;
-  return view === "catalogo" ? "/" : `/${view}`;
+  if (view === "kits") return kit ? `/kit/${encodeURIComponent(kit)}` : "/";
+  return `/${view}`;
 }
 
 function useRoute() {
@@ -155,11 +174,15 @@ function Shell() {
   }, [density]);
 
   const setView = React.useCallback(
-    (view: View) => navigate({ view, focus: null }),
+    (view: View) => navigate({ view, focus: null, kit: null }),
     [navigate],
   );
   const setFocus = React.useCallback(
-    (focus: string | null) => navigate({ view: "catalogo", focus }),
+    (focus: string | null) => navigate({ view: "catalogo", focus, kit: null }),
+    [navigate],
+  );
+  const setKit = React.useCallback(
+    (kit: string) => navigate({ view: "kits", focus: null, kit }),
     [navigate],
   );
 
@@ -228,13 +251,21 @@ function Shell() {
         </div>
       </header>
 
+      {route.view === "kits" && (
+        <KitRoom
+          slug={route.kit ?? KITS[0].slug}
+          onSlug={setKit}
+          onFocus={setFocus}
+          onCatalogo={() => setView("catalogo")}
+        />
+      )}
+
       {route.view === "catalogo" && <Gallery focus={route.focus} onFocus={setFocus} />}
 
       {/* A espera é a altura de uma tela, não um "carregando…": trocar de aba não
           deve fazer a página encolher e voltar a crescer. */}
       <React.Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
         {route.view === "marca" && <BrandStudioBody />}
-        {route.view === "rig" && <VintageRig />}
       </React.Suspense>
     </div>
   );

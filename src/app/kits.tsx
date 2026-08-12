@@ -84,6 +84,10 @@ export const KITS: Kit[] = [
     ausentes: {
       "motion-layer": "biblioteca de scroll — sustenta o marquee da página que vende",
       "smooth-scroll-provider": "provider de página inteira; não cabe dentro de um painel",
+      "octahedron-loader":
+        "quebrado: o .lottie da marca não está no repo (ver bugs/REPORTS.md)",
+      "spring-dots":
+        "sonda a cor no documento, não no host: nesta sala escura o ponto sai quase preto (ver bugs/REPORTS.md)",
     },
   },
   {

@@ -71,19 +71,21 @@ export default function VintageRig() {
   }, []);
 
   return (
-    // O gradiente termina num token, não num hex misturado à mão: quando o tema
-    // vintage mudar de fundo, a bancada acompanha em vez de ficar com a beirada
-    // de uma paleta antiga.
-    <div className="min-h-screen bg-gradient-to-br from-[var(--vintage-surface-2)] via-[var(--vintage-surface-1)] to-[var(--vintage-surface-1)] p-8">
+    /*
+     * A bancada não pinta mais o próprio fundo nem reserva a tela inteira.
+     *
+     * Ela virou a composição de um kit, e quem manda na superfície é a SALA
+     * (`KitRoom` aplica o gradiente vintage e a moldura). Enquanto o gradiente
+     * morava aqui, montar a bancada dentro de qualquer outro container
+     * produzia painel dentro de painel, com duas beiradas de metal.
+     *
+     * O título grande também saiu: o cabeçalho da sala já diz o nome do kit, e
+     * dois títulos empilhados era a mesma informação cobrando duas dobras.
+     */
+    <div className="w-full">
       <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-12">
-          <h1 className="text-6xl font-vintage-display font-black text-transparent bg-clip-text bg-gradient-to-r from-[var(--vintage-label)] via-[var(--vintage-value)] to-[var(--vintage-label)] mb-2 tracking-wider">
-            VINTAGE UI
-          </h1>
-          <p className="text-[var(--vintage-text-muted)] font-vintage-mono text-sm tracking-widest">
-            @VISANT/UI — RETRO AUDIO CONTROL REGISTRY
-          </p>
-          <div className="mt-2 flex justify-center gap-3">
+        <header className="text-center mb-10">
+          <div className="flex justify-center gap-3">
             <VintageLed color="green" active label="PWR" />
             <VintageLed color="yellow" active={activeButton === "bypass"} label="BYP" />
             <VintageLed color="red" active={meterValue > 8} label="CLIP" />

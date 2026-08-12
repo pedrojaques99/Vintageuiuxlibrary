@@ -67,9 +67,12 @@ function escrever(caminhoRelativo, html) {
 
 // --- páginas -----------------------------------------------------------------
 
+/* A home é a primeira sala de kit desde que os kits viraram a porta de entrada.
+   A descrição acompanha: quem chega não compra componente solto, compra a
+   composição montada. */
 const HOME = {
   titulo: "@visant/ui — a library da Visant",
-  descricao: `${registry.items.length} componentes React em registry shadcn, com temas de marca compilados: nenhum componente sabe a cor de um cliente.`,
+  descricao: `Cinco kits montados — mesa de trabalho, landing, motion, bancada vintage e marca viva — sobre ${registry.items.length} componentes React em registry shadcn, com tema de marca compilado.`,
 };
 
 writeFileSync(
@@ -79,10 +82,18 @@ writeFileSync(
 
 const SECOES = [
   {
+    slug: "catalogo",
+    titulo: "Catálogo — @visant/ui",
+    descricao: `As ${registry.items.length} peças do registry, uma por linha, com demo viva e comando de instalação.`,
+  },
+  {
     slug: "marca",
     titulo: "Marca — @visant/ui",
     descricao: "Trocar a marca repinta a interface inteira: tokens compilados do vault, em runtime.",
   },
+  /* `/rig` virou apelido de `/kit/rig-vintage`. A página continua existindo
+     porque o endereço circulou — e sem HTML próprio o link colado no chat
+     perderia a prévia que já tinha. */
   {
     slug: "rig",
     titulo: "Rig vintage — @visant/ui",
@@ -90,7 +101,30 @@ const SECOES = [
   },
 ];
 
-for (const s of SECOES) {
+/*
+ * As salas de kit, lidas de `src/app/kits.tsx`.
+ *
+ * Uma cópia da lista aqui envelheceria na primeira sala nova — e o sintoma
+ * seria silencioso: a página existiria no app e não teria prévia ao ser colada
+ * em lugar nenhum. Mesma técnica do portão de catálogo, que lê o `catalog.tsx`.
+ */
+const kitsSrc = readFileSync(join(ROOT, "src", "app", "kits.tsx"), "utf8");
+const KITS = [
+  ...kitsSrc
+    .slice(kitsSrc.indexOf("export const KITS"))
+    .matchAll(/slug:\s*"([^"]+)",[\s\S]*?title:\s*"([^"]+)",[\s\S]*?tese:\s*\n?\s*"((?:[^"\\]|\\.)*)"/g),
+].map(([, slug, title, tese]) => ({
+  slug: `kit/${slug}`,
+  titulo: `${title} — @visant/ui`,
+  descricao: tese.replace(/\\"/g, '"'),
+}));
+
+if (!KITS.length) {
+  console.error("nenhum kit lido de src/app/kits.tsx — o formato do arquivo mudou?");
+  process.exit(1);
+}
+
+for (const s of [...SECOES, ...KITS]) {
   escrever(s.slug, comMeta({ titulo: s.titulo, descricao: s.descricao, url: `${SITE}/${s.slug}`, imagem: `${SITE}/og/home.png` }));
 }
 
@@ -106,7 +140,7 @@ for (const item of registry.items) {
   );
 }
 
-console.log(`páginas: ${registry.items.length + SECOES.length + 1}`);
+console.log(`páginas: ${registry.items.length + SECOES.length + KITS.length + 1}`);
 
 if (!existsSync(join(DIST, "c"))) {
   console.error("dist/c não foi criado — o prerender rodou antes do build?");

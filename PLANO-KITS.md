@@ -1,110 +1,74 @@
-# A vitrine vende peça solta. Ninguém compra peça solta.
+# Kits — o que ficou de pé
 
-Diagnóstico e proposta para a library da Visant — 2026-08-11.
+Diagnóstico e execução — 11/08/2026. A vitrine vendia peça solta; ninguém compra
+peça solta. A unidade passou a ser o **kit**.
 
-## O que os prints mostram
+## O diagnóstico (dos prints)
 
-65 itens numa coluna única, cada um num palco de altura própria, ordenados por
-nada em particular. Quatro defeitos, e nenhum deles é de CSS:
+65 itens numa coluna única, ordenados pelo que o repositório tem. Quatro defeitos:
 
-1. **Não existe unidade de compra.** O `theme-visant` (uma linha) e o
-   `testimonial-wall` (uma seção inteira de landing page) disputam o mesmo eixo
-   visual. Quem chega não consegue responder "o que eu levo daqui hoje?".
-2. **Os temas estão misturados na vertical.** O `vintage-large-knob` (painel
-   preto, LED âmbar, alumínio escovado) encosta no card de papel claro do
-   `spine-card`. Rolar a página é atravessar quatro linguagens visuais em
-   trinta segundos — a library parece três libraries num arquivo só.
-3. **O palco engole a peça.** `scrub-input` e `segmented-control` são objetos de
-   180px sozinhos num palco de 720. 80% do card é vazio, e vazio ao lado de
-   vazio vira ruído: o `kanban` aparece cortado com barra de rolagem enquanto o
-   vizinho tem meia tela sobrando.
-4. **Card sem demo continua ocupando palco.** `brand-selector` gasta 300px de
-   altura pra escrever "está na barra do topo →".
+1. **Não existia unidade de compra.** `theme-visant` (uma linha) competia com
+   `testimonial-wall` (uma seção inteira de landing) no mesmo eixo visual.
+2. **Temas empilhados na vertical.** O painel preto do `vintage-large-knob`
+   encostava no papel claro do `spine-card` — rolar era atravessar três
+   libraries.
+3. **O palco engolia a peça.** `scrub-input` sozinho num palco de 720px; o
+   `kanban` cortado com barra de rolagem no vizinho.
+4. **Card sem demo gastava palco.** `brand-selector` usava 300px de altura para
+   escrever "está na barra do topo →".
 
-Nada disso se conserta ajustando espaçamento. O problema é que a página está
-organizada pelo que o repositório TEM (65 arquivos) e não pelo que o ICP QUER
-(uma composição pronta que ele cola no projeto hoje à noite).
+## O que foi feito
 
-## A tese
+**Cinco salas, uma por tela, com seta e tecla entre elas.** Kits viraram a home;
+o catálogo de 65 peças continua inteiro em `/catalogo`.
 
-> O criativo vibecoder não instala um `chip`. Ele instala **uma mesa de trabalho
-> inteira** e passa a tarde ajustando.
+| Sala | Peças | O que é |
+| --- | --- | --- |
+| Mesa de trabalho | 11 | Board denso (4 colunas), trilho com capa, linha do tempo, filtro que gruda, nome que se edita onde se lê, estado vazio. |
+| Página que vende | 16 | Landing completa: hero raspável, faixa, serviços, passos, número com régua, prova social, estante, mosaico, CTA. |
+| Motion e estado | 14 | Sala escura, tudo em loop: fila de geração, exportação, área de largar, colagem com paralaxe. |
+| Rig vintage | 13 | A bancada, agora sem pintar o próprio fundo — quem manda na superfície é a sala. |
+| Marca viva | 11 | Tokens lidos do `getComputedStyle`, par tipográfico, hooks mostrando o valor de agora, busca real sobre o catálogo. |
 
-Então a unidade da vitrine passa a ser o **kit**: um conjunto curado, com tema
-próprio, composição viva em tamanho real, SFX ligado, e **um comando só**.
-A peça solta continua existindo — mas embaixo, pra quem já sabe o nome dela.
+### Decisões que sustentam isso
 
-## Arquitetura: kit é item de registry, não invenção
+- **A lista de peças de cada kit é derivada do catálogo, por família.** Lista
+  escrita à mão envelheceria na primeira colheita: peça nova entraria no
+  catálogo e ficaria fora do kit sem ninguém ver.
+- **Tema por container (`.dark` + fundo), nunca no documento.** É o que impede
+  a bancada de encostar no papel claro, e o que mantém cabeçalho e seletor de
+  marca no tema da pessoa enquanto a sala escura acontece dentro deles. Tem
+  teste.
+- **Composição lazy, uma por sala.** Cada kit virou um chunk próprio
+  (4–7KB + o que ele puxa); quem abre a home não paga GSAP nem dnd-kit.
+- **Peça ausente aparece esmaecida na tira, com o motivo.** Sem isso, a pessoa
+  conta 14 nomes, acha 12 na tela e conclui que a demo quebrou.
+- **`←/→` só quando nada está focado.** A primeira versão roubava a seta do knob
+  e do fader — mudava o ganho e pulava de kit no mesmo gesto. Tem teste.
 
-Nada de formato novo. O shadcn já resolve isto com `registryDependencies`:
+### O comando
 
-```jsonc
-// registry/visant/kits/rig-vintage.json
-{
-  "name": "rig-vintage",
-  "type": "registry:block",
-  "registryDependencies": ["@visant/vintage-knob", "@visant/vintage-meter", "…13 peças"],
-  "files": [{ "path": "kits/rig-vintage.tsx", "type": "registry:component" }]
-}
-```
+A sala mostra **um comando com os N nomes** (`shadcn add` aceita vários), não um
+`@visant/<kit>` que ainda não existe. Comando comprido e verdadeiro é melhor que
+comando curto que entrega menos do que a tela mostrou.
 
-`npx shadcn@latest add @visant/rig-vintage` puxa as 13 peças **mais a
-composição montada**. O arquivo de composição é o que o `VintageRig.tsx` já é
-hoje na aba "Rig vintage" — ele vira o produto em vez de ser demo interna.
+## Também nesta leva
 
-## Os kits (a partir do que já existe)
+- **Botão de bug em cada card**, revelado no hover, gravando em `bugs/` por um
+  middleware do Vite dev-only. `npm run bugs` lista; `-- --resolve <id>` fecha.
+- **Rotas e SEO:** `/` = primeira sala, `/kit/<slug>`, `/catalogo`, e `/rig`
+  virou apelido de `/kit/rig-vintage`. O prerender lê os kits do próprio
+  `kits.tsx` — 73 páginas com meta própria.
+- **Suíte:** 149 testes passando, incluindo 9 novos de sala.
 
-| Kit | De onde sai | Tema da sala | O que é |
-| --- | --- | --- | --- |
-| **Rig vintage** | família `vintage`, 13 | Painel escuro, LED âmbar, SFX de clique | A bancada. Já existe montada. |
-| **Mesa de trabalho** | `trabalho`, 11 | shadcn burilado, claro, sóbrio | Kanban + data-table + tabs + command. O "normal, mas bem feito". |
-| **Página que vende** | `aquisicao`, 16 | Papel da marca, tipografia grande | Hero + prova social + step cards + marquee. Landing inteira. |
-| **Motion e estado** | `motion`, 14 | Fundo neutro escuro, tudo em loop | O nichado. Vende por hipnose, então roda sozinho. |
-| **Marca viva** | `marca` + `fundacao`, 11 | Troca de cor ao vivo | Tokens, tema, selector. O que faz os outros quatro repintarem. |
+## O que ficou de fora, e por quê
 
-Cinco kits. Cinco salas. **Um tema por sala, nunca dois na mesma tela** — é o
-que mata o defeito 2.
-
-## A tela
-
-```
-┌──────────────────────────────────────────────────────────┐
-│  ‹     RIG VINTAGE            2 / 5                 ›    │  ← setinha entre kits
-│  13 peças · dnd-kit zero · um comando                    │
-│  npx shadcn add @visant/rig-vintage            [copiar]  │
-├──────────────────────────────────────────────────────────┤
-│                                                          │
-│         [ a composição inteira, viva, no tema dela ]     │
-│                                                          │
-├──────────────────────────────────────────────────────────┤
-│  as 13 peças  ▸  knob · meter · fader · led · pad · …    │  ← tira densa, abre o solo
-└──────────────────────────────────────────────────────────┘
-```
-
-- **Uma sala por vez**, setinha (e ←/→) pra próxima. Não é rolagem infinita de
-  65 cards: são 5 telas que se atravessa em 20 segundos.
-- **A sala carrega o tema dela** num container isolado (`data-kit="vintage"`),
-  então o vintage nunca encosta no claro.
-- **SFX do visantismo ligado por kit** (`src/lib/sfx-bus.ts` já existe): clique
-  do knob no rig, tick do drag no kanban. Mudo por padrão, com um botão de som
-  na sala — SFX que toca sem pedir é o jeito mais rápido de fechar a aba.
-- **A tira de peças embaixo** é onde a peça solta continua acessível: nome +
-  `add`. Clicar abre o foco que já existe.
-- **Catálogo completo vira segunda aba** ("todas as 65"), exatamente a lista de
-  hoje. Quem chega por busca cai lá; quem chega pra decidir cai nos kits.
-
-## Ordem de execução
-
-1. `catalog.tsx` ganha `KITS` — nome, tese, itens, tema, componente de
-   composição. Deriva das famílias que já existem; zero item recadastrado.
-2. `KitRoom.tsx` — a sala: header, palco em tamanho real, tira de peças, setas.
-3. Composições: `rig-vintage` já pronta (`VintageRig.tsx`). Faltam 4 — é o
-   grosso do trabalho, e é o que a library não tem hoje.
-4. JSON de kit no registry + `npm run build:registry`, e o portão do
-   `check:catalog` passa a exigir que todo kit resolva suas peças.
-5. Rota `/kits` vira a home; catálogo continua em `/catalogo`.
-
-## O que isso não faz
-
-Não mexe em nenhum componente do registry (as 65 peças ficam como estão), não
-inventa formato de registry, e não toca no vault de marcas.
+- **Item de kit no registry.** Um `@visant/mesa-de-trabalho` só vale a pena
+  quando levar **a composição junto** — é isso que o kit vende. Hoje as
+  composições importam o banco de mídia da vitrine (`src/app/media`), que não vai
+  para o consumidor. O passo é publicar cada composição recebendo a mídia por
+  slot; aí o comando colapsa num nome só.
+- **`octahedron-loader` e `spring-dots`** saíram da composição de motion, com o
+  motivo escrito na tira e o reporte em `bugs/REPORTS.md`. Um aponta para um
+  `.lottie` que não existe no repositório; o outro sonda a cor no documento e
+  some dentro de um container escurecido por classe.

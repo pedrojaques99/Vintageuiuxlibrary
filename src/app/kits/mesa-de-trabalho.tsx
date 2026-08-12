@@ -99,9 +99,11 @@ export default function MesaDeTrabalho() {
     >
       {/* cabeçalho do app */}
       <div className="flex flex-wrap items-center gap-3 border-b border-border px-4 py-3 sm:px-5">
+        {/* `whitespace-nowrap`: sem isto o nome do board quebrava em duas linhas
+            e o cabeçalho do app crescia de altura no meio da composição. */}
         <InlineEdit
           isEditing={editando}
-          value={<span className="text-destaque font-medium">{nome}</span>}
+          value={<span className="whitespace-nowrap text-destaque font-medium">{nome}</span>}
           onStartEdit={() => {
             setRascunho(nome);
             setEditando(true);
@@ -192,7 +194,7 @@ export default function MesaDeTrabalho() {
             fallback={<div className="h-[260px] w-full animate-pulse rounded bg-muted/40" />}
           >
             <div className="h-[300px]">
-              <Kanban />
+              <Kanban denso />
             </div>
           </React.Suspense>
         ) : vista === "trilho" ? (
