@@ -3,7 +3,7 @@
   "name": "step-cards",
   "title": "Step Cards",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Como funciona, em passos numerados. Lista ordenada de verdade e a arte de cada passo por slot.",
+  "description": "Como funciona, em passos numerados. Sai como lista ordenada no HTML, e a arte de cada passo entra por slot.",
   "registryDependencies": [
     "utils"
   ],

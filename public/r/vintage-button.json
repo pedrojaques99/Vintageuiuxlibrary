@@ -3,7 +3,7 @@
   "name": "vintage-button",
   "title": "Vintage Button",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Botão de painel com afundamento real no clique.",
+  "description": "Botão de painel que afunda no clique.",
   "registryDependencies": [
     "@visant/vintage-theme",
     "utils"

@@ -3,7 +3,7 @@
   "name": "vintage-theme",
   "title": "Vintage Theme",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "O tema do kit de áudio — o contraponto escuro aos temas de marca.",
+  "description": "O tema do kit de áudio, o contraponto escuro aos temas de marca.",
   "cssVars": {
     "theme": {
       "font-vintage-display": "'Orbitron', sans-serif",

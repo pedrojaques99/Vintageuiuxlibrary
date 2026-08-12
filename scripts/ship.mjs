@@ -125,6 +125,23 @@ run("node scripts/privacy-check.mjs");
 // ── Portão 2: componente não tem cor própria ─────────────────────────────────
 say("Portão de hex em registry/visant/");
 const HEX = /#[0-9a-fA-F]{6}\b/;
+
+/*
+ * Comentário não é regra de estilo.
+ *
+ * O portão lia o arquivo inteiro, então uma explicação que CITA um hex derrubava
+ * o ship. Caso real: o comentário do `erase-field` documenta que o tema claro
+ * deste repo declara `--muted-foreground` como hex e o escuro como `oklch(...)`,
+ * que é a causa-raiz de um bug de sonda de cor. Apagar o valor apagaria a única
+ * pista que explica o conserto para quem ler depois.
+ *
+ * A regra continua cega para intenção no CÓDIGO, que é onde ela precisa ser
+ * cega: "esta cor aqui pode" é como um portão morre. Ela só para de acusar prosa.
+ */
+const semComentario = (src) =>
+  src
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/(^|[^:])\/\/[^\n]*/g, "$1");
 const walk = (dir) =>
   readdirSync(dir).flatMap((n) => {
     const p = join(dir, n);
@@ -135,7 +152,7 @@ const visantDir = join(ROOT, "registry", "visant");
 const offenders = existsSync(visantDir)
   ? walk(visantDir)
       .filter((p) => /\.(tsx?|jsx?|css)$/.test(p))
-      .filter((p) => HEX.test(readFileSync(p, "utf8")))
+      .filter((p) => HEX.test(semComentario(readFileSync(p, "utf8"))))
       .map((p) => p.slice(ROOT.length + 1))
   : [];
 

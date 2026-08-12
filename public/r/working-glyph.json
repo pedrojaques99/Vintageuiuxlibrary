@@ -3,7 +3,7 @@
   "name": "working-glyph",
   "title": "Working Glyph",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Ícone que bate com faísca — o sistema mostrando esforço em vez de pedir paciência.",
+  "description": "Ícone que bate com faísca. O sistema mostra esforço em vez de pedir paciência.",
   "dependencies": [
     "lucide-react"
   ],

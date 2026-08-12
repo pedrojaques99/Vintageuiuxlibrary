@@ -3,7 +3,7 @@
   "name": "store-status",
   "title": "Store Status",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Aberto/fechado calculado no fuso da loja, não no do visitante — a resposta certa para quem está do outro lado do mundo.",
+  "description": "Aberto/fechado calculado no fuso da loja, não no do visitante. Quem está do outro lado do mundo vê a resposta certa.",
   "registryDependencies": [
     "utils"
   ],

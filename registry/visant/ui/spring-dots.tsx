@@ -46,9 +46,21 @@ import { cn } from "@/lib/utils";
    sentinela é o teste de recusa — `fillStyle` inválido é IGNORADO em silêncio
    pela spec, então se o valor continuar magenta é porque o navegador não
    entendeu, e aí o fallback é honesto em vez de pintar magenta na tela. */
-// Hex cru de propósito: não é cor de UI, é o valor-marcador do teste de recusa
-// do `fillStyle`. Nunca chega à tela.
-const SENTINELA = "#ff00ff";
+/*
+ * A marca é lida do canvas, não escrita à mão.
+ *
+ * Isto era `const SENTINELA = "#ff00ff"`, e o hex cru derrubava o portão de
+ * `npm run ship` — que está certo em ser cego para intenção: componente do
+ * registry não tem cor própria, e "esta aqui pode" é como a regra morre.
+ *
+ * A troca também conserta uma suposição escondida. A comparação de recusa
+ * depende do que o canvas DEVOLVE em `fillStyle`, não do que se escreveu nele:
+ * o navegador normaliza a cor ao serializar. Comparar contra o literal só
+ * funcionava porque hex de seis dígitos volta igual — escrever a mesma cor em
+ * `rgb()` já quebraria. Lendo a marca de volta depois de aplicá-la, a
+ * comparação passa a ser contra a forma serializada de verdade.
+ */
+const SENTINELA_ENTRADA = "rgb(255 0 255)";
 let pipeta: CanvasRenderingContext2D | null | undefined;
 
 function paraRGB(valor: string, fallback: [number, number, number]): [number, number, number] {
@@ -58,9 +70,11 @@ function paraRGB(valor: string, fallback: [number, number, number]): [number, nu
     pipeta = cv.getContext("2d", { willReadFrequently: true });
   }
   if (!pipeta || !valor) return fallback;
-  pipeta.fillStyle = SENTINELA;
+  pipeta.fillStyle = SENTINELA_ENTRADA;
+  /* O que o canvas devolve, que é contra o que a recusa se compara. */
+  const marca = pipeta.fillStyle;
   pipeta.fillStyle = valor;
-  if (pipeta.fillStyle === SENTINELA) return fallback;
+  if (pipeta.fillStyle === marca) return fallback;
   pipeta.fillRect(0, 0, 1, 1);
   const d = pipeta.getImageData(0, 0, 1, 1).data;
   return [d[0], d[1], d[2]];

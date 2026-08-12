@@ -3,7 +3,7 @@
   "name": "measure-picker",
   "title": "Measure Picker",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Escolher por medida e receber a recomendação — a faixa traduz o número em produto.",
+  "description": "Escolher por medida e receber a recomendação. A faixa traduz o número em produto.",
   "registryDependencies": [
     "utils"
   ],

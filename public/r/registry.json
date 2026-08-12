@@ -7,7 +7,7 @@
       "name": "vintage-theme",
       "type": "registry:theme",
       "title": "Vintage Theme",
-      "description": "O tema do kit de áudio — o contraponto escuro aos temas de marca.",
+      "description": "O tema do kit de áudio, o contraponto escuro aos temas de marca.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "cssVars": {
         "theme": {
@@ -179,7 +179,7 @@
       "name": "vintage-button",
       "type": "registry:ui",
       "title": "Vintage Button",
-      "description": "Botão de painel com afundamento real no clique.",
+      "description": "Botão de painel que afunda no clique.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
@@ -497,7 +497,7 @@
       "name": "store-status",
       "type": "registry:ui",
       "title": "Store Status",
-      "description": "Aberto/fechado calculado no fuso da loja, não no do visitante — a resposta certa para quem está do outro lado do mundo.",
+      "description": "Aberto/fechado calculado no fuso da loja, não no do visitante. Quem está do outro lado do mundo vê a resposta certa.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -513,7 +513,7 @@
       "name": "measure-picker",
       "type": "registry:ui",
       "title": "Measure Picker",
-      "description": "Escolher por medida e receber a recomendação — a faixa traduz o número em produto.",
+      "description": "Escolher por medida e receber a recomendação. A faixa traduz o número em produto.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -681,7 +681,7 @@
       "name": "octahedron-loader",
       "type": "registry:ui",
       "title": "Octahedron Loader",
-      "description": "Carregamento com sólido girando — a marca da casa em espera curta.",
+      "description": "Carregamento com sólido girando. A marca da casa em espera curta.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -756,7 +756,7 @@
       "name": "repulsive-hover",
       "type": "registry:ui",
       "title": "Repulsive Hover",
-      "description": "O elemento foge do cursor com mola. Gesto de hero, não de formulário.",
+      "description": "O elemento foge do cursor com mola. Gesto de hero, fora de formulário.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -842,7 +842,7 @@
       "name": "working-glyph",
       "type": "registry:ui",
       "title": "Working Glyph",
-      "description": "Ícone que bate com faísca — o sistema mostrando esforço em vez de pedir paciência.",
+      "description": "Ícone que bate com faísca. O sistema mostra esforço em vez de pedir paciência.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "dependencies": [
         "lucide-react"
@@ -984,7 +984,7 @@
       "name": "grid-dots",
       "type": "registry:ui",
       "title": "Grid Dots",
-      "description": "Malha de pontos de fundo — o papel milimetrado que dá profundidade sem competir.",
+      "description": "Malha de pontos de fundo, o papel milimetrado que dá profundidade sem competir.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -1099,7 +1099,7 @@
       "name": "step-cards",
       "type": "registry:block",
       "title": "Step Cards",
-      "description": "Como funciona, em passos numerados. Lista ordenada de verdade e a arte de cada passo por slot.",
+      "description": "Como funciona, em passos numerados. Sai como lista ordenada no HTML, e a arte de cada passo entra por slot.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -1376,7 +1376,7 @@
       "name": "measure-bar",
       "type": "registry:ui",
       "title": "Measure Bar",
-      "description": "Nenhum número sem régua: valor, qualificador, evidência e rótulo nessa ordem. Sem denominador honesto a barra não desenha, e o estado desconhecido fica tracejado em vez de zerado.",
+      "description": "Nenhum número sem régua: valor, qualificador, evidência e rótulo nessa ordem. Sem denominador a barra não desenha, e o estado desconhecido fica tracejado em vez de zerado.",
       "registryDependencies": [
         "utils"
       ],

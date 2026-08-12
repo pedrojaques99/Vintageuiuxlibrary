@@ -614,7 +614,7 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "480",
-          "descricao": null
+          "descricao": "Largura natural em px — vira teto, não trava: a peça encolhe abaixo dela."
         }
       ]
     }
@@ -810,6 +810,13 @@
           "descricao": "Faixa de cor sólida com a cor da marca."
         },
         {
+          "nome": "bleed",
+          "tipo": "number | false",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Quantos px a faixa sangra pra fora do container, de cada lado.\n\nFaixa contida por um `px-6` de página não é faixa: o corte nas duas pontas\ndenuncia a caixa e mata a ilusão de que o texto vem de fora e vai pra fora.\nPasse o mesmo respiro do pai (`px-6` → `bleed={24}`) e ela encosta na borda.\n\nIsto não é conveniência: hoje quem consome resolve por fora e resolve mal.\nNa sala \"Página que vende\" a faixa precisou de um `className=\"px-0 py-1\nsm:px-0\"` no wrapper só pra desfazer o respiro do bloco — e isso deixa de\nfuncionar no dia em que o bloco mudar de respiro. Aqui a peça sabe sozinha.\n\n`false` (padrão) é a faixa contida de sempre."
+        },
+        {
           "nome": "boost",
           "tipo": "number",
           "obrigatoria": false,
@@ -888,11 +895,39 @@
           "descricao": "Setas de navegação (só aparecem onde há ponteiro)."
         },
         {
+          "nome": "bleed",
+          "tipo": "number | false",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Quantos px o trilho sangra pra fora do container, de cada lado.\n\nPasse o mesmo respiro lateral do pai (`px-6` → `bleed={24}`) e a fileira\nencosta na borda da tela enquanto o primeiro item continua alinhado com o\ntexto acima. `false` (padrão) é o trilho contido de sempre."
+        },
+        {
+          "nome": "fade",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Esmaece as pontas onde a lista continua. Segue o estado real das bordas."
+        },
+        {
           "nome": "gap",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "20",
           "descricao": null
+        },
+        {
+          "nome": "heading",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O nome da lista, na fileira das setas.\n\n`heading` e não `title` de propósito: `title` já é atributo de HTML e vira\no tooltip nativo do navegador. Aceitar o mesmo nome pros dois faria quem\ninstala escrever um e receber o outro — e o tooltip sumiria sem explicação."
+        },
+        {
+          "nome": "hint",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O qualificador ao lado do nome: \"12 peças\", \"atualizado hoje\"."
         },
         {
           "nome": "itemWidth",
@@ -922,6 +957,27 @@
           "obrigatoria": false,
           "padrao": "div",
           "descricao": null
+        },
+        {
+          "nome": "badge",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Etiqueta no canto superior esquerdo: \"novo\", \"esgotado\", \"-30%\"."
+        },
+        {
+          "nome": "blend",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "multiply",
+          "descricao": "Como a foto se mistura com a placa.\n\n`\"multiply\"` (padrão) para recorte sobre branco — o branco vira placa.\n`\"normal\"` para foto de cena, still com fundo próprio ou PNG com alpha, que\no multiply destruiria."
+        },
+        {
+          "nome": "ground",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Sombra de contato na base da placa. Faz o recorte pousar em vez de flutuar.\n\nEla mora na base da PLACA, não na base do produto — a placa não tem como\nsaber onde a silhueta termina dentro de um `object-contain`. Vale pro\nrecorte de catálogo, que por convenção enquadra o produto ocupando o frame.\nProduto pequeno e centralizado deixa a sombra solta embaixo; nesse caso o\nconserto é o enquadramento da foto, não ligar o `ground`."
         },
         {
           "nome": "inset",
@@ -987,6 +1043,13 @@
           "obrigatoria": false,
           "padrao": "header",
           "descricao": "Seletor do cabeçalho grudado a medir."
+        },
+        {
+          "nome": "hideProgress",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Desliga o fio de progresso. Aditivo: ligado por padrão, e some sozinho\nquando a região governada não rola o bastante para haver progresso."
         }
       ]
     },
@@ -1123,6 +1186,13 @@
           "descricao": "Formata o valor de entrada (ex.: 175 → \"175cm · 5ft 9in\")."
         },
         {
+          "nome": "hideReadout",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Esconde a linha de cabeçalho (rótulo + valor). Aditivo e desligado por\npadrão: o valor formatado só existia no `aria-valuetext`, ou seja, quem\nenxerga nunca via o número que estava escolhendo."
+        },
+        {
           "nome": "step",
           "tipo": "number",
           "obrigatoria": false,
@@ -1157,7 +1227,7 @@
   "kanban": [
     {
       "nome": "Kanban",
-      "descricao": "Kanban primitive — headless, data-agnostic, dirigido por design tokens.\n\nDnD robusto via dnd-kit (Pointer + Touch + Keyboard sensors, DragOverlay,\nmulti-container sortable): substitui o HTML5 drag nativo (sem touch, ghost\nfeio, casos de borda bugados). Reordena dentro da coluna E move entre colunas.\n\nTheming: lê só `--kanban-*` (com fallback pros tokens do design system) — troca\no arquivo de tokens da marca e o mesmo componente se veste. Ver kanban.css.\n\nSeleção múltipla (opt-in via `selectable`): marquee \"select by area\" (arrastar\nsobre o vazio, via",
+      "descricao": null,
       "props": [
         {
           "nome": "columns",
@@ -1378,7 +1448,7 @@
     },
     {
       "nome": "Kanban",
-      "descricao": "Kanban primitive — headless, data-agnostic, dirigido por design tokens.\n\nDnD robusto via dnd-kit (Pointer + Touch + Keyboard sensors, DragOverlay,\nmulti-container sortable): substitui o HTML5 drag nativo (sem touch, ghost\nfeio, casos de borda bugados). Reordena dentro da coluna E move entre colunas.\n\nTheming: lê só `--kanban-*` (com fallback pros tokens do design system) — troca\no arquivo de tokens da marca e o mesmo componente se veste. Ver kanban.css.\n\nSeleção múltipla (opt-in via `selectable`): marquee \"select by area\" (arrastar\nsobre o vazio, via",
+      "descricao": null,
       "props": [
         {
           "nome": "columns",
@@ -1646,7 +1716,7 @@
   "segmented-control": [
     {
       "nome": "SegmentedControl",
-      "descricao": "Apple-like segmented control (trilho + pill ativo). Fonte única reusada pelo\nViewModeToggle e pelo painel de preferências (densidade / visão padrão).",
+      "descricao": "Apple-like segmented control (trilho + pill ativo). Fonte única reusada pelo\ncabeçalho da vitrine (seção e densidade), pelo Gallery e pelos kits.\n\n── O que faltava (o \"meio simples\") ────────────────────────────────────────\nNão faltava enfeite: faltava o pill. O \"pill ativo\" era só uma cor de fundo\nque pulava de um botão para o outro — cada segmento tinha o seu, e o\n`gap-1` entre eles fazia o trilho parecer três botões encostados em vez de um\ncontrole só. Um segmented control de verdade tem UM polegar que ANDA: é o\nmovimento que conta de onde você veio, e é ele que faz o grupo ler como uma\npeça única.\n\nAgora o polegar é um elemento só, absoluto, que translada por `transform`.\nNada de largura/altura animada — o trilho tem colunas iguais (`flex-1` no\nfill, largura fixa no compact), então `translateX(índice · 100%)` cai exato\nem qualquer quantidade de opções, sem medir DOM e sem ResizeObserver.\n\nO `gap` saiu e entraram divisores de fio de cabelo entre vizinhos inativos,\nque somem ao lado do ativo — é o detalhe que separa \"montado\" de \"desenhado\",\ne é o mesmo truque do iOS.\n\n── Teclado ────────────────────────────────────────────────────────────────\nSetas ←/→ (e ↑/↓) andam pelas opções e já trocam o valor, com Home/End nas\npontas. O grupo é UM ponto de tabulação (roving tabindex): com quatro desses\nno cabeçalho da vitrine, um Tab por botão viraria uma travessia de doze\nparadas antes de chegar no conteúdo.\n\n── Ícone sem rótulo ───────────────────────────────────────────────────────\n`aria-label` já entrega o nome pro leitor de tela; o `title` entrega pro\nponteiro. Quem troca \"Barras/Linha\" por dois ícones tira uma tradução do\ncaminho de quem vê — e não pode tirar o nome de quem não vê nem de quem não\nreconhece o desenho.\n\nA API não mudou uma vírgula — o cabeçalho da vitrine inteira depende dela.",
       "props": [
         {
           "nome": "onChange",
@@ -1684,6 +1754,13 @@
           "descricao": null
         },
         {
+          "nome": "size",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "md",
+          "descricao": "Densidade. `md` é a régua da casa.\n\n`sm` existe para painel lateral: medido num painel de 340px onde três\ngrupos dividem a mesma linha, 12px de rótulo não cabem e o controle começa\na truncar palavra (\"Por pesso…\"). Encolher a tipografia é mais honesto do\nque abreviar o rótulo, porque a abreviação some da leitura e o tamanho não."
+        },
+        {
           "nome": "variant",
           "tipo": "enum",
           "obrigatoria": false,
@@ -1696,7 +1773,7 @@
   "octahedron-loader": [
     {
       "nome": "OctahedronLoader",
-      "descricao": "Loader de rota da marca — o Octahedron Visant no centro da tela.\n\nSubstitui os `loading.tsx` genéricos (spinner cru / skeleton chutado). NÃO\nsubstitui os skeletons internos dos componentes-cliente (SWR `isLoading`,\ndata-table), que refletem o dado real chegando — esses são a inteligência de\ncada página e ficam intactos.\n\n`prefers-reduced-motion`: mostra o símbolo parado (sem loop/autoplay).\n\nUsa a variante de linha do símbolo (`-lines`), gerada do original por\n`scripts/lottie-outline.js` — o arquivo de marca fica intacto.",
+      "descricao": null,
       "props": [
         {
           "nome": "className",
@@ -1706,11 +1783,25 @@
           "descricao": null
         },
         {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Carregando",
+          "descricao": "Texto lido por leitor de tela."
+        },
+        {
           "nome": "size",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "96",
           "descricao": "Lado do símbolo em px."
+        },
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Caminho do `.lottie` (ou `.json` do Lottie) do símbolo da marca. Sem ele o\nloader cai no wireframe genérico e avisa no console."
         }
       ]
     }
@@ -1790,6 +1881,27 @@
           "obrigatoria": true,
           "padrao": null,
           "descricao": null
+        },
+        {
+          "nome": "description",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Uma frase abaixo do título. Só aparece se `title` existir."
+        },
+        {
+          "nome": "emptyLabel",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": "Nenhuma etapa por aqui ainda.",
+          "descricao": "O que a linha diz quando `data` chega vazio."
+        },
+        {
+          "nome": "title",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Cabeça opcional. Sem ela a linha começa direto no primeiro nó."
         }
       ]
     }
@@ -1797,7 +1909,7 @@
   "assignee-stack": [
     {
       "nome": "AssigneeStack",
-      "descricao": "Stacked avatar group for the team co-owners of an issue. Clean and compact:\noverlapping circles with a ring cutout, capped at `max` with a \"+N\" overflow.\nRender only when it adds signal (the caller decides — e.g. only co-owned tasks).",
+      "descricao": "Pilha de responsáveis — quem toca a tarefa, em círculos sobrepostos.\n\n── O que estava errado ─────────────────────────────────────────────────────\nA pilha se declarava `role=\"img\"`: para o leitor de tela era um desenho, e\npara o teclado não existia. O nome de cada pessoa morava num `title` nativo,\nque só aparece com mouse parado em cima por um segundo e nunca aparece no\ncelular. E o \"+N\" era um `<span>` — o excedente, que é justamente a\ninformação escondida, era a única parte inalcançável.\n\nAgora é um grupo de verdade: UM ponto de tabulação, setas ←/→ andando pelas\npessoas, `Home`/`End` nas pontas. Um ponto só porque uma lista de projetos\ntem uma dessas por linha — um Tab por avatar transformaria a travessia da\npágina em dezenas de paradas antes do conteúdo.\n\n── A micro-interação, e por que ela é utilidade ────────────────────────────\nParada, a pilha economiza espaço escondendo rosto atrás de rosto. Com o\nponteiro em cima (ou com o foco dentro) ela ABRE: os círculos deslizam para\nos seus lugares e o nome de quem está sob o cursor aparece embaixo. É o\nmesmo aperto que o `title` tentava resolver, resolvido onde dá para ver e\ncom teclado junto.\n\nSó `transform` anima — a abertura é `margin` virando `translateX`, nunca\nlargura. E `hover` não é a única porta: `focus-within` abre igual, senão em\ntouch a pilha nunca abriria.",
       "props": [
         {
           "nome": "assignees",
@@ -1819,6 +1931,13 @@
           "obrigatoria": false,
           "padrao": "4",
           "descricao": null
+        },
+        {
+          "nome": "onSelect",
+          "tipo": "(assignee: Assignee) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Quando presente, clicar/Enter numa pessoa devolve ela. Aditivo."
         },
         {
           "nome": "size",
@@ -2250,6 +2369,13 @@
           "descricao": null
         },
         {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
           "nome": "hint",
           "tipo": "string",
           "obrigatoria": false,
@@ -2262,6 +2388,20 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": null
+        },
+        {
+          "nome": "kind",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Vocabulário do painel de design. Só define sufixo e passo padrão."
+        },
+        {
+          "nome": "layout",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "\"row\" = rótulo e valor na mesma linha (campo metade da altura)."
         },
         {
           "nome": "step",
@@ -2749,7 +2889,7 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "4",
-          "descricao": null
+          "descricao": "Teto de colunas. A largura do container é quem decide quantas cabem."
         },
         {
           "nome": "empty",
@@ -2776,7 +2916,7 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "4",
-          "descricao": null
+          "descricao": "Teto de colunas. A largura do container é quem decide quantas cabem."
         },
         {
           "nome": "empty",
@@ -3234,7 +3374,7 @@
           "tipo": "boolean",
           "obrigatoria": false,
           "padrao": "true",
-          "descricao": "Desenha a barra de título acima da fileira."
+          "descricao": "Reserva a fileira de controle que o `@visant/rail` desenha acima do trilho\n(as duas setas, a partir de `lg`). Antes isto desenhava uma barra de título\n— que o trilho não tem — e era metade do salto de altura."
         },
         {
           "nome": "itemWidth",
@@ -3242,6 +3382,13 @@
           "obrigatoria": false,
           "padrao": "240",
           "descricao": "Os mesmos valores do `@visant/rail` que este esqueleto representa."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Carregando a lista",
+          "descricao": "O que o leitor de tela ouve enquanto a lista não chegou."
         },
         {
           "nome": "ratio",

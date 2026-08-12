@@ -3,7 +3,7 @@
   "name": "measure-bar",
   "title": "Measure Bar",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Nenhum número sem régua: valor, qualificador, evidência e rótulo nessa ordem. Sem denominador honesto a barra não desenha, e o estado desconhecido fica tracejado em vez de zerado.",
+  "description": "Nenhum número sem régua: valor, qualificador, evidência e rótulo nessa ordem. Sem denominador a barra não desenha, e o estado desconhecido fica tracejado em vez de zerado.",
   "registryDependencies": [
     "utils"
   ],
