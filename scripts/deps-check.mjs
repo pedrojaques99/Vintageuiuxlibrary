@@ -68,8 +68,16 @@ for (const item of registry.items) {
     for (const [, spec] of src.matchAll(IMPORT_RE)) {
       if (spec.startsWith("@/")) {
         // Alias do projeto: `@/components/ui/button` → item `button`.
+        //
+        // `nomesDeArquivo` entra aqui pela mesma razão que já entrava no ramo
+        // relativo abaixo: um item pode enviar mais de um arquivo, e o `.tsx`
+        // importar o `.ts` irmão pelo alias — que é como o consumidor vai ver
+        // os dois depois do `add`, já que ambos aterrissam em `src/`. Sem isto,
+        // `cover-art` (lib + ui no mesmo item) era acusado de não declarar
+        // dependência de si mesmo, e a "correção" seria partir o item em dois
+        // só pra agradar o portão.
         const alvo = spec.split("/").pop();
-        if (alvo && !declaradasRegistry.has(alvo) && alvo !== "utils") {
+        if (alvo && !declaradasRegistry.has(alvo) && !nomesDeArquivo.has(alvo) && alvo !== "utils") {
           problemas.push(`${item.name}: importa ${spec} sem declarar "${alvo}" em registryDependencies`);
         }
         continue;

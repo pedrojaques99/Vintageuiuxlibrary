@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "skeleton-rail",
+  "title": "Skeleton Rail",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "O esqueleto do trilho com as mesmas medidas do trilho: mesmos nomes de prop, overflow hidden em vez de auto, e pulse em vez de shimmer.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/skeleton-rail.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Skeleton Rail — o esqueleto do trilho, com as MESMAS medidas do trilho.\n *\n * ── A única coisa que um skeleton precisa acertar ──────────────────────────\n *\n * Ele existe pra evitar o salto de layout. Se as medidas dele divergirem do\n * componente real, ele deixa de evitar o salto e passa a **causar** um — que é\n * pior que não ter skeleton nenhum, porque agora o salto acontece depois de a\n * pessoa já ter começado a ler.\n *\n * Por isso `itemWidth`, `gap` e `ratio` são exatamente os nomes e os defaults do\n * `@visant/rail`, e a recomendação é passar os mesmos valores dos dois lados a\n * partir de uma constante do projeto. Skeleton com número escrito à mão diverge\n * do trilho no primeiro ajuste.\n *\n * ── As duas decisões pequenas ──────────────────────────────────────────────\n *\n * · `overflow-hidden`, não `auto`: skeleton não deve rolar de lado. Ele\n *   representa conteúdo que ainda não existe, e oferecer navegação por cima de\n *   nada é oferecer uma porta falsa.\n * · O bloco é `--muted`, e só. Nada de gradiente varrendo: shimmer é movimento\n *   contínuo numa tela onde a pessoa está esperando, e ele some sob\n *   `prefers-reduced-motion` deixando o esqueleto sem nenhum sinal de vida. O\n *   `animate-pulse` respira e sobrevive ao guard.\n *\n * O número de cards default é 5 porque é quanto cabe numa faixa larga: menos\n * deixa a linha visivelmente curta e denuncia que aquilo não é o conteúdo.\n */\n\nexport interface SkeletonRailProps extends React.HTMLAttributes<HTMLDivElement> {\n  /** Quantos cards fantasma. Default 5. */\n  cards?: number;\n  /** Os mesmos valores do `@visant/rail` que este esqueleto representa. */\n  itemWidth?: number;\n  gap?: number;\n  /** Proporção da arte, ex. `\"4 / 3\"`. */\n  ratio?: string;\n  /** Desenha a barra de título acima da fileira. */\n  heading?: boolean;\n}\n\nexport function SkeletonRail({\n  cards = 5,\n  itemWidth = 240,\n  gap = 20,\n  ratio = \"4 / 3\",\n  heading = true,\n  className,\n  ...props\n}: SkeletonRailProps) {\n  return (\n    <section\n      aria-hidden=\"true\"\n      className={cn(\"min-w-0\", className)}\n      {...(props as React.HTMLAttributes<HTMLElement>)}\n    >\n      {heading && <div className=\"mb-3 h-4 w-44 animate-pulse rounded bg-muted\" />}\n      <div className=\"flex overflow-hidden\" style={{ gap }}>\n        {Array.from({ length: cards }).map((_, i) => (\n          <div key={i} className=\"shrink-0\" style={{ width: itemWidth }}>\n            <div className=\"animate-pulse rounded bg-muted\" style={{ aspectRatio: ratio }} />\n            <div className=\"mt-3 h-3.5 w-3/4 animate-pulse rounded bg-muted\" />\n            <div className=\"mt-1.5 h-3 w-1/2 animate-pulse rounded bg-muted\" />\n          </div>\n        ))}\n      </div>\n    </section>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

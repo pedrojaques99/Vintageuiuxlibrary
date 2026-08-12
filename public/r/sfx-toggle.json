@@ -1,0 +1,36 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sfx-toggle",
+  "title": "SFX Toggle",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Liga e desliga o som da casa em um ícone só: as ondas recolhem pro alto-falante, e o estado nulo antes da hidratação fica desenhado em vez de chutado.",
+  "registryDependencies": [
+    "utils",
+    "@visant/sfx-bus"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/sfx-toggle.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\nimport { sfx, useSfxEnabled } from \"@/lib/sfx-bus\";\n\n/**\n * O botão que liga e desliga o som da casa.\n *\n * Dois estados, **um** ícone. As ondas recolhem PARA o alto-falante em vez de\n * sumir: o movimento diz qual estado é qual sem precisar de um segundo desenho,\n * e sem precisar da palavra \"mudo\" ao lado. Trocar de ícone entre dois estados\n * é a saída fácil e a que menos comunica — o olho perde a continuidade e tem\n * que reconhecer um símbolo novo.\n *\n * ── O estado nulo é desenhado, e é o detalhe que costuma faltar ────────────\n *\n * A preferência mora no `localStorage`, que o servidor não enxerga. Qualquer\n * chute no HTML é um estado errado piscando na tela até a hidratação corrigir —\n * e num toggle, estado errado piscando lê como o botão tendo sido apertado\n * sozinho. Aqui o rótulo nasce vazio (o botão ocupa o espaço, invisível) e só\n * aparece quando o bus responde. Reserva o layout sem afirmar nada.\n *\n * `data-sfx-silent` impede que a fiação do bus toque o `press` neste botão: ele\n * toca o próprio som ao ligar, e dois sons no mesmo clique lêem como bug.\n */\nexport interface SfxToggleProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {\n  /** Rótulos, porque texto é voz de marca e não pertence ao componente. */\n  labels?: { on: string; off: string };\n}\n\nexport function SfxToggle({ labels, className, ...props }: SfxToggleProps) {\n  const on = useSfxEnabled();\n  const rotulos = labels ?? { on: \"Desligar o som\", off: \"Ligar o som\" };\n\n  return (\n    <button\n      type=\"button\"\n      data-sfx-silent\n      data-state={on === null ? \"unknown\" : on ? \"on\" : \"off\"}\n      aria-pressed={on ?? false}\n      aria-label={on ? rotulos.on : rotulos.off}\n      // Invisível, não ausente: desmontar até hidratar faria a barra saltar.\n      style={on === null ? { visibility: \"hidden\" } : undefined}\n      onClick={() => sfx.setEnabled(!sfx.isEnabled())}\n      className={cn(\n        \"sfx-toggle inline-flex size-[34px] flex-none items-center justify-center rounded-[var(--r-control)]\",\n        \"border border-transparent bg-transparent p-0 text-muted-foreground\",\n        // `[transition-duration:…]` e não `duration-[…]`: a utility de duração\n        // do Tailwind não aceita `var()` como valor arbitrário e não gera regra\n        // nenhuma — falha silenciosa que o check:css-tokens pegou.\n        \"transition-[color,border-color,transform] [transition-duration:var(--dur-base,240ms)] ease-[var(--ease-out)]\",\n        \"active:scale-[0.92]\",\n        \"hover:text-foreground hover:border-border\",\n        \"data-[state=on]:text-foreground\",\n        className,\n      )}\n      {...props}\n    >\n      <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" className=\"block size-[17px]\">\n        <path\n          d=\"M4 9v6h3.5L13 19V5L7.5 9H4Z\"\n          fill=\"currentColor\"\n          stroke=\"currentColor\"\n          strokeWidth=\"1.4\"\n          strokeLinejoin=\"round\"\n        />\n        <g className=\"sfx-wave\">\n          <path\n            d=\"M16.2 9.2a4 4 0 0 1 0 5.6\"\n            stroke=\"currentColor\"\n            strokeWidth=\"1.6\"\n            strokeLinecap=\"round\"\n          />\n          <path\n            d=\"M18.9 6.6a7.7 7.7 0 0 1 0 10.8\"\n            stroke=\"currentColor\"\n            strokeWidth=\"1.6\"\n            strokeLinecap=\"round\"\n          />\n        </g>\n      </svg>\n    </button>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "css": {
+    "@layer components": {
+      ".sfx-toggle .sfx-wave": {
+        "transform-origin": "6px 12px",
+        "transition": "opacity var(--dur-base, 240ms) var(--ease-out), transform var(--dur-base, 240ms) var(--ease-out)"
+      },
+      ".sfx-toggle[data-state=\"off\"] .sfx-wave": {
+        "opacity": "0",
+        "transform": "scale(0.4)"
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".sfx-toggle .sfx-wave": {
+        "transition": "none"
+      }
+    }
+  },
+  "type": "registry:ui"
+}

@@ -4,7 +4,16 @@
 
 ---
 
-## STATUS — 30/07/2026: no ar e verificado ponta a ponta
+## STATUS — 11/08/2026: **64 itens** (13 novos, verificados, ainda não publicados)
+
+A colheita `visantismo` + `visant-club` entrou: fundo raspável, campo de mola,
+o bus de som, contagem, paralaxe de ponteiro, o sistema de entrada por dobra, a
+régua sob número, o cartão-objeto, a capa determinística, o estado vazio, o
+esqueleto de trilho e a busca local. Portões todos verdes, **deploy pendente** —
+ver [`COLHEITA-VISANTISMO-CLUB.md`](COLHEITA-VISANTISMO-CLUB.md) para o motivo e
+para os rejeitados, que valem mais que a lista de aceitos.
+
+### Antes disso — 30/07/2026: no ar e verificado ponta a ponta
 
 **`https://visant-ui.vercel.app/r/{name}.json`** — **33 itens + 3 temas de marca**.
 
