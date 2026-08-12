@@ -27,7 +27,7 @@
  */
 
 import * as React from "react";
-import { Expand, List, Rows3, Search, X } from "lucide-react";
+import { Expand, List, Rows3, Search, SlidersHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useBrandTheme } from "@/lib/brand-theme";
 import { Chip } from "../../registry/visant/ui/chip";
@@ -48,11 +48,13 @@ import { CopyCommand } from "./copy-command";
 import { DepBadges, DepLogo } from "./dep-badges";
 import { SEM_DEPS, allDeps, matchesDep } from "./deps";
 import { FitStage, useLazyDemo } from "./stage";
+import { WireframeToggle } from "./media";
 import { ComponentFocus } from "./ComponentFocus";
+import { BugButton } from "./bug-report";
 
 type Mode = "vitrine" | "lista";
 type FamilyFilter = Family | "todos";
-type Tab = "interface" | "sem-interface";
+type TipoFilter = CatalogItem["type"] | null;
 
 const MODES = [
   { value: "vitrine" as const, icon: Rows3, ariaLabel: "Ver uma peça por linha" },
@@ -60,17 +62,23 @@ const MODES = [
 ];
 
 /**
- * Quem tem demo aparece na vitrine; quem não tem, na outra aba.
+ * Quem tem demo ganha palco; quem não tem entra como LINHA, na mesma lista.
  *
- * A grade de quatro colunas misturava as duas coisas, e o resultado era uma peça
- * desenhada ao lado de um cartão escrito "sem superfície visual própria" — o
- * mesmo peso visual para o que se olha e para o que só se instala. Um hook não
- * fica melhor num palco vazio: ele fica melhor numa lista onde o que importa é
- * o nome e o comando.
+ * Isto já foi uma aba separada ("Sem interface"), e a razão original era boa: na
+ * grade de quatro colunas, uma peça desenhada ao lado de um cartão escrito "sem
+ * superfície visual própria" dava o mesmo peso visual pro que se olha e pro que
+ * só se instala.
+ *
+ * O que mudou é que **a grade acabou** — hoje é uma peça por linha. Numa coluna
+ * vertical, a linha densa ao lado do card grande JÁ é a diferença de peso que a
+ * aba tentava criar, e sem o custo dela: um hook escondido atrás de um segundo
+ * clique é um hook que ninguém acha, e a aba era um eixo de filtro a mais
+ * competindo com a categoria, que é o eixo que importa.
+ *
+ * Quem quiser só os hooks agora filtra por **tipo**, que é a pergunta que a aba
+ * estava tentando responder por aproximação.
  */
 const TEM_INTERFACE = (i: CatalogItem) => Boolean(i.demo);
-
-const SEM_INTERFACE_COUNT = CATALOG.filter((i) => !TEM_INTERFACE(i)).length;
 
 function TypeBadge({ type }: { type: CatalogItem["type"] }) {
   return (
@@ -97,12 +105,10 @@ function TypeBadge({ type }: { type: CatalogItem["type"] }) {
 const Showcase = React.memo(function Showcase({
   item,
   onOpen,
-  onPickDep,
   index,
 }: {
   item: CatalogItem;
   onOpen: () => void;
-  onPickDep: (dep: string) => void;
   index: number;
 }) {
   const Demo = item.demo!;
@@ -113,7 +119,9 @@ const Showcase = React.memo(function Showcase({
     <article
       ref={ref}
       className={cn(
-        "overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
+        // `group`: o botão de bug só aparece quando a mão (ou o teclado) chega
+        // ao card — ver `bug-report.tsx`.
+        "group overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
         "transition-[border-color,box-shadow] [transition-duration:var(--dur-fast,160ms)] [transition-timing-function:var(--ease-out)]",
         "focus-within:border-[var(--brand)] hover:border-[var(--brand)]",
         // A placa levanta um degrau no hover. Sem mover nada: a peça viva lá
@@ -122,32 +130,33 @@ const Showcase = React.memo(function Showcase({
       )}
     >
       {/*
-        No celular o cabeçalho é uma coluna: identificação em cima, ações
-        embaixo em linha cheia. Espremer nome, descrição, comando e botão na
-        mesma linha de 390px reduz os dois alvos de toque a nada.
+        Uma linha, não três.
+
+        No celular ela vira coluna: identificação em cima, ações embaixo em
+        linha cheia. Espremer nome, descrição, comando e botão na mesma faixa de
+        390px reduz os dois alvos de toque a nada.
+
+        O cabeçalho carregava nome, tipo, ícones de dependência, descrição em
+        parágrafo próprio e mais duas ações — cinco informações antes da peça,
+        que é o que a pessoa veio ver. Tipo e dependências continuam existindo:
+        moram na ficha de foco, onde a decisão de instalar é tomada. Aqui fica o
+        que identifica (nome), o que situa em uma frase (descrição) e o que se
+        faz (copiar, focar).
       */}
-      <header className="flex flex-col gap-3 border-b border-border px-4 py-3 sm:flex-row sm:items-start sm:gap-4 sm:px-5">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              data-card-index={index}
-              onClick={onOpen}
-              className="truncate font-mono text-destaque outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline"
-            >
-              {item.name}
-            </button>
-            <TypeBadge type={item.type} />
-            {/* Ao lado do tipo, não embaixo da descrição: "o que é" e "o que
-                custa" são a mesma leitura, feita antes de olhar a peça. */}
-            <DepBadges
-              name={item.name}
-              variant="icones"
-              onPick={onPickDep}
-              className="ml-0.5 border-l border-border pl-2"
-            />
-          </div>
-          <p className="mt-1 max-w-[74ch] text-apoio leading-relaxed text-muted-foreground">
+      <header className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-4 sm:px-5">
+        <div className="flex min-w-0 flex-1 flex-col gap-x-3 sm:flex-row sm:items-baseline">
+          <button
+            type="button"
+            data-card-index={index}
+            onClick={onOpen}
+            className="shrink-0 truncate text-left font-mono text-destaque outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline"
+          >
+            {item.name}
+          </button>
+          {/* `line-clamp-1`: a descrição situa, não explica. Quem quer o texto
+              inteiro abre o foco — e assim nenhum card fica mais alto que o
+              vizinho por ter frase comprida. */}
+          <p className="min-w-0 line-clamp-1 text-apoio text-muted-foreground">
             {item.description}
           </p>
         </div>
@@ -171,21 +180,32 @@ const Showcase = React.memo(function Showcase({
             <Expand className="h-3.5 w-3.5" />
             Focar
           </button>
+          {/* Terceira ação, e a única que não é sobre usar a peça — por isso
+              some em repouso e volta no hover. */}
+          <BugButton item={item.name} />
         </div>
       </header>
 
-      {/* O palco: a peça desenha no tamanho declarado e só encolhe se não couber.
-          `mx-auto` com `maxWidth` centraliza a peça estreita em vez de deixá-la
-          encostada na margem esquerda de uma faixa de 1200px. */}
-      {/* `overflow-x-auto`: a peça grande para de encolher no piso da escala e
-          passa a transbordar — quem está no celular rola de lado e continua
-          conseguindo LER o depoimento, em vez de olhar texto de 6px. */}
+      {/*
+        O palco divide a superfície do card — não tem fundo nem borda próprios.
+
+        Antes ele era uma caixa `bg-background` dentro de uma caixa `bg-card`, e
+        a peça aparecia com duas molduras em volta antes da própria. Numa página
+        de 50 cards isso vira grade de janelinhas: o olho conta as bordas, não as
+        peças. A única exceção é o kit vintage, que é skeuomórfico e precisa do
+        painel escuro para o metal e o LED existirem (`stageSurfaceOf`).
+
+        `overflow-hidden`, e nunca `auto`: barra de rolagem horizontal dentro de
+        um card de vitrine é sempre defeito. Ou a peça cabe, ou ela ENCOLHE até
+        caber — daí o piso de escala mais baixo. O que não pode é a pessoa
+        descobrir que faltava conteúdo arrastando de lado.
+      */}
       <div
-        className="overflow-x-auto bg-background px-3 py-4 sm:px-6 sm:py-6"
+        className="overflow-hidden px-4 pb-5 pt-1 sm:px-6 sm:pb-7"
         style={stageSurfaceOf(item)}
       >
-        <div className="mx-auto w-full" style={{ maxWidth: w }}>
-          <FitStage w={w} h={h} minScale={0.62} active={active} label={item.name}>
+        <div className="mx-auto w-full" style={{ maxWidth: Math.max(w, 720) }}>
+          <FitStage w={w} h={h} minScale={0.42} active={active} label={item.name}>
             {mounted ? <Demo /> : <div className="h-full w-full animate-pulse bg-muted/40" />}
           </FitStage>
         </div>
@@ -220,6 +240,7 @@ function Row({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; i
         a linha inteira — e no toque não há hover para revelar nada.
       */}
       <CopyCommand variant="chip" text={installCommand(item.name)} />
+      <BugButton item={item.name} variant="chip" />
     </div>
   );
 }
@@ -235,25 +256,36 @@ export function Gallery({
   const [family, setFamily] = React.useState<FamilyFilter>("todos");
   /** `null` = não filtra por dependência. `SEM_DEPS` = só o que não puxa nada. */
   const [dep, setDep] = React.useState<string | null>(null);
+  const [tipo, setTipo] = React.useState<TipoFilter>(null);
   const [mode, setMode] = React.useState<Mode>("vitrine");
-  const [tab, setTab] = React.useState<Tab>("interface");
+  /**
+   * Os dois eixos secundários ficam recolhidos.
+   *
+   * A barra tinha três linhas permanentes — busca, categoria e npm — e com 65
+   * itens a terceira linha empurrava o primeiro card pra baixo da dobra em
+   * qualquer laptop. Categoria é a pergunta que quase todo mundo faz e fica à
+   * vista; tipo e peso de bundle são perguntas de quem já está decidindo, e
+   * cabem atrás de um clique. O botão diz quantos filtros estão ligados, então
+   * recolher nunca esconde um filtro ATIVO.
+   */
+  const [abertos, setAbertos] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
   const heroRef = React.useRef<HTMLElement>(null);
   const { brands } = useBrandTheme();
 
-  const pool = React.useMemo(
-    () => CATALOG.filter((i) => (tab === "interface" ? TEM_INTERFACE(i) : !TEM_INTERFACE(i))),
-    [tab],
-  );
+  const pool = CATALOG;
 
   const results = React.useMemo(() => {
     const needle = fold(q.trim());
     return pool.filter(
       (i) =>
-        (family === "todos" || i.family === family) && matchesDep(i.name, dep) && matches(i, needle),
+        (family === "todos" || i.family === family) &&
+        (tipo === null || i.type === tipo) &&
+        matchesDep(i.name, dep) &&
+        matches(i, needle),
     );
-  }, [q, family, dep, pool]);
+  }, [q, family, dep, tipo, pool]);
 
   /*
    * O filtro de dependência se monta do que EXISTE ali, com a contagem junto.
@@ -262,13 +294,13 @@ export function Gallery({
    * no dia em que alguém colhesse a primeira peça com `three`, oferecendo um
    * filtro que não existe e escondendo o que passou a existir.
    *
-   * O escopo é a aba MAIS a família escolhida, pelo mesmo motivo que a contagem
-   * de família não olha o catálogo inteiro: número de chip que o clique seguinte
-   * desmente contamina a confiança em todos os outros.
+   * O escopo é a categoria E o tipo escolhidos, pelo mesmo motivo que a contagem
+   * de categoria não olha o catálogo inteiro: número de chip que o clique
+   * seguinte desmente contamina a confiança em todos os outros.
    */
   const escopoDep = React.useMemo(
-    () => pool.filter((i) => family === "todos" || i.family === family),
-    [pool, family],
+    () => pool.filter((i) => (family === "todos" || i.family === family) && (tipo === null || i.type === tipo)),
+    [pool, family, tipo],
   );
   const depsDoEscopo = React.useMemo(() => allDeps(escopoDep.map((i) => i.name)), [escopoDep]);
   const semDepsCount = React.useMemo(
@@ -284,24 +316,45 @@ export function Gallery({
     if (!existe) setDep(null);
   }, [depsDoEscopo, semDepsCount, dep]);
 
-  const pickDep = React.useCallback(
+  const pickDep = React.useCallback((chave: string) => {
     // Clicar de novo na mesma dependência desfaz: o ícone do card é o mesmo
     // controle, ligado e desligado, e não um caminho só de ida.
-    (chave: string) => setDep((atual) => (atual === chave ? null : chave)),
-    [],
-  );
+    setDep((atual) => (atual === chave ? null : chave));
+    // E abre o painel: filtrar pelo ícone do card com o painel fechado mudaria
+    // a lista sem mostrar QUAL controle mudou, que é como filtro vira mágica.
+    setAbertos(true);
+  }, []);
 
   /*
-   * A contagem do filtro é da aba, não do catálogo inteiro.
+   * A contagem de cada categoria já obedece aos outros dois filtros.
    *
-   * Um chip escrito "Fundação 4" numa aba onde só existe 1 é uma promessa que a
-   * própria tela desmente no clique seguinte — e some com a confiança no resto
-   * dos números.
+   * Um chip escrito "Fundação 8" que entrega 1 porque o filtro de tipo está
+   * ligado é uma promessa que a própria tela desmente no clique seguinte — e
+   * some com a confiança no resto dos números.
    */
   const escopoFamilia = React.useMemo(
-    () => pool.filter((i) => matchesDep(i.name, dep)),
-    [pool, dep],
+    () => pool.filter((i) => matchesDep(i.name, dep) && (tipo === null || i.type === tipo)),
+    [pool, dep, tipo],
   );
+
+  /** Idem para o eixo de tipo: conta dentro da categoria e do npm escolhidos. */
+  const countByTipo = React.useMemo(() => {
+    const escopo = pool.filter(
+      (i) => (family === "todos" || i.family === family) && matchesDep(i.name, dep),
+    );
+    return escopo.reduce<Record<string, number>>((acc, i) => {
+      acc[i.type] = (acc[i.type] ?? 0) + 1;
+      return acc;
+    }, {});
+  }, [pool, family, dep]);
+
+  /* Tipo que sumiu do escopo deixaria a pessoa olhando lista vazia sem pedir. */
+  React.useEffect(() => {
+    if (tipo && !countByTipo[tipo]) setTipo(null);
+  }, [countByTipo, tipo]);
+
+  /** Quantos eixos secundários estão ligados — é o que o botão recolhido diz. */
+  const secundariosAtivos = (tipo ? 1 : 0) + (dep ? 1 : 0);
 
   const countByFamily = React.useMemo(
     () =>
@@ -354,7 +407,7 @@ export function Gallery({
     // Salto seco: a lista mudou inteira, rolagem suave aqui só atrasaria o que a
     // pessoa pediu — e ainda seria cancelada pelo reflow do próprio filtro.
     if (window.scrollY > target) window.scrollTo({ top: target, behavior: "auto" });
-  }, [family, dep, mode, results.length]);
+  }, [family, dep, tipo, mode, results.length]);
 
   const focusIndex = focus ? results.findIndex((i) => i.name === focus) : -1;
   const focusItem = focusIndex >= 0 ? results[focusIndex] : CATALOG.find((i) => i.name === focus);
@@ -418,12 +471,15 @@ export function Gallery({
         >
           A library da Visant
         </h1>
+        {/* Duas frases, e a segunda é a tese. A versão anterior tinha quatro e
+            explicava também onde ficam as marcas reais — informação de conta,
+            que pertence à tela de conta, não à primeira dobra do catálogo. */}
         <p className="mt-4 max-w-2xl text-corpo leading-relaxed text-muted-foreground sm:text-destaque">
           {/* Conta a lista que está na tela, e não um número escrito à mão que
               envelhece: o portão `npm run check:catalog` garante que esta lista
               e o registry.json não divergem. */}
-          {CATALOG.length} peças nesta vitrine, servidas por{" "}
-          <code className="font-mono text-corpo">{REGISTRY_PUBLIC_LABEL}</code>, mais{" "}
+          {CATALOG.length} peças servidas por{" "}
+          <code className="font-mono text-corpo">{REGISTRY_PUBLIC_LABEL}</code>, em{" "}
           {/*
             O número de temas vem do índice do vault — o sync publica marca nova e
             a frase acompanha sozinha. A frase inteira fica no ar desde o primeiro
@@ -432,8 +488,8 @@ export function Gallery({
             com a pessoa já lendo.
           */}
           <span className="inline-block min-w-[1.6ch] tabular-nums">{brands.length || "…"}</span>{" "}
-          marcas de demonstração. Nenhum componente sabe a cor de um cliente — trocar a marca no
-          seletor repinta esta página inteira. As marcas reais ficam na conta de quem entra.
+          marcas. Nenhum componente sabe a cor de um cliente — trocar a marca no seletor repinta
+          esta página inteira.
         </p>
       </section>
 
@@ -466,24 +522,28 @@ export function Gallery({
             )}
           </div>
 
-          {tab === "interface" ? (
-            <SegmentedControl
-              value={mode}
-              onChange={setMode}
-              variant="compact"
-              aria-label="Modo de visualização"
-              options={MODES}
-            />
-          ) : null}
+          {/* Ao lado do modo de visualização porque é a mesma natureza: as duas
+              mudam COMO se olha o catálogo, não O QUE ele mostra. Filtro tira
+              peça da lista; estes dois não tiram nenhuma. */}
+          <WireframeToggle />
+
+          <SegmentedControl
+            value={mode}
+            onChange={setMode}
+            variant="compact"
+            aria-label="Modo de visualização"
+            options={MODES}
+          />
         </div>
 
-        {/* famílias: rolam na horizontal no celular em vez de virar quatro linhas */}
+        {/* A ÚNICA linha permanente de filtro: a categoria. Rola na horizontal
+            no celular em vez de virar quatro linhas. */}
         <div className="shell-bleed mt-2 flex gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
           <Chip
             pressed={family === "todos"}
-            // A contagem do "Todos" também obedece ao filtro de npm — senão ele
-            // anuncia 43 e entrega 5, que é o tipo de número que ensina a pessoa
-            // a não confiar em nenhum outro na barra.
+            // A contagem do "Todos" também obedece aos eixos recolhidos — senão
+            // ele anuncia 65 e entrega 5, que é o tipo de número que ensina a
+            // pessoa a não confiar em nenhum outro na barra.
             count={escopoFamilia.length}
             onClick={() => setFamily("todos")}
             className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
@@ -502,65 +562,91 @@ export function Gallery({
             </Chip>
           ))}
 
-          {/*
-            A aba do que não tem interface fica na mesma barra, à direita e
-            separada: é o mesmo gesto de filtrar, e promovê-la a aba de topo
-            faria a library parecer dois produtos.
-          */}
+          {/* O botão dos eixos secundários. Carrega a contagem do que está
+              ligado, então recolhido nunca esconde filtro ativo — o modo de
+              falha clássico de disclosure em barra de filtro. */}
           <span className="shrink-0 sm:ml-auto sm:pl-3">
             <Chip
-              pressed={tab === "sem-interface"}
-              count={SEM_INTERFACE_COUNT}
-              onClick={() => setTab(tab === "interface" ? "sem-interface" : "interface")}
-              className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
+              pressed={abertos || secundariosAtivos > 0}
+              count={secundariosAtivos}
+              onClick={() => setAbertos((v) => !v)}
+              icon={<SlidersHorizontal className="h-3 w-3" />}
+              aria-expanded={abertos}
+              className="gap-1.5 rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
             >
-              Sem interface
+              Tipo e peso
             </Chip>
           </span>
         </div>
 
         {/*
-          Segunda linha: o que a peça CUSTA.
+          Os dois eixos secundários, recolhidos.
 
-          Fica separada da família de propósito — são duas perguntas diferentes
-          ("onde isso se usa?" e "isso pesa no meu bundle?") e misturá-las numa
-          barra só faria a pessoa ler quinze pastilhas para achar as seis dela.
-          A linha inteira só existe quando há o que filtrar.
+          "Que tipo de peça é essa?" e "isso pesa no meu bundle?" são perguntas
+          de quem JÁ escolheu a categoria e está decidindo. Elas ocupavam duas
+          linhas permanentes da barra — com 65 itens, isso empurrava o primeiro
+          card pra baixo da dobra em qualquer laptop, e a página abria mostrando
+          controle em vez de componente.
         */}
-        {depsDoEscopo.length ? (
-          <div className="shell-bleed mt-1.5 flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <span className="shrink-0 pr-0.5 font-mono text-micro uppercase tracking-wider text-muted-foreground">
-              npm
-            </span>
-            {semDepsCount ? (
-              <Chip
-                pressed={dep === SEM_DEPS}
-                count={semDepsCount}
-                onClick={() => pickDep(SEM_DEPS)}
-                className="rounded-[var(--r-pill,9999px)] px-2.5 py-1 text-micro font-normal"
-              >
-                Nenhuma
-              </Chip>
+        {abertos ? (
+          <div className="shell-bleed mt-2 space-y-1.5 border-t border-border pt-2">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <span className="w-8 shrink-0 font-mono text-micro uppercase tracking-wider text-muted-foreground">
+                tipo
+              </span>
+              {(Object.keys(TYPE_LABEL) as CatalogItem["type"][])
+                .filter((t) => countByTipo[t])
+                .map((t) => (
+                  <Chip
+                    key={t}
+                    pressed={tipo === t}
+                    count={countByTipo[t]}
+                    // Clicar de novo desfaz: o mesmo controle ligado e
+                    // desligado, e não um caminho só de ida.
+                    onClick={() => setTipo((atual) => (atual === t ? null : t))}
+                    className="rounded-[var(--r-pill,9999px)] px-2.5 py-1 font-mono text-micro font-normal"
+                  >
+                    {TYPE_LABEL[t]}
+                  </Chip>
+                ))}
+            </div>
+
+            {depsDoEscopo.length ? (
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <span className="w-8 shrink-0 font-mono text-micro uppercase tracking-wider text-muted-foreground">
+                  npm
+                </span>
+                {semDepsCount ? (
+                  <Chip
+                    pressed={dep === SEM_DEPS}
+                    count={semDepsCount}
+                    onClick={() => pickDep(SEM_DEPS)}
+                    className="rounded-[var(--r-pill,9999px)] px-2.5 py-1 text-micro font-normal"
+                  >
+                    Nenhuma
+                  </Chip>
+                ) : null}
+                {depsDoEscopo.map(({ info, count }) => (
+                  <Chip
+                    key={info.key}
+                    pressed={dep === info.key}
+                    count={count}
+                    onClick={() => pickDep(info.key)}
+                    icon={info.icon ? <DepLogo icon={info.icon} className="h-3 w-3" /> : undefined}
+                    title={info.packages.join(" · ")}
+                    className="gap-1.5 rounded-[var(--r-pill,9999px)] px-2.5 py-1 text-micro font-normal"
+                  >
+                    {info.label}
+                  </Chip>
+                ))}
+              </div>
             ) : null}
-            {depsDoEscopo.map(({ info, count }) => (
-              <Chip
-                key={info.key}
-                pressed={dep === info.key}
-                count={count}
-                onClick={() => pickDep(info.key)}
-                icon={info.icon ? <DepLogo icon={info.icon} className="h-3 w-3" /> : undefined}
-                title={info.packages.join(" · ")}
-                className="gap-1.5 rounded-[var(--r-pill,9999px)] px-2.5 py-1 text-micro font-normal"
-              >
-                {info.label}
-              </Chip>
-            ))}
           </div>
         ) : null}
       </div>
 
       {results.length ? (
-        mode === "vitrine" && tab === "interface" ? (
+        mode === "vitrine" ? (
           <div
             ref={listRef}
             // `overflow-anchor: none`: o Chrome tenta manter na tela o elemento
@@ -571,15 +657,24 @@ export function Gallery({
             style={{ overflowAnchor: "none" }}
             className="mt-6 flex flex-col gap-5"
           >
-            {results.map((item, i) => (
-              <Showcase
-                key={item.name}
-                item={item}
-                index={i}
-                onOpen={() => onFocus(item.name)}
-                onPickDep={pickDep}
-              />
-            ))}
+            {/* Peça com demo ganha palco; lib, hook e tema entram como LINHA na
+                mesma coluna. A diferença de peso é o que a aba "Sem interface"
+                tentava criar, e aqui ela sai de graça — sem eixo de filtro a
+                mais e sem esconder metade da library atrás de um clique. */}
+            {results.map((item, i) =>
+              TEM_INTERFACE(item) ? (
+                <Showcase
+                  key={item.name}
+                  item={item}
+                  index={i}
+                  onOpen={() => onFocus(item.name)}
+                />
+              ) : (
+                <div key={item.name} className="rounded-[var(--r-surface,0.875rem)] border border-border bg-card px-2">
+                  <Row item={item} index={i} onOpen={() => onFocus(item.name)} />
+                </div>
+              ),
+            )}
           </div>
         ) : (
           <div ref={listRef} style={{ overflowAnchor: "none" }} className="mt-6 border-t border-border">

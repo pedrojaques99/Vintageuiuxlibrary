@@ -15,6 +15,18 @@ import "@fontsource/oswald/400.css";
 import "@fontsource/oswald/500.css";
 
 import App from "./app/App.tsx";
+import { MediaProvider } from "./app/media.tsx";
 import "./styles/index.css";
 
-createRoot(document.getElementById("root")!).render(<App />);
+/*
+ * O `MediaProvider` mora na raiz, e não dentro da vitrine, porque a escolha
+ * entre mídia real e wireframe vale para o app inteiro — catálogo, studio de
+ * marca e bancada. Provider por página faria o botão da barra parar de valer
+ * assim que a pessoa trocasse de aba, que é o momento em que ela mais quer
+ * comparar as duas leituras.
+ */
+createRoot(document.getElementById("root")!).render(
+  <MediaProvider>
+    <App />
+  </MediaProvider>,
+);

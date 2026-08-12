@@ -402,10 +402,13 @@
       "name": "marquee",
       "type": "registry:ui",
       "title": "Marquee",
-      "description": "Faixa infinita com duplicação medida, pausa no hover e bail-out em prefers-reduced-motion.",
+      "description": "Faixa infinita em GSAP com três modos de scroll: empurrar o ritmo, virar esteira do scroll ou amarrar a posição à rolagem.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
+      ],
+      "dependencies": [
+        "gsap"
       ],
       "files": [
         {
@@ -414,21 +417,9 @@
         }
       ],
       "css": {
-        "@layer components": {
-          ".marquee-track": {
-            "animation-name": "visant-marquee",
-            "animation-timing-function": "linear",
-            "animation-iteration-count": "infinite"
-          }
-        },
-        "@keyframes visant-marquee": {
-          "to": {
-            "transform": "translate3d(-50%, 0, 0)"
-          }
-        },
         "@media (prefers-reduced-motion: reduce)": {
           ".marquee-track": {
-            "animation": "none",
+            "transform": "none",
             "flex-wrap": "wrap",
             "width": "auto"
           },
@@ -1147,6 +1138,397 @@
           "target": "~/components/testimonial-wall/index.ts"
         }
       ]
+    },
+    {
+      "name": "erase-field",
+      "type": "registry:ui",
+      "title": "Erase Field",
+      "description": "Fundo em canvas que a mão raspa pra revelar a luz por baixo, com acabamento líquido, poeira que volta em deriva e passeio ocioso pra quem não mexe o ponteiro.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/erase-field.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "spring-dots",
+      "type": "registry:ui",
+      "title": "Spring Dots",
+      "description": "Malha de pontos com mola: o ponteiro empurra, o atrito segura, e quem sai de casa acende na cor da marca.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/spring-dots.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "sfx-bus",
+      "type": "registry:lib",
+      "title": "SFX Bus",
+      "description": "Dois sons de interface em WebAudio puro, hover e clique, com throttle, debounce por alvo, contexto armado no primeiro gesto e mudo sob prefers-reduced-motion.",
+      "dependencies": [
+        "react"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/sfx-bus.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "sfx-toggle",
+      "type": "registry:ui",
+      "title": "SFX Toggle",
+      "description": "Liga e desliga o som da casa em um ícone só: as ondas recolhem pro alto-falante, e o estado nulo antes da hidratação fica desenhado em vez de chutado.",
+      "registryDependencies": [
+        "utils",
+        "@visant/sfx-bus"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/sfx-toggle.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".sfx-toggle .sfx-wave": {
+            "transform-origin": "6px 12px",
+            "transition": "opacity var(--dur-base, 240ms) var(--ease-out), transform var(--dur-base, 240ms) var(--ease-out)"
+          },
+          ".sfx-toggle[data-state=\"off\"] .sfx-wave": {
+            "opacity": "0",
+            "transform": "scale(0.4)"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".sfx-toggle .sfx-wave": {
+            "transition": "none"
+          }
+        }
+      },
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "count-up",
+      "type": "registry:ui",
+      "title": "Count Up",
+      "description": "O número que se apura em vez de aparecer pronto: lê o valor final do próprio texto, trava a largura antes do primeiro quadro e não anima o que não dá pra parsear.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/count-up.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "use-pointer-parallax",
+      "type": "registry:hook",
+      "title": "usePointerParallax",
+      "description": "Escreve --px e --py uma vez por quadro e deixa o CSS decidir a profundidade de cada objeto. Só em ponteiro fino, volta ao repouso ao sair da janela.",
+      "dependencies": [
+        "react"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/hooks/use-pointer-parallax.ts",
+          "type": "registry:hook",
+          "target": "@hooks/use-pointer-parallax.ts"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "fold-motion",
+      "type": "registry:lib",
+      "title": "Fold Motion",
+      "description": "Hierarquia de entradas por dobra: rise, drift, mask, settle, climax e invert em vez de trinta entradas iguais. O esconderijo é aplicado pelo componente, nunca por CSS estático.",
+      "dependencies": [
+        "react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/fold-motion.tsx",
+          "type": "registry:lib"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".visant-fold[data-armed]": {
+            "opacity": "0",
+            "transform": "translateY(14px)",
+            "transition": "opacity var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-out)"
+          },
+          ".visant-fold[data-armed][data-in]": {
+            "opacity": "1",
+            "transform": "none"
+          },
+          ".visant-fold[data-fold=\"drift-l\"][data-armed], .visant-fold[data-fold=\"drift-r\"][data-armed]": {
+            "opacity": "1",
+            "transform": "none",
+            "overflow-x": "clip"
+          },
+          ".visant-fold[data-fold=\"drift-l\"][data-armed] > [data-fold-part], .visant-fold[data-fold=\"drift-r\"][data-armed] > [data-fold-part]": {
+            "opacity": "0",
+            "transition": "opacity var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-drawer)"
+          },
+          ".visant-fold[data-fold=\"drift-l\"][data-armed] > [data-fold-part]": {
+            "transform": "translateX(-22px)"
+          },
+          ".visant-fold[data-fold=\"drift-r\"][data-armed] > [data-fold-part]": {
+            "transform": "translateX(22px)"
+          },
+          ".visant-fold[data-fold=\"drift-l\"][data-armed][data-in] > [data-fold-part], .visant-fold[data-fold=\"drift-r\"][data-armed][data-in] > [data-fold-part]": {
+            "opacity": "1",
+            "transform": "none"
+          },
+          ".visant-fold[data-fold=\"mask\"][data-armed]": {
+            "opacity": "1",
+            "transform": "none"
+          },
+          ".visant-fold[data-fold=\"mask\"][data-armed] :is(h1, h2, h3)": {
+            "clip-path": "inset(0 0 100% 0)",
+            "transform": "translateY(0.24em)",
+            "transition": "clip-path var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-out)"
+          },
+          ".visant-fold[data-fold=\"mask\"][data-armed][data-in] :is(h1, h2, h3)": {
+            "clip-path": "inset(0 0 -0.2em 0)",
+            "transform": "none"
+          },
+          ".visant-fold[data-fold=\"settle\"][data-armed]": {
+            "opacity": "1",
+            "transform": "none"
+          },
+          ".visant-fold[data-fold=\"settle\"][data-armed] > *": {
+            "opacity": "0",
+            "transform": "scale(1.03)",
+            "transition": "opacity var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-out)"
+          },
+          ".visant-fold[data-fold=\"settle\"][data-armed][data-in] > *": {
+            "opacity": "1",
+            "transform": "none"
+          },
+          ".visant-fold[data-fold=\"climax\"][data-armed]": {
+            "transform": "translateY(8px) scale(0.994)",
+            "transition-duration": "var(--dur-climax, 1100ms)"
+          },
+          ".visant-fold[data-fold=\"invert\"][data-armed]": {
+            "opacity": "1",
+            "transform": "none",
+            "background": "var(--background)",
+            "color": "var(--foreground)",
+            "transition": "background-color var(--dur-climax, 1100ms) var(--ease-in-out), color var(--dur-climax, 1100ms) var(--ease-in-out)"
+          },
+          ".visant-fold[data-fold=\"invert\"][data-armed][data-in]": {
+            "background": "var(--foreground)",
+            "color": "var(--background)"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".visant-fold[data-armed], .visant-fold[data-armed] > [data-fold-part], .visant-fold[data-armed] > *": {
+            "opacity": "1",
+            "transform": "none",
+            "transition": "none"
+          },
+          ".visant-fold[data-armed] :is(h1, h2, h3)": {
+            "clip-path": "none",
+            "transform": "none",
+            "transition": "none"
+          }
+        }
+      },
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "measure-bar",
+      "type": "registry:ui",
+      "title": "Measure Bar",
+      "description": "Nenhum número sem régua: valor, qualificador, evidência e rótulo nessa ordem. Sem denominador honesto a barra não desenha, e o estado desconhecido fica tracejado em vez de zerado.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/measure-bar.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".measure-bar-fill": {
+            "width": "100%",
+            "transform": "scaleX(var(--v, 1))",
+            "transition": "transform var(--dur-slow, 700ms) var(--ease-out)"
+          },
+          ".visant-fold[data-armed]:not([data-in]) .measure-bar-fill": {
+            "transform": "scaleX(0)"
+          },
+          ".measure-bar-track[data-state=\"unknown\"]": {
+            "background": "repeating-linear-gradient(90deg, var(--border) 0 6px, transparent 6px 12px)"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".measure-bar-fill": {
+            "transition": "none"
+          }
+        }
+      },
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "spine-card",
+      "type": "registry:ui",
+      "title": "Spine Card",
+      "description": "O retângulo que lê como objeto: lombada de luz na borda, tombo apoiado na base que endireita no hover, e capa em duotone que só ganha cor onde a atenção está.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/spine-card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".spine-card": {
+            "--tilt": "-5deg",
+            "--lift": "0px",
+            "transform": "rotate(var(--tilt)) translateY(var(--lift))",
+            "transform-origin": "bottom center",
+            "transition": "transform var(--dur-slow, 700ms) var(--ease-out), border-color var(--dur-slow, 700ms) ease"
+          },
+          ".spine-card::before": {
+            "content": "\"\"",
+            "position": "absolute",
+            "z-index": "1",
+            "top": "0",
+            "bottom": "0",
+            "left": "0",
+            "width": "12px",
+            "border-right": "1px solid var(--border)",
+            "background": "linear-gradient(90deg, color-mix(in oklch, var(--foreground) 7%, transparent), transparent)",
+            "pointer-events": "none"
+          },
+          ".spine-card:hover, .spine-card:focus-visible": {
+            "--tilt": "0deg",
+            "--lift": "-10px"
+          },
+          ".spine-card-cover :is(img, svg, video)": {
+            "display": "block",
+            "width": "100%",
+            "height": "auto",
+            "object-fit": "cover",
+            "filter": "grayscale(1) sepia(0.5) hue-rotate(155deg) saturate(1.3) brightness(0.92) contrast(1.06)",
+            "transition": "filter var(--dur-slow, 700ms) ease"
+          },
+          ".spine-card:hover .spine-card-cover :is(img, svg, video), .spine-card:focus-visible .spine-card-cover :is(img, svg, video), .spine-card[data-full-color] .spine-card-cover :is(img, svg, video)": {
+            "filter": "none"
+          }
+        },
+        "@media (hover: none)": {
+          ".spine-card-cover :is(img, svg, video)": {
+            "filter": "none"
+          },
+          ".spine-card": {
+            "--tilt": "0deg"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".spine-card": {
+            "transition": "none"
+          }
+        }
+      },
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "cover-art",
+      "type": "registry:ui",
+      "title": "Cover Art",
+      "description": "Capa determinística em CSS pra item sem arte: três famílias (livro, app, placa), monograma, e rampa tonal derivada da marca por color-mix. Zero byte de imagem, SSR igual ao cliente.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/cover-art.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/ui/cover-art.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:ui",
+      "title": "Empty State",
+      "description": "O estado vazio canônico: arte por slot com véu de contraste garantido, eyebrow, frase que diz o que vai aparecer ali, e no máximo uma ação.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/empty-state.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "skeleton-rail",
+      "type": "registry:ui",
+      "title": "Skeleton Rail",
+      "description": "O esqueleto do trilho com as mesmas medidas do trilho: mesmos nomes de prop, overflow hidden em vez de auto, e pulse em vez de shimmer.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/skeleton-rail.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "use-local-search",
+      "type": "registry:hook",
+      "title": "useLocalSearch",
+      "description": "Busca em memória tolerante a acento: índice montado uma vez por lista, todos os termos batendo em qualquer ordem, e termo vazio devolvendo a lista inteira.",
+      "dependencies": [
+        "react"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/hooks/use-local-search.ts",
+          "type": "registry:hook",
+          "target": "@hooks/use-local-search.ts"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
     }
   ]
 }

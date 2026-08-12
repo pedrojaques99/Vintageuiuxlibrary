@@ -810,6 +810,13 @@
           "descricao": "Faixa de cor sólida com a cor da marca."
         },
         {
+          "nome": "boost",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "4",
+          "descricao": "Teto do empurrão em `\"boost\"`. 4 = até 4× o ritmo base no scroll bruto."
+        },
+        {
           "nome": "fade",
           "tipo": "boolean",
           "obrigatoria": false,
@@ -824,6 +831,20 @@
           "descricao": null
         },
         {
+          "nome": "laps",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": "Voltas percorridas na travessia da dobra em `\"drive\"` e `\"scrub\"`."
+        },
+        {
+          "nome": "pauseOnHover",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Pausa no hover/foco. Desligue em faixa puramente decorativa."
+        },
+        {
           "nome": "reverse",
           "tipo": "boolean",
           "obrigatoria": false,
@@ -831,11 +852,18 @@
           "descricao": "Anda para a direita. Duas faixas em sentidos opostos leem como sistema."
         },
         {
+          "nome": "scroll",
+          "tipo": "false | \"boost\" | \"drive\" | \"scrub\"",
+          "obrigatoria": false,
+          "padrao": "boost",
+          "descricao": "Como o scroll entra na faixa.\n\n- `\"boost\"` (padrão): ela anda sozinha; o scroll acelera e inverte o sentido.\n- `\"drive\"`: só anda com o scroll, sempre para o mesmo lado. Parou de rolar,\n  parou a faixa — esteira ligada ao movimento da página.\n- `\"scrub\"`: a posição É o scroll. Rolar de volta traz a faixa de volta.\n- `false`: loop puro, indiferente à página."
+        },
+        {
           "nome": "speed",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "46",
-          "descricao": "Segundos para uma volta completa. Mais itens pedem mais tempo."
+          "descricao": "Segundos para uma volta completa no ritmo base. Mais itens pedem mais tempo."
         },
         {
           "nome": "tilt",
@@ -2758,6 +2786,478 @@
           "descricao": "O que aparece quando ainda não há depoimento nenhum."
         }
       ]
+    }
+  ],
+  "erase-field": [
+    {
+      "nome": "EraseField",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "dustVar",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "--background",
+          "descricao": "Var de cor da poeira que cobre. Default `--background`."
+        },
+        {
+          "nome": "intensity",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.5",
+          "descricao": "Intensidade da luz, 0–1. Acima de ~0.7 o texto por cima começa a sofrer."
+        },
+        {
+          "nome": "lightVar",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "--brand",
+          "descricao": "Var de cor da luz revelada. Default `--brand`."
+        }
+      ]
+    }
+  ],
+  "spring-dots": [
+    {
+      "nome": "SpringDots",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "activeVar",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "--brand",
+          "descricao": "Var de cor de quem acendeu. Default `--brand`."
+        },
+        {
+          "nome": "reach",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "140",
+          "descricao": "Alcance do empurrão, em px."
+        },
+        {
+          "nome": "restVar",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "--muted-foreground",
+          "descricao": "Var de cor de quem está em casa. Default `--muted-foreground`."
+        },
+        {
+          "nome": "spacing",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "34",
+          "descricao": "Distância entre pontos, em px. Densidade da malha."
+        }
+      ]
+    }
+  ],
+  "sfx-bus": [
+    {
+      "nome": "useSfxWiring",
+      "descricao": "Liga o bus ao documento. Um por app, no topo.\n\nA fiação é por **delegação no documento** e não por prop em cada botão, e é\nessa a decisão que faz o item valer: um `<SfxProvider/>` na raiz sonoriza\nbotão que ainda nem foi escrito, inclusive de biblioteca de terceiro.",
+      "props": []
+    },
+    {
+      "nome": "useSfxEnabled",
+      "descricao": "Estado reativo do bus, pra desenhar o toggle. `null` até hidratar — a\npreferência mora no `localStorage`, que o servidor não enxerga, e chutar no\nHTML é um estado errado piscando na tela até a hidratação corrigir.",
+      "props": []
+    },
+    {
+      "nome": "SfxProvider",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "selector",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "button, [role='button'], a[data-sfx-target]",
+          "descricao": "Alvos que soam. Estenda quando os alvos de decisão do app tiverem outro nome."
+        }
+      ]
+    },
+    {
+      "nome": "SFX_DEFAULT_SELECTOR",
+      "descricao": "Alvos padrão. Card, item de acordeão e link de texto ficam de fora de\npropósito: som em elemento que a pessoa só atravessa é o que transforma\nsutil em irritante.",
+      "props": []
+    },
+    {
+      "nome": "sfx",
+      "descricao": "Singleton: um `AudioContext` por documento, não um por componente.",
+      "props": []
+    }
+  ],
+  "sfx-toggle": [
+    {
+      "nome": "SfxToggle",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "labels",
+          "tipo": "{ on: string; off: string; }",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Rótulos, porque texto é voz de marca e não pertence ao componente."
+        }
+      ]
+    }
+  ],
+  "count-up": [
+    {
+      "nome": "CountUp",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O valor FINAL, já formatado. É ele que a contagem devolve no último quadro."
+        },
+        {
+          "nome": "decimalSep",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": ",",
+          "descricao": "Separadores da string de ENTRADA. Default pt-BR."
+        },
+        {
+          "nome": "delay",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Atraso, pra escalonar uma fileira de números."
+        },
+        {
+          "nome": "duration",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "900",
+          "descricao": "ms. Default 900 — fecha logo depois de uma entrada de dobra de 0.7s."
+        },
+        {
+          "nome": "locale",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "pt-BR",
+          "descricao": null
+        },
+        {
+          "nome": "thousandSep",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": ".",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "use-pointer-parallax": [
+    {
+      "nome": "usePointerParallax",
+      "descricao": "Paralaxe de ponteiro — em vinte e cinco linhas de trabalho útil.\n\n── Por que isto existe, tendo prontas ─────────────────────────────────────\n\nAntes de escrever o original, as prontas foram olhadas: **Atropos** faz tilt\n3D de hover num card só; **Rellax** e **SimpleParallax** fazem parallax de\nFUNDO no scroll. Nenhuma faz composição com profundidade POR OBJETO. Instalar\nqualquer uma seria pagar peso pra ainda escrever este arquivo.\n\n── A divisão de trabalho é a que o navegador prefere ──────────────────────\n\nO hook escreve DUAS custom properties no elemento — `--px` e `--py`, de -1 a\n1 — e **o CSS decide** o que cada objeto faz com elas, tipicamente através de\num `--d` de profundidade próprio:\n\n```css\n.objeto { transform: translate3d(calc(var(--px) * var(--d) * 1px),\n                                 calc(var(--py) * var(--d) * 1px), 0); }\n```\n\nAssim o layout e a estética ficam inteiros na folha de estilo, e trocar a\ncomposição não encosta em JavaScript. É também o que permite dar profundidade\ndiferente a cada peça sem uma linha a mais aqui.\n\n── As quatro guardas ──────────────────────────────────────────────────────\n\n· **Uma escrita por quadro.** `pointermove` dispara dezenas de vezes por\n  segundo, e escrever custom property a cada evento força recálculo de estilo\n  fora do quadro. rAF é o teto útil.\n· **Só onde há ponteiro fino.** No toque não existe hover, e a paralaxe\n  ficaria presa no último ponto tocado — pior que não existir.\n· **Nada a fazer com o alvo fora da tela.** Sai antes de medir.\n· **Ponteiro saiu da janela: volta ao repouso**, em vez de congelar torto.\n\nSe o hook não rodar, `--px` e `--py` ficam em 0 e a composição é uma imagem\nparada. É o estado de repouso correto, não um estado quebrado — e é por isso\nque os defaults do CSS têm que ser `var(--px, 0)`.\n\nA deriva de SCROLL não pertence aqui: ela é `animation-timeline: view()`\nnativo, que roda fora da main thread. Ouvir scroll em JS pra isso seria\nreinventar, e pior.",
+      "props": []
+    }
+  ],
+  "fold-motion": [
+    {
+      "nome": "Fold",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "as",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "section",
+          "descricao": null
+        },
+        {
+          "nome": "threshold",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.12",
+          "descricao": "Quanto da dobra precisa estar em tela pra ela entrar."
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "rise",
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "FoldPart",
+      "descricao": "O filho que a variante move, quando não é a dobra inteira.\n\n`settle` move os cartões de número, `drift-*` move o contêiner de conteúdo —\ne nos dois casos mover a `<section>` seria errado: ela tem a largura da\nviewport, então `translateX(-22px)` nela põe a borda esquerda em -22 e cria\nestouro horizontal real. (Medido: -22px numa dobra antes de entrar. O\n`overflow-x: hidden` do body mascarava o estouro sem resolver.) O\ndeslocamento vai no filho, e a dobra recorta com `overflow-x: clip` — `clip`\ne não `hidden`, porque `hidden` criaria um contêiner de rolagem.",
+      "props": []
+    }
+  ],
+  "measure-bar": [
+    {
+      "nome": "MeasureBar",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "value",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O número, já formatado. Combina com `@visant/count-up` como children."
+        },
+        {
+          "nome": "align",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "start",
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Nome do que está sendo medido."
+        },
+        {
+          "nome": "qualifier",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O qualificador que transforma trivia em fato. \"em 14 meses\", \"de 600k\"."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "0–1. **Sem default de propósito.** Omitir não desenha régua; é a saída\nhonesta pra número que é piso, não proporção."
+        },
+        {
+          "nome": "state",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "ok",
+          "descricao": "`unknown` desenha a trilha tracejada: o dado não chegou, e isso se vê."
+        }
+      ]
+    }
+  ],
+  "spine-card": [
+    {
+      "nome": "SpineCard",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "title",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "action",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A ação, à direita do título na mesma linha de base. Uma, não três."
+        },
+        {
+          "nome": "cover",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A arte. Slot, pra caber `next/image`, `<img>` ou uma capa desenhada."
+        },
+        {
+          "nome": "fullColor",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Desliga o duotone quando a arte já nasce na cor certa."
+        },
+        {
+          "nome": "href",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "index",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Grau do tombo. Passe o índice do item e ele alterna sozinho."
+        }
+      ]
+    }
+  ],
+  "cover-art": [
+    {
+      "nome": "hashKey",
+      "descricao": "djb2-ish. Estável entre Node e browser — é o que garante SSR == cliente.\nTrocar por qualquer hash \"melhor\" é aceitável; trocar por um que dependa de\nordem de iteração de objeto ou de locale, não.",
+      "props": []
+    },
+    {
+      "nome": "monogram",
+      "descricao": "Duas letras pra identificar a peça na barra da janela.",
+      "props": []
+    },
+    {
+      "nome": "coverLook",
+      "descricao": "Toda a variação sai de UM hash, por deslocamento de bits — cada aspecto lê\numa fatia diferente do mesmo número, então nada precisa de segunda semente.",
+      "props": []
+    },
+    {
+      "nome": "TONE_RAMP",
+      "descricao": "A rampa tonal.\n\n**Não são cores, são misturas.** O original trazia cinco pares de hex, e hex\nnum item de registry morre no primeiro cliente de outra marca. Aqui cada tom\né uma proporção entre `--card` e `--foreground`, então a rampa inteira nasce\nda paleta de quem instalou.\n\nAs diferenças são pequenas de propósito: numa prateleira real os livros\nvariam de tom sem virar arco-íris, e é essa variação sutil que faz um trilho\ninteiro sem thumb não parecer defeito de carregamento.",
+      "props": []
+    },
+    {
+      "nome": "STOPWORDS_PT_EN",
+      "descricao": "Palavras que não identificam nada. Sem esta lista, \"A Imersão de Marca\" vira\n\"ID\" (Imersão + de) — pego por teste, não na tela. Monograma existe pra a\npessoa reconhecer o item de relance; preposição não reconhece.\n\nA lista é pt-BR + en por padrão e entra por parâmetro quando o produto fala\noutra língua: stopword é decisão de idioma, não de design.",
+      "props": []
+    },
+    {
+      "nome": "mix",
+      "descricao": "`mix(14)` → um tom 14% mais próximo do `--foreground` que o `--card`.",
+      "props": []
+    },
+    {
+      "nome": "CoverArt",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "seed",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Chave ESTÁVEL: slug > id > título. Ver a armadilha 1 acima."
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "family",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "plate",
+          "descricao": null
+        },
+        {
+          "nome": "titleless",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Fundo de peça grande: mesma linguagem, sem o título."
+        }
+      ]
+    }
+  ],
+  "empty-state": [
+    {
+      "nome": "EmptyState",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "title",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "action",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "UMA ação. Ver a nota acima."
+        },
+        {
+          "nome": "art",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Slot da arte. `next/image`, `<img>`, ou um `@visant/cover-art`."
+        },
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Uma frase que diz o que vai aparecer ali, não que lamenta a ausência."
+        },
+        {
+          "nome": "eyebrow",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "skeleton-rail": [
+    {
+      "nome": "SkeletonRail",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "cards",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5",
+          "descricao": "Quantos cards fantasma. Default 5."
+        },
+        {
+          "nome": "gap",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "20",
+          "descricao": null
+        },
+        {
+          "nome": "heading",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Desenha a barra de título acima da fileira."
+        },
+        {
+          "nome": "itemWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "240",
+          "descricao": "Os mesmos valores do `@visant/rail` que este esqueleto representa."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "4 / 3",
+          "descricao": "Proporção da arte, ex. `\"4 / 3\"`."
+        }
+      ]
+    }
+  ],
+  "use-local-search": [
+    {
+      "nome": "fold",
+      "descricao": "Remove diacrítico e normaliza caixa. Exportada porque a mesma dobra costuma\nser precisa fora do hook (num `<option>`, num agrupamento).",
+      "props": []
     }
   ]
 }

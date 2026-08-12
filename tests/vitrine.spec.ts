@@ -11,6 +11,16 @@ import { expect, test, type Page } from "@playwright/test";
  */
 
 const CARD = "article";
+/**
+ * Toda peça na lista, com palco ou sem.
+ *
+ * `article` conta só quem tem demo. Desde que lib, hook e tema passaram a
+ * entrar como LINHA na mesma coluna (em vez de numa aba "Sem interface"),
+ * "quantas peças estão na tela" precisa de um seletor que enxergue as duas
+ * formas — e `data-card-index` é justamente a âncora que as duas já tinham,
+ * porque é por ela que a navegação por seta percorre a lista.
+ */
+const PECA = "[data-card-index]";
 const CHIP = (nome: string) => `[aria-pressed] >> text=${nome}`;
 
 async function esperarGrade(page: Page) {
@@ -250,7 +260,10 @@ test.describe("vista de foco", () => {
  */
 test.describe("dependências npm", () => {
   test("a peça sem dependência diz isso em voz alta", async ({ page }) => {
-    await page.goto("/c/marquee");
+    // `rail`, e não `marquee`: o marquee ganhou motor de GSAP e saiu da lista
+    // dos que não custam nada. Quem trocar a peça de exemplo aqui, confira em
+    // `deps.generated.json` que a nova continua sem `dependencies`.
+    await page.goto("/c/rail");
     await page.waitForTimeout(400);
 
     const ficha = page.locator('[role="dialog"]');
@@ -275,12 +288,41 @@ test.describe("dependências npm", () => {
     const todos = page.locator("[aria-pressed]", { hasText: /^Todos\s*\d+$/ });
     const antes = Number((await todos.textContent())?.match(/\d+/)?.[0]);
 
+    // Tipo e npm vivem recolhidos desde que a barra passou a ter uma linha
+    // permanente só (a categoria). O botão diz quantos filtros estão ligados,
+    // então nada some — mas o teste precisa abrir, como a pessoa abre.
+    await page.locator("[aria-pressed]", { hasText: /Tipo e peso/ }).click();
     await page.locator("[aria-pressed]", { hasText: /^motion\s*\d+$/ }).click();
     await page.waitForTimeout(400);
 
     const depois = Number((await todos.textContent())?.match(/\d+/)?.[0]);
     expect(depois, "o filtro de npm não encolheu nada").toBeLessThan(antes);
-    // O número do chip é a promessa; os cards na tela são a entrega.
-    expect(await page.locator(CARD).count()).toBe(depois);
+    // O número do chip é a promessa; as peças na tela são a entrega.
+    expect(await page.locator(PECA).count()).toBe(depois);
+  });
+
+  test("recolhido nunca esconde filtro ativo, e o eixo de tipo filtra", async ({ page }) => {
+    await page.goto("/");
+    await esperarGrade(page);
+
+    const botao = page.locator("[aria-pressed]", { hasText: /Tipo e peso/ });
+    await botao.click();
+
+    const hook = page.locator("[aria-pressed]", { hasText: /^hook\s*\d+$/ });
+    const esperado = Number((await hook.textContent())?.match(/\d+/)?.[0]);
+    expect(esperado, "o catálogo não tem hook nenhum").toBeGreaterThan(0);
+
+    await hook.click();
+    await page.waitForTimeout(400);
+    expect(await page.locator(PECA).count()).toBe(esperado);
+
+    /*
+     * O modo de falha clássico de disclosure em barra de filtro: a pessoa
+     * recolhe, esquece que ligou algo, e a lista fica curta sem explicação
+     * visível. O botão carrega a contagem justamente para isso.
+     */
+    await botao.click();
+    await expect(botao).toHaveText(/Tipo e peso\s*1/);
+    expect(await page.locator(PECA).count()).toBe(esperado);
   });
 });

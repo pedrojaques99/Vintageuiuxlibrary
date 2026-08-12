@@ -11,6 +11,9 @@
   "vintage-large-knob": [
     "react"
   ],
+  "marquee": [
+    "gsap"
+  ],
   "motion-layer": [
     "gsap"
   ],
@@ -61,5 +64,20 @@
   "brand-selector": [
     "cmdk",
     "lucide-react"
+  ],
+  "sfx-bus": [
+    "react"
+  ],
+  "sfx-toggle": [
+    "react"
+  ],
+  "use-pointer-parallax": [
+    "react"
+  ],
+  "fold-motion": [
+    "react"
+  ],
+  "use-local-search": [
+    "react"
   ]
 }

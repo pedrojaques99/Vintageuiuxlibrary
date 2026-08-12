@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { bugReportPlugin } from './scripts/vite-bug-report.mjs'
 
 
 function figmaAssetResolver() {
@@ -19,6 +20,9 @@ function figmaAssetResolver() {
 export default defineConfig({
   plugins: [
     figmaAssetResolver(),
+    // Recebe o botão de bug dos cards e escreve em `bugs/`. `apply: 'serve'`
+    // dentro do próprio plugin: não existe em build.
+    bugReportPlugin(),
     // The React and Tailwind plugins are both required for Make, even if
     // Tailwind is not being actively used – do not remove them
     react(),

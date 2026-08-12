@@ -26,8 +26,11 @@ export default function KanbanDemo() {
     { id: "c", columnId: "fazendo", data: { t: "Brand selector" } },
   ]);
 
+  // `overflow-hidden`, e não `auto`: a barra de rolagem que aparecia aqui dentro
+  // era o palco declarando largura menor que o board. Quem conserta isso é o
+  // `preview.w` do catálogo, não uma barra que esconde coluna.
   return (
-    <div className="h-full w-full overflow-auto p-2 text-rotulo">
+    <div className="h-full w-full overflow-hidden p-2 text-rotulo">
       <Kanban
         columns={columns}
         items={items}

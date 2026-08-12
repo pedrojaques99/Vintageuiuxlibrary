@@ -21,8 +21,10 @@
     "build:deps": "node scripts/deps-extract.mjs",
     "check:deps": "node scripts/deps-check.mjs",
     "build:og": "node scripts/og-images.mjs",
+    "build:media": "node scripts/media-bank.mjs",
     "build:pages": "node scripts/prerender.mjs",
-    "check:css-tokens": "node scripts/css-tokens-check.mjs"
+    "check:css-tokens": "node scripts/css-tokens-check.mjs",
+    "bugs": "node scripts/bugs.mjs"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
