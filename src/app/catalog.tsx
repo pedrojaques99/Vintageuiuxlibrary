@@ -59,6 +59,7 @@ import { Fold, FoldPart } from "../../registry/visant/lib/fold-motion";
 import { usePointerParallax } from "../../registry/visant/hooks/use-pointer-parallax";
 import { LineReveal } from "../../registry/visant/ui/line-reveal";
 import { PhotoFrame } from "../../registry/visant/ui/photo-frame";
+import { PhotoCompare } from "../../registry/visant/ui/photo-compare";
 import { PhotoFlip } from "../../registry/visant/ui/photo-flip";
 import { MagneticCta } from "../../registry/visant/ui/magnetic-cta";
 import {
@@ -931,6 +932,30 @@ function PhotoFlipDemo() {
       <span className="text-[length:var(--text-micro,0.68rem)] text-muted-foreground">
         clique pra ampliar · Esc fecha
       </span>
+    </div>
+  );
+}
+
+/**
+ * Duas fotos de acervo diferentes fazendo de antes e depois.
+ *
+ * O acervo não tem um par real de antes/depois, e inventar um com filtro CSS
+ * seria pior: a peça passaria a ser julgada pelo filtro, e o defeito que ela
+ * evita (a foto de cima ENCOLHER em vez de ser recortada) só aparece quando as
+ * duas imagens são de fato distintas. Duas cenas diferentes mostram a cortina
+ * pelo que ela é.
+ */
+function PhotoCompareDemo() {
+  return (
+    <div className="flex h-full w-full items-center justify-center px-4">
+      <PhotoCompare
+        className="w-[440px]"
+        ratio="3/2"
+        before={<Media papel="cena" indice={2} className="size-full" />}
+        after={<Media papel="cena" indice={5} className="size-full" />}
+        beforeLabel="antes"
+        afterLabel="depois"
+      />
     </div>
   );
 }
@@ -1883,6 +1908,17 @@ export const CATALOG: CatalogItem[] = [
     tags: ["foto", "galeria", "lightbox", "flip", "morph", "grade", "gsap"],
     demo: () => <PhotoFlipDemo />,
     preview: { w: 900, h: 420 },
+  },
+  {
+    name: "photo-compare",
+    title: "Photo Compare",
+    type: "ui",
+    family: "motion",
+    description:
+      "A cortina entre o antes e o depois: a camada de cima é RECORTADA, nunca redimensionada, então as duas fotos ficam na mesma escala. O arrasto, o teclado e o leitor de tela vêm de um input range invisível.",
+    tags: ["foto", "antes", "depois", "comparar", "cortina", "rebrand", "slider"],
+    demo: () => <PhotoCompareDemo />,
+    preview: { w: 560, h: 360 },
   },
   {
     name: "measure-bar",

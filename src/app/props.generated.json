@@ -3798,5 +3798,155 @@
         }
       ]
     }
+  ],
+  "photo-frame": [
+    {
+      "nome": "PhotoFrame",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A mídia. `<img>`, `next/image`, `<video>` — o que o projeto usar."
+        },
+        {
+          "nome": "caption",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Legenda. Entra como `<figcaption>` e transforma a peça em `<figure>`."
+        },
+        {
+          "nome": "from",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "bottom",
+          "descricao": "De onde a moldura abre."
+        },
+        {
+          "nome": "parallax",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Deriva na rolagem, em % da altura. 0 desliga. Acima de ~12 denuncia."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "4/5",
+          "descricao": "Proporção da moldura, formato CSS: `\"4/5\"`, `\"16/9\"`, `\"1\"`."
+        },
+        {
+          "nome": "start",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "top 85%",
+          "descricao": "Onde o gatilho arma."
+        }
+      ]
+    }
+  ],
+  "photo-flip": [
+    {
+      "nome": "PhotoFlip",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "PhotoFlipEntry[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "dialogLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Foto ampliada",
+          "descricao": "Rótulo do overlay para leitor de tela."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": "Proporção do tile na grade. A tela cheia usa a proporção real da foto."
+        }
+      ]
+    }
+  ],
+  "photo-compare": [
+    {
+      "nome": "PhotoCompare",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "after",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A foto de cima, revelada pela cortina."
+        },
+        {
+          "nome": "before",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A foto de baixo — o estado original."
+        },
+        {
+          "nome": "afterLabel",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": "depois",
+          "descricao": null
+        },
+        {
+          "nome": "beforeLabel",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": "antes",
+          "descricao": null
+        },
+        {
+          "nome": "defaultValue",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "Posição inicial da cortina, 0 a 100."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Comparar antes e depois",
+          "descricao": "Rótulo do controle para leitor de tela."
+        },
+        {
+          "nome": "onValueChange",
+          "tipo": "(v: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "peek",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Desliga a espiada de descoberta."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "3/2",
+          "descricao": "Proporção da caixa, formato CSS. Obrigatória na prática: ver decisão 5."
+        }
+      ]
+    }
   ]
 }

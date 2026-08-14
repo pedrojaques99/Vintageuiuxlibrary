@@ -91,5 +91,14 @@
   ],
   "pinned-scene": [
     "gsap"
+  ],
+  "photo-frame": [
+    "gsap"
+  ],
+  "photo-flip": [
+    "gsap"
+  ],
+  "photo-compare": [
+    "gsap"
   ]
 }

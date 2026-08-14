@@ -2065,6 +2065,125 @@
           }
         }
       }
+    },
+    {
+      "name": "photo-compare",
+      "type": "registry:ui",
+      "title": "Photo Compare",
+      "description": "A cortina entre o antes e o depois: a camada de cima é RECORTADA, nunca redimensionada, então as duas fotos ficam na mesma escala. O arrasto, o teclado e o leitor de tela vêm de um input range invisível.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "gsap"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/photo-compare.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".photo-compare": {
+            "position": "relative",
+            "aspect-ratio": "var(--ratio, 3/2)",
+            "overflow": "hidden",
+            "border-radius": "var(--r-surface, 16px)",
+            "background": "var(--muted)",
+            "user-select": "none"
+          },
+          ".photo-compare-layer": {
+            "position": "absolute",
+            "inset": "0"
+          },
+          ".photo-compare-layer img, .photo-compare-layer video": {
+            "width": "100%",
+            "height": "100%",
+            "object-fit": "cover",
+            "display": "block"
+          },
+          ".photo-compare-after": {
+            "clip-path": "inset(0 calc(100% - var(--p, 50%)) 0 0)"
+          },
+          ".photo-compare-seam": {
+            "position": "absolute",
+            "top": "0",
+            "bottom": "0",
+            "left": "var(--p, 50%)",
+            "width": "2px",
+            "margin-left": "-1px",
+            "background": "var(--brand)",
+            "pointer-events": "none",
+            "display": "grid",
+            "place-items": "center"
+          },
+          ".photo-compare-grip": {
+            "width": "2.25rem",
+            "height": "2.25rem",
+            "border-radius": "var(--r-pill, 9999px)",
+            "background": "var(--brand)",
+            "box-shadow": "var(--e-raised, 0 2px 8px rgb(0 0 0 / 0.18))"
+          },
+          ".photo-compare-label": {
+            "position": "absolute",
+            "bottom": "0.75rem",
+            "border-radius": "var(--r-pill, 9999px)",
+            "background": "color-mix(in oklab, var(--background) 82%, transparent)",
+            "color": "var(--foreground)",
+            "padding": "0.25rem 0.7rem",
+            "font-size": "12px",
+            "line-height": "1.4",
+            "pointer-events": "none"
+          },
+          ".photo-compare-label-before": {
+            "right": "0.75rem"
+          },
+          ".photo-compare-label-after": {
+            "left": "0.75rem"
+          },
+          ".photo-compare-input": {
+            "position": "absolute",
+            "inset": "0",
+            "width": "100%",
+            "height": "100%",
+            "margin": "0",
+            "opacity": "0",
+            "appearance": "none",
+            "-webkit-appearance": "none",
+            "background": "transparent",
+            "cursor": "ew-resize",
+            "touch-action": "pan-y"
+          },
+          ".photo-compare-input::-webkit-slider-thumb": {
+            "appearance": "none",
+            "-webkit-appearance": "none",
+            "width": "2.75rem",
+            "height": "100%"
+          },
+          ".photo-compare-input::-moz-range-thumb": {
+            "width": "2.75rem",
+            "height": "100%",
+            "border": "0",
+            "background": "transparent"
+          },
+          ".photo-compare-input:focus-visible ~ .photo-compare-seam .photo-compare-grip": {
+            "outline": "var(--focus, 2px solid var(--ring))",
+            "outline-offset": "3px"
+          },
+          ".photo-compare-layer > :not(.photo-compare-label)": {
+            "width": "100%",
+            "height": "100%",
+            "display": "block"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".photo-compare-seam": {
+            "transition": "none"
+          }
+        }
+      }
     }
   ]
 }

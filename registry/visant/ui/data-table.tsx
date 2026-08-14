@@ -1,5 +1,17 @@
 'use client';
 
+/*
+ * Esta tabela é escrita contra a API v8 do TanStack Table (`getIsSelected`,
+ * `toggleAllPageRowsSelected`, `ColumnDef` com genérico de duas casas). A v9
+ * reorganizou tudo em features compostas e nada disso existe mais lá.
+ *
+ * Por isso a dependência do item vai PINADA em `^8.21.3` no `registry.json`.
+ * Sem o pino o `shadcn add` instalava a última, e o projeto do cliente quebrava
+ * no `tsc` com treze erros de tipo num arquivo que ele nunca abriu — foi assim
+ * que o teste de instalação limpa acusou. Migrar pra v9 é trabalho de verdade;
+ * o pino é o que impede o estrago enquanto isso não acontece.
+ */
+
 import * as React from 'react';
 
 import {
