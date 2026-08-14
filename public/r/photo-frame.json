@@ -1,0 +1,57 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "photo-frame",
+  "title": "Photo Frame",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "A moldura que revela a foto: a máscara abre, a foto assenta mais devagar que a máscara, e opcionalmente deriva na rolagem. Proporção declarada pra não haver salto de layout, e mídia por slot.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/photo-frame.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport gsap from \"gsap\";\nimport { ScrollTrigger } from \"gsap/ScrollTrigger\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Photo Frame — a moldura que revela a foto em vez de mostrá-la já pronta.\n *\n * Três movimentos que só valem juntos, e é a soma que faz a foto parecer\n * fotografada em vez de colada:\n *\n *   1. a moldura ABRE (`clip-path`, de baixo pra cima);\n *   2. a foto ASSENTA (de `scale(1.12)` para 1, mais devagar que a abertura);\n *   3. opcionalmente ela DERIVA na rolagem (paralaxe curta, presa à passagem).\n *\n * O passo 2 é o que quase todo mundo esquece, e é o mais importante: com a foto\n * parada, abrir a máscara parece uma cortina de teatro. Com ela assentando um\n * pouco mais devagar que a cortina, o olho lê profundidade — a foto continua se\n * acomodando depois que a moldura já parou.\n *\n * ── Sobre `ease-in-out`, que é o que se pede e quase nunca é o certo ───────\n *\n * Aqui a curva é `power3.out`, não `inOut`. A regra da casa: **entrada e saída\n * usam `out`; `in-out` é para o que se MOVE na tela já estando presente.** Uma\n * foto sendo revelada está chegando — ela tem que responder na hora e desacelerar\n * no fim. Com `inOut` ela começa devagar, e esse arranque preguiçoso é\n * exatamente a sensação de site pesado. O `in-out` correto está no\n * `@visant/photo-flip`, onde a foto atravessa a tela de um lugar conhecido para\n * outro — ali as duas pontas são conhecidas, e frear nas duas é o que faz o\n * objeto parecer sólido.\n *\n * ── As armadilhas ──────────────────────────────────────────────────────────\n *\n * 1. **A mídia entra por SLOT.** `<img>`, `next/image`, `<video>` — a moldura\n *    não escolhe por você e não faz `fetch`. Mesma regra do\n *    `@visant/showcase-card`. O que ela exige é que a mídia preencha a caixa,\n *    e o CSS cuida disso — em DOIS níveis, de propósito: o filho direto ganha\n *    tamanho, e o `img`/`video` em qualquer profundidade ganha o `object-fit`.\n *    Só o filho direto não basta: `next/image` e `<picture>` embrulham a\n *    imagem, e a regra de recorte caía no invólucro sem efeito nenhum — a foto\n *    ficava esticada e ninguém sabia por quê.\n * 2. **A caixa tem proporção declarada, sempre.** Sem `aspect-ratio` a página\n *    salta quando a imagem carrega, e aí o `ScrollTrigger` já calculou as\n *    posições erradas. O salto de layout não é só feio: ele quebra o gatilho.\n * 3. **Paralaxe pede foto MAIOR que a moldura.** Deslocar uma imagem de 100% da\n *    altura abre uma faixa vazia na borda. Por isso `parallax` também escala a\n *    mídia — e é por isso que o valor é pequeno (8%, não 30%): paralaxe forte\n *    denuncia o efeito, fraca só dá profundidade. Lição herdada do\n *    `@visant/motion-layer`.\n * 4. **O esconderijo é aplicado por JS.** Se o `clip-path` fechado viesse do\n *    CSS, um bloqueio de script deixaria a foto invisível para sempre. A\n *    moldura nasce aberta e fecha no mesmo quadro em que o gatilho é criado.\n * 5. **`will-change` não fica pra sempre.** Ele é ligado no `onStart` e\n *    desligado no fim: uma galeria de 30 fotos com camada de composição\n *    permanente é memória de vídeo torrada por uma animação que já acabou.\n * 6. **Sob `prefers-reduced-motion` não há máscara nem deriva.** A foto está\n *    lá, inteira, desde o primeiro quadro — o desfecho nunca é o que se corta.\n */\n\ngsap.registerPlugin(ScrollTrigger);\n\nexport interface PhotoFrameProps extends React.HTMLAttributes<HTMLDivElement> {\n  /** A mídia. `<img>`, `next/image`, `<video>` — o que o projeto usar. */\n  children: React.ReactNode;\n  /** Proporção da moldura, formato CSS: `\"4/5\"`, `\"16/9\"`, `\"1\"`. */\n  ratio?: string;\n  /** Legenda. Entra como `<figcaption>` e transforma a peça em `<figure>`. */\n  caption?: React.ReactNode;\n  /** Deriva na rolagem, em % da altura. 0 desliga. Acima de ~12 denuncia. */\n  parallax?: number;\n  /** De onde a moldura abre. */\n  from?: \"bottom\" | \"top\" | \"left\" | \"right\";\n  /** Onde o gatilho arma. */\n  start?: string;\n}\n\nconst CLIP_FECHADO: Record<NonNullable<PhotoFrameProps[\"from\"]>, string> = {\n  bottom: \"inset(100% 0% 0% 0%)\",\n  top: \"inset(0% 0% 100% 0%)\",\n  left: \"inset(0% 100% 0% 0%)\",\n  right: \"inset(0% 0% 0% 100%)\",\n};\n\nexport function PhotoFrame({\n  children,\n  ratio = \"4/5\",\n  caption,\n  parallax = 0,\n  from = \"bottom\",\n  start = \"top 85%\",\n  className,\n  style,\n  ...props\n}: PhotoFrameProps) {\n  const ref = React.useRef<HTMLDivElement>(null);\n\n  React.useEffect(() => {\n    const raiz = ref.current;\n    if (!raiz) return;\n    if (window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches) return;\n\n    const janela = raiz.querySelector<HTMLElement>(\".photo-frame-window\");\n    const media = raiz.querySelector<HTMLElement>(\".photo-frame-media\");\n    if (!janela || !media) return;\n\n    const ctx = gsap.context(() => {\n      const tl = gsap.timeline({\n        scrollTrigger: { trigger: raiz, start, once: true },\n        onStart: () => {\n          janela.style.willChange = \"clip-path\";\n          media.style.willChange = \"transform\";\n        },\n        onComplete: () => {\n          janela.style.willChange = \"\";\n          // O `will-change` da mídia só sai se ela não seguir derivando — com\n          // paralaxe ativa a camada continua sendo útil o resto da rolagem.\n          if (!parallax) media.style.willChange = \"\";\n        },\n      });\n\n      tl.fromTo(\n        janela,\n        { clipPath: CLIP_FECHADO[from] },\n        { clipPath: \"inset(0% 0% 0% 0%)\", duration: 0.9, ease: \"power3.out\" },\n      ).fromTo(\n        media,\n        { scale: 1.12 },\n        // Mais longa que a abertura, e começando junto (`<`): é o atraso entre\n        // as duas que produz a profundidade. Iguais, viram um efeito só.\n        { scale: parallax ? 1 + parallax / 100 : 1, duration: 1.4, ease: \"power3.out\" },\n        \"<\",\n      );\n\n      if (parallax) {\n        gsap.fromTo(\n          media,\n          { yPercent: -parallax / 2 },\n          {\n            yPercent: parallax / 2,\n            // `none` é o certo em movimento amarrado ao dedo: qualquer curva\n            // aqui faz a foto acelerar sem o scroll ter acelerado.\n            ease: \"none\",\n            scrollTrigger: { trigger: raiz, start: \"top bottom\", end: \"bottom top\", scrub: true },\n          },\n        );\n      }\n    }, raiz);\n\n    return () => ctx.revert();\n  }, [from, start, parallax]);\n\n  const Raiz = caption ? \"figure\" : \"div\";\n\n  return (\n    <Raiz\n      ref={ref as React.Ref<never>}\n      className={cn(\"photo-frame\", className)}\n      style={{ \"--ratio\": ratio, ...style } as React.CSSProperties}\n      {...props}\n    >\n      <div className=\"photo-frame-window\">\n        <div className=\"photo-frame-media\">{children}</div>\n      </div>\n      {caption ? <figcaption className=\"photo-frame-caption\">{caption}</figcaption> : null}\n    </Raiz>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "css": {
+    "@layer components": {
+      ".photo-frame": {
+        "display": "block",
+        "margin": "0"
+      },
+      ".photo-frame-window": {
+        "position": "relative",
+        "overflow": "hidden",
+        "aspect-ratio": "var(--ratio, 4/5)",
+        "border-radius": "var(--r-surface, 16px)",
+        "background": "var(--muted)"
+      },
+      ".photo-frame-media": {
+        "position": "absolute",
+        "inset": "0"
+      },
+      ".photo-frame-caption": {
+        "margin-top": "0.75rem",
+        "font-size": "13px",
+        "line-height": "1.5",
+        "color": "var(--muted-foreground)"
+      },
+      ".photo-frame-media > *": {
+        "width": "100%",
+        "height": "100%",
+        "display": "block"
+      },
+      ".photo-frame-media img, .photo-frame-media video": {
+        "width": "100%",
+        "height": "100%",
+        "object-fit": "cover",
+        "display": "block"
+      }
+    }
+  },
+  "type": "registry:ui"
+}

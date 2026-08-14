@@ -79,5 +79,17 @@
   ],
   "use-local-search": [
     "react"
+  ],
+  "line-reveal": [
+    "gsap"
+  ],
+  "magnetic-cta": [
+    "@radix-ui/react-slot"
+  ],
+  "nav-drawer": [
+    "@radix-ui/react-dialog"
+  ],
+  "pinned-scene": [
+    "gsap"
   ]
 }

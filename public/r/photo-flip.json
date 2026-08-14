@@ -1,0 +1,118 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "photo-flip",
+  "title": "Photo Flip",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "A foto atravessa da grade para a tela cheia — mesmo nó do DOM, reparentado e animado por GSAP Flip com ease-in-out. A vaga segura a proporção pra grade não desabar, e o foco volta pra foto que abriu.",
+  "dependencies": [
+    "gsap"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/photo-flip.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { createPortal } from \"react-dom\";\nimport gsap from \"gsap\";\nimport { Flip } from \"gsap/Flip\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Photo Flip — a foto que ATRAVESSA da grade para a tela cheia.\n *\n * Não é um lightbox que abre por cima: é a mesma foto, o mesmo nó do DOM,\n * mudando de lugar e de tamanho. A diferença não é sutil — um lightbox faz a\n * pessoa perder o fio de qual das doze fotos ela abriu, e o percurso responde\n * essa pergunta sem legenda nenhuma.\n *\n * ── Aqui `ease-in-out` é o certo, e é o único lugar onde é ────────────────\n *\n * A regra da casa: `out` para o que chega ou sai, `in-out` para o que se MOVE\n * na tela. A foto não está chegando — ela já estava lá, visível, e vai para\n * outro ponto conhecido. As duas pontas são conhecidas, então frear nas duas é\n * o que faz o objeto ler como sólido em vez de teletransportado. `power2.inOut`,\n * 0.55s: passa dos 300ms de propósito, porque o teto de 300ms governa um\n * CONTROLE respondendo a clique, e isto é uma passagem — a mesma licença que\n * uma transição de rota tem.\n *\n * ── Por que GSAP Flip e não `layoutId` do framer-motion ───────────────────\n *\n * As duas fazem FLIP de verdade (medem, invertem, animam em `transform`). O\n * `layoutId` exige que as duas pontas estejam montadas no MESMO\n * `AnimatePresence`, e degrada silenciosamente para crossfade quando não estão\n * — o pior tipo de defeito, porque nada quebra. Aqui a foto é literalmente\n * reparentada, então não existe \"as duas pontas\": existe uma ponta só, e o\n * morph não tem como degradar. Se o projeto já roda framer-motion e a grade é\n * simples, `layoutId` é resposta legítima; a partir do momento em que a foto\n * muda de container, o Flip é a ferramenta.\n *\n * ── As armadilhas, todas pagas ────────────────────────────────────────────\n *\n * 1. **A grade DESABA quando a foto sai.** O nó é movido para o overlay, e o\n *    buraco que ele deixa reflui as outras fotos — que é o efeito colateral\n *    mais feio possível, porque acontece atrás do overlay e aparece só no\n *    fechamento. A casca do tile tem proporção própria e segura a vaga.\n * 2. **`absolute: true` não é opcional.** Sem ele, o Flip anima o nó já\n *    reparentado sem tirá-lo do fluxo, e os irmãos dançam junto durante a\n *    passagem.\n * 3. **Travar a rolagem empurra a página.** `overflow: hidden` no `body` some\n *    com a barra de rolagem e a página inteira salta ~15px para a direita no\n *    exato quadro em que a foto está viajando. A compensação em `padding-right`\n *    é a diferença entre uma passagem limpa e um solavanco.\n * 4. **O foco tem que voltar para a foto que abriu**, não para o topo do\n *    documento — senão quem navega por teclado recomeça a grade do zero a cada\n *    foto vista.\n * 5. **`prefers-reduced-motion` não desliga o recurso, desliga o percurso.**\n *    A foto ainda vai para a tela cheia; ela só não viaja. Movimento é o que se\n *    corta, o desfecho não.\n * 6. **Uma passagem por vez.** Clicar outra foto durante a viagem produziria\n *    dois nós no overlay. O gesto é ignorado enquanto `viajando` está de pé.\n * 7. **`position: fixed` não é fixo dentro de um ancestral transformado.**\n *    Qualquer `transform`, `filter` ou `backdrop-filter` num pai vira bloco\n *    contentor, e o overlay passa a ser recortado por ele em vez de cobrir a\n *    tela. Pego na vitrine, que escala o palco da demo — e não é caso de\n *    laboratório: transição de página, carrossel e container com `will-change`\n *    fazem o mesmo. Por isso o overlay sai por `createPortal` direto no `body`.\n *    Sem o portal, o componente funciona em metade dos projetos e ninguém sabe\n *    dizer qual metade.\n * 8. **O Escape do modal não pode vazar.** Enquanto a foto está aberta, o\n *    Escape é dela. Sem `stopPropagation` em fase de captura, ele também chega\n *    a quem ouve no documento — e a pessoa fecha a foto e navega junto, num\n *    gesto só. Não é caso raro: atalho global de Escape existe em quase todo\n *    app com paleta de comandos, gaveta ou rota que \"volta\".\n * 9. **Mover um nó por baixo do React exige que o React não re-renderize a\n *    grade.** Este é o risco real da técnica, e ele não aparece no primeiro\n *    teste: enquanto nada muda nos filhos, o React não encosta num nó que ele\n *    julga já estar no lugar — mas basta uma re-renderização que altere\n *    qualquer coisa nos tiles para a foto ser recolocada na grade no meio da\n *    viagem. Por isso a grade é memoizada e NÃO depende do estado de abertura:\n *    abrir e fechar não re-renderiza um único tile. É também por isso que a\n *    guarda de reentrância vive em `ref`, e não em estado — estado dentro do\n *    `onClick` memoizado envelheceria na primeira abertura.\n */\n\ngsap.registerPlugin(Flip);\n\nexport interface PhotoFlipEntry {\n  id: string;\n  /** A mídia. `<img>`, `next/image` — por slot, como no `@visant/photo-frame`. */\n  media: React.ReactNode;\n  caption?: React.ReactNode;\n}\n\nexport interface PhotoFlipProps extends React.HTMLAttributes<HTMLDivElement> {\n  items: PhotoFlipEntry[];\n  /** Proporção do tile na grade. A tela cheia usa a proporção real da foto. */\n  ratio?: string;\n  /** Rótulo do overlay para leitor de tela. */\n  dialogLabel?: string;\n}\n\nconst DUR = 0.55;\n\nexport function PhotoFlip({\n  items,\n  ratio = \"1\",\n  dialogLabel = \"Foto ampliada\",\n  className,\n  ...props\n}: PhotoFlipProps) {\n  const [aberta, setAberta] = React.useState<string | null>(null);\n  /** Espelho em ref: é o que os handlers memoizados leem sem envelhecer. */\n  const abertaRef = React.useRef<string | null>(null);\n  const viajando = React.useRef(false);\n  const overlayRef = React.useRef<HTMLDivElement>(null);\n  const palcoRef = React.useRef<HTMLDivElement>(null);\n  const fecharRef = React.useRef<HTMLButtonElement>(null);\n  const origemRef = React.useRef<HTMLButtonElement | null>(null);\n  const [montado, setMontado] = React.useState(false);\n  React.useEffect(() => setMontado(true), []);\n\n  const reduzido = () =>\n    typeof window !== \"undefined\" &&\n    window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches;\n\n  const abrir = React.useCallback((id: string, botao: HTMLButtonElement) => {\n    if (viajando.current || abertaRef.current) return;\n    const no = botao.querySelector<HTMLElement>(\".photo-flip-media\");\n    const palco = palcoRef.current;\n    if (!no || !palco) return;\n\n    viajando.current = true;\n    origemRef.current = botao;\n\n    // A barra de rolagem some com o `overflow: hidden`; o padding devolve a\n    // largura que ela ocupava, e a página não anda de lado no meio da passagem.\n    const barra = window.innerWidth - document.documentElement.clientWidth;\n    document.body.style.overflow = \"hidden\";\n    document.body.style.paddingRight = `${barra}px`;\n\n    const estado = Flip.getState(no);\n    palco.appendChild(no);\n    abertaRef.current = id;\n    setAberta(id);\n\n    const terminar = () => {\n      viajando.current = false;\n      fecharRef.current?.focus();\n    };\n\n    if (reduzido()) {\n      terminar();\n      return;\n    }\n\n    Flip.from(estado, { duration: DUR, ease: \"power2.inOut\", absolute: true, onComplete: terminar });\n  }, []);\n\n  const fechar = React.useCallback(() => {\n    const id = abertaRef.current;\n    if (viajando.current || !id) return;\n    const palco = palcoRef.current;\n    const no = palco?.querySelector<HTMLElement>(\".photo-flip-media\");\n    const vaga = document.querySelector<HTMLElement>(`[data-flip-slot=\"${id}\"]`);\n    if (!no || !vaga) return;\n\n    viajando.current = true;\n    const estado = Flip.getState(no);\n    vaga.appendChild(no);\n\n    const terminar = () => {\n      viajando.current = false;\n      abertaRef.current = null;\n      setAberta(null);\n      document.body.style.overflow = \"\";\n      document.body.style.paddingRight = \"\";\n      origemRef.current?.focus();\n    };\n\n    if (reduzido()) {\n      terminar();\n      return;\n    }\n\n    Flip.from(estado, { duration: DUR, ease: \"power2.inOut\", absolute: true, onComplete: terminar });\n  }, []);\n\n  React.useEffect(() => {\n    if (!aberta) return;\n    const onKey = (e: KeyboardEvent) => {\n      if (e.key !== \"Escape\") return;\n      // Captura + `stopPropagation`: o Escape é do modal aberto e de mais\n      // ninguém. Sem isso ele vaza para quem estiver ouvindo no documento e a\n      // pessoa fecha a foto e navega junto — foi o que aconteceu na vitrine,\n      // que usa Escape para voltar à grade. Quase todo app tem um desses.\n      e.stopPropagation();\n      fechar();\n    };\n    document.addEventListener(\"keydown\", onKey, true);\n    return () => document.removeEventListener(\"keydown\", onKey, true);\n  }, [aberta, fechar]);\n\n  // Desmontar com o overlay aberto deixaria o `body` travado para sempre — e o\n  // sintoma (a página não rola mais) aparece longe daqui, numa outra rota.\n  React.useEffect(\n    () => () => {\n      document.body.style.overflow = \"\";\n      document.body.style.paddingRight = \"\";\n    },\n    [],\n  );\n\n  // A grade não conhece o estado de abertura — de propósito. Ver armadilha 7.\n  const grade = React.useMemo(\n    () => (\n      <div className={cn(\"photo-flip-grid\", className)} {...props}>\n        {items.map((item) => (\n          <button\n            key={item.id}\n            type=\"button\"\n            className=\"photo-flip-tile\"\n            style={{ \"--ratio\": ratio } as React.CSSProperties}\n            aria-label={typeof item.caption === \"string\" ? item.caption : undefined}\n            onClick={(e) => abrir(item.id, e.currentTarget)}\n          >\n            {/* A vaga: fica aqui segurando a proporção mesmo com a foto viajando.\n                É ela que impede a grade de refluir por trás do overlay. */}\n            <span className=\"photo-flip-slot\" data-flip-slot={item.id}>\n              <span className=\"photo-flip-media\">{item.media}</span>\n            </span>\n          </button>\n        ))}\n      </div>\n    ),\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n    [items, ratio, className, abrir],\n  );\n\n  return (\n    <>\n      {grade}\n\n      {/* Portal no `body`: ver armadilha 7. `montado` existe porque no primeiro\n          render do servidor não há `document` — sem a guarda, SSR quebra. */}\n      {montado\n        ? createPortal(\n            <div\n              ref={overlayRef}\n              className=\"photo-flip-overlay\"\n              data-open={aberta ? \"1\" : undefined}\n              role=\"dialog\"\n              aria-modal=\"true\"\n              aria-label={dialogLabel}\n              // `hidden` de verdade quando fechado: um overlay só invisível\n              // continua sendo lido por leitor de tela e capturando Tab.\n              hidden={!aberta}\n              onClick={(e) => {\n                if (e.target === e.currentTarget) fechar();\n              }}\n            >\n              <div ref={palcoRef} className=\"photo-flip-stage\" />\n              <button ref={fecharRef} type=\"button\" className=\"photo-flip-close\" onClick={fechar}>\n                Fechar\n              </button>\n            </div>,\n            document.body,\n          )\n        : null}\n    </>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "css": {
+    ".photo-flip-stage .photo-flip-media img, .photo-flip-stage .photo-flip-media video": {
+      "object-fit": "contain"
+    },
+    "@layer components": {
+      ".photo-flip-grid": {
+        "display": "grid",
+        "grid-template-columns": "repeat(3, 1fr)",
+        "gap": "0.75rem"
+      },
+      ".photo-flip-tile": {
+        "position": "relative",
+        "display": "block",
+        "padding": "0",
+        "border": "0",
+        "background": "none",
+        "cursor": "zoom-in",
+        "border-radius": "var(--r-surface, 16px)"
+      },
+      ".photo-flip-tile:focus-visible": {
+        "outline": "var(--focus, 2px solid var(--ring))",
+        "outline-offset": "3px"
+      },
+      ".photo-flip-slot": {
+        "position": "relative",
+        "display": "block",
+        "aspect-ratio": "var(--ratio, 1)",
+        "overflow": "hidden",
+        "border-radius": "inherit",
+        "background": "var(--muted)"
+      },
+      ".photo-flip-media": {
+        "position": "absolute",
+        "inset": "0",
+        "display": "block"
+      },
+      ".photo-flip-overlay": {
+        "position": "fixed",
+        "inset": "0",
+        "z-index": "60",
+        "display": "grid",
+        "place-items": "center",
+        "padding": "clamp(1rem, 4vw, 4rem)",
+        "background": "color-mix(in oklab, var(--background) 88%, transparent)",
+        "backdrop-filter": "blur(6px)",
+        "cursor": "zoom-out"
+      },
+      ".photo-flip-stage": {
+        "position": "relative",
+        "width": "min(92vw, 1100px)",
+        "height": "min(84vh, 900px)"
+      },
+      ".photo-flip-close": {
+        "position": "absolute",
+        "top": "clamp(1rem, 3vw, 2rem)",
+        "right": "clamp(1rem, 3vw, 2rem)",
+        "border-radius": "var(--r-pill, 9999px)",
+        "border": "1px solid var(--border)",
+        "background": "var(--card)",
+        "color": "var(--foreground)",
+        "padding": "0.5rem 1rem",
+        "font-size": "13px",
+        "cursor": "pointer"
+      },
+      ".photo-flip-close:focus-visible": {
+        "outline": "var(--focus, 2px solid var(--ring))",
+        "outline-offset": "2px"
+      },
+      ".photo-flip-overlay[data-open=\"1\"]": {
+        "animation": "photo-flip-veu var(--dur-base, 200ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both"
+      },
+      ".photo-flip-media > *": {
+        "width": "100%",
+        "height": "100%",
+        "display": "block"
+      },
+      ".photo-flip-media img, .photo-flip-media video": {
+        "width": "100%",
+        "height": "100%",
+        "object-fit": "cover",
+        "display": "block"
+      }
+    },
+    "@keyframes photo-flip-veu": {
+      "from": {
+        "opacity": "0"
+      },
+      "to": {
+        "opacity": "1"
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".photo-flip-overlay[data-open=\"1\"]": {
+        "animation": "none"
+      }
+    }
+  },
+  "type": "registry:ui"
+}

@@ -57,6 +57,21 @@ import { EmptyState } from "../../registry/visant/ui/empty-state";
 import { SkeletonRail } from "../../registry/visant/ui/skeleton-rail";
 import { Fold, FoldPart } from "../../registry/visant/lib/fold-motion";
 import { usePointerParallax } from "../../registry/visant/hooks/use-pointer-parallax";
+import { LineReveal } from "../../registry/visant/ui/line-reveal";
+import { PhotoFrame } from "../../registry/visant/ui/photo-frame";
+import { PhotoFlip } from "../../registry/visant/ui/photo-flip";
+import { MagneticCta } from "../../registry/visant/ui/magnetic-cta";
+import {
+  NavDrawer,
+  NavDrawerTrigger,
+  NavDrawerContent,
+  NavDrawerList,
+  NavDrawerItem,
+  NavDrawerClose,
+  NavDrawerBurger,
+} from "../../registry/visant/ui/nav-drawer";
+import { Gleam } from "../../registry/visant/ui/gleam";
+import { SimSlider } from "../../registry/visant/ui/sim-slider";
 import { StepCards } from "../../registry/visant/blocks/step-cards";
 import { TestimonialWall } from "../../registry/visant/blocks/testimonial-wall";
 
@@ -615,7 +630,70 @@ function TimelineDemo() {
   );
 }
 
+/**
+ * O drawer abre em tela cheia mesmo dentro do card, e é assim que tem que ser:
+ * ele é um `Dialog` do Radix, portalizado no `body`. Simular a peça dentro da
+ * moldura do catálogo pediria `container` no portal e `absolute` no painel — e
+ * aí a vitrine mostraria uma coisa que não é a que o `shadcn add` entrega.
+ * Vitrine que mente é pior que vitrine nenhuma.
+ */
+function NavDrawerDemo() {
+  const links = [
+    ["Início", "01"],
+    ["Serviços", "02"],
+    ["Portfólio", "03"],
+    ["Contato", "04"],
+  ] as const;
+  return (
+    <Frame>
+      <NavDrawer>
+        <div className="flex items-center gap-3">
+          <NavDrawerTrigger asChild>
+            <NavDrawerBurger />
+          </NavDrawerTrigger>
+          <span className="text-[length:var(--text-apoio,0.8125rem)] text-muted-foreground">
+            abrir menu
+          </span>
+        </div>
+        <NavDrawerContent
+          title="Navegação"
+          footer={
+            <div className="flex items-center justify-between">
+              <span>pt-BR</span>
+              <span>contato@marca.com</span>
+            </div>
+          }
+        >
+          <NavDrawerList>
+            {links.map(([label, n], i) => (
+              // `NavDrawerClose asChild` em volta do item: em app com router o
+              // clique no link não desmonta nada, e o drawer ficaria aberto por
+              // cima da rota nova.
+              <NavDrawerClose asChild key={label}>
+                <NavDrawerItem href="#" meta={n} active={i === 0}>
+                  {label}
+                </NavDrawerItem>
+              </NavDrawerClose>
+            ))}
+          </NavDrawerList>
+        </NavDrawerContent>
+      </NavDrawer>
+    </Frame>
+  );
+}
+
 const MarqueeVariantes = React.lazy(() => import("./demos/marquee-demo"));
+
+const CenaPresa = React.lazy(() => import("./demos/pinned-scene-demo"));
+
+/** Mesmo trato do marquee: GSAP só chega quando o card chega. */
+function PinnedSceneDemoCard() {
+  return (
+    <React.Suspense fallback={<div className="h-full w-full animate-pulse bg-muted/30" />}>
+      <CenaPresa />
+    </React.Suspense>
+  );
+}
 
 /**
  * Sob demanda: o motor da faixa é GSAP + ScrollTrigger, e importar aqui em cima
@@ -727,6 +805,132 @@ function CountUpDemo() {
       <Chip className="alvo-toque" onClick={() => setN((x) => x + 1)}>
         contar de novo
       </Chip>
+    </div>
+  );
+}
+
+/**
+ * A revelação é uma vez só, por contrato — então a vitrine remonta a peça por
+ * `key`, mesmo padrão do `CountUpDemo`. E aqui ela roda em `immediate`: dentro
+ * de um palco de 520px que já nasce visível, um gatilho de rolagem nunca
+ * dispararia, e o card ficaria com um título parado prometendo animação.
+ */
+function LineRevealDemo() {
+  const [n, setN] = React.useState(0);
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-5 px-6">
+      {/* Medida curta de propósito: a peça revela POR LINHA, e num palco de
+          1500px a frase caberia numa linha só — a demo mostraria uma cascata de
+          um elemento, que é o mesmo que não mostrar nada. */}
+      <LineReveal
+        key={n}
+        as="h3"
+        immediate
+        className="max-w-[20ch] text-center text-[1.6rem] font-medium leading-[1.15]"
+      >
+        A quebra de linha é do navegador. O corte, do desenho.
+      </LineReveal>
+      <Chip className="alvo-toque" onClick={() => setN((x) => x + 1)}>
+        revelar de novo
+      </Chip>
+    </div>
+  );
+}
+
+/** Três cards lado a lado: é a grade que prova que a luz é local a cada peça. */
+function GleamDemo() {
+  return (
+    <div className="flex h-full w-full items-center justify-center gap-4 px-5">
+      {["Marca", "Motion", "Medida"].map((t) => (
+        <Gleam key={t} className="w-[9.5rem] p-5">
+          <span className="text-[0.95rem] font-medium">{t}</span>
+          <p className="mt-1.5 text-[length:var(--text-micro,0.68rem)] text-muted-foreground">
+            passe o ponteiro
+          </p>
+        </Gleam>
+      ))}
+    </div>
+  );
+}
+
+/** Faixa de investimento → receita projetada, com a premissa escrita embaixo. */
+function SimSliderDemo() {
+  const brl = (v: number) =>
+    v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+  return (
+    <SimSlider
+      className="w-full"
+      label="Investimento mensal"
+      min={2000}
+      max={20000}
+      step={500}
+      defaultValue={6000}
+      format={brl}
+      outputs={[
+        { label: "Receita projetada", value: (v) => brl(v * 3.2), primary: true },
+        { label: "Retorno", value: () => "3,2×" },
+      ]}
+      ceilingLabel="teto da faixa"
+      // A curva é a projeção distribuída em 12 meses, com a rampa de maturação
+      // da campanha — série derivada do valor, não pontos bonitos inventados.
+      // A escala é a FAIXA inteira (por isso `/ 20000`): arrastar o controle
+      // tem que mostrar ganho, não redesenhar a mesma curva cheia.
+      curve={(v) =>
+        Array.from({ length: 12 }, (_, i) => (v / 20000) * (1 - Math.exp(-(i + 1) / 3.5)))
+      }
+      assumption="Projeção a partir de ticket médio de R$180 e 2,4% de conversão medidos nos últimos 90 dias. Não é garantia de resultado."
+    />
+  );
+}
+
+/**
+ * A moldura revela UMA vez, na rolagem — e num palco que já nasce visível o
+ * gatilho nunca arma. O replay por `key` é o mesmo recurso do `CountUpDemo`, e
+ * a demo dispara na montagem chamando o `ScrollTrigger.refresh` de graça: a peça
+ * remontada recalcula o próprio gatilho.
+ */
+function PhotoFrameDemo() {
+  const [n, setN] = React.useState(0);
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-4">
+      <div className="flex items-start gap-4" key={n}>
+        <PhotoFrame ratio="4/5" className="w-[150px]" caption="sem paralaxe">
+          <Media papel="cena" indice={1} className="size-full" />
+        </PhotoFrame>
+        <PhotoFrame ratio="4/5" className="w-[150px]" parallax={10} caption="paralaxe 10%">
+          <Media papel="cena" indice={3} className="size-full" />
+        </PhotoFrame>
+        <PhotoFrame ratio="4/5" className="w-[150px]" from="left" caption="abre da esquerda">
+          <Media papel="retrato" indice={2} className="size-full" />
+        </PhotoFrame>
+      </div>
+      <Chip className="alvo-toque" onClick={() => setN((x) => x + 1)}>
+        revelar de novo
+      </Chip>
+    </div>
+  );
+}
+
+/** Clicar leva a foto pra tela cheia — mesmo nó, percurso visível. */
+function PhotoFlipDemo() {
+  const items = React.useMemo(
+    () =>
+      [4, 5, 6, 7, 8, 9].map((i) => ({
+        id: `f${i}`,
+        media: <Media papel="cena" indice={i} className="size-full" />,
+        caption: `Foto ${i}`,
+      })),
+    [],
+  );
+  // Largura fixa, e não `w-full`: o palco da vitrine escala a demo pra caber, e
+  // uma grade elástica dentro de um palco elástico vira seis fotos gigantes com
+  // a segunda fileira fora da tela.
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-3">
+      <PhotoFlip items={items} className="grid w-[420px] grid-cols-3 gap-2" />
+      <span className="text-[length:var(--text-micro,0.68rem)] text-muted-foreground">
+        clique pra ampliar · Esc fecha
+      </span>
     </div>
   );
 }
@@ -1637,6 +1841,50 @@ export const CATALOG: CatalogItem[] = [
     preview: { w: 520, h: 300 },
   },
   {
+    name: "line-reveal",
+    title: "Line Reveal",
+    type: "ui",
+    family: "motion",
+    description:
+      "O título que sobe de dentro do próprio corte de linha: mede a quebra depois da fonte carregar, re-quebra ao redimensionar, e o esconderijo é aplicado por JS pra página nunca sumir sem script.",
+    tags: ["título", "reveal", "linha", "split", "gsap", "herói", "tipografia"],
+    demo: () => <LineRevealDemo />,
+    preview: { w: 560, h: 260 },
+  },
+  {
+    name: "gleam",
+    title: "Gleam",
+    type: "ui",
+    family: "motion",
+    description:
+      "A superfície que sabe onde o cursor está: luz sob o ponteiro, borda acesa do lado da luz e inclinação de 5 graus. Quatro números por quadro no JS, o desenho inteiro no CSS.",
+    tags: ["hover", "card", "ponteiro", "tilt", "luz", "spotlight", "magnético"],
+    demo: () => <GleamDemo />,
+    preview: { w: 600, h: 240 },
+  },
+  {
+    name: "photo-frame",
+    title: "Photo Frame",
+    type: "ui",
+    family: "motion",
+    description:
+      "A moldura que revela a foto: a máscara abre, a foto assenta mais devagar que a máscara, e opcionalmente deriva na rolagem. Proporção declarada pra não haver salto de layout, e mídia por slot.",
+    tags: ["foto", "moldura", "imagem", "reveal", "paralaxe", "scroll", "gsap"],
+    demo: () => <PhotoFrameDemo />,
+    preview: { w: 620, h: 330 },
+  },
+  {
+    name: "photo-flip",
+    title: "Photo Flip",
+    type: "ui",
+    family: "motion",
+    description:
+      "A foto atravessa da grade para a tela cheia — mesmo nó do DOM, reparentado e animado por GSAP Flip com ease-in-out. A vaga segura a proporção pra grade não desabar, e o foco volta pra foto que abriu.",
+    tags: ["foto", "galeria", "lightbox", "flip", "morph", "grade", "gsap"],
+    demo: () => <PhotoFlipDemo />,
+    preview: { w: 900, h: 420 },
+  },
+  {
     name: "measure-bar",
     title: "Measure Bar",
     type: "ui",
@@ -1652,6 +1900,17 @@ export const CATALOG: CatalogItem[] = [
       </div>
     ),
     preview: { w: 620, h: 220 },
+  },
+  {
+    name: "sim-slider",
+    title: "Sim Slider",
+    type: "ui",
+    family: "aquisicao",
+    description:
+      "A dobra que deixa o visitante fazer a conta: controle acessível, projeção derivada do próprio valor, curva sem transição (pra não discordar do número) e premissa obrigatória por escrito.",
+    tags: ["simulador", "calculadora", "slider", "projeção", "roi", "curva", "premissa"],
+    demo: () => <SimSliderDemo />,
+    preview: { w: 640, h: 420 },
   },
   {
     name: "spine-card",
@@ -1765,6 +2024,46 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Busca em memória tolerante a acento: índice montado uma vez por lista, todos os termos batendo em qualquer ordem, e termo vazio devolvendo a lista inteira.",
     tags: ["busca", "filtro", "acento", "catálogo"],
+  },
+  {
+    name: "magnetic-cta",
+    title: "Magnetic CTA",
+    type: "ui",
+    family: "aquisicao",
+    description:
+      "O botão principal que vem buscar o ponteiro: campo de atração com medida lida uma vez, rótulo com inércia própria e volta com mola. No toque e sob reduced-motion é um botão comum.",
+    tags: ["cta", "botão", "ímã", "hover", "conversão"],
+    demo: () => (
+      <Frame className="gap-8">
+        <MagneticCta>Agendar conversa</MagneticCta>
+        <MagneticCta variant="outline" pull={6}>
+          Ver o método
+        </MagneticCta>
+      </Frame>
+    ),
+    preview: { w: 560, h: 220 },
+  },
+  {
+    name: "nav-drawer",
+    title: "Nav Drawer",
+    type: "ui",
+    family: "fundacao",
+    description:
+      "O menu mobile feito uma vez direito: foco preso, Escape, retorno do foco e trava de rolagem vindos do Radix Dialog; entrada em cascata com teto, e ícone que lê o estado em vez de guardar o seu.",
+    tags: ["menu", "mobile", "drawer", "navegação", "acessibilidade"],
+    demo: NavDrawerDemo,
+    preview: { w: 420, h: 200 },
+  },
+  {
+    name: "pinned-scene",
+    title: "Pinned Scene",
+    type: "ui",
+    family: "motion",
+    description:
+      "A dobra que prende a arte e avança em passos. O pin é position:sticky, não ScrollTrigger.pin — o GSAP entra só pra relatar progresso em --p, --sp e --near, sem tocar no DOM.",
+    tags: ["scroll", "sticky", "passos", "storytelling", "gsap"],
+    demo: PinnedSceneDemoCard,
+    preview: { w: 700, h: 500 },
   },
 ];
 

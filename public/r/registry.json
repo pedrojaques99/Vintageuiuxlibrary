@@ -1543,6 +1543,528 @@
         }
       ],
       "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "line-reveal",
+      "type": "registry:ui",
+      "title": "Line Reveal",
+      "description": "O título que sobe de dentro do próprio corte de linha: mede a quebra depois da fonte carregar, re-quebra ao redimensionar, e o esconderijo é aplicado por JS pra página nunca sumir sem script.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "gsap"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/line-reveal.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".line-reveal-line, .line-reveal-word": {
+            "will-change": "transform"
+          }
+        }
+      }
+    },
+    {
+      "name": "gleam",
+      "type": "registry:ui",
+      "title": "Gleam",
+      "description": "A superfície que sabe onde o cursor está: luz sob o ponteiro, borda acesa do lado da luz e inclinação de 5 graus. Quatro números por quadro no JS, o desenho inteiro no CSS.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/gleam.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".gleam-stage": {
+            "perspective": "900px"
+          },
+          ".gleam": {
+            "position": "relative",
+            "isolation": "isolate",
+            "border-radius": "var(--r-surface, 16px)",
+            "border": "1px solid var(--border)",
+            "background": "var(--card)",
+            "transform-style": "preserve-3d",
+            "transform": "rotateX(calc(var(--rx, 0) * 1deg)) rotateY(calc(var(--ry, 0) * 1deg))",
+            "transition": "transform 120ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), box-shadow var(--dur-base, 200ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1))"
+          },
+          ".gleam:not([data-lit=\"1\"])": {
+            "transition-duration": "320ms"
+          },
+          ".gleam:focus-visible": {
+            "outline": "var(--focus, 2px solid var(--ring))",
+            "outline-offset": "2px"
+          },
+          ".gleam-light": {
+            "position": "absolute",
+            "inset": "0",
+            "border-radius": "inherit",
+            "pointer-events": "none",
+            "z-index": "0",
+            "opacity": "0",
+            "transition": "opacity var(--dur-base, 200ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1))",
+            "background": "radial-gradient(circle at calc(var(--gx, 0.5) * 100%) calc(var(--gy, 0.5) * 100%), color-mix(in oklab, var(--brand) 26%, transparent), transparent 55%)"
+          },
+          ".gleam[data-lit=\"1\"] .gleam-light": {
+            "opacity": "var(--glow, 1)"
+          },
+          ".gleam-edge": {
+            "position": "absolute",
+            "inset": "0",
+            "border-radius": "inherit",
+            "pointer-events": "none",
+            "z-index": "1",
+            "padding": "1px",
+            "background": "radial-gradient(circle at calc(var(--gx, 0.5) * 100%) calc(var(--gy, 0.5) * 100%), color-mix(in oklab, var(--brand) 65%, transparent), transparent 45%)",
+            "-webkit-mask": "linear-gradient(black 0 0) content-box, linear-gradient(black 0 0)",
+            "mask": "linear-gradient(black 0 0) content-box, linear-gradient(black 0 0)",
+            "-webkit-mask-composite": "xor",
+            "mask-composite": "exclude",
+            "opacity": "0",
+            "transition": "opacity var(--dur-base, 200ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1))"
+          },
+          ".gleam[data-lit=\"1\"] .gleam-edge": {
+            "opacity": "1"
+          },
+          ".gleam > :not(.gleam-light):not(.gleam-edge)": {
+            "position": "relative",
+            "z-index": "2"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".gleam": {
+            "transform": "none",
+            "transition": "none"
+          }
+        }
+      }
+    },
+    {
+      "name": "sim-slider",
+      "type": "registry:ui",
+      "title": "Sim Slider",
+      "description": "A dobra que deixa o visitante fazer a conta: controle acessível, projeção derivada do próprio valor, curva sem transição (pra não discordar do número) e premissa obrigatória por escrito.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils",
+        "slider"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/sim-slider.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".sim-slider-line": {
+            "fill": "none",
+            "stroke": "var(--brand)",
+            "stroke-width": "2",
+            "stroke-linejoin": "round",
+            "stroke-linecap": "round",
+            "animation": "sim-slider-fade var(--dur-slow, 300ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both"
+          },
+          ".sim-slider-ceiling": {
+            "stroke": "var(--border)",
+            "stroke-width": "1",
+            "stroke-dasharray": "3 4"
+          },
+          ".sim-slider-area": {
+            "fill": "color-mix(in oklab, var(--brand) 14%, transparent)",
+            "animation": "sim-slider-fade var(--dur-slow, 300ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) 400ms both"
+          }
+        },
+        "@keyframes sim-slider-fade": {
+          "from": {
+            "opacity": "0"
+          },
+          "to": {
+            "opacity": "1"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".sim-slider-line, .sim-slider-area": {
+            "animation": "none"
+          }
+        }
+      }
+    },
+    {
+      "name": "magnetic-cta",
+      "type": "registry:ui",
+      "title": "Magnetic CTA",
+      "description": "O botão principal que vem buscar o ponteiro: campo de atração com medida lida uma vez, rótulo com inércia própria e volta com mola. No toque e sob reduced-motion é um botão comum.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "dependencies": [
+        "@radix-ui/react-slot"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/magnetic-cta.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        ".magnet-body": {
+          "transition": "transform var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)), scale var(--dur-fast, 140ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)), background-color var(--dur-fast, 140ms) linear"
+        },
+        ".magnet-field[data-magnet=hold] .magnet-body": {
+          "will-change": "transform"
+        },
+        ".magnet-field[data-magnet=rest] .magnet-body, .magnet-field[data-magnet=rest] .magnet-label": {
+          "transition-duration": "620ms",
+          "transition-timing-function": "cubic-bezier(0.22, 1.35, 0.36, 1)"
+        },
+        ".magnet-label": {
+          "transform": "translate3d(calc(var(--mx, 0px) * var(--lag, 0.35) * -1), calc(var(--my, 0px) * var(--lag, 0.35) * -1), 0)",
+          "transition": "transform var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1))"
+        },
+        ".magnet-sheen": {
+          "background": "radial-gradient(130px 130px at var(--sx, 50%) var(--sy, 50%), color-mix(in oklab, var(--brand-foreground, var(--background)) 24%, transparent), transparent 72%)",
+          "opacity": "0",
+          "transition": "opacity var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1))"
+        },
+        ".magnet-field[data-magnet=hold] .magnet-sheen": {
+          "opacity": "1"
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".magnet-body, .magnet-label": {
+            "transform": "none",
+            "transition": "none"
+          },
+          ".magnet-sheen": {
+            "display": "none"
+          }
+        }
+      }
+    },
+    {
+      "name": "nav-drawer",
+      "type": "registry:ui",
+      "title": "Nav Drawer",
+      "description": "O menu mobile feito uma vez direito: foco preso, Escape, retorno do foco e trava de rolagem vindos do Radix Dialog; entrada em cascata com teto, e ícone que lê o estado em vez de guardar o seu.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "dependencies": [
+        "@radix-ui/react-dialog"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/nav-drawer.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@keyframes nav-drawer-veil": {
+          "from": {
+            "opacity": "0"
+          },
+          "to": {
+            "opacity": "1"
+          }
+        },
+        "@keyframes nav-drawer-from-right": {
+          "from": {
+            "transform": "translate3d(100%, 0, 0)"
+          },
+          "to": {
+            "transform": "translate3d(0, 0, 0)"
+          }
+        },
+        "@keyframes nav-drawer-from-left": {
+          "from": {
+            "transform": "translate3d(-100%, 0, 0)"
+          },
+          "to": {
+            "transform": "translate3d(0, 0, 0)"
+          }
+        },
+        "@keyframes nav-drawer-from-top": {
+          "from": {
+            "transform": "translate3d(0, -100%, 0)"
+          },
+          "to": {
+            "transform": "translate3d(0, 0, 0)"
+          }
+        },
+        "@keyframes nav-drawer-item-in": {
+          "from": {
+            "opacity": "0",
+            "transform": "translate3d(0, 14px, 0)"
+          },
+          "to": {
+            "opacity": "1",
+            "transform": "translate3d(0, 0, 0)"
+          }
+        },
+        ".nav-drawer-overlay[data-state=open]": {
+          "animation": "nav-drawer-veil var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)) both"
+        },
+        ".nav-drawer-overlay[data-state=closed]": {
+          "animation": "nav-drawer-veil var(--dur-fast, 140ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)) reverse both"
+        },
+        ".nav-drawer-panel[data-side=right][data-state=open]": {
+          "animation": "nav-drawer-from-right var(--dur-slow, 420ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) both"
+        },
+        ".nav-drawer-panel[data-side=right][data-state=closed]": {
+          "animation": "nav-drawer-from-right var(--dur-base, 240ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) reverse both"
+        },
+        ".nav-drawer-panel[data-side=left][data-state=open]": {
+          "animation": "nav-drawer-from-left var(--dur-slow, 420ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) both"
+        },
+        ".nav-drawer-panel[data-side=left][data-state=closed]": {
+          "animation": "nav-drawer-from-left var(--dur-base, 240ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) reverse both"
+        },
+        ".nav-drawer-panel[data-side=top][data-state=open]": {
+          "animation": "nav-drawer-from-top var(--dur-slow, 420ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) both"
+        },
+        ".nav-drawer-panel[data-side=top][data-state=closed]": {
+          "animation": "nav-drawer-from-top var(--dur-base, 240ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) reverse both"
+        },
+        ".nav-drawer-panel[data-state=open] .nav-drawer-list > li": {
+          "animation": "nav-drawer-item-in 460ms var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)) both",
+          "animation-delay": "calc(120ms + var(--i, 0) * 45ms)"
+        },
+        ".nav-drawer-rule": {
+          "transform": "scaleX(0)",
+          "transition": "transform var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1))"
+        },
+        ".nav-drawer-item:hover .nav-drawer-rule, .nav-drawer-item:focus-visible .nav-drawer-rule, .nav-drawer-item[data-active] .nav-drawer-rule": {
+          "transform": "scaleX(1)"
+        },
+        ".nav-drawer-label": {
+          "transition": "transform var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1))"
+        },
+        ".nav-drawer-item:hover .nav-drawer-label, .nav-drawer-item:focus-visible .nav-drawer-label": {
+          "transform": "translate3d(6px, 0, 0)"
+        },
+        ".nav-drawer-burger .burger-bar": {
+          "transition": "transform var(--dur-base, 240ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1))"
+        },
+        ".nav-drawer-burger[data-state=open] .burger-bar:first-child": {
+          "transform": "translateY(4.25px) rotate(45deg)"
+        },
+        ".nav-drawer-burger[data-state=open] .burger-bar:last-child": {
+          "transform": "translateY(-4.25px) rotate(-45deg)"
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".nav-drawer-overlay, .nav-drawer-panel, .nav-drawer-panel[data-state=open] .nav-drawer-list > li": {
+            "animation-duration": "1ms",
+            "animation-delay": "0ms"
+          },
+          ".nav-drawer-rule, .nav-drawer-label, .nav-drawer-burger .burger-bar": {
+            "transition": "none"
+          }
+        }
+      }
+    },
+    {
+      "name": "pinned-scene",
+      "type": "registry:ui",
+      "title": "Pinned Scene",
+      "description": "A dobra que prende a arte e avança em passos. O pin é position:sticky, não ScrollTrigger.pin — o GSAP entra só pra relatar progresso em --p, --sp e --near, sem tocar no DOM.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "dependencies": [
+        "gsap"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/pinned-scene.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "photo-frame",
+      "type": "registry:ui",
+      "title": "Photo Frame",
+      "description": "A moldura que revela a foto: a máscara abre, a foto assenta mais devagar que a máscara, e opcionalmente deriva na rolagem. Proporção declarada pra não haver salto de layout, e mídia por slot.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "gsap"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/photo-frame.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".photo-frame": {
+            "display": "block",
+            "margin": "0"
+          },
+          ".photo-frame-window": {
+            "position": "relative",
+            "overflow": "hidden",
+            "aspect-ratio": "var(--ratio, 4/5)",
+            "border-radius": "var(--r-surface, 16px)",
+            "background": "var(--muted)"
+          },
+          ".photo-frame-media": {
+            "position": "absolute",
+            "inset": "0"
+          },
+          ".photo-frame-caption": {
+            "margin-top": "0.75rem",
+            "font-size": "13px",
+            "line-height": "1.5",
+            "color": "var(--muted-foreground)"
+          },
+          ".photo-frame-media > *": {
+            "width": "100%",
+            "height": "100%",
+            "display": "block"
+          },
+          ".photo-frame-media img, .photo-frame-media video": {
+            "width": "100%",
+            "height": "100%",
+            "object-fit": "cover",
+            "display": "block"
+          }
+        }
+      }
+    },
+    {
+      "name": "photo-flip",
+      "type": "registry:ui",
+      "title": "Photo Flip",
+      "description": "A foto atravessa da grade para a tela cheia — mesmo nó do DOM, reparentado e animado por GSAP Flip com ease-in-out. A vaga segura a proporção pra grade não desabar, e o foco volta pra foto que abriu.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "gsap"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/photo-flip.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        ".photo-flip-stage .photo-flip-media img, .photo-flip-stage .photo-flip-media video": {
+          "object-fit": "contain"
+        },
+        "@layer components": {
+          ".photo-flip-grid": {
+            "display": "grid",
+            "grid-template-columns": "repeat(3, 1fr)",
+            "gap": "0.75rem"
+          },
+          ".photo-flip-tile": {
+            "position": "relative",
+            "display": "block",
+            "padding": "0",
+            "border": "0",
+            "background": "none",
+            "cursor": "zoom-in",
+            "border-radius": "var(--r-surface, 16px)"
+          },
+          ".photo-flip-tile:focus-visible": {
+            "outline": "var(--focus, 2px solid var(--ring))",
+            "outline-offset": "3px"
+          },
+          ".photo-flip-slot": {
+            "position": "relative",
+            "display": "block",
+            "aspect-ratio": "var(--ratio, 1)",
+            "overflow": "hidden",
+            "border-radius": "inherit",
+            "background": "var(--muted)"
+          },
+          ".photo-flip-media": {
+            "position": "absolute",
+            "inset": "0",
+            "display": "block"
+          },
+          ".photo-flip-overlay": {
+            "position": "fixed",
+            "inset": "0",
+            "z-index": "60",
+            "display": "grid",
+            "place-items": "center",
+            "padding": "clamp(1rem, 4vw, 4rem)",
+            "background": "color-mix(in oklab, var(--background) 88%, transparent)",
+            "backdrop-filter": "blur(6px)",
+            "cursor": "zoom-out"
+          },
+          ".photo-flip-stage": {
+            "position": "relative",
+            "width": "min(92vw, 1100px)",
+            "height": "min(84vh, 900px)"
+          },
+          ".photo-flip-close": {
+            "position": "absolute",
+            "top": "clamp(1rem, 3vw, 2rem)",
+            "right": "clamp(1rem, 3vw, 2rem)",
+            "border-radius": "var(--r-pill, 9999px)",
+            "border": "1px solid var(--border)",
+            "background": "var(--card)",
+            "color": "var(--foreground)",
+            "padding": "0.5rem 1rem",
+            "font-size": "13px",
+            "cursor": "pointer"
+          },
+          ".photo-flip-close:focus-visible": {
+            "outline": "var(--focus, 2px solid var(--ring))",
+            "outline-offset": "2px"
+          },
+          ".photo-flip-overlay[data-open=\"1\"]": {
+            "animation": "photo-flip-veu var(--dur-base, 200ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both"
+          },
+          ".photo-flip-media > *": {
+            "width": "100%",
+            "height": "100%",
+            "display": "block"
+          },
+          ".photo-flip-media img, .photo-flip-media video": {
+            "width": "100%",
+            "height": "100%",
+            "object-fit": "cover",
+            "display": "block"
+          }
+        },
+        "@keyframes photo-flip-veu": {
+          "from": {
+            "opacity": "0"
+          },
+          "to": {
+            "opacity": "1"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".photo-flip-overlay[data-open=\"1\"]": {
+            "animation": "none"
+          }
+        }
+      }
     }
   ]
 }

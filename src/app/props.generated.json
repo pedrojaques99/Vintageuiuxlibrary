@@ -3406,5 +3406,397 @@
       "descricao": "Remove diacrítico e normaliza caixa. Exportada porque a mesma dobra costuma\nser precisa fora do hook (num `<option>`, num agrupamento).",
       "props": []
     }
+  ],
+  "line-reveal": [
+    {
+      "nome": "LineReveal",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O texto. Pode conter `<em>`, `<br>`, link — o split preserva a marcação."
+        },
+        {
+          "nome": "as",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "h2",
+          "descricao": "Elemento renderizado. Título de dobra é `h2`; topo de página é `h1`."
+        },
+        {
+          "nome": "immediate",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Anima na montagem, sem esperar a rolagem. Para o herói do topo, que já está\nvisível quando a página abre — ali um ScrollTrigger nunca dispararia bem."
+        },
+        {
+          "nome": "repeat",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Repete a cada passagem. Padrão é uma vez só: entrada que repete vira enfeite."
+        },
+        {
+          "nome": "split",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "lines",
+          "descricao": "O que se quebra. `lines` é a revelação de título; `words` serve a frases\ncurtas onde a linha inteira subindo parece pesada demais."
+        },
+        {
+          "nome": "stagger",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.07",
+          "descricao": "Atraso entre linhas, em segundos. Teto embutido: nunca passa de 0.4s no total."
+        },
+        {
+          "nome": "start",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "top 88%",
+          "descricao": "Onde na tela o gatilho arma. `top 88%` = a dobra entrou um oitavo."
+        }
+      ]
+    }
+  ],
+  "gleam": [
+    {
+      "nome": "Gleam",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "as",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "div",
+          "descricao": "Elemento raiz. `a` quando o card inteiro leva a algum lugar."
+        },
+        {
+          "nome": "flat",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Desliga o giro e mantém luz e borda. Para card dentro de grade densa."
+        },
+        {
+          "nome": "glow",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": "Força da luz, 0→1."
+        },
+        {
+          "nome": "tilt",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5",
+          "descricao": "Graus de inclinação no canto. Acima de ~8 o card lê como brinquedo."
+        }
+      ]
+    }
+  ],
+  "sim-slider": [
+    {
+      "nome": "SimSlider",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "assumption",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A premissa, por escrito. Sem ela o simulador não é ferramenta, é promessa."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "outputs",
+          "tipo": "SimOutput[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "ceilingLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O que o topo da caixa significa. É a régua da curva — sem ela a linha é um\ntraço num retângulo. Ausente, o tracejado ainda desenha, mudo."
+        },
+        {
+          "nome": "curve",
+          "tipo": "(v: number) => number[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A série da curva para um dado valor, entre 0 e 1 cada ponto. Ausente, a\ncurva não desenha — e isso é o certo quando não há projeção temporal real."
+        },
+        {
+          "nome": "defaultValue",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "format",
+          "tipo": "(v: number) => string",
+          "obrigatoria": false,
+          "padrao": "(v) => String(v)",
+          "descricao": "Formata a leitura do próprio controle (o que a pessoa está movendo)."
+        },
+        {
+          "nome": "onValueChange",
+          "tipo": "(v: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "step",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "magnetic-cta": [
+    {
+      "nome": "MagneticCta",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "asChild",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Renderiza no elemento filho em vez de um `<button>`. Use pra `<a>`, `<Link>`\ndo Next, ou o botão do design system do cliente."
+        },
+        {
+          "nome": "field",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "84",
+          "descricao": "Raio do campo magnético em px, medido a partir da borda do botão. É o quanto\nANTES de chegar o ponteiro começa a puxar. Abaixo de ~48px o efeito só\nacontece depois que o cursor já está em cima, e aí não serve pra nada."
+        },
+        {
+          "nome": "labelLag",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.35",
+          "descricao": "Fração do deslocamento que o rótulo acompanha. `0` trava o texto no lugar."
+        },
+        {
+          "nome": "pull",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "10",
+          "descricao": "Deslocamento máximo do botão, em px. Acima de ~14 vira escorregão."
+        },
+        {
+          "nome": "sheen",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Brilho que segue o ponteiro sobre a superfície. Desligue em fundo claro chapado."
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "solid",
+          "descricao": "Sem `--brand`: superfície de contorno, pro CTA secundário da mesma dobra."
+        }
+      ]
+    }
+  ],
+  "nav-drawer": [
+    {
+      "nome": "NavDrawerList",
+      "descricao": "Embrulha cada filho num `<li>` e escreve o `--i` da cascata. Ver a nota.",
+      "props": []
+    },
+    {
+      "nome": "NavDrawerTrigger",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "asChild",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "NavDrawerClose",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "asChild",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "NavDrawerContent",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "title",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Obrigatório: é o nome do diálogo pro leitor de tela. Fica invisível a menos\nque `showTitle`. Sem ele o Radix reclama no console — e com razão, porque um\ndiálogo sem nome é um buraco na navegação por voz."
+        },
+        {
+          "nome": "asChild",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "footer",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Rodapé do painel: idioma, telefone, redes. Fica colado embaixo."
+        },
+        {
+          "nome": "showTitle",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "side",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "right",
+          "descricao": "De onde o painel entra. `right` é o padrão do polegar destro."
+        }
+      ]
+    },
+    {
+      "nome": "NavDrawerItem",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "active",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Marca a rota atual. A peça não descobre isso sozinha — ver a nota."
+        },
+        {
+          "nome": "asChild",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Renderiza no filho — `<Link>` do Next, `<NavLink>` do router."
+        },
+        {
+          "nome": "meta",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Número/rótulo à direita: contagem, ano, \"novo\". Nunca decoração."
+        }
+      ]
+    },
+    {
+      "nome": "NavDrawerBurger",
+      "descricao": "O gatilho desenhado: dois traços que viram X quando o painel abre.\n\nLê o `data-state` que o próprio `Dialog.Trigger` escreve, então não existe um\nsegundo estado pra manter em sincronia — o defeito clássico é o ícone ficar em\nX depois de fechar por `Escape`, porque quem fechou não foi o clique.\n\nUse dentro de `<NavDrawerTrigger asChild>`.",
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Menu",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "pinned-scene": [
+    {
+      "nome": "PinnedScene",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "steps",
+          "tipo": "PinnedStep[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "rail",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Régua de progresso com contagem. Some abaixo de `md`."
+        },
+        {
+          "nome": "scroller",
+          "tipo": "string | HTMLElement",
+          "obrigatoria": false,
+          "padrao": "null",
+          "descricao": "Quem rola, quando não é a janela: um `overflow-y: auto` (documentação,\nmodal, painel). O `sticky` já funciona dentro de container sem ajuda; isto\nexiste só pra o ScrollTrigger medir o progresso no mesmo scroller, senão a\nrégua fica parada enquanto a cena anda."
+        },
+        {
+          "nome": "side",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "left",
+          "descricao": "De que lado a arte gruda. `left` é o padrão de leitura ocidental."
+        },
+        {
+          "nome": "stepHeight",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "100svh",
+          "descricao": "Altura de cada passo — é o que define o comprimento de rolagem da cena.\n`100svh` é o padrão (e `svh`, não `vh`: no iOS o `vh` conta a barra de\nendereço que já recolheu, e cada passo ganharia uns 70px de vão morto).\nBaixar pra `70svh` deixa a cena mais rápida; abaixo disso a arte troca antes\nde a pessoa terminar de ler."
+        },
+        {
+          "nome": "top",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "12vh",
+          "descricao": "Distância do topo em que a arte trava. Deixe espaço pro header fixo."
+        }
+      ]
+    }
   ]
 }
