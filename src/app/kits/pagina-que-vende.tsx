@@ -290,7 +290,7 @@ export default function PaginaQueVende() {
         nota="A terceira barra é o dado que não chegou. Tracejado, e não zero."
       >
         <Faixa tom="recuo" className="py-8 sm:py-10">
-          <div className="grid gap-8 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             <div>
               <CountUp className="block text-[2.4rem] font-semibold leading-none tracking-tight">
                 1.291

@@ -77,7 +77,13 @@ function cssConstruido() {
     .replace(/\s*([:,{};])\s*/g, "$1");
 }
 
-const escapar = (cls) => cls.replace(/[.[\]()#,%:&>+~*/!'"$^=|?]/g, (c) => "\\" + c);
+/*
+ * `@` entra na lista: o Tailwind escapa a arroba no seletor
+ * (`.\[\@media\(hover\:none\)\]\:text-…`) e sem ela a busca montava um seletor
+ * que não existe em CSS nenhum. O portão acusava de "não gerou regra" uma
+ * classe cuja regra estava lá — falso positivo em toda variante `[@media…]`.
+ */
+const escapar = (cls) => cls.replace(/[.[\]()#,%:&>+~*/!'"$^=|?@]/g, (c) => "\\" + c);
 
 /*
  * A classe é fatiada por ESPAÇO, não por regex de forma.

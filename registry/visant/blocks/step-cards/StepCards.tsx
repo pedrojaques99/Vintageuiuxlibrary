@@ -22,6 +22,26 @@ import { cn } from "@/lib/utils";
  * 3. **`columns` aceita o passo órfão.** Quatro passos em três colunas deixam um
  *    sozinho na segunda linha — a referência resolve deitando o último
  *    (`wideLast`), e é isso que a prop faz.
+ *
+ * ── 4. O passo em foco, e por que ele não é enfeite ────────────────────────
+ *
+ * Três cards idênticos numa fileira dizem "existem três passos" e param aí. O
+ * que a peça precisa dizer é **onde você está** — numa página de "como
+ * funciona" que acompanha a rolagem, num onboarding que marca o passo atual,
+ * num carrossel que passa sozinho. Por isso existe `active`.
+ *
+ * O destaque é por **recuo dos outros**, não por brilho no escolhido: o ativo
+ * fica como o card sempre foi (opaco, borda de marca, elevado) e os demais
+ * perdem opacidade e um fio de escala. É a diferença entre a fileira ter um
+ * foco e a fileira ter um card piscando.
+ *
+ * Duas guardas:
+ * · **Sem `active`, nada muda.** Quem já usava o bloco recebe o mesmo pixel —
+ *   inclusive o passo do meio, que não vira "o ativo" por acaso.
+ * · **O ponteiro também promove.** Passar o mouse num passo recuado traz ele
+ *   de volta, senão o recuo vira um card apagado que ninguém consegue ler.
+ *   E `motion-reduce` corta a transição, não o estado: quem pediu menos
+ *   movimento continua enxergando qual é o passo atual.
  */
 
 export interface Step {
@@ -40,6 +60,13 @@ export interface StepCardsProps extends React.HTMLAttributes<HTMLOListElement> {
   wideLast?: boolean;
   /** Altura da área de visual. Abaixo de ~180px o mockup não se lê. */
   visualHeight?: number;
+  /**
+   * Índice do passo em foco. Os outros recuam. Sem valor, todos iguais.
+   *
+   * Quem manda é quem consome: rolagem, timer de carrossel ou clique. O bloco
+   * não escolhe passo sozinho — passo atual é estado da página, não do card.
+   */
+  active?: number;
 }
 
 const COLS: Record<2 | 3 | 4, string> = {
@@ -53,23 +80,39 @@ export function StepCards({
   columns = 3,
   wideLast = false,
   visualHeight = 240,
+  active,
   className,
   ...props
 }: StepCardsProps) {
   const orphan = wideLast && steps.length % columns === 1;
+  const marcado = typeof active === "number";
 
   return (
     <ol className={cn("grid grid-cols-1 gap-5", COLS[columns], className)} {...props}>
       {steps.map((step, i) => {
         const last = i === steps.length - 1;
+        const ativo = marcado && i === active;
 
         return (
           <li
             key={i}
+            data-active={ativo ? "" : undefined}
             className={cn(
-              "flex flex-col overflow-hidden rounded-[var(--r-surface,1rem)] border border-[var(--border)] bg-[var(--card,var(--background))]",
+              "group/passo flex flex-col overflow-hidden rounded-[var(--r-surface,1rem)] border border-[var(--border)] bg-[var(--card,var(--background))]",
               "[box-shadow:var(--e-flat)]",
               orphan && last && "sm:col-span-full lg:flex-row lg:items-center",
+              // Sem `active` a fileira é a de sempre: nem transição, nem recuo.
+              marcado && [
+                "transition-[opacity,transform,border-color,box-shadow]",
+                "[transition-duration:var(--dur-slow,300ms)]",
+                "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+                "motion-reduce:transition-none",
+                ativo
+                  ? "border-[var(--brand)] [box-shadow:var(--e-raised)]"
+                  : // O ponteiro devolve o passo recuado: recuo é hierarquia, não
+                    // porta trancada.
+                    "opacity-60 [transform:scale(0.975)] hover:opacity-100 hover:[transform:scale(1)]",
+              ],
             )}
           >
             {step.visual ? (
@@ -91,10 +134,17 @@ export function StepCards({
               )}
             >
               <div className="flex items-baseline gap-2.5">
-                {/* O <ol> já numera para quem ouve; este é só o eco visual. */}
+                {/* O <ol> já numera para quem ouve; este é só o eco visual.
+                    No passo em foco ele vira selo: a marca entra no número e
+                    não numa faixa nova, que é onde a fileira ficaria barulhenta. */}
                 <span
                   aria-hidden="true"
-                  className="text-[13px] font-semibold tabular-nums text-[var(--accent-ink,var(--foreground))]"
+                  className={cn(
+                    "inline-flex shrink-0 items-center justify-center text-[13px] font-semibold tabular-nums",
+                    ativo
+                      ? "min-w-6 rounded-[var(--r-pill,9999px)] px-1.5 py-0.5 bg-[var(--brand)] text-[var(--brand-foreground)]"
+                      : "text-[var(--accent-ink,var(--foreground))]",
+                  )}
                 >
                   {step.label ?? String(i + 1).padStart(2, "0")}
                 </span>

@@ -59,7 +59,16 @@ export default function PinnedSceneDemo() {
       <div ref={scrollerRef} className="h-full w-full overflow-y-auto px-6">
         <PinnedScene
           scroller={scroller}
-          stepHeight="380px"
+          /*
+           * A janela cresceu (700px) e o passo cresceu junto, porque os dois
+           * andam amarrados: a arte é `--pinned-h * 0.7`, então com 380px ela
+           * saía com 266px de altura dentro de um quadro de 500 — uma
+           * miniatura grudada com meia tela vazia embaixo, e o pin parecia não
+           * fazer nada. Em 520 a arte dá 364px e ocupa a metade de cima do
+           * quadro: dá pra ver a imagem SEGURAR enquanto o texto sobe, que é a
+           * única coisa que esta peça vende.
+           */
+          stepHeight="520px"
           top="24px"
           rail={false}
           steps={PASSOS.map((p, i) => ({

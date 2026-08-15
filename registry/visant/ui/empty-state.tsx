@@ -59,6 +59,21 @@ import { cn } from "@/lib/utils";
  *   otimizada; um item que impõe `<img>` cru obriga o consumidor a abrir mão
  *   dele. Sem `art`, o vazio ainda funciona — vira a caixa de texto centrada,
  *   que é o piso honesto.
+ *
+ * ── E por que a arte padrão passou a ser DESENHADA, não fotografada ────────
+ *
+ * Foto num estado vazio é a decisão que envelhece pior: ela vem de um acervo
+ * que a marca do cliente não escolheu, custa bytes numa tela que existe pra
+ * dizer "ainda não tem nada", e some do ar quando alguém troca a pasta de
+ * assets. Pior: quatro rotas vazias com a mesma foto viram quatro telas que
+ * parecem a mesma tela.
+ *
+ * `<EmptyArt>` resolve os três: é geometria em SVG derivada de `var(--brand)`
+ * por `color-mix`, então ela É a marca de quem instalou — e muda de composição
+ * conforme a semente, então "favoritos" e "arquivados" não se confundem. Zero
+ * byte de rede, mesmo desenho em SSR e no cliente, e nada pra quebrar quando o
+ * CDN cai. Mesma tese do `@visant/cover-art`, aplicada à faixa em vez da capa.
+ * O slot `art` continua aberto: quem tem ilustração de marca passa a ilustração.
  */
 
 // `title` é ReactNode aqui, e o `title` do DOM é string (a tooltip nativa).
@@ -103,7 +118,11 @@ export function EmptyState({
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(to bottom, transparent 0%, transparent 42%, var(--card) 100%)",
+                // 58% e não 42%: com a arte ganhando altura, a cortina começava
+                // ainda no meio do desenho e comia justamente a parte que o
+                // report pediu pra crescer. O contrato continua o mesmo — opaco
+                // onde o texto pousa, transparente onde não pousa.
+                "linear-gradient(to bottom, transparent 0%, transparent 58%, var(--card) 100%)",
             }}
           />
         </div>
@@ -148,6 +167,144 @@ export function EmptyState({
         )}
         {action && <div className="mt-5 flex justify-center">{action}</div>}
       </div>
+    </div>
+  );
+}
+
+/* ── a arte generativa ─────────────────────────────────────────────────────── */
+
+/**
+ * djb2, e ele mora aqui em vez de vir de um `@visant/cover-look`.
+ *
+ * São cinco linhas contra uma dependência a mais no `shadcn add` de um item que
+ * hoje não puxa nada. Se um dia um terceiro item precisar do mesmo hash, aí sim
+ * ele vira lib — três consumidores é a régua da casa, não dois.
+ *
+ * O importante não é o algoritmo e sim a propriedade: mesma semente, mesmo
+ * desenho, no servidor e no cliente. `Math.random()` aqui daria hidratação
+ * divergente e uma tela vazia que muda de cara a cada F5.
+ */
+function hashDe(s: string): number {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
+/**
+ * A rampa inteira sai de `--brand` misturada com o papel do card.
+ *
+ * `color-mix` e não opacidade: um `fill` translúcido sobre `--card` dá o mesmo
+ * resultado no tema claro e some no escuro, porque ali o papel é escuro e o
+ * traço clareia. Misturando com a PRÓPRIA cor do card, a arte acompanha o tema
+ * sem uma segunda paleta pra manter. `currentColor` é a rede pra quem instalou
+ * e ainda não definiu `--brand`.
+ */
+const tom = (pct: number) =>
+  `color-mix(in oklab, var(--brand, currentColor) ${pct}%, var(--card))`;
+
+export interface EmptyArtProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * A semente. Passe o nome da coleção vazia (`"favoritos"`, `"arquivados"`) e
+   * cada tela vazia do app ganha uma composição própria — de graça, e estável.
+   */
+  seed?: string;
+  /** Densidade do desenho. Menos é mais em faixa baixa. */
+  intensity?: "quieta" | "cheia";
+}
+
+/**
+ * EmptyArt — a faixa desenhada em código pro slot `art`.
+ *
+ * Três composições, escolhidas pela semente: arcos (o que continua fora do
+ * quadro), malha (o inventário que ainda não chegou) e faixas (o corte).
+ * Nenhuma delas desenha texto, ícone ou objeto reconhecível de propósito — a
+ * frase embaixo é que diz o que a tela é; a arte só dá superfície e marca.
+ *
+ * `aria-hidden`: é ornamento. Um `role="img"` aqui obrigaria a inventar uma
+ * descrição pra uma coisa que não descreve nada, e o leitor de tela passaria a
+ * ouvir "gráfico decorativo" antes da única frase que importa.
+ */
+export function EmptyArt({
+  seed = "vazio",
+  intensity = "quieta",
+  className,
+  style,
+  ...props
+}: EmptyArtProps) {
+  const h = hashDe(seed);
+  const familia = h % 3;
+  // Cada aspecto lê uma fatia diferente do MESMO número — nada aqui precisa de
+  // segunda semente, e é isso que mantém o desenho reproduzível.
+  const giro = ((h >> 3) % 21) - 10;
+  const cheia = intensity === "cheia";
+
+  return (
+    <div
+      aria-hidden="true"
+      className={cn("relative overflow-hidden bg-card", className)}
+      style={{
+        // O clarão de fundo sai do mesmo token: sem ele o campo fica chapado e
+        // a geometria parece colada, não iluminada.
+        backgroundImage: `radial-gradient(120% 90% at ${20 + (h % 60)}% 0%, ${tom(16)}, var(--card) 70%)`,
+        ...style,
+      }}
+      {...props}
+    >
+      {/* `slice` e não `meet`: a arte é CAMPO, não figura. Ela recorta pra
+          preencher a faixa que receber, em qualquer proporção, em vez de
+          encolher e deixar duas margens vazias — que é como um SVG decorativo
+          denuncia que ninguém pensou na caixa. */}
+      <svg
+        viewBox="0 0 400 200"
+        preserveAspectRatio="xMidYMid slice"
+        className="absolute inset-0 h-full w-full"
+      >
+        {familia === 0 &&
+          Array.from({ length: cheia ? 7 : 5 }).map((_, i) => (
+            // Centro fora do quadro: o arco que não fecha é o que sugere que a
+            // coleção continua além da tela vazia.
+            <circle
+              key={i}
+              cx={64 + (h % 40)}
+              cy={214}
+              r={54 + i * 44}
+              fill="none"
+              stroke={tom(Math.max(6, 34 - i * 5))}
+              strokeWidth={6 + ((h >> (i + 1)) % 5) * 3}
+            />
+          ))}
+
+        {familia === 1 &&
+          Array.from({ length: cheia ? 9 : 7 }).flatMap((_, r) =>
+            Array.from({ length: 15 }).map((_, c) => {
+              const destaque = (r * 15 + c + h) % 13 === 0;
+              return (
+                <circle
+                  key={`${r}-${c}`}
+                  cx={16 + c * 26}
+                  cy={18 + r * 24}
+                  r={destaque ? 7 : 3.5}
+                  fill={tom(destaque ? 60 : 22)}
+                />
+              );
+            }),
+          )}
+
+        {familia === 2 && (
+          <g transform={`rotate(${giro} 200 100)`}>
+            {Array.from({ length: cheia ? 8 : 6 }).map((_, i) => (
+              <rect
+                key={i}
+                x={-40 + i * 74}
+                y={-80}
+                width={16 + ((h >> (i * 2)) % 5) * 11}
+                height={360}
+                fill={tom(12 + (i % 3) * 13)}
+              />
+            ))}
+          </g>
+        )}
+      </svg>
     </div>
   );
 }

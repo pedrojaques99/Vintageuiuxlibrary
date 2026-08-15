@@ -46,6 +46,30 @@ import { cn } from "@/lib/utils";
  *
  * Quem pediu menos movimento recebe a linha inteira preenchida e todos os nós
  * no estado final: o conteúdo é o mesmo, sem percurso.
+ *
+ * ── Por que o estado deixou de ser uma palavra ────────────────────────────
+ *
+ * Antes, o degrau atual se anunciava com a etiqueta "agora" ao lado da data:
+ * caixa alta, mono, tracking largo — a terceira etiqueta em caixa alta da mesma
+ * linha, contando com a data e com o que o consumidor põe no corpo. É esse
+ * empilhamento de etiqueta que dá a cara de gerado por IA: tudo vira rótulo e
+ * nada vira desenho. E era etiqueta redundante, porque o nó ao lado já estava
+ * dizendo a mesma coisa.
+ *
+ * O estado agora é ANATOMIA, não texto:
+ *
+ * · **feito** — nó cheio, conteúdo em peso normal. Já passou, não pede atenção.
+ * · **agora** — o marco ganha superfície: cartão com fundo, borda e um fio da
+ *   marca colado na esquerda, encostando no trilho. É o único degrau com caixa
+ *   na coluna inteira, então o olho acha em um quadro, sem ler nada.
+ * · **a seguir** — nó vazado e título em cinza de apoio. Está lá, ainda não é
+ *   agora. O recuo NÃO é por opacidade: opacidade em cima de `--muted-foreground`
+ *   derruba o contraste do texto abaixo do piso de legibilidade, e o degrau que
+ *   ainda não chegou é justamente o que a pessoa está tentando ler.
+ *
+ * A palavra continua existindo pra quem não vê a tela, em `sr-only`: leitor de
+ * tela não enxerga fio nem fundo, e "onde eu estou" é a pergunta que a peça
+ * existe pra responder. Texto invisível não é etiqueta — é a legenda do desenho.
  */
 
 export interface TimelineEntry {
@@ -135,7 +159,17 @@ export function Timeline({
     setAlcancados(fracoes.filter((f) => f <= p).length);
   });
 
-  const total = semMovimento ? data.length : alcancados;
+  /*
+   * Piso de um: linha do tempo sem degrau atual não é linha do tempo.
+   *
+   * Com `alcancados` em zero — antes de a peça entrar na faixa de rolagem que a
+   * preenche — TODOS os nós caíam em "a seguir": doze pontos vazios e doze
+   * títulos apagados, uma lista morta. Pior, `i === total - 1` virava `i === -1`
+   * e nem o "agora" existia, então a peça não dizia nada em nenhum dos seus
+   * estados. O primeiro marco é o presente por definição; o traço continua em
+   * zero e cresce com a rolagem, que é o que ele tem a dizer.
+   */
+  const total = semMovimento ? data.length : Math.max(1, alcancados);
 
   if (!data.length) {
     return (
@@ -213,7 +247,7 @@ export function Timeline({
               ref={(el) => {
                 nosRef.current[i] = el;
               }}
-              className={cn("relative min-w-0", i > 0 && "mt-8")}
+              className={cn("relative min-w-0", i > 0 && "mt-5")}
             >
               {/*
                * O nó carrega o estado, e ele muda por `background` e `box-shadow`
@@ -231,7 +265,7 @@ export function Timeline({
                  * enfiado nela. Se mexer no `pl-` da lista, mexa aqui junto.
                  */
                 className={cn(
-                  "absolute -left-8 top-[0.3rem] block size-[7px] rounded-full",
+                  "absolute -left-8 top-[0.95rem] block size-[7px] rounded-full",
                   "transition-[background-color,box-shadow]",
                   "[transition-duration:var(--dur-base,200ms)]",
                   "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
@@ -248,35 +282,56 @@ export function Timeline({
                 }}
               />
 
-              <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                <span className="font-mono text-[length:var(--text-micro,0.625rem)] uppercase tracking-[0.14em] text-muted-foreground">
-                  {item.meta ?? `Etapa ${String(i + 1).padStart(2, "0")}`}
-                </span>
-                {/*
-                 * O qualificador só aparece no degrau em que a pessoa está. Nos
-                 * outros ele seria ruído repetido N vezes — e "feito" em doze
-                 * linhas seguidas para de significar feito.
-                 */}
-                {estado === ESTADO.agora && (
-                  <span
-                    className="font-mono text-[length:var(--text-micro,0.625rem)] uppercase tracking-[0.14em]"
-                    style={{ color: "var(--brand, var(--foreground))" }}
-                  >
-                    · {ESTADO.agora}
-                  </span>
-                )}
-              </div>
-
-              <h3
+              {/*
+               * O cartão do marco. A caixa existe em TODOS os degraus (mesmo
+               * recuo, mesma borda transparente) e só a pintura muda — se ela
+               * nascesse junto com o estado, o texto pularia 1rem pro lado toda
+               * vez que a rolagem trocasse o degrau atual.
+               */}
+              <div
                 className={cn(
-                  "mt-0.5 text-[length:var(--text-destaque,0.9375rem)] font-semibold tracking-tight",
-                  aceso ? "text-foreground" : "text-muted-foreground",
+                  "relative min-w-0 rounded-[var(--r-surface,0.875rem)] border px-3.5 py-2.5",
+                  "transition-[background-color,border-color]",
+                  "[transition-duration:var(--dur-base,200ms)]",
+                  "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+                  estado === ESTADO.agora ? "border-border bg-muted/40" : "border-transparent",
                 )}
               >
-                {item.title}
-              </h3>
+                {/* O fio da marca é o sinal do degrau atual — forma, não palavra.
+                    Encosta no trilho e é a única aresta pintada da coluna. */}
+                {estado === ESTADO.agora && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-y-2 left-0 w-[2px] rounded-full"
+                    style={{ background: "var(--brand, var(--foreground))" }}
+                  />
+                )}
 
-              <div className="mt-1.5 min-w-0">{item.content}</div>
+                <div className="flex min-w-0 items-baseline gap-2">
+                  {/* Data em mono tabular e caixa do consumidor: caixa alta com
+                      tracking largo aqui era a terceira etiqueta gritada da
+                      mesma linha. Mono e tabular já dizem "isto é um dado". */}
+                  <span className="font-mono text-[length:var(--text-micro,0.625rem)] tabular-nums text-muted-foreground">
+                    {item.meta ?? `Etapa ${String(i + 1).padStart(2, "0")}`}
+                  </span>
+                  {/* Só pra leitor de tela: fio e fundo não são anunciados. */}
+                  {estado === ESTADO.agora && <span className="sr-only">{ESTADO.agora}</span>}
+                </div>
+
+                <h3
+                  className={cn(
+                    "mt-0.5 text-[length:var(--text-destaque,0.9375rem)] tracking-tight",
+                    // O peso também é estado: o degrau atual é o único em
+                    // semibold, então a coluna tem um ponto de entrada só.
+                    estado === ESTADO.agora ? "font-semibold" : "font-medium",
+                    aceso ? "text-foreground" : "text-muted-foreground",
+                  )}
+                >
+                  {item.title}
+                </h3>
+
+                <div className="mt-1 min-w-0">{item.content}</div>
+              </div>
             </li>
           );
         })}

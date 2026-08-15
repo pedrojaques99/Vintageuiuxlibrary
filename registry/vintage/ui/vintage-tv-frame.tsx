@@ -2,6 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import {
+  VintageOscilloscope,
+  type VintageScopeMode,
+} from "@/components/ui/vintage-oscilloscope";
 
 /**
  * VintageTvFrame — o chassi de tubo, e o motivo de ele ser proporcional.
@@ -36,6 +40,19 @@ interface VintageTvFrameProps {
   showScanlines?: boolean;
   showTimecode?: string;
   signalActive?: boolean;
+  /**
+   * O programa que entra quando não há `children`.
+   *
+   * A tela vazia dizia "NO SIGNAL" e ficava lá, parada — uma moldura de TV cuja
+   * única função é emoldurar não prova nada. Agora o padrão é o tubo tocando um
+   * dos visualizadores do `vintage-oscilloscope`. `null` traz de volta o cartão
+   * de sem-sinal, pra quem quer o objeto desligado de propósito.
+   */
+  program?: VintageScopeMode | null;
+  /** Fonte ao vivo pro programa. Sem ela o visualizador gera o próprio sinal. */
+  programAnalyser?: AnalyserNode | null;
+  /** Relógio do programa. `false` congela — use com o card fora da tela. */
+  programActive?: boolean;
   className?: string;
 }
 
@@ -135,6 +152,9 @@ export function VintageTvFrame({
   showScanlines = true,
   showTimecode,
   signalActive,
+  program = "scope",
+  programAnalyser,
+  programActive = true,
   className,
 }: VintageTvFrameProps) {
   const [internalOn, setInternalOn] = useState(true);
@@ -143,7 +163,9 @@ export function VintageTvFrame({
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const isOn = controlledOn !== undefined ? controlledOn : internalOn;
-  const hasSignal = signalActive ?? !!children;
+  // O LED de sinal acende com o programa interno também: com ele aceso e o
+  // visualizador rodando, o chassi para de mentir sobre o próprio estado.
+  const hasSignal = signalActive ?? (!!children || !!program);
 
   useEffect(() => {
     injectKeyframes();
@@ -300,17 +322,30 @@ export function VintageTvFrame({
                 {/* Children content */}
                 {isOn && children}
 
-                {/* No-signal static when on but no content */}
-                {isOn && !children && (
+                {/* Programa padrão: o tubo tocando, e não um recado dizendo
+                    que não toca. `chrome={false}` porque a moldura, o vinheta
+                    e as scanlines já são da TV — dois chassis aninhados leem
+                    como componente encaixado errado. */}
+                {isOn && !children && program && (
+                  <VintageOscilloscope
+                    fill
+                    chrome={false}
+                    mode={program}
+                    analyser={programAnalyser}
+                    active={programActive}
+                    color="var(--vintage-meter-green)"
+                  />
+                )}
+
+                {/* Sem-sinal explícito: só quando o dono pede `program={null}`. */}
+                {isOn && !children && !program && (
                   <div
                     style={{
                       position: "absolute",
                       inset: 0,
                       display: "flex",
-                      flexDirection: "column",
                       alignItems: "center",
                       justifyContent: "center",
-                      gap: 8,
                     }}
                   >
                     <span
@@ -320,7 +355,9 @@ export function VintageTvFrame({
                         fontSize: 11,
                         fontWeight: 700,
                         letterSpacing: "0.15em",
-                        color: "rgba(255,255,255,0.15)",
+                        // Era `rgba(255,255,255,0.15)` sobre tubo escuro: 1,2:1,
+                        // texto que só existe pra quem já sabe que está lá.
+                        color: "rgba(255,255,255,0.45)",
                         textTransform: "uppercase",
                       }}
                     >

@@ -35,6 +35,16 @@ import { cn } from "@/lib/utils";
  * exatamente no ângulo do vizinho: repetir o mesmo em todos devolve o ar de
  * grade que a inclinação foi corrigir.
  *
+ * **E ela é `tilt`, opcional, desligada por padrão.** O tombo só significa
+ * alguma coisa quando existe estante: três ou mais objetos lado a lado, com
+ * folga entre eles. Um card sozinho numa coluna, ou dois numa grade apertada,
+ * ficam apenas tortos — e torto sem estante lê como defeito de CSS, não como
+ * objeto apoiado. Pior: o giro come largura útil (a 7° um card de 190px pede
+ * ~24px a mais de caixa), então onde já estava apertado ele aperta de novo.
+ * Padrão a prumo, tombo por escolha de quem monta a prateleira. O hover
+ * continua subindo o objeto nos dois casos — o gesto de pegar não depende do
+ * tombo.
+ *
  * ── 3. O gesto de pegar ────────────────────────────────────────────────────
  *
  * No hover ele **endireita e sobe**. Não é "um card que reage": é o gesto de
@@ -91,8 +101,16 @@ export interface SpineCardProps extends Omit<React.HTMLAttributes<HTMLElement>, 
   /** A ação, à direita do título na mesma linha de base. Uma, não três. */
   action?: React.ReactNode;
   href?: string;
-  /** Grau do tombo. Passe o índice do item e ele alterna sozinho. */
+  /** Grau do tombo. Passe o índice do item e ele alterna sozinho. Só vale com `tilt`. */
   index?: number;
+  /**
+   * Liga o tombo. **Desligado por padrão** — ver a nota 2 do cabeçalho.
+   *
+   * Fica a prumo e continua subindo no hover, que é o gesto de pegar. Ligue
+   * numa estante montada de propósito, onde três ou mais objetos lado a lado
+   * fazem a inclinação ler como prateleira em vez de card torto.
+   */
+  tilt?: boolean;
   /** Desliga o duotone quando a arte já nasce na cor certa. */
   fullColor?: boolean;
 }
@@ -105,6 +123,7 @@ export function SpineCard({
   action,
   href,
   index = 0,
+  tilt = false,
   fullColor = false,
   className,
   ...props
@@ -119,7 +138,7 @@ export function SpineCard({
       // lê é uma utilitária. Se o ângulo viesse direto em `--tilt`, o estilo
       // inline venceria o `:hover` sempre — inline ganha de qualquer folha — e o
       // card nunca endireitaria.
-      style={{ ["--tilt-base" as string]: TOMBOS[index % TOMBOS.length] }}
+      style={{ ["--tilt-base" as string]: tilt ? TOMBOS[index % TOMBOS.length] : "0deg" }}
       className={cn(
         "spine-card group @container relative flex w-full min-w-0 flex-col",
         "border border-border bg-card text-inherit no-underline",

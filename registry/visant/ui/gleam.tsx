@@ -67,6 +67,20 @@ export interface GleamProps extends React.HTMLAttributes<HTMLDivElement> {
   tilt?: number;
   /** Força da luz, 0→1. */
   glow?: number;
+  /**
+   * Cor da luz e da borda acesa. Qualquer cor CSS; o padrão é a marca.
+   *
+   * Existe para o caso em que uma superfície precisa acender numa cor que NÃO é
+   * a da marca — o card de erro, o de destaque sazonal, a grade em que cada
+   * categoria tem a sua tinta. Sem isto a única saída era redefinir `--brand`
+   * num ancestral, o que repinta também o conteúdo do card (botão, pastilha,
+   * ícone), e aí "mudar a cor da luz" vira "trocar a marca dentro desse pedaço
+   * da página".
+   *
+   * A troca é escrita nas DUAS camadas de luz, e só nelas: o `--brand` local
+   * morre no `<span>` do brilho e não desce para os filhos.
+   */
+  tint?: string;
   /** Desliga o giro e mantém luz e borda. Para card dentro de grade densa. */
   flat?: boolean;
   /** Elemento raiz. `a` quando o card inteiro leva a algum lugar. */
@@ -76,6 +90,7 @@ export interface GleamProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Gleam({
   tilt = 5,
   glow = 1,
+  tint,
   flat = false,
   as: Tag = "div",
   className,
@@ -146,11 +161,15 @@ export function Gleam({
   // assinatura ilegível que isso produz na ficha do componente.
   const Root = Tag as React.ElementType;
 
+  // Redefinir `--brand` NA camada, não no card: o CSS do brilho já lê `--brand`,
+  // então a troca é de uma propriedade só, e ela não vaza para o conteúdo.
+  const cor = tint ? ({ "--brand": tint } as React.CSSProperties) : undefined;
+
   return (
     <div className="gleam-stage" style={{ "--glow": glow } as React.CSSProperties}>
       <Root ref={ref} className={cn("gleam", className)} style={style} {...props}>
-        <span aria-hidden="true" className="gleam-light" />
-        <span aria-hidden="true" className="gleam-edge" />
+        <span aria-hidden="true" className="gleam-light" style={cor} />
+        <span aria-hidden="true" className="gleam-edge" style={cor} />
         {children}
       </Root>
     </div>

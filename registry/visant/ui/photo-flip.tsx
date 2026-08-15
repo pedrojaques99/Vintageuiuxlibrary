@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import gsap from "gsap";
 import { Flip } from "gsap/Flip";
 
@@ -79,6 +79,17 @@ import { cn } from "@/lib/utils";
  *    abrir e fechar não re-renderiza um único tile. É também por isso que a
  *    guarda de reentrância vive em `ref`, e não em estado — estado dentro do
  *    `onClick` memoizado envelheceria na primeira abertura.
+ * 10. **FLIP mede o destino no mesmo quadro; o React só pinta no seguinte.**
+ *    Este foi o defeito reportado como "bugado", e ele é invisível na leitura
+ *    do código: `setAberta(id)` é agendado, não aplicado — dentro de um handler
+ *    o React agrupa e pinta depois. Só que a linha seguinte é o `Flip.from`, e
+ *    nela o overlay ainda está `hidden`, isto é, `display: none`. O destino
+ *    media **0 × 0**, e o GSAP escrevia `transform: scale(0, 0)` na foto:
+ *    medido na vitrine, exatamente esse valor. A foto encolhia até sumir
+ *    durante 0,55s e só então aparecia em tela cheia, de um quadro pro outro —
+ *    ou seja, a peça inteira, que é a PASSAGEM, não acontecia. `flushSync`
+ *    obriga o React a pintar o overlay antes da medição. Vale para qualquer
+ *    FLIP cujo destino nasce no mesmo gesto que o dispara.
  */
 
 gsap.registerPlugin(Flip);
@@ -140,7 +151,10 @@ export function PhotoFlip({
     const estado = Flip.getState(no);
     palco.appendChild(no);
     abertaRef.current = id;
-    setAberta(id);
+    // `flushSync` e não `setAberta` seco: ver armadilha 10. O Flip mede o
+    // destino na linha seguinte, e o destino ainda está `hidden` até o React
+    // pintar este estado.
+    flushSync(() => setAberta(id));
 
     const terminar = () => {
       viajando.current = false;

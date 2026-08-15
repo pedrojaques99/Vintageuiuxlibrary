@@ -40,17 +40,35 @@ export function GlitchChars({
       typeof window !== "undefined" && window.matchMedia
         ? window.matchMedia("(prefers-reduced-motion: reduce)")
         : null;
-    if (media?.matches) return;
 
-    const id = setInterval(() => {
-      setText(
-        Array.from(
-          { length },
-          () => chars[Math.floor(Math.random() * chars.length)],
-        ).join(""),
-      );
-    }, intervalMs);
-    return () => clearInterval(id);
+    let id: ReturnType<typeof setInterval> | null = null;
+
+    // A preferência é reavaliada por evento, não só na montagem: quem liga
+    // "reduzir movimento" no meio de uma espera longa (é justamente aí que se
+    // liga) ficava com o ruído correndo até trocar de página.
+    const aplicar = () => {
+      if (id) clearInterval(id);
+      id = null;
+      if (media?.matches) {
+        setText(chars.slice(0, length));
+        return;
+      }
+      id = setInterval(() => {
+        setText(
+          Array.from(
+            { length },
+            () => chars[Math.floor(Math.random() * chars.length)],
+          ).join(""),
+        );
+      }, intervalMs);
+    };
+
+    aplicar();
+    media?.addEventListener?.("change", aplicar);
+    return () => {
+      if (id) clearInterval(id);
+      media?.removeEventListener?.("change", aplicar);
+    };
   }, [chars, length, intervalMs]);
 
   return (

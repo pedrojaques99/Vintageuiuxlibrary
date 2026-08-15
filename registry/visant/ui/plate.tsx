@@ -40,6 +40,24 @@ import { cn } from "@/lib/utils";
  * `badge` existe porque a etiqueta (esgotado, novo, -30%) sempre acaba sendo
  * escrita por fora com `absolute` e um `z-index` chutado por quem consome. O
  * canto é território da placa: ela já tem `isolate` e `overflow-hidden`.
+ *
+ * ── E faltava a placa ser uma placa ────────────────────────────────────────
+ *
+ * Duas correções que só aparecem quando a peça é usada de verdade:
+ *
+ * 4. **No tema escuro o multiply comia o produto.** A placa pintava `--muted`,
+ *    que é escuro no escuro. `multiply` sobre fundo escuro escurece TUDO: o
+ *    branco do arquivo vira o cinza da placa e o produto some junto. Ou seja, a
+ *    peça que existe pra resolver recorte sobre branco só funcionava em metade
+ *    dos temas. `surface="photo"` pinta a ilha clara que o multiply exige, nos
+ *    dois temas, por `--plate-photo` — quem instala aponta o token pro papel da
+ *    marca e a página inteira acompanha. Segue desligado por padrão: a placa
+ *    já publicada não pode trocar de cor sozinha.
+ * 5. **O chão era estático.** Sombra de contato que não responde ao ponteiro
+ *    denuncia que é desenho, não apoio. No hover do card ela espalha e clareia
+ *    junto com o zoom da foto — o produto levanta um dedo da superfície. É o
+ *    mesmo gesto do zoom (nada muda de tamanho na página) e ele para inteiro
+ *    em `prefers-reduced-motion`.
  */
 
 export interface PlateProps extends React.HTMLAttributes<HTMLElement> {
@@ -71,6 +89,15 @@ export interface PlateProps extends React.HTMLAttributes<HTMLElement> {
   ground?: boolean;
   /** Etiqueta no canto superior esquerdo: "novo", "esgotado", "-30%". */
   badge?: React.ReactNode;
+  /**
+   * A superfície da placa.
+   *
+   * `"muted"` (padrão) segue o tema, e serve pra placa que é só moldura.
+   * `"photo"` é a ilha clara nos dois temas — condição de existência do
+   * `multiply`, que precisa de fundo claro pra devolver o produto. Redefina
+   * `--plate-photo` pra casar com o papel da marca.
+   */
+  surface?: "muted" | "photo";
 }
 
 export function Plate({
@@ -82,6 +109,7 @@ export function Plate({
   blend = "multiply",
   ground = false,
   badge,
+  surface = "muted",
   className,
   style,
   ...props
@@ -89,7 +117,8 @@ export function Plate({
   return (
     <Tag
       className={cn(
-        "relative block overflow-hidden bg-[var(--muted)] [isolation:isolate]",
+        "relative block overflow-hidden [isolation:isolate]",
+        surface === "muted" && "bg-[var(--muted)]",
         // A foto é filha direta; o blend e o zoom vivem aqui para o consumidor
         // só precisar passar um <img> ou um next/image.
         "[&_img]:relative [&_img]:z-[1] [&_img]:block [&_img]:size-full [&_img]:object-contain",
@@ -102,7 +131,19 @@ export function Plate({
         zoomOnGroupHover && "[.group:hover_&_img]:scale-[1.045]",
         className,
       )}
-      style={{ aspectRatio: ratio, padding: `${inset}px`, ...style }}
+      style={{
+        aspectRatio: ratio,
+        padding: `${inset}px`,
+        /* A ilha clara vai em `style`, e não em classe: o fallback é uma função
+           de cor com vírgulas dentro de um `var()`, o tipo de valor arbitrário
+           que o Tailwind às vezes recusa em silêncio — e recusar em silêncio,
+           aqui, é a placa voltando a comer o produto no tema escuro. Claro de
+           propósito nos dois temas: é a condição do `multiply`, não um gosto. */
+        ...(surface === "photo"
+          ? { background: "var(--plate-photo, oklch(0.97 0 0))" }
+          : null),
+        ...style,
+      }}
       {...props}
     >
       {ground && (
@@ -117,7 +158,16 @@ export function Plate({
          */
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[22%]"
+          /* No hover do card a elipse espalha e afina: é o produto levantando
+             um dedo da superfície, o mesmo instante em que a foto dá o zoom.
+             Só `transform` e `opacity` animam — as duas propriedades que o
+             compositor resolve sem relayout. */
+          className={cn(
+            "pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[22%] origin-bottom",
+            "transition-[transform,opacity] [transition-duration:var(--dur-base,200ms)] ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+            "[.group:hover_&]:scale-x-[1.14] [.group:hover_&]:opacity-70",
+            "motion-reduce:transition-none motion-reduce:[.group:hover_&]:scale-x-100 motion-reduce:[.group:hover_&]:opacity-100",
+          )}
           style={{
             background:
               "radial-gradient(ellipse 46% 52% at 50% 100%, color-mix(in oklch, var(--foreground) 22%, transparent), transparent 70%)",

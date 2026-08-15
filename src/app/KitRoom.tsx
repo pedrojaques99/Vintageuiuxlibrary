@@ -110,7 +110,11 @@ function Tira({
           <span>zero dependência npm</span>
         )}
       </div>
-      <div className="mt-2.5 flex flex-wrap gap-1.5">
+      {/* Âncora de teste, como o `data-card-index` da vitrine: a suíte precisa
+          contar o que a tira REALMENTE lista pra confrontar com o número que o
+          cabeçalho anuncia. Sem ela, o teste teria de contar por classe do
+          Tailwind e quebraria no primeiro ajuste de espaçamento. */}
+      <div data-tira-pecas className="mt-2.5 flex flex-wrap gap-1.5">
         {pecas.map((p) => {
           const motivo = kit.ausentes?.[p.name];
           return (

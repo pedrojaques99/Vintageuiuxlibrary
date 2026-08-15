@@ -27,7 +27,7 @@
  */
 
 import * as React from "react";
-import { Expand, List, Rows3, Search, SlidersHorizontal, X } from "lucide-react";
+import { Expand, LayoutGrid, List, Search, SlidersHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useBrandTheme } from "@/lib/brand-theme";
 import { Chip } from "../../registry/visant/ui/chip";
@@ -36,6 +36,7 @@ import {
   CATALOG,
   FAMILIES,
   TYPE_LABEL,
+  familyLabel,
   fold,
   matches,
   previewOf,
@@ -47,7 +48,16 @@ import { REGISTRY_PUBLIC_LABEL, installCommand } from "./registry-meta";
 import { CopyCommand } from "./copy-command";
 import { DepBadges, DepLogo } from "./dep-badges";
 import { SEM_DEPS, allDeps, matchesDep } from "./deps";
-import { FitStage, useLazyDemo } from "./stage";
+import { FitStage, useElementWidth, useLazyDemo } from "./stage";
+import {
+  GRID_GAP,
+  GRID_ROW,
+  alturaEmDegraus,
+  colsIn,
+  colsWanted,
+  useFundoEscuro,
+  useRowSpan,
+} from "./mosaic";
 import { WireframeToggle } from "./media";
 import { ComponentFocus } from "./ComponentFocus";
 import { BugButton } from "./bug-report";
@@ -57,7 +67,7 @@ type FamilyFilter = Family | "todos";
 type TipoFilter = CatalogItem["type"] | null;
 
 const MODES = [
-  { value: "vitrine" as const, icon: Rows3, ariaLabel: "Ver uma peça por linha" },
+  { value: "vitrine" as const, icon: LayoutGrid, ariaLabel: "Ver em mosaico, cada peça no tamanho dela" },
   { value: "lista" as const, icon: List, ariaLabel: "Ver em lista" },
 ];
 
@@ -80,6 +90,122 @@ const MODES = [
  */
 const TEM_INTERFACE = (i: CatalogItem) => Boolean(i.demo);
 
+/**
+ * A capa de uma categoria, no índice.
+ *
+ * Três miniaturas empilhadas, o nome, a contagem — e **nenhuma demo viva**. É a
+ * diferença entre uma home que abre instantânea e uma que monta 81 componentes
+ * antes da primeira leitura.
+ *
+ * As miniaturas saem de `public/shots/`, geradas offline (`npm run build:shots`)
+ * a partir da mesma rota `?solo=1` que o iframe de foco usa — mesma peça, mesmo
+ * CSS, sem chance de a capa mentir sobre o que o `add` entrega. É o caminho que
+ * o shadcn usa no fallback mobile dos blocks.
+ *
+ * Se o arquivo ainda não existe, a capa cai no nome da peça em mono: degradação,
+ * não erro. Uma library que quebra a home porque faltou rodar um script é uma
+ * library que ninguém publica na sexta.
+ */
+function CapaDeCategoria({
+  familia,
+  itens,
+  onAbrir,
+}: {
+  familia: Family;
+  itens: CatalogItem[];
+  onAbrir: () => void;
+}) {
+  // As três primeiras COM demo: peça sem superfície visual não ilustra nada.
+  const amostra = itens.filter(TEM_INTERFACE).slice(0, 3);
+  const escuro = useFundoEscuro();
+  const tom = escuro ? "escuro" : "claro";
+  return (
+    <button
+      type="button"
+      onClick={onAbrir}
+      className={cn(
+        "group flex flex-col overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card text-left outline-none",
+        "transition-[border-color,box-shadow] [transition-duration:var(--dur-fast,160ms)] [transition-timing-function:var(--ease-out)]",
+        "hover:border-[var(--brand)] hover:[box-shadow:var(--e-raised)] focus-visible:border-[var(--brand)]",
+      )}
+    >
+      {/*
+        Altura fixa na tira, não proporção por miniatura.
+        Com `aspect-ratio` em cada figura, a categoria que só tem UMA peça com
+        demo (`marca`, com três itens e uma superfície) ganhava uma miniatura
+        larga e altíssima, e a capa virava um retângulo oco do dobro da altura
+        das vizinhas. A tira tem a altura de uma tira; quantas peças cabem nela
+        é outro assunto.
+      */}
+      <div className="flex h-[104px] gap-1.5 bg-muted/40 p-3">
+        {amostra.map((i) => (
+          <figure
+            key={i.name}
+            className="relative flex h-full min-w-0 flex-1 items-center justify-center overflow-hidden rounded-[var(--r-control,0.5rem)] border border-border bg-background"
+          >
+            {/*
+              UMA imagem, escolhida pela luminância do fundo — não um par
+              `dark:hidden`/`dark:block`. Ver `useFundoEscuro`: marca de tema
+              escuro não liga a classe `.dark`, e o par mostrava a foto clara
+              sobre papel preto.
+
+              `object-contain`, depois de a captura passar a recortar no
+              conteúdo (`caixaDaPeca`, em `capture-registry.mjs`).
+
+              A ordem importa e foi aprendida na tela: com as fotos antigas, de
+              margem enorme, `contain` mostrava um selo no meio do nada e `cover`
+              era melhor. Com o recorte justo, `cover` passou a CORTAR PALAVRA
+              NO MEIO — "mpanha Verão 26" — e é isso que lê como defeito, não
+              como miniatura. Peça inteira e pequena ganha de metade de peça em
+              tamanho grande.
+            */}
+            <img
+              src={`/shots/${i.name}-${tom}.webp`}
+              alt=""
+              /*
+               * `eager`, e não `lazy`.
+               *
+               * São dezoito miniaturas de ~40KB, e as seis capas cabem na
+               * primeira tela em qualquer desktop — `lazy` aqui só garante que
+               * a pessoa veja o índice VAZIO no primeiro quadro e as fotos
+               * aparecerem depois. Adiar carga que já está na dobra é o uso
+               * errado do atributo: ele existe pro que está longe.
+               */
+              loading="eager"
+              decoding="async"
+              className="h-full w-full object-contain p-1"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+            {/*
+              Sem legenda sobre a foto.
+
+              A tira tem 104px e a miniatura já é pequena; um nome por cima dela
+              cobre justamente a peça, e o degradê que o nome precisa para ser
+              legível cobre mais ainda. Numa capa de categoria o nome de cada
+              peça não decide nada — quem decide é a categoria, e os nomes estão
+              todos a um clique de distância, ao lado da peça viva.
+
+              O `sr-only` fica: quem navega por leitor de tela precisa saber o
+              que a capa está ilustrando, e ali o texto não custa pixel nenhum.
+            */}
+            <figcaption className="sr-only">{i.name}</figcaption>
+          </figure>
+        ))}
+      </div>
+      <div className="flex items-baseline gap-2 px-4 py-3">
+        <span className="text-destaque font-medium group-hover:text-[var(--brand)]">
+          {familyLabel(familia)}
+        </span>
+        <span className="font-mono text-apoio tabular-nums text-muted-foreground">
+          {itens.length}
+        </span>
+      </div>
+    </button>
+  );
+}
+
 /*
  * Sem `uppercase tracking-wider`: o selo de tipo aparece uma vez por linha numa
  * lista de 65, e caixa-alta com tracking transforma a coluna inteira em
@@ -94,13 +220,19 @@ function TypeBadge({ type }: { type: CatalogItem["type"] }) {
 }
 
 /**
- * A placa da vitrine: uma peça por linha, e nada disputando a linha com ela.
+ * A placa da vitrine — no tamanho da peça, não no tamanho da página.
  *
- * A grade de quatro colunas tratava 52 itens como resultado de busca — três ou
- * quatro peças na mesma linha, cada uma escalada até caber numa coluna, e as de
- * `span` maior deixando buracos entre as vizinhas. Peça de biblioteca não é
- * resultado de busca: ou ela aparece no tamanho em que foi desenhada, ou não
- * dá para julgar se serve.
+ * Duas versões erradas vieram antes desta, e as duas pelo mesmo motivo:
+ *
+ * 1. **Grade de quatro colunas iguais.** Tratava 52 itens como resultado de
+ *    busca — board e knob na mesma caixa, cada um escalado até caber.
+ * 2. **Uma peça por linha, em faixa cheia.** Consertou o board e quebrou o
+ *    knob: a pastilha de 420px passou a desenhar 420px reais encostada na quina
+ *    de um card de 1350px. Quinze reports descreveram esse mesmo pixel.
+ *
+ * Agora a largura natural que o item declara decide quanto de grade ele ocupa
+ * (`mosaic.ts`), e a peça desenha centrada, em escala 1. O ladrilho é ladrilho,
+ * a faixa é faixa.
  *
  * Os dois botões ficam **sempre visíveis**, não no hover. Focar e copiar o
  * comando são as duas únicas coisas que se faz aqui; esconder as duas atrás de
@@ -111,22 +243,60 @@ const Showcase = React.memo(function Showcase({
   item,
   onOpen,
   index,
+  span,
+  colW,
 }: {
   item: CatalogItem;
   onOpen: () => void;
   index: number;
+  /** Colunas que este card ocupa, já limitado pelo que o viewport tem. */
+  span: number;
+  /** Largura de uma coluna, em px. 0 antes da primeira medição da grade. */
+  colW: number;
 }) {
   const Demo = item.demo!;
-  const { w, h } = previewOf(item);
+  const { w, h: declarado } = previewOf(item);
+  // O degrau do balde vira piso da altura: dois cards vizinhos começam a peça na
+  // mesma linha do olho, sem que peça alta perca altura. Ver `mosaic.ts`.
+  const h = alturaEmDegraus(w, declarado);
   const { ref, mounted, active } = useLazyDemo<HTMLElement>();
+
+  // O palpite de altura que segura a grade até o JS medir — ver `useRowSpan`.
+  // 48px é o `px-6` do palco; 88 é cabeçalho mais o respiro de baixo.
+  const cardW = colW ? colW * span + GRID_GAP * (span - 1) : w + 48;
+  const escala = Math.min(1, (cardW - 48) / w);
+  const [spanRef, rows] = useRowSpan<HTMLElement>(h * escala + 88);
+
+  const refs = React.useCallback(
+    (node: HTMLElement | null) => {
+      ref.current = node;
+      spanRef(node);
+    },
+    [ref, spanRef],
+  );
 
   return (
     <article
-      ref={ref}
+      /*
+       * `alignSelf: start` não é estética — é o que faz a medição funcionar.
+       *
+       * Item de grid nasce esticado até a área que recebeu. Esticado, o
+       * `ResizeObserver` do card mede a altura que a GRADE deu, não a que o
+       * conteúdo pede: o span nunca cresceria, e o card com `overflow-hidden`
+       * cortaria a demo — de volta ao defeito de origem, por outro caminho.
+       * Com `start`, a altura é a do conteúdo e a medição tem o que medir.
+       */
+      style={{ gridColumn: `span ${span}`, gridRow: `span ${rows}`, alignSelf: "start" }}
+      ref={refs}
       className={cn(
         // `group`: o botão de bug só aparece quando a mão (ou o teclado) chega
         // ao card — ver `bug-report.tsx`.
-        "group overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
+        // `@container`: no mosaico o card tem três larguras possíveis na MESMA
+        // janela — 450, 920 e 1392. Um `sm:` aqui pergunta o tamanho da janela e
+        // responde "cabe em linha" para os três, então o ladrilho de 450 recebia
+        // nome, descrição, comando e dois botões na mesma faixa e o texto
+        // atropelava o botão. Quem tem de ser perguntado é o card.
+        "@container group overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
         "transition-[border-color,box-shadow] [transition-duration:var(--dur-fast,160ms)] [transition-timing-function:var(--ease-out)]",
         "focus-within:border-[var(--brand)] hover:border-[var(--brand)]",
         // A placa levanta um degrau no hover. Sem mover nada: a peça viva lá
@@ -148,8 +318,8 @@ const Showcase = React.memo(function Showcase({
         que identifica (nome), o que situa em uma frase (descrição) e o que se
         faz (copiar, focar).
       */}
-      <header className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-4 sm:px-5">
-        <div className="flex min-w-0 flex-1 flex-col gap-x-3 sm:flex-row sm:items-baseline">
+      <header className="flex flex-col gap-2 px-4 py-3 @2xl:flex-row @2xl:items-baseline @2xl:gap-4 @2xl:px-5">
+        <div className="flex min-w-0 flex-1 flex-col gap-x-3 @2xl:flex-row @2xl:items-baseline">
           <button
             type="button"
             data-card-index={index}
@@ -166,7 +336,7 @@ const Showcase = React.memo(function Showcase({
           </p>
         </div>
 
-        <div className="flex items-center gap-2 sm:shrink-0">
+        <div className="flex items-center gap-2 @2xl:shrink-0">
           {/* `min-w-0` + `truncate` no código: o comando é longo e, sem isso, ele
               empurra o botão de foco para fora da tela em vez de encurtar. */}
           {/* Borda transparente em repouso: o comando precisa estar à mão, mas
@@ -175,7 +345,7 @@ const Showcase = React.memo(function Showcase({
           <CopyCommand
             variant="line"
             text={installCommand(item.name)}
-            className="min-w-0 flex-1 border-transparent bg-muted/60 hover:border-[var(--brand)] sm:w-[min(22rem,26vw)] sm:flex-none"
+            className="min-w-0 flex-1 border-transparent bg-muted/60 hover:border-[var(--brand)] @2xl:w-[min(22rem,26cqw)] @2xl:flex-none"
           />
           <button
             type="button"
@@ -209,8 +379,28 @@ const Showcase = React.memo(function Showcase({
         className="overflow-hidden px-4 pb-5 pt-1 sm:px-6 sm:pb-7"
         style={stageSurfaceOf(item)}
       >
-        <div className="mx-auto w-full" style={{ maxWidth: Math.max(w, 720) }}>
-          <FitStage w={w} h={h} minScale={0.42} active={active} label={item.name}>
+        {/* `maxWidth: w`, e não `max(w, 720)`: a caixa hospeda a peça, não a
+            página. Com o teto antigo o palco esticava até 720 e a demo de 420
+            ficava colada na esquerda dele — o "espremido/descentralizado" que
+            apareceu em quinze reports. Aqui a caixa tem a largura da peça e o
+            `mx-auto` a centraliza na coluna que a grade deu. */}
+        {/*
+          Sem piso de escala: aqui a peça SEMPRE cabe.
+
+          O piso de 0,42 existia para o texto de uma parede de depoimento não
+          virar 6px num celular. Ele funcionava enquanto a peça mais larga do
+          catálogo tinha 760px; com as cenas de faixa cheia (`line-reveal` a
+          1280, `step-cards` a 1180) ele passou a produzir o defeito que o card
+          promete não ter: a 390px a peça desenhava 537px e transbordava por
+          baixo do `overflow-hidden`, ou seja, sumia conteúdo sem aviso.
+
+          A regra do card, escrita acima, é "ou cabe, ou ENCOLHE até caber". O
+          preview de celular de uma cena de desktop é uma miniatura — e é honesto
+          que seja: quem precisa ler a peça abre o foco, que a desenha em tamanho
+          real e nos presets de viewport.
+        */}
+        <div className="mx-auto w-full" style={{ maxWidth: w }}>
+          <FitStage w={w} h={h} active={active} label={item.name}>
             {mounted ? <Demo /> : <div className="h-full w-full animate-pulse bg-muted/40" />}
           </FitStage>
         </div>
@@ -218,6 +408,28 @@ const Showcase = React.memo(function Showcase({
     </article>
   );
 });
+
+/**
+ * O ladrilho de quem não tem demo: lib, hook, tema.
+ *
+ * Ele mede a própria altura pelo mesmo motivo que o card mede: a linha densa
+ * tem 48px quando a descrição cabe numa linha e 120px quando o item carrega
+ * cinco dependências e uma frase comprida (o `data-table` é o caso). Com um
+ * `span` fixo, o segundo caso escorregava por baixo do vizinho de baixo — a
+ * grade não empilha, ela sobrepõe.
+ */
+function RowTile({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; index: number }) {
+  const [ref, rows] = useRowSpan<HTMLDivElement>(64);
+  return (
+    <div
+      ref={ref}
+      style={{ gridRow: `span ${rows}`, alignSelf: "start" }}
+      className="flex items-center rounded-[var(--r-surface,0.875rem)] border border-border bg-card px-2"
+    >
+      <Row item={item} index={index} onOpen={onOpen} />
+    </div>
+  );
+}
 
 function Row({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; index: number }) {
   return (
@@ -250,13 +462,31 @@ function Row({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; i
   );
 }
 
-export function Gallery({
-  focus,
-  onFocus,
-}: {
+/**
+ * O catálogo, em dois modos — e é a rota que decide qual.
+ *
+ * `familia = null` desenha o ÍNDICE: as seis capas de categoria, com contagem, e
+ * nenhuma demo montada. `familia = "motion"` desenha só aquela família, viva.
+ *
+ * A razão é medida, não gosto: com as 81 entradas numa página só, o documento
+ * fechava em 26.253px. Nenhuma library de referência faz isso — shadcn e Origin
+ * UI fatiam por categoria em rota estática, e o índice geral delas é estático.
+ * Ver `PLANO-VITRINE.md`.
+ *
+ * Quem chama é o `App.tsx` (a rota); quem desenha é este arquivo. Os dois lados
+ * do contrato foram publicados antes de qualquer um dos dois ser escrito, para
+ * as duas frentes poderem andar juntas sem editar o arquivo da outra.
+ */
+export interface GalleryProps {
   focus: string | null;
   onFocus: (name: string | null) => void;
-}) {
+  /** `null` = índice de categorias. Uma família = aquela fatia, com demo viva. */
+  familia?: Family | null;
+  /** O card de categoria navega por aqui. Ausente = a Gallery troca por estado. */
+  onFamilia?: (f: Family | null) => void;
+}
+
+export function Gallery({ focus, onFocus, familia = null, onFamilia }: GalleryProps) {
   const [q, setQ] = React.useState("");
   const [family, setFamily] = React.useState<FamilyFilter>("todos");
   /** `null` = não filtra por dependência. `SEM_DEPS` = só o que não puxa nada. */
@@ -275,13 +505,51 @@ export function Gallery({
    */
   const [abertos, setAbertos] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const listRef = React.useRef<HTMLDivElement>(null);
+  // `| null` explícito: a grade recebe um ref de callback (mede a largura) que
+  // também alimenta este aqui, e ref só é atribuível quando é mutável.
+  const listRef = React.useRef<HTMLDivElement | null>(null);
   const heroRef = React.useRef<HTMLElement>(null);
   const { brands } = useBrandTheme();
 
-  const pool = CATALOG;
+  /*
+   * A grade mede a si mesma, e não o viewport.
+   *
+   * Contar coluna por breakpoint dá certo até a página ganhar uma barra lateral
+   * ou o `shell` mudar de teto — aí o número chutado e o número real divergem, e
+   * a divergência aparece como card atravessando duas colunas e meia. Aqui a
+   * largura vem do próprio nó, então a conta não tem como envelhecer.
+   */
+  const [gridWidthRef, gridWidth] = useElementWidth<HTMLDivElement>();
+  const cols = colsIn(gridWidth);
+  const colW = gridWidth ? (gridWidth - (cols - 1) * GRID_GAP) / cols : 0;
+  const gridRefs = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      listRef.current = node;
+      gridWidthRef(node);
+    },
+    [gridWidthRef],
+  );
+
+  /*
+   * A rota manda na fatia; o filtro de família só existe DENTRO de uma fatia.
+   *
+   * Com `familia = null` a página não é uma lista com filtro — é o índice das
+   * seis categorias. Foi a medição que forçou isso: as 81 entradas juntas davam
+   * um documento de 26.253px, e nenhuma library de referência monta o catálogo
+   * inteiro numa página só (ver `PLANO-VITRINE.md`).
+   */
+  const pool = React.useMemo(
+    () => (familia ? CATALOG.filter((i) => i.family === familia) : CATALOG),
+    [familia],
+  );
+
+  /** Índice: nem fatia escolhida, nem busca digitada. */
+  const noIndice = !familia && !q.trim();
 
   const results = React.useMemo(() => {
+    // Busca que começa vazia — o truque do Origin UI. No índice, nada monta até
+    // a pessoa pedir; é o que mantém a home barata mesmo com 81 peças.
+    if (noIndice) return [];
     const needle = fold(q.trim());
     return pool.filter(
       (i) =>
@@ -290,7 +558,7 @@ export function Gallery({
         matchesDep(i.name, dep) &&
         matches(i, needle),
     );
-  }, [q, family, dep, tipo, pool]);
+  }, [q, family, dep, tipo, pool, noIndice]);
 
   /*
    * O filtro de dependência se monta do que EXISTE ali, com a contagem junto.
@@ -458,23 +726,45 @@ export function Gallery({
         cards[target]?.scrollIntoView({ block: "nearest" });
       };
 
-      // Uma peça por linha nos dois modos: percorrer é sempre para cima e para
-      // baixo, e não há mais coluna para ler do grid.
-      if (e.key === "ArrowRight" || e.key === "ArrowDown") move(1);
-      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") move(-1);
+      /*
+       * Esquerda/direita andam um card; cima/baixo andam uma fileira.
+       *
+       * "Uma fileira" no mosaico não é um número fixo — o card de faixa cheia
+       * come as três colunas sozinho. Andar pelo número de colunas é aproximação,
+       * e é a aproximação certa: quem usa seta espera sair do lugar de forma
+       * previsível, não aterrissar no vizinho geométrico exato. No modo lista o
+       * salto é sempre 1, porque lá é uma coluna só.
+       */
+      const fileira = mode === "vitrine" ? cols : 1;
+      if (e.key === "ArrowRight") move(1);
+      else if (e.key === "ArrowLeft") move(-1);
+      else if (e.key === "ArrowDown") move(fileira);
+      else if (e.key === "ArrowUp") move(-fileira);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [q, mode]);
+  }, [q, mode, cols]);
 
   return (
     <div className="shell pb-24">
       <section ref={heroRef} className="pt-10 pb-7 sm:pt-14 sm:pb-8">
+        {/* Dentro de uma fatia, a volta vem ANTES do título — é o primeiro alvo
+            que a mão procura, e escondê-la no rodapé transforma o botão de voltar
+            do browser na única saída. */}
+        {familia ? (
+          <button
+            type="button"
+            onClick={() => onFamilia?.(null)}
+            className="mb-3 inline-flex items-center gap-1.5 font-mono text-apoio text-muted-foreground outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline"
+          >
+            ← todas as categorias
+          </button>
+        ) : null}
         <h1
           className="text-[clamp(1.75rem,5vw,3.2rem)] font-semibold leading-[1.02] tracking-[-0.03em]"
           style={{ fontFamily: "var(--font-display, inherit)" }}
         >
-          A library da Visant
+          {familia ? familyLabel(familia) : "A library da Visant"}
         </h1>
         {/* Duas frases, e a segunda é a tese. A versão anterior tinha quatro e
             explicava também onde ficam as marcas reais — informação de conta,
@@ -483,7 +773,7 @@ export function Gallery({
           {/* Conta a lista que está na tela, e não um número escrito à mão que
               envelhece: o portão `npm run check:catalog` garante que esta lista
               e o registry.json não divergem. */}
-          {CATALOG.length} peças servidas por{" "}
+          {familia ? pool.length : CATALOG.length} peças servidas por{" "}
           <code className="font-mono text-corpo">{REGISTRY_PUBLIC_LABEL}</code>, em{" "}
           {/*
             O número de temas vem do índice do vault — o sync publica marca nova e
@@ -544,23 +834,42 @@ export function Gallery({
         {/* A ÚNICA linha permanente de filtro: a categoria. Rola na horizontal
             no celular em vez de virar quatro linhas. */}
         <div className="shell-bleed mt-2 flex gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
+          {/*
+            Dentro de uma fatia, o chip de categoria NAVEGA em vez de filtrar.
+            São a mesma pergunta — "quero ver outra categoria" — e ter as duas
+            respostas na mesma barra (um chip que filtra dentro da rota e uma
+            rota que faz o mesmo) é o tipo de duplicidade que faz a pessoa clicar
+            e não entender o que mudou. No índice a barra some: as capas já são
+            as categorias.
+          */}
+          {/*
+            Na fatia este chip é uma SAÍDA, não um filtro — e por isso ele perde
+            o número. Com a contagem, "Todos 81" ao lado de "Motion 22" numa
+            página que mostra 22 peças se lê como "81 aqui": o número certo, na
+            barra errada, mentindo. Todo outro número desta barra fala do que
+            está na tela; este falaria de outro lugar.
+          */}
           <Chip
-            pressed={family === "todos"}
+            pressed={familia ? false : family === "todos"}
             // A contagem do "Todos" também obedece aos eixos recolhidos — senão
             // ele anuncia 65 e entrega 5, que é o tipo de número que ensina a
             // pessoa a não confiar em nenhum outro na barra.
-            count={escopoFamilia.length}
-            onClick={() => setFamily("todos")}
+            count={familia ? undefined : escopoFamilia.length}
+            onClick={() => (familia ? onFamilia?.(null) : setFamily("todos"))}
             className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
           >
-            Todos
+            {familia ? "← todas" : "Todos"}
           </Chip>
-          {FAMILIES.filter((f) => countByFamily[f.key]).map((f) => (
+          {FAMILIES.filter((f) => (familia ? true : countByFamily[f.key])).map((f) => (
             <Chip
               key={f.key}
-              pressed={family === f.key}
-              count={countByFamily[f.key] ?? 0}
-              onClick={() => setFamily(f.key)}
+              pressed={familia ? familia === f.key : family === f.key}
+              count={
+                familia
+                  ? CATALOG.filter((i) => i.family === f.key).length
+                  : (countByFamily[f.key] ?? 0)
+              }
+              onClick={() => (familia ? onFamilia?.(f.key) : setFamily(f.key))}
               className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
             >
               {f.label}
@@ -650,34 +959,66 @@ export function Gallery({
         ) : null}
       </div>
 
-      {results.length ? (
+      {noIndice ? (
+        /*
+         * O índice: seis capas, nenhuma demo.
+         *
+         * Este bloco é a resposta aos 26.253px que a página tinha quando as 81
+         * peças viviam numa lista só. As capas são imagem estática gerada
+         * offline da MESMA rota `?solo=1` que o foco usa — o índice abre
+         * instantâneo e continua não podendo mentir sobre a peça.
+         */
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {FAMILIES.map((f) => {
+            const itens = CATALOG.filter((i) => i.family === f.key);
+            if (!itens.length) return null;
+            return (
+              <CapaDeCategoria
+                key={f.key}
+                familia={f.key}
+                itens={itens}
+                onAbrir={() => onFamilia?.(f.key)}
+              />
+            );
+          })}
+        </div>
+      ) : results.length ? (
         mode === "vitrine" ? (
           <div
-            ref={listRef}
+            ref={gridRefs}
             // `overflow-anchor: none`: o Chrome tenta manter na tela o elemento
             // "âncora" quando o conteúdo acima muda, e ao filtrar ele desfaz a
             // reposição logo depois de nós a fazermos — a página voltava para o
             // fim do documento novo. Aqui a âncora não ajuda: os itens de cima
             // não mudaram de tamanho, sumiram.
-            style={{ overflowAnchor: "none" }}
-            className="mt-6 flex flex-col gap-5"
+            style={{
+              overflowAnchor: "none",
+              display: "grid",
+              gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+              // Linhas minúsculas: é assim que cada card atravessa exatamente a
+              // altura que tem, e o mosaico fecha sem degrau.
+              gridAutoRows: `${GRID_ROW}px`,
+              gap: GRID_GAP,
+            }}
+            className="mt-6"
           >
-            {/* Peça com demo ganha palco; lib, hook e tema entram como LINHA na
-                mesma coluna. A diferença de peso é o que a aba "Sem interface"
-                tentava criar, e aqui ela sai de graça — sem eixo de filtro a
-                mais e sem esconder metade da library atrás de um clique. */}
+            {/* Peça com demo ganha palco no tamanho dela; lib, hook e tema
+                entram como LADRILHO de uma coluna. A diferença de peso é o que a
+                aba "Sem interface" tentava criar, e aqui ela sai de graça — sem
+                eixo de filtro a mais e sem esconder metade da library atrás de
+                um clique. */}
             {results.map((item, i) =>
               TEM_INTERFACE(item) ? (
                 <Showcase
                   key={item.name}
                   item={item}
                   index={i}
+                  span={Math.min(cols, colsWanted(previewOf(item).w))}
+                  colW={colW}
                   onOpen={() => onFocus(item.name)}
                 />
               ) : (
-                <div key={item.name} className="rounded-[var(--r-surface,0.875rem)] border border-border bg-card px-2">
-                  <Row item={item} index={i} onOpen={() => onFocus(item.name)} />
-                </div>
+                <RowTile key={item.name} item={item} index={i} onOpen={() => onFocus(item.name)} />
               ),
             )}
           </div>

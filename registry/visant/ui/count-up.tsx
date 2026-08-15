@@ -104,8 +104,28 @@ export function CountUp({
       return partes.pre + corpo + partes.pos;
     };
 
-    // Trava a largura AGORA, com o valor final ainda desenhado.
-    el.style.minWidth = `${Math.ceil(el.getBoundingClientRect().width)}px`;
+    /*
+     * Trava a largura AGORA, com o valor final ainda desenhado — mas a largura
+     * do TEXTO, não a da caixa.
+     *
+     * `getBoundingClientRect()` do elemento responde a largura do bloco, e num
+     * `display: block` isso é a coluna inteira. O número "1.291" numa coluna de
+     * 443px gravava `min-width: 443px` no estilo inline: a partir daí a peça
+     * tinha um piso de largura que não encolhia nunca. Numa página que muda de
+     * largura, o resultado é a coluna empurrando a página de lado no celular —
+     * defeito que só aparece DEPOIS de o layout mudar, então passa por todo
+     * teste que carrega a página já no tamanho final.
+     *
+     * Um `Range` sobre o conteúdo mede a tinta, que é o que a reserva quer:
+     * impedir o salto enquanto os dígitos trocam. E `max-width: 100%` fecha a
+     * porta de vez — reserva nenhuma pode valer mais que o espaço que existe.
+     */
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const tinta = range.getBoundingClientRect().width;
+    range.detach?.();
+    el.style.minWidth = `${Math.ceil(tinta || el.getBoundingClientRect().width)}px`;
+    el.style.maxWidth = "100%";
 
     let raf = 0;
     let timer = 0;

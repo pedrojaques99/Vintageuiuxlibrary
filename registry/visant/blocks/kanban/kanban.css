@@ -104,9 +104,24 @@
  * andando pro lado), não uma entrada nem uma saída.
  */
 .kanban-card {
-  transition-property: transform;
+  transition-property: transform, outline-color, background-color;
   transition-duration: var(--dur-base, 200ms);
   transition-timing-function: var(--ease-in-out, cubic-bezier(0.77, 0, 0.175, 1));
+
+  /*
+   * O contorno do slot existe SEMPRE, transparente — e é isso que faz a entrada
+   * e a saída do buraco serem suaves.
+   *
+   * `outline-style` não é animável: enquanto o repouso era `outline: none`, o
+   * tracejado do slot aparecia e sumia em um quadro, no meio de um gesto em que
+   * todo o resto desliza. Declarado aqui com cor transparente, só a COR muda de
+   * estado, e ela transiciona. `outline` não ocupa espaço, então o card parado
+   * continua com a mesma caixa de antes.
+   */
+  border-radius: var(--kanban-card-radius);
+  outline: 1.5px dashed transparent;
+  outline-offset: -1px;
+  background-color: transparent;
 }
 
 /*
@@ -125,10 +140,8 @@
  */
 .kanban-card.is-drop-slot,
 .kanban-card.is-landing {
-  border-radius: var(--kanban-card-radius);
-  outline: 1.5px dashed var(--kanban-drop-ring);
-  outline-offset: -1px;
-  background: var(--kanban-drop-bg);
+  outline-color: var(--kanban-drop-ring);
+  background-color: var(--kanban-drop-bg);
 }
 
 .kanban-card > * {
@@ -158,7 +171,10 @@
  */
 .kanban-card-overlay {
   cursor: grabbing;
-  border-radius: var(--kanban-card-radius);
+  /* Fallback no ponto de uso, e não herança: o overlay é portalizado no `body`
+     (ver a nota do bloco contenedor em Kanban.tsx), então ele não é descendente
+     do `.kanban-root` e não alcança nenhum `--kanban-*` declarado lá. */
+  border-radius: var(--kanban-card-radius, var(--t-card-radius, 0.75rem));
   /* A sombra é o que diz "este está no ar e os outros no papel". Sem ela o card
      que viaja tem o mesmo peso visual dos parados e o gesto parece um bug de
      render. Nada de `scale` aqui: o dnd-kit LÊ o transform computado deste nó
@@ -166,6 +182,39 @@
   box-shadow:
     0 1px 2px color-mix(in oklch, black 8%, transparent),
     0 12px 28px -6px color-mix(in oklch, black 22%, transparent);
+  /* A ENTRADA do gesto. O overlay nascia já com a sombra inteira: o card não era
+     "pego", ele aparecia no ar de um quadro pro outro, e o começo do arraste
+     ficava com a mesma dureza que o fim tinha antes de o pouso ser animado.
+     Agora a sombra CRESCE — o card sobe do papel em vez de já estar em cima.
+
+     Só `box-shadow` anima, e o motivo está no comentário acima: o dnd-kit lê o
+     transform computado DESTE nó pra calcular o pouso, então escala ou
+     deslocamento nossos entrariam na conta e errariam o alvo. */
+  animation: kanban-overlay-erguer var(--dur-fast, 160ms)
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+@keyframes kanban-overlay-erguer {
+  from {
+    box-shadow:
+      0 0 0 color-mix(in oklch, black 0%, transparent),
+      0 0 0 -6px color-mix(in oklch, black 0%, transparent);
+  }
+}
+
+/* Quem pediu menos movimento recebe o resultado, não o percurso — o pouso já é
+   zerado no JS (ver `readDropAnimation`), e aqui vai a metade CSS do mesmo
+   acordo, pra quem instalar o bloco num projeto sem o guard global da casa. */
+@media (prefers-reduced-motion: reduce) {
+  .kanban-card {
+    transition-duration: 0.001ms;
+  }
+  .kanban-card > * {
+    transition-duration: 0.001ms;
+  }
+  .kanban-card-overlay {
+    animation-duration: 0.001ms;
+  }
 }
 
 /* Card na seleção múltipla — anel no accent da marca (fallback neutro). O ring

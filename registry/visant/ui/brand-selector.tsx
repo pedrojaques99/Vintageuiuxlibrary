@@ -163,6 +163,19 @@ export function BrandSelector({ className, shortcut = "b" }: BrandSelectorProps)
             {brand ? `${brand.fonts.display} · v${brand.version ?? "?"}` : `${brands.length} no vault`}
           </span>
         </span>
+        {/*
+         * A paleta no gatilho, e não só dentro da lista.
+         *
+         * Fechado, o botão dizia "Kastrup · Geist" — nome e fonte, nenhuma cor.
+         * Só que a coisa que ele troca é justamente a COR do produto inteiro, e
+         * o único lugar onde ela aparecia era atrás do clique. Três amostras
+         * custam 30px e fazem o controle dizer o que ele é sem abrir nada.
+         */}
+        {brand && brand.palette.length > 0 && (
+          <span className="ml-0.5 hidden sm:block">
+            <Swatches brand={brand} max={3} />
+          </span>
+        )}
         {shortcut && (
           <kbd className="ml-1 hidden rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:block">
             ⌘{shortcut.toUpperCase()}

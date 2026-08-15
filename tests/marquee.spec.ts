@@ -14,19 +14,57 @@ import { test, expect, type Page } from "@playwright/test";
  * continuava andando — só ficava surda ao scroll. Nenhum erro, nenhum log.
  */
 
-/** A demo mostra as três faixas: 0 = boost, 1 = drive, 2 = a solta. */
-const xDoTrack = (page: Page, i = 0) =>
-  page.evaluate((n) => {
-    const t = document.querySelectorAll(".marquee-track")[n] as HTMLElement | undefined;
+/*
+ * A faixa é a do CARD do marquee — nunca a n-ésima da página.
+ *
+ * Este arquivo indexava `.marquee-track` global (`0 = boost, 1 = drive, 2 = a
+ * solta`) e o índice envelheceu duas vezes:
+ *
+ * 1. A demo passou a mostrar **uma faixa por vez**, com setas trocando o modo —
+ *    então índice 1 deixou de existir dentro do card.
+ * 2. Entrou o `logo-wall`, que compõe o mesmo marquee. O índice 1 virou a faixa
+ *    de logos, e os testes de `drive` passaram a medir uma peça que não é a que
+ *    eles descrevem. Era essa a causa do vermelho — não o componente.
+ *
+ * Agora o alvo é derivado do card, e o modo é escolhido pelo mesmo gesto que a
+ * pessoa faz: apertar a seta até o rótulo bater.
+ */
+const xDoTrack = (page: Page, _i = 0) =>
+  page.evaluate(() => {
+    const card = [...document.querySelectorAll("article")].find(
+      (a) => a.querySelector("[data-card-index]")?.textContent?.trim() === "marquee",
+    );
+    const t = card?.querySelector(".marquee-track") as HTMLElement | undefined;
     return t ? new DOMMatrixReadOnly(getComputedStyle(t).transform).m41 : null;
-  }, i);
+  });
 
 /** A volta da faixa: metade do track mais meio vão. A conta do componente. */
-const voltaDaFaixa = (page: Page, i = 0) =>
-  page.evaluate((n) => {
-    const t = document.querySelectorAll(".marquee-track")[n] as HTMLElement;
+const voltaDaFaixa = (page: Page, _i = 0) =>
+  page.evaluate(() => {
+    const card = [...document.querySelectorAll("article")].find(
+      (a) => a.querySelector("[data-card-index]")?.textContent?.trim() === "marquee",
+    );
+    const t = card!.querySelector(".marquee-track") as HTMLElement;
     return t.scrollWidth / 2 + parseFloat(getComputedStyle(t).columnGap || "0") / 2;
-  }, i);
+  });
+
+/**
+ * Põe a demo no modo pedido, pelo mesmo gesto da pessoa: a seta.
+ *
+ * A demo mostra um modo por vez e o nome dele em mono ao lado das setas. Vinte
+ * cliques é folga sobre os quatro modos — se o rótulo nunca bate, é defeito de
+ * verdade e o teste tem de falhar dizendo isso, não rodar para sempre.
+ */
+async function escolherModo(page: Page, modo: string) {
+  const card = page.locator("article").filter({ has: page.getByText("marquee", { exact: true }) });
+  for (let i = 0; i < 20; i++) {
+    const atual = await card.locator("span").filter({ hasText: /^(solta|boost|drive|scrub)$/ }).first().textContent();
+    if (atual?.trim() === modo) return;
+    await card.getByLabel("Próximo modo").click();
+    await page.waitForTimeout(220);
+  }
+  throw new Error(`modo "${modo}" não apareceu na demo do marquee`);
+}
 
 /*
  * O deslocamento CURTO entre duas leituras.
@@ -58,7 +96,15 @@ async function pxPorSegundo(page: Page, ms = 900, faixa = 0) {
  * scroll passar perto — daí o laço em vez de um `scrollIntoView` direto.
  */
 async function centralizarFaixa(page: Page) {
-  await page.goto("/catalogo");
+  /*
+   * A fatia, e não o catálogo inteiro.
+   *
+   * `/catalogo` virou ÍNDICE de categorias — capas estáticas, zero demo montada
+   * — quando a página única de 26.000px foi fatiada por família. Rolar ali
+   * procurando `.marquee-track` roda 200 vezes e não acha nada, porque não há
+   * marquee nenhum para achar. O marquee mora em aquisição.
+   */
+  await page.goto("/catalogo/aquisicao");
   for (let i = 0; i < 200; i++) {
     if (await page.evaluate(() => !!document.querySelector(".marquee-track"))) break;
     await page.evaluate(() => window.scrollBy(0, 400));
@@ -145,7 +191,23 @@ test("o x nunca sai da emenda", async ({ page }) => {
 
 test("fora da tela ela para", async ({ page }) => {
   await centralizarFaixa(page);
-  await page.evaluate(() => window.scrollTo(0, 0));
+  /*
+   * Tira a faixa da tela de verdade, em vez de assumir que o topo basta.
+   *
+   * `scrollTo(0, 0)` valia enquanto o catálogo era uma lista de 26.000px e o
+   * marquee ficava lá pelo meio. Com a página fatiada por categoria, a fatia de
+   * aquisição é curta e o topo ainda mostra a faixa — o teste passou a exigir
+   * que uma peça VISÍVEL estivesse parada, que é o oposto do que ela promete.
+   * Agora o alvo é a posição do próprio elemento.
+   */
+  await page.evaluate(() => {
+    const faixa = document.querySelector(".marquee-track");
+    if (!faixa) throw new Error("faixa não encontrada");
+    const topo = faixa.getBoundingClientRect().top + window.scrollY;
+    // Uma tela inteira ABAIXO do fim da faixa: fora da viewport e fora da
+    // margem de pré-carga do observador.
+    window.scrollTo(0, topo + window.innerHeight * 2);
+  });
   await page.waitForTimeout(800);
   expect(Math.abs(await pxPorSegundo(page, 700))).toBeLessThan(0.5);
 });
@@ -182,15 +244,19 @@ test("prefers-reduced-motion desliga o movimento", async ({ browser }) => {
  */
 test("drive: parada sem scroll, e o sentido não depende de para onde se rola", async ({ page }) => {
   await centralizarFaixa(page);
+  // A demo mostra um modo por vez: sem isto, o que se mede é a faixa `solta`,
+  // que anda sozinha por contrato — e o teste reprovava a peça certa pelo
+  // comportamento de outra.
+  await escolherModo(page, "drive");
 
-  expect(Math.abs(await pxPorSegundo(page, 900, 1)), "sem scroll, parada").toBeLessThan(0.5);
+  expect(Math.abs(await pxPorSegundo(page, 900)), "sem scroll, parada").toBeLessThan(0.5);
 
-  const descendo = await cutucarScroll(page, 1, 8, 45, 1);
+  const descendo = await cutucarScroll(page, 1, 8, 45);
   expect(descendo.media, "descer empurra a faixa").toBeLessThan(-3);
 
   await page.waitForTimeout(900);
-  expect(Math.abs(await pxPorSegundo(page, 700, 1)), "parou de rolar, parou").toBeLessThan(1);
+  expect(Math.abs(await pxPorSegundo(page, 700)), "parou de rolar, parou").toBeLessThan(1);
 
-  const subindo = await cutucarScroll(page, -1, 8, 45, 1);
+  const subindo = await cutucarScroll(page, -1, 8, 45);
   expect(subindo.media, "subir empurra para o MESMO lado").toBeLessThan(-3);
 });

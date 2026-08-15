@@ -186,9 +186,17 @@ export function SimSlider({
               <dd
                 className={cn(
                   "tabular-nums leading-none",
+                  /*
+                   * O número principal ganha TAMANHO e a fonte de display, não
+                   * a cor da marca. Marca clara pintando número grande é o
+                   * defeito preferido do simulador: o ciano da casa dá 1,29:1
+                   * sobre papel branco, e o valor que a peça inteira existe
+                   * para mostrar é o primeiro a sumir. A hierarquia aqui já
+                   * vem do corpo — 2,5rem contra 1,25rem é o dobro.
+                   */
                   o.primary
-                    ? "[font-family:var(--font-display,inherit)] text-[clamp(1.75rem,1.4rem+1.4vw,2.5rem)] text-[var(--brand)]"
-                    : "text-[1.25rem] text-[var(--foreground)]",
+                    ? "[font-family:var(--font-display,inherit)] text-[clamp(1.75rem,1.4rem+1.4vw,2.5rem)] text-[var(--foreground)]"
+                    : "text-[1.25rem] text-[var(--muted-foreground)]",
                 )}
                 style={{ minWidth: `${widths[i]}ch` }}
               >

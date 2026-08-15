@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   DndContext,
   DragOverlay,
@@ -416,6 +417,43 @@ export function Kanban<T = unknown, C = unknown>({
     }
   };
 
+  /*
+   * O CARD QUE VOAVA PRA LONGE DO CURSOR — e por que era o pai, não o dnd-kit.
+   *
+   * O `DragOverlay` é `position: fixed`, e o dnd-kit escreve nele um
+   * `translate3d` em coordenadas de VIEWPORT (o rect que ele mediu no início do
+   * gesto, mais o delta do ponteiro). Isso só bate enquanto o bloco contenedor
+   * do `fixed` for o viewport.
+   *
+   * Qualquer ancestral com `transform`, `filter`, `perspective`, `backdrop-filter`
+   * ou `will-change` dessas propriedades passa a ser o bloco contenedor de
+   * descendentes `fixed` — regra do CSS, não bug de lib. Aí o mesmo
+   * `translate3d(x, y)` deixa de ser medido do canto da janela e passa a ser
+   * medido do canto DAQUELE elemento: o card aparece deslocado exatamente pela
+   * posição do ancestral na página (com a rolagem inteira somada, o que numa
+   * página longa joga o card pra fora da tela). Ao soltar, o overlay some e o
+   * card real reaparece no lugar certo — daí a leitura de "pula pro lugar".
+   *
+   * Isso não é caso de laboratório: um card com `transform: scale()` pra caber
+   * numa vitrine, um painel com `backdrop-filter`, um modal com animação de
+   * entrada — todos produzem o mesmo defeito no projeto de quem instalou.
+   *
+   * O overlay vai pro `body` por portal. Ele não pertence ao fluxo do board (é
+   * um fantasma que voa por cima de tudo), então tirá-lo de lá não muda layout
+   * nenhum — e passa a viver onde a matemática do dnd-kit já supunha que ele
+   * estava. Os tokens `--kanban-*` que o overlay usa têm fallback no ponto de
+   * uso (kanban.css), justamente porque fora do `.kanban-root` não há herança.
+   */
+  const overlay = (
+    <DragOverlay dropAnimation={dropAnimation}>
+      {activeItem ? (
+        <div className="kanban-card-overlay">
+          {renderCard({ item: activeItem, overlay: true })}
+        </div>
+      ) : null}
+    </DragOverlay>
+  );
+
   return (
     <DndContext
       sensors={sensors}
@@ -451,13 +489,7 @@ export function Kanban<T = unknown, C = unknown>({
           />
         ))}
       </div>
-      <DragOverlay dropAnimation={dropAnimation}>
-        {activeItem ? (
-          <div className="kanban-card-overlay">
-            {renderCard({ item: activeItem, overlay: true })}
-          </div>
-        ) : null}
-      </DragOverlay>
+      {typeof document === "undefined" ? overlay : createPortal(overlay, document.body)}
     </DndContext>
   );
 }

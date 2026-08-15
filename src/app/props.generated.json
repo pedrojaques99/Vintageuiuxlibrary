@@ -176,6 +176,13 @@
           "descricao": null
         },
         {
+          "nome": "defaultValue",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Nível inicial quando o medidor é não-controlado."
+        },
+        {
           "nome": "label",
           "tipo": "string",
           "obrigatoria": false,
@@ -197,11 +204,25 @@
           "descricao": null
         },
         {
+          "nome": "onChange",
+          "tipo": "(value: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado a cada mudança vinda do usuário (arraste, roda, teclado).\n\nNo modo controlado ele é obrigatório para a peça aceitar entrada: sem\n`onChange` não há para onde escrever, e um arraste que não move o ponteiro\né pior do que um medidor assumidamente passivo."
+        },
+        {
+          "nome": "readOnly",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Desliga a entrada do usuário e devolve o VU de vitrine, só leitura."
+        },
+        {
           "nome": "value",
           "tipo": "number",
           "obrigatoria": false,
-          "padrao": "0",
-          "descricao": null
+          "padrao": null,
+          "descricao": "Controlado. Sem ele o medidor guarda o próprio nível."
         }
       ]
     }
@@ -346,6 +367,13 @@
           "descricao": null
         },
         {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "260",
+          "descricao": "Lado da peça INTEIRA em px — coroa de marcações inclusive.\n\nAntes o corpo era fixo em 318px e a coroa vazava 19% para fora dele sem que\nnada reservasse esse espaço: o anel de marcações caía por cima do rótulo\nlogo abaixo. Aqui o `size` é a caixa que a peça de fato ocupa, e o corpo\nmora dentro dela."
+        },
+        {
           "nome": "value",
           "tipo": "number",
           "obrigatoria": false,
@@ -455,6 +483,70 @@
       ]
     }
   ],
+  "vintage-parametric-eq": [
+    {
+      "nome": "VintageParametricEQ",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "accent",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--vintage-value)",
+          "descricao": null
+        },
+        {
+          "nome": "bands",
+          "tipo": "EqBand[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "height",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "220",
+          "descricao": null
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(bands: EqBand[]) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "range",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "12",
+          "descricao": "Teto do eixo em dB. A régua vai de −range a +range."
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "PARAMETRIC EQ",
+          "descricao": null
+        },
+        {
+          "nome": "width",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "520",
+          "descricao": "Largura natural do painel da curva."
+        }
+      ]
+    }
+  ],
   "vintage-led": [
     {
       "nome": "VintageLed",
@@ -480,6 +572,13 @@
           "obrigatoria": false,
           "padrao": "green",
           "descricao": null
+        },
+        {
+          "nome": "intensity",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": "Quanto o LED está aceso, de 0 a 1. É o que separa \"ligado\" de \"no talo\":\num indicador de nível precisa clarear com o sinal, não só acender."
         },
         {
           "nome": "label",
@@ -532,6 +631,13 @@
           "descricao": null
         },
         {
+          "nome": "autoFocus",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Foco no campo ao montar. Padrão: sim em modal, não embutida."
+        },
+        {
           "nome": "className",
           "tipo": "string",
           "obrigatoria": false,
@@ -544,6 +650,13 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": null
+        },
+        {
+          "nome": "inline",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Monta dentro do pai posicionado em vez de `fixed` na janela.\n\nExiste porque a paleta também é útil embutida — num painel de bancada, num\ncard de ferramenta — e porque `fixed inset-0` só tem um lugar possível na\npágina: em cima de tudo. Embutida, ela não rouba o foco por padrão nem\nescurece a página inteira. O pai precisa ter `position: relative`."
         },
         {
           "nome": "placeholder",
@@ -580,6 +693,27 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": null
+        },
+        {
+          "nome": "program",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "scope",
+          "descricao": "O programa que entra quando não há `children`.\n\nA tela vazia dizia \"NO SIGNAL\" e ficava lá, parada — uma moldura de TV cuja\núnica função é emoldurar não prova nada. Agora o padrão é o tubo tocando um\ndos visualizadores do `vintage-oscilloscope`. `null` traz de volta o cartão\nde sem-sinal, pra quem quer o objeto desligado de propósito."
+        },
+        {
+          "nome": "programActive",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Relógio do programa. `false` congela — use com o card fora da tela."
+        },
+        {
+          "nome": "programAnalyser",
+          "tipo": "AnalyserNode",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Fonte ao vivo pro programa. Sem ela o visualizador gera o próprio sinal."
         },
         {
           "nome": "showScanlines",
@@ -674,6 +808,13 @@
           "descricao": null
         },
         {
+          "nome": "silent",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Não toca nada. Para quando o app já cuida do áudio no `onTrigger`."
+        },
+        {
           "nome": "size",
           "tipo": "number",
           "obrigatoria": false,
@@ -746,6 +887,27 @@
       "descricao": null,
       "props": [
         {
+          "nome": "active",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Relógio. `false` congela o desenho — use com o palco fora da tela."
+        },
+        {
+          "nome": "analyser",
+          "tipo": "AnalyserNode",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Fonte ao vivo. Quando vem, manda no `data`: a peça lê o buffer a cada\nquadro e não passa por estado do React — sessenta `setState` por segundo\nrepintariam a árvore inteira pra mexer um pixel."
+        },
+        {
+          "nome": "chrome",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Moldura, scanlines e rótulo do modo. Desligue quando o tubo já é do pai."
+        },
+        {
           "nome": "className",
           "tipo": "string",
           "obrigatoria": false,
@@ -764,7 +926,14 @@
           "tipo": "Float32Array<ArrayBuffer> | number[]",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": null
+          "descricao": "Amostras. Em `wave`/`scope`/`rings`/`grid` são do domínio do tempo (−1…1);\nem `fft`, magnitudes em dB, como o modo sempre leu."
+        },
+        {
+          "nome": "fill",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Ocupa o pai inteiro em vez de `width`×`height`. É como a TV o encaixa."
         },
         {
           "nome": "height",
@@ -781,11 +950,18 @@
           "descricao": null
         },
         {
+          "nome": "params",
+          "tipo": "VintageScopeParams",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
           "nome": "width",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "320",
-          "descricao": null
+          "descricao": "Largura natural do desenho. Com `fill`, vira só o piso do buffer."
         }
       ]
     }
@@ -882,6 +1058,98 @@
       ]
     }
   ],
+  "logo-wall": [
+    {
+      "nome": "LogoWall",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "LogoWallItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "bleed",
+          "tipo": "number | false",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Sangra pra fora do container. Passe o mesmo respiro do pai."
+        },
+        {
+          "nome": "fade",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Some nas bordas em vez de ser cortada a faca."
+        },
+        {
+          "nome": "finish",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "grayscale",
+          "descricao": "O acabamento em repouso.\n\n- `\"grayscale\"` (padrão): dessatura e apaga; a cor volta no hover. Serve\n  qualquer arquivo.\n- `\"mono\"`: pinta com `currentColor` — só SVG inline, e o único seguro no\n  tema escuro. Ver a nota do cabeçalho.\n- `\"none\"`: o logo como veio, sempre."
+        },
+        {
+          "nome": "gap",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "64",
+          "descricao": null
+        },
+        {
+          "nome": "heading",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O rótulo da faixa: \"Confiam na gente\", \"Clientes desde 2019\".\n\nEle mora FORA da esteira, e não é preciosismo: dentro dela viraria conteúdo\ndo loop e andaria junto com os logos, reaparecendo a cada volta. Foi a\nlição que a demo do marquee já tinha aprendido."
+        },
+        {
+          "nome": "height",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2",
+          "descricao": "Altura óptica base, em rem. É sobre ela que o `scale` de cada item age."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Clientes",
+          "descricao": "Nome da lista pro leitor de tela, quando não há `heading` visível."
+        },
+        {
+          "nome": "marquee",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Desligue pra uma grade parada. A normalização continua valendo."
+        },
+        {
+          "nome": "maxWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "9",
+          "descricao": "Teto de largura de cada logo, em rem. Segura o wordmark comprido."
+        },
+        {
+          "nome": "reverse",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "speed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "72",
+          "descricao": "Segundos por volta. Faixa de logo pede lento: 60 a 90."
+        }
+      ]
+    }
+  ],
   "rail": [
     {
       "nome": "Rail",
@@ -942,6 +1210,133 @@
           "obrigatoria": false,
           "padrao": "Scrollable list",
           "descricao": null
+        },
+        {
+          "nome": "progress",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Régua embaixo: quanto da lista cabe na vista e onde ela está."
+        },
+        {
+          "nome": "remainder",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "`+N` na ponta que continua. Clicar anda um item."
+        }
+      ]
+    }
+  ],
+  "reels-rail": [
+    {
+      "nome": "ReelsRail",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "ReelItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "arrows",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": null
+        },
+        {
+          "nome": "autoPlay",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "O card do meio toca sozinho. Desligue e o play passa a ser sempre manual."
+        },
+        {
+          "nome": "bleed",
+          "tipo": "number | false",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Sangra pra fora do container. Passe o mesmo respiro lateral do pai."
+        },
+        {
+          "nome": "drift",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "A fileira anda sozinha. Só faz sentido com `loop`."
+        },
+        {
+          "nome": "driftSpeed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "26",
+          "descricao": "Velocidade da deriva, em px por segundo. Acima de ~60 vira esteira."
+        },
+        {
+          "nome": "fade",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": null
+        },
+        {
+          "nome": "gap",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "16",
+          "descricao": null
+        },
+        {
+          "nome": "heading",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "hint",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "itemWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "260",
+          "descricao": "Largura de cada card, em px. 9:16 em 260px dá ~462px de altura."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Vídeos",
+          "descricao": null
+        },
+        {
+          "nome": "loop",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "A fileira dá a volta em vez de acabar. Ver a nota do cabeçalho.\n\nPrecisa de itens suficientes pra encher a vista: com dois cards numa faixa\nlarga, o conjunto repetido aparece na tela ao lado do original e a repetição\nfica óbvia. De 5 pra cima é confortável."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "9/16",
+          "descricao": "Proporção do card, formato CSS. Reels é `\"9/16\"`; TikTok idem."
+        },
+        {
+          "nome": "sound",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Mostra o botão de som no card ativo. Desligue em vídeo sem áudio."
         }
       ]
     }
@@ -994,6 +1389,13 @@
           "descricao": "Proporção da placa. Produto alto (stick, garrafa) pede 4/5 ou 3/4."
         },
         {
+          "nome": "surface",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "muted",
+          "descricao": "A superfície da placa.\n\n`\"muted\"` (padrão) segue o tema, e serve pra placa que é só moldura.\n`\"photo\"` é a ilha clara nos dois temas — condição de existência do\n`multiply`, que precisa de fundo claro pra devolver o produto. Redefina\n`--plate-photo` pra casar com o papel da marca."
+        },
+        {
           "nome": "zoomOnGroupHover",
           "tipo": "boolean",
           "obrigatoria": false,
@@ -1023,11 +1425,25 @@
           "descricao": null
         },
         {
+          "nome": "mark",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "A marca de conferido que cresce quando liga.\n\nDesligue em pastilha que é escolha ÚNICA dentro de um grupo (um segmentado\ndisfarçado): ali a cor cheia já é a resposta e o traço vira redundância que\nmexe na largura de todo mundo a cada troca."
+        },
+        {
           "nome": "pressed",
           "tipo": "boolean",
           "obrigatoria": false,
           "padrao": "false",
           "descricao": null
+        },
+        {
+          "nome": "size",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "md",
+          "descricao": "`sm` para barra densa (linha de facetas), `md` para a barra principal."
         }
       ]
     }
@@ -1094,11 +1510,25 @@
           "descricao": null
         },
         {
-          "nome": "labels",
-          "tipo": "{ open: (close: number) => string; closed: (open: number) => string; }",
+          "nome": "closingSoon",
+          "tipo": "number",
           "obrigatoria": false,
-          "padrao": "{\n    open: (c) => `Open now until ${fmtHour(c)}`,\n    closed: (o) => `Opens at ${fmtHour(o)}`,\n  }",
+          "padrao": "60",
+          "descricao": "Minutos que fazem o estado virar `closing`."
+        },
+        {
+          "nome": "labels",
+          "tipo": "Partial<StoreStatusLabels>",
+          "obrigatoria": false,
+          "padrao": null,
           "descricao": null
+        },
+        {
+          "nome": "locale",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "en-GB",
+          "descricao": "Locale do nome do dia da semana."
         },
         {
           "nome": "openDays",
@@ -1780,7 +2210,7 @@
           "tipo": "string",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": null
+          "descricao": "O contrato é tela cheia (`min-h-screen`) — ele substitui a rota inteira\nenquanto ela carrega. Dentro de uma caixa menor, passe `min-h-0` aqui: o\n`cn` resolve o conflito a favor de quem chama."
         },
         {
           "nome": "label",
@@ -1870,6 +2300,154 @@
       ]
     }
   ],
+  "auth-button": [
+    {
+      "nome": "AuthButton",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "onSignOut",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "status",
+          "tipo": "enum",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Os três estados de verdade. `loading` nunca desenha texto de conta."
+        },
+        {
+          "nome": "account",
+          "tipo": "AuthAccount",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Só faz sentido em `signed-in`."
+        },
+        {
+          "nome": "align",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "end",
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "hint",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "signed-out",
+          "descricao": "Palpite de forma para o esqueleto. Não vira texto em hipótese nenhuma."
+        },
+        {
+          "nome": "items",
+          "tipo": "AuthMenuItem[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Itens extras do menu da conta (perfil, cobrança, equipe…)."
+        },
+        {
+          "nome": "labels",
+          "tipo": "Partial<{ signIn: string; signOut: string; loading: string; providers: string; }>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onSignIn",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "providers",
+          "tipo": "AuthProviderOption[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Com provedores, o clique abre a lista. Sem eles, chama `onSignIn`."
+        }
+      ]
+    },
+    {
+      "nome": "AuthBadge",
+      "descricao": "Selo de \"entrou\" — opcional, para quem quer confirmar a entrada sem toast.\nFica aqui e não numa peça própria porque só existe em função deste botão.",
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "profile-form": [
+    {
+      "nome": "ProfileForm",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "onSave",
+          "tipo": "(next: ProfileValue, extra: { avatarFile: File; }) => Promise<void>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "ProfileValue",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O valor SALVO — a fonte de verdade. O rascunho é interno."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "emailVerified",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Verificação do e-mail salvo. Muda o e-mail, o selo cai sozinho."
+        },
+        {
+          "nome": "onResendVerification",
+          "tipo": "() => void | Promise<void>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "undoWindowMs",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "6000",
+          "descricao": "Janela do desfazer depois de salvar. `0` desliga."
+        },
+        {
+          "nome": "validate",
+          "tipo": "(draft: ProfileValue) => Partial<Record<\"name\" | \"email\", string>>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Validação de negócio, somada à básica (obrigatório / formato de e-mail)."
+        }
+      ]
+    }
+  ],
   "timeline": [
     {
       "nome": "Timeline",
@@ -1909,7 +2487,7 @@
   "assignee-stack": [
     {
       "nome": "AssigneeStack",
-      "descricao": "Pilha de responsáveis — quem toca a tarefa, em círculos sobrepostos.\n\n── O que estava errado ─────────────────────────────────────────────────────\nA pilha se declarava `role=\"img\"`: para o leitor de tela era um desenho, e\npara o teclado não existia. O nome de cada pessoa morava num `title` nativo,\nque só aparece com mouse parado em cima por um segundo e nunca aparece no\ncelular. E o \"+N\" era um `<span>` — o excedente, que é justamente a\ninformação escondida, era a única parte inalcançável.\n\nAgora é um grupo de verdade: UM ponto de tabulação, setas ←/→ andando pelas\npessoas, `Home`/`End` nas pontas. Um ponto só porque uma lista de projetos\ntem uma dessas por linha — um Tab por avatar transformaria a travessia da\npágina em dezenas de paradas antes do conteúdo.\n\n── A micro-interação, e por que ela é utilidade ────────────────────────────\nParada, a pilha economiza espaço escondendo rosto atrás de rosto. Com o\nponteiro em cima (ou com o foco dentro) ela ABRE: os círculos deslizam para\nos seus lugares e o nome de quem está sob o cursor aparece embaixo. É o\nmesmo aperto que o `title` tentava resolver, resolvido onde dá para ver e\ncom teclado junto.\n\nSó `transform` anima — a abertura é `margin` virando `translateX`, nunca\nlargura. E `hover` não é a única porta: `focus-within` abre igual, senão em\ntouch a pilha nunca abriria.",
+      "descricao": "Pilha de responsáveis — quem toca a tarefa, em círculos sobrepostos.\n\n── O que estava errado ─────────────────────────────────────────────────────\nA pilha se declarava `role=\"img\"`: para o leitor de tela era um desenho, e\npara o teclado não existia. O nome de cada pessoa morava num `title` nativo,\nque só aparece com mouse parado em cima por um segundo e nunca aparece no\ncelular. E o \"+N\" era um `<span>` — o excedente, que é justamente a\ninformação escondida, era a única parte inalcançável.\n\nAgora é um grupo de verdade: UM ponto de tabulação, setas ←/→ andando pelas\npessoas, `Home`/`End` nas pontas. Um ponto só porque uma lista de projetos\ntem uma dessas por linha — um Tab por avatar transformaria a travessia da\npágina em dezenas de paradas antes do conteúdo.\n\n── A micro-interação, e por que ela é utilidade ────────────────────────────\nParada, a pilha economiza espaço escondendo rosto atrás de rosto. Com o\nponteiro em cima (ou com o foco dentro) ela ABRE: os círculos deslizam para\nos seus lugares e o nome de quem está sob o cursor aparece embaixo. É o\nmesmo aperto que o `title` tentava resolver, resolvido onde dá para ver e\ncom teclado junto.\n\nSó `transform` anima — a abertura é `margin` virando `translateX`, nunca\nlargura. E `hover` não é a única porta: `focus-within` abre igual, senão em\ntouch a pilha nunca abriria.\n\n── Por que a pilha abre para a ESQUERDA ────────────────────────────────────\nA primeira versão abria empurrando todo mundo para a direita: o último\ncírculo — e principalmente o \"+N\", que é a informação que a pilha esconde —\nandava para fora do container e estourava a borda do cartão. E não era acaso:\no lugar natural desta peça é encostada à direita da linha, então crescer para\na direita é crescer para fora, sempre.\n\nAgora o círculo mais à direita fica ANCORADO (deslocamento zero) e os outros\nrecuam para a esquerda. A pilha abre para dentro da linha, onde já existe\nfolga, e a borda direita nunca se move. O espaço que a abertura vai ocupar é\nreservado em `padding-left` no repouso: `transform` não empurra layout, então\nsem a reserva a pilha aberta passaria por cima do texto do vizinho.",
       "props": [
         {
           "nome": "assignees",
@@ -1958,22 +2536,22 @@
           "nome": "className",
           "tipo": "string",
           "obrigatoria": false,
-          "padrao": "",
+          "padrao": null,
           "descricao": null
         },
         {
           "nome": "radius",
           "tipo": "number",
           "obrigatoria": false,
-          "padrao": "2",
-          "descricao": null
+          "padrao": "140",
+          "descricao": "Raio de influência em px. Abaixo dele a peça começa a fugir."
         },
         {
           "nome": "strength",
           "tipo": "number",
           "obrigatoria": false,
-          "padrao": "5",
-          "descricao": null
+          "padrao": "12",
+          "descricao": "Deslocamento máximo em px, no ponto mais próximo do cursor."
         }
       ]
     }
@@ -2075,7 +2653,7 @@
   "turbulence-field": [
     {
       "nome": "TurbulenceField",
-      "descricao": "Névoa procedural para estados de espera — SVG `feTurbulence` puro.\n\nA alternativa óbvia (shader/WebGL) morre no caso real: uma grade de 12 tiles\ngerando ao mesmo tempo estoura o limite de contextos WebGL do browser e os\nprimeiros tiles apagam. Isto é filtro SVG animado pelo compositor — escala\npara qualquer número de instâncias e não gasta um frame de JS.\n\nA cor vem de `currentColor`, então herda o token da marca sem hex próprio.\n\n`baseFrequency` animada em 14s: devagar o bastante para ler como fluido, não\ncomo ruído de TV. Encurtar isso é a tentação errada.\n\n`prefers-reduced-motion`: congela a turbulência (a textura fica, o movimento sai).",
+      "descricao": "Névoa procedural para estados de espera — SVG `feTurbulence` puro.\n\nA alternativa óbvia (shader/WebGL) morre no caso real: uma grade de 12 tiles\ngerando ao mesmo tempo estoura o limite de contextos WebGL do browser e os\nprimeiros tiles apagam. Isto é filtro SVG animado pelo compositor — escala\npara qualquer número de instâncias e não gasta um frame de JS.\n\nA cor vem de `currentColor`, então herda o token da marca sem hex próprio.\n\n`baseFrequency` animada em 14s: devagar o bastante para ler como fluido, não\ncomo ruído de TV. Encurtar isso é a tentação errada.\n\n`prefers-reduced-motion`: congela a turbulência (a textura fica, o movimento sai).\n\n── Os três botões do campo ────────────────────────────────────────────────\n\n`intensity` (quanto se vê), `scale` (o tamanho do grão) e `speed` (quanto\ndemora um ciclo) são as únicas variáveis que mudam o CARÁTER da névoa, e é por\nisso que são props em vez de números fixos: com a mesma peça e três valores\ndá pra ir de névoa larga de fundo de marca a grão fechado de papel impresso.\n`octaves` fica fora — subir de 2 multiplica o custo do filtro por passada sem\nmudar a leitura em opacidade baixa.",
       "props": [
         {
           "nome": "className",
@@ -2090,6 +2668,20 @@
           "obrigatoria": false,
           "padrao": "0.18",
           "descricao": "Alpha total da névoa (0–1). Sutil — acima de ~0.3 come o conteúdo."
+        },
+        {
+          "nome": "scale",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": "Multiplicador do grão. `<1` abre a névoa (manchas largas, fundo de marca);\n`>1` fecha (grão de papel)."
+        },
+        {
+          "nome": "speed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "14",
+          "descricao": "Segundos de um ciclo. Abaixo de ~6s começa a ler como ruído de TV."
         }
       ]
     }
@@ -2423,7 +3015,7 @@
   "grid-dots": [
     {
       "nome": "GridDots",
-      "descricao": "Malha de pontos de fundo — o \"papel milimetrado\" das telas de ferramenta.\n\nUm `radial-gradient` repetido, não SVG e não canvas: zero nós no DOM, zero\nrequisição, e o navegador desenha no compositor. Numa página com sidebar,\ncanvas e grade de resultados, isso é a diferença entre textura de graça e mais\num elemento para o layout engine resolver.\n\nA cor vem de `currentColor` (default: `--foreground`), então inverte sozinha\nentre tema claro e escuro sem hook de tema nem prop de cor.\n\nOpacidade default 0.07 é o teto útil: acima disso a malha compete com o\nconteúdo em vez de dar profundidade.",
+      "descricao": "Malha de pontos de fundo — o \"papel milimetrado\" das telas de ferramenta.\n\nUm `radial-gradient` repetido, não SVG e não canvas: zero nós no DOM, zero\nrequisição, e o navegador desenha no compositor. Numa página com sidebar,\ncanvas e grade de resultados, isso é a diferença entre textura de graça e mais\num elemento para o layout engine resolver.\n\nA cor vem de `currentColor` (default: `--foreground`), então inverte sozinha\nentre tema claro e escuro sem hook de tema nem prop de cor.\n\nOpacidade default 0.07 é o teto útil: acima disso a malha compete com o\nconteúdo em vez de dar profundidade.\n\n── `spotlight`: a malha que responde ao ponteiro ───────────────────────────\n\nMalha parada é papel de parede — dá profundidade e para por aí. Com\n`spotlight={raio}` a peça ganha o trabalho que justifica existir num hero: os\npontos ACENDEM na cor da marca dentro de um círculo que segue o ponteiro, e o\nresto da superfície continua no cinza de fundo. É o mesmo gesto de \"a luz\nmostra que a superfície tem textura\" — o fundo deixa de ser decoração e passa\na reagir a quem está lendo.\n\nTrês decisões que fazem isso não virar peso:\n\n· **O halo é uma máscara, não um segundo desenho.** A camada acesa é a mesma\n  malha com `mask-image` radial. Nenhum ponto é recalculado; o compositor\n  move um gradiente.\n· **Uma escrita por quadro.** `pointermove` dispara dezenas de vezes por\n  segundo; escrever custom property em cada evento força recálculo de estilo\n  fora do quadro.\n· **Só onde há ponteiro fino.** Em toque não existe hover: o halo ficaria\n  preso no último ponto tocado, o que é pior que não ter halo. Sem ponteiro\n  fino a camada acesa nem monta, e a peça é a malha de sempre.\n\nO repouso — ponteiro nunca entrou, ou já saiu — é o halo no centro, apagado.\nNunca uma superfície em branco esperando gesto.",
       "props": [
         {
           "nome": "className",
@@ -2452,6 +3044,20 @@
           "obrigatoria": false,
           "padrao": "20",
           "descricao": "Distância entre pontos, em px."
+        },
+        {
+          "nome": "spotlight",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Raio em px do halo que segue o ponteiro. Sem isto a malha é estática —\nque continua sendo o uso certo em superfície de trabalho."
+        },
+        {
+          "nome": "spotlightOpacity",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.55",
+          "descricao": "0–1. Alpha dos pontos acesos dentro do halo."
         }
       ]
     }
@@ -2459,15 +3065,8 @@
   "drop-overlay": [
     {
       "nome": "DropOverlay",
-      "descricao": "Alvo de soltar arquivo — a confirmação visual do drag-and-drop.\n\nPequeno, mas não opcional: sem ele o usuário arrasta um arquivo sobre a área e\nnão tem sinal nenhum de que a página aceita, então solta fora e acha que o\nupload está quebrado. É o estado que todo mundo esquece de desenhar.\n\n`pointer-events-none` é o detalhe que faz funcionar: o overlay aparece POR\nCIMA da zona, e se ele capturasse o ponteiro dispararia o `dragleave` do\npróprio pai — o overlay piscaria infinitamente e o `drop` nunca chegaria.\n\nA borda tracejada é a convenção de \"solte aqui\" desde sempre; trocar por sólida\nlê como estado de erro.",
+      "descricao": "Alvo de soltar arquivo — a confirmação visual do drag-and-drop.\n\nPequeno, mas não opcional: sem ele o usuário arrasta um arquivo sobre a área e\nnão tem sinal nenhum de que a página aceita, então solta fora e acha que o\nupload está quebrado. É o estado que todo mundo esquece de desenhar.\n\n── Os três estados, que são o item inteiro ────────────────────────────────\n\n| `state` | quando | o que a pessoa vê |\n|---|---|---|\n| `idle` | ninguém arrastando | nada — a zona é o conteúdo |\n| `over` | arquivo pairando | tracejado + convite |\n| `drop` | soltou, sistema aceitou | cheio na cor da marca, por um instante |\n\nO `drop` existe porque o instante entre soltar e o arquivo aparecer na lista é\nonde o gesto some: sem uma confirmação de meio segundo, quem soltou não sabe\nse acertou a zona ou se largou fora e a página ignorou.\n\n── Dois detalhes que fazem funcionar ──────────────────────────────────────\n\n`pointer-events-none`: o overlay aparece POR CIMA da zona, e se ele capturasse\no ponteiro dispararia o `dragleave` do próprio pai — o overlay piscaria\ninfinitamente e o `drop` nunca chegaria.\n\nA camada **fica montada** e troca de opacidade, em vez de desmontar. Overlay\nque nasce e morre aparece com corte seco no quadro exato em que o cursor cruza\na borda, e o corte lê como falha de render; a transição lê como resposta.\nMontado e invisível não custa nada — é um `div` sem filho pintado.\n\nA borda tracejada é a convenção de \"solte aqui\" desde sempre; sólida no estado\nde espera lê como erro. No `drop` ela fecha, porque aí não é mais convite.",
       "props": [
-        {
-          "nome": "visible",
-          "tipo": "boolean",
-          "obrigatoria": true,
-          "padrao": null,
-          "descricao": null
-        },
         {
           "nome": "className",
           "tipo": "string",
@@ -2476,11 +3075,32 @@
           "descricao": null
         },
         {
+          "nome": "doneMessage",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Recebido",
+          "descricao": null
+        },
+        {
           "nome": "message",
           "tipo": "string",
           "obrigatoria": false,
           "padrao": "Solte o arquivo aqui",
           "descricao": null
+        },
+        {
+          "nome": "state",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Quando presente, manda em `visible`."
+        },
+        {
+          "nome": "visible",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Atalho para `state=\"over\"`. Mantido porque é o uso de uma linha."
         }
       ]
     }
@@ -2810,6 +3430,13 @@
           "descricao": null
         },
         {
+          "nome": "active",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Índice do passo em foco. Os outros recuam. Sem valor, todos iguais.\n\nQuem manda é quem consome: rolagem, timer de carrossel ou clique. O bloco\nnão escolhe passo sozinho — passo atual é estado da página, não do card."
+        },
+        {
           "nome": "columns",
           "tipo": "enum",
           "obrigatoria": false,
@@ -2844,6 +3471,13 @@
           "descricao": null
         },
         {
+          "nome": "active",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Índice do passo em foco. Os outros recuam. Sem valor, todos iguais.\n\nQuem manda é quem consome: rolagem, timer de carrossel ou clique. O bloco\nnão escolhe passo sozinho — passo atual é estado da página, não do card."
+        },
+        {
           "nome": "columns",
           "tipo": "enum",
           "obrigatoria": false,
@@ -2868,7 +3502,7 @@
     },
     {
       "nome": "Step",
-      "descricao": "StepCards — \"como funciona\" em passos numerados, com o visual por slot.\n\nDuas referências viraram este bloco: os três cards de gradiente\n(assinar/pedir/receber) e os quatro passos com mini-telas do produto dentro.\nO que elas têm em comum e o que separa uma da outra:\n\n- **Comum:** número, título, uma frase, e uma área grande de visual em cima.\n- **Diferente:** a arte. Numa é gradiente de marca, na outra é screenshot do\n  app. Por isso `visual` é slot e o componente não desenha nada lá dentro —\n  um bloco que embute a arte de um cliente só serve para aquele cliente.\n\nDecisões:\n\n1. **É `<ol>`, não uma grade de `<div>`.** A ordem é a informação. Quem navega\n   por leitor de tela ouve \"lista de 4 itens\" e sabe que existe uma sequência.\n2. **O número é `aria-hidden`.** O `<ol>` já numera; o \"01\" na tela é o eco\n   visual disso, e anunciar os dois faz \"um, um, envie seu pedido\".\n3. **`columns` aceita o passo órfão.** Quatro passos em três colunas deixam um\n   sozinho na segunda linha — a referência resolve deitando o último\n   (`wideLast`), e é isso que a prop faz.",
+      "descricao": "StepCards — \"como funciona\" em passos numerados, com o visual por slot.\n\nDuas referências viraram este bloco: os três cards de gradiente\n(assinar/pedir/receber) e os quatro passos com mini-telas do produto dentro.\nO que elas têm em comum e o que separa uma da outra:\n\n- **Comum:** número, título, uma frase, e uma área grande de visual em cima.\n- **Diferente:** a arte. Numa é gradiente de marca, na outra é screenshot do\n  app. Por isso `visual` é slot e o componente não desenha nada lá dentro —\n  um bloco que embute a arte de um cliente só serve para aquele cliente.\n\nDecisões:\n\n1. **É `<ol>`, não uma grade de `<div>`.** A ordem é a informação. Quem navega\n   por leitor de tela ouve \"lista de 4 itens\" e sabe que existe uma sequência.\n2. **O número é `aria-hidden`.** O `<ol>` já numera; o \"01\" na tela é o eco\n   visual disso, e anunciar os dois faz \"um, um, envie seu pedido\".\n3. **`columns` aceita o passo órfão.** Quatro passos em três colunas deixam um\n   sozinho na segunda linha — a referência resolve deitando o último\n   (`wideLast`), e é isso que a prop faz.\n\n── 4. O passo em foco, e por que ele não é enfeite ────────────────────────\n\nTrês cards idênticos numa fileira dizem \"existem três passos\" e param aí. O\nque a peça precisa dizer é **onde você está** — numa página de \"como\nfunciona\" que acompanha a rolagem, num onboarding que marca o passo atual,\nnum carrossel que passa sozinho. Por isso existe `active`.\n\nO destaque é por **recuo dos outros**, não por brilho no escolhido: o ativo\nfica como o card sempre foi (opaco, borda de marca, elevado) e os demais\nperdem opacidade e um fio de escala. É a diferença entre a fileira ter um\nfoco e a fileira ter um card piscando.\n\nDuas guardas:\n· **Sem `active`, nada muda.** Quem já usava o bloco recebe o mesmo pixel —\n  inclusive o passo do meio, que não vira \"o ativo\" por acaso.\n· **O ponteiro também promove.** Passar o mouse num passo recuado traz ele\n  de volta, senão o recuo vira um card apagado que ninguém consegue ler.\n  E `motion-reduce` corta a transição, não o estado: quem pediu menos\n  movimento continua enxergando qual é o passo atual.",
       "props": []
     }
   ],
@@ -2924,6 +3558,98 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": "O que aparece quando ainda não há depoimento nenhum."
+        }
+      ]
+    }
+  ],
+  "quote-block": [
+    {
+      "nome": "QuoteBlock",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "author",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "quote",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A fala. Curta: acima de ~40 palavras isto deixa de ser capa e vira parede."
+        },
+        {
+          "nome": "bare",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Sem moldura: o depoimento solto na página, sem caixa e sem respiro próprio."
+        },
+        {
+          "nome": "company",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "flip",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Retrato à direita. A citação continua vindo antes no DOM — e na leitura."
+        },
+        {
+          "nome": "logo",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Marca do cliente. Em B2B, o logo prova mais que o rosto — os dois cabem."
+        },
+        {
+          "nome": "portrait",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O retrato, por slot: `<img>`, `next/image`, o que o projeto usar."
+        },
+        {
+          "nome": "portraitWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "13",
+          "descricao": "Largura do retrato, em rem. É ela que decide quando a peça empilha."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "4/5",
+          "descricao": "Proporção do retrato, formato CSS."
+        },
+        {
+          "nome": "role",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Cargo. Junto com `company` vira a linha \"Cargo, Empresa\"."
+        },
+        {
+          "nome": "source",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "URL da fonte da citação (case, post, entrevista). Vai no `cite` do HTML."
+        },
+        {
+          "nome": "tone",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "card",
+          "descricao": null
         }
       ]
     }
@@ -3229,7 +3955,14 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "0",
-          "descricao": "Grau do tombo. Passe o índice do item e ele alterna sozinho."
+          "descricao": "Grau do tombo. Passe o índice do item e ele alterna sozinho. Só vale com `tilt`."
+        },
+        {
+          "nome": "tilt",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Liga o tombo. **Desligado por padrão** — ver a nota 2 do cabeçalho.\n\nFica a prumo e continua subindo no hover, que é o gesto de pegar. Ligue\nnuma estante montada de propósito, onde três ou mais objetos lado a lado\nfazem a inclinação ler como prateleira em vez de card torto."
         }
       ]
     }
@@ -3348,6 +4081,26 @@
           "descricao": null
         }
       ]
+    },
+    {
+      "nome": "EmptyArt",
+      "descricao": "EmptyArt — a faixa desenhada em código pro slot `art`.\n\nTrês composições, escolhidas pela semente: arcos (o que continua fora do\nquadro), malha (o inventário que ainda não chegou) e faixas (o corte).\nNenhuma delas desenha texto, ícone ou objeto reconhecível de propósito — a\nfrase embaixo é que diz o que a tela é; a arte só dá superfície e marca.\n\n`aria-hidden`: é ornamento. Um `role=\"img\"` aqui obrigaria a inventar uma\ndescrição pra uma coisa que não descreve nada, e o leitor de tela passaria a\nouvir \"gráfico decorativo\" antes da única frase que importa.",
+      "props": [
+        {
+          "nome": "intensity",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "quieta",
+          "descricao": "Densidade do desenho. Menos é mais em faixa baixa."
+        },
+        {
+          "nome": "seed",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "vazio",
+          "descricao": "A semente. Passe o nome da coleção vazia (`\"favoritos\"`, `\"arquivados\"`) e\ncada tela vazia do app ganha uma composição própria — de graça, e estável."
+        }
+      ]
     }
   ],
   "skeleton-rail": [
@@ -3385,10 +4138,10 @@
         },
         {
           "nome": "label",
-          "tipo": "string",
+          "tipo": "string | false",
           "obrigatoria": false,
           "padrao": "Carregando a lista",
-          "descricao": "O que o leitor de tela ouve enquanto a lista não chegou."
+          "descricao": "O que o leitor de tela ouve enquanto a lista não chegou. `false` cala a\npeça — pra quando quem anuncia é o container que embrulha vários.\n\n`role=\"status\"` no lugar de um `aria-hidden` seco: escondido de todo mundo,\no esqueleto deixava quem usa leitor de tela sem NENHUM sinal entre o clique\ne a lista chegar — só silêncio, que se lê como travou. Os blocos visuais\nseguem escondidos, porque eles são forma, não conteúdo."
         },
         {
           "nome": "ratio",
@@ -3396,6 +4149,163 @@
           "obrigatoria": false,
           "padrao": "4 / 3",
           "descricao": "Proporção da arte, ex. `\"4 / 3\"`."
+        }
+      ]
+    },
+    {
+      "nome": "SkeletonCard",
+      "descricao": "SkeletonCard — mídia em cima, título e apoio embaixo.\n\nAs duas linhas são 14px e 12px, e não é gosto: são as alturas de linha de\n`text-corpo` e `text-apoio` truncados numa linha, que é o que um card de\ncatálogo desenha. Um bloco de 16px aqui adiantaria 4px por linha, e o salto\napareceria multiplicado pelo número de cards da fileira.",
+      "props": [
+        {
+          "nome": "delay",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string | false",
+          "obrigatoria": false,
+          "padrao": "Carregando",
+          "descricao": null
+        },
+        {
+          "nome": "lines",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2",
+          "descricao": "Quantas linhas de texto abaixo da mídia."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string | false",
+          "obrigatoria": false,
+          "padrao": "4 / 3",
+          "descricao": "Proporção da mídia, ex. `\"4 / 3\"`. `false` desenha um card sem mídia."
+        }
+      ]
+    },
+    {
+      "nome": "SkeletonText",
+      "descricao": "SkeletonText — o parágrafo que ainda não chegou.\n\n`lineHeight` + `gap` em vez de uma classe de altura: a soma dos dois é a\nentrelinha do texto de verdade, e é a soma que precisa bater. Com `h-4 gap-2`\ncravado, um parágrafo de seis linhas erra 24px — meia linha de diferença por\nlinha, que é exatamente o tamanho do salto que ninguém consegue explicar.",
+      "props": [
+        {
+          "nome": "delay",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "gap",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "8",
+          "descricao": "Respiro entre linhas em px. O resto da entrelinha, na prática."
+        },
+        {
+          "nome": "label",
+          "tipo": "string | false",
+          "obrigatoria": false,
+          "padrao": "Carregando o texto",
+          "descricao": null
+        },
+        {
+          "nome": "lineHeight",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "14",
+          "descricao": "Altura da linha em px. Use a MESMA `line-height` do texto que vai entrar."
+        },
+        {
+          "nome": "lines",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "3",
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "SkeletonList",
+      "descricao": "SkeletonList — a fileira vertical de registros.\n\nA altura da linha é prop e não conta interna: lista de e-mail, de pedido e de\nmembro do time têm alturas diferentes, e o esqueleto que assume 56px pra\ntodas volta a causar o salto que ele existe pra evitar. O `justify-between`\nsegura a coluna de meta na direita, como na linha real.",
+      "props": [
+        {
+          "nome": "delay",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string | false",
+          "obrigatoria": false,
+          "padrao": "Carregando a lista",
+          "descricao": null
+        },
+        {
+          "nome": "meta",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "A coluna miúda da direita: valor, data, contagem."
+        },
+        {
+          "nome": "rowHeight",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "56",
+          "descricao": "Altura de cada linha em px. A mesma da linha real, sempre."
+        },
+        {
+          "nome": "rows",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "4",
+          "descricao": null
+        },
+        {
+          "nome": "thumb",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "O quadrado à esquerda: avatar, capa, ícone. `false` tira."
+        }
+      ]
+    },
+    {
+      "nome": "SkeletonMedia",
+      "descricao": "SkeletonMedia — o retângulo da foto, do vídeo, do mapa, do gráfico.\n\nÉ o formato mais simples e o mais fácil de errar: quase todo mundo escreve\n`h-48` e a mídia real chega com proporção, não com altura. Aqui é\n`aspect-ratio` por padrão, que é como a caixa da mídia se reserva de verdade\n— a altura sai da largura que a coluna deu, em qualquer tela.",
+      "props": [
+        {
+          "nome": "delay",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string | false",
+          "obrigatoria": false,
+          "padrao": "Carregando a mídia",
+          "descricao": null
+        },
+        {
+          "nome": "radius",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--r-surface, 0.875rem)",
+          "descricao": "Cantos da mídia real. Passe o mesmo raio, senão a troca \"estala\"."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "16 / 9",
+          "descricao": null
         }
       ]
     }
@@ -3460,6 +4370,13 @@
           "obrigatoria": false,
           "padrao": "top 88%",
           "descricao": "Onde na tela o gatilho arma. `top 88%` = a dobra entrou um oitavo."
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "mask",
+          "descricao": "Qual revelação. Ver a tabela no cabeçalho."
         }
       ]
     }
@@ -3496,6 +4413,13 @@
           "obrigatoria": false,
           "padrao": "5",
           "descricao": "Graus de inclinação no canto. Acima de ~8 o card lê como brinquedo."
+        },
+        {
+          "nome": "tint",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Cor da luz e da borda acesa. Qualquer cor CSS; o padrão é a marca.\n\nExiste para o caso em que uma superfície precisa acender numa cor que NÃO é\na da marca — o card de erro, o de destaque sazonal, a grade em que cada\ncategoria tem a sua tinta. Sem isto a única saída era redefinir `--brand`\nnum ancestral, o que repinta também o conteúdo do card (botão, pastilha,\nícone), e aí \"mudar a cor da luz\" vira \"trocar a marca dentro desse pedaço\nda página\".\n\nA troca é escrita nas DUAS camadas de luz, e só nelas: o `--brand` local\nmorre no `<span>` do brilho e não desce para os filhos."
         }
       ]
     }
@@ -3609,7 +4533,7 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "0.35",
-          "descricao": "Fração do deslocamento que o rótulo acompanha. `0` trava o texto no lugar."
+          "descricao": "Quanto o rótulo fica pra trás do botão. `0` cola o texto na casca."
         },
         {
           "nome": "pull",
@@ -3638,7 +4562,7 @@
   "nav-drawer": [
     {
       "nome": "NavDrawerList",
-      "descricao": "Embrulha cada filho num `<li>` e escreve o `--i` da cascata. Ver a nota.",
+      "descricao": "Embrulha cada filho num `<li>` e escreve os DOIS índices da cascata.\n\n`--i` é a ordem de entrada, de cima pra baixo. `--io` é a ordem de saída, de\nbaixo pra cima — e não é capricho: a saída não é a entrada tocada de trás pra\nfrente. Se ela fosse, o primeiro item sumiria primeiro e a lista pareceria se\ndesfazendo pelo topo enquanto o painel ainda está na tela. Saindo do fim pro\ncomeço, o olho acompanha a borda do painel indo embora — a lista sai junto\ncom o painel, e não apesar dele.",
       "props": []
     },
     {
@@ -3684,6 +4608,13 @@
           "obrigatoria": false,
           "padrao": "false",
           "descricao": null
+        },
+        {
+          "nome": "brand",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Slot da marca no topo do painel — logo, wordmark, monograma.\n\nExiste porque o drawer costuma cobrir o header inteiro: sem ele, o momento\nem que o menu abre é o único momento da navegação em que a marca some da\ntela. Entra por slot e não por prop de `src` porque cada projeto tem o\ncomponente de logo dele, com o SVG e as variantes de contraste da marca."
         },
         {
           "nome": "footer",
@@ -3737,7 +4668,7 @@
     },
     {
       "nome": "NavDrawerBurger",
-      "descricao": "O gatilho desenhado: dois traços que viram X quando o painel abre.\n\nLê o `data-state` que o próprio `Dialog.Trigger` escreve, então não existe um\nsegundo estado pra manter em sincronia — o defeito clássico é o ícone ficar em\nX depois de fechar por `Escape`, porque quem fechou não foi o clique.\n\nUse dentro de `<NavDrawerTrigger asChild>`.",
+      "descricao": "O gatilho desenhado: três traços que viram X quando o painel abre.\n\nLê o `data-state` que o próprio `Dialog.Trigger` escreve, então não existe um\nsegundo estado pra manter em sincronia — o defeito clássico é o ícone ficar em\nX depois de fechar por `Escape`, porque quem fechou não foi o clique.\n\n── Por que três traços, e por que o botão tem caixa ──────────────────────────\n\nA versão anterior desenhava DOIS traços soltos num quadrado transparente. Duas\ncoisas quebravam ao mesmo tempo: dois traços não são o sinal universal de menu\n(o olho lê \"igual\", não \"menu\"), e sem borda nem fundo em repouso o ícone\nficava boiando no header — nada dizia onde termina o alvo de clique, então\nninguém sabia que aquilo era um botão até passar o mouse.\n\nAgora são três traços dentro de uma caixa de botão de verdade: 44px de alvo (o\nmínimo de toque), borda e superfície do tema em repouso. O traço do meio some\nencolhendo pela esquerda quando abre — se ele apenas apagasse, o X apareceria\ncom um fantasma no centro no meio da transição.\n\nA geometria é o que faz o X fechar: caixa de 10px, traços em 0 / 4,25 / 8,5.\nO CSS do item leva o primeiro traço 4,25px pra baixo e o último 4,25px pra\ncima — os dois pousam exatamente no meio, que é onde o X cruza.\n\nUse dentro de `<NavDrawerTrigger asChild>`.",
       "props": [
         {
           "nome": "label",
@@ -3745,6 +4676,143 @@
           "obrigatoria": false,
           "padrao": "Menu",
           "descricao": null
+        }
+      ]
+    }
+  ],
+  "side-nav": [
+    {
+      "nome": "SideNav",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "brand",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Marca no topo. Slot, porque cada projeto tem o componente de logo dele."
+        },
+        {
+          "nome": "collapsed",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Controle externo. Passando isto, a peça para de guardar sozinha."
+        },
+        {
+          "nome": "collapsedWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "3.75",
+          "descricao": "Largura colapsada, em rem. Tem que caber um alvo de toque de 44px."
+        },
+        {
+          "nome": "defaultCollapsed",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Estado inicial quando não há nada guardado."
+        },
+        {
+          "nome": "footer",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Rodapé colado embaixo: conta, tema, versão."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Navegação principal",
+          "descricao": "Nome do landmark. Duas navegações na mesma tela precisam de nomes diferentes."
+        },
+        {
+          "nome": "onCollapsedChange",
+          "tipo": "(collapsed: boolean) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "shortcut",
+          "tipo": "string | false",
+          "obrigatoria": false,
+          "padrao": "b",
+          "descricao": "A tecla do atalho, sempre com `Ctrl`/`⌘`. `false` desliga.\n\n`\"b\"` é o padrão porque é o que VS Code, Linear e o próprio shadcn usam pra\na mesma coisa — atalho de aplicação é convenção, não invenção."
+        },
+        {
+          "nome": "storageKey",
+          "tipo": "string | false",
+          "obrigatoria": false,
+          "padrao": "visant:side-nav",
+          "descricao": "Chave do `localStorage`. `false` desliga a persistência."
+        },
+        {
+          "nome": "toggle",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "O gatilho de colapso no topo da própria barra.\n\nEle mora AQUI dentro porque o contexto que carrega o estado mora aqui: um\n`<SideNavToggle>` solto no header do app estaria fora do provider e\nestouraria no primeiro render. Quem quer o gatilho no header do app usa o\npar controlado (`collapsed` + `onCollapsedChange`) e desenha o botão dele —\né o mesmo trato do `nav-drawer`, que também não decide onde fica o gatilho."
+        },
+        {
+          "nome": "width",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "15",
+          "descricao": "Largura aberta, em rem."
+        }
+      ]
+    },
+    {
+      "nome": "SideNavGroup",
+      "descricao": "O grupo, e o que acontece com o rótulo dele quando a barra fecha.\n\n\"Projetos\" em 3,75rem de largura sai cortado no meio da segunda sílaba, e um\nrótulo cortado é pior que rótulo nenhum — ele parece defeito. Colapsado, o\nrótulo vira `sr-only` e no lugar dele fica uma régua: a informação \"aqui\ncomeça outro conjunto\" sobrevive, que é a única parte do rótulo que o desenho\nprecisa carregar naquela largura.\n\n`role=\"group\"` + `aria-labelledby` e não uma `<section>`: seção dentro de\n`<nav>` cria um segundo landmark aninhado, e o leitor de tela passa a anunciar\nduas regiões onde existe uma.",
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O nome do grupo. Colapsado, ele vira uma régua — ver a nota."
+        }
+      ]
+    },
+    {
+      "nome": "SideNavToggle",
+      "descricao": "O gatilho de colapso.\n\nFica fora do `<nav>` na maioria dos layouts (topo do app), e é por isso que\nele lê o estado do contexto em vez de receber por prop: um segundo estado pra\nmanter em sincronia é como o ícone acaba mentindo depois de um atalho de\nteclado, que é justamente o caminho que não passa por clique.",
+      "props": []
+    },
+    {
+      "nome": "SideNavItem",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "active",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Marca a rota atual. A peça não descobre isso sozinha."
+        },
+        {
+          "nome": "asChild",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Renderiza no filho — `<Link>` do Next, `<NavLink>` do router."
+        },
+        {
+          "nome": "icon",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O ícone. Obrigatório na prática: é tudo que sobra quando a barra fecha."
+        },
+        {
+          "nome": "meta",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Contagem, atalho, \"novo\". Some quando a barra fecha — não cabe."
         }
       ]
     }
@@ -3760,6 +4828,13 @@
           "obrigatoria": true,
           "padrao": null,
           "descricao": null
+        },
+        {
+          "nome": "onStepChange",
+          "tipo": "(index: number, step: PinnedStep) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Avisa quando o passo ativo muda. Serve pra trocar um vídeo, disparar\nanalytics de dobra, ou acender algo fora da peça. Recebe o índice e o passo."
         },
         {
           "nome": "rail",
@@ -3845,6 +4920,118 @@
           "obrigatoria": false,
           "padrao": "top 85%",
           "descricao": "Onde o gatilho arma."
+        }
+      ]
+    }
+  ],
+  "photo-split": [
+    {
+      "nome": "PhotoSplit",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "media",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A mídia, por slot: `<img>`, `next/image`, `<video>`."
+        },
+        {
+          "nome": "title",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "actions",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Botões e links abaixo do texto."
+        },
+        {
+          "nome": "as",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "h2",
+          "descricao": null
+        },
+        {
+          "nome": "caption",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Legenda da foto. Entra como `<figcaption>` da moldura."
+        },
+        {
+          "nome": "eyebrow",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O rótulo acima do título. Decorativo — vai com `aria-hidden`."
+        },
+        {
+          "nome": "gap",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "3.5",
+          "descricao": "Respiro entre as duas colunas, em rem."
+        },
+        {
+          "nome": "lead",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "parallax",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Deriva da foto na rolagem, em % da altura. 0 desliga."
+        },
+        {
+          "nome": "ratio",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "4/5",
+          "descricao": "Proporção da moldura, formato CSS."
+        },
+        {
+          "nome": "side",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "left",
+          "descricao": "De que lado fica a FOTO. Dentro de `PhotoSplitStack` é escrito automático."
+        },
+        {
+          "nome": "weight",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1.1",
+          "descricao": "Peso da coluna da foto contra a do texto. 1 é meio a meio."
+        }
+      ]
+    },
+    {
+      "nome": "PhotoSplitStack",
+      "descricao": "A pilha que escreve o lado de cada dobra.\n\nClonar e não passar por contexto: o lado precisa chegar como PROP, porque é\nele que decide a variante de entrada e o sentido da abertura da moldura — e\nas duas coisas são lidas no render da filha, não num efeito.",
+      "props": [
+        {
+          "nome": "space",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "6",
+          "descricao": "Respiro entre as dobras, em rem."
+        },
+        {
+          "nome": "start",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "left",
+          "descricao": "De que lado começa a primeira foto. As seguintes alternam sozinhas."
         }
       ]
     }

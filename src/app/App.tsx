@@ -25,6 +25,7 @@ import { Solo, fundoDoSolo } from "./Solo";
 import { BrandSelector } from "../../registry/visant/ui/brand-selector";
 import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import { Gallery } from "./Gallery";
+import { CATALOG, FAMILIES, type Family } from "./catalog";
 
 /*
  * Studio e bancada chegam quando alguém abre a aba.
@@ -52,7 +53,34 @@ interface Route {
   focus: string | null;
   /** Sala aberta. Só existe nos kits. */
   kit: string | null;
+  /** Fatia do catálogo. `null` = o índice das seis categorias. */
+  familia: Family | null;
 }
+
+/**
+ * A aba `marca` e a família `marca` são coisas diferentes, e a URL diz qual.
+ *
+ * `/marca` é o Brand Studio — a seção que repinta a interface inteira. A família
+ * `marca` do catálogo (logo, cover, brand-selector) mora em `/catalogo/marca`,
+ * porque família é sempre segmento de dentro do catálogo. Não há colisão: a
+ * primeira parte do caminho decide a seção, e a segunda só é lida quando a
+ * primeira é `catalogo`. Dar à família um endereço de primeiro nível é que
+ * criaria ambiguidade — e roubaria o endereço curto de uma seção inteira.
+ */
+const familiaDe = (parte: string | undefined): Family | null =>
+  FAMILIES.find((f) => f.key === parte)?.key ?? null;
+
+/**
+ * Link direto de peça (`/c/kanban`) abre dentro da fatia dela.
+ *
+ * `/c/<item>` não carrega família no caminho, e sem esta linha a peça abriria
+ * por cima do ÍNDICE de categorias: as setas não teriam lista para percorrer e
+ * fechar devolveria a pessoa a uma página de capas, sem nenhuma relação com o
+ * que ela veio ver. Com a família derivada do item, o link de chat entrega a
+ * peça em cima da vizinhança dela — que é o contexto que faz o `add` acontecer.
+ */
+const familiaDaPeca = (nome: string | null): Family | null =>
+  (nome ? CATALOG.find((i) => i.name === nome)?.family : null) ?? null;
 
 /*
  * Kits primeiro, e não por ordem alfabética.
@@ -91,30 +119,41 @@ function parsePath(loc: Location): Route {
 
   const partes = loc.pathname.split("/").filter(Boolean);
   if (partes[0] === "c" && partes[1]) {
-    return { view: "catalogo", focus: decodeURIComponent(partes[1]), kit: null };
+    const focus = decodeURIComponent(partes[1]);
+    return { view: "catalogo", focus, kit: null, familia: familiaDaPeca(focus) };
   }
   if (partes[0] === "kit" && partes[1]) {
-    return { view: "kits", focus: null, kit: decodeURIComponent(partes[1]) };
+    return { view: "kits", focus: null, kit: decodeURIComponent(partes[1]), familia: null };
   }
   /* `/rig` era a aba da bancada. Hoje a bancada é uma sala, e o link antigo
      entra nela em vez de dar 404 em quem tinha o endereço salvo. */
-  if (partes[0] === "rig") return { view: "kits", focus: null, kit: "rig-vintage" };
+  if (partes[0] === "rig")
+    return { view: "kits", focus: null, kit: "rig-vintage", familia: null };
   const view = VIEWS.find((v) => v.value === partes[0]);
-  return { view: view?.value ?? "kits", focus: null, kit: null };
+  /* A família só é lida sob `catalogo`: é o que mantém `/marca` (o estúdio)
+     separado de `/catalogo/marca` (a fatia do catálogo). Nome de família que não
+     existe cai no índice, em vez de mostrar uma fatia vazia. */
+  const familia = view?.value === "catalogo" ? familiaDe(partes[1]) : null;
+  return { view: view?.value ?? "kits", focus: null, kit: null, familia };
 }
 
 function parseLegacyHash(hash: string): Route {
   if (hash.startsWith("#/c/")) {
-    return { view: "catalogo", focus: decodeURIComponent(hash.slice(4)) || null, kit: null };
+    const focus = decodeURIComponent(hash.slice(4)) || null;
+    return { view: "catalogo", focus, kit: null, familia: familiaDaPeca(focus) };
   }
-  if (hash.startsWith("#/rig")) return { view: "kits", focus: null, kit: "rig-vintage" };
+  if (hash.startsWith("#/rig"))
+    return { view: "kits", focus: null, kit: "rig-vintage", familia: null };
   const view = VIEWS.find((v) => v.value !== "kits" && hash.startsWith(`#/${v.value}`));
-  return { view: view?.value ?? "kits", focus: null, kit: null };
+  const familia =
+    view?.value === "catalogo" ? familiaDe(hash.replace(/^#\//, "").split("/")[1]) : null;
+  return { view: view?.value ?? "kits", focus: null, kit: null, familia };
 }
 
-function formatPath({ view, focus, kit }: Route): string {
+function formatPath({ view, focus, kit, familia }: Route): string {
   if (focus) return `/c/${encodeURIComponent(focus)}`;
   if (view === "kits") return kit ? `/kit/${encodeURIComponent(kit)}` : "/";
+  if (view === "catalogo" && familia) return `/catalogo/${familia}`;
   return `/${view}`;
 }
 
@@ -174,15 +213,25 @@ function Shell() {
   }, [density]);
 
   const setView = React.useCallback(
-    (view: View) => navigate({ view, focus: null, kit: null }),
+    // Clicar na aba "Catálogo" volta ao índice das categorias, nunca à última
+    // fatia aberta: aba é começo de caminho, não retomada de estado.
+    (view: View) => navigate({ view, focus: null, kit: null, familia: null }),
     [navigate],
   );
+  /* Fechar o foco devolve à fatia de onde a peça foi aberta — se ela foi aberta
+     por link direto (`/c/kanban`), não há fatia e o retorno é o índice. */
+  const familiaAtual = route.familia;
   const setFocus = React.useCallback(
-    (focus: string | null) => navigate({ view: "catalogo", focus, kit: null }),
+    (focus: string | null) =>
+      navigate({ view: "catalogo", focus, kit: null, familia: familiaAtual }),
+    [navigate, familiaAtual],
+  );
+  const setFamilia = React.useCallback(
+    (familia: Family | null) => navigate({ view: "catalogo", focus: null, kit: null, familia }),
     [navigate],
   );
   const setKit = React.useCallback(
-    (kit: string) => navigate({ view: "kits", focus: null, kit }),
+    (kit: string) => navigate({ view: "kits", focus: null, kit, familia: null }),
     [navigate],
   );
 
@@ -260,7 +309,14 @@ function Shell() {
         />
       )}
 
-      {route.view === "catalogo" && <Gallery focus={route.focus} onFocus={setFocus} />}
+      {route.view === "catalogo" && (
+        <Gallery
+          focus={route.focus}
+          onFocus={setFocus}
+          familia={route.familia}
+          onFamilia={setFamilia}
+        />
+      )}
 
       {/* A espera é a altura de uma tela, não um "carregando…": trocar de aba não
           deve fazer a página encolher e voltar a crescer. */}

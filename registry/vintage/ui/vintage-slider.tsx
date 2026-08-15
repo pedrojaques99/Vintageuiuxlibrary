@@ -42,12 +42,38 @@ export function VintageSlider({
   const [dragging, setDragging] = useState(false);
   const [hover, setHover] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
+  const fillRef = useRef<HTMLDivElement>(null);
+  const thumbRef = useRef<HTMLDivElement>(null);
   const valRef = useRef(currentValue);
   valRef.current = currentValue;
 
   useEffect(() => {
     if (value !== valRef.current) setCurrentValue(value);
   }, [value]);
+
+  /**
+   * O punho e a faixa são escritos no DOM na mão, dentro de um rAF.
+   *
+   * O relato era "lag ao arrastar", e a causa estava em dois lugares somados.
+   * O primeiro é o culpado óbvio, e era deliberado: `transition-[width]` e
+   * `transition-[left]` de 75ms no punho. Uma transição num valor que o dedo
+   * está ditando não suaviza nada — ela atrasa o desenho em 75ms fixos, e o
+   * punho passa o arraste inteiro correndo atrás do cursor. Some no arraste,
+   * volta quando o valor chega de fora (roda, duplo clique, prop).
+   *
+   * O segundo é o caminho do estado: cada `pointermove` disparava um render do
+   * componente E do dono do estado — no painel de dez faders da vitrine, um
+   * fader arrastado repintava os outros nove. Aqui o movimento escreve pixel
+   * direto e junta as amostras do frame num rAF só; o estado é atualizado uma
+   * vez por frame, para o número embaixo do trilho.
+   */
+  const pendente = useRef<{ x: number; fine: boolean } | null>(null);
+  const frame = useRef(0);
+
+  const pintar = useCallback((pct: number) => {
+    if (fillRef.current) fillRef.current.style.width = `${pct}%`;
+    if (thumbRef.current) thumbRef.current.style.left = `calc(${pct}% - 6px)`;
+  }, []);
 
   const update = useCallback(
     (clientX: number, fine: boolean) => {
@@ -59,10 +85,33 @@ export function VintageSlider({
       const snapped = fine
         ? Math.round(v * 100) / 100
         : Math.round(v * 10) / 10;
+      valRef.current = snapped;
+      pintar(((snapped - min) / (max - min)) * 100);
       setCurrentValue(snapped);
       onChange?.(snapped);
     },
-    [min, max, onChange]
+    [min, max, onChange, pintar]
+  );
+
+  const agendar = useCallback(
+    (clientX: number, fine: boolean) => {
+      pendente.current = { x: clientX, fine };
+      if (frame.current) return;
+      frame.current = requestAnimationFrame(() => {
+        frame.current = 0;
+        const p = pendente.current;
+        pendente.current = null;
+        if (p) update(p.x, p.fine);
+      });
+    },
+    [update]
+  );
+
+  useEffect(
+    () => () => {
+      if (frame.current) cancelAnimationFrame(frame.current);
+    },
+    []
   );
 
   // Pointer events com captura, e não listener de mouse no `document`.
@@ -84,7 +133,7 @@ export function VintageSlider({
   };
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (dragging) update(e.clientX, e.shiftKey);
+    if (dragging) agendar(e.clientX, e.shiftKey);
   };
 
   const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -155,21 +204,27 @@ export function VintageSlider({
       >
         <div className="absolute inset-0 bg-[var(--vintage-surface-2)] rounded border border-[var(--vintage-border)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
           <div
-            className="h-full bg-gradient-to-r from-[var(--vintage-meter-green)] via-[var(--vintage-meter-yellow)] to-[var(--vintage-meter-red)] rounded transition-[width] duration-75"
-            style={{ width: `${percentage}%` }}
+            ref={fillRef}
+            className="h-full bg-gradient-to-r from-[var(--vintage-meter-green)] via-[var(--vintage-meter-yellow)] to-[var(--vintage-meter-red)] rounded"
+            style={{
+              width: `${percentage}%`,
+              transition: dragging ? "none" : "width 75ms linear",
+            }}
           />
         </div>
 
         {/* Thumb */}
         <div
+          ref={thumbRef}
           className={cn(
-            "absolute top-1/2 -translate-y-1/2 w-3 rounded pointer-events-none transition-[left] duration-75",
+            "absolute top-1/2 -translate-y-1/2 w-3 rounded pointer-events-none",
             // O punho continua mais alto que o trilho: é o que dá o alvo de
             // arraste e a leitura de peça física. Encolhe junto, não some.
             dense ? "h-7" : "h-10"
           )}
           style={{
             left: `calc(${percentage}% - 6px)`,
+            transition: dragging ? "none" : "left 75ms linear",
             background:
               "linear-gradient(to bottom, var(--vintage-metal-light), var(--vintage-metal-dark))",
             border: "2px solid var(--vintage-text-muted)",

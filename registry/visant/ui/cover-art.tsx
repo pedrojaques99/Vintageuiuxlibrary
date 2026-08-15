@@ -1,7 +1,19 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { coverLook, mix, monogram, type CoverFamily, type CoverLook } from "@/lib/cover-art";
+/*
+ * O lib se chama `cover-look`, e não `cover-art`, de propósito.
+ *
+ * O item entrega dois arquivos, e enquanto os dois tiveram o MESMO nome de base
+ * o shadcn reescreveu o import errado na instalação: `@/lib/cover-art` virava
+ * `@/components/ui/cover-art`, o arquivo passava a importar de si mesmo e o
+ * projeto do cliente quebrava com "Circular definition of import alias". No
+ * repo de origem isso não aparece — só o teste de instalação limpa pega.
+ *
+ * Regra que vale pra qualquer item de vários arquivos: dois arquivos do mesmo
+ * item nunca compartilham nome de base.
+ */
+import { coverLook, mix, monogram, type CoverFamily, type CoverLook } from "@/lib/cover-look";
 
 /**
  * Cover Art — a capa determinística que substitui a caixa cinza.

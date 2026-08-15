@@ -50,11 +50,16 @@ export function WorkingGlyph({
         {icon ?? <Pickaxe size={size} />}
       </span>
 
-      {/* faísca na zona de impacto da ponta, mais rápida que o texto de status */}
+      {/* Faísca na zona de impacto da ponta, mais rápida que o texto de status.
+          Sem moldura a caixa é do tamanho do ícone, então a faísca sai para fora
+          dela — dentro, ela caía em cima do próprio glifo e virava sujeira. */}
       <GlitchChars
         length={1}
         intervalMs={120}
-        className="absolute bottom-1 right-1.5 text-[10px] font-bold leading-none opacity-80"
+        className={cn(
+          "absolute text-[10px] font-bold leading-none opacity-80",
+          framed ? "bottom-1 right-1.5" : "-bottom-1.5 -right-1.5",
+        )}
       />
     </div>
   );

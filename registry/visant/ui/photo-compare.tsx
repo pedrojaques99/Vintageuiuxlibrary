@@ -68,6 +68,32 @@ import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
+/**
+ * O punho, e por que ele mora aqui e não no bloco `css` do item.
+ *
+ * O bloco `css` desenhava `.photo-compare-grip` como um disco de 2,25rem
+ * **preenchido** com `var(--brand)`. Duas consequências, e as duas foram
+ * reportadas na mesma frase: sobre uma foto de 440px aquilo é uma bolha de
+ * 36px, e num tema cuja marca é ciano ela lê como um respingo de cor no meio
+ * da imagem — sem nenhuma pista de que ali se arrasta.
+ *
+ * Aqui o punho volta a ser punho: menor, com o corpo na cor da superfície, o
+ * anel na marca e as setas em `--foreground`. Cor da marca vira contorno, não
+ * mancha — e é o mesmo desenho em claro e em escuro, porque as três cores
+ * saem do tema.
+ *
+ * Mora em utilitária, e não numa reescrita do bloco `css`, pelo mesmo motivo
+ * do `@visant/spine-card`: utilitária ganha de `@layer components` por camada,
+ * então quem instalou pelo `shadcn add` recebe ESTE desenho mesmo com o bloco
+ * antigo ainda na folha. A classe `.photo-compare-grip` fica no lugar para o
+ * seletor de foco do bloco continuar casando.
+ */
+const PUNHO = [
+  "photo-compare-grip",
+  "grid size-7 place-items-center rounded-[var(--r-pill,9999px)]",
+  "border-2 border-[var(--brand)] bg-[var(--background)] text-[var(--foreground)]",
+].join(" ");
+
 export interface PhotoCompareProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   /** A foto de baixo — o estado original. */
   before: React.ReactNode;
@@ -167,7 +193,22 @@ export function PhotoCompare({
       </div>
 
       <span aria-hidden="true" className="photo-compare-seam">
-        <span className="photo-compare-grip" />
+        <span className={PUNHO}>
+          {/* Duas setas, e não um disco liso: a alça precisa DIZER que arrasta
+              de lado. Sem o sinal ela vira um ponto colorido no meio da foto —
+              foi assim que a peça foi reportada como "bola azul gigante". */}
+          <svg
+            viewBox="0 0 24 24"
+            className="h-3.5 w-3.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M10 8.5 6.5 12l3.5 3.5M14 8.5l3.5 3.5-3.5 3.5" />
+          </svg>
+        </span>
       </span>
 
       {/* O controle de verdade. Invisível, do tamanho da caixa, e é dele que

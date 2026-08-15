@@ -6,6 +6,12 @@
  * O `@dnd-kit` são 185KB (60KB comprimidos) que serviam UM card do catálogo e
  * chegavam no primeiro carregamento, antes de qualquer pessoa rolar até ele.
  * Aqui o pedaço só é buscado quando o card entra na tela.
+ *
+ * Uma nota sobre o palco: o `FitStage` escala a demo com `transform` quando ela
+ * não cabe, e o dnd-kit move o card em pixel de tela, sem saber da escala. Com
+ * o board declarado em 1020 dentro da faixa cheia a escala é 1 e o arraste é
+ * exato; abaixo disso (celular) o fantasma anda mais rápido que o board. É
+ * limite do palco, não da peça — num app de verdade não há escala nenhuma.
  */
 
 import * as React from "react";
@@ -15,21 +21,25 @@ import type { KanbanItem } from "../../../registry/visant/blocks/kanban/types";
 /*
  * Dois tamanhos do mesmo board, e o motivo de existirem dois.
  *
- * No card do catálogo o board tem 760px declarados e precisa caber inteiro:
- * duas colunas e três cartões é o que mostra o gesto sem virar uma barra de
- * rolagem. Já na sala da mesa de trabalho o board É a tela — duas colunas
- * quase vazias ali leem como app sem uso, e o que se está vendendo é
- * justamente o app cheio. Mesma peça, mesmo arquivo, densidade diferente.
+ * No card do catálogo o board tem 1020px declarados: três colunas de 320
+ * (`--kanban-col-min`) mais as goteiras. Duas colunas cabiam em 760, mas com
+ * duas colunas o gesto tem um destino só — e o que este item vende é escolher
+ * ONDE o card cai, entre quais vizinhos. Já na sala da mesa de trabalho o board
+ * É a tela, e ali entram as quatro. Mesma peça, mesmo arquivo, densidade
+ * diferente.
  */
 const ENXUTO = {
   columns: [
     { id: "fila", data: { label: "Fila" } },
     { id: "fazendo", data: { label: "Fazendo" } },
+    { id: "pronto", data: { label: "Pronto" } },
   ],
   items: [
     { id: "a", columnId: "fila", data: { t: "Colher marquee" } },
     { id: "b", columnId: "fila", data: { t: "Tema Kastrup" } },
     { id: "c", columnId: "fazendo", data: { t: "Brand selector" } },
+    { id: "d", columnId: "fazendo", data: { t: "Landing Casa Vinte" } },
+    { id: "e", columnId: "pronto", data: { t: "Rebrand Ribalta" } },
   ],
 };
 

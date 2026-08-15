@@ -297,6 +297,23 @@
       ]
     },
     {
+      "name": "vintage-parametric-eq",
+      "type": "registry:ui",
+      "title": "Vintage Parametric EQ",
+      "description": "O EQ paramétrico: cada banda é um sino, e a curva grossa é a soma em dB. Arraste um ponto, roda muda o Q, e o BYPASS achata sem perder os valores.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/vintage-theme",
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/vintage/ui/vintage-parametric-eq.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "vintage-led",
       "type": "registry:ui",
       "title": "Vintage LED",
@@ -338,7 +355,9 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
-        "utils"
+        "utils",
+        "https://visant-ui.vercel.app/r/vintage-oscilloscope.json",
+        "@visant/vintage-oscilloscope"
       ],
       "files": [
         {
@@ -355,7 +374,9 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
-        "utils"
+        "utils",
+        "https://visant-ui.vercel.app/r/sfx-bus.json",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -430,6 +451,27 @@
       }
     },
     {
+      "name": "logo-wall",
+      "type": "registry:ui",
+      "title": "Logo Wall",
+      "description": "A faixa de \"confiam na gente\" com os logos normalizados: altura óptica por item, teto de largura pro wordmark comprido e dessaturação em repouso que vira cor no hover.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "gsap"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://visant-ui.vercel.app/r/marquee.json",
+        "@visant/marquee"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/logo-wall.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "rail",
       "type": "registry:ui",
       "title": "Rail",
@@ -441,6 +483,24 @@
       "files": [
         {
           "path": "registry/visant/ui/rail.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "reels-rail",
+      "type": "registry:ui",
+      "title": "Reels Rail",
+      "description": "O trilho de vídeo vertical: cartões 9:16 com encaixe, o do meio tocando e os vizinhos parados e mudos. Som opcional, um card por vez, e fora da tela pausa tudo.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils",
+        "https://visant-ui.vercel.app/r/rail.json",
+        "@visant/rail"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/reels-rail.tsx",
           "type": "registry:ui"
         }
       ]
@@ -651,7 +711,7 @@
         }
       ],
       "dependencies": [
-        "@tanstack/react-table",
+        "@tanstack/react-table@^8.21.3",
         "class-variance-authority",
         "lucide-react",
         "next",
@@ -714,6 +774,46 @@
       ],
       "dependencies": [
         "lucide-react"
+      ]
+    },
+    {
+      "name": "auth-button",
+      "type": "registry:ui",
+      "title": "Auth Button",
+      "description": "O canto da conta nos três estados. Enquanto a sessão não responde ele não escreve “Entrar” — e não muda de tamanho quando ela chega.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "avatar"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/auth-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "profile-form",
+      "type": "registry:ui",
+      "title": "Profile Form",
+      "description": "Editar o perfil com foto, nome e e-mail verificado. Quando não dá pra salvar, o motivo aparece no campo — não num toast.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "avatar"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/profile-form.tsx",
+          "type": "registry:ui"
+        }
       ]
     },
     {
@@ -1154,6 +1254,22 @@
       }
     },
     {
+      "name": "quote-block",
+      "type": "registry:ui",
+      "title": "Quote Block",
+      "description": "O depoimento único, em tamanho de dobra: a citação vem primeiro e em corpo de manchete, a atribuição entra depois como assinatura.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/quote-block.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "erase-field",
       "type": "registry:ui",
       "title": "Erase Field",
@@ -1485,7 +1601,7 @@
       ],
       "files": [
         {
-          "path": "registry/visant/lib/cover-art.ts",
+          "path": "registry/visant/lib/cover-look.ts",
           "type": "registry:lib"
         },
         {
@@ -1751,6 +1867,9 @@
           ".magnet-sheen": {
             "display": "none"
           }
+        },
+        ".magnet-field[data-magnet=rest] .magnet-sheen": {
+          "transition-duration": "var(--dur-fast, 140ms)"
         }
       }
     },
@@ -1773,12 +1892,20 @@
         }
       ],
       "css": {
-        "@keyframes nav-drawer-veil": {
+        "@keyframes nav-drawer-veil-in": {
           "from": {
             "opacity": "0"
           },
           "to": {
             "opacity": "1"
+          }
+        },
+        "@keyframes nav-drawer-veil-out": {
+          "from": {
+            "opacity": "1"
+          },
+          "to": {
+            "opacity": "0"
           }
         },
         "@keyframes nav-drawer-from-right": {
@@ -1789,6 +1916,14 @@
             "transform": "translate3d(0, 0, 0)"
           }
         },
+        "@keyframes nav-drawer-to-right": {
+          "from": {
+            "transform": "translate3d(0, 0, 0)"
+          },
+          "to": {
+            "transform": "translate3d(100%, 0, 0)"
+          }
+        },
         "@keyframes nav-drawer-from-left": {
           "from": {
             "transform": "translate3d(-100%, 0, 0)"
@@ -1797,12 +1932,28 @@
             "transform": "translate3d(0, 0, 0)"
           }
         },
+        "@keyframes nav-drawer-to-left": {
+          "from": {
+            "transform": "translate3d(0, 0, 0)"
+          },
+          "to": {
+            "transform": "translate3d(-100%, 0, 0)"
+          }
+        },
         "@keyframes nav-drawer-from-top": {
           "from": {
             "transform": "translate3d(0, -100%, 0)"
           },
           "to": {
             "transform": "translate3d(0, 0, 0)"
+          }
+        },
+        "@keyframes nav-drawer-to-top": {
+          "from": {
+            "transform": "translate3d(0, 0, 0)"
+          },
+          "to": {
+            "transform": "translate3d(0, -100%, 0)"
           }
         },
         "@keyframes nav-drawer-item-in": {
@@ -1815,33 +1966,47 @@
             "transform": "translate3d(0, 0, 0)"
           }
         },
+        "@keyframes nav-drawer-item-out": {
+          "from": {
+            "opacity": "1",
+            "transform": "translate3d(0, 0, 0)"
+          },
+          "to": {
+            "opacity": "0",
+            "transform": "translate3d(0, 8px, 0)"
+          }
+        },
         ".nav-drawer-overlay[data-state=open]": {
-          "animation": "nav-drawer-veil var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)) both"
+          "animation": "nav-drawer-veil-in var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)) both"
         },
         ".nav-drawer-overlay[data-state=closed]": {
-          "animation": "nav-drawer-veil var(--dur-fast, 140ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)) reverse both"
+          "animation": "nav-drawer-veil-out var(--dur-fast, 140ms) cubic-bezier(0.5, 0, 0.9, 0.4) both"
         },
         ".nav-drawer-panel[data-side=right][data-state=open]": {
           "animation": "nav-drawer-from-right var(--dur-slow, 420ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) both"
         },
         ".nav-drawer-panel[data-side=right][data-state=closed]": {
-          "animation": "nav-drawer-from-right var(--dur-base, 240ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) reverse both"
+          "animation": "nav-drawer-to-right var(--dur-base, 240ms) cubic-bezier(0.5, 0, 0.9, 0.4) both"
         },
         ".nav-drawer-panel[data-side=left][data-state=open]": {
           "animation": "nav-drawer-from-left var(--dur-slow, 420ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) both"
         },
         ".nav-drawer-panel[data-side=left][data-state=closed]": {
-          "animation": "nav-drawer-from-left var(--dur-base, 240ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) reverse both"
+          "animation": "nav-drawer-to-left var(--dur-base, 240ms) cubic-bezier(0.5, 0, 0.9, 0.4) both"
         },
         ".nav-drawer-panel[data-side=top][data-state=open]": {
           "animation": "nav-drawer-from-top var(--dur-slow, 420ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) both"
         },
         ".nav-drawer-panel[data-side=top][data-state=closed]": {
-          "animation": "nav-drawer-from-top var(--dur-base, 240ms) var(--ease-drawer, cubic-bezier(0.32, 0.72, 0, 1)) reverse both"
+          "animation": "nav-drawer-to-top var(--dur-base, 240ms) cubic-bezier(0.5, 0, 0.9, 0.4) both"
         },
         ".nav-drawer-panel[data-state=open] .nav-drawer-list > li": {
           "animation": "nav-drawer-item-in 460ms var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)) both",
           "animation-delay": "calc(120ms + var(--i, 0) * 45ms)"
+        },
+        ".nav-drawer-panel[data-state=closed] .nav-drawer-list > li": {
+          "animation": "nav-drawer-item-out calc(var(--dur-base, 240ms) * 0.6) cubic-bezier(0.5, 0, 0.9, 0.4) both",
+          "animation-delay": "calc(var(--io, 0) * var(--dur-base, 240ms) * 0.1)"
         },
         ".nav-drawer-rule": {
           "transform": "scaleX(0)",
@@ -1866,7 +2031,7 @@
           "transform": "translateY(-4.25px) rotate(-45deg)"
         },
         "@media (prefers-reduced-motion: reduce)": {
-          ".nav-drawer-overlay, .nav-drawer-panel, .nav-drawer-panel[data-state=open] .nav-drawer-list > li": {
+          ".nav-drawer-overlay, .nav-drawer-panel, .nav-drawer-panel[data-state=open] .nav-drawer-list > li, .nav-drawer-panel[data-state=closed] .nav-drawer-list > li": {
             "animation-duration": "1ms",
             "animation-delay": "0ms"
           },
@@ -1875,6 +2040,22 @@
           }
         }
       }
+    },
+    {
+      "name": "side-nav",
+      "type": "registry:ui",
+      "title": "Side Nav",
+      "description": "A navegação lateral de aplicação: colapsa por clique ou por ⌘/Ctrl+B, agrupa, marca a rota ativa e lembra o estado. O rótulo vira sr-only quando fecha, nunca some do DOM.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/side-nav.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "pinned-scene",
@@ -1949,6 +2130,31 @@
           }
         }
       }
+    },
+    {
+      "name": "photo-split",
+      "type": "registry:ui",
+      "title": "Photo Split",
+      "description": "A dobra alternada foto ↔ texto: a moldura revela a imagem, o texto entra deslizando da borda externa e o lado inverte a cada dobra sem ninguém escrever nada.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "gsap"
+      ],
+      "registryDependencies": [
+        "utils",
+        "https://visant-ui.vercel.app/r/photo-frame.json",
+        "https://visant-ui.vercel.app/r/section-intro.json",
+        "https://visant-ui.vercel.app/r/fold-motion.json",
+        "@visant/photo-frame",
+        "@visant/section-intro",
+        "@visant/fold-motion"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/photo-split.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "photo-flip",

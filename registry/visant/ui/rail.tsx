@@ -45,6 +45,23 @@ import { cn } from "@/lib/utils";
  *
  * As três entram como prop nova, e as três nascem desligadas: quem já usava o
  * trilho recebe o mesmo pixel de antes.
+ *
+ * ── E a ponta esmaecida ainda não dizia nada ───────────────────────────────
+ *
+ * `fade` conserta a mentira ("existe mais lista deste lado") mas para na
+ * metáfora: o esmaecido promete continuação sem dizer QUANTA. Num trilho de 6
+ * itens isso é gesto; num de 40, é a diferença entre arrastar e desistir — e
+ * quem arrasta no telefone não tem seta pra contar por ela.
+ *
+ * `remainder` põe o número na própria ponta: `+7`, contando os itens que ainda
+ * não couberam INTEIROS na vista, do mesmo `getBoundingClientRect` que já roda
+ * a cada rolagem. Clicar nele anda um item, então a informação e o controle são
+ * o mesmo alvo — e ele desaparece quando chega ao fim, como as setas.
+ *
+ * `progress` desenha a régua embaixo: largura do polegar = fatia visível da
+ * lista, posição = onde se está. É a barra de rolagem que o navegador esconde
+ * no telefone, redesenhada com o token da marca, e é o que responde "isso é
+ * uma lista de seis ou de sessenta?" antes do primeiro gesto.
  */
 
 export interface RailProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -75,6 +92,10 @@ export interface RailProps extends React.HTMLAttributes<HTMLDivElement> {
   heading?: React.ReactNode;
   /** O qualificador ao lado do nome: "12 peças", "atualizado hoje". */
   hint?: React.ReactNode;
+  /** `+N` na ponta que continua. Clicar anda um item. */
+  remainder?: boolean;
+  /** Régua embaixo: quanto da lista cabe na vista e onde ela está. */
+  progress?: boolean;
 }
 
 export function Rail({
@@ -87,11 +108,21 @@ export function Rail({
   fade = false,
   heading,
   hint,
+  remainder = false,
+  progress = false,
   className,
   ...props
 }: RailProps) {
   const ref = React.useRef<HTMLDivElement>(null);
   const [edge, setEdge] = React.useState({ start: true, end: false });
+  /**
+   * O que a ponta e a régua mostram, medido no MESMO passo das bordas.
+   *
+   * Um estado só, e não três: `restam` e a régua mudam sempre junto com
+   * `edge`, e três `setState` no mesmo `onScroll` seriam três renders por
+   * quadro de rolagem pra desenhar uma informação que é uma só.
+   */
+  const [vista, setVista] = React.useState({ restam: 0, fatia: 1, pos: 0 });
 
   const sync = React.useCallback(() => {
     const el = ref.current;
@@ -99,6 +130,20 @@ export function Rail({
     setEdge({
       start: el.scrollLeft < 8,
       end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 8,
+    });
+
+    const caixa = el.getBoundingClientRect();
+    // "Falta" o item que ainda não coube INTEIRO. O card cortado na borda é a
+    // promessa da peça; contá-lo como visto seria a conta mentindo pra manter
+    // o número bonito. 1px de tolerância para o sub-pixel de layout.
+    const restam = Array.from(el.children as HTMLCollectionOf<HTMLElement>).filter(
+      (c) => c.getBoundingClientRect().right > caixa.right + 1,
+    ).length;
+    const rolavel = el.scrollWidth - el.clientWidth;
+    setVista({
+      restam,
+      fatia: el.scrollWidth ? el.clientWidth / el.scrollWidth : 1,
+      pos: rolavel > 0 ? el.scrollLeft / rolavel : 0,
     });
   }, []);
 
@@ -305,47 +350,92 @@ export function Rail({
         </div>
       )}
 
-      <div
-        ref={ref}
-        role="group"
-        aria-label={label}
-        onScroll={sync}
-        onKeyDown={teclado}
-        onFocus={aoFocar}
-        className={cn(
-          "grid grid-flow-col overflow-x-auto overscroll-x-contain pb-3",
-          "[scroll-snap-type:x_proximity]",
-          "[&>*]:min-w-0 [&>*]:[scroll-snap-align:start]",
-          "[scrollbar-width:thin]",
+      {/* A caixa de posicionamento é ESTA, não o container inteiro: com a
+          cabeça ligada, `top-1/2` do container cairia no meio do conjunto
+          "cabeçalho + trilho" e o `+N` flutuaria acima dos cards. */}
+      <div className="relative">
+        <div
+          ref={ref}
+          role="group"
+          aria-label={label}
+          onScroll={sync}
+          onKeyDown={teclado}
+          onFocus={aoFocar}
+          className={cn(
+            "grid grid-flow-col overflow-x-auto overscroll-x-contain pb-3",
+            "[scroll-snap-type:x_proximity]",
+            "[&>*]:min-w-0 [&>*]:[scroll-snap-align:start]",
+            "[scrollbar-width:thin]",
+          )}
+          style={{
+            gridAutoColumns: `minmax(${itemWidth}px, 1fr)`,
+            gap: `${gap}px`,
+            scrollbarColor: "var(--border) transparent",
+            /*
+             * Sangria em três partes, e as três são obrigatórias.
+             *
+             * A margem negativa tira a caixa pra fora do container; o padding
+             * devolve o CONTEÚDO pro lugar, então o primeiro item continua na
+             * mesma vertical do texto de cima; e o `scroll-padding` faz o encaixe
+             * parar nessa mesma vertical. Sem a terceira, o snap ancora na borda
+             * crua do scroller e o primeiro card encosta na tela toda vez que a
+             * pessoa volta pro começo — o defeito clássico de trilho sangrado.
+             */
+            ...(sangra
+              ? {
+                  marginInline: `-${sangra}px`,
+                  paddingInline: `${sangra}px`,
+                  scrollPaddingInline: `${sangra}px`,
+                }
+              : null),
+            ...(mascara
+              ? { maskImage: mascara, WebkitMaskImage: mascara }
+              : null),
+          }}
+        >
+          {children}
+        </div>
+
+        {remainder && vista.restam > 0 && (
+          /* Fica DENTRO da área rolável e por cima do último card cortado —
+             é a legenda do corte. `tabIndex={-1}` pelo mesmo motivo das setas:
+             o teclado já anda com ←/→ e moveria o foco junto, que é melhor. */
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-hidden="true"
+            onClick={() => nudge(1)}
+            className={cn(
+              "absolute right-0 top-1/2 z-10 -translate-y-1/2",
+              "inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--background)]",
+              "px-2.5 py-1 font-mono text-[11px] tabular-nums text-[var(--muted-foreground)]",
+              "transition-[color,border-color,transform] [transition-duration:var(--dur-press,120ms)]",
+              "hover:border-[var(--foreground)] hover:text-[var(--foreground)]",
+              "active:scale-[0.94] motion-reduce:active:scale-100",
+            )}
+          >
+            +{vista.restam}
+          </button>
         )}
-        style={{
-          gridAutoColumns: `minmax(${itemWidth}px, 1fr)`,
-          gap: `${gap}px`,
-          scrollbarColor: "var(--border) transparent",
-          /*
-           * Sangria em três partes, e as três são obrigatórias.
-           *
-           * A margem negativa tira a caixa pra fora do container; o padding
-           * devolve o CONTEÚDO pro lugar, então o primeiro item continua na
-           * mesma vertical do texto de cima; e o `scroll-padding` faz o encaixe
-           * parar nessa mesma vertical. Sem a terceira, o snap ancora na borda
-           * crua do scroller e o primeiro card encosta na tela toda vez que a
-           * pessoa volta pro começo — o defeito clássico de trilho sangrado.
-           */
-          ...(sangra
-            ? {
-                marginInline: `-${sangra}px`,
-                paddingInline: `${sangra}px`,
-                scrollPaddingInline: `${sangra}px`,
-              }
-            : null),
-          ...(mascara
-            ? { maskImage: mascara, WebkitMaskImage: mascara }
-            : null),
-        }}
-      >
-        {children}
       </div>
+
+      {progress && (
+        // `aria-hidden`: é o retrato da mesma rolagem que o leitor de tela já
+        // percorre item a item dentro do `role="group"`. Anunciar de novo, em
+        // porcentagem, seria ruído sobre um dado que ele não pode usar.
+        <div aria-hidden="true" className="mt-1 h-[3px] w-full overflow-hidden rounded-full bg-[var(--muted)]">
+          <div
+            className="h-full rounded-full bg-[var(--brand,var(--foreground))] transition-transform [transition-duration:var(--dur-press,120ms)] ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))] motion-reduce:transition-none"
+            style={{
+              width: `${Math.min(1, vista.fatia) * 100}%`,
+              // A translação é em % da PRÓPRIA largura, então o polegar anda
+              // exatamente o resto da pista: em `fatia` 0,4 ele percorre 150%
+              // de si mesmo e encosta no fim sem passar.
+              transform: `translateX(${(vista.pos * (1 - Math.min(1, vista.fatia)) * 100) / Math.max(0.0001, Math.min(1, vista.fatia))}%)`,
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -365,7 +365,7 @@ export default function MotionEEstado() {
           pecas={["paper-shuttle"]}
           nota="a barra só entra quando a porcentagem é verdadeira"
         >
-          <div className="grid gap-7 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
             {/* Cada um ganha o próprio chão. Solto na coluna, o loader de 200px
                 ficava centrado e o texto encostado à esquerda, e os dois
                 pareciam não ter relação. */}
@@ -424,7 +424,7 @@ export default function MotionEEstado() {
           que a linha do tempo se abriu em dois finais possíveis.
         */}
         <Faixa tom="recuo" className="py-8 sm:py-10">
-          <div className="grid gap-9 lg:grid-cols-2 lg:gap-10">
+          <div className="grid grid-cols-1 gap-9 lg:grid-cols-2 lg:gap-10">
             <Bloco titulo="05 falhou" nota="a caixa é a mesma do ato anterior, o conteúdo é que troca">
               <Falha />
             </Bloco>

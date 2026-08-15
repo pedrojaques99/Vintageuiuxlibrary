@@ -38,6 +38,10 @@ export function PaperShuttle({
 }) {
   const reduced = useReducedMotion();
 
+  // Grampeado uma vez só: antes a barra respeitava o limite e o número não, então
+  // um `progress={130}` desenhava a barra cheia com "130%" escrito embaixo.
+  const pct = progress == null ? null : Math.min(100, Math.max(0, progress));
+
   return (
     <div className={cn("text-brand", className)} role="status" aria-live="polite">
       <div className="relative mx-auto h-[64px] w-[200px]">
@@ -82,21 +86,33 @@ export function PaperShuttle({
       </div>
 
       <div className="mx-auto mt-3 w-[200px]">
-        {progress != null && (
-          <div className="h-[6px] overflow-hidden rounded-full bg-muted">
+        {pct != null && (
+          <div
+            className="h-[6px] overflow-hidden rounded-full bg-muted"
+            role="progressbar"
+            aria-valuenow={Math.round(pct)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
             <motion.div
               className="h-full rounded-full bg-brand"
               initial={{ width: 0 }}
-              animate={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+              animate={{ width: `${pct}%` }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             />
           </div>
         )}
-        <p className="mt-1.5 text-center font-mono text-[10px] tabular-nums text-muted-foreground">
+        {/* A linha é `aria-hidden` porque ela muda a cada quadro de progresso: numa
+            região viva o leitor de tela leria "41%, 43%, 45%" sem parar. O que a
+            região anuncia é o rótulo — a frase que de fato muda de sentido. */}
+        <p
+          aria-hidden="true"
+          className="mt-1.5 text-center font-mono text-[10px] tabular-nums text-muted-foreground"
+        >
           <GlitchChars className="mr-1 text-[var(--accent-ink,var(--muted-foreground))]" />
-          {label ??
-            (progress != null ? `${Math.round(progress)}%` : "Processando…")}
+          {label ?? (pct != null ? `${Math.round(pct)}%` : "Processando…")}
         </p>
+        <span className="sr-only">{label ?? "Processando"}</span>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@
   "author": "Visant Labs <visantsupply@gmail.com>",
   "description": "Tabela densa: ordenação, seleção, edição inline e menu de contexto. Hoje acoplada a Next (next-auth + next/navigation) — roda em app Next, não nesta vitrine.",
   "dependencies": [
-    "@tanstack/react-table",
+    "@tanstack/react-table@^8.21.3",
     "class-variance-authority",
     "lucide-react",
     "next",

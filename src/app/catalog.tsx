@@ -17,49 +17,27 @@ import * as React from "react";
 import { Filter, Layers, Ruler, SlidersHorizontal } from "lucide-react";
 
 import { useStageActive } from "./stage";
-import { Media, proporcao, type Papel } from "./media";
+import { Media, type Papel } from "./media";
 import { depKeysOf } from "./deps";
-import { PAD_VOICES, PEOPLE, SCOPE_PHOSPHOR, SCOPE_SAMPLES } from "./demo-fixtures";
+import { PAD_VOICES, PEOPLE } from "./demo-fixtures";
 
 import { Chip } from "../../registry/visant/ui/chip";
-import { Plate } from "../../registry/visant/ui/plate";
-import { Rail } from "../../registry/visant/ui/rail";
 import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
-import { StoreStatus } from "../../registry/visant/ui/store-status";
-import { MeasurePicker } from "../../registry/visant/ui/measure-picker";
 import { StatusTicker } from "../../registry/visant/ui/status-ticker";
 import { GlitchChars } from "../../registry/visant/ui/glitch-chars";
 import { WorkingGlyph } from "../../registry/visant/ui/working-glyph";
 import { PaperShuttle } from "../../registry/visant/ui/paper-shuttle";
-import { GeneratingTile } from "../../registry/visant/ui/generating-tile";
-import { TurbulenceField } from "../../registry/visant/ui/turbulence-field";
-import { GridDots } from "../../registry/visant/ui/grid-dots";
-import { DropOverlay } from "../../registry/visant/ui/drop-overlay";
 import { OctahedronLoader } from "../../registry/visant/ui/octahedron-loader";
-import { AssigneeStack } from "../../registry/visant/ui/assignee-stack";
-import { MasonryGallery } from "../../registry/visant/ui/masonry-gallery";
 import { ScrubInput } from "../../registry/visant/ui/scrub-input";
 import { InlineEdit } from "../../registry/visant/ui/inline-edit";
-import { RepulsiveHover } from "../../registry/visant/ui/repulsive-hover";
-import { Timeline } from "../../registry/visant/ui/timeline";
-import { StickyFilterbar, FilterRow } from "../../registry/visant/ui/sticky-filterbar";
 import { SectionIntro } from "../../registry/visant/ui/section-intro";
 import { CtaSurface, CtaAction } from "../../registry/visant/ui/cta-surface";
-import { ShowcaseCard } from "../../registry/visant/ui/showcase-card";
 import { EraseField } from "../../registry/visant/ui/erase-field";
 import { SpringDots } from "../../registry/visant/ui/spring-dots";
 import { SfxToggle } from "../../registry/visant/ui/sfx-toggle";
-import { CountUp } from "../../registry/visant/ui/count-up";
 import { MeasureBar } from "../../registry/visant/ui/measure-bar";
-import { SpineCard } from "../../registry/visant/ui/spine-card";
-import { CoverArt } from "../../registry/visant/ui/cover-art";
 import { EmptyState } from "../../registry/visant/ui/empty-state";
-import { SkeletonRail } from "../../registry/visant/ui/skeleton-rail";
-import { Fold, FoldPart } from "../../registry/visant/lib/fold-motion";
-import { usePointerParallax } from "../../registry/visant/hooks/use-pointer-parallax";
-import { LineReveal } from "../../registry/visant/ui/line-reveal";
 import { PhotoFrame } from "../../registry/visant/ui/photo-frame";
-import { PhotoCompare } from "../../registry/visant/ui/photo-compare";
 import { PhotoFlip } from "../../registry/visant/ui/photo-flip";
 import { MagneticCta } from "../../registry/visant/ui/magnetic-cta";
 import {
@@ -71,24 +49,68 @@ import {
   NavDrawerClose,
   NavDrawerBurger,
 } from "../../registry/visant/ui/nav-drawer";
-import { Gleam } from "../../registry/visant/ui/gleam";
 import { SimSlider } from "../../registry/visant/ui/sim-slider";
-import { StepCards } from "../../registry/visant/blocks/step-cards";
 import { TestimonialWall } from "../../registry/visant/blocks/testimonial-wall";
 
-import { VintageKnob } from "../../registry/vintage/ui/vintage-knob";
 import { VintageLargeKnob } from "../../registry/vintage/ui/vintage-large-knob";
-import { VintageMeter } from "../../registry/vintage/ui/vintage-meter";
 import { VintageButton } from "../../registry/vintage/ui/vintage-button";
-import { VintageSlider } from "../../registry/vintage/ui/vintage-slider";
-import { VintageToggle } from "../../registry/vintage/ui/vintage-toggle";
 import { VintageEQ } from "../../registry/vintage/ui/vintage-eq";
-import { VintageLed } from "../../registry/vintage/ui/vintage-led";
+import { VintageToggle } from "../../registry/vintage/ui/vintage-toggle";
 import { VintageTvFrame } from "../../registry/vintage/ui/vintage-tv-frame";
 import { VintageSoundboardPad } from "../../registry/vintage/ui/vintage-soundboard-pad";
 import { VintageXYPad } from "../../registry/vintage/ui/vintage-xy-pad";
-import { VintageOscilloscope } from "../../registry/vintage/ui/vintage-oscilloscope";
-import { VintageCommandPalette } from "../../registry/vintage/ui/vintage-command-palette";
+/*
+ * As demos que moram em arquivo próprio.
+ *
+ * Todas exportam default. O import é estático — o `React.lazy` fica só para
+ * quem carrega peso que a grade inteira não usa (o @dnd-kit do board) ou que
+ * mora no meio da lista (marquee, pinned-scene). Fatiar as outras não pagaria:
+ * o GSAP já entra no primeiro chunk pelas demos que continuam inline aqui
+ * (`PhotoFrameDemo`, `PhotoFlipDemo`), então um chunk a mais só somaria
+ * requisição sem tirar byte do caminho crítico.
+ */
+import AssigneeStackDemo from "./demos/assignee-stack-demo";
+import BrandSelectorDemo from "./demos/brand-selector-demo";
+import ChipDemo from "./demos/chip-demo";
+import CountUpDemo from "./demos/count-up-demo";
+import CoverArtDemo from "./demos/cover-art-demo";
+import DropOverlayDemo from "./demos/drop-overlay-demo";
+import FoldMotionDemo from "./demos/fold-motion-demo";
+import GleamDemo from "./demos/gleam-demo";
+import GridDotsDemo from "./demos/grid-dots-demo";
+import LineRevealDemo from "./demos/line-reveal-demo";
+import LoadingGalleryDemo from "./demos/loading-gallery-demo";
+import LogoWallDemo from "./demos/logo-wall-demo";
+import MasonryGalleryDemo from "./demos/masonry-gallery-demo";
+import MeasurePickerDemo from "./demos/measure-picker-demo";
+import PhotoCompareDemo from "./demos/photo-compare-demo";
+import PhotoSplitDemo from "./demos/photo-split-demo";
+import PlateDemo from "./demos/plate-demo";
+import PointerParallaxDemo from "./demos/use-pointer-parallax-demo";
+import QuoteBlockDemo from "./demos/quote-block-demo";
+import RailDemo from "./demos/rail-demo";
+import ReelsRailDemo from "./demos/reels-rail-demo";
+import RepulsiveHoverDemo from "./demos/repulsive-hover-demo";
+import ShowcaseCardDemo from "./demos/showcase-card-demo";
+import SideNavDemo from "./demos/side-nav-demo";
+import AuthButtonDemo from "./demos/auth-button-demo";
+import ProfileFormDemo from "./demos/profile-form-demo";
+import EmptyStateDemo from "./demos/empty-state-demo";
+import PhotoFrameDemo from "./demos/photo-frame-demo";
+import PhotoFlipDemo from "./demos/photo-flip-demo";
+import VintageParametricEqDemo from "./demos/vintage-parametric-eq-demo";
+import VintageOscilloscopeDemo from "./demos/vintage-oscilloscope-demo";
+import SkeletonRailDemo from "./demos/skeleton-rail-demo";
+import SpineCardDemo from "./demos/spine-card-demo";
+import StepCardsDemo from "./demos/step-cards-demo";
+import StickyFilterbarDemo from "./demos/sticky-filterbar-demo";
+import StoreStatusDemo from "./demos/store-status-demo";
+import TimelineDemo from "./demos/timeline-demo";
+import TurbulenceFieldDemo from "./demos/turbulence-field-demo";
+import VintageKnobDemo from "./demos/vintage-knob-demo";
+import VintageLedDemo from "./demos/vintage-led-demo";
+import VintageMeterDemo from "./demos/vintage-meter-demo";
+import VintageSliderDemo from "./demos/vintage-slider-demo";
 
 export type Family = "trabalho" | "aquisicao" | "motion" | "marca" | "vintage" | "fundacao";
 
@@ -228,34 +250,6 @@ function useTick(ms = 120, fn?: (n: number) => void) {
 
 // --- demos com estado --------------------------------------------------------
 
-function ChipsDemo() {
-  const [on, setOn] = React.useState<Set<string>>(new Set(["Sênior"]));
-  return (
-    <Frame className="flex-wrap gap-2">
-      {[
-        { l: "Sênior", c: 24 },
-        { l: "Júnior", c: 8 },
-        { l: "Goleiro", c: 0 },
-      ].map(({ l, c }) => (
-        <Chip
-          key={l}
-          pressed={on.has(l)}
-          count={c}
-          onClick={() =>
-            setOn((p) => {
-              const n = new Set(p);
-              n.has(l) ? n.delete(l) : n.add(l);
-              return n;
-            })
-          }
-        >
-          {l}
-        </Chip>
-      ))}
-    </Frame>
-  );
-}
-
 function SegmentedDemo() {
   const [v, setV] = React.useState<"grade" | "lista" | "kanban">("grade");
   return (
@@ -271,36 +265,6 @@ function SegmentedDemo() {
           { value: "kanban", label: "Kanban" },
         ]}
       />
-    </Frame>
-  );
-}
-
-function MeasureDemo() {
-  const [v, setV] = React.useState(152);
-  return (
-    // `accent-color` no palco, não no componente: o item não deve decidir a cor
-    // do range nativo — quem instala escolhe, e aqui a escolha é o token da marca.
-    <Frame className="[&_input[type=range]]:accent-[var(--brand)]">
-      <MeasurePicker
-        min={130}
-        max={200}
-        value={v}
-        onValueChange={setV}
-        label="Altura do jogador"
-        edgeLabels={["130 cm", "200 cm"]}
-        formatValue={(x) => `${x} cm`}
-        bands={[
-          { max: 150, value: "Youth 46", note: "cabo curto" },
-          { max: 168, value: "Junior 52" },
-          { max: 200, value: "Senior 60", note: "flex 85" },
-        ]}
-      >
-        {(band) => (
-          <span className="text-apoio text-muted-foreground">
-            taco sugerido: <strong className="text-foreground">{String(band.value)}</strong>
-          </span>
-        )}
-      </MeasurePicker>
     </Frame>
   );
 }
@@ -395,25 +359,6 @@ function KanbanDemo() {
   );
 }
 
-function MeterDemo() {
-  const [v, setV] = React.useState(5);
-  useTick(140, React.useCallback(() => setV((p) => Math.max(0, Math.min(10, p + (Math.random() * 2 - 1)))), []));
-  return (
-    <Frame>
-      <VintageMeter label="SIGNAL" value={v} />
-    </Frame>
-  );
-}
-
-function KnobDemo() {
-  const [v, setV] = React.useState(5);
-  return (
-    <Frame>
-      <VintageKnob label="BASS" value={v} onChange={setV} />
-    </Frame>
-  );
-}
-
 function LargeKnobDemo() {
   const [v, setV] = React.useState(6);
   return (
@@ -423,36 +368,6 @@ function LargeKnobDemo() {
   );
 }
 
-function SliderDemo() {
-  const [v, setV] = React.useState(6);
-  return (
-    <Frame>
-      <VintageSlider label="GAIN" value={v} onChange={setV} />
-    </Frame>
-  );
-}
-
-function OscilloscopeDemo() {
-  const t = React.useRef(0);
-  const [data, setData] = React.useState(() => new Float32Array(SCOPE_SAMPLES));
-  useTick(
-    60,
-    React.useCallback(() => {
-      t.current += 0.12;
-      const d = new Float32Array(SCOPE_SAMPLES);
-      for (let i = 0; i < d.length; i++) {
-        const p = (i / d.length) * Math.PI * 2;
-        d[i] = Math.sin(p * 3 + t.current) * 0.5 + Math.sin(p * 7 + t.current * 1.7) * 0.2;
-      }
-      setData(d);
-    }, []),
-  );
-  return (
-    <Frame>
-      <VintageOscilloscope data={data} width={280} height={130} color={SCOPE_PHOSPHOR} />
-    </Frame>
-  );
-}
 
 function PadDemo() {
   const [on, setOn] = React.useState<Set<number>>(new Set([1]));
@@ -479,155 +394,15 @@ function PadDemo() {
   );
 }
 
-function DropDemo() {
-  const [over, setOver] = React.useState(false);
-  return (
-    <div
-      className="relative h-full w-full p-3"
-      onMouseEnter={() => setOver(true)}
-      onMouseLeave={() => setOver(false)}
-    >
-      <div className="grid h-full place-items-center rounded-[var(--r-control,0.5rem)] border border-dashed border-border text-rotulo text-muted-foreground">
-        passe o mouse
-      </div>
-      <DropOverlay visible={over} message="Solte os arquivos" />
-    </div>
-  );
-}
-
-function GeneratingDemo() {
-  const active = useStageActive();
-  const [loading, setLoading] = React.useState(true);
-  React.useEffect(() => {
-    if (!active) return;
-    const id = setInterval(() => setLoading((v) => !v), 4200);
-    return () => clearInterval(id);
-  }, [active]);
-  return (
-    <Frame>
-      <div className="w-[160px]">
-        <GeneratingTile isLoading={loading} aspectRatio="1/1">
-          <div className="grid h-full place-items-center bg-muted text-rotulo text-muted-foreground">
-            resultado
-          </div>
-        </GeneratingTile>
-      </div>
-    </Frame>
-  );
-}
-
 function PaperShuttleDemo() {
-  const [p, setP] = React.useState(0.1);
-  useTick(90, React.useCallback(() => setP((v) => (v > 0.98 ? 0.02 : v + 0.02)), []));
+  // `progress` é 0–100, e não 0–1: com a escala errada a barra vivia colada no
+  // zero e a demo parecia uma peça quebrada.
+  const [p, setP] = React.useState(10);
+  useTick(90, React.useCallback(() => setP((v) => (v > 98 ? 2 : v + 2)), []));
   return (
     <Frame>
       <PaperShuttle progress={p} label="exportando" />
     </Frame>
-  );
-}
-
-/**
- * A malha com acervo de verdade — porque é a única forma de julgá-la.
- *
- * Com seis retângulos cinza de altura arbitrária, qualquer malha parece certa.
- * O que quebra um masonry é foto real: proporção que não se repete, retrato
- * junto de paisagem, uma peça mais alta que a coluna inteira. As proporções
- * vêm do manifesto do banco, então a coluna é montada com o número que o
- * arquivo tem — e não com um `h` chutado que sempre fecha.
- */
-function MasonryDemo() {
-  const items = React.useMemo(
-    () =>
-      [
-        { papel: "cena" as const, indice: 0 },
-        { papel: "retrato" as const, indice: 1 },
-        { papel: "textura" as const, indice: 0 },
-        { papel: "cena" as const, indice: 3 },
-        { papel: "retrato" as const, indice: 4 },
-        { papel: "cena" as const, indice: 5 },
-      ].map((it, i) => ({ ...it, i, ratio: proporcao(it.papel, it.indice) })),
-    [],
-  );
-  return (
-    <div className="h-full w-full overflow-hidden p-3">
-      <MasonryGallery
-        items={items}
-        cols={3}
-        gap={8}
-        getKey={(it) => it.i}
-        renderItem={(it) => (
-          <Media
-            papel={it.papel}
-            indice={it.indice}
-            ratio={it.ratio}
-            className="rounded-[var(--r-control,0.5rem)] border border-border"
-          />
-        )}
-      />
-    </div>
-  );
-}
-
-function FilterbarDemo() {
-  return (
-    // O componente MEDE um cabeçalho e publica a altura em `--header-h`. Dentro
-    // do card ele apontaria para o cabeçalho da vitrine e escreveria na raiz do
-    // documento — demo não pode mexer na página que a hospeda. Aqui ele mede um
-    // cabeçalho de mentira, que é justamente o que a demo tem de mostrar.
-    // A demo antiga não rolava: três linhas curtas num card sem scroll. A peça
-    // inteira é sobre o que acontece AO ROLAR — grudar, condensar, mostrar o
-    // quanto da lista já passou — e nada disso podia acontecer. Vitrine que não
-    // deixa mexer na peça é captura de tela com passos extras.
-    <div className="h-full w-full overflow-y-auto">
-      <div
-        data-demo-header
-        className="sticky top-0 z-40 h-6 border-b border-border bg-background"
-      />
-      {/* Respiro entre o cabeçalho e a barra. Sem ele a barra já nasce na
-          própria linha de grude, e a demo abre no estado condensado — ou seja,
-          nunca se vê a barra SOLTA nem o momento em que ela gruda, que é a
-          peça inteira. */}
-      <p className="px-3 py-3 text-apoio text-muted-foreground">
-        Ao rolar, a barra encosta no cabeçalho, a linha secundária recolhe e o fio embaixo
-        conta quanto da lista já passou.
-      </p>
-      <StickyFilterbar headerSelector="[data-demo-header]">
-        <FilterRow>
-          <Chip pressed>Todos</Chip>
-          <Chip count={12}>Em produção</Chip>
-          <Chip count={3}>Rascunho</Chip>
-        </FilterRow>
-        <FilterRow label="Cor" collapsible>
-          <Chip>Quente</Chip>
-          <Chip>Fria</Chip>
-          <Chip>Neutra</Chip>
-        </FilterRow>
-      </StickyFilterbar>
-      <div className="space-y-2 p-3">
-        {Array.from({ length: 14 }, (_, i) => (
-          <div key={i} className="h-6 rounded bg-muted" />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function TimelineDemo() {
-  const data = React.useMemo(
-    () => [
-      { meta: "seg 04", title: "Briefing", content: <p className="text-apoio text-muted-foreground">Guideline lida do vault.</p> },
-      { meta: "qua 06", title: "Tokens", content: <p className="text-apoio text-muted-foreground">Cor e tipo compilados.</p> },
-      { meta: "sex 08", title: "Entrega", content: <p className="text-apoio text-muted-foreground">Tema publicado no registry.</p> },
-    ],
-    [],
-  );
-  /* Sem o `[&_h2]:text-base` que morava aqui: ele existia pra domar um título
-     que a peça escrevia sozinha, em inglês e de outra marca. Agora a cabeça é
-     slot, então a demo passa a dela e a caixa não precisa desmentir a peça. */
-  return (
-    <div className="h-full w-full overflow-hidden">
-      <Timeline data={data} title="A semana do projeto" />
-    </div>
   );
 }
 
@@ -658,6 +433,14 @@ function NavDrawerDemo() {
         </div>
         <NavDrawerContent
           title="Navegação"
+          // O slot da marca existe porque o painel cobre o header inteiro: sem
+          // ele, o único momento da navegação em que a marca some da tela é
+          // justamente aquele em que a pessoa está escolhendo pra onde ir.
+          brand={
+            <span className="text-[length:var(--text-destaque,0.9375rem)] font-semibold tracking-[-0.02em] text-foreground">
+              Marca
+            </span>
+          }
           footer={
             <div className="flex items-center justify-between">
               <span>pt-BR</span>
@@ -711,149 +494,6 @@ function MarqueeDemo() {
 
 // --- catálogo ----------------------------------------------------------------
 
-/**
- * Duas demos precisam de estado próprio, e por isso são componentes em vez de
- * JSX inline como as outras. Ficam aqui, ao lado do catálogo, e não em
- * `demos/`: são dez linhas cada, e um arquivo por demo de dez linhas espalha o
- * catálogo por três pastas sem ganhar nada.
- */
-
-/** O hook escreve `--px`/`--py`; o CSS decide por objeto, via `--d`. */
-function ParallaxDemo() {
-  const ref = React.useRef<HTMLDivElement>(null);
-  usePointerParallax(ref);
-  const objetos = [
-    { d: 26, cls: "left-[12%] top-[18%] size-16" },
-    { d: 14, cls: "right-[16%] top-[26%] size-24" },
-    { d: 38, cls: "left-[38%] bottom-[14%] size-12" },
-  ];
-  return (
-    <div ref={ref} className="relative h-full w-full overflow-hidden rounded-[var(--r-surface)]">
-      {objetos.map((o) => (
-        <div
-          key={o.cls}
-          className={`absolute rounded-[var(--r-control)] border border-border bg-card ${o.cls}`}
-          style={{
-            // `var(--px, 0)` com default: se o hook não rodar, a composição é
-            // uma imagem parada — que é o repouso correto, não um estado quebrado.
-            transform:
-              `translate3d(calc(var(--px, 0) * ${o.d}px), calc(var(--py, 0) * ${o.d}px), 0)`,
-          }}
-        />
-      ))}
-      <span className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-[length:var(--text-micro,0.68rem)] text-muted-foreground">
-        mova o ponteiro
-      </span>
-    </div>
-  );
-}
-
-/** Remonta a dobra a cada troca de variante — é o único jeito de ver a entrada
- *  mais de uma vez, já que a entrada é deliberadamente uma vez só. */
-function FoldDemo() {
-  const variantes = ["rise", "drift-l", "mask", "settle", "climax"] as const;
-  const [v, setV] = React.useState<(typeof variantes)[number]>("mask");
-  const [n, setN] = React.useState(0);
-  return (
-    <div className="flex h-full w-full flex-col gap-3">
-      <div className="flex flex-wrap gap-1.5">
-        {variantes.map((k) => (
-          <Chip
-            key={k}
-            pressed={v === k}
-            onClick={() => {
-              setV(k);
-              setN((x) => x + 1);
-            }}
-          >
-            {k}
-          </Chip>
-        ))}
-      </div>
-      <Fold key={`${v}-${n}`} variant={v} className="rounded-[var(--r-surface)] border border-border p-5">
-        <FoldPart>
-          <h3 className="text-[1.1rem] font-semibold tracking-tight">A dobra que decide</h3>
-          <p className="mt-2 text-[length:var(--text-apoio,0.82rem)] text-muted-foreground">
-            Trinta entradas idênticas o olho lê como uma.
-          </p>
-        </FoldPart>
-      </Fold>
-    </div>
-  );
-}
-
-/**
- * A contagem acontece UMA vez, quando o número entra em tela — que é o certo no
- * produto e péssimo na vitrine: quem chega no card depois da primeira rolagem
- * nunca vê o efeito, e não tinha como pedir de novo.
- *
- * O replay remonta a peça por `key`, em vez de expor um método imperativo que
- * não existe no componente publicado. E o botão é um `Chip` de verdade, com
- * `alvo-toque` pra fechar os 44px do dedo: gesto de demonstração não pode ser
- * um alvo que só o mouse acerta.
- */
-function CountUpDemo() {
-  const [n, setN] = React.useState(0);
-  return (
-    <div className="flex h-full flex-col items-center justify-center gap-5">
-      <div className="flex items-center justify-center gap-8" key={n}>
-        <CountUp className="text-[2rem] font-semibold tracking-tight">R$450k</CountUp>
-        <CountUp className="text-[2rem] font-semibold tracking-tight" delay={120}>
-          1.200
-        </CountUp>
-        <span className="text-[2rem] font-semibold tracking-tight text-muted-foreground">—</span>
-      </div>
-      <Chip className="alvo-toque" onClick={() => setN((x) => x + 1)}>
-        contar de novo
-      </Chip>
-    </div>
-  );
-}
-
-/**
- * A revelação é uma vez só, por contrato — então a vitrine remonta a peça por
- * `key`, mesmo padrão do `CountUpDemo`. E aqui ela roda em `immediate`: dentro
- * de um palco de 520px que já nasce visível, um gatilho de rolagem nunca
- * dispararia, e o card ficaria com um título parado prometendo animação.
- */
-function LineRevealDemo() {
-  const [n, setN] = React.useState(0);
-  return (
-    <div className="flex h-full flex-col items-center justify-center gap-5 px-6">
-      {/* Medida curta de propósito: a peça revela POR LINHA, e num palco de
-          1500px a frase caberia numa linha só — a demo mostraria uma cascata de
-          um elemento, que é o mesmo que não mostrar nada. */}
-      <LineReveal
-        key={n}
-        as="h3"
-        immediate
-        className="max-w-[20ch] text-center text-[1.6rem] font-medium leading-[1.15]"
-      >
-        A quebra de linha é do navegador. O corte, do desenho.
-      </LineReveal>
-      <Chip className="alvo-toque" onClick={() => setN((x) => x + 1)}>
-        revelar de novo
-      </Chip>
-    </div>
-  );
-}
-
-/** Três cards lado a lado: é a grade que prova que a luz é local a cada peça. */
-function GleamDemo() {
-  return (
-    <div className="flex h-full w-full items-center justify-center gap-4 px-5">
-      {["Marca", "Motion", "Medida"].map((t) => (
-        <Gleam key={t} className="w-[9.5rem] p-5">
-          <span className="text-[0.95rem] font-medium">{t}</span>
-          <p className="mt-1.5 text-[length:var(--text-micro,0.68rem)] text-muted-foreground">
-            passe o ponteiro
-          </p>
-        </Gleam>
-      ))}
-    </div>
-  );
-}
-
 /** Faixa de investimento → receita projetada, com a premissa escrita embaixo. */
 function SimSliderDemo() {
   const brl = (v: number) =>
@@ -884,82 +524,6 @@ function SimSliderDemo() {
   );
 }
 
-/**
- * A moldura revela UMA vez, na rolagem — e num palco que já nasce visível o
- * gatilho nunca arma. O replay por `key` é o mesmo recurso do `CountUpDemo`, e
- * a demo dispara na montagem chamando o `ScrollTrigger.refresh` de graça: a peça
- * remontada recalcula o próprio gatilho.
- */
-function PhotoFrameDemo() {
-  const [n, setN] = React.useState(0);
-  return (
-    <div className="flex h-full flex-col items-center justify-center gap-4">
-      <div className="flex items-start gap-4" key={n}>
-        <PhotoFrame ratio="4/5" className="w-[150px]" caption="sem paralaxe">
-          <Media papel="cena" indice={1} className="size-full" />
-        </PhotoFrame>
-        <PhotoFrame ratio="4/5" className="w-[150px]" parallax={10} caption="paralaxe 10%">
-          <Media papel="cena" indice={3} className="size-full" />
-        </PhotoFrame>
-        <PhotoFrame ratio="4/5" className="w-[150px]" from="left" caption="abre da esquerda">
-          <Media papel="retrato" indice={2} className="size-full" />
-        </PhotoFrame>
-      </div>
-      <Chip className="alvo-toque" onClick={() => setN((x) => x + 1)}>
-        revelar de novo
-      </Chip>
-    </div>
-  );
-}
-
-/** Clicar leva a foto pra tela cheia — mesmo nó, percurso visível. */
-function PhotoFlipDemo() {
-  const items = React.useMemo(
-    () =>
-      [4, 5, 6, 7, 8, 9].map((i) => ({
-        id: `f${i}`,
-        media: <Media papel="cena" indice={i} className="size-full" />,
-        caption: `Foto ${i}`,
-      })),
-    [],
-  );
-  // Largura fixa, e não `w-full`: o palco da vitrine escala a demo pra caber, e
-  // uma grade elástica dentro de um palco elástico vira seis fotos gigantes com
-  // a segunda fileira fora da tela.
-  return (
-    <div className="flex h-full flex-col items-center justify-center gap-3">
-      <PhotoFlip items={items} className="grid w-[420px] grid-cols-3 gap-2" />
-      <span className="text-[length:var(--text-micro,0.68rem)] text-muted-foreground">
-        clique pra ampliar · Esc fecha
-      </span>
-    </div>
-  );
-}
-
-/**
- * Duas fotos de acervo diferentes fazendo de antes e depois.
- *
- * O acervo não tem um par real de antes/depois, e inventar um com filtro CSS
- * seria pior: a peça passaria a ser julgada pelo filtro, e o defeito que ela
- * evita (a foto de cima ENCOLHER em vez de ser recortada) só aparece quando as
- * duas imagens são de fato distintas. Duas cenas diferentes mostram a cortina
- * pelo que ela é.
- */
-function PhotoCompareDemo() {
-  return (
-    <div className="flex h-full w-full items-center justify-center px-4">
-      <PhotoCompare
-        className="w-[440px]"
-        ratio="3/2"
-        before={<Media papel="cena" indice={2} className="size-full" />}
-        after={<Media papel="cena" indice={5} className="size-full" />}
-        beforeLabel="antes"
-        afterLabel="depois"
-      />
-    </div>
-  );
-}
-
 export const CATALOG: CatalogItem[] = [
   // ---- marca
   {
@@ -970,12 +534,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Seletor de marca com prévia ao percorrer: paleta, par tipográfico e completude do vault na linha. Aplica o tema da marca escolhida ao app inteiro.",
     tags: ["marca", "tema", "cmdk", "vault"],
-    demo: () => (
-      <Frame className="flex-col gap-2 text-center">
-        <span className="text-rotulo text-muted-foreground">está na barra do topo →</span>
-        <span className="font-mono text-rotulo">⌘B</span>
-      </Frame>
-    ),
+    demo: BrandSelectorDemo,
+    preview: { w: 620, h: 220 },
   },
   {
     name: "brand-theme",
@@ -1015,10 +575,10 @@ export const CATALOG: CatalogItem[] = [
       "Board com drag-and-drop, seleção por marquee sobre o vazio e multi-seleção com shift/ctrl.",
     tags: ["board", "dnd", "seleção"],
     demo: KanbanDemo,
-    // 760 de largura porque o board tem duas colunas e uma barra de rolagem
-    // horizontal dentro de um card de vitrine é sempre defeito; 210 de altura
-    // porque o que sobrava era buraco, não respiro.
-    preview: { w: 760, h: 210 },
+    // Largura pra caber as colunas sem barra de rolagem horizontal — que dentro
+    // de um card de vitrine é sempre defeito; 220 de altura porque o que sobrava
+    // era buraco, não respiro.
+    preview: { w: 1020, h: 220 },
   },
   {
     name: "inline-edit",
@@ -1029,6 +589,31 @@ export const CATALOG: CatalogItem[] = [
       "Editar onde se lê. Enter salva, Esc cancela, o valor só troca depois que a promessa resolve.",
     tags: ["edição", "formulário"],
     demo: InlineEditDemo,
+  },
+  {
+    name: "auth-button",
+    title: "Auth Button",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "O canto da conta nos três estados. Enquanto a sessão não responde ele não escreve “Entrar” — e não muda de tamanho quando ela chega.",
+    tags: ["conta", "sessão", "menu"],
+    demo: AuthButtonDemo,
+    // 620: o defeito que a peça mata (o pulo do cabeçalho quando a sessão
+    // chega) só é visível com a barra em volta. Botão sozinho num quadro não
+    // tem o que empurrar.
+    preview: { w: 620, h: 300 },
+  },
+  {
+    name: "profile-form",
+    title: "Profile Form",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Editar o perfil com foto, nome e e-mail verificado. Quando não dá pra salvar, o motivo aparece no campo — não num toast.",
+    tags: ["conta", "formulário", "validação"],
+    demo: ProfileFormDemo,
+    preview: { w: 620, h: 400 },
   },
   {
     name: "segmented-control",
@@ -1056,11 +641,8 @@ export const CATALOG: CatalogItem[] = [
     family: "trabalho",
     description: "Pilha de responsáveis com excedente contado. Iniciais quando não há avatar.",
     tags: ["avatar", "equipe"],
-    demo: () => (
-      <Frame>
-        <AssigneeStack assignees={PEOPLE} max={3} size="md" />
-      </Frame>
-    ),
+    demo: AssigneeStackDemo,
+    preview: { w: 620, h: 320 },
   },
   {
     name: "sticky-filterbar",
@@ -1070,8 +652,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Barra de filtro que gruda abaixo do cabeçalho sem medir altura na mão e sem pular no scroll.",
     tags: ["filtro", "scroll"],
-    demo: FilterbarDemo,
-    preview: { w: 420, h: 240 },
+    demo: StickyFilterbarDemo,
+    preview: { w: 760, h: 440 },
   },
   {
     name: "measure-picker",
@@ -1081,8 +663,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Escolher por medida e receber a recomendação. A faixa traduz o número em produto.",
     tags: ["slider", "recomendação"],
-    demo: MeasureDemo,
-    preview: { w: 560, h: 240 },
+    demo: MeasurePickerDemo,
+    preview: { w: 620, h: 280 },
   },
   {
     name: "timeline",
@@ -1092,7 +674,20 @@ export const CATALOG: CatalogItem[] = [
     description: "Linha do tempo com progresso amarrado ao scroll.",
     tags: ["scroll", "narrativa"],
     demo: TimelineDemo,
-    preview: { w: 460, h: 300 },
+    // 780 de altura porque a linha do tempo é a peça inteira: cortada em 300 o
+    // card mostrava um passo e meio, e o progresso preso ao scroll nunca andava.
+    preview: { w: 660, h: 780 },
+  },
+  {
+    name: "side-nav",
+    title: "Side Nav",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "A navegação lateral de aplicação: colapsa por clique ou por ⌘/Ctrl+B, agrupa, marca a rota ativa e lembra o estado. O rótulo vira sr-only quando fecha, nunca some do DOM.",
+    tags: ["sidebar", "navegação", "app", "colapsar", "atalho", "teclado"],
+    demo: SideNavDemo,
+    preview: { w: 1360, h: 500 },
   },
 
   // ---- aquisição
@@ -1108,6 +703,17 @@ export const CATALOG: CatalogItem[] = [
     preview: { w: 640, h: 300 },
   },
   {
+    name: "logo-wall",
+    title: "Logo Wall",
+    type: "ui",
+    family: "aquisicao",
+    description:
+      "A faixa de \"confiam na gente\" com os logos normalizados: altura óptica por item, teto de largura pro wordmark comprido e dessaturação em repouso que vira cor no hover.",
+    tags: ["logos", "clientes", "prova social", "faixa", "marquee", "gsap"],
+    demo: LogoWallDemo,
+    preview: { w: 760, h: 260 },
+  },
+  {
     name: "rail",
     title: "Rail",
     type: "ui",
@@ -1115,46 +721,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Trilho horizontal com snap, setas que somem nas pontas e scroll por teclado.",
     tags: ["carrossel", "snap"],
-    /*
-     * Foto do acervo, e não seis caixas cinzas escritas "item 1".
-     *
-     * Trilho é peça de vitrine: o que ele resolve — o card cortado na borda que
-     * promete que a gama continua, o encaixe que para no item inteiro, a ponta
-     * que esmaece enquanto há lista — só se julga com imagem de verdade dentro.
-     * Com retângulo cinza a demo mostrava que o scroll funciona, que é a única
-     * coisa que ninguém duvidava.
-     *
-     * `bleed={12}` casa com o `px-3` do palco: a fileira encosta na borda e o
-     * título continua alinhado com o primeiro card.
-     */
-    demo: () => (
-      <div className="w-full px-3">
-        <Rail
-          itemWidth={116}
-          gap={10}
-          label="Coleção"
-          bleed={12}
-          fade
-          heading="Coleção"
-          hint="8 peças"
-        >
-          {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-            <figure key={i} className="min-w-0">
-              <Media
-                papel="cena"
-                indice={i}
-                ratio="4/5"
-                className="rounded-[var(--r-control,0.5rem)] border border-border"
-              />
-              <figcaption className="mt-1.5 truncate text-rotulo text-muted-foreground">
-                Peça {String(i + 1).padStart(2, "0")}
-              </figcaption>
-            </figure>
-          ))}
-        </Rail>
-      </div>
-    ),
-    preview: { w: 620, h: 240 },
+    demo: RailDemo,
+    preview: { w: 920, h: 360 },
   },
   {
     name: "plate",
@@ -1164,47 +732,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "A placa onde a foto de catálogo senta. Resolve o recorte branco sobre fundo colorido.",
     tags: ["produto", "foto"],
-    /*
-     * A demo mostrava uma caixa cinza escrita "foto do produto" — numa peça
-     * cujo trabalho inteiro é o que acontece ENTRE a foto e a placa. Sem foto
-     * não dá pra ver o multiply casar o recorte com o fundo, nem o chão fazer o
-     * produto pousar, nem a etiqueta sobreviver ao blend. Agora são duas placas
-     * com arte de verdade e a diferença entre elas é a decisão que a peça pede:
-     * recorte sobre branco (multiply, com chão) contra foto de cena (normal).
-     */
-    demo: () => (
-      <Frame>
-        <div className="flex items-end gap-4">
-          {(
-            [
-              { blend: "multiply", ground: true, nota: "multiply, com chão", i: 0 },
-              { blend: "normal", ground: false, nota: "normal, etiqueta", i: 5 },
-            ] as const
-          ).map((p) => (
-            <div key={p.nota} className="w-[132px]">
-              <Plate
-                ratio="4/5"
-                blend={p.blend}
-                ground={p.ground}
-                badge={
-                  p.blend === "normal" ? (
-                    <span className="rounded-[var(--r-pill,9999px)] bg-[var(--brand)] px-2 py-0.5 font-mono text-micro uppercase tracking-[0.12em] text-[var(--brand-foreground)]">
-                      novo
-                    </span>
-                  ) : undefined
-                }
-              >
-                <Media papel="cena" indice={p.i} className="h-full w-full" />
-              </Plate>
-              <p className="mt-1.5 font-mono text-micro uppercase tracking-wider text-muted-foreground">
-                {p.nota}
-              </p>
-            </div>
-          ))}
-        </div>
-      </Frame>
-    ),
-    preview: { w: 420, h: 260 },
+    demo: PlateDemo,
+    preview: { w: 660, h: 350 },
   },
   {
     name: "chip",
@@ -1213,7 +742,8 @@ export const CATALOG: CatalogItem[] = [
     family: "aquisicao",
     description: "Pastilha de filtro com contagem que nunca renderiza zero.",
     tags: ["filtro", "loja"],
-    demo: ChipsDemo,
+    demo: ChipDemo,
+    preview: { w: 660, h: 350 },
   },
   {
     name: "store-status",
@@ -1223,12 +753,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Aberto/fechado calculado no fuso da loja, não no do visitante. Quem está do outro lado do mundo vê a resposta certa.",
     tags: ["loja", "fuso"],
-    demo: () => (
-      <Frame className="flex-col gap-1 text-center">
-        <StoreStatus timeZone="America/Sao_Paulo" openHour={9} closeHour={18} />
-        <span className="text-micro text-muted-foreground">America/Sao_Paulo, 9h às 18h</span>
-      </Frame>
-    ),
+    demo: StoreStatusDemo,
+    preview: { w: 420, h: 250 },
   },
   {
     name: "masonry-gallery",
@@ -1238,12 +764,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Mosaico por round-robin: anexar página nova não reordena o que já estava na tela.",
     tags: ["galeria", "grid"],
-    demo: MasonryDemo,
-    // 420×430 e não 420×250: com foto de verdade a coluna tem a altura que o
-    // ARQUIVO tem, e um retrato 720×900 sozinho come 250px. O palco corta o que
-    // passa do declarado — declarar de menos aqui era a peça aparecer sem a
-    // última fileira, que é justamente o que um mosaico precisa mostrar.
-    preview: { w: 420, h: 430 },
+    demo: MasonryGalleryDemo,
+    preview: { w: 920, h: 520 },
   },
   {
     name: "repulsive-hover",
@@ -1252,18 +774,8 @@ export const CATALOG: CatalogItem[] = [
     family: "aquisicao",
     description: "O elemento foge do cursor com mola. Gesto de hero, fora de formulário.",
     tags: ["hover", "mola"],
-    demo: () => (
-      <Frame>
-        <RepulsiveHover strength={8} radius={160}>
-          <span
-            className="rounded-[var(--r-pill,9999px)] px-5 py-2.5 text-corpo font-medium"
-            style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
-          >
-            tente clicar
-          </span>
-        </RepulsiveHover>
-      </Frame>
-    ),
+    demo: RepulsiveHoverDemo,
+    preview: { w: 680, h: 290 },
   },
 
   // ---- motion e estado
@@ -1302,8 +814,8 @@ export const CATALOG: CatalogItem[] = [
     family: "motion",
     description: "O quadro que ocupa o lugar do resultado enquanto ele não existe.",
     tags: ["ia", "placeholder"],
-    demo: GeneratingDemo,
-    preview: { w: 380, h: 230 },
+    demo: LoadingGalleryDemo,
+    preview: { w: 980, h: 450 },
   },
   {
     name: "paper-shuttle",
@@ -1330,8 +842,8 @@ export const CATALOG: CatalogItem[] = [
     // genérico — que é exatamente o que quem instalar sem passar o arquivo vai
     // ver. O aviso no console faz parte da demonstração.
     demo: () => (
-      <Frame className="[&>[role=status]]:min-h-0">
-        <OctahedronLoader size={72} />
+      <Frame>
+        <OctahedronLoader size={72} className="min-h-0" />
       </Frame>
     ),
   },
@@ -1357,11 +869,8 @@ export const CATALOG: CatalogItem[] = [
     family: "motion",
     description: "Ruído animado em SVG para dar vida a uma superfície parada.",
     tags: ["ruído", "svg"],
-    demo: () => (
-      <div className="relative h-full w-full">
-        <TurbulenceField intensity={0.4} />
-      </div>
-    ),
+    demo: TurbulenceFieldDemo,
+    preview: { w: 560, h: 330 },
   },
   {
     name: "grid-dots",
@@ -1370,11 +879,8 @@ export const CATALOG: CatalogItem[] = [
     family: "motion",
     description: "Malha de pontos de fundo, o papel milimetrado que dá profundidade sem competir.",
     tags: ["fundo", "grid"],
-    demo: () => (
-      <div className="relative h-full w-full">
-        <GridDots opacity={0.35} spacing={16} />
-      </div>
-    ),
+    demo: GridDotsDemo,
+    preview: { w: 620, h: 320 },
   },
   {
     name: "drop-overlay",
@@ -1383,7 +889,11 @@ export const CATALOG: CatalogItem[] = [
     family: "motion",
     description: "A camada que aparece quando um arquivo está sendo arrastado sobre a área.",
     tags: ["upload", "dnd"],
-    demo: DropDemo,
+    demo: DropOverlayDemo,
+    // 440 e não 320: a cena tem zona de solta MAIS a fileira de miniaturas que
+    // aparece depois de receber. Medida na página, ela fecha em 432 — declarar
+    // menos fazia o palco crescer depois de montar e empurrar a grade.
+    preview: { w: 560, h: 440 },
   },
   {
     name: "motion-layer",
@@ -1412,8 +922,8 @@ export const CATALOG: CatalogItem[] = [
     family: "vintage",
     description: "Potenciômetro com arraste vertical e trava de curso.",
     tags: ["áudio", "knob"],
-    demo: KnobDemo,
-    preview: { w: 340, h: 200 },
+    demo: VintageKnobDemo,
+    preview: { w: 340, h: 240 },
   },
   {
     name: "vintage-large-knob",
@@ -1423,7 +933,7 @@ export const CATALOG: CatalogItem[] = [
     description: "O irmão grande: marcação de escala e leitura de valor.",
     tags: ["áudio", "knob"],
     demo: LargeKnobDemo,
-    preview: { w: 540, h: 470 },
+    preview: { w: 340, h: 360 },
   },
   {
     name: "vintage-meter",
@@ -1432,8 +942,8 @@ export const CATALOG: CatalogItem[] = [
     family: "vintage",
     description: "VU analógico com balística de ponteiro.",
     tags: ["áudio", "medidor"],
-    demo: MeterDemo,
-    preview: { w: 440, h: 230 },
+    demo: VintageMeterDemo,
+    preview: { w: 340, h: 200 },
   },
   {
     name: "vintage-slider",
@@ -1442,8 +952,8 @@ export const CATALOG: CatalogItem[] = [
     family: "vintage",
     description: "Fader de console com curso e trilho gravados.",
     tags: ["áudio", "fader"],
-    demo: SliderDemo,
-    preview: { w: 440, h: 300 },
+    demo: VintageSliderDemo,
+    preview: { w: 300, h: 290 },
   },
   {
     name: "vintage-button",
@@ -1481,14 +991,8 @@ export const CATALOG: CatalogItem[] = [
     family: "vintage",
     description: "LED de painel com halo. Quatro cores, estado on/off.",
     tags: ["áudio", "estado"],
-    demo: () => (
-      <Frame className="gap-3">
-        <VintageLed color="green" active label="PWR" />
-        <VintageLed color="yellow" active label="BYP" />
-        <VintageLed color="red" label="CLIP" />
-      </Frame>
-    ),
-    preview: { w: 440, h: 190 },
+    demo: VintageLedDemo,
+    preview: { w: 620, h: 540 },
   },
   {
     name: "vintage-eq",
@@ -1496,7 +1000,7 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "vintage",
     description: "Banco de faders com curva desenhada.",
-    tags: ["áudio", "eq"],
+    tags: ["áudio", "eq", "faders", "gráfico"],
     demo: () => (
       <Frame>
         <VintageEQ />
@@ -1505,14 +1009,32 @@ export const CATALOG: CatalogItem[] = [
     preview: { w: 560, h: 540 },
   },
   {
+    name: "vintage-parametric-eq",
+    title: "Vintage Parametric EQ",
+    type: "ui",
+    family: "vintage",
+    description:
+      "O EQ paramétrico: cada banda é um sino, e a curva grossa é a soma em dB. Arraste um ponto, roda muda o Q, e o BYPASS achata sem perder os valores.",
+    tags: ["áudio", "eq", "curva", "paramétrico", "filtro"],
+    // Peça NOVA, não substituta: o gráfico e o paramétrico são ferramentas
+    // diferentes (um é o EQ de quem ouve, outro o de quem mistura) e trocar a
+    // API do item publicado quebraria quem já rodou o `add`. Ver o cabeçalho do
+    // `vintage-parametric-eq.tsx`.
+    demo: VintageParametricEqDemo,
+    preview: { w: 690, h: 460 },
+  },
+  {
     name: "vintage-oscilloscope",
     title: "Vintage Oscilloscope",
     type: "ui",
     family: "vintage",
     description: "Traço de osciloscópio alimentado por um buffer de amostras.",
     tags: ["áudio", "canvas"],
-    demo: OscilloscopeDemo,
-    preview: { w: 580, h: 240 },
+    // Quatro tubos comendo o MESMO buffer: é o que prova que os modos são
+    // leituras diferentes de um sinal, e não quatro animações decorativas
+    // rodando lado a lado. Um de cada vez esconderia justamente isso.
+    demo: VintageOscilloscopeDemo,
+    preview: { w: 690, h: 420 },
   },
   {
     name: "vintage-soundboard-pad",
@@ -1678,20 +1200,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Card de serviço: mídia com selo de seta, título que cobre o card inteiro e a lista do que está incluso como texto, não como filtro.",
     tags: ["serviço", "card", "vitrine"],
-    demo: () => (
-      // Largura travada, mas não fixa: sem o teto o card cresce até a mídia
-      // estourar a altura declarada do palco; com largura FIXA ele estoura a tela
-      // de 360px — foi o que a suíte de responsivo pegou.
-      <div className="w-full max-w-[360px]">
-        <ShowcaseCard
-          href="#/c/showcase-card"
-          title="Identidade que quer dizer alguma coisa"
-          media={<DemoSurface papel="video" />}
-          tags={["Estratégia", "Naming", "Logo", "Identidade visual"]}
-        />
-      </div>
-    ),
-    preview: { w: 380, h: 400 },
+    demo: ShowcaseCardDemo,
+    preview: { w: 340, h: 400 },
   },
   {
     name: "step-cards",
@@ -1701,30 +1211,19 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Como funciona, em passos numerados. Sai como lista ordenada no HTML, e a arte de cada passo entra por slot.",
     tags: ["passos", "como funciona", "onboarding"],
-    demo: () => (
-      <StepCards
-        columns={3}
-        visualHeight={140}
-        steps={[
-          {
-            title: "Envie o pedido",
-            description: "Conte o que precisa e suba os arquivos da marca.",
-            visual: <DemoSurface indice={1} ratio="4/3" />,
-          },
-          {
-            title: "O time entra",
-            description: "Cruzamos o projeto com quem tem a mão certa para ele.",
-            visual: <DemoSurface papel="retrato" indice={3} ratio="4/3" />,
-          },
-          {
-            title: "Você comenta",
-            description: "Feedback direto na plataforma até ficar de pé.",
-            visual: <DemoSurface indice={4} ratio="4/3" />,
-          },
-        ]}
-      />
-    ),
-    preview: { w: 720, h: 250 },
+    demo: StepCardsDemo,
+    preview: { w: 1180, h: 370 },
+  },
+  {
+    name: "quote-block",
+    title: "Quote Block",
+    type: "ui",
+    family: "aquisicao",
+    description:
+      "O depoimento único, em tamanho de dobra: a citação vem primeiro e em corpo de manchete, a atribuição entra depois como assinatura.",
+    tags: ["depoimento", "prova social", "citação", "cliente", "retrato"],
+    demo: QuoteBlockDemo,
+    preview: { w: 660, h: 380 },
   },
   {
     name: "testimonial-wall",
@@ -1841,7 +1340,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "O número que se apura em vez de aparecer pronto: lê o valor final do próprio texto, trava a largura antes do primeiro quadro e não anima o que não dá pra parsear.",
     tags: ["número", "contagem", "prova", "estatística", "animar"],
-    demo: () => <CountUpDemo />,
+    demo: CountUpDemo,
+    preview: { w: 560, h: 210 },
   },
   {
     name: "use-pointer-parallax",
@@ -1851,8 +1351,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Escreve --px e --py uma vez por quadro e deixa o CSS decidir a profundidade de cada objeto. Só em ponteiro fino, volta ao repouso ao sair da janela.",
     tags: ["paralaxe", "ponteiro", "profundidade", "colagem", "hero"],
-    demo: () => <ParallaxDemo />,
-    preview: { w: 460, h: 240 },
+    demo: PointerParallaxDemo,
+    preview: { w: 690, h: 380 },
   },
   {
     name: "fold-motion",
@@ -1862,8 +1362,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Hierarquia de entradas por dobra: rise, drift, mask, settle, climax e invert em vez de trinta entradas iguais. O esconderijo é aplicado pelo componente, nunca por CSS estático.",
     tags: ["scroll", "entrada", "reveal", "dobra", "hierarquia"],
-    demo: () => <FoldDemo />,
-    preview: { w: 520, h: 300 },
+    demo: FoldMotionDemo,
+    preview: { w: 690, h: 300 },
   },
   {
     name: "line-reveal",
@@ -1873,8 +1373,11 @@ export const CATALOG: CatalogItem[] = [
     description:
       "O título que sobe de dentro do próprio corte de linha: mede a quebra depois da fonte carregar, re-quebra ao redimensionar, e o esconderijo é aplicado por JS pra página nunca sumir sem script.",
     tags: ["título", "reveal", "linha", "split", "gsap", "herói", "tipografia"],
-    demo: () => <LineRevealDemo />,
-    preview: { w: 560, h: 260 },
+    demo: LineRevealDemo,
+    // 1280 de largura porque a peça revela POR LINHA: num palco estreito a
+    // frase quebra em duas e a cascata some. A demo agora traz frase longa e
+    // as variantes lado a lado — é essa medida que faz o corte aparecer.
+    preview: { w: 1280, h: 230 },
   },
   {
     name: "gleam",
@@ -1884,8 +1387,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "A superfície que sabe onde o cursor está: luz sob o ponteiro, borda acesa do lado da luz e inclinação de 5 graus. Quatro números por quadro no JS, o desenho inteiro no CSS.",
     tags: ["hover", "card", "ponteiro", "tilt", "luz", "spotlight", "magnético"],
-    demo: () => <GleamDemo />,
-    preview: { w: 600, h: 240 },
+    demo: GleamDemo,
+    preview: { w: 690, h: 390 },
   },
   {
     name: "photo-frame",
@@ -1896,7 +1399,18 @@ export const CATALOG: CatalogItem[] = [
       "A moldura que revela a foto: a máscara abre, a foto assenta mais devagar que a máscara, e opcionalmente deriva na rolagem. Proporção declarada pra não haver salto de layout, e mídia por slot.",
     tags: ["foto", "moldura", "imagem", "reveal", "paralaxe", "scroll", "gsap"],
     demo: () => <PhotoFrameDemo />,
-    preview: { w: 620, h: 330 },
+    preview: { w: 690, h: 320 },
+  },
+  {
+    name: "photo-split",
+    title: "Photo Split",
+    type: "ui",
+    family: "motion",
+    description:
+      "A dobra alternada foto ↔ texto: a moldura revela a imagem, o texto entra deslizando da borda externa e o lado inverte a cada dobra sem ninguém escrever nada.",
+    tags: ["dobra", "seção", "foto", "texto", "alternado", "scroll", "gsap"],
+    demo: PhotoSplitDemo,
+    preview: { w: 900, h: 700 },
   },
   {
     name: "photo-flip",
@@ -1907,7 +1421,7 @@ export const CATALOG: CatalogItem[] = [
       "A foto atravessa da grade para a tela cheia — mesmo nó do DOM, reparentado e animado por GSAP Flip com ease-in-out. A vaga segura a proporção pra grade não desabar, e o foco volta pra foto que abriu.",
     tags: ["foto", "galeria", "lightbox", "flip", "morph", "grade", "gsap"],
     demo: () => <PhotoFlipDemo />,
-    preview: { w: 900, h: 420 },
+    preview: { w: 1360, h: 300 },
   },
   {
     name: "photo-compare",
@@ -1917,8 +1431,19 @@ export const CATALOG: CatalogItem[] = [
     description:
       "A cortina entre o antes e o depois: a camada de cima é RECORTADA, nunca redimensionada, então as duas fotos ficam na mesma escala. O arrasto, o teclado e o leitor de tela vêm de um input range invisível.",
     tags: ["foto", "antes", "depois", "comparar", "cortina", "rebrand", "slider"],
-    demo: () => <PhotoCompareDemo />,
-    preview: { w: 560, h: 360 },
+    demo: PhotoCompareDemo,
+    preview: { w: 700, h: 440 },
+  },
+  {
+    name: "reels-rail",
+    title: "Reels Rail",
+    type: "ui",
+    family: "motion",
+    description:
+      "O trilho de vídeo vertical: cartões 9:16 com encaixe, o do meio tocando e os vizinhos parados e mudos. Som opcional, um card por vez, e fora da tela pausa tudo.",
+    tags: ["vídeo", "reels", "shorts", "vertical", "carrossel", "trilho"],
+    demo: ReelsRailDemo,
+    preview: { w: 1360, h: 490 },
   },
   {
     name: "measure-bar",
@@ -1956,33 +1481,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "O retângulo que lê como objeto: lombada de luz na borda, tombo apoiado na base que endireita no hover, e capa em duotone que só ganha cor onde a atenção está.",
     tags: ["card", "livro", "estante", "produto", "lombada"],
-    demo: () => (
-      // `flex-wrap`: a estante tem que caber no celular também — a demo roda
-      // sozinha num viewport de 360px no teste de peça responsiva.
-      //
-      // Sem `h-full`: com ele a estante colava no rodapé de um palco que cresce
-      // (a vista de foco dá 1500px de largura ao palco), e a linha do título
-      // ficava cortada embaixo. A altura da demo agora é a da estante, e o palco
-      // se ajusta a ela — que é o contrato do FitStage.
-      <div className="flex flex-wrap items-end justify-center gap-5 py-2">
-        {["Marca em 9 etapas", "O método do lote", "Imersão"].map((t, i) => (
-          <SpineCard
-            key={t}
-            index={i}
-            href="#"
-            title={t}
-            action="ver →"
-            className="w-[150px]"
-            cover={
-              <div className="relative aspect-[2/3] w-full">
-                <CoverArt title={t} seed={t} family="book" />
-              </div>
-            }
-          />
-        ))}
-      </div>
-    ),
-    preview: { w: 540, h: 330 },
+    demo: SpineCardDemo,
+    preview: { w: 670, h: 420 },
   },
   {
     name: "cover-art",
@@ -1992,25 +1492,11 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Capa determinística em CSS pra item sem arte: três famílias (livro, app, placa), monograma, e rampa tonal derivada da marca por color-mix. Zero byte de imagem, SSR igual ao cliente.",
     tags: ["capa", "placeholder", "catálogo", "determinístico", "sem imagem"],
-    demo: () => (
-      // Retrato, e não paisagem: numa caixa 4/3 de 150px sobravam 112px de
-      // altura pro título, e a capa aparecia mais como faixa do que como capa.
-      // Sem `h-full`, a demo tem a altura das capas e o palco acompanha.
-      <div className="flex flex-wrap items-center justify-center gap-[18px] py-1">
-        {(
-          [
-            ["Marca em 9 etapas", "book"],
-            ["Brand Machine", "app"],
-            ["Live de outubro", "plate"],
-          ] as const
-        ).map(([t, f]) => (
-          <div key={t} className="relative aspect-[3/4] w-[160px] overflow-hidden rounded">
-            <CoverArt title={t} seed={t} family={f} />
-          </div>
-        ))}
-      </div>
-    ),
-    preview: { w: 550, h: 240 },
+    demo: CoverArtDemo,
+    // Palco em retrato (330×430): a capa é 3/4, e numa caixa larga ela vira
+    // faixa. A demo mostra uma família por vez, então o que precisa caber é a
+    // altura de uma capa inteira, não três lado a lado.
+    preview: { w: 330, h: 430 },
   },
   {
     name: "empty-state",
@@ -2020,26 +1506,11 @@ export const CATALOG: CatalogItem[] = [
     description:
       "O estado vazio canônico: arte por slot com véu de contraste garantido, eyebrow, frase que diz o que vai aparecer ali, e no máximo uma ação.",
     tags: ["vazio", "empty", "onboarding", "primeiro uso"],
-    demo: () => (
-      <EmptyState
-        /* `w-full max-w-[340px]` e não `w-[340px]`: medido, a largura cravada
-           estourava 80px numa coluna de 260px — e coluna estreita é justamente
-           onde estado vazio mora. O teto continua, o piso deixa de existir. */
-        className="mx-auto w-full max-w-[340px]"
-        eyebrow="Biblioteca"
-        title="Nada por aqui ainda."
-        action={<Chip pressed>Importar acervo</Chip>}
-        /* Foto de verdade no slot, e não a capa tonal que estava aqui: o véu
-           existe pra garantir contraste sobre imagem com luz de janela, e uma
-           rampa de duas cores nunca ameaça o texto. Com a foto dá pra ver se o
-           véu está fazendo o trabalho ou só apagando a arte — era exatamente
-           esse o defeito. */
-        art={<Media papel="cena" indice={2} className="h-[120px] w-full" />}
-      >
-        O que você salvar aparece aqui, com o trecho e o minuto do vídeo.
-      </EmptyState>
-    ),
-    preview: { w: 380, h: 300 },
+    demo: EmptyStateDemo,
+    // Duas caixas lado a lado, e por isso `duplo` e não ladrilho: "generativo" é
+    // uma afirmação sobre variação, e uma caixa sozinha prova que a arte existe,
+    // não que ela nasce da semente.
+    preview: { w: 690, h: 360 },
   },
   {
     name: "skeleton-rail",
@@ -2049,8 +1520,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "O esqueleto do trilho com as mesmas medidas do trilho: mesmos nomes de prop, overflow hidden em vez de auto, e pulse em vez de shimmer.",
     tags: ["skeleton", "carregando", "trilho", "espera"],
-    demo: () => <SkeletonRail cards={4} itemWidth={150} gap={14} />,
-    preview: { w: 620, h: 220 },
+    demo: SkeletonRailDemo,
+    preview: { w: 1360, h: 740 },
   },
   {
     name: "use-local-search",
@@ -2069,8 +1540,12 @@ export const CATALOG: CatalogItem[] = [
     description:
       "O botão principal que vem buscar o ponteiro: campo de atração com medida lida uma vez, rótulo com inércia própria e volta com mola. No toque e sob reduced-motion é um botão comum.",
     tags: ["cta", "botão", "ímã", "hover", "conversão"],
+    // Empilha no estreito. O halo do ímã reserva 84px de cada lado — é a área
+    // onde o cursor já é sentido —, então dois CTAs lado a lado pedem ~500px de
+    // geometria mesmo com 250px de botão. A 360 eles vazavam a tela: não era o
+    // botão que não cabia, era o campo.
     demo: () => (
-      <Frame className="gap-8">
+      <Frame className="flex-col gap-8 sm:flex-row">
         <MagneticCta>Agendar conversa</MagneticCta>
         <MagneticCta variant="outline" pull={6}>
           Ver o método
@@ -2099,7 +1574,7 @@ export const CATALOG: CatalogItem[] = [
       "A dobra que prende a arte e avança em passos. O pin é position:sticky, não ScrollTrigger.pin — o GSAP entra só pra relatar progresso em --p, --sp e --near, sem tocar no DOM.",
     tags: ["scroll", "sticky", "passos", "storytelling", "gsap"],
     demo: PinnedSceneDemoCard,
-    preview: { w: 700, h: 500 },
+    preview: { w: 1360, h: 620 },
   },
 ];
 
@@ -2122,24 +1597,11 @@ export const CATALOG: CatalogItem[] = [
  * wireframe pra todas as peças de uma vez, que é como se julga a estrutura sem
  * a maquiagem da foto. Ver `media.tsx`.
  */
-function DemoSurface({
-  papel = "cena",
-  indice = 0,
-  ratio,
-}: {
-  papel?: Papel;
-  indice?: number;
-  /**
-   * Só onde o slot da peça NÃO fixa a altura.
-   *
-   * O `testimonial-wall` reserva a caixa do retrato e a mídia preenche; o
-   * `step-cards` deixa a altura para o conteúdo, e sem proporção declarada cada
-   * passo ficava com uma altura diferente — três cards desalinhados por causa da
-   * proporção do arquivo, não do componente.
-   */
-  ratio?: string;
-}) {
-  return <Media papel={papel} indice={indice} ratio={ratio} className="size-full" />;
+function DemoSurface({ papel = "cena", indice = 0 }: { papel?: Papel; indice?: number }) {
+  // Sem `ratio`: o único cliente que restou aqui é o `testimonial-wall`, e ele
+  // reserva a caixa do retrato — a mídia só preenche. Quem precisava declarar
+  // proporção (o `step-cards`) mudou pra `demos/step-cards-demo`.
+  return <Media papel={papel} indice={indice} className="size-full" />;
 }
 
 /**

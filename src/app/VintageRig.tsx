@@ -42,7 +42,7 @@ import { VintageMeter } from "../../registry/vintage/ui/vintage-meter";
 import { VintageButton } from "../../registry/vintage/ui/vintage-button";
 import { VintageSlider } from "../../registry/vintage/ui/vintage-slider";
 import { VintageToggle } from "../../registry/vintage/ui/vintage-toggle";
-import { VintageEQ } from "../../registry/vintage/ui/vintage-eq";
+import { VintageParametricEQ } from "../../registry/vintage/ui/vintage-parametric-eq";
 import { VintageLed } from "../../registry/vintage/ui/vintage-led";
 import { VintageCommandPalette } from "../../registry/vintage/ui/vintage-command-palette";
 import { VintageTvFrame } from "../../registry/vintage/ui/vintage-tv-frame";
@@ -535,10 +535,16 @@ export default function VintageRig() {
             )}
           >
             <Trilho>
-              <VintageEQ
-                title="GRAPHIC EQ"
-                labels={["63Hz", "125Hz", "250Hz", "500Hz", "1kHz", "2kHz"]}
-                onChange={setBandas}
+              {/* A bancada usa o EQ PARAMÉTRICO: `onChange` entrega bandas com
+                  ganho em dB (−12…+12), e não posições de fader 0…10. A
+                  conversão mantém a régua que o resto do rig já usa.
+
+                  O `vintage-eq` de faders continua publicado e intacto — são
+                  duas peças, não uma que substituiu a outra. Aqui vale a curva
+                  porque a bancada já tem fader demais. */}
+              <VintageParametricEQ
+                title="PARAMETRIC EQ"
+                onChange={(bs) => setBandas(bs.map((b) => 5 + (b.gain / 12) * 5))}
               />
             </Trilho>
 

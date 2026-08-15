@@ -118,6 +118,18 @@ for (const nome of ITENS) {
         })();
         if (sobreImagem) continue;
 
+        /*
+         * Controle desabilitado não entra na conta.
+         *
+         * Apagar é como um controle desligado diz que está desligado — e a
+         * própria WCAG 1.4.3 isenta componente inativo do mínimo de contraste.
+         * Sem esta linha o portão reprova exatamente o desenho correto: o
+         * `profile-form` abre com "Salvar" e "Desfazer" desabilitados (não há
+         * mudança a salvar), a 40% de opacidade, e virava dois falsos
+         * positivos. Portão que acusa o certo é portão que o time desliga.
+         */
+        if (el.closest("[disabled],[aria-disabled='true']")) continue;
+
         const [cr, cg, cb, ca] = parse(cs.color);
         const fundo = fundoEfetivo(el);
         // A opacidade do próprio elemento entra na conta: `opacity-70` num

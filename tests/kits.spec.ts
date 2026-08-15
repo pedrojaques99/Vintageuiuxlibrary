@@ -16,12 +16,25 @@ import { test, expect, type Page } from "@playwright/test";
  *    listar exatamente N — é o número que sustenta o comando único.
  */
 
+/*
+ * A contagem NÃO fica escrita aqui.
+ *
+ * Ela já ficou, e envelheceu: a tira é derivada da família do item no catálogo,
+ * então toda peça nova muda o número de uma sala. Três dos cinco kits estavam
+ * vermelhos por isso — não porque a promessa quebrou, mas porque o registry
+ * cresceu e o número escrito à mão não. Teste que reprova o crescimento normal
+ * do projeto é teste que o time aprende a ignorar.
+ *
+ * O invariante de verdade é a coerência entre os dois lugares: o que o
+ * cabeçalho anuncia é o que a tira lista. Esse é o número que sustenta o
+ * comando único, e é ele que este teste passa a travar.
+ */
 const KITS = [
-  { slug: "mesa-de-trabalho", titulo: "Mesa de trabalho", pecas: 11 },
-  { slug: "pagina-que-vende", titulo: "Página que vende", pecas: 16 },
-  { slug: "motion-e-estado", titulo: "Motion e estado", pecas: 14 },
-  { slug: "rig-vintage", titulo: "Rig vintage", pecas: 13 },
-  { slug: "marca-viva", titulo: "Marca viva", pecas: 11 },
+  { slug: "mesa-de-trabalho", titulo: "Mesa de trabalho" },
+  { slug: "pagina-que-vende", titulo: "Página que vende" },
+  { slug: "motion-e-estado", titulo: "Motion e estado" },
+  { slug: "rig-vintage", titulo: "Rig vintage" },
+  { slug: "marca-viva", titulo: "Marca viva" },
 ];
 
 /** A composição é lazy e algumas peças montam em rAF; sem isto mede-se o esqueleto. */
@@ -32,7 +45,7 @@ async function esperarSala(page: Page, titulo: string) {
 
 test.describe("salas de kit", () => {
   for (const kit of KITS) {
-    test(`${kit.slug}: monta, lista as ${kit.pecas} peças e não rola de lado`, async ({ page }) => {
+    test(`${kit.slug}: monta, a tira bate com o cabeçalho e não rola de lado`, async ({ page }) => {
       const erros: string[] = [];
       page.on("pageerror", (e) => erros.push(String(e)));
 
@@ -41,7 +54,14 @@ test.describe("salas de kit", () => {
       await esperarSala(page, kit.titulo);
 
       // A tira é a promessa do comando: N no cabeçalho, N na lista.
-      await expect(page.getByRole("heading", { name: `as ${kit.pecas} peças` })).toBeVisible();
+      const cabecalho = page.getByRole("heading", { name: /^as \d+ peças$/ });
+      await expect(cabecalho).toBeVisible();
+      const anunciadas = Number((await cabecalho.textContent())!.match(/\d+/)![0]);
+      const listadas = await page.locator("[data-tira-pecas] > button").count();
+      expect(listadas, `${kit.slug} anuncia ${anunciadas} peças e lista ${listadas}`).toBe(
+        anunciadas,
+      );
+      expect(anunciadas, `${kit.slug} sem peça nenhuma na tira`).toBeGreaterThan(0);
 
       // Nenhuma exceção de runtime durante a montagem da composição.
       expect(erros, `erro de runtime em ${kit.slug}`).toEqual([]);

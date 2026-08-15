@@ -17,19 +17,29 @@ interface VintageKnobProps {
   className?: string;
 }
 
-function KnobDial({ rotation = 0 }: { rotation?: number }) {
+/**
+ * A caixa do dial dentro do quadro de 81×75. Corpo e listra desenham no MESMO
+ * retângulo, um por cima do outro — é isso que mantém a listra encaixada no
+ * centro do metal quando ela gira.
+ */
+const CAIXA_DIAL = {
+  width: "43.2%",
+  height: "56%",
+  left: "28.5%",
+  top: "24.3%",
+} as const;
+
+/**
+ * O corpo: metal, chanfro e sombra. **Não gira.**
+ *
+ * Antes o botão inteiro girava, gradiente especular junto, e o resultado era
+ * fisicamente errado — a luz do painel andava atrás do dedo do usuário. Luz e
+ * sombra são da sala, não da peça; o que gira num potenciômetro é o eixo, e
+ * quem denuncia o eixo é a listra.
+ */
+function KnobBody() {
   return (
-    <div
-      className="absolute transition-transform duration-75"
-      style={{
-        width: "43.2%",
-        height: "56%",
-        left: "28.5%",
-        top: "24.3%",
-        transform: `rotate(${rotation}deg)`,
-        transformOrigin: "center center",
-      }}
-    >
+    <div className="absolute" style={CAIXA_DIAL}>
       <svg viewBox="0 0 46 50" className="w-full h-full" fill="none">
         <defs>
           <radialGradient
@@ -121,6 +131,23 @@ function KnobDial({ rotation = 0 }: { rotation?: number }) {
           stroke="url(#vk-fstroke)"
           strokeWidth="0.2"
         />
+      </svg>
+    </div>
+  );
+}
+
+/** A listra de direção. É a única coisa que se move quando o valor muda. */
+function KnobPointer({ rotation }: { rotation: number }) {
+  return (
+    <div
+      className="absolute transition-transform duration-75 motion-reduce:transition-none"
+      style={{
+        ...CAIXA_DIAL,
+        transform: `rotate(${rotation}deg)`,
+        transformOrigin: "center center",
+      }}
+    >
+      <svg viewBox="0 0 46 50" className="w-full h-full" fill="none">
         <rect
           fill="var(--vintage-value, #ffd700)"
           height="6"
@@ -237,7 +264,8 @@ export function VintageKnob({
           }}
         >
           <KnobMarks size={81} />
-          <KnobDial rotation={rotation} />
+          <KnobBody />
+          <KnobPointer rotation={rotation} />
         </div>
       </div>
 

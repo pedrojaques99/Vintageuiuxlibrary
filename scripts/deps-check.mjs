@@ -50,7 +50,18 @@ for (const item of registry.items) {
   const nomesDeArquivo = new Set(
     (item.files ?? []).map((f) => basename(f.path).replace(/\.\w+$/, "")),
   );
-  const declaradas = new Set(item.dependencies ?? []);
+  /*
+   * A declaração pode vir com faixa de versão — `@tanstack/react-table@^8.21.3`
+   * é sintaxe válida e recomendada do shadcn, e é o que o `add` instala.
+   * Comparar a string inteira com o nome importado acusava o item de não
+   * declarar exatamente o que ele declara. Corta a faixa antes de comparar,
+   * cuidando do `@` inicial do escopo, que não é separador.
+   */
+  const semVersao = (d) => {
+    const at = d.lastIndexOf("@");
+    return at > 0 ? d.slice(0, at) : d;
+  };
+  const declaradas = new Set((item.dependencies ?? []).map(semVersao));
   const declaradasRegistry = new Set(
     (item.registryDependencies ?? []).map((d) => d.replace(/^@visant\//, "")),
   );

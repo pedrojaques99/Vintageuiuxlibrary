@@ -44,7 +44,15 @@ const AVISO_SEM_SRC =
   "está no estado de espera genérico. Passe o .lottie da marca: " +
   "<OctahedronLoader src=\"/assets/brand/simbolo.lottie\" />";
 
+/** Chaves já gritadas no console. Módulo, não componente: o aviso é do projeto. */
+const jaAvisado = new Set<string>();
+
 export interface OctahedronLoaderProps {
+  /**
+   * O contrato é tela cheia (`min-h-screen`) — ele substitui a rota inteira
+   * enquanto ela carrega. Dentro de uma caixa menor, passe `min-h-0` aqui: o
+   * `cn` resolve o conflito a favor de quem chama.
+   */
   className?: string;
   /**
    * Caminho do `.lottie` (ou `.json` do Lottie) do símbolo da marca. Sem ele o
@@ -67,7 +75,13 @@ export function OctahedronLoader({
   const [falhou, setFalhou] = React.useState(false);
 
   React.useEffect(() => {
-    if (!src) console.error(AVISO_SEM_SRC);
+    // Uma vez por sessão, não por montagem: este loader monta a cada troca de
+    // rota, e um console com 40 linhas iguais deixa de ser aviso e vira ruído —
+    // some junto com o erro que a pessoa está caçando.
+    if (!src && !jaAvisado.has("sem-src")) {
+      jaAvisado.add("sem-src");
+      console.error(AVISO_SEM_SRC);
+    }
   }, [src]);
 
   const mostraFallback = !src || falhou;
@@ -94,10 +108,13 @@ export function OctahedronLoader({
             // isso, um `src` errado (404 que devolve HTML, arquivo corrompido)
             // continuaria sendo tela em branco — o defeito original.
             dl?.addEventListener("loadError", (e) => {
-              console.error(
-                `[OctahedronLoader] o .lottie de "${src}" não carregou.`,
-                e,
-              );
+              if (!jaAvisado.has(src)) {
+                jaAvisado.add(src);
+                console.error(
+                  `[OctahedronLoader] o .lottie de "${src}" não carregou.`,
+                  e,
+                );
+              }
               setFalhou(true);
             });
           }}

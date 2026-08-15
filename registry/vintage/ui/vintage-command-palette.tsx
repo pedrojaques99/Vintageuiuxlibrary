@@ -44,6 +44,17 @@ interface VintageCommandPaletteProps {
   onSelect: (id: string) => void;
   onClose: () => void;
   placeholder?: string;
+  /**
+   * Monta dentro do pai posicionado em vez de `fixed` na janela.
+   *
+   * Existe porque a paleta também é útil embutida — num painel de bancada, num
+   * card de ferramenta — e porque `fixed inset-0` só tem um lugar possível na
+   * página: em cima de tudo. Embutida, ela não rouba o foco por padrão nem
+   * escurece a página inteira. O pai precisa ter `position: relative`.
+   */
+  inline?: boolean;
+  /** Foco no campo ao montar. Padrão: sim em modal, não embutida. */
+  autoFocus?: boolean;
   className?: string;
 }
 
@@ -53,15 +64,21 @@ export function VintageCommandPalette({
   onSelect,
   onClose,
   placeholder = "Search...",
+  inline = false,
+  autoFocus,
   className,
 }: VintageCommandPaletteProps) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Embutida não puxa o foco: a paleta pode estar num painel que a pessoa nem
+  // olhou ainda, e roubar o cursor de quem está digitando em outro lugar é o
+  // tipo de gentileza que vira sabotagem.
+  const focar = autoFocus ?? !inline;
   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+    if (focar) inputRef.current?.focus();
+  }, [focar]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -170,10 +187,12 @@ export function VintageCommandPalette({
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[9999] flex items-start justify-center",
-        // `10vh` de topo num celular deitado é quase toda a tela; o piso de 2rem
-        // é o que mantém a paleta acima da dobra em qualquer altura.
-        "px-4 pb-4 pt-[max(2rem,10vh)]",
+        "flex items-start justify-center",
+        inline
+          ? "absolute inset-0 z-10 p-3"
+          : // `10vh` de topo num celular deitado é quase toda a tela; o piso de
+            // 2rem é o que mantém a paleta acima da dobra em qualquer altura.
+            "fixed inset-0 z-[9999] px-4 pb-4 pt-[max(2rem,10vh)]",
         className
       )}
       style={{
@@ -193,7 +212,12 @@ export function VintageCommandPalette({
         onMouseDown={(e) => e.stopPropagation()}
         // Largura natural de 480, teto na tela: era `w-[480px]` cravado e num
         // celular de 390 o painel sangrava 45px de cada lado.
-        className="flex max-h-[70vh] w-[min(480px,100%)] flex-col overflow-hidden rounded-2xl border border-[var(--vintage-border)]"
+        className={cn(
+          "flex w-[min(480px,100%)] flex-col overflow-hidden rounded-2xl border border-[var(--vintage-border)]",
+          // Embutida, o teto é o pai; modal, é a janela. `70vh` dentro de um
+          // card de 300px devolveria um diálogo mais alto que o próprio card.
+          inline ? "max-h-full" : "max-h-[70vh]"
+        )}
         style={{
           background:
             "linear-gradient(160deg, var(--vintage-surface-2), var(--vintage-surface-1))",

@@ -91,6 +91,11 @@ export interface PinnedSceneProps extends React.HTMLAttributes<HTMLElement> {
   /** Régua de progresso com contagem. Some abaixo de `md`. */
   rail?: boolean;
   /**
+   * Avisa quando o passo ativo muda. Serve pra trocar um vídeo, disparar
+   * analytics de dobra, ou acender algo fora da peça. Recebe o índice e o passo.
+   */
+  onStepChange?: (index: number, step: PinnedStep) => void;
+  /**
    * Quem rola, quando não é a janela: um `overflow-y: auto` (documentação,
    * modal, painel). O `sticky` já funciona dentro de container sem ajuda; isto
    * existe só pra o ScrollTrigger medir o progresso no mesmo scroller, senão a
@@ -108,6 +113,7 @@ export function PinnedScene({
   top = "12vh",
   stepHeight = "100svh",
   rail = true,
+  onStepChange,
   scroller = null,
   className,
   style,
@@ -115,6 +121,22 @@ export function PinnedScene({
 }: PinnedSceneProps) {
   const rootRef = React.useRef<HTMLElement>(null);
   const [active, setActive] = React.useState(0);
+
+  // O callback entra por ref, e não nas dependências do efeito: passado como
+  // arrow inline (que é como todo mundo passa), ele muda de identidade a cada
+  // render e derrubaria e recriaria os ScrollTriggers da cena inteira em cada
+  // troca de passo — que é justamente quando ele dispara.
+  const aviso = React.useRef(onStepChange);
+  React.useEffect(() => {
+    aviso.current = onStepChange;
+  }, [onStepChange]);
+
+  React.useEffect(() => {
+    aviso.current?.(active, steps[active]);
+    // `steps` fora das dependências de propósito: quem manda aqui é a troca de
+    // passo, e a lista costuma ser um literal remontado a cada render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
 
   useIsomorphicLayoutEffect(() => {
     const root = rootRef.current;
@@ -181,7 +203,14 @@ export function PinnedScene({
       let pending = 0;
       const ro = new ResizeObserver(() => {
         cancelAnimationFrame(pending);
-        pending = requestAnimationFrame(() => ScrollTrigger.refresh());
+        pending = requestAnimationFrame(() => {
+          // Remede só os gatilhos DESTA cena, e não `ScrollTrigger.refresh()`
+          // global: o global recalcula tudo que existe na página, inclusive o
+          // pin de outro componente que não mudou de tamanho nenhum. Quem
+          // cresceu foi este root — o `ResizeObserver` observa ele e mais nada.
+          scene.refresh();
+          perStep.forEach((t) => t.refresh());
+        });
       });
       ro.observe(root);
 

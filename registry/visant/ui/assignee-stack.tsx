@@ -27,15 +27,25 @@ function initials(name: string): string {
  *
  * O tom vai no TEXTO e o fundo é o tom diluído no card, em vez de círculo
  * chapado com letra branca. Não é gosto: `--chart-4` é um amarelo claro, e
- * letra branca em cima dele some. Tom sobre fundo quase-card tem contraste nos
- * cinco tons e nos dois temas, sem tabela de exceção.
+ * letra branca em cima dele some.
+ *
+ * Mas o tom CRU no texto também não serve, e isso o portão de legibilidade
+ * provou: `--chart-4` sobre o fundo diluído dele mesmo dá 1,3:1 — as duas
+ * letras somem, justamente na única forma que resta quando não há foto. A
+ * versão anterior deste comentário afirmava contraste nos cinco tons; era
+ * afirmação, não medida.
+ *
+ * A tinta agora é o tom **puxado para a cor do texto do tema**: metade do
+ * caminho até `--foreground`. A identidade continua (o amarelo continua sendo
+ * o amarelo, e cada pessoa mantém o seu), e a legibilidade passa a vir do
+ * tema — escurece no claro, clareia no escuro, sem tabela de exceção.
  */
 const TONES = [
-  "bg-[color-mix(in_oklab,var(--chart-1)_16%,var(--card))] text-[var(--chart-1)]",
-  "bg-[color-mix(in_oklab,var(--chart-2)_16%,var(--card))] text-[var(--chart-2)]",
-  "bg-[color-mix(in_oklab,var(--chart-3)_16%,var(--card))] text-[var(--chart-3)]",
-  "bg-[color-mix(in_oklab,var(--chart-4)_16%,var(--card))] text-[var(--chart-4)]",
-  "bg-[color-mix(in_oklab,var(--chart-5)_16%,var(--card))] text-[var(--chart-5)]",
+  "bg-[color-mix(in_oklab,var(--chart-1)_16%,var(--card))] text-[color-mix(in_oklab,var(--chart-1)_50%,var(--foreground))]",
+  "bg-[color-mix(in_oklab,var(--chart-2)_16%,var(--card))] text-[color-mix(in_oklab,var(--chart-2)_50%,var(--foreground))]",
+  "bg-[color-mix(in_oklab,var(--chart-3)_16%,var(--card))] text-[color-mix(in_oklab,var(--chart-3)_50%,var(--foreground))]",
+  "bg-[color-mix(in_oklab,var(--chart-4)_16%,var(--card))] text-[color-mix(in_oklab,var(--chart-4)_50%,var(--foreground))]",
+  "bg-[color-mix(in_oklab,var(--chart-5)_16%,var(--card))] text-[color-mix(in_oklab,var(--chart-5)_50%,var(--foreground))]",
 ];
 
 function toneOf(id: string): string {
@@ -75,6 +85,19 @@ const SIZES = {
  * Só `transform` anima — a abertura é `margin` virando `translateX`, nunca
  * largura. E `hover` não é a única porta: `focus-within` abre igual, senão em
  * touch a pilha nunca abriria.
+ *
+ * ── Por que a pilha abre para a ESQUERDA ────────────────────────────────────
+ * A primeira versão abria empurrando todo mundo para a direita: o último
+ * círculo — e principalmente o "+N", que é a informação que a pilha esconde —
+ * andava para fora do container e estourava a borda do cartão. E não era acaso:
+ * o lugar natural desta peça é encostada à direita da linha, então crescer para
+ * a direita é crescer para fora, sempre.
+ *
+ * Agora o círculo mais à direita fica ANCORADO (deslocamento zero) e os outros
+ * recuam para a esquerda. A pilha abre para dentro da linha, onde já existe
+ * folga, e a borda direita nunca se move. O espaço que a abertura vai ocupar é
+ * reservado em `padding-left` no repouso: `transform` não empurra layout, então
+ * sem a reserva a pilha aberta passaria por cima do texto do vizinho.
  */
 export function AssigneeStack({
   assignees,
@@ -143,8 +166,15 @@ export function AssigneeStack({
     }
   };
 
+  // O passo da abertura e a reserva que ela consome. O deslocamento de cada
+  // círculo é negativo e cresce da direita para a esquerda: o último fica no
+  // lugar, o primeiro anda o percurso inteiro.
+  const passo = size === "lg" ? 12 : size === "md" ? 10 : 8;
+  const abertura = (count - 1) * passo;
+  const desloca = (i: number) => `${-(count - 1 - i) * passo}px`;
+
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative", className)} style={{ paddingLeft: abertura }}>
       <div
         role="group"
         aria-label={`Colaboradores: ${names}`}
@@ -177,7 +207,8 @@ export function AssigneeStack({
             className={cn(
               "relative rounded-full ring-2 ring-card",
               // A abertura: cada círculo anda o suficiente para desfazer a
-              // sobreposição, e quem está mais à direita anda mais.
+              // sobreposição, e quem está mais à ESQUERDA anda mais — ver a
+              // nota sobre a direção.
               "transition-transform [transition-duration:var(--dur-base,200ms)] ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
               "group-hover/pilha:translate-x-[var(--abre)] group-focus-within/pilha:translate-x-[var(--abre)]",
               // Quem está sob o cursor sobe na pilha para o rosto não ficar
@@ -185,7 +216,7 @@ export function AssigneeStack({
               hovered === i ? "z-20" : "z-10",
               !onSelect && "cursor-default",
             )}
-            style={{ ["--abre" as string]: `${i * (size === "lg" ? 12 : size === "md" ? 10 : 8)}px` }}
+            style={{ ["--abre" as string]: desloca(i) }}
           >
             <Avatar className={s.box}>
               {a.avatarUrl && <AvatarImage src={a.avatarUrl} alt="" />}
@@ -220,9 +251,8 @@ export function AssigneeStack({
               "group-hover/pilha:translate-x-[var(--abre)] group-focus-within/pilha:translate-x-[var(--abre)]",
               "hover:bg-muted hover:text-foreground focus-visible:text-foreground",
             )}
-            style={{
-              ["--abre" as string]: `${visible.length * (size === "lg" ? 12 : size === "md" ? 10 : 8)}px`,
-            }}
+            // O "+N" é sempre o último da fila, então é ele que fica ancorado.
+            style={{ ["--abre" as string]: desloca(visible.length) }}
           >
             +{extra}
           </button>
@@ -233,11 +263,15 @@ export function AssigneeStack({
        * Quem é a pessoa. Absoluto e `pointer-events-none` de propósito: um
        * rótulo que empurra layout faria a linha do cartão pular a cada vez que
        * o mouse passa — o defeito que o `title` nativo evitava ficando inútil.
+       *
+       * Ancorado à direita pelo mesmo motivo da abertura: a pilha vive na borda
+       * direita da linha, e um rótulo que cresce para a direita cresce para fora
+       * do cartão no primeiro nome comprido.
        */}
       <span
         aria-hidden="true"
         className={cn(
-          "pointer-events-none absolute left-0 top-full z-30 mt-1 max-w-[14rem] truncate whitespace-nowrap rounded-[var(--r-control,0.5rem)] border border-border bg-card px-1.5 py-0.5 text-[11px] leading-tight text-foreground",
+          "pointer-events-none absolute right-0 top-full z-30 mt-1 max-w-[14rem] truncate whitespace-nowrap rounded-[var(--r-control,0.5rem)] border border-border bg-card px-1.5 py-0.5 text-[11px] leading-tight text-foreground",
           "transition-opacity [transition-duration:var(--dur-fast,160ms)] ease-[var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
           shown ? "opacity-100" : "opacity-0",
         )}

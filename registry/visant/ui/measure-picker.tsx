@@ -174,7 +174,14 @@ export function MeasurePicker<T>({
           className={cn(
             // `measure-range` fica pelo CSS do registry (quem já instalou).
             // O desenho abaixo é do componente, para ele não depender disso.
-            "measure-range relative z-10 h-10 w-full cursor-grab appearance-none bg-transparent",
+            // `block` não é enfeite: o input nasce inline, e aí o container
+            // `relative` fica ~6px mais alto que ele por causa do espaço de
+            // linha embaixo da base. O polegar se centra na trilha NATIVA (o
+            // meio do input), a trilha desenhada se centra no container — e as
+            // duas ficavam 3px fora de registro, que é a bolinha desalinhada do
+            // report. Tirando o espaço de linha, os dois centros voltam a ser o
+            // mesmo ponto.
+            "measure-range relative z-10 block h-10 w-full cursor-grab appearance-none bg-transparent",
             "active:cursor-grabbing focus-visible:outline-none",
             // Trilha nativa some: quem pinta é a camada de faixas acima.
             "[&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent",

@@ -11,7 +11,13 @@
   "vintage-large-knob": [
     "react"
   ],
+  "vintage-soundboard-pad": [
+    "react"
+  ],
   "marquee": [
+    "gsap"
+  ],
+  "logo-wall": [
     "gsap"
   ],
   "motion-layer": [
@@ -25,7 +31,7 @@
     "framer-motion"
   ],
   "data-table": [
-    "@tanstack/react-table",
+    "@tanstack/react-table@^8.21.3",
     "class-variance-authority",
     "lucide-react",
     "next",
@@ -40,6 +46,12 @@
     "framer-motion"
   ],
   "inline-edit": [
+    "lucide-react"
+  ],
+  "auth-button": [
+    "lucide-react"
+  ],
+  "profile-form": [
     "lucide-react"
   ],
   "timeline": [
@@ -94,6 +106,10 @@
   ],
   "photo-frame": [
     "gsap"
+  ],
+  "photo-split": [
+    "gsap",
+    "react"
   ],
   "photo-flip": [
     "gsap"

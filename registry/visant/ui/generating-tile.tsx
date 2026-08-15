@@ -109,7 +109,11 @@ export function GeneratingTile({
       className={cn(
         "relative overflow-hidden rounded-[var(--r-surface)]",
         showFrame && "border border-border bg-card",
-        aspectRatio && ASPECT[aspectRatio],
+        // Tudo dentro do tile é absoluto (névoa, glifo, ticker). Sem proporção
+        // declarada e sem altura vinda do pai, a caixa fechava em 0px e o loader
+        // simplesmente não aparecia — o pior defeito possível num estado de
+        // espera. O piso garante que ele sempre ocupe o lugar do resultado.
+        aspectRatio ? ASPECT[aspectRatio] : "min-h-[120px]",
         className,
       )}
     >

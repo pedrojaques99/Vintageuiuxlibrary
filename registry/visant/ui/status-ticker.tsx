@@ -40,14 +40,34 @@ export function StatusTicker({
   const [dots, setDots] = useState(".");
   const [timer, setTimer] = useState("0:00");
 
+  // A palavra ASSENTADA, sem os quadros embaralhados da revelação. É ela que o
+  // leitor de tela recebe — anunciar "cr*a-do" seria pior que não anunciar.
+  const [alvo, setAlvo] = useState(steps[0] ?? "");
+
   const startedAt = useRef<number | null>(null);
   const wordIdx = useRef(0);
   const revealTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  /*
+   * `steps` não pode entrar como dependência de efeito.
+   *
+   * O default é um literal de array: identidade nova a cada render. E o efeito
+   * abaixo faz `setState` a cada 380ms (os pontinhos), o que gera render, que
+   * gera array novo, que refaz o efeito — e o efeito reinicia `startedAt`. Na
+   * prática o cronômetro nunca passava de 0:00 e a palavra nunca girava, que é
+   * exatamente o que a peça vende. Quem passa `steps={["a","b"]}` inline caía no
+   * mesmo buraco. A chave de texto é estável; o conteúdo vive num ref.
+   */
+  const stepsKey = steps.join("|");
+  const stepsRef = useRef(steps);
+  stepsRef.current = steps;
+
   useEffect(() => {
-    setWord(steps[0] ?? "");
+    const primeiro = stepsRef.current[0] ?? "";
+    setWord(primeiro);
+    setAlvo(primeiro);
     wordIdx.current = 0;
-  }, [steps]);
+  }, [stepsKey]);
 
   useEffect(() => {
     // `Date.now()` no efeito, não no render: em StrictMode/SSR o render roda
@@ -59,6 +79,7 @@ export function StatusTicker({
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
     const reveal = (target: string) => {
+      setAlvo(target);
       if (reduced) {
         setWord(target);
         return;
@@ -89,13 +110,21 @@ export function StatusTicker({
       ? null
       : setInterval(() => setDots((d) => (d.length >= 1 ? "" : ".")), 380);
 
+    // Contador próprio em vez de `sec % rotateEverySec`: um tick atrasado pelo
+    // navegador (aba de fundo, GC) pulava o resto da divisão e a palavra ficava
+    // parada mais um ciclo inteiro.
+    let desdeATroca = 0;
+
     const tickId = setInterval(() => {
       const sec = Math.floor((Date.now() - (startedAt.current ?? 0)) / 1000);
       setTimer(`${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`);
 
-      if (sec > 0 && sec % rotateEverySec === 0 && steps.length > 1) {
-        wordIdx.current = (wordIdx.current + 1) % steps.length;
-        reveal(steps[wordIdx.current]);
+      desdeATroca += 1;
+      const lista = stepsRef.current;
+      if (desdeATroca >= rotateEverySec && lista.length > 1) {
+        desdeATroca = 0;
+        wordIdx.current = (wordIdx.current + 1) % lista.length;
+        reveal(lista[wordIdx.current]);
       }
     }, 1000);
 
@@ -104,7 +133,7 @@ export function StatusTicker({
       clearInterval(tickId);
       if (revealTimer.current) clearInterval(revealTimer.current);
     };
-  }, [steps, rotateEverySec]);
+  }, [stepsKey, rotateEverySec]);
 
   return (
     <div
@@ -117,12 +146,18 @@ export function StatusTicker({
     >
       <GlitchChars className="text-[var(--accent-ink,var(--muted-foreground))]" />
       {/* min-w impede o bloco inteiro de pular a cada troca de palavra */}
-      <span className="min-w-[120px] text-foreground">
+      <span aria-hidden="true" className="min-w-[120px] text-foreground">
         {word}
         {dots}
       </span>
+      {/* O que a região viva anuncia: só a palavra assentada. Sem isto o leitor
+          de tela lia o cronômetro a cada segundo, para sempre. */}
+      <span className="sr-only">{alvo}</span>
       {showTimer && (
-        <span className="ml-auto text-[10px] tabular-nums text-[var(--muted-foreground)]">
+        <span
+          aria-hidden="true"
+          className="ml-auto text-[10px] tabular-nums text-[var(--muted-foreground)]"
+        >
           {timer}
         </span>
       )}
