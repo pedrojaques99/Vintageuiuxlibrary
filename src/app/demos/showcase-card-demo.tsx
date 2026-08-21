@@ -25,8 +25,9 @@ import * as React from "react";
 
 import { Media } from "../media";
 import { ShowcaseCard } from "../../../registry/visant/ui/showcase-card";
+import type { DemoProps } from "../catalog";
 
-export default function ShowcaseCardDemo() {
+export default function ShowcaseCardDemo({ props }: DemoProps) {
   return (
     <div className="flex h-full w-full items-center justify-center px-2">
       <ShowcaseCard
@@ -35,6 +36,7 @@ export default function ShowcaseCardDemo() {
         title="Identidade que quer dizer alguma coisa"
         media={<Media papel="video" className="size-full" />}
         tags={["Estratégia", "Naming", "Logo", "Identidade visual"]}
+        {...props}
       />
     </div>
   );

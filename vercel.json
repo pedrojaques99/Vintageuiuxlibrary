@@ -3,9 +3,25 @@
   "cleanUrls": true,
   "headers": [
     {
-      "source": "/r/(.*)",
+      "source": "/r/(.*).json",
       "headers": [
         { "key": "Content-Type", "value": "application/json; charset=utf-8" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/r/(.*).md",
+      "headers": [
+        { "key": "Content-Type", "value": "text/markdown; charset=utf-8" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
         { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "Cache-Control", "value": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400" }
       ]
@@ -19,7 +35,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!r/|og/|assets/).*)",
+      "source": "/((?!r/|og/|assets/|llms.txt).*)",
       "destination": "/index.html"
     }
   ]

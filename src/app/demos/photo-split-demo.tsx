@@ -16,11 +16,12 @@ import * as React from "react";
 
 import { Media } from "../media";
 import { PhotoSplit, PhotoSplitStack } from "../../../registry/visant/ui/photo-split";
+import type { DemoProps } from "../catalog";
 
-export default function PhotoSplitDemo() {
+export default function PhotoSplitDemo({ props }: DemoProps) {
   return (
     <div className="h-full w-full overflow-hidden px-5 py-4">
-      <PhotoSplitStack space={3}>
+      <PhotoSplitStack space={3} {...props}>
         <PhotoSplit
           eyebrow="Marca"
           title="A guideline compilada entra antes da primeira tela."

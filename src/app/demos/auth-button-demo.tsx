@@ -17,6 +17,7 @@ import { Chrome, CreditCard, Github, KeyRound, User } from "lucide-react";
 import { AuthButton, type AuthStatus } from "../../../registry/visant/ui/auth-button";
 import { SegmentedControl } from "../../../registry/visant/ui/segmented-control";
 import { midia } from "../media";
+import type { DemoProps } from "../catalog";
 
 const CONTA = {
   name: "Marina Duarte",
@@ -24,7 +25,7 @@ const CONTA = {
   avatarUrl: midia("retrato", 1)?.src,
 };
 
-export default function AuthButtonDemo() {
+export default function AuthButtonDemo({ props }: DemoProps) {
   const [status, setStatus] = React.useState<AuthStatus>("loading");
 
   return (
@@ -51,6 +52,7 @@ export default function AuthButtonDemo() {
               { id: "plano", label: "Plano e cobrança", icon: <CreditCard className="h-4 w-4" />, onSelect: () => {} },
             ]}
             onSignOut={() => setStatus("signed-out")}
+            {...props}
           />
         </div>
       </div>

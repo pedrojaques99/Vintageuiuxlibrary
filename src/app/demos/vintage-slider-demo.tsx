@@ -12,6 +12,7 @@
 import * as React from "react";
 
 import { VintageSlider } from "../../../registry/vintage/ui/vintage-slider";
+import type { DemoProps } from "../catalog";
 
 const CANAIS = [
   { rotulo: "GAIN", inicial: 6.4 },
@@ -19,7 +20,7 @@ const CANAIS = [
   { rotulo: "MIX", inicial: 7.8 },
 ];
 
-export default function VintageSliderDemo() {
+export default function VintageSliderDemo({ props }: DemoProps) {
   const [valores, setValores] = React.useState(CANAIS.map((c) => c.inicial));
 
   return (
@@ -34,6 +35,7 @@ export default function VintageSliderDemo() {
             onChange={(v) =>
               setValores((p) => p.map((x, j) => (j === i ? v : x)))
             }
+            {...props}
           />
         ))}
       </div>

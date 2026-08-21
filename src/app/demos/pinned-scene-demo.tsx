@@ -24,6 +24,7 @@ import * as React from "react";
 
 import { Media } from "../media";
 import { PinnedScene } from "../../../registry/visant/ui/pinned-scene";
+import type { DemoProps } from "../catalog";
 
 const PASSOS = [
   {
@@ -46,7 +47,7 @@ const PASSOS = [
   },
 ];
 
-export default function PinnedSceneDemo() {
+export default function PinnedSceneDemo({ props }: DemoProps) {
   const scrollerRef = React.useRef<HTMLDivElement>(null);
   // O ScrollTrigger precisa do elemento, e no primeiro render ele é `null`.
   // Um estado força o segundo render com o nó em mãos — sem isso a cena monta
@@ -75,6 +76,7 @@ export default function PinnedSceneDemo() {
             ...p,
             art: <Media papel="cena" indice={i} className="h-full w-full" />,
           }))}
+          {...props}
         />
       </div>
       <span className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-[length:var(--text-micro,0.68rem)] text-muted-foreground">

@@ -189,10 +189,18 @@ run("npx tsc --noEmit");
 say("Build do registry (shadcn)");
 run("npx shadcn@latest build");
 
-// A tabela de props sai do TypeScript dos itens — regerar aqui é o que impede a
-// documentação de descrever uma API que já mudou.
-say("Extração de props");
-run("node scripts/props-extract.mjs");
+// A tabela de props, os knobs do painel e as fichas em markdown saem todos do
+// TypeScript dos itens. Regerar aqui é o que impede a documentação de descrever
+// uma API que já mudou — e a ordem entre eles mora no `build-docs`.
+say("Documentação derivada (props, knobs, novidades)");
+run("node scripts/build-docs.mjs");
+
+// Preset é o único pedaço da doc escrito à mão. O portão confere cada um contra
+// os controles derivados: prop que sumiu, valor fora da faixa e chip que não
+// muda nada não passam. Sem isto o defeito é invisível — o chip aparece, a
+// pessoa clica, e nada acontece.
+say("Portão dos controles");
+run("node scripts/controls-check.mjs");
 
 say("Build do site (vite)");
 run("npx vite build");

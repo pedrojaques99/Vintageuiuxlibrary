@@ -31,8 +31,9 @@ import * as React from "react";
 
 import { Media } from "../media";
 import { PhotoFlip } from "../../../registry/visant/ui/photo-flip";
+import type { DemoProps } from "../catalog";
 
-export default function PhotoFlipDemo() {
+export default function PhotoFlipDemo({ props }: DemoProps) {
   const items = React.useMemo(
     () =>
       [0, 1, 2, 3, 4, 5].map((i) => ({
@@ -49,6 +50,7 @@ export default function PhotoFlipDemo() {
         items={items}
         ratio="4/5"
         className="grid w-full max-w-[1240px] grid-cols-6 gap-3"
+        {...props}
       />
       <span className="text-micro text-muted-foreground">clique pra ampliar · Esc fecha</span>
     </div>

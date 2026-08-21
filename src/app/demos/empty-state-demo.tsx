@@ -22,6 +22,7 @@
  */
 
 import { EmptyState, EmptyArt } from "../../../registry/visant/ui/empty-state";
+import type { DemoProps } from "../catalog";
 
 const VAZIOS = [
   {
@@ -38,7 +39,7 @@ const VAZIOS = [
   },
 ];
 
-export default function EmptyStateDemo() {
+export default function EmptyStateDemo({ props }: DemoProps) {
   return (
     <div className="grid h-full w-full grid-cols-1 items-start gap-5 px-4 py-2 sm:grid-cols-2">
       {VAZIOS.map((v) => (
@@ -53,7 +54,7 @@ export default function EmptyStateDemo() {
           /* 200px contra os 120px de antes: a arte precisa de altura pra a
              composição aparecer inteira, e a cortina de contraste da peça só
              morde os últimos 42%. */
-          art={<EmptyArt seed={v.seed} className="h-[200px] w-full" />}
+          art={<EmptyArt seed={v.seed} className="h-[200px] w-full" {...props} />}
         >
           {v.body}
         </EmptyState>

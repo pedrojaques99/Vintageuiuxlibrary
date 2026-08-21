@@ -29,6 +29,7 @@ import * as React from "react";
 import { MasonryGallery } from "../../../registry/visant/ui/masonry-gallery";
 import { Media, proporcao, type Papel } from "../media";
 import { useStageActive } from "../stage";
+import type { DemoProps } from "../catalog";
 
 const PAPEIS: Papel[] = ["cena", "retrato", "textura"];
 /** Proporções de recorte para a segunda volta no acervo. */
@@ -56,7 +57,7 @@ const criar = (n: number): Peca => {
   };
 };
 
-export default function MasonryGalleryDemo() {
+export default function MasonryGalleryDemo({ props }: DemoProps) {
   const ativo = useStageActive();
   const [pecas, setPecas] = React.useState<Peca[]>(() =>
     Array.from({ length: PAGINA * 2 }, (_, i) => criar(i)),
@@ -112,6 +113,7 @@ export default function MasonryGalleryDemo() {
             </figcaption>
           </figure>
         )}
+        {...props}
       />
 
       {/* A sentinela tem altura: um alvo de 0px nunca intersecta com folga em

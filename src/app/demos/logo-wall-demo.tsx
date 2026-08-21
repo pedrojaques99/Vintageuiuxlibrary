@@ -25,6 +25,7 @@ import * as React from "react";
 
 import { LogoWall, type LogoWallItem } from "../../../registry/visant/ui/logo-wall";
 import { SegmentedControl } from "../../../registry/visant/ui/segmented-control";
+import type { DemoProps } from "../catalog";
 
 /**
  * Seis marcas com anatomias de propósito diferentes: wordmark comprido,
@@ -143,7 +144,7 @@ const OPCOES = [
   { value: "peca" as const, label: "normalizado" },
 ];
 
-export default function LogoWallDemo() {
+export default function LogoWallDemo({ props }: DemoProps) {
   const [modo, setModo] = React.useState<Modo>("peca");
 
   const itens = React.useMemo<LogoWallItem[]>(
@@ -173,7 +174,7 @@ export default function LogoWallDemo() {
           ))}
         </div>
       ) : (
-        <LogoWall items={itens} heading="Confiam na gente" bleed={12} speed={64} />
+        <LogoWall items={itens} heading="Confiam na gente" bleed={12} speed={64} {...props} />
       )}
     </div>
   );

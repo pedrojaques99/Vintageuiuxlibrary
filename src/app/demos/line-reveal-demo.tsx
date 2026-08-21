@@ -33,6 +33,7 @@ import * as React from "react";
 
 import { LineReveal } from "../../../registry/visant/ui/line-reveal";
 import type { LineRevealVariant } from "../../../registry/visant/ui/line-reveal";
+import type { DemoProps } from "../catalog";
 
 const FRASE = "A quebra de linha é do navegador. O corte, do desenho.";
 
@@ -43,7 +44,7 @@ const VARIACOES: ReadonlyArray<{ v: LineRevealVariant; nota: string }> = [
   { v: "rise", nota: "sobe sem corte" },
 ];
 
-export default function LineRevealDemo() {
+export default function LineRevealDemo({ props }: DemoProps) {
   const [n, setN] = React.useState(0);
 
   return (
@@ -90,6 +91,7 @@ export default function LineRevealDemo() {
               variant={v}
               immediate
               className="text-[1.35rem] font-medium leading-[1.2]"
+              {...props}
             >
               {FRASE}
             </LineReveal>

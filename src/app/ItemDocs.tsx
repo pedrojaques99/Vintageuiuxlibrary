@@ -19,6 +19,7 @@ import { Check, Copy, FileCode } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { REGISTRY_URL, registryItemUrl } from "./registry-meta";
 import { useCopy } from "./copy-command";
+import { Codigo, linguagemDe } from "./codigo";
 import propsGerados from "./props.generated.json";
 
 interface PropDoc {
@@ -27,6 +28,25 @@ interface PropDoc {
   obrigatoria: boolean;
   padrao: string | null;
   descricao: string | null;
+  /** Os membros da união, quando o tipo é uma união de literais. */
+  valores?: string[];
+  faixa?: { min?: number; max?: number; step?: number };
+}
+
+/**
+ * O tipo como ele responde "o que eu posso passar aqui?".
+ *
+ * A coluna mostrava a palavra `enum` em 48 props — que é o nome da categoria,
+ * não a resposta. Quem lia tinha de abrir o código pra descobrir se `finish`
+ * aceita três valores ou trinta.
+ */
+function tipoLegivel(p: PropDoc) {
+  if (p.valores?.length) return p.valores.map((v) => `"${v}"`).join(" | ");
+  if (p.tipo === "number" && p.faixa) {
+    const { min, max } = p.faixa;
+    if (min !== undefined && max !== undefined) return `number (${min}–${max})`;
+  }
+  return p.tipo;
 }
 
 interface ComponenteDoc {
@@ -93,7 +113,7 @@ export function TabelaDeProps({ name }: { name: string }) {
                         ) : null}
                       </td>
                       <td className="py-2 pr-4 font-mono text-rotulo text-muted-foreground">
-                        {p.tipo}
+                        {tipoLegivel(p)}
                       </td>
                       <td className="py-2 pr-4 font-mono text-rotulo text-muted-foreground">
                         {p.padrao ?? "—"}
@@ -183,9 +203,12 @@ export function CodigoDoItem({ name }: { name: string }) {
         </button>
       </div>
 
-      <pre className="min-h-0 flex-1 overflow-auto bg-muted/20 p-4 text-apoio leading-relaxed sm:p-5">
-        <code className="font-mono">{arquivo?.content ?? ""}</code>
-      </pre>
+      <Codigo
+        codigo={arquivo?.content ?? ""}
+        linguagem={linguagemDe(arquivo?.path ?? "")}
+        numerado
+        className="min-h-0 flex-1 bg-muted/20 p-4 sm:p-5"
+      />
     </div>
   );
 }

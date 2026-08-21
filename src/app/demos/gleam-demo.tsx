@@ -36,8 +36,9 @@ import { Chip } from "../../../registry/visant/ui/chip";
 import { Gleam } from "../../../registry/visant/ui/gleam";
 import { Media } from "../media";
 import { ScrubInput } from "../../../registry/visant/ui/scrub-input";
+import type { DemoProps } from "../catalog";
 
-export default function GleamDemo() {
+export default function GleamDemo({ props }: DemoProps) {
   const [luz, setLuz] = React.useState(100);
   const [inclinacao, setInclinacao] = React.useState(9);
   const [matiz, setMatiz] = React.useState(212);
@@ -62,6 +63,7 @@ export default function GleamDemo() {
         tint={cor}
         flat={inclinacao === 0}
         className="w-full max-w-[300px] shrink-0 overflow-hidden bg-[color-mix(in_oklch,var(--foreground)_5%,var(--card))] p-3"
+        {...props}
       >
         {/* A arte é filha do card, não fundo dele: a luz e a borda acesa são
             camadas ACIMA do conteúdo, então o reflexo passa por cima da foto —

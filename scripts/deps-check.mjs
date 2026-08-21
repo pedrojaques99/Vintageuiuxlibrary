@@ -41,6 +41,29 @@ const IMPORT_RE = /(?:from|import)\s+["']([^"']+)["']/g;
 const problemas = [];
 let corrigidos = 0;
 
+/*
+ * Quem ENTREGA cada arquivo.
+ *
+ * O nome do arquivo não é o nome do item: o `cover-art` envia
+ * `lib/cover-look.ts`, e um item que importa `@/lib/cover-look` depende do
+ * `cover-art`, não de um item "cover-look" — que não existe.
+ *
+ * Sem este mapa o portão exigia a declaração literal, e obedecer a ele
+ * QUEBRARIA o consumidor: `registryDependencies: ["cover-look"]` faz o
+ * `shadcn add` procurar um item inexistente e falhar na instalação. Portão que
+ * só passa com uma declaração inválida é pior que portão nenhum, porque ele
+ * ensina a mentir na configuração.
+ *
+ * É a mesma classe do conserto anterior (o ramo de alias não olhava os arquivos
+ * do próprio item): a resolução tem que ser por ARQUIVO, não por nome.
+ */
+const donoDoArquivo = new Map();
+for (const item of registry.items) {
+  for (const f of item.files ?? []) {
+    donoDoArquivo.set(basename(f.path).replace(/\.\w+$/, ""), item.name);
+  }
+}
+
 for (const item of registry.items) {
   const arquivos = (item.files ?? []).filter((f) => /\.(tsx?|jsx?)$/.test(f.path));
   if (!arquivos.length) continue;
@@ -88,8 +111,19 @@ for (const item of registry.items) {
         // dependência de si mesmo, e a "correção" seria partir o item em dois
         // só pra agradar o portão.
         const alvo = spec.split("/").pop();
-        if (alvo && !declaradasRegistry.has(alvo) && !nomesDeArquivo.has(alvo) && alvo !== "utils") {
-          problemas.push(`${item.name}: importa ${spec} sem declarar "${alvo}" em registryDependencies`);
+        // O item que ENTREGA o arquivo é quem tem de estar declarado. Ver
+        // `donoDoArquivo`.
+        const dono = alvo ? (donoDoArquivo.get(alvo) ?? alvo) : alvo;
+        if (
+          alvo &&
+          !declaradasRegistry.has(alvo) &&
+          !declaradasRegistry.has(dono) &&
+          !nomesDeArquivo.has(alvo) &&
+          dono !== item.name &&
+          alvo !== "utils"
+        ) {
+          const pedido = dono === alvo ? `"${alvo}"` : `"${dono}" (dono de ${alvo})`;
+          problemas.push(`${item.name}: importa ${spec} sem declarar ${pedido} em registryDependencies`);
         }
         continue;
       }

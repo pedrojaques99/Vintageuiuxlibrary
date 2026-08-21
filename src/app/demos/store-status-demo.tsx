@@ -21,6 +21,7 @@ import * as React from "react";
 
 import { StoreStatus, type StoreStatusLabels } from "../../../registry/visant/ui/store-status";
 import { useStageActive } from "../stage";
+import type { DemoProps } from "../catalog";
 
 const PT: Partial<StoreStatusLabels> = {
   open: () => "Aberto agora",
@@ -88,7 +89,7 @@ function Relogio({ timeZone }: { timeZone: string }) {
   );
 }
 
-export default function StoreStatusDemo() {
+export default function StoreStatusDemo({ props }: DemoProps) {
   return (
     <div className="flex h-full w-full flex-col gap-3 p-4">
       <div className="flex items-baseline justify-between gap-3">
@@ -113,6 +114,7 @@ export default function StoreStatusDemo() {
                 openDays={l.openDays ? [...l.openDays] : undefined}
                 locale="pt-BR"
                 labels={PT}
+                {...props}
               />
             </div>
             <Relogio timeZone={l.timeZone} />

@@ -6,10 +6,14 @@
  * delas — e foi assim que o fold-motion virou bug reportado como "muito
  * simples" quando na verdade não animava nada.
  *
- * 21 itens: fold-motion, gleam, line-reveal, magnetic-cta, marquee, measure-bar, measure-picker, nav-drawer, photo-compare, photo-flip, photo-frame, sfx-toggle, sim-slider, spine-card, testimonial-wall, theme-grao-editora, theme-norte-verde, theme-vega-noturno, theme-visant, vintage-base, working-glyph
+ * 22 itens: book-shelf, fold-motion, gleam, line-reveal, magnetic-cta, marquee, measure-bar, measure-picker, nav-drawer, photo-compare, photo-flip, photo-frame, sfx-toggle, sim-slider, spine-card, testimonial-wall, theme-grao-editora, theme-norte-verde, theme-vega-noturno, theme-visant, vintage-base, working-glyph
  */
 
 @layer components {
+  .book-shelf-label {
+    background: linear-gradient(to top, color-mix(in oklch, var(--background) 94%, transparent) 38%, transparent);
+    transition: opacity var(--dur-fast, 160ms) var(--ease-out);
+  }
   .visant-fold[data-armed] {
     opacity: 0;
     transform: translateY(14px);
@@ -441,7 +445,18 @@
     filter: none;
   }
 }
+@media (hover: hover) {
+  .book-shelf-label {
+    opacity: 0;
+  }
+  .group:hover .book-shelf-label, .group:focus-within .book-shelf-label {
+    opacity: 1;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
+  .book-shelf-label {
+    transition: none;
+  }
   .visant-fold[data-armed], .visant-fold[data-armed] > [data-fold-part], .visant-fold[data-armed] > * {
     opacity: 1;
     transform: none;

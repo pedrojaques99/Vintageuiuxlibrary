@@ -17,6 +17,7 @@ import * as React from "react";
 
 import { Media } from "../media";
 import { QuoteBlock } from "../../../registry/visant/ui/quote-block";
+import type { DemoProps } from "../catalog";
 
 function LogoCliente() {
   return (
@@ -30,7 +31,7 @@ function LogoCliente() {
   );
 }
 
-export default function QuoteBlockDemo() {
+export default function QuoteBlockDemo({ props }: DemoProps) {
   return (
     <div className="flex h-full w-full items-center px-4">
       <QuoteBlock
@@ -42,6 +43,7 @@ export default function QuoteBlockDemo() {
         logo={<LogoCliente />}
         source="https://exemplo.com/cases/aloro"
         portrait={<Media papel="retrato" indice={2} className="size-full" />}
+        {...props}
       />
     </div>
   );

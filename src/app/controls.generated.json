@@ -1,0 +1,3876 @@
+{
+  "use-knob-drag": {
+    "componentes": {
+      "useKnobDrag": [
+        {
+          "prop": "log",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 10,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "sensitivity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.022,
+          "resumo": null
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 5,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "vintage-button": {
+    "componentes": {
+      "VintageButton": [
+        {
+          "prop": "active",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "accent",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "vintage-slider": {
+    "componentes": {
+      "VintageSlider": [
+        {
+          "prop": "dense",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Aperta a caixa de ~124px para ~75px, sem tirar nada: rótulo, trilho e faixa",
+          "inicial": true
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 10,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 5,
+          "resumo": null
+        },
+        {
+          "prop": "accent",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "GAIN",
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "vintage-meter": {
+    "componentes": {
+      "VintageMeter": [
+        {
+          "prop": "readOnly",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Desliga a entrada do usuário e devolve o VU de vitrine, só leitura."
+        },
+        {
+          "prop": "defaultValue",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Nível inicial quando o medidor é não-controlado."
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 10,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Controlado. Sem ele o medidor guarda o próprio nível."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "LEVEL",
+          "resumo": null,
+          "inicial": "PROGRAM"
+        }
+      ]
+    }
+  },
+  "vintage-knob": {
+    "componentes": {
+      "VintageKnob": [
+        {
+          "prop": "log",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 10,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 1,
+          "max": 210,
+          "step": 1,
+          "padrao": 81,
+          "resumo": null
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 5,
+          "resumo": null
+        },
+        {
+          "prop": "accent",
+          "tipo": "texto",
+          "padrao": "var(--vintage-value)",
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "BASS",
+          "resumo": null,
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "vintage-large-knob": {
+    "componentes": {
+      "VintageLargeKnob": [
+        {
+          "prop": "log",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 10,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 10,
+          "max": 600,
+          "step": 10,
+          "padrao": 260,
+          "resumo": "Lado da peça INTEIRA em px — coroa de marcações inclusive."
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 5,
+          "resumo": null
+        },
+        {
+          "prop": "accent",
+          "tipo": "texto",
+          "padrao": "var(--vintage-value)",
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "VOLUME",
+          "resumo": null,
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "vintage-toggle": {
+    "componentes": {
+      "VintageToggle": [
+        {
+          "prop": "position",
+          "tipo": "escolha",
+          "valores": [
+            "up",
+            "middle",
+            "down"
+          ],
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "accent",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": "TOGGLE",
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "vintage-eq": {
+    "componentes": {
+      "VintageEQ": [
+        {
+          "prop": "accent",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": "GRAPHIC EQ",
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "vintage-parametric-eq": {
+    "componentes": {
+      "VintageParametricEQ": [
+        {
+          "prop": "height",
+          "tipo": "numero",
+          "min": 10,
+          "max": 500,
+          "step": 10,
+          "padrao": 220,
+          "resumo": null,
+          "inicial": 210
+        },
+        {
+          "prop": "range",
+          "tipo": "numero",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "padrao": 12,
+          "resumo": "Teto do eixo em dB. A régua vai de −range a +range."
+        },
+        {
+          "prop": "width",
+          "tipo": "numero",
+          "min": 10,
+          "max": 1100,
+          "step": 10,
+          "padrao": 520,
+          "resumo": "Largura natural do painel da curva.",
+          "inicial": 500
+        },
+        {
+          "prop": "accent",
+          "tipo": "texto",
+          "padrao": "var(--vintage-value)",
+          "resumo": null
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": "PARAMETRIC EQ",
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "vintage-led": {
+    "componentes": {
+      "VintageLed": [
+        {
+          "prop": "size",
+          "tipo": "escolha",
+          "valores": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "padrao": "md",
+          "resumo": null
+        },
+        {
+          "prop": "active",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "pulse",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "intensity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 1,
+          "resumo": "Quanto o LED está aceso, de 0 a 1. É o que separa \"ligado\" de \"no talo\":"
+        },
+        {
+          "prop": "color",
+          "tipo": "texto",
+          "padrao": "green",
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "vintage-command-palette": {
+    "componentes": {
+      "VintageCommandPalette": [
+        {
+          "prop": "autoFocus",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Foco no campo ao montar. Padrão: sim em modal, não embutida."
+        },
+        {
+          "prop": "inline",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Monta dentro do pai posicionado em vez de `fixed` na janela."
+        },
+        {
+          "prop": "placeholder",
+          "tipo": "texto",
+          "padrao": "Search...",
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "vintage-tv-frame": {
+    "componentes": {
+      "VintageTvFrame": [
+        {
+          "prop": "program",
+          "tipo": "escolha",
+          "valores": [
+            "wave",
+            "fft",
+            "scope",
+            "rings",
+            "grid"
+          ],
+          "padrao": "scope",
+          "resumo": "O programa que entra quando não há `children`."
+        },
+        {
+          "prop": "isOn",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "programActive",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Relógio do programa. `false` congela — use com o card fora da tela."
+        },
+        {
+          "prop": "showScanlines",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": null
+        },
+        {
+          "prop": "signalActive",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "width",
+          "tipo": "numero",
+          "min": 10,
+          "max": 1000,
+          "step": 10,
+          "padrao": 480,
+          "resumo": "Largura natural em px — vira teto, não trava: a peça encolhe abaixo dela.",
+          "inicial": 300
+        },
+        {
+          "prop": "showTimecode",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null,
+          "inicial": "00:12:34",
+          "secundario": true
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": "VISANT",
+          "resumo": null,
+          "inicial": "VISANT TV",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "vintage-soundboard-pad": {
+    "componentes": {
+      "VintageSoundboardPad": [
+        {
+          "prop": "active",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "silent",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Não toca nada. Para quando o app já cuida do áudio no `onTrigger`."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 1,
+          "max": 240,
+          "step": 1,
+          "padrao": 96,
+          "resumo": null,
+          "inicial": 72
+        },
+        {
+          "prop": "color",
+          "tipo": "texto",
+          "padrao": "var(--vintage-accent)",
+          "resumo": null
+        },
+        {
+          "prop": "icon",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "PAD",
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "vintage-xy-pad": {
+    "componentes": {
+      "VintageXYPad": [
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 10,
+          "max": 400,
+          "step": 10,
+          "padrao": 160,
+          "resumo": null
+        },
+        {
+          "prop": "color",
+          "tipo": "texto",
+          "padrao": "var(--vintage-accent)",
+          "resumo": null
+        },
+        {
+          "prop": "labelX",
+          "tipo": "texto",
+          "padrao": "X",
+          "resumo": null,
+          "inicial": "FREQ"
+        },
+        {
+          "prop": "labelY",
+          "tipo": "texto",
+          "padrao": "Y",
+          "resumo": null,
+          "inicial": "GLOW"
+        }
+      ]
+    }
+  },
+  "vintage-oscilloscope": {
+    "componentes": {
+      "VintageOscilloscope": [
+        {
+          "prop": "mode",
+          "tipo": "escolha",
+          "valores": [
+            "wave",
+            "fft",
+            "scope",
+            "rings",
+            "grid"
+          ],
+          "padrao": "wave",
+          "resumo": null
+        },
+        {
+          "prop": "active",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Relógio. `false` congela o desenho — use com o palco fora da tela."
+        },
+        {
+          "prop": "chrome",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Moldura, scanlines e rótulo do modo. Desligue quando o tubo já é do pai."
+        },
+        {
+          "prop": "fill",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Ocupa o pai inteiro em vez de `width`×`height`. É como a TV o encaixa."
+        },
+        {
+          "prop": "height",
+          "tipo": "numero",
+          "min": 10,
+          "max": 300,
+          "step": 10,
+          "padrao": 120,
+          "resumo": null,
+          "inicial": 132
+        },
+        {
+          "prop": "width",
+          "tipo": "numero",
+          "min": 10,
+          "max": 700,
+          "step": 10,
+          "padrao": 320,
+          "resumo": "Largura natural do desenho. Com `fill`, vira só o piso do buffer.",
+          "inicial": 250
+        },
+        {
+          "prop": "color",
+          "tipo": "texto",
+          "padrao": "var(--vintage-meter-green)",
+          "resumo": null,
+          "secundario": true
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "onda",
+        "props": {
+          "mode": "wave"
+        }
+      },
+      {
+        "nome": "espectro",
+        "props": {
+          "mode": "fft",
+          "fill": true
+        }
+      },
+      {
+        "nome": "anéis",
+        "props": {
+          "mode": "rings"
+        }
+      },
+      {
+        "nome": "sem moldura",
+        "props": {
+          "chrome": false,
+          "mode": "scope"
+        }
+      }
+    ]
+  },
+  "marquee": {
+    "componentes": {
+      "Marquee": [
+        {
+          "prop": "band",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Faixa de cor sólida com a cor da marca."
+        },
+        {
+          "prop": "fade",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Some nas bordas em vez de ser cortado a faca."
+        },
+        {
+          "prop": "pauseOnHover",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Pausa no hover/foco. Desligue em faixa puramente decorativa."
+        },
+        {
+          "prop": "reverse",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Anda para a direita. Duas faixas em sentidos opostos leem como sistema."
+        },
+        {
+          "prop": "boost",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 4,
+          "resumo": "Teto do empurrão em `\"boost\"`. 4 = até 4× o ritmo base no scroll bruto."
+        },
+        {
+          "prop": "gap",
+          "tipo": "numero",
+          "min": 0,
+          "max": 140,
+          "step": 1,
+          "padrao": 56,
+          "resumo": null
+        },
+        {
+          "prop": "laps",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 1,
+          "resumo": "Voltas percorridas na travessia da dobra em `\"drive\"` e `\"scrub\"`.",
+          "secundario": true
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 1,
+          "max": 120,
+          "step": 1,
+          "padrao": 46,
+          "resumo": "Segundos para uma volta completa no ritmo base. Mais itens pedem mais tempo.",
+          "secundario": true
+        },
+        {
+          "prop": "tilt",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Inclina a faixa. Exige um pai com `overflow: hidden`.",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "logo-wall": {
+    "componentes": {
+      "LogoWall": [
+        {
+          "prop": "finish",
+          "tipo": "escolha",
+          "valores": [
+            "grayscale",
+            "mono",
+            "none"
+          ],
+          "padrao": "grayscale",
+          "resumo": "O acabamento em repouso."
+        },
+        {
+          "prop": "fade",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Some nas bordas em vez de ser cortada a faca."
+        },
+        {
+          "prop": "marquee",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Desligue pra uma grade parada. A normalização continua valendo."
+        },
+        {
+          "prop": "reverse",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "gap",
+          "tipo": "numero",
+          "min": 0,
+          "max": 160,
+          "step": 1,
+          "padrao": 64,
+          "resumo": null
+        },
+        {
+          "prop": "height",
+          "tipo": "numero",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "padrao": 2,
+          "resumo": "Altura óptica base, em rem. É sobre ela que o `scale` de cada item age."
+        },
+        {
+          "prop": "maxWidth",
+          "tipo": "numero",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "padrao": 9,
+          "resumo": "Teto de largura de cada logo, em rem. Segura o wordmark comprido.",
+          "secundario": true
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 1,
+          "max": 180,
+          "step": 1,
+          "padrao": 72,
+          "resumo": "Segundos por volta. Faixa de logo pede lento: 60 a 90.",
+          "inicial": 64,
+          "secundario": true
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Clientes",
+          "resumo": "Nome da lista pro leitor de tela, quando não há `heading` visível.",
+          "secundario": true
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "parede parada",
+        "props": {
+          "marquee": false,
+          "finish": "grayscale",
+          "gap": 48
+        }
+      },
+      {
+        "nome": "faixa mono",
+        "props": {
+          "finish": "mono",
+          "speed": 90
+        }
+      },
+      {
+        "nome": "cor sem fade",
+        "props": {
+          "finish": "none",
+          "fade": false
+        }
+      }
+    ]
+  },
+  "rail": {
+    "componentes": {
+      "Rail": [
+        {
+          "prop": "arrows",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Setas de navegação (só aparecem onde há ponteiro)."
+        },
+        {
+          "prop": "fade",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Esmaece as pontas onde a lista continua. Segue o estado real das bordas.",
+          "inicial": true
+        },
+        {
+          "prop": "progress",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Régua embaixo: quanto da lista cabe na vista e onde ela está.",
+          "inicial": true
+        },
+        {
+          "prop": "remainder",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "`+N` na ponta que continua. Clicar anda um item.",
+          "inicial": true
+        },
+        {
+          "prop": "gap",
+          "tipo": "numero",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "padrao": 20,
+          "resumo": null,
+          "inicial": 16
+        },
+        {
+          "prop": "itemWidth",
+          "tipo": "numero",
+          "min": 10,
+          "max": 500,
+          "step": 10,
+          "padrao": 240,
+          "resumo": "Largura mínima de cada item.",
+          "inicial": 186
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Scrollable list",
+          "resumo": null,
+          "inicial": "Coleção outono",
+          "secundario": true
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "trilho seco",
+        "props": {
+          "arrows": false,
+          "fade": false,
+          "progress": false,
+          "remainder": false
+        }
+      },
+      {
+        "nome": "cartão largo",
+        "props": {
+          "itemWidth": 320,
+          "gap": 24
+        }
+      },
+      {
+        "nome": "denso",
+        "props": {
+          "itemWidth": 120,
+          "gap": 8
+        }
+      }
+    ]
+  },
+  "reels-rail": {
+    "componentes": {
+      "ReelsRail": [
+        {
+          "prop": "arrows",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": null
+        },
+        {
+          "prop": "autoPlay",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "O card do meio toca sozinho. Desligue e o play passa a ser sempre manual."
+        },
+        {
+          "prop": "drift",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "A fileira anda sozinha. Só faz sentido com `loop`."
+        },
+        {
+          "prop": "fade",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": null
+        },
+        {
+          "prop": "loop",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "A fileira dá a volta em vez de acabar. Ver a nota do cabeçalho."
+        },
+        {
+          "prop": "sound",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Mostra o botão de som no card ativo. Desligue em vídeo sem áudio."
+        },
+        {
+          "prop": "driftSpeed",
+          "tipo": "numero",
+          "min": 1,
+          "max": 70,
+          "step": 1,
+          "padrao": 26,
+          "resumo": "Velocidade da deriva, em px por segundo. Acima de ~60 vira esteira.",
+          "secundario": true
+        },
+        {
+          "prop": "gap",
+          "tipo": "numero",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "padrao": 16,
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "itemWidth",
+          "tipo": "numero",
+          "min": 10,
+          "max": 600,
+          "step": 10,
+          "padrao": 260,
+          "resumo": "Largura de cada card, em px. 9:16 em 260px dá ~462px de altura.",
+          "inicial": 230,
+          "secundario": true
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Vídeos",
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "ratio",
+          "tipo": "texto",
+          "padrao": "9/16",
+          "resumo": "Proporção do card, formato CSS. Reels é `\"9/16\"`; TikTok idem.",
+          "secundario": true
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "vitrine muda",
+        "props": {
+          "sound": false,
+          "autoPlay": true
+        }
+      },
+      {
+        "nome": "parada",
+        "props": {
+          "autoPlay": false,
+          "drift": false,
+          "sound": false
+        }
+      },
+      {
+        "nome": "cheia",
+        "props": {
+          "itemWidth": 300,
+          "gap": 24,
+          "drift": true
+        }
+      }
+    ]
+  },
+  "plate": {
+    "componentes": {
+      "Plate": [
+        {
+          "prop": "as",
+          "tipo": "escolha",
+          "valores": [
+            "div",
+            "span"
+          ],
+          "padrao": "div",
+          "resumo": null
+        },
+        {
+          "prop": "blend",
+          "tipo": "escolha",
+          "valores": [
+            "multiply",
+            "normal"
+          ],
+          "padrao": "multiply",
+          "resumo": "Como a foto se mistura com a placa."
+        },
+        {
+          "prop": "surface",
+          "tipo": "escolha",
+          "valores": [
+            "muted",
+            "photo"
+          ],
+          "padrao": "muted",
+          "resumo": "A superfície da placa.",
+          "inicial": "photo"
+        },
+        {
+          "prop": "ground",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Sombra de contato na base da placa. Faz o recorte pousar em vez de flutuar."
+        },
+        {
+          "prop": "zoomOnGroupHover",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Cresce um degrau no hover do card em volta."
+        },
+        {
+          "prop": "inset",
+          "tipo": "numero",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "padrao": 20,
+          "resumo": "Respiro entre o produto e a borda da placa.",
+          "inicial": 16
+        },
+        {
+          "prop": "ratio",
+          "tipo": "texto",
+          "padrao": "4 / 5",
+          "resumo": "Proporção da placa. Produto alto (stick, garrafa) pede 4/5 ou 3/4.",
+          "inicial": "4/5",
+          "secundario": true
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "foto",
+        "props": {
+          "surface": "photo",
+          "blend": "normal"
+        }
+      },
+      {
+        "nome": "papel",
+        "props": {
+          "surface": "muted",
+          "blend": "multiply"
+        }
+      },
+      {
+        "nome": "sobre fundo",
+        "props": {
+          "ground": true,
+          "inset": 28
+        }
+      }
+    ]
+  },
+  "chip": {
+    "componentes": {
+      "Chip": [
+        {
+          "prop": "size",
+          "tipo": "escolha",
+          "valores": [
+            "sm",
+            "md"
+          ],
+          "padrao": "md",
+          "resumo": "`sm` para barra densa (linha de facetas), `md` para a barra principal."
+        },
+        {
+          "prop": "mark",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "A marca de conferido que cresce quando liga."
+        },
+        {
+          "prop": "pressed",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "count",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "sticky-filterbar": {
+    "componentes": {
+      "StickyFilterbar": [
+        {
+          "prop": "hideProgress",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Desliga o fio de progresso. Aditivo: ligado por padrão, e some sozinho"
+        },
+        {
+          "prop": "headerSelector",
+          "tipo": "texto",
+          "padrao": "header",
+          "resumo": "Seletor do cabeçalho grudado a medir.",
+          "inicial": "[data-demo-header]"
+        }
+      ],
+      "FilterRow": [
+        {
+          "prop": "collapsible",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "store-status": {
+    "componentes": {
+      "StoreStatus": [
+        {
+          "prop": "closeHour",
+          "tipo": "numero",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "padrao": 17,
+          "resumo": null
+        },
+        {
+          "prop": "closingSoon",
+          "tipo": "numero",
+          "min": 0,
+          "max": 150,
+          "step": 1,
+          "padrao": 60,
+          "resumo": "Minutos que fazem o estado virar `closing`."
+        },
+        {
+          "prop": "openHour",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 9,
+          "resumo": null
+        },
+        {
+          "prop": "locale",
+          "tipo": "texto",
+          "padrao": "en-GB",
+          "resumo": "Locale do nome do dia da semana.",
+          "inicial": "pt-BR"
+        },
+        {
+          "prop": "timeZone",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Fuso IANA da loja, ex.: \"Europe/London\"."
+        }
+      ]
+    }
+  },
+  "measure-picker": {
+    "componentes": {
+      "MeasurePicker": [
+        {
+          "prop": "hideReadout",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Esconde a linha de cabeçalho (rótulo + valor). Aditivo e desligado por"
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 300,
+          "step": 1,
+          "padrao": null,
+          "resumo": null,
+          "inicial": 200
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 200,
+          "step": 1,
+          "padrao": null,
+          "resumo": null,
+          "inicial": 130
+        },
+        {
+          "prop": "step",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 1,
+          "resumo": null
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null,
+          "inicial": "Altura do jogador"
+        }
+      ]
+    }
+  },
+  "kanban": {
+    "componentes": {
+      "Kanban": [
+        {
+          "prop": "enabled",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "DnD ligado. Off = board somente-leitura (ex.: board do cliente)."
+        },
+        {
+          "prop": "selectable",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Liga a seleção múltipla: marquee \"select by area\" (arrastar sobre o vazio) +"
+        },
+        {
+          "prop": "columnClassName",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Classe extra por coluna (largura, etc.)."
+        }
+      ],
+      "KanbanColumn": [
+        {
+          "prop": "enabled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "isOver",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "selectable",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        }
+      ],
+      "KanbanCard": [
+        {
+          "prop": "enabled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "selectable",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Seleção múltipla ligada — habilita o shift/ctrl/cmd-clique de toggle."
+        },
+        {
+          "prop": "selected",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "data-table": {
+    "componentes": {
+      "DataTable": [
+        {
+          "prop": "batchBarInFlow",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Render the batch action bar in normal flow (full-width, wraps and pushes the"
+        },
+        {
+          "prop": "compact",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Compact style (px-3 py-2) for admin tables. Default true."
+        },
+        {
+          "prop": "disableSorting",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Desliga a ordenação por cabeçalho. Use quando a tela já tem um controle de"
+        },
+        {
+          "prop": "enableRowSelection",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Enable a leading checkbox column with shift-click range selection."
+        },
+        {
+          "prop": "hidePagination",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Hide pagination controls. Default false."
+        },
+        {
+          "prop": "hideToolbarSearch",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Hide the built-in toolbar search box. Use when the parent already provides"
+        },
+        {
+          "prop": "isLoading",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "pageSize",
+          "tipo": "numero",
+          "min": 1,
+          "max": 50,
+          "step": 1,
+          "padrao": 20,
+          "resumo": "Optional initial page size. Default 20.",
+          "secundario": true
+        },
+        {
+          "prop": "emptyMessage",
+          "tipo": "texto",
+          "padrao": "Nenhum resultado.",
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "primaryColumnId",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "The ID of the column that should be treated as \"primary\".",
+          "secundario": true
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Title for the table toolbar (optional)",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "segmented-control": {
+    "componentes": {
+      "SegmentedControl": [
+        {
+          "prop": "size",
+          "tipo": "escolha",
+          "valores": [
+            "sm",
+            "md"
+          ],
+          "padrao": "md",
+          "resumo": "Densidade. `md` é a régua da casa."
+        },
+        {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "fill",
+            "compact"
+          ],
+          "padrao": "fill",
+          "resumo": "\"fill\" = itens crescem igualmente (com label); \"compact\" = botões de ícone."
+        },
+        {
+          "prop": "value",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "octahedron-loader": {
+    "componentes": {
+      "OctahedronLoader": [
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 1,
+          "max": 240,
+          "step": 1,
+          "padrao": 96,
+          "resumo": "Lado do símbolo em px."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Carregando",
+          "resumo": "Texto lido por leitor de tela."
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Caminho do `.lottie` (ou `.json` do Lottie) do símbolo da marca. Sem ele o"
+        }
+      ]
+    }
+  },
+  "inline-edit": {
+    "componentes": {
+      "InlineEdit": [
+        {
+          "prop": "isEditing",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "showButtons",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "triggerClassName",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "auth-button": {
+    "componentes": {
+      "AuthButton": [
+        {
+          "prop": "align",
+          "tipo": "escolha",
+          "valores": [
+            "start",
+            "end"
+          ],
+          "padrao": "end",
+          "resumo": null
+        },
+        {
+          "prop": "hint",
+          "tipo": "escolha",
+          "valores": [
+            "signed-out",
+            "signed-in"
+          ],
+          "padrao": "signed-out",
+          "resumo": "Palpite de forma para o esqueleto. Não vira texto em hipótese nenhuma.",
+          "inicial": "signed-in"
+        },
+        {
+          "prop": "side",
+          "tipo": "escolha",
+          "valores": [
+            "top",
+            "bottom"
+          ],
+          "padrao": "bottom",
+          "resumo": "De que lado do gatilho o painel abre. `\"bottom\"` (padrão) é o canto do"
+        },
+        {
+          "prop": "status",
+          "tipo": "escolha",
+          "valores": [
+            "loading",
+            "signed-out",
+            "signed-in"
+          ],
+          "padrao": null,
+          "resumo": "Os três estados de verdade. `loading` nunca desenha texto de conta."
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "deslogado",
+        "props": {
+          "status": "signed-out"
+        }
+      },
+      {
+        "nome": "carregando",
+        "props": {
+          "status": "loading"
+        }
+      },
+      {
+        "nome": "logado",
+        "props": {
+          "status": "signed-in"
+        }
+      }
+    ]
+  },
+  "profile-form": {
+    "componentes": {
+      "ProfileForm": [
+        {
+          "prop": "emailVerified",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Verificação do e-mail salvo. Muda o e-mail, o selo cai sozinho."
+        },
+        {
+          "prop": "undoWindowMs",
+          "tipo": "numero",
+          "min": 0,
+          "max": 12000,
+          "step": 10,
+          "padrao": 6000,
+          "resumo": "Janela do desfazer depois de salvar. `0` desliga."
+        }
+      ]
+    }
+  },
+  "assignee-stack": {
+    "componentes": {
+      "AssigneeStack": [
+        {
+          "prop": "size",
+          "tipo": "escolha",
+          "valores": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "padrao": "sm",
+          "resumo": null,
+          "inicial": "md"
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 4,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "repulsive-hover": {
+    "componentes": {
+      "RepulsiveHover": [
+        {
+          "prop": "radius",
+          "tipo": "numero",
+          "min": 0,
+          "max": 300,
+          "step": 10,
+          "padrao": 140,
+          "resumo": "Raio de influência em px. Abaixo dele a peça começa a fugir."
+        },
+        {
+          "prop": "strength",
+          "tipo": "numero",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "padrao": 12,
+          "resumo": "Deslocamento máximo em px, no ponto mais próximo do cursor."
+        }
+      ]
+    }
+  },
+  "glitch-chars": {
+    "componentes": {
+      "GlitchChars": [
+        {
+          "prop": "intervalMs",
+          "tipo": "numero",
+          "min": 10,
+          "max": 300,
+          "step": 10,
+          "padrao": 150,
+          "resumo": "Milissegundos entre quadros."
+        },
+        {
+          "prop": "length",
+          "tipo": "numero",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "padrao": 2,
+          "resumo": "Quantos caracteres por quadro. Fonte mono ⇒ largura estável."
+        },
+        {
+          "prop": "chars",
+          "tipo": "texto",
+          "padrao": "*•□./-®",
+          "resumo": "Pool de caracteres sorteados. Troque para mudar o \"sotaque\" do ruído."
+        }
+      ]
+    }
+  },
+  "status-ticker": {
+    "componentes": {
+      "StatusTicker": [
+        {
+          "prop": "showTimer",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Cronômetro à direita — o que dá ao usuário a decisão de esperar."
+        },
+        {
+          "prop": "rotateEverySec",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 3,
+          "resumo": "Segundos em cada verbo antes de trocar."
+        }
+      ]
+    }
+  },
+  "turbulence-field": {
+    "componentes": {
+      "TurbulenceField": [
+        {
+          "prop": "intensity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.18,
+          "resumo": "Alpha total da névoa (0–1). Sutil — acima de ~0.3 come o conteúdo."
+        },
+        {
+          "prop": "scale",
+          "tipo": "numero",
+          "min": 0.05,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 1,
+          "resumo": "Multiplicador do grão. `<1` abre a névoa (manchas largas, fundo de marca);"
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 1,
+          "max": 40,
+          "step": 1,
+          "padrao": 14,
+          "resumo": "Segundos de um ciclo. Abaixo de ~6s começa a ler como ruído de TV."
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "névoa",
+        "props": {
+          "intensity": 0.08,
+          "speed": 6
+        }
+      },
+      {
+        "nome": "tempestade",
+        "props": {
+          "intensity": 0.5,
+          "speed": 30
+        }
+      },
+      {
+        "nome": "grão fino",
+        "props": {
+          "scale": 0.15,
+          "intensity": 0.3
+        }
+      }
+    ]
+  },
+  "working-glyph": {
+    "componentes": {
+      "WorkingGlyph": [
+        {
+          "prop": "framed",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Moldura discreta atrás do ícone. Desligue ao usar sobre imagem."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 1,
+          "max": 50,
+          "step": 1,
+          "padrao": 20,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "paper-shuttle": {
+    "componentes": {
+      "PaperShuttle": [
+        {
+          "prop": "progress",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "0–100. Omitido ⇒ modo indeterminado, só o rótulo."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Texto sob a animação. Default: a porcentagem, ou \"Processando…\"."
+        }
+      ]
+    }
+  },
+  "generating-tile": {
+    "componentes": {
+      "GeneratingTile": [
+        {
+          "prop": "aspectRatio",
+          "tipo": "escolha",
+          "valores": [
+            "1/1",
+            "16/9",
+            "4/3"
+          ],
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "tile",
+            "inline",
+            "overlay"
+          ],
+          "padrao": "tile",
+          "resumo": null
+        },
+        {
+          "prop": "isLoading",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "showFrame",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "false quando o pai já dá a moldura/aspecto."
+        },
+        {
+          "prop": "intensity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.18,
+          "resumo": "Opacidade da névoa (0–1)."
+        }
+      ]
+    }
+  },
+  "masonry-gallery": {
+    "componentes": {
+      "useMasonryColumns": [
+        {
+          "prop": "base",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "< 640px"
+        },
+        {
+          "prop": "lg",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "< 1280px"
+        },
+        {
+          "prop": "sm",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "< 1024px"
+        },
+        {
+          "prop": "xl",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "≥ 1280px"
+        }
+      ],
+      "MasonryGallery": [
+        {
+          "prop": "cols",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Colunas fixas. Omita para responsivo.",
+          "inicial": 5
+        },
+        {
+          "prop": "gap",
+          "tipo": "numero",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "padrao": 12,
+          "resumo": "Espaço entre itens e colunas, em px.",
+          "inicial": 10
+        }
+      ]
+    }
+  },
+  "scrub-input": {
+    "componentes": {
+      "ScrubInput": [
+        {
+          "prop": "kind",
+          "tipo": "escolha",
+          "valores": [
+            "number",
+            "px",
+            "percent",
+            "angle",
+            "multiple"
+          ],
+          "padrao": null,
+          "resumo": "Vocabulário do painel de design. Só define sufixo e passo padrão."
+        },
+        {
+          "prop": "layout",
+          "tipo": "escolha",
+          "valores": [
+            "stack",
+            "row"
+          ],
+          "padrao": null,
+          "resumo": "\"row\" = rótulo e valor na mesma linha (campo metade da altura)."
+        },
+        {
+          "prop": "disabled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "step",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "hint",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Vira `title` — bom lugar para explicar o parâmetro.",
+          "secundario": true
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "suffix",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null,
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "grid-dots": {
+    "componentes": {
+      "GridDots": [
+        {
+          "prop": "dotSize",
+          "tipo": "numero",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "padrao": 1.5,
+          "resumo": "Raio do ponto, em px.",
+          "inicial": 1.4
+        },
+        {
+          "prop": "opacity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.07,
+          "resumo": "0–1. Acima de ~0.1 vira ruído.",
+          "inicial": 0.11
+        },
+        {
+          "prop": "spacing",
+          "tipo": "numero",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "padrao": 20,
+          "resumo": "Distância entre pontos, em px.",
+          "inicial": 18
+        },
+        {
+          "prop": "spotlight",
+          "tipo": "numero",
+          "min": 0,
+          "max": 260,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Raio em px do halo que segue o ponteiro. Sem isto a malha é estática —",
+          "inicial": 170
+        },
+        {
+          "prop": "spotlightOpacity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.55,
+          "resumo": "0–1. Alpha dos pontos acesos dentro do halo."
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "malha discreta",
+        "props": {
+          "opacity": 0.06,
+          "spacing": 24,
+          "spotlightOpacity": 0.3
+        }
+      },
+      {
+        "nome": "holofote forte",
+        "props": {
+          "spotlight": 90,
+          "spotlightOpacity": 0.9,
+          "dotSize": 2
+        }
+      },
+      {
+        "nome": "grade densa",
+        "props": {
+          "spacing": 10,
+          "dotSize": 1
+        }
+      }
+    ]
+  },
+  "drop-overlay": {
+    "componentes": {
+      "DropOverlay": [
+        {
+          "prop": "state",
+          "tipo": "escolha",
+          "valores": [
+            "idle",
+            "over",
+            "drop"
+          ],
+          "padrao": null,
+          "resumo": "Quando presente, manda em `visible`."
+        },
+        {
+          "prop": "visible",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Atalho para `state=\"over\"`. Mantido porque é o uso de uma linha."
+        },
+        {
+          "prop": "doneMessage",
+          "tipo": "texto",
+          "padrao": "Recebido",
+          "resumo": null
+        },
+        {
+          "prop": "message",
+          "tipo": "texto",
+          "padrao": "Solte o arquivo aqui",
+          "resumo": null,
+          "inicial": "Solte os arquivos"
+        }
+      ]
+    }
+  },
+  "brand-theme": {
+    "componentes": {
+      "brandThemeCss": [
+        {
+          "prop": "name",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        }
+      ],
+      "BrandThemeProvider": [
+        {
+          "prop": "defaultBrand",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Slug aplicado no primeiro carregamento se nada estiver salvo."
+        },
+        {
+          "prop": "registryUrl",
+          "tipo": "texto",
+          "padrao": "https://visant-ui.vercel.app/r",
+          "resumo": "Base do registry. Em dev, `/r` serve os JSONs deste repo."
+        },
+        {
+          "prop": "storageKey",
+          "tipo": "texto",
+          "padrao": "visant-brand",
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "brand-selector": {
+    "componentes": {
+      "BrandSelector": [
+        {
+          "prop": "align",
+          "tipo": "escolha",
+          "valores": [
+            "start",
+            "end"
+          ],
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "shortcut",
+          "tipo": "texto",
+          "padrao": "b",
+          "resumo": "Atalho de teclado. `null` desliga. Padrão: ⌘/Ctrl + B."
+        }
+      ]
+    }
+  },
+  "section-intro": {
+    "componentes": {
+      "SectionIntro": [
+        {
+          "prop": "align",
+          "tipo": "escolha",
+          "valores": [
+            "center",
+            "start"
+          ],
+          "padrao": "center",
+          "resumo": null
+        },
+        {
+          "prop": "as",
+          "tipo": "escolha",
+          "valores": [
+            "h1",
+            "h2",
+            "h3"
+          ],
+          "padrao": "h2",
+          "resumo": null
+        },
+        {
+          "prop": "leadWidth",
+          "tipo": "numero",
+          "min": 1,
+          "max": 160,
+          "step": 1,
+          "padrao": 62,
+          "resumo": "Medida do parágrafo, em ch. Acima de ~70 o olho perde a volta da linha."
+        },
+        {
+          "prop": "titleWidth",
+          "tipo": "numero",
+          "min": 1,
+          "max": 50,
+          "step": 1,
+          "padrao": 20,
+          "resumo": "Medida do título, em ch. Título mais longo pede mais."
+        }
+      ]
+    }
+  },
+  "cta-surface": {
+    "componentes": {
+      "CtaSurface": [
+        {
+          "prop": "tone",
+          "tipo": "escolha",
+          "valores": [
+            "brand",
+            "ink",
+            "surface"
+          ],
+          "padrao": "brand",
+          "resumo": null
+        },
+        {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "bar",
+            "panel",
+            "card"
+          ],
+          "padrao": "panel",
+          "resumo": null
+        }
+      ],
+      "CtaAction": [
+        {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "solid",
+            "outline"
+          ],
+          "padrao": "solid",
+          "resumo": null
+        },
+        {
+          "prop": "href",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Vira `<a>` quando presente. Um CTA que navega precisa ser link."
+        }
+      ]
+    }
+  },
+  "showcase-card": {
+    "componentes": {
+      "ShowcaseCard": [
+        {
+          "prop": "href",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null,
+          "inicial": "#/c/showcase-card"
+        },
+        {
+          "prop": "ratio",
+          "tipo": "texto",
+          "padrao": "4 / 3",
+          "resumo": "Proporção da mídia. Card de site pede paisagem; de app, quadrado."
+        }
+      ]
+    }
+  },
+  "step-cards": {
+    "componentes": {
+      "StepCards": [
+        {
+          "prop": "columns",
+          "tipo": "escolha",
+          "valores": [
+            "2",
+            "3",
+            "4"
+          ],
+          "padrao": "3",
+          "resumo": null,
+          "inicial": 3
+        },
+        {
+          "prop": "wideLast",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "O último passo ocupa a linha inteira quando sobrar sozinho."
+        },
+        {
+          "prop": "active",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Índice do passo em foco. Os outros recuam. Sem valor, todos iguais."
+        },
+        {
+          "prop": "visualHeight",
+          "tipo": "numero",
+          "min": 10,
+          "max": 500,
+          "step": 10,
+          "padrao": 240,
+          "resumo": "Altura da área de visual. Abaixo de ~180px o mockup não se lê.",
+          "inicial": 220
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "duas colunas",
+        "props": {
+          "columns": "2"
+        }
+      },
+      {
+        "nome": "três colunas",
+        "props": {
+          "columns": "3"
+        }
+      },
+      {
+        "nome": "última larga",
+        "props": {
+          "columns": "3",
+          "wideLast": true
+        }
+      }
+    ]
+  },
+  "testimonial-wall": {
+    "componentes": {
+      "TestimonialWall": [
+        {
+          "prop": "columns",
+          "tipo": "escolha",
+          "valores": [
+            "2",
+            "3",
+            "4"
+          ],
+          "padrao": "4",
+          "resumo": "Teto de colunas. A largura do container é quem decide quantas cabem."
+        }
+      ]
+    }
+  },
+  "quote-block": {
+    "componentes": {
+      "QuoteBlock": [
+        {
+          "prop": "tone",
+          "tipo": "escolha",
+          "valores": [
+            "card",
+            "muted",
+            "brand"
+          ],
+          "padrao": "card",
+          "resumo": null,
+          "inicial": "muted"
+        },
+        {
+          "prop": "bare",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Sem moldura: o depoimento solto na página, sem caixa e sem respiro próprio."
+        },
+        {
+          "prop": "flip",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Retrato à direita. A citação continua vindo antes no DOM — e na leitura."
+        },
+        {
+          "prop": "portraitWidth",
+          "tipo": "numero",
+          "min": 1,
+          "max": 40,
+          "step": 1,
+          "padrao": 13,
+          "resumo": "Largura do retrato, em rem. É ela que decide quando a peça empilha."
+        },
+        {
+          "prop": "ratio",
+          "tipo": "texto",
+          "padrao": "4/5",
+          "resumo": "Proporção do retrato, formato CSS."
+        },
+        {
+          "prop": "source",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "URL da fonte da citação (case, post, entrevista). Vai no `cite` do HTML.",
+          "inicial": "https://exemplo.com/cases/aloro"
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "cartão",
+        "props": {
+          "tone": "card"
+        }
+      },
+      {
+        "nome": "papel",
+        "props": {
+          "tone": "muted"
+        }
+      },
+      {
+        "nome": "marca",
+        "props": {
+          "tone": "brand"
+        }
+      },
+      {
+        "nome": "sem caixa",
+        "props": {
+          "bare": true,
+          "flip": true
+        }
+      }
+    ]
+  },
+  "erase-field": {
+    "componentes": {
+      "EraseField": [
+        {
+          "prop": "intensity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.5,
+          "resumo": "Intensidade da luz, 0–1. Acima de ~0.7 o texto por cima começa a sofrer."
+        },
+        {
+          "prop": "dustVar",
+          "tipo": "texto",
+          "padrao": "--background",
+          "resumo": "Var de cor da poeira que cobre. Default `--background`."
+        },
+        {
+          "prop": "lightVar",
+          "tipo": "texto",
+          "padrao": "--brand",
+          "resumo": "Var de cor da luz revelada. Default `--brand`."
+        }
+      ]
+    }
+  },
+  "spring-dots": {
+    "componentes": {
+      "SpringDots": [
+        {
+          "prop": "reach",
+          "tipo": "numero",
+          "min": 0,
+          "max": 300,
+          "step": 10,
+          "padrao": 140,
+          "resumo": "Alcance do empurrão, em px."
+        },
+        {
+          "prop": "spacing",
+          "tipo": "numero",
+          "min": 0,
+          "max": 90,
+          "step": 1,
+          "padrao": 34,
+          "resumo": "Distância entre pontos, em px. Densidade da malha."
+        },
+        {
+          "prop": "activeVar",
+          "tipo": "texto",
+          "padrao": "--brand",
+          "resumo": "Var de cor de quem acendeu. Default `--brand`."
+        },
+        {
+          "prop": "restVar",
+          "tipo": "texto",
+          "padrao": "--muted-foreground",
+          "resumo": "Var de cor de quem está em casa. Default `--muted-foreground`."
+        }
+      ]
+    }
+  },
+  "sfx-bus": {
+    "componentes": {
+      "SfxProvider": [
+        {
+          "prop": "selector",
+          "tipo": "texto",
+          "padrao": "button, [role='button'], a[data-sfx-target]",
+          "resumo": "Alvos que soam. Estenda quando os alvos de decisão do app tiverem outro nome."
+        }
+      ]
+    }
+  },
+  "count-up": {
+    "componentes": {
+      "CountUp": [
+        {
+          "prop": "delay",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Atraso, pra escalonar uma fileira de números."
+        },
+        {
+          "prop": "duration",
+          "tipo": "numero",
+          "min": 10,
+          "max": 1800,
+          "step": 10,
+          "padrao": 900,
+          "resumo": "ms. Default 900 — fecha logo depois de uma entrada de dobra de 0.7s."
+        },
+        {
+          "prop": "decimalSep",
+          "tipo": "texto",
+          "padrao": ",",
+          "resumo": "Separadores da string de ENTRADA. Default pt-BR."
+        },
+        {
+          "prop": "locale",
+          "tipo": "texto",
+          "padrao": "pt-BR",
+          "resumo": null
+        },
+        {
+          "prop": "thousandSep",
+          "tipo": "texto",
+          "padrao": ".",
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "fold-motion": {
+    "componentes": {
+      "Fold": [
+        {
+          "prop": "as",
+          "tipo": "escolha",
+          "valores": [
+            "section",
+            "div",
+            "article",
+            "aside"
+          ],
+          "padrao": "section",
+          "resumo": null,
+          "inicial": "div"
+        },
+        {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "rise",
+            "drift-l",
+            "drift-r",
+            "mask",
+            "settle",
+            "climax",
+            "invert"
+          ],
+          "padrao": "rise",
+          "resumo": null
+        },
+        {
+          "prop": "threshold",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.12,
+          "resumo": "Quanto da dobra precisa estar em tela pra ela entrar."
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "subir",
+        "props": {
+          "variant": "rise"
+        }
+      },
+      {
+        "nome": "deriva",
+        "props": {
+          "variant": "drift-l"
+        }
+      },
+      {
+        "nome": "máscara",
+        "props": {
+          "variant": "mask"
+        }
+      },
+      {
+        "nome": "clímax",
+        "props": {
+          "variant": "climax"
+        }
+      }
+    ]
+  },
+  "measure-bar": {
+    "componentes": {
+      "MeasureBar": [
+        {
+          "prop": "align",
+          "tipo": "escolha",
+          "valores": [
+            "start",
+            "center"
+          ],
+          "padrao": "start",
+          "resumo": null
+        },
+        {
+          "prop": "state",
+          "tipo": "escolha",
+          "valores": [
+            "ok",
+            "unknown"
+          ],
+          "padrao": "ok",
+          "resumo": "`unknown` desenha a trilha tracejada: o dado não chegou, e isso se vê."
+        },
+        {
+          "prop": "ratio",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "0–1. **Sem default de propósito.** Omitir não desenha régua; é a saída"
+        }
+      ]
+    }
+  },
+  "spine-card": {
+    "componentes": {
+      "SpineCard": [
+        {
+          "prop": "fullColor",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Desliga o duotone quando a arte já nasce na cor certa."
+        },
+        {
+          "prop": "tilt",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Liga o tombo. **Desligado por padrão** — ver a nota 2 do cabeçalho."
+        },
+        {
+          "prop": "index",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Grau do tombo. Passe o índice do item e ele alterna sozinho. Só vale com `tilt`."
+        },
+        {
+          "prop": "href",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null,
+          "inicial": "#"
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "lombada",
+        "props": {
+          "fullColor": false,
+          "tilt": false
+        }
+      },
+      {
+        "nome": "colorida e torta",
+        "props": {
+          "fullColor": true,
+          "tilt": true
+        }
+      }
+    ]
+  },
+  "cover-art": {
+    "componentes": {
+      "CoverArt": [
+        {
+          "prop": "family",
+          "tipo": "escolha",
+          "valores": [
+            "book",
+            "app",
+            "plate"
+          ],
+          "padrao": "plate",
+          "resumo": null
+        },
+        {
+          "prop": "titleless",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Fundo de peça grande: mesma linguagem, sem o título."
+        },
+        {
+          "prop": "seed",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Chave ESTÁVEL: slug > id > título. Ver a armadilha 1 acima."
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "empty-state": {
+    "componentes": {
+      "EmptyArt": [
+        {
+          "prop": "intensity",
+          "tipo": "escolha",
+          "valores": [
+            "quieta",
+            "cheia"
+          ],
+          "padrao": "quieta",
+          "resumo": "Densidade do desenho. Menos é mais em faixa baixa."
+        },
+        {
+          "prop": "seed",
+          "tipo": "texto",
+          "padrao": "vazio",
+          "resumo": "A semente. Passe o nome da coleção vazia (`\"favoritos\"`, `\"arquivados\"`) e"
+        }
+      ]
+    }
+  },
+  "skeleton-rail": {
+    "componentes": {
+      "SkeletonRail": [
+        {
+          "prop": "heading",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Reserva a fileira de controle que o `@visant/rail` desenha acima do trilho"
+        },
+        {
+          "prop": "cards",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 5,
+          "resumo": "Quantos cards fantasma. Default 5."
+        },
+        {
+          "prop": "gap",
+          "tipo": "numero",
+          "min": 0,
+          "max": 64,
+          "step": 4,
+          "padrao": 20,
+          "resumo": null
+        },
+        {
+          "prop": "itemWidth",
+          "tipo": "numero",
+          "min": 10,
+          "max": 500,
+          "step": 10,
+          "padrao": 240,
+          "resumo": "Os mesmos valores do `@visant/rail` que este esqueleto representa."
+        },
+        {
+          "prop": "ratio",
+          "tipo": "texto",
+          "padrao": "4 / 3",
+          "resumo": "Proporção da arte, ex. `\"4 / 3\"`.",
+          "inicial": "4 / 5"
+        }
+      ],
+      "SkeletonCard": [
+        {
+          "prop": "delay",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "lines",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 2,
+          "resumo": "Quantas linhas de texto abaixo da mídia."
+        }
+      ],
+      "SkeletonText": [
+        {
+          "prop": "delay",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "gap",
+          "tipo": "numero",
+          "min": 0,
+          "max": 64,
+          "step": 4,
+          "padrao": 8,
+          "resumo": "Respiro entre linhas em px. O resto da entrelinha, na prática."
+        },
+        {
+          "prop": "lineHeight",
+          "tipo": "numero",
+          "min": 1,
+          "max": 40,
+          "step": 1,
+          "padrao": 14,
+          "resumo": "Altura da linha em px. Use a MESMA `line-height` do texto que vai entrar."
+        },
+        {
+          "prop": "lines",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 3,
+          "resumo": null
+        }
+      ],
+      "SkeletonList": [
+        {
+          "prop": "meta",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "A coluna miúda da direita: valor, data, contagem."
+        },
+        {
+          "prop": "thumb",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "O quadrado à esquerda: avatar, capa, ícone. `false` tira."
+        },
+        {
+          "prop": "delay",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "rowHeight",
+          "tipo": "numero",
+          "min": 1,
+          "max": 140,
+          "step": 1,
+          "padrao": 56,
+          "resumo": "Altura de cada linha em px. A mesma da linha real, sempre."
+        },
+        {
+          "prop": "rows",
+          "tipo": "numero",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "padrao": 4,
+          "resumo": null
+        }
+      ],
+      "SkeletonMedia": [
+        {
+          "prop": "delay",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "radius",
+          "tipo": "texto",
+          "padrao": "var(--r-surface, 0.875rem)",
+          "resumo": "Cantos da mídia real. Passe o mesmo raio, senão a troca \"estala\"."
+        },
+        {
+          "prop": "ratio",
+          "tipo": "texto",
+          "padrao": "16 / 9",
+          "resumo": null,
+          "inicial": "4 / 5"
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "curto",
+        "props": {
+          "cards": 3,
+          "itemWidth": 180
+        }
+      },
+      {
+        "nome": "longo",
+        "props": {
+          "cards": 8,
+          "itemWidth": 300,
+          "gap": 28
+        }
+      },
+      {
+        "nome": "sem título",
+        "props": {
+          "heading": false
+        }
+      }
+    ]
+  },
+  "line-reveal": {
+    "componentes": {
+      "LineReveal": [
+        {
+          "prop": "as",
+          "tipo": "escolha",
+          "valores": [
+            "h1",
+            "h2",
+            "h3",
+            "p",
+            "div"
+          ],
+          "padrao": "h2",
+          "resumo": "Elemento renderizado. Título de dobra é `h2`; topo de página é `h1`.",
+          "inicial": "h3"
+        },
+        {
+          "prop": "split",
+          "tipo": "escolha",
+          "valores": [
+            "lines",
+            "words"
+          ],
+          "padrao": "lines",
+          "resumo": "O que se quebra. `lines` é a revelação de título; `words` serve a frases"
+        },
+        {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "mask",
+            "blur",
+            "curtain",
+            "rise"
+          ],
+          "padrao": "mask",
+          "resumo": "Qual revelação. Ver a tabela no cabeçalho."
+        },
+        {
+          "prop": "immediate",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Anima na montagem, sem esperar a rolagem. Para o herói do topo, que já está",
+          "inicial": true
+        },
+        {
+          "prop": "repeat",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Repete a cada passagem. Padrão é uma vez só: entrada que repete vira enfeite."
+        },
+        {
+          "prop": "stagger",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.07,
+          "resumo": "Atraso entre linhas, em segundos. Teto embutido: nunca passa de 0.4s no total."
+        },
+        {
+          "prop": "start",
+          "tipo": "texto",
+          "padrao": "top 88%",
+          "resumo": "Onde na tela o gatilho arma. `top 88%` = a dobra entrou um oitavo.",
+          "secundario": true
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "máscara",
+        "props": {
+          "variant": "mask",
+          "split": "lines"
+        }
+      },
+      {
+        "nome": "desfoque",
+        "props": {
+          "variant": "blur",
+          "split": "words",
+          "stagger": 0.04
+        }
+      },
+      {
+        "nome": "cortina",
+        "props": {
+          "variant": "curtain",
+          "split": "lines"
+        }
+      },
+      {
+        "nome": "subida",
+        "props": {
+          "variant": "rise",
+          "split": "words"
+        }
+      }
+    ]
+  },
+  "gleam": {
+    "componentes": {
+      "Gleam": [
+        {
+          "prop": "as",
+          "tipo": "escolha",
+          "valores": [
+            "div",
+            "a",
+            "article",
+            "li"
+          ],
+          "padrao": "div",
+          "resumo": "Elemento raiz. `a` quando o card inteiro leva a algum lugar."
+        },
+        {
+          "prop": "flat",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Desliga o giro e mantém luz e borda. Para card dentro de grade densa."
+        },
+        {
+          "prop": "glow",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 1,
+          "resumo": "Força da luz, 0→1."
+        },
+        {
+          "prop": "tilt",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 5,
+          "resumo": "Graus de inclinação no canto. Acima de ~8 o card lê como brinquedo."
+        },
+        {
+          "prop": "tint",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Cor da luz e da borda acesa. Qualquer cor CSS; o padrão é a marca."
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "cartão vivo",
+        "props": {
+          "tilt": 12,
+          "glow": 1
+        }
+      },
+      {
+        "nome": "brilho sem inclinar",
+        "props": {
+          "tilt": 0,
+          "glow": 1
+        }
+      },
+      {
+        "nome": "chapado",
+        "props": {
+          "flat": true
+        }
+      }
+    ]
+  },
+  "sim-slider": {
+    "componentes": {
+      "SimSlider": [
+        {
+          "prop": "defaultValue",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "step",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 1,
+          "resumo": null
+        },
+        {
+          "prop": "assumption",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A premissa, por escrito. Sem ela o simulador não é ferramenta, é promessa."
+        },
+        {
+          "prop": "ceilingLabel",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "O que o topo da caixa significa. É a régua da curva — sem ela a linha é um"
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null,
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "magnetic-cta": {
+    "componentes": {
+      "MagneticCta": [
+        {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "solid",
+            "outline"
+          ],
+          "padrao": "solid",
+          "resumo": "Sem `--brand`: superfície de contorno, pro CTA secundário da mesma dobra."
+        },
+        {
+          "prop": "sheen",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Brilho que segue o ponteiro sobre a superfície. Desligue em fundo claro chapado."
+        },
+        {
+          "prop": "field",
+          "tipo": "numero",
+          "min": 0,
+          "max": 210,
+          "step": 1,
+          "padrao": 84,
+          "resumo": "Raio do campo magnético em px, medido a partir da borda do botão. É o quanto"
+        },
+        {
+          "prop": "labelLag",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.35,
+          "resumo": "Quanto o rótulo fica pra trás do botão. `0` cola o texto na casca."
+        },
+        {
+          "prop": "pull",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 10,
+          "resumo": "Deslocamento máximo do botão, em px. Acima de ~14 vira escorregão."
+        }
+      ]
+    }
+  },
+  "nav-drawer": {
+    "componentes": {
+      "NavDrawerContent": [
+        {
+          "prop": "side",
+          "tipo": "escolha",
+          "valores": [
+            "right",
+            "left",
+            "top"
+          ],
+          "padrao": "right",
+          "resumo": "De onde o painel entra. `right` é o padrão do polegar destro."
+        },
+        {
+          "prop": "showTitle",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        }
+      ],
+      "NavDrawerItem": [
+        {
+          "prop": "active",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Marca a rota atual. A peça não descobre isso sozinha — ver a nota."
+        }
+      ],
+      "NavDrawerBurger": [
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Menu",
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "side-nav": {
+    "componentes": {
+      "SideNav": [
+        {
+          "prop": "collapsed",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Controle externo. Passando isto, a peça para de guardar sozinha."
+        },
+        {
+          "prop": "defaultCollapsed",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Estado inicial quando não há nada guardado."
+        },
+        {
+          "prop": "toggle",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "O gatilho de colapso no topo da própria barra."
+        },
+        {
+          "prop": "collapsedWidth",
+          "tipo": "numero",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "padrao": 3.75,
+          "resumo": "Largura colapsada, em rem. Tem que caber um alvo de toque de 44px."
+        },
+        {
+          "prop": "width",
+          "tipo": "numero",
+          "min": 1,
+          "max": 40,
+          "step": 1,
+          "padrao": 15,
+          "resumo": "Largura aberta, em rem."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Navegação principal",
+          "resumo": "Nome do landmark. Duas navegações na mesma tela precisam de nomes diferentes."
+        }
+      ],
+      "SideNavItem": [
+        {
+          "prop": "active",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Marca a rota atual. A peça não descobre isso sozinha."
+        }
+      ]
+    },
+    "presets": [
+      {
+        "nome": "aberta",
+        "props": {
+          "collapsed": false,
+          "width": 15
+        }
+      },
+      {
+        "nome": "recolhida",
+        "props": {
+          "collapsed": true
+        }
+      },
+      {
+        "nome": "larga",
+        "props": {
+          "width": 22
+        }
+      }
+    ]
+  },
+  "pinned-scene": {
+    "componentes": {
+      "PinnedScene": [
+        {
+          "prop": "side",
+          "tipo": "escolha",
+          "valores": [
+            "left",
+            "right"
+          ],
+          "padrao": "left",
+          "resumo": "De que lado a arte gruda. `left` é o padrão de leitura ocidental."
+        },
+        {
+          "prop": "rail",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Régua de progresso com contagem. Some abaixo de `md`.",
+          "inicial": false
+        },
+        {
+          "prop": "stepHeight",
+          "tipo": "texto",
+          "padrao": "100svh",
+          "resumo": "Altura de cada passo — é o que define o comprimento de rolagem da cena.",
+          "inicial": "520px"
+        },
+        {
+          "prop": "top",
+          "tipo": "texto",
+          "padrao": "12vh",
+          "resumo": "Distância do topo em que a arte trava. Deixe espaço pro header fixo.",
+          "inicial": "24px"
+        }
+      ]
+    }
+  },
+  "photo-frame": {
+    "componentes": {
+      "PhotoFrame": [
+        {
+          "prop": "from",
+          "tipo": "escolha",
+          "valores": [
+            "bottom",
+            "top",
+            "left",
+            "right"
+          ],
+          "padrao": "bottom",
+          "resumo": "De onde a moldura abre."
+        },
+        {
+          "prop": "parallax",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Deriva na rolagem, em % da altura. 0 desliga. Acima de ~12 denuncia."
+        },
+        {
+          "prop": "ratio",
+          "tipo": "texto",
+          "padrao": "4/5",
+          "resumo": "Proporção da moldura, formato CSS: `\"4/5\"`, `\"16/9\"`, `\"1\"`."
+        },
+        {
+          "prop": "start",
+          "tipo": "texto",
+          "padrao": "top 85%",
+          "resumo": "Onde o gatilho arma."
+        }
+      ]
+    }
+  },
+  "photo-split": {
+    "componentes": {
+      "PhotoSplit": [
+        {
+          "prop": "as",
+          "tipo": "escolha",
+          "valores": [
+            "h2",
+            "h3"
+          ],
+          "padrao": "h2",
+          "resumo": null
+        },
+        {
+          "prop": "side",
+          "tipo": "escolha",
+          "valores": [
+            "left",
+            "right"
+          ],
+          "padrao": "left",
+          "resumo": "De que lado fica a FOTO. Dentro de `PhotoSplitStack` é escrito automático."
+        },
+        {
+          "prop": "gap",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 3.5,
+          "resumo": "Respiro entre as duas colunas, em rem."
+        },
+        {
+          "prop": "parallax",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Deriva da foto na rolagem, em % da altura. 0 desliga."
+        },
+        {
+          "prop": "weight",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 1.1,
+          "resumo": "Peso da coluna da foto contra a do texto. 1 é meio a meio."
+        },
+        {
+          "prop": "ratio",
+          "tipo": "texto",
+          "padrao": "4/5",
+          "resumo": "Proporção da moldura, formato CSS."
+        }
+      ],
+      "PhotoSplitStack": [
+        {
+          "prop": "start",
+          "tipo": "escolha",
+          "valores": [
+            "left",
+            "right"
+          ],
+          "padrao": "left",
+          "resumo": "De que lado começa a primeira foto. As seguintes alternam sozinhas."
+        },
+        {
+          "prop": "space",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 6,
+          "resumo": "Respiro entre as dobras, em rem.",
+          "inicial": 3
+        }
+      ]
+    }
+  },
+  "photo-flip": {
+    "componentes": {
+      "PhotoFlip": [
+        {
+          "prop": "dialogLabel",
+          "tipo": "texto",
+          "padrao": "Foto ampliada",
+          "resumo": "Rótulo do overlay para leitor de tela."
+        },
+        {
+          "prop": "ratio",
+          "tipo": "texto",
+          "padrao": "1",
+          "resumo": "Proporção do tile na grade. A tela cheia usa a proporção real da foto.",
+          "inicial": "4/5"
+        }
+      ]
+    }
+  },
+  "photo-compare": {
+    "componentes": {
+      "PhotoCompare": [
+        {
+          "prop": "peek",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Desliga a espiada de descoberta."
+        },
+        {
+          "prop": "defaultValue",
+          "tipo": "numero",
+          "min": 0,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "Posição inicial da cortina, 0 a 100."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Comparar antes e depois",
+          "resumo": "Rótulo do controle para leitor de tela."
+        },
+        {
+          "prop": "ratio",
+          "tipo": "texto",
+          "padrao": "3/2",
+          "resumo": "Proporção da caixa, formato CSS. Obrigatória na prática: ver decisão 5."
+        }
+      ]
+    }
+  },
+  "book-3d": {
+    "componentes": {
+      "rgbToHsl": [
+        {
+          "prop": "b",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "g",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "r",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        }
+      ],
+      "hslToCss": [
+        {
+          "prop": "h",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "l",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "s",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        }
+      ],
+      "rgbToCss": [
+        {
+          "prop": "b",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "g",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "r",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        }
+      ],
+      "paintBlock": [
+        {
+          "prop": "back",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Fundo da contracapa."
+        },
+        {
+          "prop": "board",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Cartão da capa — o degrau que aparece na praça e na quina."
+        },
+        {
+          "prop": "cover",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Topo da lombada e da contracapa."
+        },
+        {
+          "prop": "coverDark",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Pé da lombada, e o par escuro de todo gradiente."
+        },
+        {
+          "prop": "paper",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Corte do miolo."
+        },
+        {
+          "prop": "studio",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Fundo do estúdio virtual. Não é o fundo da PÁGINA (o canvas é"
+        }
+      ],
+      "bookstage": [
+        {
+          "prop": "pages",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Manda na espessura. Sem número, usa o livro de estante médio."
+        },
+        {
+          "prop": "art",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A capa. Sem ela, o livro sai com a capa desenhada — nunca caixa cinza."
+        },
+        {
+          "prop": "artColor",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Cor curada da arte, se houver. Ganha da amostragem automática — uma pessoa"
+        },
+        {
+          "prop": "mark",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Marca d'água na contracapa. Uma linha curta, tipo o selo da editora."
+        },
+        {
+          "prop": "seed",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Chave ESTÁVEL: slug > id > título. Título editado mudaria o objeto."
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        }
+      ],
+      "Book3D": [
+        {
+          "prop": "pages",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Manda na espessura. Sem número, usa o livro de estante médio."
+        },
+        {
+          "prop": "art",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A capa. Sem ela, o livro sai com a capa desenhada — nunca caixa cinza."
+        },
+        {
+          "prop": "artColor",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Cor curada da arte, se houver. Ganha da amostragem automática — uma pessoa"
+        },
+        {
+          "prop": "mark",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Marca d'água na contracapa. Uma linha curta, tipo o selo da editora."
+        },
+        {
+          "prop": "seed",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Chave ESTÁVEL: slug > id > título. Título editado mudaria o objeto."
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        }
+      ]
+    }
+  },
+  "book-shelf": {
+    "componentes": {
+      "BookShelf": [
+        {
+          "prop": "columns",
+          "tipo": "texto",
+          "padrao": "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
+          "resumo": "Classes de grade. O default é uma estante confortável em três larguras.",
+          "inicial": "grid-cols-2 sm:grid-cols-4"
+        }
+      ]
+    }
+  }
+}

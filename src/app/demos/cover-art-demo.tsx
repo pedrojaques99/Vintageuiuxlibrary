@@ -34,6 +34,7 @@ import * as React from "react";
 
 import { CoverArt } from "../../../registry/visant/ui/cover-art";
 import type { CoverFamily } from "../../../registry/visant/lib/cover-look";
+import type { DemoProps } from "../catalog";
 
 interface Capa {
   titulo: string;
@@ -73,7 +74,7 @@ function Seta({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
   );
 }
 
-export default function CoverArtDemo() {
+export default function CoverArtDemo({ props }: DemoProps) {
   const [i, setI] = React.useState(0);
   const capa = CAPAS[i];
   const anda = (d: 1 | -1) => setI((v) => (v + d + CAPAS.length) % CAPAS.length);
@@ -84,7 +85,7 @@ export default function CoverArtDemo() {
         {/* `key`: a capa é determinística e não anima — trocar a semente é
             trocar o desenho inteiro, e sem `key` o React reaproveitaria os nós
             de uma família dentro de outra. */}
-        <CoverArt key={i} title={capa.titulo} seed={capa.titulo} family={capa.familia} />
+        <CoverArt key={i} title={capa.titulo} seed={capa.titulo} family={capa.familia} {...props} />
       </div>
 
       <div className="flex w-[280px] items-center gap-2">

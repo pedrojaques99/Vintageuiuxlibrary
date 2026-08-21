@@ -73,6 +73,8 @@ import AssigneeStackDemo from "./demos/assignee-stack-demo";
 import BrandSelectorDemo from "./demos/brand-selector-demo";
 import ChipDemo from "./demos/chip-demo";
 import CountUpDemo from "./demos/count-up-demo";
+import Book3DDemo from "./demos/book-3d-demo";
+import BookShelfDemo from "./demos/book-shelf-demo";
 import CoverArtDemo from "./demos/cover-art-demo";
 import DropOverlayDemo from "./demos/drop-overlay-demo";
 import FoldMotionDemo from "./demos/fold-motion-demo";
@@ -114,6 +116,17 @@ import VintageSliderDemo from "./demos/vintage-slider-demo";
 
 export type Family = "trabalho" | "aquisicao" | "motion" | "marca" | "vintage" | "fundacao";
 
+/**
+ * O que uma demo recebe.
+ *
+ * `props` são os valores dos knobs da ficha de foco. Demo que não declara
+ * `knobs` recebe `{}` e pode ignorar o argumento — é o que as demos sem painel
+ * fazem, e é por isso que o contrato entrou sem tocar em nenhuma delas.
+ */
+export interface DemoProps {
+  props?: Record<string, unknown>;
+}
+
 export interface CatalogItem {
   /** Nome no registry — é o que vai no `shadcn add @visant/<name>`. */
   name: string;
@@ -123,7 +136,18 @@ export interface CatalogItem {
   description: string;
   tags: string[];
   /** Demo viva. Ausente = item sem superfície visual própria (lib, tema, hook). */
-  demo?: () => React.ReactNode;
+  demo?: (args: DemoProps) => React.ReactNode;
+  /**
+   * O componente que os knobs da ficha pilotam — o nome como ele sai do
+   * `props.generated.json` (`"LogoWall"`, `"Rail"`).
+   *
+   * Declarar isto é uma promessa: a demo espalha `props` no componente. Sem a
+   * promessa não há painel, e é assim de propósito — painel cujo slider não move
+   * nada é pior que painel nenhum, porque quem mexe conclui que a peça quebrou.
+   * Quem escreve a linha é o `scripts/demos-knobs.mjs`, junto com o `{...props}`
+   * do outro lado: as duas metades do contrato entram na mesma passada.
+   */
+  knobs?: string;
   /**
    * Tamanho natural da demo, em px. O palco desenha nesse tamanho e escala para
    * caber — declarar aqui é o que impede a peça grande de aparecer cortada.
@@ -369,7 +393,7 @@ function LargeKnobDemo() {
 }
 
 
-function PadDemo() {
+function PadDemo({ props }: DemoProps) {
   const [on, setOn] = React.useState<Set<number>>(new Set([1]));
   return (
     <Frame className="grid grid-cols-2 gap-2">
@@ -380,6 +404,7 @@ function PadDemo() {
           color={voice.color}
           size={58}
           active={on.has(i)}
+          {...props}
           onTrigger={() => setOn((p) => new Set(p).add(i))}
           onRelease={() =>
             setOn((p) => {
@@ -535,6 +560,7 @@ export const CATALOG: CatalogItem[] = [
       "Seletor de marca com prévia ao percorrer: paleta, par tipográfico e completude do vault na linha. Aplica o tema da marca escolhida ao app inteiro.",
     tags: ["marca", "tema", "cmdk", "vault"],
     demo: BrandSelectorDemo,
+    knobs: "BrandSelector",
     preview: { w: 620, h: 220 },
   },
   {
@@ -599,6 +625,7 @@ export const CATALOG: CatalogItem[] = [
       "O canto da conta nos três estados. Enquanto a sessão não responde ele não escreve “Entrar” — e não muda de tamanho quando ela chega.",
     tags: ["conta", "sessão", "menu"],
     demo: AuthButtonDemo,
+    knobs: "AuthButton",
     // 620: o defeito que a peça mata (o pulo do cabeçalho quando a sessão
     // chega) só é visível com a barra em volta. Botão sozinho num quadro não
     // tem o que empurrar.
@@ -613,6 +640,7 @@ export const CATALOG: CatalogItem[] = [
       "Editar o perfil com foto, nome e e-mail verificado. Quando não dá pra salvar, o motivo aparece no campo — não num toast.",
     tags: ["conta", "formulário", "validação"],
     demo: ProfileFormDemo,
+    knobs: "ProfileForm",
     preview: { w: 620, h: 400 },
   },
   {
@@ -642,6 +670,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Pilha de responsáveis com excedente contado. Iniciais quando não há avatar.",
     tags: ["avatar", "equipe"],
     demo: AssigneeStackDemo,
+    knobs: "AssigneeStack",
     preview: { w: 620, h: 320 },
   },
   {
@@ -653,6 +682,7 @@ export const CATALOG: CatalogItem[] = [
       "Barra de filtro que gruda abaixo do cabeçalho sem medir altura na mão e sem pular no scroll.",
     tags: ["filtro", "scroll"],
     demo: StickyFilterbarDemo,
+    knobs: "StickyFilterbar",
     preview: { w: 760, h: 440 },
   },
   {
@@ -664,6 +694,7 @@ export const CATALOG: CatalogItem[] = [
       "Escolher por medida e receber a recomendação. A faixa traduz o número em produto.",
     tags: ["slider", "recomendação"],
     demo: MeasurePickerDemo,
+    knobs: "MeasurePicker",
     preview: { w: 620, h: 280 },
   },
   {
@@ -687,6 +718,7 @@ export const CATALOG: CatalogItem[] = [
       "A navegação lateral de aplicação: colapsa por clique ou por ⌘/Ctrl+B, agrupa, marca a rota ativa e lembra o estado. O rótulo vira sr-only quando fecha, nunca some do DOM.",
     tags: ["sidebar", "navegação", "app", "colapsar", "atalho", "teclado"],
     demo: SideNavDemo,
+    knobs: "SideNav",
     preview: { w: 1360, h: 500 },
   },
 
@@ -711,6 +743,7 @@ export const CATALOG: CatalogItem[] = [
       "A faixa de \"confiam na gente\" com os logos normalizados: altura óptica por item, teto de largura pro wordmark comprido e dessaturação em repouso que vira cor no hover.",
     tags: ["logos", "clientes", "prova social", "faixa", "marquee", "gsap"],
     demo: LogoWallDemo,
+    knobs: "LogoWall",
     preview: { w: 760, h: 260 },
   },
   {
@@ -722,6 +755,7 @@ export const CATALOG: CatalogItem[] = [
       "Trilho horizontal com snap, setas que somem nas pontas e scroll por teclado.",
     tags: ["carrossel", "snap"],
     demo: RailDemo,
+    knobs: "Rail",
     preview: { w: 920, h: 360 },
   },
   {
@@ -733,6 +767,7 @@ export const CATALOG: CatalogItem[] = [
       "A placa onde a foto de catálogo senta. Resolve o recorte branco sobre fundo colorido.",
     tags: ["produto", "foto"],
     demo: PlateDemo,
+    knobs: "Plate",
     preview: { w: 660, h: 350 },
   },
   {
@@ -754,6 +789,7 @@ export const CATALOG: CatalogItem[] = [
       "Aberto/fechado calculado no fuso da loja, não no do visitante. Quem está do outro lado do mundo vê a resposta certa.",
     tags: ["loja", "fuso"],
     demo: StoreStatusDemo,
+    knobs: "StoreStatus",
     preview: { w: 420, h: 250 },
   },
   {
@@ -765,6 +801,7 @@ export const CATALOG: CatalogItem[] = [
       "Mosaico por round-robin: anexar página nova não reordena o que já estava na tela.",
     tags: ["galeria", "grid"],
     demo: MasonryGalleryDemo,
+    knobs: "MasonryGallery",
     preview: { w: 920, h: 520 },
   },
   {
@@ -870,6 +907,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Ruído animado em SVG para dar vida a uma superfície parada.",
     tags: ["ruído", "svg"],
     demo: TurbulenceFieldDemo,
+    knobs: "TurbulenceField",
     preview: { w: 560, h: 330 },
   },
   {
@@ -880,6 +918,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Malha de pontos de fundo, o papel milimetrado que dá profundidade sem competir.",
     tags: ["fundo", "grid"],
     demo: GridDotsDemo,
+    knobs: "GridDots",
     preview: { w: 620, h: 320 },
   },
   {
@@ -890,6 +929,7 @@ export const CATALOG: CatalogItem[] = [
     description: "A camada que aparece quando um arquivo está sendo arrastado sobre a área.",
     tags: ["upload", "dnd"],
     demo: DropOverlayDemo,
+    knobs: "DropOverlay",
     // 440 e não 320: a cena tem zona de solta MAIS a fileira de miniaturas que
     // aparece depois de receber. Medida na página, ela fecha em 432 — declarar
     // menos fazia o palco crescer depois de montar e empurrar a grade.
@@ -943,6 +983,7 @@ export const CATALOG: CatalogItem[] = [
     description: "VU analógico com balística de ponteiro.",
     tags: ["áudio", "medidor"],
     demo: VintageMeterDemo,
+    knobs: "VintageMeter",
     preview: { w: 340, h: 200 },
   },
   {
@@ -953,6 +994,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Fader de console com curso e trilho gravados.",
     tags: ["áudio", "fader"],
     demo: VintageSliderDemo,
+    knobs: "VintageSlider",
     preview: { w: 300, h: 290 },
   },
   {
@@ -1021,6 +1063,7 @@ export const CATALOG: CatalogItem[] = [
     // API do item publicado quebraria quem já rodou o `add`. Ver o cabeçalho do
     // `vintage-parametric-eq.tsx`.
     demo: VintageParametricEqDemo,
+    knobs: "VintageParametricEQ",
     preview: { w: 690, h: 460 },
   },
   {
@@ -1034,6 +1077,7 @@ export const CATALOG: CatalogItem[] = [
     // leituras diferentes de um sinal, e não quatro animações decorativas
     // rodando lado a lado. Um de cada vez esconderia justamente isso.
     demo: VintageOscilloscopeDemo,
+    knobs: "VintageOscilloscope",
     preview: { w: 690, h: 420 },
   },
   {
@@ -1044,6 +1088,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Pad de disparo com estado aceso e retorno tátil.",
     tags: ["áudio", "pad"],
     demo: PadDemo,
+    knobs: "VintageSoundboardPad",
     preview: { w: 440, h: 265 },
   },
   {
@@ -1053,11 +1098,18 @@ export const CATALOG: CatalogItem[] = [
     family: "vintage",
     description: "Campo de dois eixos para controlar dois parâmetros num gesto só.",
     tags: ["áudio", "gesto"],
-    demo: () => (
+    demo: ({ props }) => (
       <Frame>
-        <VintageXYPad size={150} labelX="FILTER" labelY="REVERB" color="var(--vintage-accent)" />
+        <VintageXYPad
+          size={150}
+          labelX="FILTER"
+          labelY="REVERB"
+          color="var(--vintage-accent)"
+          {...props}
+        />
       </Frame>
     ),
+    knobs: "VintageXYPad",
     preview: { w: 440, h: 275 },
   },
   {
@@ -1067,13 +1119,19 @@ export const CATALOG: CatalogItem[] = [
     family: "vintage",
     description: "Moldura de tubo com curvatura e brilho de varredura.",
     tags: ["moldura", "crt"],
-    demo: () => (
+    demo: ({ props }) => (
       <Frame>
         {/* 240px em vez de 190: abaixo disso o rótulo da marca corta, e a demo
             existe pra mostrar o console inteiro. Que a peça AGUENTE 190 é outra
             coisa — isso o teste de 390px prova. */}
         <div className="w-[240px]">
-          <VintageTvFrame title="VISANT TV" width={240} showTimecode="00:12:34" signalActive>
+          <VintageTvFrame
+            title="VISANT TV"
+            width={240}
+            showTimecode="00:12:34"
+            signalActive
+            {...props}
+          >
             <div className="grid h-full place-items-center font-mono text-micro text-white/70">
               NO SIGNAL
             </div>
@@ -1081,6 +1139,7 @@ export const CATALOG: CatalogItem[] = [
         </div>
       </Frame>
     ),
+    knobs: "VintageTvFrame",
     preview: { w: 440, h: 300 },
   },
   {
@@ -1201,6 +1260,7 @@ export const CATALOG: CatalogItem[] = [
       "Card de serviço: mídia com selo de seta, título que cobre o card inteiro e a lista do que está incluso como texto, não como filtro.",
     tags: ["serviço", "card", "vitrine"],
     demo: ShowcaseCardDemo,
+    knobs: "ShowcaseCard",
     preview: { w: 340, h: 400 },
   },
   {
@@ -1212,6 +1272,7 @@ export const CATALOG: CatalogItem[] = [
       "Como funciona, em passos numerados. Sai como lista ordenada no HTML, e a arte de cada passo entra por slot.",
     tags: ["passos", "como funciona", "onboarding"],
     demo: StepCardsDemo,
+    knobs: "StepCards",
     preview: { w: 1180, h: 370 },
   },
   {
@@ -1223,6 +1284,7 @@ export const CATALOG: CatalogItem[] = [
       "O depoimento único, em tamanho de dobra: a citação vem primeiro e em corpo de manchete, a atribuição entra depois como assinatura.",
     tags: ["depoimento", "prova social", "citação", "cliente", "retrato"],
     demo: QuoteBlockDemo,
+    knobs: "QuoteBlock",
     preview: { w: 660, h: 380 },
   },
   {
@@ -1341,6 +1403,7 @@ export const CATALOG: CatalogItem[] = [
       "O número que se apura em vez de aparecer pronto: lê o valor final do próprio texto, trava a largura antes do primeiro quadro e não anima o que não dá pra parsear.",
     tags: ["número", "contagem", "prova", "estatística", "animar"],
     demo: CountUpDemo,
+    knobs: "CountUp",
     preview: { w: 560, h: 210 },
   },
   {
@@ -1363,6 +1426,7 @@ export const CATALOG: CatalogItem[] = [
       "Hierarquia de entradas por dobra: rise, drift, mask, settle, climax e invert em vez de trinta entradas iguais. O esconderijo é aplicado pelo componente, nunca por CSS estático.",
     tags: ["scroll", "entrada", "reveal", "dobra", "hierarquia"],
     demo: FoldMotionDemo,
+    knobs: "Fold",
     preview: { w: 690, h: 300 },
   },
   {
@@ -1374,6 +1438,7 @@ export const CATALOG: CatalogItem[] = [
       "O título que sobe de dentro do próprio corte de linha: mede a quebra depois da fonte carregar, re-quebra ao redimensionar, e o esconderijo é aplicado por JS pra página nunca sumir sem script.",
     tags: ["título", "reveal", "linha", "split", "gsap", "herói", "tipografia"],
     demo: LineRevealDemo,
+    knobs: "LineReveal",
     // 1280 de largura porque a peça revela POR LINHA: num palco estreito a
     // frase quebra em duas e a cascata some. A demo agora traz frase longa e
     // as variantes lado a lado — é essa medida que faz o corte aparecer.
@@ -1388,6 +1453,7 @@ export const CATALOG: CatalogItem[] = [
       "A superfície que sabe onde o cursor está: luz sob o ponteiro, borda acesa do lado da luz e inclinação de 5 graus. Quatro números por quadro no JS, o desenho inteiro no CSS.",
     tags: ["hover", "card", "ponteiro", "tilt", "luz", "spotlight", "magnético"],
     demo: GleamDemo,
+    knobs: "Gleam",
     preview: { w: 690, h: 390 },
   },
   {
@@ -1410,6 +1476,7 @@ export const CATALOG: CatalogItem[] = [
       "A dobra alternada foto ↔ texto: a moldura revela a imagem, o texto entra deslizando da borda externa e o lado inverte a cada dobra sem ninguém escrever nada.",
     tags: ["dobra", "seção", "foto", "texto", "alternado", "scroll", "gsap"],
     demo: PhotoSplitDemo,
+    knobs: "PhotoSplitStack",
     preview: { w: 900, h: 700 },
   },
   {
@@ -1420,7 +1487,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "A foto atravessa da grade para a tela cheia — mesmo nó do DOM, reparentado e animado por GSAP Flip com ease-in-out. A vaga segura a proporção pra grade não desabar, e o foco volta pra foto que abriu.",
     tags: ["foto", "galeria", "lightbox", "flip", "morph", "grade", "gsap"],
-    demo: () => <PhotoFlipDemo />,
+    demo: (a) => <PhotoFlipDemo {...a} />,
+    knobs: "PhotoFlip",
     preview: { w: 1360, h: 300 },
   },
   {
@@ -1432,6 +1500,7 @@ export const CATALOG: CatalogItem[] = [
       "A cortina entre o antes e o depois: a camada de cima é RECORTADA, nunca redimensionada, então as duas fotos ficam na mesma escala. O arrasto, o teclado e o leitor de tela vêm de um input range invisível.",
     tags: ["foto", "antes", "depois", "comparar", "cortina", "rebrand", "slider"],
     demo: PhotoCompareDemo,
+    knobs: "PhotoCompare",
     preview: { w: 700, h: 440 },
   },
   {
@@ -1443,6 +1512,7 @@ export const CATALOG: CatalogItem[] = [
       "O trilho de vídeo vertical: cartões 9:16 com encaixe, o do meio tocando e os vizinhos parados e mudos. Som opcional, um card por vez, e fora da tela pausa tudo.",
     tags: ["vídeo", "reels", "shorts", "vertical", "carrossel", "trilho"],
     demo: ReelsRailDemo,
+    knobs: "ReelsRail",
     preview: { w: 1360, h: 490 },
   },
   {
@@ -1474,6 +1544,35 @@ export const CATALOG: CatalogItem[] = [
     preview: { w: 640, h: 420 },
   },
   {
+    name: "book-3d",
+    title: "Book 3D",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "O item de catálogo como objeto: capa dura em WebGL com lombada curva, espessura vinda da contagem de páginas e praça. Cor derivada dos tokens da marca e do matiz da própria arte, sem asset baixado.",
+    tags: ["livro", "3d", "webgl", "catálogo", "capa", "objeto"],
+    demo: Book3DDemo,
+    knobs: "Book3D",
+    // Palco em retrato (330×430), igual ao `cover-art`: o livro é 0.68 de
+    // largura por 1 de altura, e numa caixa larga ele vira uma peça pequena no
+    // meio de dois corredores de vazio.
+    preview: { w: 330, h: 430 },
+  },
+  {
+    name: "book-shelf",
+    title: "Book Shelf",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Estante em vez de vitrine: os itens soltos, sem moldura, e o rótulo só no hover — porque o objeto já tem silhueta e a moldura passa a competir com ela.",
+    tags: ["estante", "prateleira", "catálogo", "grade", "hover"],
+    demo: BookShelfDemo,
+    knobs: "BookShelf",
+    // Palco largo e baixo: o argumento da peça é a FILEIRA. Um palco em retrato
+    // mostraria dois livros empilhados, que é a grade de ícones que ela evita.
+    preview: { w: 560, h: 340 },
+  },
+  {
     name: "spine-card",
     title: "Spine Card",
     type: "ui",
@@ -1482,6 +1581,7 @@ export const CATALOG: CatalogItem[] = [
       "O retângulo que lê como objeto: lombada de luz na borda, tombo apoiado na base que endireita no hover, e capa em duotone que só ganha cor onde a atenção está.",
     tags: ["card", "livro", "estante", "produto", "lombada"],
     demo: SpineCardDemo,
+    knobs: "SpineCard",
     preview: { w: 670, h: 420 },
   },
   {
@@ -1493,6 +1593,7 @@ export const CATALOG: CatalogItem[] = [
       "Capa determinística em CSS pra item sem arte: três famílias (livro, app, placa), monograma, e rampa tonal derivada da marca por color-mix. Zero byte de imagem, SSR igual ao cliente.",
     tags: ["capa", "placeholder", "catálogo", "determinístico", "sem imagem"],
     demo: CoverArtDemo,
+    knobs: "CoverArt",
     // Palco em retrato (330×430): a capa é 3/4, e numa caixa larga ela vira
     // faixa. A demo mostra uma família por vez, então o que precisa caber é a
     // altura de uma capa inteira, não três lado a lado.
@@ -1507,6 +1608,7 @@ export const CATALOG: CatalogItem[] = [
       "O estado vazio canônico: arte por slot com véu de contraste garantido, eyebrow, frase que diz o que vai aparecer ali, e no máximo uma ação.",
     tags: ["vazio", "empty", "onboarding", "primeiro uso"],
     demo: EmptyStateDemo,
+    knobs: "EmptyArt",
     // Duas caixas lado a lado, e por isso `duplo` e não ladrilho: "generativo" é
     // uma afirmação sobre variação, e uma caixa sozinha prova que a arte existe,
     // não que ela nasce da semente.
@@ -1521,6 +1623,7 @@ export const CATALOG: CatalogItem[] = [
       "O esqueleto do trilho com as mesmas medidas do trilho: mesmos nomes de prop, overflow hidden em vez de auto, e pulse em vez de shimmer.",
     tags: ["skeleton", "carregando", "trilho", "espera"],
     demo: SkeletonRailDemo,
+    knobs: "SkeletonRail",
     preview: { w: 1360, h: 740 },
   },
   {
@@ -1574,6 +1677,7 @@ export const CATALOG: CatalogItem[] = [
       "A dobra que prende a arte e avança em passos. O pin é position:sticky, não ScrollTrigger.pin — o GSAP entra só pra relatar progresso em --p, --sp e --near, sem tocar no DOM.",
     tags: ["scroll", "sticky", "passos", "storytelling", "gsap"],
     demo: PinnedSceneDemoCard,
+    knobs: "PinnedScene",
     preview: { w: 1360, h: 620 },
   },
 ];

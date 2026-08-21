@@ -23,6 +23,7 @@ import * as React from "react";
 import { Media } from "../media";
 import { Chip } from "../../../registry/visant/ui/chip";
 import { StickyFilterbar, FilterRow } from "../../../registry/visant/ui/sticky-filterbar";
+import type { DemoProps } from "../catalog";
 
 type Estado = "producao" | "rascunho" | "arquivo";
 type Familia = "quente" | "fria" | "neutra";
@@ -48,7 +49,7 @@ const ACERVO: { nome: string; estado: Estado; familia: Familia }[] = [
   { nome: "Serralheria", estado: "producao", familia: "neutra" },
 ];
 
-export default function StickyFilterbarDemo() {
+export default function StickyFilterbarDemo({ props }: DemoProps) {
   const [estado, setEstado] = React.useState<Estado | null>(null);
   const [familia, setFamilia] = React.useState<Familia | null>(null);
 
@@ -73,7 +74,7 @@ export default function StickyFilterbarDemo() {
         </span>
       </div>
 
-      <StickyFilterbar headerSelector="[data-demo-header]" className="px-4">
+      <StickyFilterbar headerSelector="[data-demo-header]" className="px-4" {...props}>
         <FilterRow>
           <Chip pressed={estado === null} onClick={() => setEstado(null)}>
             Todos

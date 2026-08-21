@@ -1,0 +1,135 @@
+{
+  "//": "Ajuste manual dos knobs derivados por scripts/controls.mjs. Só o que o automático errou — nunca a lista inteira, senão volta a envelhecer a cada prop nova. Chaves: esconder [prop], ordem [prop], ajustes {prop: {min,max,step,valores,rotulo}}, presets [{nome, props}]. O padrão de uma prop NUNCA vem daqui: vem do código. Preset diz só o que MUDA — o que ele omite fica no valor que a demo tem no palco.",
+
+  "logo-wall": {
+    "presets": [
+      { "nome": "parede parada", "props": { "marquee": false, "finish": "grayscale", "gap": 48 } },
+      { "nome": "faixa mono", "props": { "finish": "mono", "speed": 90 } },
+      { "nome": "cor sem fade", "props": { "finish": "none", "fade": false } }
+    ]
+  },
+
+  "rail": {
+    "presets": [
+      { "nome": "trilho seco", "props": { "arrows": false, "fade": false, "progress": false, "remainder": false } },
+      { "nome": "cartão largo", "props": { "itemWidth": 320, "gap": 24 } },
+      { "nome": "denso", "props": { "itemWidth": 120, "gap": 8 } }
+    ]
+  },
+
+  "line-reveal": {
+    "presets": [
+      { "nome": "máscara", "props": { "variant": "mask", "split": "lines" } },
+      { "nome": "desfoque", "props": { "variant": "blur", "split": "words", "stagger": 0.04 } },
+      { "nome": "cortina", "props": { "variant": "curtain", "split": "lines" } },
+      { "nome": "subida", "props": { "variant": "rise", "split": "words" } }
+    ]
+  },
+
+  "fold-motion": {
+    "presets": [
+      { "nome": "subir", "props": { "variant": "rise" } },
+      { "nome": "deriva", "props": { "variant": "drift-l" } },
+      { "nome": "máscara", "props": { "variant": "mask" } },
+      { "nome": "clímax", "props": { "variant": "climax" } }
+    ]
+  },
+
+  "gleam": {
+    "presets": [
+      { "nome": "cartão vivo", "props": { "tilt": 12, "glow": 1 } },
+      { "nome": "brilho sem inclinar", "props": { "tilt": 0, "glow": 1 } },
+      { "nome": "chapado", "props": { "flat": true } }
+    ]
+  },
+
+  "grid-dots": {
+    "presets": [
+      { "nome": "malha discreta", "props": { "opacity": 0.06, "spacing": 24, "spotlightOpacity": 0.3 } },
+      { "nome": "holofote forte", "props": { "spotlight": 90, "spotlightOpacity": 0.9, "dotSize": 2 } },
+      { "nome": "grade densa", "props": { "spacing": 10, "dotSize": 1 } }
+    ]
+  },
+
+  "turbulence-field": {
+    "presets": [
+      { "nome": "névoa", "props": { "intensity": 0.08, "speed": 6 } },
+      { "nome": "tempestade", "props": { "intensity": 0.5, "speed": 30 } },
+      { "nome": "grão fino", "props": { "scale": 0.15, "intensity": 0.3 } }
+    ]
+  },
+
+  "plate": {
+    "presets": [
+      { "nome": "foto", "props": { "surface": "photo", "blend": "normal" } },
+      { "nome": "papel", "props": { "surface": "muted", "blend": "multiply" } },
+      { "nome": "sobre fundo", "props": { "ground": true, "inset": 28 } }
+    ]
+  },
+
+  "quote-block": {
+    "presets": [
+      { "nome": "cartão", "props": { "tone": "card" } },
+      { "nome": "papel", "props": { "tone": "muted" } },
+      { "nome": "marca", "props": { "tone": "brand" } },
+      { "nome": "sem caixa", "props": { "bare": true, "flip": true } }
+    ]
+  },
+
+  "step-cards": {
+    "presets": [
+      { "nome": "duas colunas", "props": { "columns": "2" } },
+      { "nome": "três colunas", "props": { "columns": "3" } },
+      { "nome": "última larga", "props": { "columns": "3", "wideLast": true } }
+    ]
+  },
+
+  "vintage-oscilloscope": {
+    "presets": [
+      { "nome": "onda", "props": { "mode": "wave" } },
+      { "nome": "espectro", "props": { "mode": "fft", "fill": true } },
+      { "nome": "anéis", "props": { "mode": "rings" } },
+      { "nome": "sem moldura", "props": { "chrome": false, "mode": "scope" } }
+    ]
+  },
+
+  "reels-rail": {
+    "presets": [
+      { "nome": "vitrine muda", "props": { "sound": false, "autoPlay": true } },
+      { "nome": "parada", "props": { "autoPlay": false, "drift": false, "sound": false } },
+      { "nome": "cheia", "props": { "itemWidth": 300, "gap": 24, "drift": true } }
+    ]
+  },
+
+  "skeleton-rail": {
+    "ajustes": { "gap": { "min": 0, "max": 64, "step": 4 } },
+    "presets": [
+      { "nome": "curto", "props": { "cards": 3, "itemWidth": 180 } },
+      { "nome": "longo", "props": { "cards": 8, "itemWidth": 300, "gap": 28 } },
+      { "nome": "sem título", "props": { "heading": false } }
+    ]
+  },
+
+  "side-nav": {
+    "presets": [
+      { "nome": "aberta", "props": { "collapsed": false, "width": 15 } },
+      { "nome": "recolhida", "props": { "collapsed": true } },
+      { "nome": "larga", "props": { "width": 22 } }
+    ]
+  },
+
+  "auth-button": {
+    "presets": [
+      { "nome": "deslogado", "props": { "status": "signed-out" } },
+      { "nome": "carregando", "props": { "status": "loading" } },
+      { "nome": "logado", "props": { "status": "signed-in" } }
+    ]
+  },
+
+  "spine-card": {
+    "presets": [
+      { "nome": "lombada", "props": { "fullColor": false, "tilt": false } },
+      { "nome": "colorida e torta", "props": { "fullColor": true, "tilt": true } }
+    ]
+  }
+}

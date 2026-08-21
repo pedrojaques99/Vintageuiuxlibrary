@@ -31,9 +31,9 @@ import { test, expect, type Page } from "@playwright/test";
  */
 const xDoTrack = (page: Page, _i = 0) =>
   page.evaluate(() => {
-    const card = [...document.querySelectorAll("article")].find(
-      (a) => a.querySelector("[data-card-index]")?.textContent?.trim() === "marquee",
-    );
+    // `data-name`, e não o texto do card: o ladrilho passou a mostrar o TÍTULO
+    // ("Marquee") e o nome do registry virou atributo. Ver `Ladrilho`.
+    const card = document.querySelector('article[data-name="marquee"]');
     const t = card?.querySelector(".marquee-track") as HTMLElement | undefined;
     return t ? new DOMMatrixReadOnly(getComputedStyle(t).transform).m41 : null;
   });
@@ -41,9 +41,9 @@ const xDoTrack = (page: Page, _i = 0) =>
 /** A volta da faixa: metade do track mais meio vão. A conta do componente. */
 const voltaDaFaixa = (page: Page, _i = 0) =>
   page.evaluate(() => {
-    const card = [...document.querySelectorAll("article")].find(
-      (a) => a.querySelector("[data-card-index]")?.textContent?.trim() === "marquee",
-    );
+    // `data-name`, e não o texto do card: o ladrilho passou a mostrar o TÍTULO
+    // ("Marquee") e o nome do registry virou atributo. Ver `Ladrilho`.
+    const card = document.querySelector('article[data-name="marquee"]');
     const t = card!.querySelector(".marquee-track") as HTMLElement;
     return t.scrollWidth / 2 + parseFloat(getComputedStyle(t).columnGap || "0") / 2;
   });
@@ -56,7 +56,7 @@ const voltaDaFaixa = (page: Page, _i = 0) =>
  * verdade e o teste tem de falhar dizendo isso, não rodar para sempre.
  */
 async function escolherModo(page: Page, modo: string) {
-  const card = page.locator("article").filter({ has: page.getByText("marquee", { exact: true }) });
+  const card = page.locator('article[data-name="marquee"]');
   for (let i = 0; i < 20; i++) {
     const atual = await card.locator("span").filter({ hasText: /^(solta|boost|drive|scrub)$/ }).first().textContent();
     if (atual?.trim() === modo) return;
@@ -105,6 +105,15 @@ async function centralizarFaixa(page: Page) {
    * marquee nenhum para achar. O marquee mora em aquisição.
    */
   await page.goto("/catalogo/aquisicao");
+  /*
+   * Rede parada antes de medir velocidade.
+   *
+   * Este arquivo mede px/s: ele é, por natureza, o mais sensível a CPU
+   * disputada. Com as fotos e a webfont ainda chegando enquanto o GSAP já
+   * roda, a primeira amostra sai baixa e o assert de sinal/velocidade pisca —
+   * uma rodada completa a cada três, sempre num teste diferente do arquivo.
+   */
+  await page.waitForLoadState("networkidle").catch(() => {});
   for (let i = 0; i < 200; i++) {
     if (await page.evaluate(() => !!document.querySelector(".marquee-track"))) break;
     await page.evaluate(() => window.scrollBy(0, 400));
@@ -114,6 +123,8 @@ async function centralizarFaixa(page: Page) {
   await page.evaluate(() =>
     document.querySelector(".marquee-track")!.scrollIntoView({ block: "center" }),
   );
+  // A faixa precisa de um respiro depois de entrar na vista: o `ScrollTrigger`
+  // recalcula na primeira rolagem e a velocidade só estabiliza depois disso.
   await page.waitForTimeout(1200);
 }
 

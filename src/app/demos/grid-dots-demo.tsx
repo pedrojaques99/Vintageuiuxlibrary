@@ -16,6 +16,7 @@
 import * as React from "react";
 
 import { GridDots } from "../../../registry/visant/ui/grid-dots";
+import type { DemoProps } from "../catalog";
 
 const NOS = [
   { rotulo: "Vault", valor: "marca", marca: false, deslocamento: "translate-y-3" },
@@ -23,10 +24,10 @@ const NOS = [
   { rotulo: "No ar", valor: "v3", marca: false, deslocamento: "translate-y-2" },
 ];
 
-export default function GridDotsDemo() {
+export default function GridDotsDemo({ props }: DemoProps) {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card">
-      <GridDots opacity={0.11} spacing={18} dotSize={1.4} spotlight={170} />
+      <GridDots opacity={0.11} spacing={18} dotSize={1.4} spotlight={170} {...props} />
 
       <div className="relative flex h-full items-center justify-center px-6">
         {NOS.map((no, i) => (

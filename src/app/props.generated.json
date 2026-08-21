@@ -421,7 +421,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "up",
+            "middle",
+            "down"
+          ]
         },
         {
           "nome": "title",
@@ -599,7 +604,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "md",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "sm",
+            "md",
+            "lg"
+          ]
         }
       ]
     }
@@ -699,7 +709,14 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "scope",
-          "descricao": "O programa que entra quando não há `children`.\n\nA tela vazia dizia \"NO SIGNAL\" e ficava lá, parada — uma moldura de TV cuja\núnica função é emoldurar não prova nada. Agora o padrão é o tubo tocando um\ndos visualizadores do `vintage-oscilloscope`. `null` traz de volta o cartão\nde sem-sinal, pra quem quer o objeto desligado de propósito."
+          "descricao": "O programa que entra quando não há `children`.\n\nA tela vazia dizia \"NO SIGNAL\" e ficava lá, parada — uma moldura de TV cuja\núnica função é emoldurar não prova nada. Agora o padrão é o tubo tocando um\ndos visualizadores do `vintage-oscilloscope`. `null` traz de volta o cartão\nde sem-sinal, pra quem quer o objeto desligado de propósito.",
+          "valores": [
+            "wave",
+            "fft",
+            "scope",
+            "rings",
+            "grid"
+          ]
         },
         {
           "nome": "programActive",
@@ -947,7 +964,14 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "wave",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "wave",
+            "fft",
+            "scope",
+            "rings",
+            "grid"
+          ]
         },
         {
           "nome": "params",
@@ -1089,7 +1113,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "grayscale",
-          "descricao": "O acabamento em repouso.\n\n- `\"grayscale\"` (padrão): dessatura e apaga; a cor volta no hover. Serve\n  qualquer arquivo.\n- `\"mono\"`: pinta com `currentColor` — só SVG inline, e o único seguro no\n  tema escuro. Ver a nota do cabeçalho.\n- `\"none\"`: o logo como veio, sempre."
+          "descricao": "O acabamento em repouso.\n\n- `\"grayscale\"` (padrão): dessatura e apaga; a cor volta no hover. Serve\n  qualquer arquivo.\n- `\"mono\"`: pinta com `currentColor` — só SVG inline, e o único seguro no\n  tema escuro. Ver a nota do cabeçalho.\n- `\"none\"`: o logo como veio, sempre.",
+          "valores": [
+            "grayscale",
+            "mono",
+            "none"
+          ]
         },
         {
           "nome": "gap",
@@ -1174,7 +1203,7 @@
           "tipo": "boolean",
           "obrigatoria": false,
           "padrao": "false",
-          "descricao": "Esmaece as pontas onde a lista continua. Segue o estado real das bordas."
+          "descricao": "Esmaece as pontas onde a lista continua. Segue o estado real das bordas.\n\nÉ máscara no scroller, não faixa pintada por cima: o item cortado some\ninteiro no fade, com título, legenda e o que mais houver embaixo da arte."
         },
         {
           "nome": "gap",
@@ -1182,6 +1211,13 @@
           "obrigatoria": false,
           "padrao": "20",
           "descricao": null
+        },
+        {
+          "nome": "gridUpTo",
+          "tipo": "number | false",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Com até N itens, o trilho vira GRADE: colunas iguais dividindo a faixa, sem\nrolagem, sem setas, sem máscara e sem tabindex rotativo (com três itens,\ntrês paradas de Tab é a ordem natural — o defeito das 21 paradas era outro).\n\nNasce desligado como toda prop nova daqui: quem já usava o trilho recebe o\nmesmo pixel de antes. O app da casa liga em 3, que é onde a conta fecha lá:\nquatro cards de 300 + gaps passam de 1116px e transbordam de verdade; três\ncabem sobrando 184px mortos."
         },
         {
           "nome": "heading",
@@ -1351,7 +1387,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "div",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "div",
+            "span"
+          ]
         },
         {
           "nome": "badge",
@@ -1365,7 +1405,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "multiply",
-          "descricao": "Como a foto se mistura com a placa.\n\n`\"multiply\"` (padrão) para recorte sobre branco — o branco vira placa.\n`\"normal\"` para foto de cena, still com fundo próprio ou PNG com alpha, que\no multiply destruiria."
+          "descricao": "Como a foto se mistura com a placa.\n\n`\"multiply\"` (padrão) para recorte sobre branco — o branco vira placa.\n`\"normal\"` para foto de cena, still com fundo próprio ou PNG com alpha, que\no multiply destruiria.",
+          "valores": [
+            "multiply",
+            "normal"
+          ]
         },
         {
           "nome": "ground",
@@ -1393,7 +1437,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "muted",
-          "descricao": "A superfície da placa.\n\n`\"muted\"` (padrão) segue o tema, e serve pra placa que é só moldura.\n`\"photo\"` é a ilha clara nos dois temas — condição de existência do\n`multiply`, que precisa de fundo claro pra devolver o produto. Redefina\n`--plate-photo` pra casar com o papel da marca."
+          "descricao": "A superfície da placa.\n\n`\"muted\"` (padrão) segue o tema, e serve pra placa que é só moldura.\n`\"photo\"` é a ilha clara nos dois temas — condição de existência do\n`multiply`, que precisa de fundo claro pra devolver o produto. Redefina\n`--plate-photo` pra casar com o papel da marca.",
+          "valores": [
+            "muted",
+            "photo"
+          ]
         },
         {
           "nome": "zoomOnGroupHover",
@@ -1443,7 +1491,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "md",
-          "descricao": "`sm` para barra densa (linha de facetas), `md` para a barra principal."
+          "descricao": "`sm` para barra densa (linha de facetas), `md` para a barra principal.",
+          "valores": [
+            "sm",
+            "md"
+          ]
         }
       ]
     }
@@ -2188,14 +2240,22 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "md",
-          "descricao": "Densidade. `md` é a régua da casa.\n\n`sm` existe para painel lateral: medido num painel de 340px onde três\ngrupos dividem a mesma linha, 12px de rótulo não cabem e o controle começa\na truncar palavra (\"Por pesso…\"). Encolher a tipografia é mais honesto do\nque abreviar o rótulo, porque a abreviação some da leitura e o tamanho não."
+          "descricao": "Densidade. `md` é a régua da casa.\n\n`sm` existe para painel lateral: medido num painel de 340px onde três\ngrupos dividem a mesma linha, 12px de rótulo não cabem e o controle começa\na truncar palavra (\"Por pesso…\"). Encolher a tipografia é mais honesto do\nque abreviar o rótulo, porque a abreviação some da leitura e o tamanho não.",
+          "valores": [
+            "sm",
+            "md"
+          ]
         },
         {
           "nome": "variant",
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "fill",
-          "descricao": "\"fill\" = itens crescem igualmente (com label); \"compact\" = botões de ícone."
+          "descricao": "\"fill\" = itens crescem igualmente (com label); \"compact\" = botões de ícone.",
+          "valores": [
+            "fill",
+            "compact"
+          ]
         }
       ]
     }
@@ -2317,7 +2377,12 @@
           "tipo": "enum",
           "obrigatoria": true,
           "padrao": null,
-          "descricao": "Os três estados de verdade. `loading` nunca desenha texto de conta."
+          "descricao": "Os três estados de verdade. `loading` nunca desenha texto de conta.",
+          "valores": [
+            "loading",
+            "signed-out",
+            "signed-in"
+          ]
         },
         {
           "nome": "account",
@@ -2331,7 +2396,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "end",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "start",
+            "end"
+          ]
         },
         {
           "nome": "className",
@@ -2345,7 +2414,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "signed-out",
-          "descricao": "Palpite de forma para o esqueleto. Não vira texto em hipótese nenhuma."
+          "descricao": "Palpite de forma para o esqueleto. Não vira texto em hipótese nenhuma.",
+          "valores": [
+            "signed-out",
+            "signed-in"
+          ]
         },
         {
           "nome": "items",
@@ -2374,6 +2447,17 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": "Com provedores, o clique abre a lista. Sem eles, chama `onSignIn`."
+        },
+        {
+          "nome": "side",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "bottom",
+          "descricao": "De que lado do gatilho o painel abre. `\"bottom\"` (padrão) é o canto do\nheader, que foi onde a peça nasceu.\n\n`\"top\"` existe porque o botão de conta nem sempre mora no topo: no Visant\nClub ele é o rodapé de uma coluna de 240px, e ali o painel de ~14 linhas\nabria PRA BAIXO, pra fora do viewport — o menu virava uma lista cortada na\nborda da janela, ou pior, empurrava scroll na sidebar. Um `align` não\nresolve: aquilo escolhe a borda horizontal.",
+          "valores": [
+            "top",
+            "bottom"
+          ]
         }
       ]
     },
@@ -2522,7 +2606,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "sm",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "sm",
+            "md",
+            "lg"
+          ]
         }
       ]
     }
@@ -2768,7 +2857,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "1/1",
+            "16/9",
+            "4/3"
+          ]
         },
         {
           "nome": "children",
@@ -2817,7 +2911,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "tile",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "tile",
+            "inline",
+            "overlay"
+          ]
         }
       ]
     }
@@ -2986,14 +3085,25 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": "Vocabulário do painel de design. Só define sufixo e passo padrão."
+          "descricao": "Vocabulário do painel de design. Só define sufixo e passo padrão.",
+          "valores": [
+            "number",
+            "px",
+            "percent",
+            "angle",
+            "multiple"
+          ]
         },
         {
           "nome": "layout",
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": "\"row\" = rótulo e valor na mesma linha (campo metade da altura)."
+          "descricao": "\"row\" = rótulo e valor na mesma linha (campo metade da altura).",
+          "valores": [
+            "stack",
+            "row"
+          ]
         },
         {
           "nome": "step",
@@ -3093,7 +3203,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": "Quando presente, manda em `visible`."
+          "descricao": "Quando presente, manda em `visible`.",
+          "valores": [
+            "idle",
+            "over",
+            "drop"
+          ]
         },
         {
           "nome": "visible",
@@ -3200,7 +3315,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "start",
+            "end"
+          ]
         },
         {
           "nome": "className",
@@ -3243,14 +3362,23 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "center",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "center",
+            "start"
+          ]
         },
         {
           "nome": "as",
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "h2",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "h1",
+            "h2",
+            "h3"
+          ]
         },
         {
           "nome": "eyebrow",
@@ -3335,14 +3463,24 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "brand",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "brand",
+            "ink",
+            "surface"
+          ]
         },
         {
           "nome": "variant",
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "panel",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "bar",
+            "panel",
+            "card"
+          ]
         }
       ]
     },
@@ -3362,7 +3500,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "solid",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "solid",
+            "outline"
+          ]
         }
       ]
     }
@@ -3441,7 +3583,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "3",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "2",
+            "3",
+            "4"
+          ]
         },
         {
           "nome": "visualHeight",
@@ -3482,7 +3629,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "3",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "2",
+            "3",
+            "4"
+          ]
         },
         {
           "nome": "visualHeight",
@@ -3523,7 +3675,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "4",
-          "descricao": "Teto de colunas. A largura do container é quem decide quantas cabem."
+          "descricao": "Teto de colunas. A largura do container é quem decide quantas cabem.",
+          "valores": [
+            "2",
+            "3",
+            "4"
+          ]
         },
         {
           "nome": "empty",
@@ -3550,7 +3707,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "4",
-          "descricao": "Teto de colunas. A largura do container é quem decide quantas cabem."
+          "descricao": "Teto de colunas. A largura do container é quem decide quantas cabem.",
+          "valores": [
+            "2",
+            "3",
+            "4"
+          ]
         },
         {
           "nome": "empty",
@@ -3649,7 +3811,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "card",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "card",
+            "muted",
+            "brand"
+          ]
         }
       ]
     }
@@ -3836,7 +4003,13 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "section",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "section",
+            "div",
+            "article",
+            "aside"
+          ]
         },
         {
           "nome": "threshold",
@@ -3850,7 +4023,16 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "rise",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "rise",
+            "drift-l",
+            "drift-r",
+            "mask",
+            "settle",
+            "climax",
+            "invert"
+          ]
         }
       ]
     },
@@ -3877,7 +4059,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "start",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "start",
+            "center"
+          ]
         },
         {
           "nome": "label",
@@ -3905,7 +4091,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "ok",
-          "descricao": "`unknown` desenha a trilha tracejada: o dado não chegou, e isso se vê."
+          "descricao": "`unknown` desenha a trilha tracejada: o dado não chegou, e isso se vê.",
+          "valores": [
+            "ok",
+            "unknown"
+          ]
         }
       ]
     }
@@ -4028,7 +4218,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "plate",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "book",
+            "app",
+            "plate"
+          ]
         },
         {
           "nome": "titleless",
@@ -4091,7 +4286,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "quieta",
-          "descricao": "Densidade do desenho. Menos é mais em faixa baixa."
+          "descricao": "Densidade do desenho. Menos é mais em faixa baixa.",
+          "valores": [
+            "quieta",
+            "cheia"
+          ]
         },
         {
           "nome": "seed",
@@ -4334,7 +4533,14 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "h2",
-          "descricao": "Elemento renderizado. Título de dobra é `h2`; topo de página é `h1`."
+          "descricao": "Elemento renderizado. Título de dobra é `h2`; topo de página é `h1`.",
+          "valores": [
+            "h1",
+            "h2",
+            "h3",
+            "p",
+            "div"
+          ]
         },
         {
           "nome": "immediate",
@@ -4355,7 +4561,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "lines",
-          "descricao": "O que se quebra. `lines` é a revelação de título; `words` serve a frases\ncurtas onde a linha inteira subindo parece pesada demais."
+          "descricao": "O que se quebra. `lines` é a revelação de título; `words` serve a frases\ncurtas onde a linha inteira subindo parece pesada demais.",
+          "valores": [
+            "lines",
+            "words"
+          ]
         },
         {
           "nome": "stagger",
@@ -4376,7 +4586,13 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "mask",
-          "descricao": "Qual revelação. Ver a tabela no cabeçalho."
+          "descricao": "Qual revelação. Ver a tabela no cabeçalho.",
+          "valores": [
+            "mask",
+            "blur",
+            "curtain",
+            "rise"
+          ]
         }
       ]
     }
@@ -4391,7 +4607,13 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "div",
-          "descricao": "Elemento raiz. `a` quando o card inteiro leva a algum lugar."
+          "descricao": "Elemento raiz. `a` quando o card inteiro leva a algum lugar.",
+          "valores": [
+            "div",
+            "a",
+            "article",
+            "li"
+          ]
         },
         {
           "nome": "flat",
@@ -4554,7 +4776,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "solid",
-          "descricao": "Sem `--brand`: superfície de contorno, pro CTA secundário da mesma dobra."
+          "descricao": "Sem `--brand`: superfície de contorno, pro CTA secundário da mesma dobra.",
+          "valores": [
+            "solid",
+            "outline"
+          ]
         }
       ]
     }
@@ -4635,7 +4861,12 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "right",
-          "descricao": "De onde o painel entra. `right` é o padrão do polegar destro."
+          "descricao": "De onde o painel entra. `right` é o padrão do polegar destro.",
+          "valores": [
+            "right",
+            "left",
+            "top"
+          ]
         }
       ]
     },
@@ -4855,7 +5086,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "left",
-          "descricao": "De que lado a arte gruda. `left` é o padrão de leitura ocidental."
+          "descricao": "De que lado a arte gruda. `left` é o padrão de leitura ocidental.",
+          "valores": [
+            "left",
+            "right"
+          ]
         },
         {
           "nome": "stepHeight",
@@ -4898,7 +5133,13 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "bottom",
-          "descricao": "De onde a moldura abre."
+          "descricao": "De onde a moldura abre.",
+          "valores": [
+            "bottom",
+            "top",
+            "left",
+            "right"
+          ]
         },
         {
           "nome": "parallax",
@@ -4955,7 +5196,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "h2",
-          "descricao": null
+          "descricao": null,
+          "valores": [
+            "h2",
+            "h3"
+          ]
         },
         {
           "nome": "caption",
@@ -5004,7 +5249,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "left",
-          "descricao": "De que lado fica a FOTO. Dentro de `PhotoSplitStack` é escrito automático."
+          "descricao": "De que lado fica a FOTO. Dentro de `PhotoSplitStack` é escrito automático.",
+          "valores": [
+            "left",
+            "right"
+          ]
         },
         {
           "nome": "weight",
@@ -5031,7 +5280,11 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "left",
-          "descricao": "De que lado começa a primeira foto. As seguintes alternam sozinhas."
+          "descricao": "De que lado começa a primeira foto. As seguintes alternam sozinhas.",
+          "valores": [
+            "left",
+            "right"
+          ]
         }
       ]
     }
@@ -5132,6 +5385,380 @@
           "obrigatoria": false,
           "padrao": "3/2",
           "descricao": "Proporção da caixa, formato CSS. Obrigatória na prática: ver decisão 5."
+        }
+      ]
+    }
+  ],
+  "book-3d": [
+    {
+      "nome": "tilt",
+      "descricao": "Ponteiro normalizado (−1..1, origem no centro da peça) → rotação do grupo.\n\n`px` INVERTE: cursor à direita puxa a lombada pra fora, como se o dedo\ngirasse o livro pelo corte. O contrário — cursor à direita, lombada some — lê\ncomo o objeto FUGINDO do cursor, e foi o primeiro descarte da bancada.\n\n`py` não inverte, e é o mesmo gesto: cursor na base empurra o pé e o topo vem\nna direção do olho, mostrando mais cabeça. O objeto obedece ao dedo nos dois\neixos.",
+      "props": []
+    },
+    {
+      "nome": "damp",
+      "descricao": "Amortecimento independente de taxa de quadros.\n\n`atual + (alvo − atual) * k` — o lerp que todo mundo escreve — depende do\nintervalo entre quadros: a 144 Hz o objeto chega quase instantâneo e a 30 Hz\narrasta. Duas máquinas, duas animações diferentes. A exponencial mata isso:\n`k` vira \"quanto da distância por SEGUNDO\", e o resultado é o mesmo em\nqualquer monitor.\n\nO teto de `dt` existe porque aba em segundo plano devolve um delta gigante no\nprimeiro quadro de volta. Sem ele o livro TELEPORTA, e teleporte lê como\nfalha de render.",
+      "props": []
+    },
+    {
+      "nome": "RATIO",
+      "descricao": "Proporção de livro comercial (≈ 6×9 pol). Não é escolha estética: é o que o\nolho reconhece como livro em vez de caderno ou catálogo.",
+      "props": []
+    },
+    {
+      "nome": "BOARD",
+      "descricao": "Cartão da capa dura. É ele que cria o degrau na borda — ver `SQUARE`.",
+      "props": []
+    },
+    {
+      "nome": "SQUARE",
+      "descricao": "A \"praça\": o quanto a capa avança além do miolo nas três bordas livres.\n\nÉ o detalhe que separa livro de caixa texturizada. Numa capa dura real o\ncartão sobra ~3 mm além do bloco de páginas, e é essa sombra fina em volta do\ncorte que o olho lê como \"isso abre\". Sem ela, qualquer render vira\nparalelepípedo com uma foto colada.",
+      "props": []
+    },
+    {
+      "nome": "REST_Y",
+      "descricao": "Repouso: três-quartos, lombada à vista.\n\nLivro de frente é a capa achatada — é a imagem 2D que já existe, e pagar\nWebGL pra chegar nela seria peso sem receita. O ângulo existe pra mostrar a\nÚNICA coisa que a versão 2D não mostra: que o objeto tem lado.\n\n`y` positivo gira a lombada (que fica em −X) na direção do observador.",
+      "props": []
+    },
+    {
+      "nome": "REST_X",
+      "descricao": "Inclinação de repouso no eixo X — quem revela a CABEÇA do miolo.\n\n┌─ O SINAL, QUE JÁ FOI ERRADO DUAS VEZES ───────────────────────────────────┐\n│ Uma face só é visível se o olho estiver do lado de fora do plano dela:    │\n│ `n · (olho − p) > 0`. Pra tampa de cima, com a câmera abaixo do topo do   │\n│ livro (y=0.5), isso dá NEGATIVO — não se vê a cabeça de jeito nenhum,     │\n│ incline-se o livro pra onde for.                                          │\n│                                                                            │\n│ E `x` negativo, que parece \"baixar o topo\", faz o contrário do que o nome │\n│ sugere: joga a normal do topo pra −z, ou seja, pra LONGE de quem olha.    │\n│                                                                            │\n│ Quem resolve é a CÂMERA subir acima de y=0.5. Com ela lá em cima, um `x`  │\n│ levemente POSITIVO inclina o topo na direção do olho e abre a cabeça — é  │\n│ o gesto de tombar uma caixa pra ver a tampa.                              │\n└────────────────────────────────────────────────────────────────────────────┘\n\n0.06 é pouco de propósito: acima disso o livro lê como tombando pra frente.",
+      "props": []
+    },
+    {
+      "nome": "STIFFNESS",
+      "descricao": "Rigidez do retorno. Rápido o bastante pra parecer resposta, lento o bastante\npra ter peso — livro não é botão.",
+      "props": []
+    },
+    {
+      "nome": "CAMERA",
+      "descricao": "Câmera de foto de produto.\n\n`fov` longo (24) porque grande-angular deforma a capa e denuncia o render —\n24 mm equivalente é onde foto de produto vive. A ALTURA não é gosto: o topo\ndo livro está em y=0.5 e uma face só aparece pra quem está fora do plano\ndela, então abaixo de 0.5 a cabeça do miolo não aparece em ângulo nenhum e a\npraça — metade da razão de a malha ter quatro peças — nunca chega à tela.",
+      "props": []
+    },
+    {
+      "nome": "resolveRgb",
+      "descricao": "Qualquer expressão de cor do CSS → rgb, resolvida pelo navegador.\n\nO elemento fica FORA do fluxo e é removido no mesmo tique. `getComputedStyle`\nforça layout, então isto é caro num laço — e é por isso que só roda uma vez\npor livro, na montagem, nunca por quadro.\n\nDevolve `null` fora do navegador e quando o token não existe: quem chama\ndecide o que fazer, e a decisão nunca é \"usa este hex aqui\".",
+      "props": []
+    },
+    {
+      "nome": "token",
+      "descricao": "Token do documento, ou `''` se ele não existir.",
+      "props": []
+    },
+    {
+      "nome": "rgbToHsl",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "b",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "g",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "r",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "hslToCss",
+      "descricao": "Sempre `rgb(…)`, nunca hex — o portão de cor do registry lê o CÓDIGO.",
+      "props": [
+        {
+          "nome": "h",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "l",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "s",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "bookPalette",
+      "descricao": "A palheta inteira, a partir da semente do item e — se houver — do matiz da\narte da capa.\n\nSem arte, o matiz vem da MESMA rampa que o `cover-art` usa pra desenhar a\ncapa 2D do mesmo item. Não é economia: é o que faz o livro e o card do\ncatálogo serem reconhecíveis como a mesma coisa.",
+      "props": []
+    },
+    {
+      "nome": "characterColor",
+      "descricao": "A cor de caráter de uma imagem, medida da própria textura já carregada.\n\nExiste pra que um item cadastrado amanhã já saia com a lombada na cor da arte,\nsem ninguém rodar nada. Uma palheta curada por gente continua ganhando quando\nexiste (é o parâmetro `artColor`) — ela sabe o que é ASSUNTO e o que é fundo,\ne isto aqui não sabe. Isto é o piso, não o teto.\n\nA média é CIRCULAR: matiz é ângulo, e a média aritmética de 350° e 10° dá\n180° — ciano, uma cor que não existe em nenhum dos dois pixels. Somar vetores\nunitários e tirar o `atan2` no fim é o único jeito que respeita a roda.\n\nO peso é `saturação × proximidade do meio-tom`: pixel cinza não tem matiz pra\nopinar, e branco estourado ou preto de sombra também não.",
+      "props": []
+    },
+    {
+      "nome": "rgbToCss",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "b",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "g",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "r",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "ROUGH_COVER",
+      "descricao": "Alto = pano e papel-cartão, não plástico. O erro clássico de render de livro\né deixar isto baixo e o objeto virar brinquedo lustroso.",
+      "props": []
+    },
+    {
+      "nome": "paintSpine",
+      "descricao": "A face que justifica o 3D existir.\n\nVai numa meia-cilíndrica, então a UV corre em volta da curva (u = largura da\nlombada) e ao longo da altura (v). O texto roda 90° pra correr no v: livro\nocidental lê de cima pra baixo, com a cabeça inclinada pra direita.\n\nA LARGURA da textura é o ARCO, não a largura da capa. Foi `width / height`\n(0.68) e o certo é `π·thickness/2 / height` — num livro grosso, 0.27. Assim a\ntextura saía duas vezes e meia mais larga do que a superfície onde pousa, e a\ncurva espremia tudo: o título ficava alto e fino, como letra esticada na\nvertical. É o erro que mais denuncia mapeamento em superfície curva, porque o\nolho conhece a proporção da letra e vê a distorção sem saber nomeá-la.\n\nAs duas sombras nas pontas do u são a CHARNEIRA — o vinco onde a capa dobra.\nSem elas a curva lê como tubo colado no livro; com elas, como lombada.",
+      "props": []
+    },
+    {
+      "nome": "paintBack",
+      "descricao": "Nunca fica de frente — o curso do hover para antes. Existe pra que a borda\nque se vê de três-quartos não seja um retângulo chapado.",
+      "props": []
+    },
+    {
+      "nome": "paintBlock",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "back",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Fundo da contracapa."
+        },
+        {
+          "nome": "board",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Cartão da capa — o degrau que aparece na praça e na quina."
+        },
+        {
+          "nome": "cover",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Topo da lombada e da contracapa."
+        },
+        {
+          "nome": "coverDark",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Pé da lombada, e o par escuro de todo gradiente."
+        },
+        {
+          "nome": "paper",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Corte do miolo."
+        },
+        {
+          "nome": "studio",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Fundo do estúdio virtual. Não é o fundo da PÁGINA (o canvas é\ntransparente): é o que o ambiente reflete na capa."
+        }
+      ]
+    },
+    {
+      "nome": "paintCover",
+      "descricao": "Degradação honesta: sem arte o livro não vira caixa cinza nem imagem gerada —\nvira a mesma capa desenhada que o `cover-art` mostra na prateleira, agora com\nespessura. Mesmo hash, então o item é reconhecível nas duas superfícies.",
+      "props": []
+    },
+    {
+      "nome": "bookFaces",
+      "descricao": "Tudo que o livro precisa, num lugar só.",
+      "props": []
+    },
+    {
+      "nome": "bookstage",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "seed",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Chave ESTÁVEL: slug > id > título. Título editado mudaria o objeto."
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "art",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A capa. Sem ela, o livro sai com a capa desenhada — nunca caixa cinza."
+        },
+        {
+          "nome": "artColor",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Cor curada da arte, se houver. Ganha da amostragem automática — uma pessoa\n(ou um extrator com noção de papel) sabe que o ocre da pedra é o assunto e\no céu é o fundo; uma média não sabe."
+        },
+        {
+          "nome": "mark",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Marca d'água na contracapa. Uma linha curta, tipo o selo da editora."
+        },
+        {
+          "nome": "onReady",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado no primeiro quadro em que o livro existe POR INTEIRO."
+        },
+        {
+          "nome": "pages",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Manda na espessura. Sem número, usa o livro de estante médio."
+        }
+      ]
+    },
+    {
+      "nome": "Book3D",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "seed",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Chave ESTÁVEL: slug > id > título. Título editado mudaria o objeto."
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "art",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A capa. Sem ela, o livro sai com a capa desenhada — nunca caixa cinza."
+        },
+        {
+          "nome": "artColor",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Cor curada da arte, se houver. Ganha da amostragem automática — uma pessoa\n(ou um extrator com noção de papel) sabe que o ocre da pedra é o assunto e\no céu é o fundo; uma média não sabe."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "mark",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Marca d'água na contracapa. Uma linha curta, tipo o selo da editora."
+        },
+        {
+          "nome": "onReady",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado no primeiro quadro em que o livro existe POR INTEIRO."
+        },
+        {
+          "nome": "pages",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Manda na espessura. Sem número, usa o livro de estante médio."
+        }
+      ]
+    }
+  ],
+  "book-shelf": [
+    {
+      "nome": "BookShelf",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "ShelfItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "columns",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
+          "descricao": "Classes de grade. O default é uma estante confortável em três larguras."
+        },
+        {
+          "nome": "empty",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O que mostrar quando não há nada. Estante vazia sem isto é uma área morta\nque parece carregamento travado."
         }
       ]
     }

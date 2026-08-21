@@ -17,6 +17,7 @@ import * as React from "react";
 
 import { ProfileForm, type ProfileValue } from "../../../registry/visant/ui/profile-form";
 import { midia } from "../media";
+import type { DemoProps } from "../catalog";
 
 const INICIAL: ProfileValue = {
   name: "Marina Duarte",
@@ -24,7 +25,7 @@ const INICIAL: ProfileValue = {
   avatarUrl: midia("retrato", 1)?.src ?? null,
 };
 
-export default function ProfileFormDemo() {
+export default function ProfileFormDemo({ props }: DemoProps) {
   const [valor, setValor] = React.useState<ProfileValue>(INICIAL);
   const [verificado, setVerificado] = React.useState(true);
 
@@ -49,6 +50,7 @@ export default function ProfileFormDemo() {
             avatarUrl: avatarFile ? URL.createObjectURL(avatarFile) : proximo.avatarUrl,
           });
         }}
+        {...props}
       />
     </div>
   );

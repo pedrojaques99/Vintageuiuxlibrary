@@ -1,0 +1,158 @@
+{
+  "auth-button": {
+    "hint": "signed-in"
+  },
+  "assignee-stack": {
+    "max": 4,
+    "size": "md"
+  },
+  "sticky-filterbar": {
+    "headerSelector": "[data-demo-header]",
+    "className": "px-4"
+  },
+  "measure-picker": {
+    "min": 130,
+    "max": 200,
+    "label": "Altura do jogador"
+  },
+  "side-nav": {
+    "storageKey": false
+  },
+  "logo-wall": {
+    "heading": "Confiam na gente",
+    "bleed": 12,
+    "speed": 64
+  },
+  "rail": {
+    "itemWidth": 186,
+    "gap": 16,
+    "label": "Coleção outono",
+    "heading": "Coleção outono",
+    "bleed": 24,
+    "fade": true,
+    "remainder": true,
+    "progress": true
+  },
+  "plate": {
+    "ratio": "4/5",
+    "inset": 16,
+    "surface": "photo",
+    "className": "rounded-[var(--r-control,0.5rem)]"
+  },
+  "store-status": {
+    "locale": "pt-BR"
+  },
+  "masonry-gallery": {
+    "cols": 5,
+    "gap": 10
+  },
+  "grid-dots": {
+    "opacity": 0.11,
+    "spacing": 18,
+    "dotSize": 1.4,
+    "spotlight": 170
+  },
+  "drop-overlay": {
+    "message": "Solte os arquivos",
+    "doneMessage": "Recebido"
+  },
+  "vintage-meter": {
+    "label": "PROGRAM"
+  },
+  "vintage-slider": {
+    "dense": true
+  },
+  "vintage-parametric-eq": {
+    "width": 500,
+    "height": 210
+  },
+  "vintage-oscilloscope": {
+    "width": 250,
+    "height": 132
+  },
+  "vintage-soundboard-pad": {
+    "size": 72
+  },
+  "vintage-xy-pad": {
+    "size": 160,
+    "labelX": "FREQ",
+    "labelY": "GLOW",
+    "color": "var(--vintage-accent)"
+  },
+  "vintage-tv-frame": {
+    "title": "VISANT TV",
+    "width": 300,
+    "showTimecode": "00:12:34"
+  },
+  "showcase-card": {
+    "className": "mx-auto w-full max-w-[320px]",
+    "href": "#/c/showcase-card",
+    "title": "Identidade que quer dizer alguma coisa"
+  },
+  "step-cards": {
+    "className": "w-full",
+    "columns": 3,
+    "visualHeight": 220
+  },
+  "quote-block": {
+    "tone": "muted",
+    "quote": "Chegaram com a marca já resolvida no primeiro dia. A gente parou de discutir cor e voltou a discutir produto.",
+    "author": "Marina Sales",
+    "role": "Head de Produto",
+    "company": "Aloro",
+    "source": "https://exemplo.com/cases/aloro"
+  },
+  "count-up": {
+    "className": "text-[2rem] font-semibold leading-none tracking-tight"
+  },
+  "fold-motion": {
+    "as": "div",
+    "className": "flex h-full flex-col justify-between gap-2 rounded-[var(--r-surface,0.875rem)] border border-border p-3"
+  },
+  "line-reveal": {
+    "as": "h3",
+    "immediate": true,
+    "className": "text-[1.35rem] font-medium leading-[1.2]"
+  },
+  "gleam": {
+    "className": "w-full max-w-[300px] shrink-0 overflow-hidden bg-[color-mix(in_oklch,var(--foreground)_5%,var(--card))] p-3"
+  },
+  "photo-split": {
+    "space": 3
+  },
+  "photo-flip": {
+    "ratio": "4/5",
+    "className": "grid w-full max-w-[1240px] grid-cols-6 gap-3"
+  },
+  "photo-compare": {
+    "className": "mx-auto w-full max-w-[620px] rounded-[var(--r-surface,0.875rem)] border border-border",
+    "ratio": "3/2",
+    "beforeLabel": "antes",
+    "afterLabel": "depois"
+  },
+  "reels-rail": {
+    "itemWidth": 230,
+    "heading": "Reels",
+    "hint": "mural contínuo"
+  },
+  "book-shelf": {
+    "columns": "grid-cols-2 sm:grid-cols-4"
+  },
+  "spine-card": {
+    "href": "#",
+    "action": "ver →",
+    "className": "w-[190px]"
+  },
+  "empty-state": {
+    "className": "h-[200px] w-full"
+  },
+  "skeleton-rail": {
+    "ratio": "4 / 5",
+    "label": "Carregando a coleção"
+  },
+  "pinned-scene": {
+    "stepHeight": "520px",
+    "top": "24px",
+    "rail": false
+  }
+}

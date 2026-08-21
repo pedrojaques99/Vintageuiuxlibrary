@@ -25,6 +25,7 @@ import * as React from "react";
 
 import { Chip } from "../../../registry/visant/ui/chip";
 import { CountUp } from "../../../registry/visant/ui/count-up";
+import type { DemoProps } from "../catalog";
 
 const NUMEROS = [
   { valor: "R$450k", rotulo: "faturado", delay: 0 },
@@ -32,7 +33,7 @@ const NUMEROS = [
   { valor: "98%", rotulo: "renovação", delay: 240 },
 ];
 
-export default function CountUpDemo() {
+export default function CountUpDemo({ props }: DemoProps) {
   const [n, setN] = React.useState(0);
 
   return (
@@ -46,6 +47,7 @@ export default function CountUpDemo() {
             <CountUp
               className="text-[2rem] font-semibold leading-none tracking-tight"
               delay={item.delay}
+              {...props}
             >
               {item.valor}
             </CountUp>

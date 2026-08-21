@@ -17,6 +17,7 @@ import * as React from "react";
 
 import { Chip } from "../../../registry/visant/ui/chip";
 import { TurbulenceField } from "../../../registry/visant/ui/turbulence-field";
+import type { DemoProps } from "../catalog";
 
 const PRESETS = [
   { id: "névoa", intensity: 0.24, scale: 0.55, speed: 20 },
@@ -24,14 +25,14 @@ const PRESETS = [
   { id: "grão", intensity: 0.3, scale: 3.4, speed: 26 },
 ] as const;
 
-export default function TurbulenceFieldDemo() {
+export default function TurbulenceFieldDemo({ props }: DemoProps) {
   const [i, setI] = React.useState(1);
   const p = PRESETS[i];
 
   return (
     <div className="flex h-full w-full flex-col gap-3">
       <div className="relative flex-1 overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card">
-        <TurbulenceField intensity={p.intensity} scale={p.scale} speed={p.speed} />
+        <TurbulenceField intensity={p.intensity} scale={p.scale} speed={p.speed} {...props} />
         <div className="relative flex h-full flex-col items-center justify-center gap-2">
           <span className="text-[2.4rem] font-semibold leading-none tracking-[-0.04em]">
             Visant<sup className="text-[0.9rem] align-super">®</sup>

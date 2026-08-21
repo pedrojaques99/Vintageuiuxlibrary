@@ -33,6 +33,7 @@ import * as React from "react";
 import { Media } from "../media";
 import { useStageActive } from "../stage";
 import { StepCards } from "../../../registry/visant/blocks/step-cards";
+import type { DemoProps } from "../catalog";
 
 const PASSOS = [
   {
@@ -55,7 +56,7 @@ const PASSOS = [
   },
 ];
 
-export default function StepCardsDemo() {
+export default function StepCardsDemo({ props }: DemoProps) {
   const ativo = useStageActive();
   const [i, setI] = React.useState(0);
 
@@ -82,6 +83,7 @@ export default function StepCardsDemo() {
           // desalinhados pela proporção do arquivo, não pelo componente.
           visual: <Media papel={p.papel} indice={p.indice} ratio="16/10" className="w-full" />,
         }))}
+        {...props}
       />
     </div>
   );

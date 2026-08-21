@@ -55,6 +55,7 @@ import * as React from "react";
 import { Chip } from "../../../registry/visant/ui/chip";
 import { Fold, FoldPart, type FoldVariant } from "../../../registry/visant/lib/fold-motion";
 import { useStageActive } from "../stage";
+import type { DemoProps } from "../catalog";
 
 const MARCA = "var(--brand, currentColor)";
 
@@ -160,7 +161,7 @@ const usaMovimento = () =>
   typeof window === "undefined" ||
   !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-export default function FoldMotionDemo() {
+export default function FoldMotionDemo({ props }: DemoProps) {
   const ativo = useStageActive();
   const [modo, setModo] = React.useState<"juntas" | "sequencia">("juntas");
   const [rodada, setRodada] = React.useState(0);
@@ -232,6 +233,7 @@ export default function FoldMotionDemo() {
                 variant={v}
                 as="div"
                 className="flex h-full flex-col justify-between gap-2 rounded-[var(--r-surface,0.875rem)] border border-border p-3"
+                {...props}
               >
                 <FoldPart className="flex h-full flex-col justify-between gap-2">
                   <Diagrama v={v} />

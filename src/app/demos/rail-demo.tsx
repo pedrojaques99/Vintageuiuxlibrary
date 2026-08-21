@@ -21,6 +21,7 @@ import * as React from "react";
 
 import { Rail } from "../../../registry/visant/ui/rail";
 import { Media, type Papel } from "../media";
+import type { DemoProps } from "../catalog";
 
 const PECAS = [
   { nome: "Cubo alumínio", preco: "R$ 249", papel: "cena", indice: 0 },
@@ -37,7 +38,7 @@ const PECAS = [
   { nome: "Cartão", preco: "R$ 36", papel: "cena", indice: 7 },
 ] satisfies Array<{ nome: string; preco: string; papel: Papel; indice: number }>;
 
-export default function RailDemo() {
+export default function RailDemo({ props }: DemoProps) {
   return (
     <div className="flex h-full w-full flex-col justify-center px-6">
       <Rail
@@ -52,6 +53,7 @@ export default function RailDemo() {
         fade
         remainder
         progress
+        {...props}
       >
         {PECAS.map((p) => (
           <a

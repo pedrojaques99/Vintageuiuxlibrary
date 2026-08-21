@@ -21,7 +21,10 @@
 import * as React from "react";
 import { Moon, Sun, Rows3, Rows4 } from "lucide-react";
 import { BrandThemeProvider } from "@/lib/brand-theme";
-import { Solo, fundoDoSolo } from "./Solo";
+import { Solo, fundoDoSolo, propsDaQuery } from "./Solo";
+import { Busca, BotaoDeBusca, useAtalhoDeBusca } from "./busca";
+import { Sidebar } from "./sidebar";
+import { ComponentFocus } from "./ComponentFocus";
 import { BrandSelector } from "../../registry/visant/ui/brand-selector";
 import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import { Gallery } from "./Gallery";
@@ -235,6 +238,49 @@ function Shell() {
     [navigate],
   );
 
+  /*
+   * A busca abre em qualquer seção e entrega na ficha da peça.
+   *
+   * Ela não muda a fatia aberta atrás: quem estava na família "marca" e buscou
+   * um item de "trabalho" volta pra "marca" ao fechar. A busca é um atalho pra
+   * uma peça, não uma mudança de lugar.
+   */
+  /*
+   * A vizinhança da peça em foco: a família dela, na ordem do catálogo.
+   *
+   * É o que dá sentido a `←`/`→` e ao contador "13/20" — e é derivado da peça,
+   * então o mesmo endereço percorre a mesma lista pra qualquer pessoa.
+   */
+  const pecaEmFoco = React.useMemo(
+    () => (route.focus ? (CATALOG.find((i) => i.name === route.focus) ?? null) : null),
+    [route.focus],
+  );
+  const irmas = React.useMemo(
+    () => (pecaEmFoco ? CATALOG.filter((i) => i.family === pecaEmFoco.family) : []),
+    [pecaEmFoco],
+  );
+  const indiceEmFoco = pecaEmFoco ? irmas.findIndex((i) => i.name === pecaEmFoco.name) : 0;
+
+  const andarNaFamilia = React.useCallback(
+    (passo: number) => {
+      if (!irmas.length) return;
+      const alvo = irmas[(indiceEmFoco + passo + irmas.length) % irmas.length];
+      setFocus(alvo.name);
+    },
+    [irmas, indiceEmFoco, setFocus],
+  );
+
+  const [buscando, setBuscando] = React.useState(false);
+  const abrirBusca = React.useCallback(() => setBuscando(true), []);
+  useAtalhoDeBusca(abrirBusca);
+  const escolherNaBusca = React.useCallback(
+    (name: string) => {
+      setBuscando(false);
+      setFocus(name);
+    },
+    [setFocus],
+  );
+
   return (
     <div
       className="min-h-screen bg-background text-foreground"
@@ -254,7 +300,10 @@ function Shell() {
             <span className="font-mono text-apoio tracking-tight">@visant/ui</span>
           </button>
 
-          <div className="ml-2 hidden sm:block">
+          {/* As abas ficam pro intervalo em que a sidebar ainda não cabe:
+              acima de `lg` quem diz onde a pessoa está é a coluna da esquerda,
+              e ter as duas coisas seria o mesmo controle desenhado duas vezes. */}
+          <div className="ml-2 hidden sm:block lg:hidden">
             <SegmentedControl
               value={route.view}
               onChange={setView}
@@ -264,6 +313,7 @@ function Shell() {
           </div>
 
           <div className="ml-auto flex items-center gap-2">
+            <BotaoDeBusca onClick={abrirBusca} />
             {/* A densidade sai no celular: lá a grade é de uma coluna, onde
                 densidade quase não muda nada — e o espaço que ela ocupava é o
                 que faltava para o botão de entrar caber sem estourar a linha. */}
@@ -300,6 +350,17 @@ function Shell() {
         </div>
       </header>
 
+      <div className="flex items-start">
+        <Sidebar
+          view={route.view}
+          familia={route.familia}
+          focus={route.focus}
+          onView={setView}
+          onFamilia={setFamilia}
+          onFocus={setFocus}
+        />
+
+        <div className="min-w-0 flex-1">
       {route.view === "kits" && (
         <KitRoom
           slug={route.kit ?? KITS[0].slug}
@@ -309,20 +370,49 @@ function Shell() {
         />
       )}
 
-      {route.view === "catalogo" && (
-        <Gallery
-          focus={route.focus}
-          onFocus={setFocus}
-          familia={route.familia}
-          onFamilia={setFamilia}
-        />
-      )}
+      {/*
+       * A ficha é uma ROTA, não um estado por cima da grade.
+       *
+       * `/c/<item>` renderiza a ficha no lugar do catálogo, dentro da mesma
+       * casca — mesma sidebar, mesmo cabeçalho. Enquanto ela era um diálogo, a
+       * grade continuava montada atrás do overlay: oitenta demos vivas gastando
+       * CPU embaixo de uma peça que ninguém estava vendo.
+       *
+       * A lista que as setas percorrem é a FAMÍLIA da peça, e não o resultado do
+       * filtro que estava na grade. Filtro é estado da outra página; herdá-lo
+       * faria `→` levar a lugares diferentes dependendo de como a pessoa chegou,
+       * e o mesmo endereço tem de significar a mesma coisa pra quem colou o link
+       * no chat.
+       */}
+      {route.view === "catalogo" &&
+        (route.focus && pecaEmFoco ? (
+          <ComponentFocus
+            key={pecaEmFoco.name}
+            item={pecaEmFoco}
+            index={indiceEmFoco}
+            total={irmas.length}
+            onClose={() => navigate({ view: "catalogo", focus: null, kit: null, familia: route.familia })}
+            onPrev={() => andarNaFamilia(-1)}
+            onNext={() => andarNaFamilia(1)}
+          />
+        ) : (
+          <Gallery
+            focus={null}
+            onFocus={setFocus}
+            familia={route.familia}
+            onFamilia={setFamilia}
+          />
+        ))}
 
       {/* A espera é a altura de uma tela, não um "carregando…": trocar de aba não
           deve fazer a página encolher e voltar a crescer. */}
       <React.Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
         {route.view === "marca" && <BrandStudioBody />}
       </React.Suspense>
+        </div>
+      </div>
+
+      <Busca aberto={buscando} onAberto={setBuscando} onEscolher={escolherNaBusca} />
     </div>
   );
 }
@@ -361,7 +451,7 @@ function Raiz() {
         className={fundo ? "text-foreground" : "bg-background text-foreground"}
         style={{ fontFamily: "var(--font-sans, ui-sans-serif, system-ui)", background: fundo }}
       >
-        <Solo name={nome} />
+        <Solo name={nome} props={propsDaQuery(params)} />
       </div>
     );
   }

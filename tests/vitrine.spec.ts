@@ -23,6 +23,27 @@ const CARD = "article";
 const PECA = "[data-card-index]";
 
 /**
+ * A peça, pelo NOME do registry.
+ *
+ * O card mostra o título ("Logo Wall"); o nome ("logo-wall") é o que se digita
+ * no `add`. Procurar pelo texto visível deixou quinze testes vermelhos no dia
+ * em que o card trocou um pelo outro, sem nada ter quebrado. Âncora é atributo.
+ */
+const peca = (nome: string) => `article[data-name="${nome}"]`;
+
+/** Palco com peça VIVA montada — foto não tem. */
+const PALCO = "[data-palco]";
+
+/**
+ * A ficha de um item.
+ *
+ * Era um `dialog` do Radix e virou PÁGINA quando o site ganhou sidebar — duas
+ * listas do mesmo acervo, uma escondendo a outra, era desenho repetido. O papel
+ * mudou de `dialog` para `article`; o conteúdo, não.
+ */
+const ficha = (page: Page) => page.locator("[data-ficha]");
+
+/**
  * O catálogo virou duas rotas, e os testes seguiram.
  *
  * `/catalogo` é o índice das seis categorias — sem demo montada. As peças vivas
@@ -42,43 +63,68 @@ const DENTRO_DA_FATIA = "pinned-scene";
 
 async function esperarGrade(page: Page) {
   await page.waitForSelector(CARD);
-  // As demos montam ao entrar na tela; sem isto, medir altura pega o esqueleto.
+  /*
+   * Rede parada antes de medir.
+   *
+   * Os 400ms sozinhos mediam uma página no meio do carregamento: as capturas de
+   * `/shots/` ainda chegando, a fonte ainda trocando. Com a máquina livre dava
+   * tempo; com três workers disputando CPU, não — e o teste de rolagem
+   * horizontal piscava vermelho uma rodada a cada duas, sempre com um culpado
+   * diferente. Teste que pisca ensina o time a ignorar vermelho, que é pior do
+   * que não ter o teste.
+   *
+   * `networkidle` espera o que de fato muda o layout aqui. Os 400ms continuam
+   * depois dele, pro que monta em JS depois da última resposta.
+   */
+  await page.waitForLoadState("networkidle").catch(() => {});
   await page.waitForTimeout(400);
 }
 
 test.describe("catálogo — índice de categorias", () => {
   /*
-   * A razão de o índice existir.
+   * A razão de o índice mostrar FOTO.
    *
-   * Com as 81 entradas numa página só o documento fechava em 26.253px e montava
-   * demo enquanto a pessoa ainda estava decidindo o que queria ver. O índice
-   * escolhe; a fatia mostra. Palco montado aqui é o defeito voltando.
+   * Com as 81 demos vivas numa página só o documento fechava em 26.253px e uma
+   * dúzia de relógios competia pelo mesmo quadro. O índice voltou a listar o
+   * acervo inteiro — mas em captura estática, e só a peça sob o cursor acorda.
+   * Palco montado aqui, em repouso, é o defeito voltando.
    */
-  test("o índice não monta demo nenhuma", async ({ page }) => {
+  test("o índice lista o acervo inteiro sem montar peça nenhuma", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(INDICE);
     await page.waitForTimeout(600);
 
-    expect(await page.locator(CARD).count(), "palco montado no índice").toBe(0);
-    expect(await page.locator(PECA).count(), "peça listada no índice").toBe(0);
+    expect(await page.locator(PECA).count(), "o acervo não foi listado").toBeGreaterThan(60);
+    expect(await page.locator(PALCO).count(), "peça montada em repouso").toBe(0);
   });
 
-  test("o card de categoria leva à fatia certa", async ({ page }) => {
+  test("o hover acorda a peça — uma, e só ela", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(INDICE);
+    await page.waitForTimeout(600);
+
+    await page.locator(peca("logo-wall")).scrollIntoViewIfNeeded();
+    await page.locator(peca("logo-wall")).hover();
+    // `ATRASO_HOVER` (140ms) e a montagem.
+    await page.waitForTimeout(700);
+
+    expect(await page.locator(PALCO).count(), "o hover não acordou a peça").toBe(1);
+    await expect(page.locator(peca("logo-wall")).locator(PALCO)).toHaveCount(1);
+  });
+
+  test("a sidebar leva à fatia certa", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(INDICE);
     await page.waitForTimeout(400);
 
-    // A CAPA, não o chip: os dois carregam o mesmo rótulo (`FAMILIES`, em
-    // catalog.tsx) e o chip filtra dentro da rota, enquanto a capa navega. Chip
-    // tem `aria-pressed`; a capa, não — é o que separa os dois aqui.
     await page
-      .locator("button:not([aria-pressed])", { hasText: "Motion e estado" })
-      .first()
+      .getByRole("navigation", { name: "Índice da library" })
+      .getByRole("button", { name: /Motion e estado/ })
       .click();
     await page.waitForTimeout(500);
 
     expect(new URL(page.url()).pathname).toBe("/catalogo/motion");
-    await expect(page.locator(CARD).filter({ hasText: DENTRO_DA_FATIA })).toHaveCount(1);
+    await expect(page.locator(peca(DENTRO_DA_FATIA))).toHaveCount(1);
   });
 
   test("a busca acha por uso, não só por nome", async ({ page }) => {
@@ -89,7 +135,7 @@ test.describe("catálogo — índice de categorias", () => {
     await page.waitForTimeout(300);
     // `scrub-input` não tem "arrastar" no nome: casa pela descrição/tag. E a
     // busca atravessa as famílias — ela é do catálogo inteiro, não da fatia.
-    await expect(page.locator(CARD).filter({ hasText: "scrub-input" })).toHaveCount(1);
+    await expect(page.locator(peca("scrub-input"))).toHaveCount(1);
   });
 
   test("o console fica limpo", async ({ page }) => {
@@ -116,18 +162,21 @@ test.describe("catálogo — fatia por família", () => {
     await page.goto(FATIA);
     await esperarGrade(page);
 
-    await expect(page.locator(CARD).filter({ hasText: DENTRO_DA_FATIA })).toHaveCount(1);
-    await expect(page.locator(CARD).filter({ hasText: FORA_DA_FATIA })).toHaveCount(0);
+    await expect(page.locator(peca(DENTRO_DA_FATIA))).toHaveCount(1);
+    await expect(page.locator(peca(FORA_DA_FATIA))).toHaveCount(0);
 
     /*
-     * O chip da categoria é a promessa; as peças na tela são a entrega.
+     * A contagem da sidebar é a promessa; as peças na tela são a entrega.
      *
-     * Dentro da fatia o chip de categoria navega em vez de filtrar, e o "Todos"
-     * é a volta ao índice — por isso a conta é feita no chip da própria família,
-     * e não no "Todos", que ali anuncia o catálogo inteiro de propósito.
+     * Antes a conta saía do chip de categoria da barra de filtro. Acima de `lg`
+     * esses chips somem — a coluna da esquerda passou a ser o controle de
+     * categoria, e ter os dois ensinava a pessoa a não confiar em nenhum. A
+     * promessa mudou de lugar; a checagem seguiu.
      */
-    const chip = page.locator("[aria-pressed]", { hasText: /^Motion e estado\s*\d+$/ });
-    const prometido = Number((await chip.textContent())?.match(/\d+/)?.[0]);
+    const cabecalho = page
+      .getByRole("navigation", { name: "Índice da library" })
+      .getByRole("button", { name: /Motion e estado/ });
+    const prometido = Number((await cabecalho.textContent())?.match(/\d+/)?.[0]);
     expect(prometido, "a fatia veio vazia").toBeGreaterThan(0);
     expect(await page.locator(PECA).count()).toBe(prometido);
   });
@@ -319,7 +368,7 @@ test.describe("catálogo — fatia por família", () => {
 test.describe("vista de foco", () => {
   test("o link antigo com hash continua abrindo, e a URL fica limpa", async ({ page }) => {
     await page.goto("/#/c/marquee");
-    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(ficha(page)).toBeVisible();
     // Quem tem link salvo não pode cair numa página vazia — mas a URL se corrige.
     expect(new URL(page.url()).pathname).toBe("/c/marquee");
     expect(new URL(page.url()).hash).toBe("");
@@ -329,17 +378,27 @@ test.describe("vista de foco", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/c/kanban");
 
-    const dialog = page.getByRole("dialog");
+    const dialog = ficha(page);
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByText("kanban", { exact: true }).first()).toBeVisible();
+
+    /*
+     * O TÍTULO da ficha, não "qualquer texto `kanban` dentro do diálogo".
+     *
+     * A ficha ganhou a lista do acervo na lateral, e ali o nome da peça aparece
+     * de novo — como vizinho, não como assunto. Contar ocorrências de texto
+     * passou a medir a sidebar junto com o cabeçalho, e o teste ficou vermelho
+     * sem que a navegação tivesse mudado.
+     */
+    const titulo = dialog.getByRole("heading", { name: "kanban", exact: true });
+    await expect(titulo).toBeVisible();
 
     await page.keyboard.press("ArrowRight");
-    await expect(dialog.getByText("kanban", { exact: true })).toHaveCount(0);
+    await expect(titulo).toHaveCount(0);
 
     await page.keyboard.press("Escape");
-    await expect(dialog).toBeHidden();
+    await expect(dialog).toHaveCount(0);
     /*
-     * Fechar tem de voltar para a grade: senão o botão voltar do navegador
+     * Sair tem de voltar para a grade: senão o botão voltar do navegador
      * mente. Com o catálogo fatiado, a grade de `/c/kanban` é a fatia da peça —
      * `kanban` é da família `trabalho`. É o que faz as setas terem lista para
      * percorrer e o Esc entregar vizinhança em vez de uma página de capas.
@@ -360,11 +419,11 @@ test.describe("vista de foco", () => {
     await esperarGrade(page);
 
     await page.locator(PECA).first().click();
-    const dialog = page.getByRole("dialog");
+    const dialog = ficha(page);
     await expect(dialog).toBeVisible();
 
     await page.keyboard.press("Escape");
-    await expect(dialog).toBeHidden();
+    await expect(dialog).toHaveCount(0);
     expect(new URL(page.url()).pathname).toBe(FATIA);
   });
 
@@ -377,8 +436,8 @@ test.describe("vista de foco", () => {
       await page.getByLabel(preset).click();
       await page.waitForTimeout(250);
       const vazando = await page.evaluate(() => {
-        const dialog = document.querySelector('[role="dialog"]') as HTMLElement;
-        return dialog.scrollWidth > dialog.clientWidth + 1;
+        const alvo = document.querySelector("[data-ficha]") as HTMLElement;
+        return alvo.scrollWidth > alvo.clientWidth + 1;
       });
       expect(vazando, `peça vazando no preset ${preset}`).toBe(false);
     }
@@ -401,9 +460,8 @@ test.describe("dependências npm", () => {
     await page.goto("/c/rail");
     await page.waitForTimeout(400);
 
-    const ficha = page.locator('[role="dialog"]');
-    await expect(ficha.getByText("Dependências npm")).toBeVisible();
-    await expect(ficha.getByText(/^Nenhuma\./)).toBeVisible();
+    await expect(ficha(page).getByText("Dependências npm")).toBeVisible();
+    await expect(ficha(page).getByText(/^Nenhuma\./)).toBeVisible();
   });
 
   test("a peça com dependência mostra o pacote, e ele aponta pra fora", async ({ page }) => {
@@ -411,7 +469,7 @@ test.describe("dependências npm", () => {
     await page.waitForTimeout(400);
 
     // `timeline` importa framer-motion, que na tela se chama pelo nome de hoje.
-    const pill = page.locator('[role="dialog"] a[title*="framer-motion"]');
+    const pill = page.locator('[data-ficha] a[title*="framer-motion"]');
     await expect(pill).toHaveCount(1);
     expect(await pill.getAttribute("href")).toMatch(/^https?:\/\//);
   });
@@ -463,5 +521,90 @@ test.describe("dependências npm", () => {
     await botao.click();
     await expect(botao).toHaveText(/Tipo e peso\s*1/);
     expect(await page.locator(PECA).count()).toBe(esperado);
+  });
+});
+
+/**
+ * O painel de controles.
+ *
+ * É o pedaço da ficha que responde "serve pro meu caso?", e o modo de falha
+ * dele é silencioso: o knob aparece, a pessoa mexe, e nada muda — porque a demo
+ * não espalhou `props`, porque o preset aponta pra uma prop que sumiu, ou
+ * porque o valor caiu fora da faixa. Nenhum desses dá erro em lugar nenhum.
+ *
+ * `scripts/controls-check.mjs` guarda a parte estática (preset × TypeScript).
+ * O que sobra pra cá é a parte que só a tela prova: mexer muda a peça, e o
+ * código de uso descreve o que está no palco.
+ */
+test.describe("painel de controles", () => {
+  test("o painel nasce mostrando o que está no palco, não o padrão do código", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/c/rail");
+
+    const dialog = ficha(page);
+    /*
+     * `fade`, `progress` e `remainder` têm padrão `false` no componente e a demo
+     * passa os três ligados. A primeira versão do painel lia o padrão do código
+     * e desenhava três chaves DESLIGADAS embaixo de um trilho com as três
+     * ligadas — clicar pra ligar não mudava nada, e a conclusão de quem clica é
+     * que a peça está quebrada.
+     */
+    for (const prop of ["fade", "progress", "remainder"]) {
+      await expect(
+        dialog.getByRole("switch", { name: prop }),
+        `a chave ${prop} não reflete o palco`,
+      ).toHaveAttribute("aria-checked", "true");
+    }
+  });
+
+  test("o preset aplica, se marca, e o código de uso acompanha", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/c/line-reveal");
+
+    const dialog = ficha(page);
+    const uso = dialog.locator("pre").last();
+
+    // Sem mexer em nada, o snippet descreve o palco — e não menciona `blur`.
+    await expect(uso).not.toContainText('variant="blur"');
+
+    await dialog.getByRole("button", { name: "desfoque", exact: true }).click();
+
+    // O preset é `{ variant: "blur", split: "words", stagger: 0.04 }`.
+    await expect(uso).toContainText('variant="blur"');
+    await expect(uso).toContainText('split="words"');
+    await expect(uso).toContainText("stagger={0.04}");
+
+    // E "restaurar" só existe depois de a pessoa ter mexido em alguma coisa.
+    const restaurar = dialog.getByRole("button", { name: "restaurar" });
+    await expect(restaurar).toBeVisible();
+    await restaurar.click();
+    await expect(uso).not.toContainText('variant="blur"');
+  });
+
+  test("mexer num knob muda a peça dentro do iframe de viewport", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/c/logo-wall");
+
+    const dialog = ficha(page);
+    await dialog.getByLabel("Largura de celular (360px)").click();
+
+    const frame = dialog.locator("iframe");
+    await expect(frame).toBeVisible();
+    // O iframe abre no estado atual dos knobs; sem `p` na query ele nasce limpo.
+    expect(await frame.getAttribute("src")).not.toContain("p=");
+
+    /*
+     * A partir daqui a conversa é por `postMessage`, não por recarga: mudar a
+     * query a cada quadro de um slider transformaria o controle numa
+     * apresentação de slides. Então o `src` NÃO pode mudar quando o knob muda —
+     * é justamente isso que este teste trava.
+     */
+    const antes = await frame.getAttribute("src");
+    await dialog.getByRole("switch", { name: "fade" }).click();
+    await page.waitForTimeout(300);
+    expect(await frame.getAttribute("src"), "o iframe recarregou a cada knob").toBe(antes);
+
+    // E o snippet registrou a mudança.
+    await expect(dialog.locator("pre").last()).toContainText("fade={false}");
   });
 });

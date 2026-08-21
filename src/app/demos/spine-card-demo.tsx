@@ -27,10 +27,11 @@ import * as React from "react";
 
 import { SpineCard } from "../../../registry/visant/ui/spine-card";
 import { CoverArt } from "../../../registry/visant/ui/cover-art";
+import type { DemoProps } from "../catalog";
 
 const TITULOS = ["Marca em 9 etapas", "O método do lote", "Imersão de dois dias"];
 
-export default function SpineCardDemo() {
+export default function SpineCardDemo({ props }: DemoProps) {
   const [tombo, setTombo] = React.useState(false);
 
   return (
@@ -70,6 +71,7 @@ export default function SpineCardDemo() {
                 <CoverArt title={t} seed={t} family="book" />
               </div>
             }
+            {...props}
           />
         ))}
       </div>

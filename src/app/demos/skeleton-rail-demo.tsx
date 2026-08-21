@@ -39,6 +39,7 @@ import * as React from "react";
 import { Media } from "../media";
 import { useStageActive } from "../stage";
 import { Rail } from "../../../registry/visant/ui/rail";
+import type { DemoProps } from "../catalog";
 import {
   SkeletonRail,
   SkeletonCard,
@@ -66,7 +67,7 @@ function Formato({ nome, children }: { nome: string; children: React.ReactNode }
   );
 }
 
-export default function SkeletonRailDemo() {
+export default function SkeletonRailDemo({ props }: DemoProps) {
   const ativo = useStageActive();
   const [carregando, setCarregando] = React.useState(true);
 
@@ -158,7 +159,7 @@ export default function SkeletonRailDemo() {
       </div>
 
       {carregando ? (
-        <SkeletonRail cards={CARDS} ratio="4 / 5" label="Carregando a coleção" {...MEDIDAS} />
+        <SkeletonRail cards={CARDS} ratio="4 / 5" label="Carregando a coleção" {...MEDIDAS} {...props} />
       ) : (
         // Sem `heading`/`hint` de propósito: com eles o trilho desenha uma
         // fileira de TEXTO sempre visível, e o esqueleto espelha a fileira de

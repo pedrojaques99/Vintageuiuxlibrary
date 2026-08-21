@@ -225,6 +225,79 @@ export function FitStage({
 }
 
 /**
+ * Palco de proporção fixa: a peça inteira, centrada numa moldura sempre igual.
+ *
+ * O `FitStage` deixa a ALTURA seguir a peça — cada card do catálogo ficava com
+ * uma altura, e a grade virava um mosaico que só fecha com medição de linha,
+ * `gridRow: span`, degraus de altura e um `ResizeObserver` por card. Funcionava
+ * e nunca pareceu uma vitrine: card de tamanho variável é lista de conteúdo, e
+ * o olho não consegue comparar duas peças que não estão na mesma moldura.
+ *
+ * Aqui a moldura manda. Toda peça recebe a mesma caixa, a escala é a que faz a
+ * peça CABER inteira dentro dela (largura E altura), e o que sobra é respiro —
+ * nunca corte. Uma cena de 1280px vira miniatura, e isso é honesto: quem
+ * precisa ler a peça abre o foco, que a desenha em tamanho real.
+ *
+ * Nunca amplia. Peça de 380px numa caixa de 420 fica em 380, centrada; esticar
+ * pra preencher mostraria a peça num tamanho em que ela não foi desenhada.
+ */
+export function PalcoFixo({
+  w,
+  h,
+  ratio = 4 / 3,
+  active = true,
+  className,
+  style,
+  children,
+}: {
+  w: number;
+  h: number;
+  /** Largura ÷ altura da moldura. Igual para todos os cards da grade. */
+  ratio?: number;
+  active?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}) {
+  const [ref, largura] = useElementWidth<HTMLDivElement>();
+  const pageVisible = usePageVisible();
+
+  const altura = largura / ratio;
+  // Antes da primeira medição a escala é 0 e a peça fica invisível por um quadro
+  // — melhor que aparecer em tamanho natural e encolher na frente de quem olha.
+  const escala = largura ? Math.min(1, largura / w, altura / h) : 0;
+
+  return (
+    <div
+      ref={ref}
+      /* A marca de "aqui tem peça VIVA montada".
+       *
+       * A grade do acervo mostra foto em repouso e monta a peça no hover; sem um
+       * marcador no DOM não há como um teste provar a diferença — foto e peça
+       * desenham coisas parecidas, e "não montou nada" é justamente o invariante
+       * que mantém a página de oitenta e duas peças leve. */
+      data-palco=""
+      className={className}
+      style={{ ...style, aspectRatio: String(ratio), position: "relative", overflow: "hidden" }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          width: w,
+          height: h,
+          transform: `translate(-50%, -50%) scale(${escala})`,
+          willChange: escala === 1 ? undefined : "transform",
+        }}
+      >
+        <StageActiveCtx.Provider value={active && pageVisible}>{children}</StageActiveCtx.Provider>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Monta na primeira vez que aparece e nunca mais desmonta; `active` acompanha
  * a visibilidade.
  *

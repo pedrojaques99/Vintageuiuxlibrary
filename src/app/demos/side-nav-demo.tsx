@@ -31,6 +31,7 @@
 import * as React from "react";
 
 import { useStageActive } from "../stage";
+import type { DemoProps } from "../catalog";
 import {
   SideNav,
   SideNavGroup,
@@ -59,7 +60,7 @@ const GRAFICO = "M2 13.5h12M4.5 11V7M8 11V3.5M11.5 11V8.5";
 const ENGRENAGEM = "M8 10.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4ZM8 1.8v1.6M8 12.6v1.6M14.2 8h-1.6M3.4 8H1.8M12.4 3.6l-1.1 1.1M4.7 11.3l-1.1 1.1M12.4 12.4l-1.1-1.1M4.7 4.7 3.6 3.6";
 const CAIXA = "M2.5 5 8 2.2 13.5 5v6L8 13.8 2.5 11zM2.5 5 8 7.8 13.5 5M8 7.8v6";
 
-export default function SideNavDemo() {
+export default function SideNavDemo({ props }: DemoProps) {
   const [rota, setRota] = React.useState("visao");
   const ativo = useStageActive();
 
@@ -134,6 +135,7 @@ export default function SideNavDemo() {
               </span>
             </div>
           }
+          {...props}
         >
           <SideNavGroup label="Trabalho">
             <SideNavItem

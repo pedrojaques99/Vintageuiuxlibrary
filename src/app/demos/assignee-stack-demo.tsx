@@ -24,6 +24,7 @@ import * as React from "react";
 import { midia, useWireframe } from "../media";
 import { PEOPLE } from "../demo-fixtures";
 import { AssigneeStack, type Assignee } from "../../../registry/visant/ui/assignee-stack";
+import type { DemoProps } from "../catalog";
 
 /** Mais gente do que cabe: o excedente é a parte da peça que se quer ver. */
 const EQUIPE = [
@@ -39,7 +40,7 @@ const FILA = [
   { titulo: "Naming da linha nova", coluna: "Fila", pessoas: [4, 6, 3], foto: false },
 ];
 
-export default function AssigneeStackDemo() {
+export default function AssigneeStackDemo({ props }: DemoProps) {
   const { wireframe } = useWireframe();
 
   // O avatar sai do banco de mídia da vitrine, mas respeita o interruptor de
@@ -68,7 +69,7 @@ export default function AssigneeStackDemo() {
             {/* `ml-auto` e não `justify-between`: o nome da tarefa é quem pode
                 crescer; a pilha tem largura própria e fica ancorada na borda. */}
             <div className="ml-auto shrink-0">
-              <AssigneeStack assignees={comFoto(t.pessoas, t.foto)} max={4} size="md" />
+              <AssigneeStack assignees={comFoto(t.pessoas, t.foto)} max={4} size="md" {...props} />
             </div>
           </li>
         ))}

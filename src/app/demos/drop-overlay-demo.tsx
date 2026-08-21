@@ -19,13 +19,14 @@ import * as React from "react";
 import { Chip } from "../../../registry/visant/ui/chip";
 import { Media } from "../media";
 import { DropOverlay } from "../../../registry/visant/ui/drop-overlay";
+import type { DemoProps } from "../catalog";
 
 type Estado = "idle" | "over" | "drop";
 
 const INICIAL = 3;
 const TETO = 6;
 
-export default function DropOverlayDemo() {
+export default function DropOverlayDemo({ props }: DemoProps) {
   const [estado, setEstado] = React.useState<Estado>("idle");
   const [arquivos, setArquivos] = React.useState(INICIAL);
   const timers = React.useRef<number[]>([]);
@@ -91,7 +92,7 @@ export default function DropOverlayDemo() {
           ) : null}
         </div>
 
-        <DropOverlay state={estado} message="Solte os arquivos" doneMessage="Recebido" />
+        <DropOverlay state={estado} message="Solte os arquivos" doneMessage="Recebido" {...props} />
       </div>
 
       <div className="flex justify-center">

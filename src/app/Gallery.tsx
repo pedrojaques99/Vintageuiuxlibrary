@@ -48,18 +48,10 @@ import { REGISTRY_PUBLIC_LABEL, installCommand } from "./registry-meta";
 import { CopyCommand } from "./copy-command";
 import { DepBadges, DepLogo } from "./dep-badges";
 import { SEM_DEPS, allDeps, matchesDep } from "./deps";
-import { FitStage, useElementWidth, useLazyDemo } from "./stage";
-import {
-  GRID_GAP,
-  GRID_ROW,
-  alturaEmDegraus,
-  colsIn,
-  colsWanted,
-  useFundoEscuro,
-  useRowSpan,
-} from "./mosaic";
+import { PalcoFixo, useElementWidth, useLazyDemo } from "./stage";
+import { GRID_GAP, colsIn, useFundoEscuro } from "./mosaic";
+import { ehNovo } from "./novidades";
 import { WireframeToggle } from "./media";
-import { ComponentFocus } from "./ComponentFocus";
 import { BugButton } from "./bug-report";
 
 type Mode = "vitrine" | "lista";
@@ -89,6 +81,24 @@ const MODES = [
  * estava tentando responder por aproximação.
  */
 const TEM_INTERFACE = (i: CatalogItem) => Boolean(i.demo);
+
+/**
+ * A ordem da página do acervo: o que entrou por último primeiro.
+ *
+ * A ordem do arquivo é a ordem em que as peças foram escritas, que não diz nada
+ * a quem lê. E quem volta à vitrine volta pra ver o que mudou — pôr as novas no
+ * topo é o que faz o selo `novo` significar alguma coisa, em vez de ficar
+ * espalhado no meio de oitenta cards.
+ */
+/** Quanto o cursor precisa ficar parado sobre o card pra a peça acordar. */
+const ATRASO_HOVER = 140;
+
+/** E quanto ela espera antes de voltar a ser foto, pra resvalo não piscar. */
+const ATRASO_SAIDA = 220;
+
+const ACERVO_ORDENADO = [...CATALOG].sort(
+  (a, b) => Number(ehNovo(b.name)) - Number(ehNovo(a.name)),
+);
 
 /**
  * A capa de uma categoria, no índice.
@@ -220,216 +230,227 @@ function TypeBadge({ type }: { type: CatalogItem["type"] }) {
 }
 
 /**
- * A placa da vitrine — no tamanho da peça, não no tamanho da página.
+ * O ladrilho da grade: uma moldura igual pra toda peça.
  *
- * Duas versões erradas vieram antes desta, e as duas pelo mesmo motivo:
+ * ── Por que o card de altura livre não deu certo ───────────────────────────
  *
- * 1. **Grade de quatro colunas iguais.** Tratava 52 itens como resultado de
- *    busca — board e knob na mesma caixa, cada um escalado até caber.
- * 2. **Uma peça por linha, em faixa cheia.** Consertou o board e quebrou o
- *    knob: a pastilha de 420px passou a desenhar 420px reais encostada na quina
- *    de um card de 1350px. Quinze reports descreveram esse mesmo pixel.
+ * A grade anterior deixava cada card ter a altura da peça que hospedava. Era
+ * defensável no papel — a peça desenha no tamanho natural, ninguém corta nada —
+ * e produziu uma página que não parece vitrine:
  *
- * Agora a largura natural que o item declara decide quanto de grade ele ocupa
- * (`mosaic.ts`), e a peça desenha centrada, em escala 1. O ladrilho é ladrilho,
- * a faixa é faixa.
+ * · **Nada é comparável.** Duas peças em molduras de tamanhos diferentes não se
+ *   comparam; o olho lê primeiro a diferença das caixas e só depois o conteúdo.
+ * · **A grade precisa de máquina pra fechar.** Altura livre em três colunas é
+ *   mosaico, e mosaico exige medir cada card, converter em `gridRow: span`,
+ *   arredondar por degraus e observar redimensionamento — tudo isso pra decidir
+ *   onde o próximo ladrilho encaixa.
+ * · **A página nunca fica parada.** Card que mede a si mesmo muda de tamanho
+ *   depois de a demo montar, e a grade escorrega debaixo do cursor no scroll.
  *
- * Os dois botões ficam **sempre visíveis**, não no hover. Focar e copiar o
- * comando são as duas únicas coisas que se faz aqui; esconder as duas atrás de
- * um `group-hover` custa uma descoberta e não devolve nada — e no toque não
- * existe hover nenhum.
+ * Agora a moldura é fixa e a peça cabe dentro dela (`PalcoFixo`). A grade é um
+ * `grid` de três colunas, sem medição, sem span, sem degrau. O que se perde é a
+ * peça grande em tamanho grande; o que se ganha é uma vitrine em que dá pra
+ * varrer sessenta peças com o olho — e o tamanho real continua a um clique, na
+ * ficha, com os presets de viewport.
+ *
+ * Embaixo da moldura vão as duas informações que decidem o clique: o nome da
+ * peça e a categoria. A descrição saiu — em três colunas ela vira uma linha
+ * truncada que não informa e desalinha o rodapé de cada card.
  */
-const Showcase = React.memo(function Showcase({
+const Ladrilho = React.memo(function Ladrilho({
   item,
   onOpen,
   index,
-  span,
-  colW,
+  foto = false,
 }: {
   item: CatalogItem;
   onOpen: () => void;
   index: number;
-  /** Colunas que este card ocupa, já limitado pelo que o viewport tem. */
-  span: number;
-  /** Largura de uma coluna, em px. 0 antes da primeira medição da grade. */
-  colW: number;
+  /**
+   * Foto em repouso, peça viva no hover.
+   *
+   * É o que torna possível a página com o acervo INTEIRO. Oitenta e duas demos
+   * vivas na mesma rota foi o que produziu os 26.253px de altura e uma dúzia de
+   * `setInterval` competindo — a razão de o catálogo ter sido fatiado.
+   *
+   * Mas grade de foto parada é lápide: metade destas peças SÃO movimento (a
+   * faixa que anda, o glitch, o reveal), e uma foto delas mostra justamente o
+   * quadro em que elas não estão fazendo nada.
+   *
+   * A saída não é gravar oitenta e dois vídeos — é montar a demo de verdade
+   * quando o cursor chega, e desmontar quando sai. Uma peça viva por vez, que é
+   * exatamente o custo que a página aguenta, e ainda por cima interativa: dá pra
+   * arrastar o knob de dentro do card. Vídeo não faz isso.
+   */
+  foto?: boolean;
 }) {
-  const Demo = item.demo!;
-  const { w, h: declarado } = previewOf(item);
-  // O degrau do balde vira piso da altura: dois cards vizinhos começam a peça na
-  // mesma linha do olho, sem que peça alta perca altura. Ver `mosaic.ts`.
-  const h = alturaEmDegraus(w, declarado);
+  const Demo = item.demo;
+  const { w, h } = previewOf(item);
   const { ref, mounted, active } = useLazyDemo<HTMLElement>();
+  const escuro = useFundoEscuro();
+  // Foto que ainda não foi gerada não pode virar moldura vazia: card em branco
+  // no meio da grade lê como peça quebrada. Cai no nome, como o item sem demo.
+  const [semFoto, setSemFoto] = React.useState(false);
 
-  // O palpite de altura que segura a grade até o JS medir — ver `useRowSpan`.
-  // 48px é o `px-6` do palco; 88 é cabeçalho mais o respiro de baixo.
-  const cardW = colW ? colW * span + GRID_GAP * (span - 1) : w + 48;
-  const escala = Math.min(1, (cardW - 48) / w);
-  const [spanRef, rows] = useRowSpan<HTMLElement>(h * escala + 88);
+  /*
+   * O hover que acorda a peça.
+   *
+   * `ATRASO_HOVER` existe porque o gesto mais comum na grade é atravessá-la com
+   * o mouse a caminho de outra coisa. Sem espera, varrer três fileiras montaria
+   * e desmontaria vinte demos em meio segundo — GSAP, canvas, `setInterval`, tudo
+   * — e a página engasgaria justamente por causa do recurso que existe pra ela
+   * parecer viva.
+   *
+   * `focus-within` entra junto: quem percorre a grade pelo teclado tem o mesmo
+   * direito de ver a peça se mexendo.
+   */
+  const [acordado, setAcordado] = React.useState(false);
+  const relogio = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  React.useEffect(() => () => clearTimeout(relogio.current), []);
 
-  const refs = React.useCallback(
-    (node: HTMLElement | null) => {
-      ref.current = node;
-      spanRef(node);
-    },
-    [ref, spanRef],
-  );
+  const acordar = React.useCallback(() => {
+    clearTimeout(relogio.current);
+    relogio.current = setTimeout(() => setAcordado(true), ATRASO_HOVER);
+  }, []);
+
+  const dormir = React.useCallback(() => {
+    clearTimeout(relogio.current);
+    // Desmontar na hora faz a peça piscar de volta pra foto quando o cursor
+    // resvala na borda. Um respiro curto cobre o resvalo sem segurar CPU.
+    relogio.current = setTimeout(() => setAcordado(false), ATRASO_SAIDA);
+  }, []);
+
+  // Toque não tem hover. Em vez de a peça nunca acordar no celular, o card
+  // inteiro continua sendo o alvo de abrir — a ficha é que mostra a peça viva.
+  const viva = Boolean(Demo) && (!foto || acordado);
 
   return (
     <article
-      /*
-       * `alignSelf: start` não é estética — é o que faz a medição funcionar.
+      ref={ref}
+      /* O nome no DOM.
        *
-       * Item de grid nasce esticado até a área que recebeu. Esticado, o
-       * `ResizeObserver` do card mede a altura que a GRADE deu, não a que o
-       * conteúdo pede: o span nunca cresceria, e o card com `overflow-hidden`
-       * cortaria a demo — de volta ao defeito de origem, por outro caminho.
-       * Com `start`, a altura é a do conteúdo e a medição tem o que medir.
-       */
-      style={{ gridColumn: `span ${span}`, gridRow: `span ${rows}`, alignSelf: "start" }}
-      ref={refs}
+       * O card mostra o TÍTULO ("Logo Wall"), que é o que se lê; o nome do
+       * registry ("logo-wall") é o que se digita no `add` e o que a suíte usa
+       * pra achar a peça. Antes os testes procuravam o nome no texto visível —
+       * e no dia em que o card passou a mostrar o título, quinze deles ficaram
+       * vermelhos sem que nada tivesse quebrado. Âncora é atributo, não texto. */
+      data-name={item.name}
+      onPointerEnter={foto ? acordar : undefined}
+      onPointerLeave={foto ? dormir : undefined}
+      onFocusCapture={foto ? acordar : undefined}
+      onBlurCapture={foto ? dormir : undefined}
       className={cn(
-        // `group`: o botão de bug só aparece quando a mão (ou o teclado) chega
-        // ao card — ver `bug-report.tsx`.
-        // `@container`: no mosaico o card tem três larguras possíveis na MESMA
-        // janela — 450, 920 e 1392. Um `sm:` aqui pergunta o tamanho da janela e
-        // responde "cabe em linha" para os três, então o ladrilho de 450 recebia
-        // nome, descrição, comando e dois botões na mesma faixa e o texto
-        // atropelava o botão. Quem tem de ser perguntado é o card.
-        "@container group overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
+        "group relative flex flex-col overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
         "transition-[border-color,box-shadow] [transition-duration:var(--dur-fast,160ms)] [transition-timing-function:var(--ease-out)]",
-        "focus-within:border-[var(--brand)] hover:border-[var(--brand)]",
-        // A placa levanta um degrau no hover. Sem mover nada: a peça viva lá
-        // dentro é que manda no palco, e um card que desliza rouba a cena dela.
-        "hover:[box-shadow:var(--e-raised)]",
+        "focus-within:border-[var(--brand)] hover:border-[var(--brand)] hover:[box-shadow:var(--e-raised)]",
       )}
     >
       {/*
-        Uma linha, não três.
-
-        No celular ela vira coluna: identificação em cima, ações embaixo em
-        linha cheia. Espremer nome, descrição, comando e botão na mesma faixa de
-        390px reduz os dois alvos de toque a nada.
-
-        O cabeçalho carregava nome, tipo, ícones de dependência, descrição em
-        parágrafo próprio e mais duas ações — cinco informações antes da peça,
-        que é o que a pessoa veio ver. Tipo e dependências continuam existindo:
-        moram na ficha de foco, onde a decisão de instalar é tomada. Aqui fica o
-        que identifica (nome), o que situa em uma frase (descrição) e o que se
-        faz (copiar, focar).
+        A moldura NÃO é um botão — e essa é a diferença entre a peça viva ser
+        um enfeite e ser usável.
+        
+        A primeira versão embrulhava moldura e rótulo num `<button>` só. Parecia
+        bom (o card inteiro vira alvo) e quebrava duas coisas ao mesmo tempo:
+        toda demo que tem um botão dentro passou a produzir `<button>` dentro de
+        `<button>` — HTML inválido, 26 avisos do React na fatia — e, pior, o
+        clique no knob virava clique no card. O recurso existe justamente pra
+        deixar a pessoa arrastar o knob de dentro da grade.
+        
+        Então: a moldura é clicável só ENQUANTO É FOTO, e o título é o botão que
+        sempre abre. Acordada, a peça é dela.
       */}
-      <header className="flex flex-col gap-2 px-4 py-3 @2xl:flex-row @2xl:items-baseline @2xl:gap-4 @2xl:px-5">
-        <div className="flex min-w-0 flex-1 flex-col gap-x-3 @2xl:flex-row @2xl:items-baseline">
+      <div className="flex min-w-0 flex-1 flex-col">
+        {Demo && !viva && !semFoto ? (
+          <div
+            role="button"
+            tabIndex={-1}
+            onClick={onOpen}
+            className="flex aspect-[16/10] cursor-pointer items-center justify-center overflow-hidden border-b border-border p-2"
+            style={stageSurfaceOf(item)}
+          >
+            {/* `object-contain`: a captura já vem recortada no conteúdo, e
+                `cover` passou a cortar palavra no meio — que lê como defeito,
+                não como miniatura. Peça inteira e pequena ganha de metade de
+                peça em tamanho grande. */}
+            <img
+              src={`/shots/${item.name}-${escuro ? "escuro" : "claro"}.webp`}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-contain"
+              /* Degradação, não erro: uma library que quebra a home porque
+                 faltou rodar um script ninguém publica na sexta. */
+              onError={() => setSemFoto(true)}
+            />
+          </div>
+        ) : viva ? (
+          <PalcoFixo
+            w={w}
+            h={h}
+            /* A mesma moldura da foto: a fatia viva e o acervo em foto têm de
+               dar cards do mesmo tamanho, senão trocar de página parece trocar
+               de site. E 16/10 é mais generoso com as peças largas — em 4/3 uma
+               cena de 1280×300 virava uma faixa fina no meio de um vazio. */
+            ratio={16 / 10}
+            active={active}
+            className="border-b border-border"
+            style={stageSurfaceOf(item)}
+          >
+            {mounted && Demo ? (
+              <Demo />
+            ) : (
+              <div className="h-full w-full animate-pulse bg-muted/40" />
+            )}
+          </PalcoFixo>
+        ) : (
+          /* Lib, hook e tema não têm superfície. Em vez de sumirem da grade —
+             que era o efeito de mandá-los pra uma linha densa —, recebem a
+             mesma moldura com o nome desenhado nela. A library tem 81 peças, e
+             nove delas não serem visíveis é nove peças que ninguém descobre. */
+          <div className="flex aspect-[16/10] items-center justify-center border-b border-border bg-muted/20 px-6">
+            <span className="text-center font-mono text-apoio text-muted-foreground">
+              {item.name}
+            </span>
+          </div>
+        )}
+
+        <div className="flex min-w-0 flex-col gap-0.5 px-4 pb-3 pt-3">
+          {/* O botão de verdade do card: o título. É por ele que a navegação
+              por seta percorre a grade (`data-card-index`) e é ele que o
+              teclado alcança — a moldura fica fora da ordem de tabulação
+              justamente pra não haver dois alvos pro mesmo destino. */}
           <button
             type="button"
             data-card-index={index}
             onClick={onOpen}
-            className="shrink-0 truncate text-left font-mono text-destaque outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline"
+            className="truncate text-left text-destaque font-semibold tracking-tight outline-none hover:text-[var(--brand)] focus-visible:underline"
           >
-            {item.name}
+            {item.title}
           </button>
-          {/* `line-clamp-1`: a descrição situa, não explica. Quem quer o texto
-              inteiro abre o foco — e assim nenhum card fica mais alto que o
-              vizinho por ter frase comprida. */}
-          <p className="min-w-0 line-clamp-1 text-apoio text-muted-foreground">
-            {item.description}
+          <p className="truncate pr-24 font-mono text-micro uppercase tracking-wider text-muted-foreground">
+            {familyLabel(item.family)} · {TYPE_LABEL[item.type]}
           </p>
         </div>
+      </div>
 
-        <div className="flex items-center gap-2 @2xl:shrink-0">
-          {/* `min-w-0` + `truncate` no código: o comando é longo e, sem isso, ele
-              empurra o botão de foco para fora da tela em vez de encurtar. */}
-          {/* Borda transparente em repouso: o comando precisa estar à mão, mas
-              não pode brigar com o nome da peça pela primeira leitura. Ele ganha
-              contorno quando a mão chega perto. */}
-          <CopyCommand
-            variant="line"
-            text={installCommand(item.name)}
-            className="min-w-0 flex-1 border-transparent bg-muted/60 hover:border-[var(--brand)] @2xl:w-[min(22rem,26cqw)] @2xl:flex-none"
-          />
-          <button
-            type="button"
-            onClick={onOpen}
-            className="alvo-toque inline-flex shrink-0 items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2.5 py-1.5 text-apoio text-muted-foreground outline-none transition-[color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:text-foreground active:scale-[0.97] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
-          >
-            <Expand className="h-3.5 w-3.5" />
-            Focar
-          </button>
-          {/* Terceira ação, e a única que não é sobre usar a peça — por isso
-              some em repouso e volta no hover. */}
-          <BugButton item={item.name} />
-        </div>
-      </header>
+      {/* O selo do que entrou por último, dentro da moldura, onde o olho já
+          está. Borda e fundo na marca; a cor do texto continua a do tema. */}
+      {ehNovo(item.name) ? (
+        <span className="pointer-events-none absolute left-3 top-3 rounded-full border border-[var(--brand)] bg-background/80 px-1.5 py-px font-mono text-micro uppercase tracking-wider backdrop-blur-sm">
+          novo
+        </span>
+      ) : null}
 
-      {/*
-        O palco divide a superfície do card — não tem fundo nem borda próprios.
-
-        Antes ele era uma caixa `bg-background` dentro de uma caixa `bg-card`, e
-        a peça aparecia com duas molduras em volta antes da própria. Numa página
-        de 50 cards isso vira grade de janelinhas: o olho conta as bordas, não as
-        peças. A única exceção é o kit vintage, que é skeuomórfico e precisa do
-        painel escuro para o metal e o LED existirem (`stageSurfaceOf`).
-
-        `overflow-hidden`, e nunca `auto`: barra de rolagem horizontal dentro de
-        um card de vitrine é sempre defeito. Ou a peça cabe, ou ela ENCOLHE até
-        caber — daí o piso de escala mais baixo. O que não pode é a pessoa
-        descobrir que faltava conteúdo arrastando de lado.
-      */}
-      <div
-        className="overflow-hidden px-4 pb-5 pt-1 sm:px-6 sm:pb-7"
-        style={stageSurfaceOf(item)}
-      >
-        {/* `maxWidth: w`, e não `max(w, 720)`: a caixa hospeda a peça, não a
-            página. Com o teto antigo o palco esticava até 720 e a demo de 420
-            ficava colada na esquerda dele — o "espremido/descentralizado" que
-            apareceu em quinze reports. Aqui a caixa tem a largura da peça e o
-            `mx-auto` a centraliza na coluna que a grade deu. */}
-        {/*
-          Sem piso de escala: aqui a peça SEMPRE cabe.
-
-          O piso de 0,42 existia para o texto de uma parede de depoimento não
-          virar 6px num celular. Ele funcionava enquanto a peça mais larga do
-          catálogo tinha 760px; com as cenas de faixa cheia (`line-reveal` a
-          1280, `step-cards` a 1180) ele passou a produzir o defeito que o card
-          promete não ter: a 390px a peça desenhava 537px e transbordava por
-          baixo do `overflow-hidden`, ou seja, sumia conteúdo sem aviso.
-
-          A regra do card, escrita acima, é "ou cabe, ou ENCOLHE até caber". O
-          preview de celular de uma cena de desktop é uma miniatura — e é honesto
-          que seja: quem precisa ler a peça abre o foco, que a desenha em tamanho
-          real e nos presets de viewport.
-        */}
-        <div className="mx-auto w-full" style={{ maxWidth: w }}>
-          <FitStage w={w} h={h} active={active} label={item.name}>
-            {mounted ? <Demo /> : <div className="h-full w-full animate-pulse bg-muted/40" />}
-          </FitStage>
-        </div>
+      {/* Copiar o `add` é a ação que a vitrine existe pra provocar: fica sempre
+          visível. Reportar bug some em repouso — é a única ação aqui que não é
+          sobre usar a peça. */}
+      <div className="absolute bottom-2.5 right-3 flex items-center gap-1">
+        <BugButton item={item.name} />
+        <CopyCommand variant="chip" text={installCommand(item.name)} />
       </div>
     </article>
   );
 });
-
-/**
- * O ladrilho de quem não tem demo: lib, hook, tema.
- *
- * Ele mede a própria altura pelo mesmo motivo que o card mede: a linha densa
- * tem 48px quando a descrição cabe numa linha e 120px quando o item carrega
- * cinco dependências e uma frase comprida (o `data-table` é o caso). Com um
- * `span` fixo, o segundo caso escorregava por baixo do vizinho de baixo — a
- * grade não empilha, ela sobrepõe.
- */
-function RowTile({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; index: number }) {
-  const [ref, rows] = useRowSpan<HTMLDivElement>(64);
-  return (
-    <div
-      ref={ref}
-      style={{ gridRow: `span ${rows}`, alignSelf: "start" }}
-      className="flex items-center rounded-[var(--r-surface,0.875rem)] border border-border bg-card px-2"
-    >
-      <Row item={item} index={index} onOpen={onOpen} />
-    </div>
-  );
-}
 
 function Row({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; index: number }) {
   return (
@@ -682,17 +703,14 @@ export function Gallery({ focus, onFocus, familia = null, onFamilia }: GalleryPr
     if (window.scrollY > target) window.scrollTo({ top: target, behavior: "auto" });
   }, [family, dep, tipo, mode, results.length]);
 
-  const focusIndex = focus ? results.findIndex((i) => i.name === focus) : -1;
-  const focusItem = focusIndex >= 0 ? results[focusIndex] : CATALOG.find((i) => i.name === focus);
-
-  const step = React.useCallback(
-    (delta: number) => {
-      if (!results.length) return;
-      const from = focusIndex >= 0 ? focusIndex : 0;
-      onFocus(results[(from + delta + results.length) % results.length].name);
-    },
-    [results, focusIndex, onFocus],
-  );
+  /*
+   * A grade não monta mais a ficha.
+   *
+   * Enquanto a ficha era um diálogo, ela vivia por cima desta lista e precisava
+   * dela pra saber o que `←`/`→` percorrem. Como página, `/c/<item>` é outra
+   * rota — quem decide o que renderizar é o `App`, e a lista de irmãos sai da
+   * família da peça, não do filtro que estava aplicado na grade.
+   */
 
   // Atalhos da grade. `/` foca a busca — convenção de quem usa o teclado — e as
   // setas percorrem os cards a partir do que estiver focado, com o número de
@@ -747,21 +765,39 @@ export function Gallery({ focus, onFocus, familia = null, onFamilia }: GalleryPr
 
   return (
     <div className="shell pb-24">
-      <section ref={heroRef} className="pt-10 pb-7 sm:pt-14 sm:pb-8">
-        {/* Dentro de uma fatia, a volta vem ANTES do título — é o primeiro alvo
-            que a mão procura, e escondê-la no rodapé transforma o botão de voltar
-            do browser na única saída. */}
+      {/*
+       * A dobra encolhe quando a sidebar existe.
+       *
+       * Com a coluna da esquerda na tela, a fatia repetia três coisas que já
+       * estavam ali: a volta pras categorias, o nome da categoria e a contagem.
+       * Somando o parágrafo de tese, eram QUATRO blocos de texto antes do
+       * primeiro componente — numa página cuja única promessa é mostrar
+       * componente. Acima de `lg` sobra o título; abaixo, onde não há sidebar,
+       * tudo continua como estava, porque lá é a única porta.
+       */}
+      <section
+        ref={heroRef}
+        className={cn(
+          "pt-10 pb-7 sm:pt-14 sm:pb-8",
+          familia && "lg:pt-8 lg:pb-5",
+        )}
+      >
         {familia ? (
           <button
             type="button"
             onClick={() => onFamilia?.(null)}
-            className="mb-3 inline-flex items-center gap-1.5 font-mono text-apoio text-muted-foreground outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline"
+            className="mb-3 inline-flex items-center gap-1.5 font-mono text-apoio text-muted-foreground outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline lg:hidden"
           >
             ← todas as categorias
           </button>
         ) : null}
         <h1
-          className="text-[clamp(1.75rem,5vw,3.2rem)] font-semibold leading-[1.02] tracking-[-0.03em]"
+          className={cn(
+            "font-semibold leading-[1.02] tracking-[-0.03em]",
+            familia
+              ? "text-[clamp(1.5rem,4vw,2.4rem)]"
+              : "text-[clamp(1.75rem,5vw,3.2rem)]",
+          )}
           style={{ fontFamily: "var(--font-display, inherit)" }}
         >
           {familia ? familyLabel(familia) : "A library da Visant"}
@@ -769,7 +805,15 @@ export function Gallery({ focus, onFocus, familia = null, onFamilia }: GalleryPr
         {/* Duas frases, e a segunda é a tese. A versão anterior tinha quatro e
             explicava também onde ficam as marcas reais — informação de conta,
             que pertence à tela de conta, não à primeira dobra do catálogo. */}
-        <p className="mt-4 max-w-2xl text-corpo leading-relaxed text-muted-foreground sm:text-destaque">
+        <p
+          className={cn(
+            "mt-4 max-w-2xl text-corpo leading-relaxed text-muted-foreground sm:text-destaque",
+            // A tese é da porta de entrada. Repetida em cada uma das seis fatias
+            // ela vira cabeçalho institucional, e cabeçalho institucional é o
+            // que empurra o conteúdo pra fora da primeira tela.
+            familia && "lg:hidden",
+          )}
+        >
           {/* Conta a lista que está na tela, e não um número escrito à mão que
               envelhece: o portão `npm run check:catalog` garante que esta lista
               e o registry.json não divergem. */}
@@ -835,6 +879,17 @@ export function Gallery({ focus, onFocus, familia = null, onFamilia }: GalleryPr
             no celular em vez de virar quatro linhas. */}
         <div className="shell-bleed mt-2 flex gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
           {/*
+            Os chips de CATEGORIA somem acima de `lg` — e só eles.
+            
+            A sidebar já lista as seis categorias com a contagem, e dois
+            controles pra mesma pergunta ensinam a pessoa a não confiar em
+            nenhum dos dois. Já "tipo e peso" não tem equivalente na coluna: ele
+            responde "isso pesa no meu bundle?", que é a pergunta de quem JÁ
+            escolheu a categoria. Esconder os dois juntos foi o que sumiu com o
+            filtro de npm inteiro no desktop.
+          */}
+          <span className="contents lg:hidden">
+          {/*
             Dentro de uma fatia, o chip de categoria NAVEGA em vez de filtrar.
             São a mesma pergunta — "quero ver outra categoria" — e ter as duas
             respostas na mesma barra (um chip que filtra dentro da rota e uma
@@ -875,6 +930,7 @@ export function Gallery({ focus, onFocus, familia = null, onFamilia }: GalleryPr
               {f.label}
             </Chip>
           ))}
+          </span>
 
           {/* O botão dos eixos secundários. Carrega a contagem do que está
               ligado, então recolhido nunca esconde filtro ativo — o modo de
@@ -961,66 +1017,65 @@ export function Gallery({ focus, onFocus, familia = null, onFamilia }: GalleryPr
 
       {noIndice ? (
         /*
-         * O índice: seis capas, nenhuma demo.
+         * O acervo inteiro numa página — em foto.
          *
-         * Este bloco é a resposta aos 26.253px que a página tinha quando as 81
-         * peças viviam numa lista só. As capas são imagem estática gerada
-         * offline da MESMA rota `?solo=1` que o foco usa — o índice abre
-         * instantâneo e continua não podendo mentir sobre a peça.
+         * A versão anterior mostrava seis CAPAS de categoria e nenhuma peça. Era
+         * a resposta certa pra pergunta errada: resolvia os 26.253px que as 81
+         * demos vivas produziam, e resolvia escondendo a library atrás de mais
+         * um clique. Quem chega numa vitrine de componente quer ver componente,
+         * não seis retângulos com nome de categoria.
+         *
+         * A foto resolve os dois de uma vez, e é como toda vitrine grande de
+         * componente funciona: o card é uma imagem, a peça viva mora um clique
+         * adiante. As capturas saem da MESMA rota `?solo=1` que a ficha usa
+         * (`npm run build:shots`), então não há como a grade mentir sobre o que
+         * o `add` entrega.
+         *
+         * A fatia por categoria continua existindo e continua viva: lá são dez
+         * ou vinte demos, que é o número em que montar tudo ainda é barato.
          */
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {FAMILIES.map((f) => {
-            const itens = CATALOG.filter((i) => i.family === f.key);
-            if (!itens.length) return null;
-            return (
-              <CapaDeCategoria
-                key={f.key}
-                familia={f.key}
-                itens={itens}
-                onAbrir={() => onFamilia?.(f.key)}
-              />
-            );
-          })}
+        <div
+          style={{ gap: GRID_GAP }}
+          className="mt-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
+        >
+          {ACERVO_ORDENADO.map((item, i) => (
+            <Ladrilho
+              key={item.name}
+              item={item}
+              index={i}
+              foto
+              onOpen={() => onFocus(item.name)}
+            />
+          ))}
         </div>
       ) : results.length ? (
         mode === "vitrine" ? (
           <div
             ref={gridRefs}
-            // `overflow-anchor: none`: o Chrome tenta manter na tela o elemento
-            // "âncora" quando o conteúdo acima muda, e ao filtrar ele desfaz a
-            // reposição logo depois de nós a fazermos — a página voltava para o
-            // fim do documento novo. Aqui a âncora não ajuda: os itens de cima
-            // não mudaram de tamanho, sumiram.
-            style={{
-              overflowAnchor: "none",
-              display: "grid",
-              gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-              // Linhas minúsculas: é assim que cada card atravessa exatamente a
-              // altura que tem, e o mosaico fecha sem degrau.
-              gridAutoRows: `${GRID_ROW}px`,
-              gap: GRID_GAP,
-            }}
-            className="mt-6"
+            /*
+             * Uma grade de verdade, e nada de mosaico.
+             *
+             * `overflow-anchor: none` fica: o Chrome tenta manter na tela o
+             * elemento "âncora" quando o conteúdo acima muda, e ao filtrar ele
+             * desfazia a reposição logo depois de nós a fazermos — a página
+             * voltava pro fim do documento novo.
+             *
+             * O que saiu foi o `gridAutoRows` de 8px com `gridRow: span N` por
+             * card. Aquilo era a máquina de encaixar alturas diferentes; com a
+             * moldura fixa do `PalcoFixo` não há altura diferente pra encaixar,
+             * e três colunas iguais resolvem sozinhas.
+             */
+            style={{ overflowAnchor: "none", gap: GRID_GAP }}
+            className="mt-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
           >
-            {/* Peça com demo ganha palco no tamanho dela; lib, hook e tema
-                entram como LADRILHO de uma coluna. A diferença de peso é o que a
-                aba "Sem interface" tentava criar, e aqui ela sai de graça — sem
-                eixo de filtro a mais e sem esconder metade da library atrás de
-                um clique. */}
-            {results.map((item, i) =>
-              TEM_INTERFACE(item) ? (
-                <Showcase
-                  key={item.name}
-                  item={item}
-                  index={i}
-                  span={Math.min(cols, colsWanted(previewOf(item).w))}
-                  colW={colW}
-                  onOpen={() => onFocus(item.name)}
-                />
-              ) : (
-                <RowTile key={item.name} item={item} index={i} onOpen={() => onFocus(item.name)} />
-              ),
-            )}
+            {results.map((item, i) => (
+              <Ladrilho
+                key={item.name}
+                item={item}
+                index={i}
+                onOpen={() => onFocus(item.name)}
+              />
+            ))}
           </div>
         ) : (
           <div ref={listRef} style={{ overflowAnchor: "none" }} className="mt-6 border-t border-border">
@@ -1039,17 +1094,6 @@ export function Gallery({ focus, onFocus, familia = null, onFamilia }: GalleryPr
         </div>
       )}
 
-      {focusItem && (
-        <ComponentFocus
-          key={focusItem.name}
-          item={focusItem}
-          index={focusIndex >= 0 ? focusIndex : 0}
-          total={results.length}
-          onClose={() => onFocus(null)}
-          onPrev={() => step(-1)}
-          onNext={() => step(1)}
-        />
-      )}
     </div>
   );
 }

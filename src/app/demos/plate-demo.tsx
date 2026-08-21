@@ -27,6 +27,7 @@ import * as React from "react";
 
 import { Plate } from "../../../registry/visant/ui/plate";
 import { Media, midia, useWireframe, type Papel } from "../media";
+import type { DemoProps } from "../catalog";
 
 const PRATELEIRA = [
   { nome: "Cubo alumínio", preco: "R$ 249", papel: "cena" as Papel, indice: 0, etiqueta: null },
@@ -59,7 +60,7 @@ function Recorte({ papel, indice }: { papel: Papel; indice: number }) {
   );
 }
 
-export default function PlateDemo() {
+export default function PlateDemo({ props }: DemoProps) {
   const [multiply, setMultiply] = React.useState(true);
   const [chao, setChao] = React.useState(true);
 
@@ -110,6 +111,7 @@ export default function PlateDemo() {
                   </span>
                 ) : undefined
               }
+              {...props}
             >
               <Recorte papel={p.papel} indice={p.indice} />
             </Plate>

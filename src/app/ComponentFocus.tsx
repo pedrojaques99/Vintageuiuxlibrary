@@ -1,37 +1,61 @@
 "use client";
 
 /**
- * A vista de foco: um item, tela cheia, tamanho real.
+ * A ficha de um item — uma PÁGINA, não um diálogo.
  *
  * O card da grade responde "isso existe?". Ele não responde "isso serve pro meu
  * caso?" — pra isso a pessoa precisa *usar* a peça: arrastar o knob, largar um
  * card no board, ver o que acontece a 360px de largura. É o que esta vista faz.
  *
- * Três decisões que valem explicação:
+ * ── Por que deixou de ser modal ────────────────────────────────────────────
+ *
+ * Ela nasceu como `Dialog` do Radix, e isso fez sentido enquanto o site não
+ * tinha sidebar: um overlay em cima da grade dava a peça em tela cheia sem
+ * inventar rota. Quando a coluna do acervo entrou no site, o modal passou a
+ * cobri-la — e a ficha ganhou uma lista PRÓPRIA por dentro pra compensar. Duas
+ * listas do mesmo acervo, desenhadas duas vezes, escondendo uma à outra.
+ *
+ * Como página, `/c/<item>` usa a sidebar que já existe, o scroll volta a ser o
+ * scroll do documento (o modal tinha o seu, e a roda do mouse parava na borda),
+ * e o endereço passa a ser um lugar de verdade em vez de um estado por cima de
+ * outro lugar.
+ *
+ * O que se perde: `Esc` deixa de ser "fechar" e vira "voltar pra categoria" —
+ * mesmo destino, outro nome. As setas continuam percorrendo, só que agora
+ * trocando de rota, o que dá histórico de navegador de graça.
+ *
+ * Duas coisas que ficam:
  *
  * - **Presets de viewport.** A pergunta que mais aparece sobre um componente de
  *   library é se ele aguenta o celular. Aqui a resposta é um clique, não um
  *   devtools — e a peça é escalada, nunca cortada, quando o preset não cabe.
- * - **`←` `→` navegam sem fechar.** Percorrer o catálogo é o gesto principal;
- *   obrigar a fechar e reabrir mataria o ritmo.
- * - **Rota no hash (`#/c/<nome>`), decidida pelo App.** Dá link compartilhável e
- *   faz o botão voltar do navegador significar "voltar pra grade", que é o que a
- *   pessoa espera. Esta vista não conhece a URL: recebe o item e devolve eventos.
+ * - **A rota é decidida pelo App.** Esta vista não conhece a URL: recebe o item
+ *   e devolve eventos.
  */
 
 import * as React from "react";
-import * as Dialog from "@radix-ui/react-dialog";
-import { ChevronLeft, ChevronRight, Monitor, Smartphone, Tablet, X } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Copy, Monitor, Smartphone, Tablet, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import { FitStage, useElementWidth } from "./stage";
-import { MSG_ALTURA } from "./Solo";
+import { MSG_ALTURA, MSG_PROPS } from "./Solo";
+import {
+  Customize,
+  controlesDe,
+  snippetDeUso,
+  useKnobs,
+  type Controle,
+  type ValorDeKnob,
+} from "./controls";
 import { useBrandTheme } from "@/lib/brand-theme";
 import { TYPE_LABEL, familyLabel, previewOf, stageSurfaceOf, type CatalogItem } from "./catalog";
-import { installCommand } from "./registry-meta";
-import { CopyCommand } from "./copy-command";
+import { useCopy } from "./copy-command";
+import { Instalar } from "./instalar";
+import { CopiarPraIA } from "./copiar-pra-ia";
 import { DepResumo } from "./dep-badges";
+import { ehNovo } from "./novidades";
 import { CodigoDoItem, TabelaDeProps } from "./ItemDocs";
+import { Codigo } from "./codigo";
 
 /** Larguras de teste. `0` = o que couber na tela. */
 const VIEWPORTS = [
@@ -73,14 +97,35 @@ function SoloFrame({
   largura,
   escala,
   alturaMinima,
+  props,
 }: {
   item: CatalogItem;
   largura: number;
   escala: number;
   alturaMinima: number;
+  /** Os valores dos knobs. Entram na query no primeiro paint e por mensagem depois. */
+  props: Record<string, ValorDeKnob>;
 }) {
   const [altura, setAltura] = React.useState(alturaMinima);
   const { brand } = useBrandTheme();
+  const frame = React.useRef<HTMLIFrameElement>(null);
+
+  /*
+   * A primeira carga leva os knobs na query; as seguintes vão por mensagem.
+   *
+   * `propsIniciais` é congelado por item de propósito: se a query acompanhasse
+   * cada mexida do slider, o `src` mudaria e o iframe recarregaria a cada quadro
+   * — o controle viraria apresentação de slides. A query serve pra abrir
+   * configurado (link compartilhado, `←`/`→` entre itens), não pra transmitir.
+   */
+  const propsIniciais = React.useMemo(() => props, [item.name]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useEffect(() => {
+    frame.current?.contentWindow?.postMessage(
+      { type: MSG_PROPS, name: item.name, props },
+      window.location.origin,
+    );
+  }, [props, item.name]);
 
   React.useEffect(() => {
     const ouvir = (e: MessageEvent) => {
@@ -100,6 +145,7 @@ function SoloFrame({
   // cair na marca padrão e a peça aparecer fora da marca do resto da tela.
   if (brand?.slug) query.set("brand", brand.slug);
   if (escuro) query.set("dark", "1");
+  if (Object.keys(propsIniciais).length) query.set("p", JSON.stringify(propsIniciais));
 
   return (
     <div
@@ -109,6 +155,7 @@ function SoloFrame({
       style={{ width: largura * escala, height: altura * escala }}
     >
       <iframe
+        ref={frame}
         // A chave amarra o iframe ao item: trocar de peça com `←`/`→` recarrega
         // o documento em vez de reaproveitar o anterior e piscar o conteúdo velho.
         key={item.name}
@@ -122,6 +169,47 @@ function SoloFrame({
           transformOrigin: "top left",
         }}
       />
+    </div>
+  );
+}
+
+/**
+ * O código que escreve a peça do jeito que ela está no palco agora.
+ *
+ * É a diferença entre uma vitrine e um catálogo: a pessoa mexeu até chegar no
+ * que queria, e a linha pra colar no projeto já está pronta ali — sem ela ter
+ * de traduzir de cabeça três knobs em três props. Só o que fugiu do padrão
+ * aparece; despejar as nove props com o valor que o componente já tem faria
+ * quem colasse congelar padrões que deveriam continuar chegando de graça.
+ */
+function UsoAoVivo({
+  componente,
+  controles,
+  props,
+}: {
+  componente: string;
+  controles: Controle[];
+  props: Record<string, ValorDeKnob>;
+}) {
+  const codigo = snippetDeUso(componente, controles, props);
+  const { done, copy } = useCopy(codigo);
+
+  return (
+    <div className="overflow-hidden rounded-[var(--r-control,0.5rem)] border border-border">
+      <div className="flex items-center gap-2 border-b border-border bg-muted/20 px-3 py-1.5">
+        <span className="font-mono text-micro uppercase tracking-wider text-muted-foreground">
+          uso
+        </span>
+        <button
+          type="button"
+          onClick={copy}
+          className="ml-auto flex items-center gap-1.5 font-mono text-micro text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] hover:text-foreground"
+        >
+          {done ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+          {done ? "copiado" : "copiar"}
+        </button>
+      </div>
+      <Codigo codigo={codigo} className="px-3 py-2" />
     </div>
   );
 }
@@ -147,6 +235,11 @@ export function ComponentFocus({
   const Demo = item.demo;
   const natural = previewOf(item);
 
+  // `controles` é null quando a demo ainda não declarou `knobs` no catálogo —
+  // e aí a ficha fica exatamente como era antes de o painel existir.
+  const controles = controlesDe(item.name, item.knobs);
+  const knobs = useKnobs(controles?.controles ?? []);
+
   // Setas percorrem o catálogo. Ignoradas enquanto alguém digita dentro da demo —
   // várias peças aqui têm input, e roubar a seta do cursor seria hostil.
   React.useEffect(() => {
@@ -161,31 +254,44 @@ export function ComponentFocus({
         e.preventDefault();
         onNext();
       }
+      // `Esc` era o "fechar" do diálogo. Como página ele continua existindo, e
+      // continua indo pro mesmo lugar — a categoria de onde a peça foi aberta.
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [onPrev, onNext]);
+  }, [onPrev, onNext, onClose]);
 
   const preset = VIEWPORTS.find((v) => v.value === viewport)!;
   const frameW = preset.px || Math.max(available, 320);
   const frameH = Math.max(natural.h, MIN_STAGE_H);
 
   return (
-    <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-background/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0" />
-        <Dialog.Content
-          aria-describedby={undefined}
-          className={cn(
-            "fixed inset-0 z-50 flex flex-col bg-background outline-none",
-            "sm:inset-4 sm:rounded-[var(--r-surface,0.875rem)] sm:border sm:border-border sm:shadow-2xl",
-            "origin-center data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
-            "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
-          )}
-        >
+    <article
+      /* Âncora única da ficha. `article` sozinho não serve mais: os cards da
+         grade também são `article`, e um seletor que casa com os dois não
+         consegue provar que a ficha FECHOU. */
+      data-ficha={item.name}
+      aria-labelledby="ficha-titulo"
+      /*
+       * `min-w-0` em cada nível que é `flex-1`.
+       *
+       * O diálogo era `fixed inset-0` e a largura vinha da janela. Como página,
+       * a largura vem do pai — e item de flex nasce com `min-width: auto`, que
+       * significa "não encolho abaixo do meu conteúdo". O palco de 1370px então
+       * empurrava a ficha inteira pra fora da tela: barra de rolagem horizontal
+       * na página e a coluna da direita cortada ao meio.
+       */
+      className="flex min-h-[calc(100dvh-var(--shell-header-h))] min-w-0 flex-col"
+    >
           {/* cabeçalho */}
-          <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border px-4 py-3 sm:px-5">
-            <Dialog.Title className="font-mono text-corpo">{item.name}</Dialog.Title>
+          <div className="sticky top-[var(--shell-header-h)] z-20 flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border bg-background/85 px-4 py-3 backdrop-blur-xl sm:px-5">
+            <h1 id="ficha-titulo" className="font-mono text-corpo">
+              {item.name}
+            </h1>
             <span className="rounded-full border border-border px-1.5 py-px font-mono text-micro uppercase tracking-wider text-muted-foreground">
               {TYPE_LABEL[item.type]}
             </span>
@@ -194,7 +300,12 @@ export function ComponentFocus({
             </span>
 
             <div className="ml-auto flex items-center gap-1">
-              <span className="mr-1 hidden font-mono text-rotulo tabular-nums text-muted-foreground sm:inline">
+              <CopiarPraIA
+                item={item}
+                controles={controles?.controles ?? []}
+                props={knobs.props}
+              />
+              <span className="mx-1 hidden font-mono text-rotulo tabular-nums text-muted-foreground sm:inline">
                 {index + 1}/{total}
               </span>
               <button
@@ -213,16 +324,19 @@ export function ComponentFocus({
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
-              <Dialog.Close
-                aria-label="Fechar"
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Voltar para a categoria"
                 className="alvo-toque ml-1 grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
               >
                 <X className="h-4 w-4" />
-              </Dialog.Close>
+              </button>
             </div>
           </div>
 
-          <div className="flex min-h-0 flex-1 flex-col overflow-auto lg:flex-row">
+          <div className="flex min-h-0 min-w-0 flex-1">
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col lg:flex-row">
             {/* palco / código / props */}
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-2 sm:px-5">
@@ -235,6 +349,8 @@ export function ComponentFocus({
                 />
               </div>
 
+              {/* O código tem altura própria: como página, a lista de arquivos
+                  rola com o documento em vez de ter a barra dela. */}
               {aba === "codigo" ? <CodigoDoItem name={item.name} /> : null}
               {aba === "props" ? (
                 <div className="min-h-0 flex-1 overflow-auto">
@@ -259,7 +375,17 @@ export function ComponentFocus({
 
                   <div
                     ref={stageRef}
-                    className="flex flex-1 items-start justify-center overflow-auto p-4 sm:p-8"
+                    /*
+                     * O palco cresce com a peça, não com a tela.
+                     *
+                     * Como diálogo ele era `flex-1` dentro de uma caixa de
+                     * altura fixa, e esticar preenchia o que sobrava. Como
+                     * página, `flex-1` dentro de `min-h-screen` esticou o palco
+                     * até o fim da tela: o `quote-block` ficava com 200px de
+                     * vazio em cima e 120 embaixo, e o painel de controles caía
+                     * inteiro abaixo da dobra. Piso, e não esticão.
+                     */
+                    className="flex min-h-[24rem] items-start justify-center overflow-auto p-4 sm:p-8"
                     style={{
                       backgroundImage:
                         "radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0)",
@@ -288,6 +414,7 @@ export function ComponentFocus({
                         largura={preset.px}
                         escala={Math.min(1, (available || preset.px) / preset.px)}
                         alturaMinima={MIN_STAGE_H}
+                        props={knobs.props}
                       />
                     ) : (
                       <div
@@ -299,11 +426,35 @@ export function ComponentFocus({
                       >
                         {/* Escala só entra quando o preset não cabe — nunca amplia. */}
                         <FitStage w={frameW} h={frameH} maxScale={1}>
-                          <Demo />
+                          <Demo props={knobs.props} />
                         </FitStage>
                       </div>
                     )}
                   </div>
+
+                  {/*
+                   * O painel vem DEPOIS do palco, sempre.
+                   *
+                   * Knob antes da peça é a página se explicando em vez de se
+                   * mostrar: a pessoa chega pra ver o componente e encontra um
+                   * formulário. Aqui o primeiro pixel abaixo da barra de largura
+                   * é a peça rodando, e o painel espera embaixo pra quem quer
+                   * mexer.
+                   */}
+                  {controles ? (
+                    <div className="shrink-0 space-y-3 border-t border-border p-4 sm:p-5">
+                      <Customize
+                        controles={controles.controles}
+                        presets={controles.presets}
+                        {...knobs}
+                      />
+                      <UsoAoVivo
+                        componente={item.knobs!}
+                        controles={controles.controles}
+                        props={knobs.props}
+                      />
+                    </div>
+                  ) : null}
                 </>
               ) : null}
 
@@ -319,7 +470,7 @@ export function ComponentFocus({
             </div>
 
             {/* ficha */}
-            <aside className="shrink-0 space-y-4 border-t border-border p-4 sm:p-5 lg:w-[300px] lg:border-l lg:border-t-0">
+            <aside className="shrink-0 space-y-4 border-t border-border p-4 sm:p-5 lg:w-[300px] lg:border-l lg:border-t-0 xl:w-[320px]">
               <div>
                 <h2
                   className="text-titulo font-semibold tracking-[-0.02em]"
@@ -332,7 +483,7 @@ export function ComponentFocus({
                 </p>
               </div>
 
-              <CopyCommand text={installCommand(item.name)} />
+              <Instalar name={item.name} />
 
               {/* Logo abaixo do comando, de propósito: a conta do que esse `add`
                   traz junto tem de estar do lado do gesto de instalar, não no
@@ -357,9 +508,8 @@ export function ComponentFocus({
                 volta pra grade
               </p>
             </aside>
+            </div>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+    </article>
   );
 }

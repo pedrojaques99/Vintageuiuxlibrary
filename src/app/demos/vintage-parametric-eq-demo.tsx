@@ -14,11 +14,12 @@
 import * as React from "react";
 
 import { VintageParametricEQ } from "../../../registry/vintage/ui/vintage-parametric-eq";
+import type { DemoProps } from "../catalog";
 
-export default function VintageParametricEqDemo() {
+export default function VintageParametricEqDemo({ props }: DemoProps) {
   return (
     <div className="flex h-full w-full items-center justify-center p-4">
-      <VintageParametricEQ width={500} height={210} />
+      <VintageParametricEQ width={500} height={210} {...props} />
     </div>
   );
 }

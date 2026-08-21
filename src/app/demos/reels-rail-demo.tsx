@@ -27,6 +27,7 @@ import * as React from "react";
 import { Media } from "../media";
 import { useStageActive } from "../stage";
 import { ReelsRail, type ReelItem } from "../../../registry/visant/ui/reels-rail";
+import type { DemoProps } from "../catalog";
 
 const CARDS: { papel: "video" | "retrato"; indice: number; title: string; meta: string }[] = [
   { papel: "video", indice: 2, title: "Composição em movimento", meta: "Aloro · 0:14" },
@@ -37,7 +38,7 @@ const CARDS: { papel: "video" | "retrato"; indice: number; title: string; meta: 
   { papel: "retrato", indice: 6, title: "Making of", meta: "Meridiano · 0:19" },
 ];
 
-export default function ReelsRailDemo() {
+export default function ReelsRailDemo({ props }: DemoProps) {
   const ativo = useStageActive();
 
   const itens = React.useMemo<ReelItem[]>(
@@ -73,6 +74,7 @@ export default function ReelsRailDemo() {
         // observer que a própria peça tem pra pausar o vídeo.
         drift={ativo}
         autoPlay={ativo}
+        {...props}
       />
     </div>
   );

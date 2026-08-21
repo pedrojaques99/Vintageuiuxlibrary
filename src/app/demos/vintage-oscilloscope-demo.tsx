@@ -19,6 +19,7 @@
 import * as React from "react";
 
 import { useStageActive } from "../stage";
+import type { DemoProps } from "../catalog";
 import {
   VintageOscilloscope,
   type VintageScopeMode,
@@ -33,7 +34,7 @@ const CANAIS: { modo: VintageScopeMode; cor: string }[] = [
   { modo: "wave", cor: "var(--vintage-value)" },
 ];
 
-export default function VintageOscilloscopeDemo() {
+export default function VintageOscilloscopeDemo({ props }: DemoProps) {
   const ativo = useStageActive();
   const [dados, setDados] = React.useState(() => new Float32Array(AMOSTRAS));
   const passo = React.useRef(0);
@@ -71,6 +72,7 @@ export default function VintageOscilloscopeDemo() {
           width={250}
           height={132}
           active={ativo}
+          {...props}
         />
       ))}
     </div>

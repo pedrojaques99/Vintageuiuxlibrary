@@ -23,8 +23,9 @@ import * as React from "react";
 
 import { useBrandTheme } from "@/lib/brand-theme";
 import { BrandSelector } from "../../../registry/visant/ui/brand-selector";
+import type { DemoProps } from "../catalog";
 
-export default function BrandSelectorDemo() {
+export default function BrandSelectorDemo({ props }: DemoProps) {
   const { active } = useBrandTheme();
 
   return (
@@ -33,7 +34,7 @@ export default function BrandSelectorDemo() {
         {/* A barra de um produto qualquer: é o lugar onde esta peça mora. */}
         <div className="flex items-center justify-between gap-3 border-b border-border px-3 py-2.5">
           <span className="text-rotulo font-semibold tracking-tight">Mesa de trabalho</span>
-          <BrandSelector />
+          <BrandSelector {...props} />
         </div>
 
         {/*

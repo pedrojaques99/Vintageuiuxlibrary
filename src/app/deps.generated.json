@@ -116,5 +116,10 @@
   ],
   "photo-compare": [
     "gsap"
+  ],
+  "book-3d": [
+    "@react-three/drei",
+    "@react-three/fiber",
+    "three"
   ]
 }

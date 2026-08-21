@@ -20,6 +20,7 @@ import * as React from "react";
 
 import { MeasurePicker, type MeasureBand } from "../../../registry/visant/ui/measure-picker";
 import { Media, type Papel } from "../media";
+import type { DemoProps } from "../catalog";
 
 interface Taco {
   tier: string;
@@ -49,7 +50,7 @@ const FAIXAS: MeasureBand<Taco>[] = [
   },
 ];
 
-export default function MeasurePickerDemo() {
+export default function MeasurePickerDemo({ props }: DemoProps) {
   const [altura, setAltura] = React.useState(163);
 
   return (
@@ -65,6 +66,7 @@ export default function MeasurePickerDemo() {
         edgeLabels={["130 cm", "200 cm"]}
         formatValue={(x) => `${x} cm`}
         bands={FAIXAS}
+        {...props}
       >
         {(faixa) => {
           const t = faixa.value;

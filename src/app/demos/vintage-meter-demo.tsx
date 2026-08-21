@@ -17,8 +17,9 @@ import * as React from "react";
 import { useStageActive } from "../stage";
 import { VintageMeter } from "../../../registry/vintage/ui/vintage-meter";
 import { VintageKnob } from "../../../registry/vintage/ui/vintage-knob";
+import type { DemoProps } from "../catalog";
 
-export default function VintageMeterDemo() {
+export default function VintageMeterDemo({ props }: DemoProps) {
   const ativo = useStageActive();
   const [ganho, setGanho] = React.useState(6);
   const [nivel, setNivel] = React.useState(4);
@@ -53,6 +54,7 @@ export default function VintageMeterDemo() {
           manualAte.current = performance.now() + 1000;
           setNivel(v);
         }}
+        {...props}
       />
     </div>
   );

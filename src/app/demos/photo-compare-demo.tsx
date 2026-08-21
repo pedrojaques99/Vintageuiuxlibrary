@@ -38,8 +38,9 @@ import * as React from "react";
 
 import { Media } from "../media";
 import { PhotoCompare } from "../../../registry/visant/ui/photo-compare";
+import type { DemoProps } from "../catalog";
 
-export default function PhotoCompareDemo() {
+export default function PhotoCompareDemo({ props }: DemoProps) {
   return (
     <div className="flex h-full w-full items-center justify-center px-4">
       <PhotoCompare
@@ -49,6 +50,7 @@ export default function PhotoCompareDemo() {
         after={<Media papel="cena" indice={5} className="size-full" />}
         beforeLabel="antes"
         afterLabel="depois"
+        {...props}
       />
     </div>
   );
