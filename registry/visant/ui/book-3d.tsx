@@ -16,6 +16,26 @@
  * `React.lazy` e não `next/dynamic` de propósito: o item roda em Vite, Remix e
  * Next igual, e `next/dynamic` só existe num deles.
  *
+ * ── A LINHA DO react-three-fiber, e por que ela está fixada ────────────────
+ *
+ * As dependências declaram `@react-three/fiber@^8` + `@react-three/drei@^9`.
+ * Não é conservadorismo: o fiber v9 exige React >= 19 e a instalação FALHA num
+ * projeto React 18, com um erro de peer que não diz o que fazer. A linha 8
+ * instala nos dois.
+ *
+ * Este código roda igual nas duas linhas — foi verificado nas duas, e não
+ * deduzido: fiber 8 + drei 9 sobre React 18 nesta vitrine, e fiber 9 + drei 10
+ * sobre React 19 no app de onde a peça foi colhida.
+ *
+ * Num projeto React 19, subir vale a pena (o v9 é a linha mantida):
+ *   npm i three@latest @react-three/fiber@^9 @react-three/drei@^10
+ *
+ * Atenção ao contrário: instalar o fiber v9 num projeto React 18 não quebra só
+ * em runtime. A augmentação de JSX dele mira `React.JSX`, que não existe nos
+ * types do 18, e o namespace vazio que ela cria APAGA a tipagem de todo
+ * elemento intrínseco do projeto — `<div>` passa a aceitar `never`. O sintoma
+ * aparece em arquivos que não têm nada a ver com 3D.
+ *
  * ── ONDE ISTO NÃO VAI ──────────────────────────────────────────────────────
  *
  * Num trilho de 20–40 cards. Quarenta contextos WebGL derrubam telefone, e o

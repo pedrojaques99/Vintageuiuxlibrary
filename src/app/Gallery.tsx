@@ -324,6 +324,37 @@ const Ladrilho = React.memo(function Ladrilho({
   // inteiro continua sendo o alvo de abrir — a ficha é que mostra a peça viva.
   const viva = Boolean(Demo) && (!foto || acordado);
 
+  /*
+   * A moldura de foto, uma vez só.
+   *
+   * Ela aparece em dois papéis: como o card em repouso e como a espera enquanto
+   * o chunk da demo chega. Duplicar o markup faria os dois divergirem no
+   * primeiro ajuste de padding — e aí a troca no hover ganharia um pulinho.
+   */
+  const moldura = (
+    <div
+      role="button"
+      tabIndex={-1}
+      onClick={onOpen}
+      className="flex aspect-[16/10] cursor-pointer items-center justify-center overflow-hidden border-b border-border p-2"
+      style={stageSurfaceOf(item)}
+    >
+      {/* `object-contain`: a captura já vem recortada no conteúdo, e `cover`
+          passou a cortar palavra no meio — que lê como defeito, não como
+          miniatura. Peça inteira e pequena ganha de metade de peça grande. */}
+      <img
+        src={`/shots/${item.name}-${escuro ? "escuro" : "claro"}.webp`}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="h-full w-full object-contain"
+        /* Degradação, não erro: uma library que quebra a home porque faltou
+           rodar um script ninguém publica na sexta. */
+        onError={() => setSemFoto(true)}
+      />
+    </div>
+  );
+
   return (
     <article
       ref={ref}
@@ -361,28 +392,7 @@ const Ladrilho = React.memo(function Ladrilho({
       */}
       <div className="flex min-w-0 flex-1 flex-col">
         {Demo && !viva && !semFoto ? (
-          <div
-            role="button"
-            tabIndex={-1}
-            onClick={onOpen}
-            className="flex aspect-[16/10] cursor-pointer items-center justify-center overflow-hidden border-b border-border p-2"
-            style={stageSurfaceOf(item)}
-          >
-            {/* `object-contain`: a captura já vem recortada no conteúdo, e
-                `cover` passou a cortar palavra no meio — que lê como defeito,
-                não como miniatura. Peça inteira e pequena ganha de metade de
-                peça em tamanho grande. */}
-            <img
-              src={`/shots/${item.name}-${escuro ? "escuro" : "claro"}.webp`}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-contain"
-              /* Degradação, não erro: uma library que quebra a home porque
-                 faltou rodar um script ninguém publica na sexta. */
-              onError={() => setSemFoto(true)}
-            />
-          </div>
+          moldura
         ) : viva ? (
           <PalcoFixo
             w={w}
@@ -396,11 +406,22 @@ const Ladrilho = React.memo(function Ladrilho({
             className="border-b border-border"
             style={stageSurfaceOf(item)}
           >
-            {mounted && Demo ? (
-              <Demo />
-            ) : (
-              <div className="h-full w-full animate-pulse bg-muted/40" />
-            )}
+            {/*
+              A FOTO é a espera, não um esqueleto.
+              
+              A demo chega por `import()`, e a primeira versão punha um retângulo
+              pulsando no lugar. O resultado no hover era foto → cinza piscando →
+              peça: um passo a mais do que existia antes, e o passo do meio não
+              informa nada. A captura já está na tela e é a mesma peça; deixá-la
+              ali faz a troca parecer a peça ganhando vida em vez de a página
+              recarregando.
+              
+              A fronteira precisa ficar AQUI dentro: sem ela a suspensão sobe até
+              o topo da árvore e a grade inteira pisca por causa de um card.
+            */}
+            <React.Suspense fallback={foto ? moldura : <div className="h-full w-full animate-pulse bg-muted/40" />}>
+              {mounted && Demo ? <Demo /> : <div className="h-full w-full animate-pulse bg-muted/40" />}
+            </React.Suspense>
           </PalcoFixo>
         ) : (
           /* Lib, hook e tema não têm superfície. Em vez de sumirem da grade —

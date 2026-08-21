@@ -278,7 +278,7 @@ acervo, e um corte de validade pra library parada não anunciar novidade velha.
 | 4.1 | `Copiar pra IA`: prompt / configurado / fonte / comando | `copiar-pra-ia.tsx` |
 | 4.2 | `llms.txt` + `/r/<item>.md` (81 fichas) | `scripts/llms.mjs` |
 | 3.2 | realce de sintaxe, com paleta que segue o fundo real e Prism sob demanda | `codigo.tsx`, `codigo-realce.tsx` |
-| — | **51 presets em 16 itens** — as "variações" | `controls.overrides.json` |
+| — | **64 presets em 21 itens** — as "variações" | `controls.overrides.json` |
 | — | `controls-check` — portão que confere preset × TypeScript | `scripts/controls-check.mjs` |
 
 ### O portão dos controles
@@ -295,7 +295,32 @@ Ele achou dois defeitos no dia em que entrou:
   monta (`PadDemo`, local) não espalhava nada — painel morto em produção;
 - um preset com `gap` fora da faixa do slider.
 
+Ele tem duas regras. A primeira é de coerência (prop existe, valor cabe). A
+segunda é de desenho: **preset que muda uma prop só é erro** — se aquela prop já
+está na tela como trilho segmentado, o chip é um segundo botão pro mesmo clique
+dois centímetros acima. A primeira leva tinha seis assim. A exceção é a união
+grande, que vira `<select>`: ali o chip é atalho de verdade.
+
 Roda no `build` e no `ship`.
+
+### O corte do bundle
+
+O chunk principal foi de **963 kB para 630 kB** (300 → 189 gzip).
+
+O que destravou foi a própria grade: enquanto o índice montava demo viva, as 44
+demos precisavam estar no chunk inicial e fatiar só somaria requisição. Com a
+grade em foto, quem abre a home não monta demo nenhuma — e mesmo assim baixava
+todas. Agora cada uma é um `React.lazy`, com `<Suspense>` nos três lugares que
+renderizam `item.demo` (ladrilho, ficha, `?solo=1`).
+
+No ladrilho a espera é a **foto**, não um esqueleto: a captura já está na tela e
+é a mesma peça, então a troca lê como a peça ganhando vida em vez de a página
+recarregando.
+
+O Prism do realce ficou fora do caminho crítico pelo mesmo motivo (87 kB sob
+demanda). O que sobra no chunk principal é a vitrine e os ~28 componentes do
+registry que as demos inline do `catalog.tsx` usam — cortá-lo mais exige mover
+essas demos inline pra arquivos.
 
 ### Falta
 

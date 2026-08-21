@@ -37,8 +37,6 @@ import { SpringDots } from "../../registry/visant/ui/spring-dots";
 import { SfxToggle } from "../../registry/visant/ui/sfx-toggle";
 import { MeasureBar } from "../../registry/visant/ui/measure-bar";
 import { EmptyState } from "../../registry/visant/ui/empty-state";
-import { PhotoFrame } from "../../registry/visant/ui/photo-frame";
-import { PhotoFlip } from "../../registry/visant/ui/photo-flip";
 import { MagneticCta } from "../../registry/visant/ui/magnetic-cta";
 import {
   NavDrawer,
@@ -60,59 +58,64 @@ import { VintageTvFrame } from "../../registry/vintage/ui/vintage-tv-frame";
 import { VintageSoundboardPad } from "../../registry/vintage/ui/vintage-soundboard-pad";
 import { VintageXYPad } from "../../registry/vintage/ui/vintage-xy-pad";
 /*
- * As demos que moram em arquivo próprio.
+ * As demos que moram em arquivo próprio — todas sob demanda.
  *
- * Todas exportam default. O import é estático — o `React.lazy` fica só para
- * quem carrega peso que a grade inteira não usa (o @dnd-kit do board) ou que
- * mora no meio da lista (marquee, pinned-scene). Fatiar as outras não pagaria:
- * o GSAP já entra no primeiro chunk pelas demos que continuam inline aqui
- * (`PhotoFrameDemo`, `PhotoFlipDemo`), então um chunk a mais só somaria
- * requisição sem tirar byte do caminho crítico.
+ * Elas eram `import` estático, e a conta fazia sentido enquanto a grade montava
+ * demo viva: se a página ia montar quarenta delas de qualquer jeito, fatiar só
+ * somaria requisição. O GSAP entrava no primeiro chunk por tabela.
+ *
+ * A grade do acervo passou a mostrar FOTO e só acordar a peça sob o cursor. Aí
+ * a conta virou: quem abre a home não monta demo nenhuma, e mesmo assim baixava
+ * as quarenta — mais o GSAP, o Lenis e o resto que elas arrastam. Agora cada uma
+ * é um `React.lazy`, e o Rollup leva junto o que só ela usa.
+ *
+ * Quem renderiza `item.demo` põe `<React.Suspense>` em volta. São três lugares:
+ * o ladrilho da grade, a ficha e a rota `?solo=1`.
  */
-import AssigneeStackDemo from "./demos/assignee-stack-demo";
-import BrandSelectorDemo from "./demos/brand-selector-demo";
-import ChipDemo from "./demos/chip-demo";
-import CountUpDemo from "./demos/count-up-demo";
-import Book3DDemo from "./demos/book-3d-demo";
-import BookShelfDemo from "./demos/book-shelf-demo";
-import CoverArtDemo from "./demos/cover-art-demo";
-import DropOverlayDemo from "./demos/drop-overlay-demo";
-import FoldMotionDemo from "./demos/fold-motion-demo";
-import GleamDemo from "./demos/gleam-demo";
-import GridDotsDemo from "./demos/grid-dots-demo";
-import LineRevealDemo from "./demos/line-reveal-demo";
-import LoadingGalleryDemo from "./demos/loading-gallery-demo";
-import LogoWallDemo from "./demos/logo-wall-demo";
-import MasonryGalleryDemo from "./demos/masonry-gallery-demo";
-import MeasurePickerDemo from "./demos/measure-picker-demo";
-import PhotoCompareDemo from "./demos/photo-compare-demo";
-import PhotoSplitDemo from "./demos/photo-split-demo";
-import PlateDemo from "./demos/plate-demo";
-import PointerParallaxDemo from "./demos/use-pointer-parallax-demo";
-import QuoteBlockDemo from "./demos/quote-block-demo";
-import RailDemo from "./demos/rail-demo";
-import ReelsRailDemo from "./demos/reels-rail-demo";
-import RepulsiveHoverDemo from "./demos/repulsive-hover-demo";
-import ShowcaseCardDemo from "./demos/showcase-card-demo";
-import SideNavDemo from "./demos/side-nav-demo";
-import AuthButtonDemo from "./demos/auth-button-demo";
-import ProfileFormDemo from "./demos/profile-form-demo";
-import EmptyStateDemo from "./demos/empty-state-demo";
-import PhotoFrameDemo from "./demos/photo-frame-demo";
-import PhotoFlipDemo from "./demos/photo-flip-demo";
-import VintageParametricEqDemo from "./demos/vintage-parametric-eq-demo";
-import VintageOscilloscopeDemo from "./demos/vintage-oscilloscope-demo";
-import SkeletonRailDemo from "./demos/skeleton-rail-demo";
-import SpineCardDemo from "./demos/spine-card-demo";
-import StepCardsDemo from "./demos/step-cards-demo";
-import StickyFilterbarDemo from "./demos/sticky-filterbar-demo";
-import StoreStatusDemo from "./demos/store-status-demo";
-import TimelineDemo from "./demos/timeline-demo";
-import TurbulenceFieldDemo from "./demos/turbulence-field-demo";
-import VintageKnobDemo from "./demos/vintage-knob-demo";
-import VintageLedDemo from "./demos/vintage-led-demo";
-import VintageMeterDemo from "./demos/vintage-meter-demo";
-import VintageSliderDemo from "./demos/vintage-slider-demo";
+const AssigneeStackDemo = React.lazy(() => import("./demos/assignee-stack-demo"));
+const BrandSelectorDemo = React.lazy(() => import("./demos/brand-selector-demo"));
+const ChipDemo = React.lazy(() => import("./demos/chip-demo"));
+const CountUpDemo = React.lazy(() => import("./demos/count-up-demo"));
+const Book3DDemo = React.lazy(() => import("./demos/book-3d-demo"));
+const BookShelfDemo = React.lazy(() => import("./demos/book-shelf-demo"));
+const CoverArtDemo = React.lazy(() => import("./demos/cover-art-demo"));
+const DropOverlayDemo = React.lazy(() => import("./demos/drop-overlay-demo"));
+const FoldMotionDemo = React.lazy(() => import("./demos/fold-motion-demo"));
+const GleamDemo = React.lazy(() => import("./demos/gleam-demo"));
+const GridDotsDemo = React.lazy(() => import("./demos/grid-dots-demo"));
+const LineRevealDemo = React.lazy(() => import("./demos/line-reveal-demo"));
+const LoadingGalleryDemo = React.lazy(() => import("./demos/loading-gallery-demo"));
+const LogoWallDemo = React.lazy(() => import("./demos/logo-wall-demo"));
+const MasonryGalleryDemo = React.lazy(() => import("./demos/masonry-gallery-demo"));
+const MeasurePickerDemo = React.lazy(() => import("./demos/measure-picker-demo"));
+const PhotoCompareDemo = React.lazy(() => import("./demos/photo-compare-demo"));
+const PhotoSplitDemo = React.lazy(() => import("./demos/photo-split-demo"));
+const PlateDemo = React.lazy(() => import("./demos/plate-demo"));
+const PointerParallaxDemo = React.lazy(() => import("./demos/use-pointer-parallax-demo"));
+const QuoteBlockDemo = React.lazy(() => import("./demos/quote-block-demo"));
+const RailDemo = React.lazy(() => import("./demos/rail-demo"));
+const ReelsRailDemo = React.lazy(() => import("./demos/reels-rail-demo"));
+const RepulsiveHoverDemo = React.lazy(() => import("./demos/repulsive-hover-demo"));
+const ShowcaseCardDemo = React.lazy(() => import("./demos/showcase-card-demo"));
+const SideNavDemo = React.lazy(() => import("./demos/side-nav-demo"));
+const AuthButtonDemo = React.lazy(() => import("./demos/auth-button-demo"));
+const ProfileFormDemo = React.lazy(() => import("./demos/profile-form-demo"));
+const EmptyStateDemo = React.lazy(() => import("./demos/empty-state-demo"));
+const PhotoFrameDemo = React.lazy(() => import("./demos/photo-frame-demo"));
+const PhotoFlipDemo = React.lazy(() => import("./demos/photo-flip-demo"));
+const VintageParametricEqDemo = React.lazy(() => import("./demos/vintage-parametric-eq-demo"));
+const VintageOscilloscopeDemo = React.lazy(() => import("./demos/vintage-oscilloscope-demo"));
+const SkeletonRailDemo = React.lazy(() => import("./demos/skeleton-rail-demo"));
+const SpineCardDemo = React.lazy(() => import("./demos/spine-card-demo"));
+const StepCardsDemo = React.lazy(() => import("./demos/step-cards-demo"));
+const StickyFilterbarDemo = React.lazy(() => import("./demos/sticky-filterbar-demo"));
+const StoreStatusDemo = React.lazy(() => import("./demos/store-status-demo"));
+const TimelineDemo = React.lazy(() => import("./demos/timeline-demo"));
+const TurbulenceFieldDemo = React.lazy(() => import("./demos/turbulence-field-demo"));
+const VintageKnobDemo = React.lazy(() => import("./demos/vintage-knob-demo"));
+const VintageLedDemo = React.lazy(() => import("./demos/vintage-led-demo"));
+const VintageMeterDemo = React.lazy(() => import("./demos/vintage-meter-demo"));
+const VintageSliderDemo = React.lazy(() => import("./demos/vintage-slider-demo"));
 
 export type Family = "trabalho" | "aquisicao" | "motion" | "marca" | "vintage" | "fundacao";
 

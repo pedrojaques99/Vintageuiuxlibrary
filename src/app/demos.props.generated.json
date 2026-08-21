@@ -135,9 +135,6 @@
     "heading": "Reels",
     "hint": "mural contínuo"
   },
-  "book-shelf": {
-    "columns": "grid-cols-2 sm:grid-cols-4"
-  },
   "spine-card": {
     "href": "#",
     "action": "ver →",

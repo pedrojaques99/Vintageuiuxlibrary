@@ -36,26 +36,63 @@ export type Hsl = { h: number; s: number; l: number };
 /* ── O resolvedor ───────────────────────────────────────────────────────── */
 
 /**
- * Qualquer expressão de cor do CSS → rgb, resolvida pelo navegador.
+ * Qualquer expressão de cor do CSS → rgb sRGB, em DUAS etapas.
  *
- * O elemento fica FORA do fluxo e é removido no mesmo tique. `getComputedStyle`
- * força layout, então isto é caro num laço — e é por isso que só roda uma vez
- * por livro, na montagem, nunca por quadro.
+ * ┌─ POR QUE DUAS, E NÃO UMA ─────────────────────────────────────────────────┐
+ * │ A primeira versão lia `getComputedStyle(el).color` e extraía os números    │
+ * │ com regex, assumindo `rgb(r, g, b)`. Isso está errado desde que os         │
+ * │ navegadores passaram a PRESERVAR o espaço de cor: um token declarado como  │
+ * │ `oklch(0.99 0.002 17)` volta como `oklch(0.99 0.002 17)`, e a regex lia    │
+ * │ 0.99 / 0.002 / 17 como se fossem canais 0–255. O resultado era preto quase │
+ * │ puro onde deveria haver branco.                                            │
+ * │                                                                            │
+ * │ E falhava CALADO: a palheta inteira saía plausível — escura, monocromática │
+ * │ — só que da cor errada. Nada quebrava. Foi preciso medir o token na página │
+ * │ pra ver. É a pior classe de bug de cor que existe, porque o olho aceita.   │
+ * │                                                                            │
+ * │ `canvas.fillStyle` também preserva `oklch`, então normalizar por ele não   │
+ * │ resolve. O único ponto do pipeline que OBRIGA sRGB é o rasterizador: pinta │
+ * │ 1×1 e lê o pixel. Funciona pra `oklch`, `lab`, `color(display-p3 …)` e     │
+ * │ pro que a CSS inventar depois, porque o que se lê é o que a tela mostra.   │
+ * └────────────────────────────────────────────────────────────────────────────┘
+ *
+ * Etapa 1 resolve `var()` e `color-mix()` (que o canvas não entende) num
+ * elemento fora do fluxo; etapa 2 rasteriza. As duas forçam layout/pintura, e é
+ * por isso que isto roda uma vez por livro, na montagem, nunca por quadro.
  *
  * Devolve `null` fora do navegador e quando o token não existe: quem chama
  * decide o que fazer, e a decisão nunca é "usa este hex aqui".
  */
 export function resolveRgb(css: string): Rgb | null {
   if (typeof document === "undefined") return null;
+
   const probe = document.createElement("span");
   probe.style.cssText = "position:absolute;visibility:hidden;pointer-events:none";
   probe.style.color = css;
   document.body.appendChild(probe);
-  const painted = getComputedStyle(probe).color;
+  const concrete = getComputedStyle(probe).color;
   probe.remove();
-  const m = painted.match(/-?[\d.]+/g);
-  if (!m || m.length < 3) return null;
-  return { r: +m[0], g: +m[1], b: +m[2] };
+  if (!concrete) return null;
+
+  try {
+    const c = document.createElement("canvas");
+    c.width = 1;
+    c.height = 1;
+    const ctx = c.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return null;
+    /* Sem sentinela de "cor inválida" de propósito: `getComputedStyle` já
+       devolve sempre uma cor válida. Token que NÃO EXISTE cai na cor herdada da
+       página, e essa degradação é sã — o objeto herda a tinta de quem o
+       hospeda, em vez de sumir. */
+    ctx.fillStyle = concrete;
+    ctx.clearRect(0, 0, 1, 1);
+    ctx.fillRect(0, 0, 1, 1);
+    const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
+    if (a === 0) return null;
+    return { r, g, b };
+  } catch {
+    return null;
+  }
 }
 
 /** Token do documento, ou `''` se ele não existir. */

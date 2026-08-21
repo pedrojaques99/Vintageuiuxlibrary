@@ -426,7 +426,9 @@ export function ComponentFocus({
                       >
                         {/* Escala só entra quando o preset não cabe — nunca amplia. */}
                         <FitStage w={frameW} h={frameH} maxScale={1}>
-                          <Demo props={knobs.props} />
+                          <React.Suspense fallback={<div className="h-full w-full animate-pulse bg-muted/40" />}>
+                            <Demo props={knobs.props} />
+                          </React.Suspense>
                         </FitStage>
                       </div>
                     )}

@@ -96,8 +96,34 @@ for (const [item, dados] of Object.entries(controles)) {
       erros.push(`${item}: preset sem nome ou sem props`);
       continue;
     }
-    if (!Object.keys(preset.props).length) {
+    const props = Object.entries(preset.props);
+
+    if (!props.length) {
       erros.push(`${item} · ${preset.nome}: preset vazio — chip que não muda nada`);
+    }
+
+    /*
+     * Preset de uma prop só quase sempre é ruído.
+     *
+     * Se a prop já aparece como trilho segmentado logo abaixo — e ela aparece
+     * sempre que a união tem até quatro membros —, o chip é um segundo botão
+     * pro mesmo clique, dois centímetros acima. A primeira leva de presets tinha
+     * seis assim: "cartão / papel / marca" no `quote-block` repetia exatamente o
+     * controle `tone`.
+     *
+     * A exceção é a união GRANDE, que vira `<select>`: ali o chip é um atalho de
+     * verdade, porque o valor está escondido atrás de um menu.
+     */
+    if (props.length === 1) {
+      const [prop] = props[0];
+      const c = porProp[prop];
+      const escondido = c?.tipo === "escolha" && c.valores.length > 4;
+      if (c && !escondido) {
+        erros.push(
+          `${item} · ${preset.nome}: muda só "${prop}", que já está na tela como controle — ` +
+            `preset serve pra combinar duas ou mais`,
+        );
+      }
     }
 
     for (const [prop, valor] of Object.entries(preset.props)) {

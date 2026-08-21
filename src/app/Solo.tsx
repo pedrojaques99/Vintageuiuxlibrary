@@ -121,7 +121,11 @@ export function Solo({ name, props: iniciais }: { name: string; props?: Record<s
 
   return (
     <div ref={ref} className="p-4">
-      <Demo props={props} />
+      {/* A demo é um `React.lazy`. Sem esta fronteira o documento do iframe
+          suspende inteiro e o pai mede altura zero. */}
+      <React.Suspense fallback={<div className="h-40 w-full animate-pulse bg-muted/40" />}>
+        <Demo props={props} />
+      </React.Suspense>
     </div>
   );
 }

@@ -2398,9 +2398,9 @@
       "description": "O item de catálogo como objeto: capa dura em WebGL com lombada curva, espessura vinda da contagem de páginas e praça. Cor derivada dos tokens da marca e do matiz da própria arte, sem asset baixado.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "dependencies": [
-        "three",
-        "@react-three/fiber",
-        "@react-three/drei"
+        "three@^0.170.0",
+        "@react-three/fiber@^8.18.0",
+        "@react-three/drei@^9.122.0"
       ],
       "registryDependencies": [
         "utils",

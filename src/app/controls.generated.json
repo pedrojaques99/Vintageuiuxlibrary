@@ -535,7 +535,40 @@
           "secundario": true
         }
       ]
-    }
+    },
+    "presets": [
+      {
+        "nome": "no ar",
+        "props": {
+          "isOn": true,
+          "signalActive": true,
+          "programActive": true
+        }
+      },
+      {
+        "nome": "chuvisco",
+        "props": {
+          "isOn": true,
+          "signalActive": false
+        }
+      },
+      {
+        "nome": "tubo limpo",
+        "props": {
+          "isOn": true,
+          "showScanlines": false,
+          "signalActive": true
+        }
+      },
+      {
+        "nome": "espectro",
+        "props": {
+          "isOn": true,
+          "program": "fft",
+          "signalActive": true
+        }
+      }
+    ]
   },
   "vintage-soundboard-pad": {
     "componentes": {
@@ -581,7 +614,30 @@
           "resumo": null
         }
       ]
-    }
+    },
+    "presets": [
+      {
+        "nome": "aceso",
+        "props": {
+          "active": true,
+          "silent": false
+        }
+      },
+      {
+        "nome": "mudo",
+        "props": {
+          "active": true,
+          "silent": true
+        }
+      },
+      {
+        "nome": "pad grande",
+        "props": {
+          "size": 140,
+          "active": true
+        }
+      }
+    ]
   },
   "vintage-xy-pad": {
     "componentes": {
@@ -683,22 +739,10 @@
     },
     "presets": [
       {
-        "nome": "onda",
-        "props": {
-          "mode": "wave"
-        }
-      },
-      {
-        "nome": "espectro",
+        "nome": "espectro cheio",
         "props": {
           "mode": "fft",
           "fill": true
-        }
-      },
-      {
-        "nome": "anéis",
-        "props": {
-          "mode": "rings"
         }
       },
       {
@@ -706,6 +750,13 @@
         "props": {
           "chrome": false,
           "mode": "scope"
+        }
+      },
+      {
+        "nome": "grade parada",
+        "props": {
+          "mode": "grid",
+          "active": false
         }
       }
     ]
@@ -1630,21 +1681,24 @@
     },
     "presets": [
       {
-        "nome": "deslogado",
+        "nome": "logado, menu à direita",
         "props": {
-          "status": "signed-out"
+          "status": "signed-in",
+          "align": "end"
         }
       },
       {
-        "nome": "carregando",
+        "nome": "carregando no topo",
         "props": {
-          "status": "loading"
+          "status": "loading",
+          "side": "top"
         }
       },
       {
-        "nome": "logado",
+        "nome": "deslogado embaixo",
         "props": {
-          "status": "signed-in"
+          "status": "signed-out",
+          "side": "bottom"
         }
       }
     ]
@@ -2190,7 +2244,30 @@
           "inicial": "Solte os arquivos"
         }
       ]
-    }
+    },
+    "presets": [
+      {
+        "nome": "parado",
+        "props": {
+          "state": "idle",
+          "visible": false
+        }
+      },
+      {
+        "nome": "arrastando",
+        "props": {
+          "state": "over",
+          "visible": true
+        }
+      },
+      {
+        "nome": "soltou",
+        "props": {
+          "state": "drop",
+          "visible": true
+        }
+      }
+    ]
   },
   "brand-theme": {
     "componentes": {
@@ -2406,22 +2483,24 @@
     },
     "presets": [
       {
-        "nome": "duas colunas",
-        "props": {
-          "columns": "2"
-        }
-      },
-      {
-        "nome": "três colunas",
-        "props": {
-          "columns": "3"
-        }
-      },
-      {
         "nome": "última larga",
         "props": {
           "columns": "3",
           "wideLast": true
+        }
+      },
+      {
+        "nome": "quatro parelhas",
+        "props": {
+          "columns": "4",
+          "wideLast": false
+        }
+      },
+      {
+        "nome": "duas altas",
+        "props": {
+          "columns": "2",
+          "visualHeight": 300
         }
       }
     ]
@@ -2496,28 +2575,24 @@
     },
     "presets": [
       {
-        "nome": "cartão",
+        "nome": "papel sem caixa",
         "props": {
-          "tone": "card"
+          "tone": "muted",
+          "bare": true
         }
       },
       {
-        "nome": "papel",
+        "nome": "marca virada",
         "props": {
-          "tone": "muted"
-        }
-      },
-      {
-        "nome": "marca",
-        "props": {
-          "tone": "brand"
-        }
-      },
-      {
-        "nome": "sem caixa",
-        "props": {
-          "bare": true,
+          "tone": "brand",
           "flip": true
+        }
+      },
+      {
+        "nome": "retrato largo",
+        "props": {
+          "tone": "card",
+          "portraitWidth": 20
         }
       }
     ]
@@ -2826,7 +2901,30 @@
           "resumo": null
         }
       ]
-    }
+    },
+    "presets": [
+      {
+        "nome": "livro",
+        "props": {
+          "family": "book",
+          "titleless": false
+        }
+      },
+      {
+        "nome": "app sem título",
+        "props": {
+          "family": "app",
+          "titleless": true
+        }
+      },
+      {
+        "nome": "prato",
+        "props": {
+          "family": "plate",
+          "titleless": false
+        }
+      }
+    ]
   },
   "empty-state": {
     "componentes": {
@@ -3037,7 +3135,9 @@
       {
         "nome": "sem título",
         "props": {
-          "heading": false
+          "heading": false,
+          "cards": 4,
+          "itemWidth": 200
         }
       }
     ]
@@ -3209,7 +3309,8 @@
       {
         "nome": "chapado",
         "props": {
-          "flat": true
+          "flat": true,
+          "glow": 0
         }
       }
     ]
@@ -3420,22 +3521,24 @@
     },
     "presets": [
       {
-        "nome": "aberta",
-        "props": {
-          "collapsed": false,
-          "width": 15
-        }
-      },
-      {
         "nome": "recolhida",
         "props": {
-          "collapsed": true
+          "collapsed": true,
+          "toggle": true
         }
       },
       {
-        "nome": "larga",
+        "nome": "larga e fixa",
         "props": {
-          "width": 22
+          "width": 22,
+          "toggle": false
+        }
+      },
+      {
+        "nome": "estreita",
+        "props": {
+          "width": 11,
+          "collapsedWidth": 3
         }
       }
     ]
@@ -3475,7 +3578,23 @@
           "inicial": "24px"
         }
       ]
-    }
+    },
+    "presets": [
+      {
+        "nome": "trilho à esquerda",
+        "props": {
+          "side": "left",
+          "rail": true
+        }
+      },
+      {
+        "nome": "sem trilho",
+        "props": {
+          "side": "right",
+          "rail": false
+        }
+      }
+    ]
   },
   "photo-frame": {
     "componentes": {
@@ -3867,8 +3986,7 @@
           "prop": "columns",
           "tipo": "texto",
           "padrao": "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
-          "resumo": "Classes de grade. O default é uma estante confortável em três larguras.",
-          "inicial": "grid-cols-2 sm:grid-cols-4"
+          "resumo": "Classes de grade. O default é uma estante confortável em três larguras."
         }
       ]
     }
