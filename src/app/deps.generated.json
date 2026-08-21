@@ -118,8 +118,13 @@
     "gsap"
   ],
   "book-3d": [
-    "@react-three/drei",
-    "@react-three/fiber",
-    "three"
+    "@react-three/drei@^9.122.0",
+    "@react-three/fiber@^8.18.0",
+    "three@^0.170.0"
+  ],
+  "book-shelf": [
+    "@react-three/drei@^9.122.0",
+    "@react-three/fiber@^8.18.0",
+    "three@^0.170.0"
   ]
 }
