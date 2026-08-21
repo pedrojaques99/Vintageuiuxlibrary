@@ -18,10 +18,23 @@
  * como novidade.
  *
  * Saída: `src/app/novidades.generated.json` — `{ "<item>": "2026-08-14" }`.
+ *
+ * ── E por que ele se RECUSA a escrever vazio ────────────────────────────────
+ *
+ * O build da Vercel clona raso. `git log --diff-filter=A` não acha adição
+ * nenhuma num clone sem histórico, e a primeira versão deste script alegremente
+ * gravou `{}` por cima do arquivo versionado — a publicação foi ao ar com os
+ * selos `novo` sumidos e a sidebar anunciando "0 novas". Nada quebrou, nada
+ * gritou: só a informação desapareceu.
+ *
+ * É o mesmo desenho que `og-images.mjs` e `capture-registry.mjs` já tinham (eles
+ * exigem Chromium, que a Vercel não tem, e por isso são versionados e rodados à
+ * mão). A regra: **o arquivo versionado é a verdade; este script só o
+ * substitui quando tem como fazer melhor.**
  */
 
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -54,10 +67,29 @@ for (const item of registry.items) {
   if (data) saida[item.name] = data;
 }
 
-writeFileSync(
-  join(ROOT, "src", "app", "novidades.generated.json"),
-  JSON.stringify(saida, null, 2) + "\n",
-);
+const destino = join(ROOT, "src", "app", "novidades.generated.json");
+const versionadas = existsSync(destino)
+  ? Object.keys(JSON.parse(readFileSync(destino, "utf8"))).length
+  : 0;
+
+/*
+ * Vazio não sobrescreve.
+ *
+ * Sem esta guarda o build da Vercel — que clona raso — gravava `{}` por cima do
+ * arquivo versionado, e a publicação ia ao ar com os selos `novo` sumidos e a
+ * sidebar anunciando "0 novas". Nada quebrou e nada gritou: a informação
+ * simplesmente desapareceu, que é o modo de falha mais caro de achar.
+ */
+if (!Object.keys(saida).length) {
+  console.log(
+    versionadas
+      ? `novidades: sem histórico de git aqui (clone raso?) — mantendo as ${versionadas} datas versionadas`
+      : "novidades: sem histórico de git e sem arquivo versionado — a vitrine fica sem selo `novo`",
+  );
+  process.exit(0);
+}
+
+writeFileSync(destino, JSON.stringify(saida, null, 2) + "\n");
 
 const ordenadas = Object.values(saida).sort();
 console.log(
