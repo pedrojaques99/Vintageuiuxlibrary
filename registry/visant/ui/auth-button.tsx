@@ -84,6 +84,17 @@ export interface AuthButtonProps {
   /** Palpite de forma para o esqueleto. Não vira texto em hipótese nenhuma. */
   hint?: "signed-in" | "signed-out";
   align?: "start" | "end";
+  /**
+   * De que lado do gatilho o painel abre. `"bottom"` (padrão) é o canto do
+   * header, que foi onde a peça nasceu.
+   *
+   * `"top"` existe porque o botão de conta nem sempre mora no topo: no Visant
+   * Club ele é o rodapé de uma coluna de 240px, e ali o painel de ~14 linhas
+   * abria PRA BAIXO, pra fora do viewport — o menu virava uma lista cortada na
+   * borda da janela, ou pior, empurrava scroll na sidebar. Um `align` não
+   * resolve: aquilo escolhe a borda horizontal.
+   */
+  side?: "top" | "bottom";
   labels?: Partial<{
     signIn: string;
     signOut: string;
@@ -118,6 +129,7 @@ function Painel({
   open,
   onClose,
   align,
+  side,
   gatilho,
   className,
   children,
@@ -125,6 +137,7 @@ function Painel({
   open: boolean;
   onClose: () => void;
   align: "start" | "end";
+  side: "top" | "bottom";
   gatilho: React.RefObject<HTMLButtonElement>;
   className?: string;
   children: React.ReactNode;
@@ -201,10 +214,15 @@ function Painel({
         }
       }}
       className={cn(
-        "absolute top-[calc(100%+0.375rem)] z-50 w-[16.5rem] max-w-[calc(100vw-1.5rem)] overflow-hidden",
+        "absolute z-50 w-[16.5rem] max-w-[calc(100vw-1.5rem)] overflow-hidden",
         "rounded-[var(--r-surface,0.875rem)] border border-border bg-popover text-popover-foreground",
         "[box-shadow:var(--e-raised,0_8px_24px_-12px_rgb(0_0_0/0.35))]",
-        "origin-top animate-in fade-in-0 zoom-in-95 [animation-duration:var(--dur-fast,160ms)]",
+        "animate-in fade-in-0 zoom-in-95 [animation-duration:var(--dur-fast,160ms)]",
+        // A origem da escala acompanha o lado: painel que abre pra cima e cresce
+        // a partir do topo parece que veio de outro lugar da tela.
+        side === "top"
+          ? "bottom-[calc(100%+0.375rem)] origin-bottom"
+          : "top-[calc(100%+0.375rem)] origin-top",
         align === "end" ? "right-0" : "left-0",
         className,
       )}
@@ -227,6 +245,7 @@ export function AuthButton({
   items,
   hint = "signed-out",
   align = "end",
+  side = "bottom",
   labels,
   className,
 }: AuthButtonProps) {
@@ -343,7 +362,7 @@ export function AuthButton({
       )}
 
       {status === "signed-out" && !!providers?.length && (
-        <Painel open={aberto} onClose={fechar} align={align} gatilho={gatilho}>
+        <Painel open={aberto} onClose={fechar} align={align} side={side} gatilho={gatilho}>
           <p className="px-3 pb-1 pt-2.5 text-[length:var(--text-rotulo,0.6875rem)] uppercase tracking-[0.08em] text-muted-foreground">
             {t.providers}
           </p>
@@ -371,7 +390,7 @@ export function AuthButton({
       )}
 
       {status === "signed-in" && account && (
-        <Painel open={aberto} onClose={fechar} align={align} gatilho={gatilho}>
+        <Painel open={aberto} onClose={fechar} align={align} side={side} gatilho={gatilho}>
           {/* Quem está logado, escrito por extenso. O avatar sozinho é ambíguo
               em qualquer produto com duas contas na mesma máquina. */}
           <div className="flex min-w-0 items-center gap-2.5 border-b border-border px-3 py-2.5">

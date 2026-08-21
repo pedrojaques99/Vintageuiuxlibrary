@@ -62,6 +62,34 @@ import { cn } from "@/lib/utils";
  * lista, posição = onde se está. É a barra de rolagem que o navegador esconde
  * no telefone, redesenhada com o token da marca, e é o que responde "isso é
  * uma lista de seis ou de sessenta?" antes do primeiro gesto.
+ *
+ * ── E o trilho de DOIS itens ───────────────────────────────────────────────
+ *
+ * Tudo acima cuida da lista que transborda. A que não transborda ficava sem
+ * dono, e o defeito foi medido no app que consome isto: faixa útil de 1116px,
+ * dois cards de ~245px encostados à esquerda, **610px de vazio à direita** —
+ * mais da metade da fileira. Não é bug de código: sem transbordo não há o que
+ * rolar, então as setas somem e a máscara colapsa, exatamente como manda o
+ * estado. O que sobra é uma fileira curta ancorada num canto de uma faixa
+ * larga, e isso lê como conteúdo faltando, não como catálogo enxuto.
+ *
+ * `gridUpTo` é o limiar: com até N itens o trilho deixa de ser trilho e vira
+ * grade de colunas iguais que dividem a faixa. É a mesma lista, com a forma que
+ * a contagem pede — fileira quando há o que rolar, grade quando não há.
+ *
+ * Duas decisões que valem mais que o efeito:
+ *
+ * 1. **Quem decide é `Children.count`, não a medida.** O componente JÁ sabe se
+ *    transborda (`sync`), mas só DEPOIS de montar no cliente — trocar de layout
+ *    ali é um salto visível e, em SSR, HTML de servidor que não bate com o da
+ *    hidratação. A contagem existe no primeiro render dos dois lados, então o
+ *    servidor e o cliente pintam a mesma coisa e nada pisca.
+ * 2. **A coluna tem TETO.** Grade que só divide a largura devolve, com dois
+ *    itens numa faixa larga, dois pôsteres de ~550px; num card de proporção
+ *    alta isso é meia dobra de altura pra dois itens, e o `sizes` do next/image
+ *    que o consumidor declarou pra um card de 300 passa a servir imagem macia.
+ *    O teto é 1,5× o `itemWidth`: enche a faixa quando dá, e quando não dá,
+ *    para antes de virar outro problema.
  */
 
 export interface RailProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -80,7 +108,12 @@ export interface RailProps extends React.HTMLAttributes<HTMLDivElement> {
    * texto acima. `false` (padrão) é o trilho contido de sempre.
    */
   bleed?: number | false;
-  /** Esmaece as pontas onde a lista continua. Segue o estado real das bordas. */
+  /**
+   * Esmaece as pontas onde a lista continua. Segue o estado real das bordas.
+   *
+   * É máscara no scroller, não faixa pintada por cima: o item cortado some
+   * inteiro no fade, com título, legenda e o que mais houver embaixo da arte.
+   */
   fade?: boolean;
   /**
    * O nome da lista, na fileira das setas.
@@ -96,6 +129,17 @@ export interface RailProps extends React.HTMLAttributes<HTMLDivElement> {
   remainder?: boolean;
   /** Régua embaixo: quanto da lista cabe na vista e onde ela está. */
   progress?: boolean;
+  /**
+   * Com até N itens, o trilho vira GRADE: colunas iguais dividindo a faixa, sem
+   * rolagem, sem setas, sem máscara e sem tabindex rotativo (com três itens,
+   * três paradas de Tab é a ordem natural — o defeito das 21 paradas era outro).
+   *
+   * Nasce desligado como toda prop nova daqui: quem já usava o trilho recebe o
+   * mesmo pixel de antes. O app da casa liga em 3, que é onde a conta fecha lá:
+   * quatro cards de 300 + gaps passam de 1116px e transbordam de verdade; três
+   * cabem sobrando 184px mortos.
+   */
+  gridUpTo?: number | false;
 }
 
 export function Rail({
@@ -110,9 +154,14 @@ export function Rail({
   hint,
   remainder = false,
   progress = false,
+  gridUpTo = false,
   className,
   ...props
 }: RailProps) {
+  const total = React.Children.count(children);
+  const grade =
+    typeof gridUpTo === "number" && total > 0 && total <= gridUpTo;
+
   const ref = React.useRef<HTMLDivElement>(null);
   const [edge, setEdge] = React.useState({ start: true, end: false });
   /**
@@ -244,12 +293,15 @@ export function Rail({
     (ativo: number) => {
       itens().forEach((item, i) => {
         focaveisDe(item).forEach((f) => {
-          if (i === ativo) f.removeAttribute("tabindex");
+          // Em grade não há âncora: os itens estão todos na vista, então a
+          // ordem de Tab natural é a certa — e é ela que devolve o tabindex a
+          // quem já tinha sido marcado quando a mesma lista era fileira.
+          if (grade || i === ativo) f.removeAttribute("tabindex");
           else f.setAttribute("tabindex", "-1");
         });
       });
     },
-    [itens],
+    [itens, grade],
   );
 
   React.useEffect(() => {
@@ -296,7 +348,10 @@ export function Rail({
   };
 
   const temCabeca = Boolean(heading || hint);
-  const sangra = typeof bleed === "number" && bleed > 0 ? bleed : 0;
+  // Seta que não rola nada é controle mentindo sobre a lista — em grade não há
+  // rolagem nenhuma, então ela não existe (não é a versão desabilitada dela).
+  const mostrarSetas = arrows && !grade;
+  const sangra = !grade && typeof bleed === "number" && bleed > 0 ? bleed : 0;
 
   /*
    * A máscara nasce do `edge`, não de "tem overflow".
@@ -305,17 +360,34 @@ export function Rail({
    * começo quando já se está no começo, e continua prometendo depois do último
    * item. Aqui cada ponta só existe enquanto há lista daquele lado — o mesmo
    * estado que desabilita as setas, agora com um segundo consumidor.
+   *
+   * ── Por que a geometria virou variável, e não duas strings ──────────────
+   *
+   * Era um `useMemo` que trocava a string INTEIRA do gradiente a cada virada de
+   * ponta. Duas consequências medidas no app que consome isto (trilho de 1440,
+   * fade de 84px): a máscara reaparecia de estalo no primeiro pixel de rolagem,
+   * porque `mask-image` não é propriedade animável — trocar a string é corte
+   * seco; e quem quisesse suavizar não tinha onde pegar, o valor nascia e morria
+   * dentro do componente.
+   *
+   * Agora a máscara fica SEMPRE ligada e o que muda é a largura de cada ponta,
+   * publicada em `--rail-fade-ini` / `--rail-fade-fim`. Com `0px` o par de
+   * paradas colapsa no mesmo ponto e não há fade nenhum — o primeiro item nasce
+   * inteiro, que é o defeito óbvio de mascarar os dois lados sempre. E como as
+   * duas larguras são custom properties, o app que as REGISTRA com
+   * `@property { syntax: '<length>' }` ganha a transição de graça, sem que este
+   * arquivo precise carregar CSS junto (o item do registry é só este .tsx).
+   * Sem registro, o comportamento é o de hoje: troca imediata, nada quebra.
    */
-  const mascara = React.useMemo(() => {
-    if (!fade) return undefined;
-    const ini = edge.start ? "black 0" : "transparent 0, black 40px";
-    const fim = edge.end ? "black 100%" : "black calc(100% - 40px), transparent 100%";
-    return `linear-gradient(to right, ${ini}, ${fim})`;
-  }, [fade, edge.start, edge.end]);
+  // Em grade não há ponta que continue: mascarar aqui apagaria metade de um
+  // card que está inteiro na vista.
+  const mascara = fade && !grade
+    ? "linear-gradient(to right, transparent 0, black var(--rail-fade-ini), black calc(100% - var(--rail-fade-fim)), transparent 100%)"
+    : undefined;
 
   return (
     <div className={cn("relative", className)} {...props}>
-      {(arrows || temCabeca) && (
+      {(mostrarSetas || temCabeca) && (
         <div
           className={cn(
             "mb-3 items-end gap-3",
@@ -341,7 +413,7 @@ export function Rail({
               )}
             </div>
           )}
-          {arrows && (
+          {mostrarSetas && (
             <div className={cn("gap-2", temCabeca ? "hidden lg:flex" : "flex")}>
               <RailButton dir="prev" disabled={edge.start} onClick={() => nudge(-1)} />
               <RailButton dir="next" disabled={edge.end} onClick={() => nudge(1)} />
@@ -358,19 +430,40 @@ export function Rail({
           ref={ref}
           role="group"
           aria-label={label}
-          onScroll={sync}
-          onKeyDown={teclado}
-          onFocus={aoFocar}
+          onScroll={grade ? undefined : sync}
+          onKeyDown={grade ? undefined : teclado}
+          onFocus={grade ? undefined : aoFocar}
           className={cn(
-            "grid grid-flow-col overflow-x-auto overscroll-x-contain pb-3",
-            "[scroll-snap-type:x_proximity]",
-            "[&>*]:min-w-0 [&>*]:[scroll-snap-align:start]",
-            "[scrollbar-width:thin]",
+            "grid pb-3 [&>*]:min-w-0",
+            grade
+              ? null
+              : [
+                  "grid-flow-col overflow-x-auto overscroll-x-contain",
+                  "[scroll-snap-type:x_proximity]",
+                  "[&>*]:[scroll-snap-align:start]",
+                  "[scrollbar-width:thin]",
+                ],
           )}
           style={{
-            gridAutoColumns: `minmax(${itemWidth}px, 1fr)`,
             gap: `${gap}px`,
-            scrollbarColor: "var(--border) transparent",
+            ...(grade
+              ? {
+                  /* `auto-fit` e não `repeat(total, 1fr)`: onde a faixa não
+                     comporta as colunas — telefone, container estreito — as
+                     sobrando descem de linha sozinhas, e as trilhas vazias
+                     colapsam pra que as que ficaram dividam a largura inteira.
+                     Grade responsiva sem uma media query escrita à mão.
+
+                     O `maxWidth` é o teto de 1,5× (ver a nota do cabeçalho):
+                     é ele que impede a coluna de virar pôster gigante quando
+                     há dois itens numa faixa larga. */
+                  gridTemplateColumns: `repeat(auto-fit, minmax(${itemWidth}px, 1fr))`,
+                  maxWidth: `${total * itemWidth * 1.5 + (total - 1) * gap}px`,
+                }
+              : {
+                  gridAutoColumns: `minmax(${itemWidth}px, 1fr)`,
+                  scrollbarColor: "var(--border) transparent",
+                }),
             /*
              * Sangria em três partes, e as três são obrigatórias.
              *
@@ -388,15 +481,27 @@ export function Rail({
                   scrollPaddingInline: `${sangra}px`,
                 }
               : null),
+            /* A máscara vale pro SCROLLER inteiro — a altura toda do item, não
+               só a faixa da arte. Uma faixa pintada por cima só cobre o que ela
+               alcança: no app que consome isto dá pra ler o título e a descrição
+               do card cortado LOGO ABAIXO do gradiente. Máscara recorta o
+               elemento, então não sobra nada legível além do fade.
+               `black`/`transparent` aqui são canal de opacidade, não cor de
+               marca: não há token pra apontar. */
             ...(mascara
-              ? { maskImage: mascara, WebkitMaskImage: mascara }
+              ? {
+                  ["--rail-fade-ini" as string]: edge.start ? "0px" : "40px",
+                  ["--rail-fade-fim" as string]: edge.end ? "0px" : "40px",
+                  maskImage: mascara,
+                  WebkitMaskImage: mascara,
+                }
               : null),
           }}
         >
           {children}
         </div>
 
-        {remainder && vista.restam > 0 && (
+        {remainder && !grade && vista.restam > 0 && (
           /* Fica DENTRO da área rolável e por cima do último card cortado —
              é a legenda do corte. `tabIndex={-1}` pelo mesmo motivo das setas:
              o teclado já anda com ←/→ e moveria o foco junto, que é melhor. */
@@ -419,7 +524,7 @@ export function Rail({
         )}
       </div>
 
-      {progress && (
+      {progress && !grade && (
         // `aria-hidden`: é o retrato da mesma rolagem que o leitor de tela já
         // percorre item a item dentro do `role="group"`. Anunciar de novo, em
         // porcentagem, seria ruído sobre um dado que ele não pode usar.

@@ -2390,6 +2390,82 @@
           }
         }
       }
+    },
+    {
+      "name": "book-3d",
+      "type": "registry:ui",
+      "title": "Book 3D",
+      "description": "O item de catálogo como objeto: capa dura em WebGL com lombada curva, espessura vinda da contagem de páginas e praça. Cor derivada dos tokens da marca e do matiz da própria arte, sem asset baixado.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "three",
+        "@react-three/fiber",
+        "@react-three/drei"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@visant/cover-art"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/book-geometry.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/book-material.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/book-faces.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/ui/book-stage.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "registry/visant/ui/book-3d.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "book-shelf",
+      "type": "registry:ui",
+      "title": "Book Shelf",
+      "description": "Estante em vez de vitrine: os itens soltos, sem moldura, e o rótulo só no hover — porque o objeto já tem silhueta e a moldura passa a competir com ela.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils",
+        "@visant/book-3d"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/book-shelf.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".book-shelf-label": {
+            "background": "linear-gradient(to top, color-mix(in oklch, var(--background) 94%, transparent) 38%, transparent)",
+            "transition": "opacity var(--dur-fast, 160ms) var(--ease-out)"
+          }
+        },
+        "@media (hover: hover)": {
+          ".book-shelf-label": {
+            "opacity": "0"
+          },
+          ".group:hover .book-shelf-label, .group:focus-within .book-shelf-label": {
+            "opacity": "1"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".book-shelf-label": {
+            "transition": "none"
+          }
+        }
+      }
     }
   ]
 }
