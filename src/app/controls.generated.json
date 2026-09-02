@@ -1034,6 +1034,16 @@
     "componentes": {
       "ReelsRail": [
         {
+          "prop": "playOn",
+          "tipo": "escolha",
+          "valores": [
+            "center",
+            "hover"
+          ],
+          "padrao": "center",
+          "resumo": "Quem toca: o card do MEIO ou o card sob o cursor."
+        },
+        {
           "prop": "arrows",
           "tipo": "chave",
           "padrao": true,
@@ -1067,7 +1077,8 @@
           "prop": "sound",
           "tipo": "chave",
           "padrao": true,
-          "resumo": "Mostra o botão de som no card ativo. Desligue em vídeo sem áudio."
+          "resumo": "Mostra o botão de som no card ativo. Desligue em vídeo sem áudio.",
+          "secundario": true
         },
         {
           "prop": "driftSpeed",
@@ -3987,6 +3998,27 @@
           "tipo": "texto",
           "padrao": "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
           "resumo": "Classes de grade. O default é uma estante confortável em três larguras."
+        }
+      ]
+    }
+  },
+  "carousel-3d": {
+    "componentes": {
+      "Carousel3D": [
+        {
+          "prop": "autoRotate",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.2,
+          "resumo": "Velocidade do giro ocioso. 0 desliga."
+        },
+        {
+          "prop": "cta",
+          "tipo": "texto",
+          "padrao": "Ver projeto",
+          "resumo": "Texto do botão."
         }
       ]
     }

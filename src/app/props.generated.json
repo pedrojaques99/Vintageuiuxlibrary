@@ -1361,6 +1361,17 @@
           "descricao": "A fileira dá a volta em vez de acabar. Ver a nota do cabeçalho.\n\nPrecisa de itens suficientes pra encher a vista: com dois cards numa faixa\nlarga, o conjunto repetido aparece na tela ao lado do original e a repetição\nfica óbvia. De 5 pra cima é confortável."
         },
         {
+          "nome": "playOn",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "center",
+          "descricao": "Quem toca: o card do MEIO ou o card sob o cursor.\n\n`\"center\"` (padrão) é o formato de feed: a fileira decide, o dedo rola, o\ndo meio toca — e funciona igual no celular, onde não existe hover.\n\n`\"hover\"` devolve a escolha ao cursor: nada toca até alguém apontar, e aí\ntoca aquele. Combina com a deriva, que já para quando o ponteiro entra —\napontar vira \"segura aí que eu quero ver esse\". Num aparelho sem cursor\nele cai sozinho no `\"center\"`: um trilho onde nada nunca toca não é uma\nopção, é um defeito.",
+          "valores": [
+            "center",
+            "hover"
+          ]
+        },
+        {
           "nome": "ratio",
           "tipo": "string",
           "obrigatoria": false,
@@ -5759,6 +5770,59 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": "O que mostrar quando não há nada. Estante vazia sem isto é uma área morta\nque parece carregamento travado."
+        }
+      ]
+    }
+  ],
+  "carousel-3d": [
+    {
+      "nome": "StudioEnvironment",
+      "descricao": "Luz de estúdio assada em Lightformers — sem baixar HDR da rede.\n\nMaterial metálico sem environment não tem o que refletir e sai chapado; um\n.hdr de 2 MB por superfície 3D resolve isso pagando um download que o\nprimeiro quadro espera. Quatro lightformers cobrem o caso de vitrine\n(chave na frente, dois preenchimentos laterais, um rebote frio embaixo) e\ncustam zero byte de rede.\n\n`frames={1}` assa uma vez: a cena não muda de luz, então recalcular o cube\nrender target todo quadro seria GPU queimada à toa.",
+      "props": []
+    },
+    {
+      "nome": "ContextLossGuard",
+      "descricao": "Devolve o contexto WebGL no unmount, em vez de esperar o GC.\n\nO navegador tem um teto de contextos vivos (≈16 no Chrome). Uma SPA que\nmonta e desmonta superfícies 3D em navegação de cliente estoura esse teto\nsem nunca ter duas cenas na tela ao mesmo tempo — e o sintoma que aparece é\n\"THREE.WebGLRenderer: Context Lost\" numa cena que não fez nada de errado.\n\nO `setTimeout(…, 0)` não é superstição: o React e o drei ainda vão fazer o\ndispose deles (o `<Environment>` tem um cube render target próprio) e\nprecisam de um contexto VIVO pra isso. Forçar a perda de forma síncrona aqui\nfaz o dispose deles ler de um contexto já morto e lançar.",
+      "props": []
+    },
+    {
+      "nome": "Carousel3D",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "Carousel3DItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "autoRotate",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.2",
+          "descricao": "Velocidade do giro ocioso. 0 desliga."
+        },
+        {
+          "nome": "cta",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Ver projeto",
+          "descricao": "Texto do botão."
+        },
+        {
+          "nome": "onSelect",
+          "tipo": "(id: string) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado no clique do botão central. É por aqui que entra o router do app."
+        },
+        {
+          "nome": "resolveSrc",
+          "tipo": "(url: string) => string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Última chance de reescrever a URL da capa antes de virar textura.\n\nExiste por CORS: textura de outro domínio sem `Access-Control-Allow-Origin`\nsuja o canvas e o three recusa. Num app Next, `/_next/image?url=…` resolve\nservindo a imagem como same-origin. Padrão: passa reto."
         }
       ]
     }

@@ -272,6 +272,7 @@ export function Marquee({
          * saiu de vista para de queimar compositor no mesmo quadro.
          */
         const io = new IntersectionObserver(([e]) => {
+          if (!e) return;
           onscreen = e.isIntersecting;
           sync();
         });

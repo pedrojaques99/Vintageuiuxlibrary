@@ -126,6 +126,19 @@ export interface ReelsRailProps extends React.HTMLAttributes<HTMLDivElement> {
    * fica óbvia. De 5 pra cima é confortável.
    */
   loop?: boolean;
+  /**
+   * Quem toca: o card do MEIO ou o card sob o cursor.
+   *
+   * `"center"` (padrão) é o formato de feed: a fileira decide, o dedo rola, o
+   * do meio toca — e funciona igual no celular, onde não existe hover.
+   *
+   * `"hover"` devolve a escolha ao cursor: nada toca até alguém apontar, e aí
+   * toca aquele. Combina com a deriva, que já para quando o ponteiro entra —
+   * apontar vira "segura aí que eu quero ver esse". Num aparelho sem cursor
+   * ele cai sozinho no `"center"`: um trilho onde nada nunca toca não é uma
+   * opção, é um defeito.
+   */
+  playOn?: "center" | "hover";
   /** A fileira anda sozinha. Só faz sentido com `loop`. */
   drift?: boolean;
   /** Velocidade da deriva, em px por segundo. Acima de ~60 vira esteira. */
@@ -145,6 +158,7 @@ export function ReelsRail({
   label = "Vídeos",
   sound = true,
   autoPlay = true,
+  playOn = "center",
   loop = true,
   drift = true,
   driftSpeed = 26,
@@ -168,7 +182,29 @@ export function ReelsRail({
    * Volta a `null` quando o card ativo troca: a decisão era sobre AQUELE vídeo.
    */
   const [manual, setManual] = React.useState<boolean | null>(null);
-  React.useEffect(() => setManual(null), [ativo]);
+
+  /**
+   * O card sob o cursor, e o aparelho que tem cursor.
+   *
+   * `any-hover: hover` e não `pointer: fine`: um laptop com tela sensível ao
+   * toque responde às duas coisas, e a pergunta aqui é "existe um jeito de
+   * apontar sem tocar?", não "o ponteiro é preciso?".
+   */
+  const [sobCursor, setSobCursor] = React.useState<number | null>(null);
+  const [temCursor, setTemCursor] = React.useState(true);
+  React.useEffect(() => {
+    const mq = window.matchMedia("(any-hover: hover)");
+    const ler = () => setTemCursor(mq.matches);
+    ler();
+    mq.addEventListener("change", ler);
+    return () => mq.removeEventListener("change", ler);
+  }, []);
+
+  // Quem toca. No modo hover sem cursor, cai no do meio — ver a nota da prop.
+  const porHover = playOn === "hover" && temCursor;
+  const alvo = porHover ? sobCursor : ativo;
+
+  React.useEffect(() => setManual(null), [alvo]);
 
   // Decidido uma vez, no cliente: o valor é usado dentro de efeitos que não
   // devem depender de um `matchMedia` refeito a cada render.
@@ -346,9 +382,12 @@ export function ReelsRail({
   React.useEffect(() => {
     const raiz = raizRef.current;
     if (!raiz || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(([e]) => setNaTela(e.isIntersecting), {
-      threshold: 0.15,
-    });
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e) setNaTela(e.isIntersecting);
+      },
+      { threshold: 0.15 },
+    );
     io.observe(raiz);
     return () => io.disconnect();
   }, []);
@@ -375,7 +414,9 @@ export function ReelsRail({
 
     // Movimento reduzido nunca toca sozinho — mas um `play` pedido no botão
     // continua valendo, porque aí não é a página que se mexe sozinha.
-    const querTocar = naTela && (manual ?? (autoPlay && !reduzido));
+    // No modo hover, "ninguém apontando" é uma resposta legítima: tudo parado.
+    const querTocar =
+      naTela && alvo !== null && (manual ?? (autoPlay && !reduzido));
 
     lista.forEach((v, i) => {
       if (!v) return;
@@ -383,7 +424,7 @@ export function ReelsRail({
       v.playsInline = true;
       v.loop = true;
 
-      if (i === ativo && querTocar) {
+      if (i === alvo && querTocar) {
         v.muted = !(sound && comSom);
         // `play()` devolve promessa e ela REJEITA quando o navegador barra a
         // reprodução (política de autoplay, aba em economia). Sem o catch isso
@@ -395,14 +436,14 @@ export function ReelsRail({
         v.pause();
         // Volta ao começo: reel é peça de 6 segundos, e reencontrar um card
         // parado no meio parece vídeo quebrado, não vídeo pausado.
-        if (i !== ativo) v.currentTime = 0;
+        if (i !== alvo) v.currentTime = 0;
       }
     });
-  }, [ativo, naTela, comSom, sound, autoPlay, manual, reduzido, videos, items]);
+  }, [alvo, naTela, comSom, sound, autoPlay, manual, reduzido, videos, items]);
 
   /** O ícone de play só conta a verdade se o estado vier do elemento. */
   React.useEffect(() => {
-    const v = videos()[ativo];
+    const v = alvo === null ? null : videos()[alvo];
     if (!v) return;
     const sincronizar = () => setTocando(!v.paused);
     sincronizar();
@@ -412,11 +453,23 @@ export function ReelsRail({
       v.removeEventListener("play", sincronizar);
       v.removeEventListener("pause", sincronizar);
     };
-  }, [ativo, videos, items]);
+  }, [alvo, videos, items]);
 
   // O botão só declara a vontade; quem toca e quem para é o efeito acima. Uma
   // regra de reprodução, num lugar só — ver a nota dele.
   const alternarPlay = () => setManual(!tocando);
+
+  /**
+   * A saída só apaga o card se ele ainda for o apontado.
+   *
+   * Andando de um card ao vizinho, o `enter` do novo chega ANTES do `leave` do
+   * velho. Um `leave` que zera sem conferir apagaria a escolha recém-feita, e o
+   * vídeo pararia meio segundo depois de começar — o defeito clássico de mover
+   * o cursor rápido por uma fileira.
+   */
+  const apontar = React.useCallback((posicao: number, dentro: boolean) => {
+    setSobCursor((atual) => (dentro ? posicao : atual === posicao ? null : atual));
+  }, []);
 
   /*
    * `min-w-0` na raiz, e não é detalhe de estilo.
@@ -463,7 +516,8 @@ export function ReelsRail({
                 key={`${c}:${item.id}`}
                 item={item}
                 ratio={ratio}
-                ativo={posicao === ativo}
+                ativo={posicao === alvo}
+                onHover={porHover ? (dentro) => apontar(posicao, dentro) : undefined}
                 tocando={tocando}
                 comSom={sound && comSom}
                 mostrarSom={sound}
@@ -487,6 +541,7 @@ function ReelCard({
   mostrarSom,
   onPlay,
   onSom,
+  onHover,
 }: {
   item: ReelItem;
   ratio: string;
@@ -496,10 +551,26 @@ function ReelCard({
   mostrarSom: boolean;
   onPlay: () => void;
   onSom: () => void;
+  /** Só existe no modo `playOn="hover"`. Ausente = o card não escuta ponteiro. */
+  onHover?: (dentro: boolean) => void;
 }) {
   return (
     <article
       data-ativo={ativo || undefined}
+      // `pointerenter/leave` e não `mouseenter`: o mesmo par cobre caneta e
+      // mouse, e não dispara no toque (que já não usa este modo).
+      onPointerEnter={onHover ? () => onHover(true) : undefined}
+      onPointerLeave={onHover ? () => onHover(false) : undefined}
+      // Teclado chega ao card pelo link do título: quem tabula até ele também
+      // quer ver o vídeo, senão o modo hover exclui quem não usa cursor.
+      onFocusCapture={onHover ? () => onHover(true) : undefined}
+      onBlurCapture={
+        onHover
+          ? (e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node | null)) onHover(false);
+            }
+          : undefined
+      }
       className={cn(
         "relative isolate overflow-hidden rounded-[var(--r-surface,1rem)] bg-[var(--muted)]",
         // O vizinho recua: um pouco menor e um pouco mais apagado. É o que faz o

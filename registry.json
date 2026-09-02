@@ -491,7 +491,7 @@
       "name": "reels-rail",
       "type": "registry:ui",
       "title": "Reels Rail",
-      "description": "O trilho de vídeo vertical: cartões 9:16 com encaixe, o do meio tocando e os vizinhos parados e mudos. Som opcional, um card por vez, e fora da tela pausa tudo.",
+      "description": "O trilho de vídeo vertical: cartões 9:16 com encaixe, tocando o do meio ou o que está sob o cursor. Som opcional, um card por vez, e fora da tela pausa tudo.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils",
@@ -2466,6 +2466,32 @@
           }
         }
       }
+    },
+    {
+      "name": "carousel-3d",
+      "type": "registry:ui",
+      "title": "Carousel 3D",
+      "description": "Capas num carrossel circular em WebGL: o card da frente cresce no hover, o botão central abre o item e o canvas só nasce perto da dobra. Aposentado da listagem — bom em vitrine de poucas peças.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "three@^0.170.0",
+        "@react-three/fiber@^8.18.0",
+        "@react-three/drei@^9.122.0",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/webgl-stage.tsx",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/ui/carousel-3d.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

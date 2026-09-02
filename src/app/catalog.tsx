@@ -77,6 +77,7 @@ const BrandSelectorDemo = React.lazy(() => import("./demos/brand-selector-demo")
 const ChipDemo = React.lazy(() => import("./demos/chip-demo"));
 const CountUpDemo = React.lazy(() => import("./demos/count-up-demo"));
 const Book3DDemo = React.lazy(() => import("./demos/book-3d-demo"));
+const Carousel3DDemo = React.lazy(() => import("./demos/carousel-3d-demo"));
 const BookShelfDemo = React.lazy(() => import("./demos/book-shelf-demo"));
 const CoverArtDemo = React.lazy(() => import("./demos/cover-art-demo"));
 const DropOverlayDemo = React.lazy(() => import("./demos/drop-overlay-demo"));
@@ -1512,7 +1513,7 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "motion",
     description:
-      "O trilho de vídeo vertical: cartões 9:16 com encaixe, o do meio tocando e os vizinhos parados e mudos. Som opcional, um card por vez, e fora da tela pausa tudo.",
+      "O trilho de vídeo vertical: cartões 9:16 com encaixe, tocando o do meio ou o que está sob o cursor. Som opcional, um card por vez, e fora da tela pausa tudo.",
     tags: ["vídeo", "reels", "shorts", "vertical", "carrossel", "trilho"],
     demo: ReelsRailDemo,
     knobs: "ReelsRail",
@@ -1544,6 +1545,18 @@ export const CATALOG: CatalogItem[] = [
       "A dobra que deixa o visitante fazer a conta: controle acessível, projeção derivada do próprio valor, curva sem transição (pra não discordar do número) e premissa obrigatória por escrito.",
     tags: ["simulador", "calculadora", "slider", "projeção", "roi", "curva", "premissa"],
     demo: () => <SimSliderDemo />,
+    preview: { w: 640, h: 420 },
+  },
+  {
+    name: "carousel-3d",
+    title: "Carousel 3D",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Capas num carrossel circular em WebGL: o card da frente cresce no hover, o botão central abre o item e o canvas só nasce perto da dobra. Aposentado da listagem — bom em vitrine de poucas peças.",
+    tags: ["carrossel", "3d", "webgl", "portfólio", "capa", "vitrine"],
+    demo: Carousel3DDemo,
+    knobs: "Carousel3D",
     preview: { w: 640, h: 420 },
   },
   {
