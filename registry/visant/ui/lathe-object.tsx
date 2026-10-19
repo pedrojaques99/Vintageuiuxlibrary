@@ -191,7 +191,9 @@ async function criarCena(
     // Folga de 20%, não 4%: a caixa é medida parada, mas a câmera vem de cima, as
     // varetas balançam e o arrasto inclina até ±0.12π. Com 4% as pontas das
     // varetas saíam cortadas no topo do canvas (visto em tamanho real na vitrine).
-    const dist = Math.max(tamanho.y / 2 / meiaVert, raio / (meiaVert * camera.aspect)) * 1.2 + raio * 0.5;
+    // Um raio inteiro (era meio): em peça larga (vela, pote) a borda frontal de
+    // baixo fica perto da câmera e crescia até encostar no pé do canvas.
+    const dist = Math.max(tamanho.y / 2 / meiaVert, raio / (meiaVert * camera.aspect)) * 1.2 + raio;
     const dir = new THREE.Vector3(0, 0.237, 1).normalize();
     camera.position.copy(dir.multiplyScalar(dist));
     camera.updateProjectionMatrix();
