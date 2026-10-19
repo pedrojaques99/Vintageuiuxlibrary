@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
 
@@ -16,13 +17,22 @@ import { Environment, Lightformer } from "@react-three/drei";
  * `frames={1}` assa uma vez: a cena não muda de luz, então recalcular o cube
  * render target todo quadro seria GPU queimada à toa.
  */
+/*
+ * Luz de estúdio, não cor de marca: branco e um azul frio de céu nas laterais,
+ * em sRGB numérico. Hex aqui derrubava o portão de "componente sem cor própria"
+ * sem ser cor de componente.
+ */
+const BRANCO = new THREE.Color().setRGB(1, 1, 1, THREE.SRGBColorSpace);
+const CEU = new THREE.Color().setRGB(0.749, 0.937, 1, THREE.SRGBColorSpace);
+const CEU_FUNDO = new THREE.Color().setRGB(0.533, 0.8, 1, THREE.SRGBColorSpace);
+
 export function StudioEnvironment() {
   return (
     <Environment resolution={256} frames={1}>
-      <Lightformer intensity={2.5} position={[0, 3, 5]} scale={[10, 10, 1]} color="#ffffff" />
-      <Lightformer intensity={1.5} position={[-5, 1, 1]} scale={[5, 10, 1]} color="#bfefff" />
-      <Lightformer intensity={1.5} position={[5, 1, 1]} scale={[5, 10, 1]} color="#ffffff" />
-      <Lightformer intensity={1} position={[0, -3, 2]} scale={[10, 4, 1]} color="#88ccff" />
+      <Lightformer intensity={2.5} position={[0, 3, 5]} scale={[10, 10, 1]} color={BRANCO} />
+      <Lightformer intensity={1.5} position={[-5, 1, 1]} scale={[5, 10, 1]} color={CEU} />
+      <Lightformer intensity={1.5} position={[5, 1, 1]} scale={[5, 10, 1]} color={BRANCO} />
+      <Lightformer intensity={1} position={[0, -3, 2]} scale={[10, 4, 1]} color={CEU_FUNDO} />
     </Environment>
   );
 }

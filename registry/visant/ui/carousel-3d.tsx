@@ -97,6 +97,15 @@ function PulseCard({ width, height }: { width: number; height: number }) {
   );
 }
 
+/*
+ * Multiplicadores de brilho sobre a mídia, não cor de marca: em repouso a capa
+ * fica em 80%, no hover cai a 36% para o rótulo HTML ganhar contraste. Escritos
+ * como cinza sRGB numérico (e não hex) porque são luminância, e o portão de
+ * hex do registry existe para cor, não para conta de luz.
+ */
+const TINTA_REPOUSO = new THREE.Color().setRGB(0.8, 0.8, 0.8, THREE.SRGBColorSpace);
+const TINTA_HOVER = new THREE.Color().setRGB(0.36, 0.36, 0.36, THREE.SRGBColorSpace);
+
 function VideoLayer({
   url,
   width,
@@ -138,7 +147,7 @@ function VideoLayer({
 
   return (
     <mesh geometry={PLANE} scale={[width, height, 1]}>
-      <meshStandardMaterial transparent opacity={0.95} color={hovered ? "#5c5c5c" : "#cccccc"}>
+      <meshStandardMaterial transparent opacity={0.95} color={hovered ? TINTA_HOVER : TINTA_REPOUSO}>
         <videoTexture attach="map" args={[video]} />
       </meshStandardMaterial>
     </mesh>
@@ -156,7 +165,7 @@ function Media(props: { url: string; width: number; height: number; hovered: boo
         scale={[width, height]}
         transparent
         opacity={0.95}
-        color={hovered ? "#5c5c5c" : "#cccccc"}
+        color={hovered ? TINTA_HOVER : TINTA_REPOUSO}
       />
     </React.Suspense>
   );

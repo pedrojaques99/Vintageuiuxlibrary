@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils";
  * | `settle` | assenta de `scale(1.03)` em vez de subir | dobra de NÚMERO: dado, não espetáculo |
  * | `climax` | sobe menos e demora mais | a dobra que pede dinheiro não deve parecer apressada |
  * | `invert` | o fundo troca de cor ao entrar | uma vez por página, no argumento central |
+ * | `mist` | sai da névoa: desfoque + opacidade + subida mínima, nunca desliza | marca contemplativa, foto, atmosfera |
  *
  * ── A armadilha que este item conserta em relação à origem ─────────────────
  *
@@ -45,6 +46,14 @@ import { cn } from "@/lib/utils";
  * escondido — uma dobra em `opacity: 0` continuaria invisível para sempre. Cada
  * variante nasce no estado final. Zera o movimento, nunca o resultado.
  *
+ * `mist` segue a mesma regra e é a mais cuidadosa com ela: sob movimento
+ * reduzido ela perde o desfoque e a subida, e NÃO perde a opacidade final —
+ * desfoque é movimento para o olho (o foco "anda"), opacidade é informação.
+ * O estado final é `filter: none`, não `blur(0)`: `blur(0)` ainda mantém a
+ * dobra numa camada de filtro, e numa dobra com foto grande isso é custo de
+ * composição pago a cada quadro de rolagem, para sempre, por um efeito que já
+ * acabou.
+ *
  * A entrada é **uma vez só**, não um efeito de ida e volta: o observer desiste
  * do alvo assim que ele entra.
  */
@@ -56,7 +65,8 @@ export type FoldVariant =
   | "mask"
   | "settle"
   | "climax"
-  | "invert";
+  | "invert"
+  | "mist";
 
 const useIsoLayoutEffect = typeof window === "undefined" ? React.useEffect : React.useLayoutEffect;
 

@@ -105,10 +105,6 @@
   "count-up": {
     "className": "text-[2rem] font-semibold leading-none tracking-tight"
   },
-  "fold-motion": {
-    "as": "div",
-    "className": "flex h-full flex-col justify-between gap-2 rounded-[var(--r-surface,0.875rem)] border border-border p-3"
-  },
   "line-reveal": {
     "as": "h3",
     "immediate": true,
@@ -137,6 +133,14 @@
   },
   "carousel-3d": {
     "cta": "Ver projeto"
+  },
+  "fog-tree": {
+    "className": "h-full min-h-0 rounded-[var(--r-surface,0.875rem)] border border-border",
+    "progress": 0.35,
+    "draggable": true
+  },
+  "fog-garden": {
+    "heightPerStop": "560px"
   },
   "spine-card": {
     "href": "#",

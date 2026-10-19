@@ -4042,7 +4042,8 @@
             "mask",
             "settle",
             "climax",
-            "invert"
+            "invert",
+            "mist"
           ]
         }
       ]
@@ -5776,11 +5777,6 @@
   ],
   "carousel-3d": [
     {
-      "nome": "StudioEnvironment",
-      "descricao": "Luz de estúdio assada em Lightformers — sem baixar HDR da rede.\n\nMaterial metálico sem environment não tem o que refletir e sai chapado; um\n.hdr de 2 MB por superfície 3D resolve isso pagando um download que o\nprimeiro quadro espera. Quatro lightformers cobrem o caso de vitrine\n(chave na frente, dois preenchimentos laterais, um rebote frio embaixo) e\ncustam zero byte de rede.\n\n`frames={1}` assa uma vez: a cena não muda de luz, então recalcular o cube\nrender target todo quadro seria GPU queimada à toa.",
-      "props": []
-    },
-    {
       "nome": "ContextLossGuard",
       "descricao": "Devolve o contexto WebGL no unmount, em vez de esperar o GC.\n\nO navegador tem um teto de contextos vivos (≈16 no Chrome). Uma SPA que\nmonta e desmonta superfícies 3D em navegação de cliente estoura esse teto\nsem nunca ter duas cenas na tela ao mesmo tempo — e o sintoma que aparece é\n\"THREE.WebGLRenderer: Context Lost\" numa cena que não fez nada de errado.\n\nO `setTimeout(…, 0)` não é superstição: o React e o drei ainda vão fazer o\ndispose deles (o `<Environment>` tem um cube render target próprio) e\nprecisam de um contexto VIVO pra isso. Forçar a perda de forma síncrona aqui\nfaz o dispose deles ler de um contexto já morto e lançar.",
       "props": []
@@ -5825,6 +5821,3050 @@
           "descricao": "Última chance de reescrever a URL da capa antes de virar textura.\n\nExiste por CORS: textura de outro domínio sem `Access-Control-Allow-Origin`\nsuja o canvas e o three recusa. Num app Next, `/_next/image?url=…` resolve\nservindo a imagem como same-origin. Padrão: passa reto."
         }
       ]
+    }
+  ],
+  "css-color": [
+    {
+      "nome": "resolveCssColor",
+      "descricao": "Resolve uma cor CSS qualquer (ou `var(--token)`) para sRGB 0..1.",
+      "props": []
+    },
+    {
+      "nome": "onThemeChange",
+      "descricao": "Avisa quando o tema muda (classe, data-theme ou style no <html>), para a cena\nreler os tokens. Devolve o unsubscribe.",
+      "props": []
+    }
+  ],
+  "ink-wordmark": [
+    {
+      "nome": "InkWordmark",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "aria-label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Nome acessível da marca. Sem ele o SVG é só desenho para o leitor de tela."
+        },
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Conteúdo SVG livre no lugar do `path` — vários paths, um `<text>`. O filtro\ndesloca qualquer coisa que pinte, inclusive texto vivo."
+        },
+        {
+          "nome": "container",
+          "tipo": "RefObject<HTMLElement>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Contêiner que rola, se não for a janela. Layout com rolagem num `div`\n(painel, modal, vitrine) precisa disto, senão o progresso nunca anda."
+        },
+        {
+          "nome": "path",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "`d` de um path único (a marca convertida em contorno). Use com `viewBox`."
+        },
+        {
+          "nome": "smoke",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "34",
+          "descricao": "Deslocamento máximo, em unidades do `viewBox`, quando a marca ainda é fumaça."
+        },
+        {
+          "nome": "viewBox",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "0 0 1000 300",
+          "descricao": "`viewBox` do SVG. Obrigatório com `path`; com `children` também é o que dá a proporção."
+        }
+      ]
+    }
+  ],
+  "fog-hero": [
+    {
+      "nome": "FogHero",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Conteúdo acima do canvas (título, CTA). Ver a nota do `<h1>`."
+        },
+        {
+          "nome": "ink",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--foreground)",
+          "descricao": "Cor da tinta (fumaça, vídeo, logo). Qualquer cor CSS ou `var(--token)`."
+        },
+        {
+          "nome": "logo",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Imagem com alpha (PNG/WebP) desenhada em tinta no centro. Opcional."
+        },
+        {
+          "nome": "paper",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--background)",
+          "descricao": "Cor do papel. Qualquer cor CSS ou `var(--token)`."
+        },
+        {
+          "nome": "params",
+          "tipo": "Partial<{ vignette: number; flipY: boolean; videoZoom: number; videoY: number; logoSize: number; logoBleed: number; cursor: number; trailFade: number; introDur: number; scrollClose: boolean; grain: number; ... 14 more ...; photo: number; }>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Ajuste parcial do preset aprovado (`FOG_HERO_PRESET`)."
+        },
+        {
+          "nome": "swapDuration",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2800",
+          "descricao": "Duração da dissolução entre dois vídeos, em ms. Longa de propósito: é cena, não corte."
+        },
+        {
+          "nome": "swapEvery",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "9000",
+          "descricao": "Intervalo entre trocas de vídeo, em ms."
+        },
+        {
+          "nome": "videos",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": "[]",
+          "descricao": "Playlist de vídeo. P&B por desenho: o shader lê só a luminância. Vazio = só névoa."
+        }
+      ]
+    },
+    {
+      "nome": "fragmentShader",
+      "descricao": "Shader da hero \"noir dissolve fog\" (protótipo YURA, 2026-10).\n\nSó duas cores entram aqui, `uPaper` e `uInk`, e as duas vêm dos tokens da\nmarca resolvidos no navegador. Todo o resto é mistura entre elas: a fumaça é\ntinta, a clareira é papel, o vídeo vira luminância e é pintado de tinta sobre\npapel. Por isso a hero troca de tema sem uma linha de cor no GLSL — os únicos\nliterais são 0 e 1 de matemática.\n\nO vídeo é lido só no canal R: a hero é P&B por desenho, e a luminância de um\ncanal basta para virar mancha de tinta.",
+      "props": []
+    },
+    {
+      "nome": "FOG_HERO_PRESET",
+      "descricao": "O preset da hero de névoa, como foi aprovado na YURA (19/10/2026).\n\nOs valores de cena (fumaça, grão, clareira, logo) são os aprovados; os três de\nenquadramento de vídeo foram neutralizados (ver abaixo).\n\nAs cores NÃO moram aqui. No original havia quatro hex (papel e fumaça, claro e\nescuro); na colheita viraram duas props do componente, `paper` e `ink`, que\npor padrão leem `--background` e `--foreground`. O tema escuro deixa de ser um\nsegundo par de hex e passa a ser só o tema da marca virando.\n\nMexa no preset por `params` (parcial) em vez de editar este arquivo: assim a\natualização do registry não pisa no ajuste do projeto.",
+      "props": []
+    },
+    {
+      "nome": "vignette",
+      "descricao": "Escurece as bordas para a tinta. 0 = sem vinheta.",
+      "props": []
+    },
+    {
+      "nome": "flipY",
+      "descricao": "Inverte o vídeo no eixo Y. Só para fonte gravada invertida.",
+      "props": []
+    },
+    {
+      "nome": "videoZoom",
+      "descricao": "< 1 afasta o vídeo (a sobra vira papel), > 1 aproxima.",
+      "props": []
+    },
+    {
+      "nome": "videoY",
+      "descricao": "Desloca o enquadramento do vídeo na vertical (fração da altura).",
+      "props": []
+    },
+    {
+      "nome": "logoSize",
+      "descricao": "Largura do logo como fração da largura da tela (desktop).",
+      "props": []
+    },
+    {
+      "nome": "logoBleed",
+      "descricao": "Sangria de tinta no contorno do logo enquanto ele surge.",
+      "props": []
+    },
+    {
+      "nome": "cursor",
+      "descricao": "Quanto o rastro do cursor empurra a fumaça.",
+      "props": []
+    },
+    {
+      "nome": "trailFade",
+      "descricao": "Quanto o rastro desbota por quadro (0..1). Maior = rastro mais curto.",
+      "props": []
+    },
+    {
+      "nome": "introDur",
+      "descricao": "Segundos da abertura da clareira.",
+      "props": []
+    },
+    {
+      "nome": "scrollClose",
+      "descricao": "A fumaça fecha de novo conforme a hero sai pelo topo.",
+      "props": []
+    },
+    {
+      "nome": "grain",
+      "descricao": "Intensidade do grão.",
+      "props": []
+    },
+    {
+      "nome": "grainSize",
+      "descricao": "Tamanho da célula de grão em px do buffer.",
+      "props": []
+    },
+    {
+      "nome": "grainFps",
+      "descricao": "Quadros por segundo do grão. 24–30 lê como película; 60 lê como chiado.",
+      "props": []
+    },
+    {
+      "nome": "spray",
+      "descricao": "Pontilhado na borda da fumaça (spray). 0 = degradê liso.",
+      "props": []
+    },
+    {
+      "nome": "soft",
+      "descricao": "Largura da borda da fumaça.",
+      "props": []
+    },
+    {
+      "nome": "fogOpacity",
+      "descricao": "Opacidade da fumaça com a clareira aberta.",
+      "props": []
+    },
+    {
+      "nome": "smokeLift",
+      "descricao": "Clareia o miolo da fumaça para o papel.",
+      "props": []
+    },
+    {
+      "nome": "contrast",
+      "descricao": "Contraste final (1 = neutro).",
+      "props": []
+    },
+    {
+      "nome": "haze",
+      "descricao": "Véu de papel por cima de tudo.",
+      "props": []
+    },
+    {
+      "nome": "clear",
+      "descricao": "Raio da clareira aberta.",
+      "props": []
+    },
+    {
+      "nome": "center",
+      "descricao": "Quanto o centro empurra a fumaça para fora.",
+      "props": []
+    },
+    {
+      "nome": "scale",
+      "descricao": "Escala do ruído. Menor = manchas maiores.",
+      "props": []
+    },
+    {
+      "nome": "speed",
+      "descricao": "Velocidade da deriva.",
+      "props": []
+    },
+    {
+      "nome": "warp",
+      "descricao": "Domain warp: o quanto a fumaça se enrola.",
+      "props": []
+    },
+    {
+      "nome": "detail",
+      "descricao": "Detalhe fino por cima do fbm.",
+      "props": []
+    },
+    {
+      "nome": "photo",
+      "descricao": "Quanto do vídeo aparece na faixa perto da fumaça.",
+      "props": []
+    },
+    {
+      "nome": "FogHero",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Conteúdo acima do canvas (título, CTA). Ver a nota do `<h1>`."
+        },
+        {
+          "nome": "ink",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--foreground)",
+          "descricao": "Cor da tinta (fumaça, vídeo, logo). Qualquer cor CSS ou `var(--token)`."
+        },
+        {
+          "nome": "logo",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Imagem com alpha (PNG/WebP) desenhada em tinta no centro. Opcional."
+        },
+        {
+          "nome": "paper",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--background)",
+          "descricao": "Cor do papel. Qualquer cor CSS ou `var(--token)`."
+        },
+        {
+          "nome": "params",
+          "tipo": "Partial<{ vignette: number; flipY: boolean; videoZoom: number; videoY: number; logoSize: number; logoBleed: number; cursor: number; trailFade: number; introDur: number; scrollClose: boolean; grain: number; ... 14 more ...; photo: number; }>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Ajuste parcial do preset aprovado (`FOG_HERO_PRESET`)."
+        },
+        {
+          "nome": "swapDuration",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2800",
+          "descricao": "Duração da dissolução entre dois vídeos, em ms. Longa de propósito: é cena, não corte."
+        },
+        {
+          "nome": "swapEvery",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "9000",
+          "descricao": "Intervalo entre trocas de vídeo, em ms."
+        },
+        {
+          "nome": "videos",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": "[]",
+          "descricao": "Playlist de vídeo. P&B por desenho: o shader lê só a luminância. Vazio = só névoa."
+        }
+      ]
+    },
+    {
+      "nome": "FogHeroProps",
+      "descricao": "Fog Hero — a dobra de abertura que nasce da névoa.\n\nColhido da hero da YURA (2026-10). Uma tela cheia de fumaça (fbm com domain\nwarp) abre uma clareira do centro, e pela borda da fumaça aparece uma\nplaylist de vídeo em P&B, pintada de tinta sobre papel. O logo, se houver,\nsurge por um dissolve de ruído depois da clareira. Ao rolar, a dobra inteira\nperde nitidez e some.\n\nDecisões que sobrevivem à colheita:\n\n1. **Duas cores, ambas tokens.** `paper` e `ink` (padrão `--background` e\n   `--foreground`) são resolvidas pelo navegador via `css-color` e relidas a\n   cada troca de tema. O original tinha dois pares de hex, claro e escuro; o\n   tema escuro agora é só a marca virando.\n2. **A cor vai crua para o shader.** O uniform é `Vector3`, não `THREE.Color`:\n   o `Color` converte sRGB para linear e o `ShaderMaterial` não converte de\n   volta, então a borda da hero sairia mais escura que o `bg-background` da\n   página. Assim o papel do shader é o MESMO pixel do papel do site.\n3. **A troca de vídeo acontece no shader, pela névoa.** O próximo vídeo\n   aparece através do mesmo ruído da fumaça (`uSwap`), e a borda da\n   dissolução clareia. Cortar seco num `<video>` quebraria a ilusão de que é\n   tudo a mesma matéria.\n4. **Para quando ninguém vê.** Fora da tela ou com a aba escondida o laço sai\n   e o vídeo pausa. O relógio da hero só anda com ela rodando, então a\n   abertura e a agenda da troca não \"pulam\" ao voltar.\n5. **Movimento reduzido:** clareira já aberta, logo já assentado, fumaça e\n   grão congelados, sem troca de vídeo (o primeiro fica parado no primeiro\n   quadro). O rastro do cursor continua, porque é gesto de quem usa.\n\n**O `<h1>` é de quem consome.** O canvas é `aria-hidden`; a hero não sabe o\ntítulo da página. Ponha o título em `children` (visível) ou como\n`<h1 className=\"sr-only\">` dentro dele — sem isso a página fica sem h1.\n\nVídeo e logo de outro domínio precisam de CORS (`Access-Control-Allow-Origin`):\ntextura sem isso suja o canvas e o three recusa.\n\nRequer `three` e `framer-motion`.",
+      "props": []
+    },
+    {
+      "nome": "__object",
+      "descricao": "O preset da hero de névoa, como foi aprovado na YURA (19/10/2026).\n\nOs valores de cena (fumaça, grão, clareira, logo) são os aprovados; os três de\nenquadramento de vídeo foram neutralizados (ver abaixo).\n\nAs cores NÃO moram aqui. No original havia quatro hex (papel e fumaça, claro e\nescuro); na colheita viraram duas props do componente, `paper` e `ink`, que\npor padrão leem `--background` e `--foreground`. O tema escuro deixa de ser um\nsegundo par de hex e passa a ser só o tema da marca virando.\n\nMexa no preset por `params` (parcial) em vez de editar este arquivo: assim a\natualização do registry não pisa no ajuste do projeto.",
+      "props": []
+    },
+    {
+      "nome": "vignette",
+      "descricao": "Escurece as bordas para a tinta. 0 = sem vinheta.",
+      "props": []
+    },
+    {
+      "nome": "flipY",
+      "descricao": "Inverte o vídeo no eixo Y. Só para fonte gravada invertida.",
+      "props": []
+    },
+    {
+      "nome": "videoZoom",
+      "descricao": "< 1 afasta o vídeo (a sobra vira papel), > 1 aproxima.",
+      "props": []
+    },
+    {
+      "nome": "videoY",
+      "descricao": "Desloca o enquadramento do vídeo na vertical (fração da altura).",
+      "props": []
+    },
+    {
+      "nome": "logoSize",
+      "descricao": "Largura do logo como fração da largura da tela (desktop).",
+      "props": []
+    },
+    {
+      "nome": "logoBleed",
+      "descricao": "Sangria de tinta no contorno do logo enquanto ele surge.",
+      "props": []
+    },
+    {
+      "nome": "cursor",
+      "descricao": "Quanto o rastro do cursor empurra a fumaça.",
+      "props": []
+    },
+    {
+      "nome": "trailFade",
+      "descricao": "Quanto o rastro desbota por quadro (0..1). Maior = rastro mais curto.",
+      "props": []
+    },
+    {
+      "nome": "introDur",
+      "descricao": "Segundos da abertura da clareira.",
+      "props": []
+    },
+    {
+      "nome": "scrollClose",
+      "descricao": "A fumaça fecha de novo conforme a hero sai pelo topo.",
+      "props": []
+    },
+    {
+      "nome": "grain",
+      "descricao": "Intensidade do grão.",
+      "props": []
+    },
+    {
+      "nome": "grainSize",
+      "descricao": "Tamanho da célula de grão em px do buffer.",
+      "props": []
+    },
+    {
+      "nome": "grainFps",
+      "descricao": "Quadros por segundo do grão. 24–30 lê como película; 60 lê como chiado.",
+      "props": []
+    },
+    {
+      "nome": "spray",
+      "descricao": "Pontilhado na borda da fumaça (spray). 0 = degradê liso.",
+      "props": []
+    },
+    {
+      "nome": "soft",
+      "descricao": "Largura da borda da fumaça.",
+      "props": []
+    },
+    {
+      "nome": "fogOpacity",
+      "descricao": "Opacidade da fumaça com a clareira aberta.",
+      "props": []
+    },
+    {
+      "nome": "smokeLift",
+      "descricao": "Clareia o miolo da fumaça para o papel.",
+      "props": []
+    },
+    {
+      "nome": "contrast",
+      "descricao": "Contraste final (1 = neutro).",
+      "props": []
+    },
+    {
+      "nome": "haze",
+      "descricao": "Véu de papel por cima de tudo.",
+      "props": []
+    },
+    {
+      "nome": "clear",
+      "descricao": "Raio da clareira aberta.",
+      "props": []
+    },
+    {
+      "nome": "center",
+      "descricao": "Quanto o centro empurra a fumaça para fora.",
+      "props": []
+    },
+    {
+      "nome": "scale",
+      "descricao": "Escala do ruído. Menor = manchas maiores.",
+      "props": []
+    },
+    {
+      "nome": "speed",
+      "descricao": "Velocidade da deriva.",
+      "props": []
+    },
+    {
+      "nome": "warp",
+      "descricao": "Domain warp: o quanto a fumaça se enrola.",
+      "props": []
+    },
+    {
+      "nome": "detail",
+      "descricao": "Detalhe fino por cima do fbm.",
+      "props": []
+    },
+    {
+      "nome": "photo",
+      "descricao": "Quanto do vídeo aparece na faixa perto da fumaça.",
+      "props": []
+    }
+  ],
+  "lathe-object": [
+    {
+      "nome": "LatheObject",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "aria-label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Objeto em 3D, arraste para girar",
+          "descricao": "Descrição para leitor de tela. O canvas é `role=\"img\"`."
+        },
+        {
+          "nome": "autoRotate",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Gira sozinho enquanto ninguém arrasta. Ignorado com movimento reduzido."
+        },
+        {
+          "nome": "body",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--muted-foreground)",
+          "descricao": "Cor do corpo. Qualquer cor CSS ou `var(--token)`."
+        },
+        {
+          "nome": "detail",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--foreground)",
+          "descricao": "Cor das varetas. Qualquer cor CSS ou `var(--token)`."
+        },
+        {
+          "nome": "profile",
+          "tipo": "LatheProfile",
+          "obrigatoria": false,
+          "padrao": "[\n  [0, 0], [0.86, 0], [0.98, 0.06], [1, 0.2], [1, 2.05], [0.96, 2.35], [0.82, 2.58],\n  [0.5, 2.74], [0.4, 2.8], [0.4, 3.02], [0.48, 3.04], [0.5, 3.1], [0.5, 3.36], [0.44, 3.4], [0, 3.4],\n]",
+          "descricao": "Meia silhueta, de baixo para cima: `[raio, altura]`. Feche no eixo (`x = 0`) nas pontas."
+        },
+        {
+          "nome": "sticks",
+          "tipo": "boolean | LatheSticks",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Varetas de difusor saindo do topo. Ausente = só o objeto."
+        }
+      ]
+    },
+    {
+      "nome": "DIFFUSER_PROFILE",
+      "descricao": "O frasco do difusor YURA: base arredondada, ombro, gargalo e tampa.",
+      "props": []
+    }
+  ],
+  "mist-text": [
+    {
+      "nome": "MistText",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "text",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A frase. Fatiada por espaço (palavra) ou por caractere (letra)."
+        },
+        {
+          "nome": "as",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "p",
+          "descricao": "Elemento raiz. `span` para usar dentro de outra linha.",
+          "valores": [
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "p",
+            "span"
+          ]
+        },
+        {
+          "nome": "by",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "word",
+          "descricao": "`word` para frase, `letter` para título curto.",
+          "valores": [
+            "word",
+            "letter"
+          ]
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "delay",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Atraso antes da primeira fatia, em segundos. Só no modo `view`."
+        },
+        {
+          "nome": "mode",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "view",
+          "descricao": "`view` entra uma vez; `scroll` acompanha a rolagem, ida e volta.",
+          "valores": [
+            "view",
+            "scroll"
+          ]
+        }
+      ]
+    }
+  ],
+  "mist-swap": [
+    {
+      "nome": "MistSwap",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Os slides. Qualquer ReactNode: `<img>`, `<video>`, um bloco de texto."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "interval",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5200",
+          "descricao": "Milissegundos entre trocas. Defase entre molduras vizinhas."
+        },
+        {
+          "nome": "overlay",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Camada por cima de cada slide (textura em `darken`, gradiente de leitura)."
+        },
+        {
+          "nome": "start",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Índice inicial, para molduras vizinhas não abrirem no mesmo slide."
+        },
+        {
+          "nome": "transition",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1.4",
+          "descricao": "Duração do cruzamento, em segundos."
+        }
+      ]
+    }
+  ],
+  "dot-cursor": [
+    {
+      "nome": "DotCursor",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "blend",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "`mix-blend-mode: difference`. Desligue para um ponto de cor fixa."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "ink",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--background)",
+          "descricao": "Tinta do ponto. Precisa ser clara com `blend` ligado (armadilha 4)."
+        },
+        {
+          "nome": "selector",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "[data-cursor], a, button",
+          "descricao": "O que conta como interativo. O anel abre sobre o mais próximo deles."
+        }
+      ]
+    }
+  ],
+  "mist-dialog": [
+    {
+      "nome": "MistDialog",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "onOpenChange",
+          "tipo": "(open: boolean) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Pedido de troca: Esc, clique no fundo, `close()` vindo de dentro."
+        },
+        {
+          "nome": "open",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Estado controlado."
+        },
+        {
+          "nome": "closeOnBackdrop",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Fecha ao clicar fora do conteúdo."
+        },
+        {
+          "nome": "labelledBy",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "`id` do título dentro do conteúdo — vira `aria-labelledby`."
+        },
+        {
+          "nome": "onClose",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Depois de fechar (inclusive por Esc). Lugar de retomar o scroll suave."
+        },
+        {
+          "nome": "onOpen",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Depois de abrir. Lugar de pausar o scroll suave da página."
+        }
+      ]
+    }
+  ],
+  "fog-tree": [
+    {
+      "nome": "grayTint",
+      "descricao": "Cinza sRGB 0..1 como o número que `ez-tree` espera em `tint`.\n\nO ez-tree lê `tint` como inteiro de cor. Escrever o literal no código seria\nhex numa pasta que proíbe hex — e, pior, esconderia que o valor é uma\nLUMINÂNCIA para o duotone, não uma cor. `SRGBColorSpace` explícito para o\nnúmero sair igual ao que a mão escreveria; sem ele o `Color` lê os floats\ncomo lineares e devolve um cinza mais claro.",
+      "props": []
+    },
+    {
+      "nome": "gray",
+      "descricao": "Cinza sRGB 0..1 como `THREE.Color` — para chão, luz e materiais da cena.",
+      "props": []
+    },
+    {
+      "nome": "contactShadowTexture",
+      "descricao": "Sombra de contato: gradiente radial num canvas, sem textura baixada.\n\nNa névoa não há sombra projetada que se leia — a luz é difusa. O que ancora\na árvore no chão é a mancha escura logo abaixo da copa, e um shadow map de\nverdade custaria um passe de profundidade inteiro por esse efeito.",
+      "props": []
+    },
+    {
+      "nome": "disposeTree",
+      "descricao": "Descarta geometria e material de tudo abaixo de `root`. Textura fica: quem\na criou é quem a guarda (as do ez-tree são cache de módulo, compartilhadas\nentre montagens — descartá-las quebraria a próxima árvore).",
+      "props": [
+        {
+          "nome": "add",
+          "tipo": "(...object: Object3D<Object3DEventMap>[]) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Adds another {@link Object3D} as child of this {@link Object3D}.\n@remarks An arbitrary number of objects may be added\nAny current parent on an {@link object } passed in here will be removed, since an {@link Object3D } can have at most one parent.\n@see {@link attach }\n@see {@link THREE.Group Group} for info on manually grouping objects.\n@param object"
+        },
+        {
+          "nome": "addEventListener",
+          "tipo": "<T extends keyof Object3DEventMap>(type: T, listener: EventListener<Object3DEventMap[T], T, Object3D<Object3DEventMap>>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Adds a listener to an event type.\n@param type The type of event to listen to.\n@param listener The function that gets called when the event is fired."
+        },
+        {
+          "nome": "animations",
+          "tipo": "AnimationClip[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Array with object's animation clips.\n@defaultValue `[]`"
+        },
+        {
+          "nome": "applyMatrix4",
+          "tipo": "(matrix: Matrix4) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Applies the matrix transform to the object and updates the object's position, rotation and scale.\n@param matrix"
+        },
+        {
+          "nome": "applyQuaternion",
+          "tipo": "(quaternion: Quaternion) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Applies the rotation represented by the quaternion to the object.\n@param quaternion"
+        },
+        {
+          "nome": "attach",
+          "tipo": "(object: Object3D<Object3DEventMap>) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Adds a {@link Object3D} as a child of this, while maintaining the object's world transform.\n@remarks Note: This method does not support scene graphs having non-uniformly-scaled nodes(s).\n@see {@link add }\n@param object"
+        },
+        {
+          "nome": "castShadow",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Whether the object gets rendered into shadow map.\n@defaultValue `false`"
+        },
+        {
+          "nome": "children",
+          "tipo": "Object3D<Object3DEventMap>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Array with object's children.\n@see {@link THREE.Object3DGroup Group} for info on manually grouping objects.\n@defaultValue `[]`"
+        },
+        {
+          "nome": "clear",
+          "tipo": "() => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Removes all child objects."
+        },
+        {
+          "nome": "clone",
+          "tipo": "(recursive?: boolean) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a clone of `this` object and optionally all descendants.\n@param recursive If true, descendants of the object are also cloned. Default `true`"
+        },
+        {
+          "nome": "copy",
+          "tipo": "(object: Object3D<Object3DEventMap>, recursive?: boolean) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Copies the given object into this object.\n@remarks Event listeners and user-defined callbacks ({@link .onAfterRender} and {@link .onBeforeRender}) are not copied.\n@param object\n@param recursive If set to `true`, descendants of the object are copied next to the existing ones. If set to\n`false`, descendants are left unchanged. Default is `true`."
+        },
+        {
+          "nome": "dispatchEvent",
+          "tipo": "<T extends keyof Object3DEventMap>(event: BaseEvent<T> & Object3DEventMap[T]) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Fire an event type.\n@param event The event that gets fired."
+        },
+        {
+          "nome": "frustumCulled",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "When this is set, it checks every frame if the object is in the frustum of the camera before rendering the object.\nIf set to `false` the object gets rendered every frame even if it is not in the frustum of the camera.\n@defaultValue `true`"
+        },
+        {
+          "nome": "getObjectById",
+          "tipo": "(id: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Searches through an object and its children, starting with the object itself, and returns the first with a matching id.\n@remarks Note that ids are assigned in chronological order: 1, 2, 3, ..., incrementing by one for each new object.\n@see {@link id }\n@param id Unique number of the object instance. Expects a `Integer`"
+        },
+        {
+          "nome": "getObjectByName",
+          "tipo": "(name: string) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Searches through an object and its children, starting with the object itself, and returns the first with a matching name.\n@remarks Note that for most objects the name is an empty string by default\nYou will have to set it manually to make use of this method.\n@param name String to match to the children's Object3D.name property."
+        },
+        {
+          "nome": "getObjectByProperty",
+          "tipo": "(name: string, value: any) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Searches through an object and its children, starting with the object itself,\nand returns the first with a property that matches the value given.\n@param name - the property name to search for.\n@param value - value of the given property."
+        },
+        {
+          "nome": "getObjectsByProperty",
+          "tipo": "(name: string, value: any, optionalTarget?: Object3D<Object3DEventMap>[]) => Object3D<Object3DEventMap>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Searches through an object and its children, starting with the object itself,\nand returns the first with a property that matches the value given.\n@param name The property name to search for.\n@param value Value of the given property.\n@param optionalTarget target to set the result. Otherwise a new Array is instantiated. If set, you must clear\nthis array prior to each call (i.e., array.length = 0;)."
+        },
+        {
+          "nome": "getWorldDirection",
+          "tipo": "(target: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a vector representing the direction of object's positive z-axis in world space.\n@param target The result will be copied into this Vector3."
+        },
+        {
+          "nome": "getWorldPosition",
+          "tipo": "(target: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a vector representing the position of the object in world space.\n@param target The result will be copied into this Vector3."
+        },
+        {
+          "nome": "getWorldQuaternion",
+          "tipo": "(target: Quaternion) => Quaternion",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a quaternion representing the rotation of the object in world space.\n@param target The result will be copied into this Quaternion."
+        },
+        {
+          "nome": "getWorldScale",
+          "tipo": "(target: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a vector of the scaling factors applied to the object for each axis in world space.\n@param target The result will be copied into this Vector3."
+        },
+        {
+          "nome": "hasEventListener",
+          "tipo": "<T extends keyof Object3DEventMap>(type: T, listener: EventListener<Object3DEventMap[T], T, Object3D<Object3DEventMap>>) => boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Checks if listener is added to an event type.\n@param type The type of event to listen to.\n@param listener The function that gets called when the event is fired."
+        },
+        {
+          "nome": "id",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Unique number for this {@link Object3D} instance.\n@remarks Note that ids are assigned in chronological order: 1, 2, 3, ..., incrementing by one for each new object.\nExpects a `Integer`"
+        },
+        {
+          "nome": "isObject3D",
+          "tipo": "true",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Flag to check if a given object is of type {@link Object3D}.\n@remarks This is a _constant_ value\n@defaultValue `true`"
+        },
+        {
+          "nome": "layers",
+          "tipo": "Layers",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "The layer membership of the object.\n@remarks The object is only visible if it has at least one layer in common with the {@link THREE.Object3DCamera Camera} in use.\nThis property can also be used to filter out unwanted objects in ray-intersection tests when using {@link THREE.Raycaster Raycaster}.\n@defaultValue `new THREE.Layers()`"
+        },
+        {
+          "nome": "localToWorld",
+          "tipo": "(vector: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Converts the vector from this object's local space to world space.\n@param vector A vector representing a position in this object's local space."
+        },
+        {
+          "nome": "lookAt",
+          "tipo": "{ (vector: Vector3): void; (x: number, y: number, z: number): void; }",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotates the object to face a point in world space.\n@remarks This method does not support objects having non-uniformly-scaled parent(s).\n@param vector A vector representing a position in world space to look at.\n@remarks This method does not support objects having non-uniformly-scaled parent(s).\n@param x Expects a `Float`\n@param y Expects a `Float`\n@param z Expects a `Float`"
+        },
+        {
+          "nome": "matrix",
+          "tipo": "Matrix4",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "The local transform matrix.\n@defaultValue `new THREE.Matrix4()`"
+        },
+        {
+          "nome": "matrixAutoUpdate",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "When this is set, it calculates the matrix of position, (rotation or quaternion) and\nscale every frame and also recalculates the matrixWorld property.\n@defaultValue {@link DEFAULT_MATRIX_AUTO_UPDATE } - that is `(true)`."
+        },
+        {
+          "nome": "matrixWorld",
+          "tipo": "Matrix4",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "The global transform of the object.\n@remarks If the {@link Object3D } has no parent, then it's identical to the local transform {@link THREE.Object3D.matrix .matrix}.\n@defaultValue `new THREE.Matrix4()`"
+        },
+        {
+          "nome": "matrixWorldAutoUpdate",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "If set, then the renderer checks every frame if the object and its children need matrix updates.\nWhen it isn't, then you have to maintain all matrices in the object and its children yourself.\n@defaultValue {@link DEFAULT_MATRIX_WORLD_AUTO_UPDATE } - that is `(true)`."
+        },
+        {
+          "nome": "matrixWorldNeedsUpdate",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "When this is set, it calculates the matrixWorld in that frame and resets this property to false.\n@defaultValue `false`"
+        },
+        {
+          "nome": "modelViewMatrix",
+          "tipo": "Matrix4",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@defaultValue `new THREE.Matrix4()`"
+        },
+        {
+          "nome": "name",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Optional name of the object\n@remarks _(doesn't need to be unique)_.\n@defaultValue `\"\"`"
+        },
+        {
+          "nome": "normalMatrix",
+          "tipo": "Matrix3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@defaultValue `new THREE.Matrix3()`"
+        },
+        {
+          "nome": "onAfterRender",
+          "tipo": "(renderer: WebGLRenderer, scene: Scene, camera: Camera, geometry: BufferGeometry<NormalBufferAttributes>, material: Material, group: Group<...>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "An optional callback that is executed immediately after a 3D object is rendered.\n@remarks This function is called with the following parameters: renderer, scene, camera, geometry, material, group.\nPlease notice that this callback is only executed for `renderable` 3D objects. Meaning 3D objects which\ndefine their visual appearance with geometries and materials like instances of {@link Mesh }, {@link Line },\n{@link Points } or {@link Sprite }. Instances of {@link Object3D }, {@link Group } or {@link Bone } are not renderable\nand thus this callback is not executed for such objects."
+        },
+        {
+          "nome": "onAfterShadow",
+          "tipo": "(renderer: WebGLRenderer, scene: Scene, camera: Camera, shadowCamera: Camera, geometry: BufferGeometry<NormalBufferAttributes>, depthMaterial: Material, group: Group<...>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "An optional callback that is executed immediately after a 3D object is rendered to a shadow map.\n@remarks This function is called with the following parameters: renderer, scene, camera, shadowCamera, geometry,\ndepthMaterial, group.\nPlease notice that this callback is only executed for `renderable` 3D objects. Meaning 3D objects which\ndefine their visual appearance with geometries and materials like instances of {@link Mesh }, {@link Line },\n{@link Points } or {@link Sprite }. Instances of {@link Object3D }, {@link Group } or {@link Bone } are not renderable\nand thus this callback is not executed for such objects."
+        },
+        {
+          "nome": "onBeforeRender",
+          "tipo": "(renderer: WebGLRenderer, scene: Scene, camera: Camera, geometry: BufferGeometry<NormalBufferAttributes>, material: Material, group: Group<...>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "An optional callback that is executed immediately before a 3D object is rendered.\n@remarks This function is called with the following parameters: renderer, scene, camera, geometry, material, group.\nPlease notice that this callback is only executed for `renderable` 3D objects. Meaning 3D objects which\ndefine their visual appearance with geometries and materials like instances of {@link Mesh }, {@link Line },\n{@link Points } or {@link Sprite }. Instances of {@link Object3D }, {@link Group } or {@link Bone } are not renderable\nand thus this callback is not executed for such objects."
+        },
+        {
+          "nome": "onBeforeShadow",
+          "tipo": "(renderer: WebGLRenderer, scene: Scene, camera: Camera, shadowCamera: Camera, geometry: BufferGeometry<NormalBufferAttributes>, depthMaterial: Material, group: Group<...>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "An optional callback that is executed immediately before a 3D object is rendered to a shadow map.\n@remarks This function is called with the following parameters: renderer, scene, camera, shadowCamera, geometry,\ndepthMaterial, group.\nPlease notice that this callback is only executed for `renderable` 3D objects. Meaning 3D objects which\ndefine their visual appearance with geometries and materials like instances of {@link Mesh }, {@link Line },\n{@link Points } or {@link Sprite }. Instances of {@link Object3D }, {@link Group } or {@link Bone } are not renderable\nand thus this callback is not executed for such objects."
+        },
+        {
+          "nome": "parent",
+          "tipo": "Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Object's parent in the {@link https://en.wikipedia.org/wiki/Scene_graph scene graph}.\n@remarks An object can have at most one parent.\n@defaultValue `null`"
+        },
+        {
+          "nome": "position",
+          "tipo": "Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Object's local position.\n@defaultValue `new THREE.Vector3()` - that is `(0, 0, 0)`."
+        },
+        {
+          "nome": "quaternion",
+          "tipo": "Quaternion",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Object's local rotation as a {@link THREE.Quaternion Quaternion}.\n@defaultValue `new THREE.Quaternion()` - that is `(0,  0, 0, 1)`."
+        },
+        {
+          "nome": "raycast",
+          "tipo": "(raycaster: Raycaster, intersects: Intersection<Object3D<Object3DEventMap>>[]) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Abstract (empty) method to get intersections between a casted ray and this object\n@remarks Subclasses such as {@link THREE.Mesh Mesh}, {@link THREE.Line Line}, and {@link THREE.Points Points} implement this method in order to use raycasting.\n@see {@link THREE.Raycaster Raycaster}\n@param raycaster\n@param intersects\n@defaultValue `() => {}`"
+        },
+        {
+          "nome": "receiveShadow",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Whether the material receives shadows.\n@defaultValue `false`"
+        },
+        {
+          "nome": "remove",
+          "tipo": "(...object: Object3D<Object3DEventMap>[]) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Removes a {@link Object3D} as child of this {@link Object3D}.\n@remarks An arbitrary number of objects may be removed.\n@see {@link THREE.Group Group} for info on manually grouping objects.\n@param object"
+        },
+        {
+          "nome": "removeEventListener",
+          "tipo": "<T extends keyof Object3DEventMap>(type: T, listener: EventListener<Object3DEventMap[T], T, Object3D<Object3DEventMap>>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Removes a listener from an event type.\n@param type The type of the listener that gets removed.\n@param listener The listener function that gets removed."
+        },
+        {
+          "nome": "removeFromParent",
+          "tipo": "() => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Removes this object from its current parent."
+        },
+        {
+          "nome": "renderOrder",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "This value allows the default rendering order of {@link https://en.wikipedia.org/wiki/Scene_graph scene graph}\nobjects to be overridden although opaque and transparent objects remain sorted independently.\n@remarks When this property is set for an instance of {@link Group Group}, all descendants objects will be sorted and rendered together.\nSorting is from lowest to highest renderOrder.\n@defaultValue `0`"
+        },
+        {
+          "nome": "rotateOnAxis",
+          "tipo": "(axis: Vector3, angle: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotate an object along an axis in object space.\n@remarks The axis is assumed to be normalized.\n@param axis A normalized vector in object space.\n@param angle The angle in radians. Expects a `Float`"
+        },
+        {
+          "nome": "rotateOnWorldAxis",
+          "tipo": "(axis: Vector3, angle: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotate an object along an axis in world space.\n@remarks The axis is assumed to be normalized\nMethod Assumes no rotated parent.\n@param axis A normalized vector in world space.\n@param angle The angle in radians. Expects a `Float`"
+        },
+        {
+          "nome": "rotateX",
+          "tipo": "(angle: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotates the object around _x_ axis in local space.\n@param rad The angle to rotate in radians. Expects a `Float`"
+        },
+        {
+          "nome": "rotateY",
+          "tipo": "(angle: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotates the object around _y_ axis in local space.\n@param rad The angle to rotate in radians. Expects a `Float`"
+        },
+        {
+          "nome": "rotateZ",
+          "tipo": "(angle: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotates the object around _z_ axis in local space.\n@param rad The angle to rotate in radians. Expects a `Float`"
+        },
+        {
+          "nome": "rotation",
+          "tipo": "Euler",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Object's local rotation ({@link https://en.wikipedia.org/wiki/Euler_angles Euler angles}), in radians.\n@defaultValue `new THREE.Euler()` - that is `(0, 0, 0, Euler.DEFAULT_ORDER)`."
+        },
+        {
+          "nome": "scale",
+          "tipo": "Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "The object's local scale.\n@defaultValue `new THREE.Vector3( 1, 1, 1 )`"
+        },
+        {
+          "nome": "setRotationFromAxisAngle",
+          "tipo": "(axis: Vector3, angle: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Calls {@link THREE.Quaternion.setFromAxisAngle setFromAxisAngle}({@link axis}, {@link angle}) on the {@link quaternion.quaternion}.\n@param axis A normalized vector in object space.\n@param angle Angle in radians. Expects a `Float`"
+        },
+        {
+          "nome": "setRotationFromEuler",
+          "tipo": "(euler: Euler) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Calls {@link THREE.Quaternion.setFromEuler setFromEuler}({@link euler}) on the {@link quaternion.quaternion}.\n@param euler Euler angle specifying rotation amount."
+        },
+        {
+          "nome": "setRotationFromMatrix",
+          "tipo": "(m: Matrix4) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Calls {@link THREE.Quaternion.setFromRotationMatrix setFromRotationMatrix}({@link m}) on the {@link quaternion.quaternion}.\n@remarks Note that this assumes that the upper 3x3 of m is a pure rotation matrix (i.e, unscaled).\n@param m Rotate the quaternion by the rotation component of the matrix."
+        },
+        {
+          "nome": "setRotationFromQuaternion",
+          "tipo": "(q: Quaternion) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Copy the given {@link THREE.Quaternion Quaternion} into {@link quaternion.quaternion}.\n@param q Normalized Quaternion."
+        },
+        {
+          "nome": "toJSON",
+          "tipo": "(meta?: JSONMeta) => Object3DJSON",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Convert the object to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 JSON Object/Scene format}.\n@param meta Object containing metadata such as materials, textures or images for the object."
+        },
+        {
+          "nome": "translateOnAxis",
+          "tipo": "(axis: Vector3, distance: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Translate an object by distance along an axis in object space\n@remarks The axis is assumed to be normalized.\n@param axis A normalized vector in object space.\n@param distance The distance to translate. Expects a `Float`"
+        },
+        {
+          "nome": "translateX",
+          "tipo": "(distance: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Translates object along x axis in object space by {@link distance} units.\n@param distance Expects a `Float`"
+        },
+        {
+          "nome": "translateY",
+          "tipo": "(distance: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Translates object along _y_ axis in object space by {@link distance} units.\n@param distance Expects a `Float`"
+        },
+        {
+          "nome": "translateZ",
+          "tipo": "(distance: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Translates object along _z_ axis in object space by {@link distance} units.\n@param distance Expects a `Float`"
+        },
+        {
+          "nome": "traverse",
+          "tipo": "(callback: (object: Object3D<Object3DEventMap>) => any) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Executes the callback on this object and all descendants.\n@remarks Note: Modifying the scene graph inside the callback is discouraged.\n@param callback A function with as first argument an {@link Object3D } object."
+        },
+        {
+          "nome": "traverseAncestors",
+          "tipo": "(callback: (object: Object3D<Object3DEventMap>) => any) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Executes the callback on all ancestors.\n@remarks Note: Modifying the scene graph inside the callback is discouraged.\n@param callback A function with as first argument an {@link Object3D } object."
+        },
+        {
+          "nome": "traverseVisible",
+          "tipo": "(callback: (object: Object3D<Object3DEventMap>) => any) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Like traverse, but the callback will only be executed for visible objects\n@remarks Descendants of invisible objects are not traversed.\nNote: Modifying the scene graph inside the callback is discouraged.\n@param callback A function with as first argument an {@link Object3D } object."
+        },
+        {
+          "nome": "type",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A Read-only _string_ to check `this` object type.\n@remarks This can be used to find a specific type of Object3D in a scene.\nSub-classes will update this value.\n@defaultValue `Object3D`"
+        },
+        {
+          "nome": "up",
+          "tipo": "Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "This is used by the {@link lookAtlookAt} method, for example, to determine the orientation of the result.\n@defaultValue {@link DEFAULT_UP Object3D.DEFAULT_UP} - that is `(0, 1, 0)`."
+        },
+        {
+          "nome": "updateMatrix",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Updates local transform."
+        },
+        {
+          "nome": "updateMatrixWorld",
+          "tipo": "(force?: boolean) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Updates the global transform of the object.\nAnd will update the object descendants if {@link matrixWorldNeedsUpdate.matrixWorldNeedsUpdate} is set to true or if the {@link force} parameter is set to `true`.\n@param force A boolean that can be used to bypass {@link matrixWorldAutoUpdate .matrixWorldAutoUpdate}, to recalculate the world matrix of the object and descendants on the current frame.\nUseful if you cannot wait for the renderer to update it on the next frame, assuming {@link matrixWorldAutoUpdate .matrixWorldAutoUpdate} set to `true`."
+        },
+        {
+          "nome": "updateWorldMatrix",
+          "tipo": "(updateParents: boolean, updateChildren: boolean) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Updates the global transform of the object.\n@param updateParents Recursively updates global transform of ancestors.\n@param updateChildren Recursively updates global transform of descendants."
+        },
+        {
+          "nome": "userData",
+          "tipo": "Record<string, any>",
+          "obrigatoria": true,
+          "padrao": "`{}`",
+          "descricao": "An object that can be used to store custom data about the {@link Object3D}.\n@remarks It should not hold references to _functions_ as these **will not** be cloned."
+        },
+        {
+          "nome": "uuid",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "{@link http://en.wikipedia.org/wiki/Universally_unique_identifier UUID} of this object instance.\n@remarks This gets automatically assigned and shouldn't be edited."
+        },
+        {
+          "nome": "visible",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Object gets rendered if `true`.\n@defaultValue `true`"
+        },
+        {
+          "nome": "worldToLocal",
+          "tipo": "(vector: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Converts the vector from world space to this object's local space.\n@param vector A vector representing a position in world space."
+        },
+        {
+          "nome": "customDepthMaterial",
+          "tipo": "Material",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Custom depth material to be used when rendering to the depth map.\n@remarks Can only be used in context of meshes.\nWhen shadow-casting with a {@link THREE.DirectionalLight DirectionalLight} or {@link THREE.SpotLight SpotLight},\nif you are modifying vertex positions in the vertex shader you must specify a customDepthMaterial for proper shadows.\n@defaultValue `undefined`"
+        },
+        {
+          "nome": "customDistanceMaterial",
+          "tipo": "Material",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Same as {@link customDepthMaterial}, but used with {@link THREE.Object3DPointLight PointLight}.\n@defaultValue `undefined`"
+        }
+      ]
+    },
+    {
+      "nome": "createFogRenderer",
+      "descricao": "Cria o renderer das cenas de névoa, ou devolve `null` se o WebGL não existir.\n\n`null` e não exceção: máquina sem WebGL (driver na lista negra, VM, modo de\neconomia) tem de ver a seção com o papel liso e o texto por cima, não uma\ntela de erro. O componente já pinta o papel por baixo do canvas.",
+      "props": []
+    },
+    {
+      "nome": "releaseRenderer",
+      "descricao": "Devolve o contexto ao navegador já, em vez de esperar o GC.\n\nO teto é ≈16 contextos vivos no Chrome. Uma SPA que entra e sai de rota com\ncena 3D estoura esse teto sem nunca ter duas cenas na tela — e o sintoma é a\ncena MAIS ANTIGA perdendo o contexto, sem erro que aponte para cá.",
+      "props": [
+        {
+          "nome": "animate",
+          "tipo": "(callback: () => void) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLRenderer#setAnimationLoop .setAnimationLoop()} instead."
+        },
+        {
+          "nome": "autoClear",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": "true",
+          "descricao": "Defines whether the renderer should automatically clear its output before rendering."
+        },
+        {
+          "nome": "autoClearColor",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": "true",
+          "descricao": "If autoClear is true, defines whether the renderer should clear the color buffer. Default is true."
+        },
+        {
+          "nome": "autoClearDepth",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": "true",
+          "descricao": "If autoClear is true, defines whether the renderer should clear the depth buffer. Default is true."
+        },
+        {
+          "nome": "autoClearStencil",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": "true",
+          "descricao": "If autoClear is true, defines whether the renderer should clear the stencil buffer. Default is true."
+        },
+        {
+          "nome": "capabilities",
+          "tipo": "WebGLCapabilities",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "clear",
+          "tipo": "(color?: boolean, depth?: boolean, stencil?: boolean) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Tells the renderer to clear its color, depth or stencil drawing buffer(s).\nArguments default to true"
+        },
+        {
+          "nome": "clearColor",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "clearDepth",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "clearStencil",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "clearTarget",
+          "tipo": "(renderTarget: WebGLRenderTarget<Texture>, color: boolean, depth: boolean, stencil: boolean) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "clippingPlanes",
+          "tipo": "Plane[]",
+          "obrigatoria": true,
+          "padrao": "[]",
+          "descricao": null
+        },
+        {
+          "nome": "compile",
+          "tipo": "(scene: Object3D<Object3DEventMap>, camera: Camera, targetScene?: Scene) => Set<Material>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Compiles all materials in the scene with the camera. This is useful to precompile shaders before the first\nrendering. If you want to add a 3D object to an existing scene, use the third optional parameter for applying the\ntarget scene.\nNote that the (target) scene's lighting should be configured before calling this method."
+        },
+        {
+          "nome": "compileAsync",
+          "tipo": "(scene: Object3D<Object3DEventMap>, camera: Camera, targetScene?: Scene) => Promise<Object3D<Object3DEventMap>>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Asynchronous version of {@link compile}(). The method returns a Promise that resolves when the given scene can be\nrendered without unnecessary stalling due to shader compilation.\nThis method makes use of the KHR_parallel_shader_compile WebGL extension."
+        },
+        {
+          "nome": "coordinateSystem",
+          "tipo": "2000",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "copyFramebufferToTexture",
+          "tipo": "(texture: Texture, position?: Vector2, level?: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Copies a region of the currently bound framebuffer into the selected mipmap level of the selected texture.\nThis region is defined by the size of the destination texture's mip level, offset by the input position.\n@param texture Specifies the destination texture.\n@param position Specifies the pixel offset from which to copy out of the framebuffer.\n@param level Specifies the destination mipmap level of the texture."
+        },
+        {
+          "nome": "copyTextureToTexture",
+          "tipo": "(srcTexture: Texture, dstTexture: Texture, srcRegion?: Box2 | Box3, dstPosition?: Vector3 | Vector2, dstLevel?: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Copies the pixels of a texture in the bounds [srcRegion]{@link Box3} in the destination texture starting from the\ngiven position. 2D Texture, 3D Textures, or a mix of the two can be used as source and destination texture\narguments for copying between layers of 3d textures\n\nThe `depthTexture` and `texture` property of render targets are supported as well.\n\nWhen using render target textures as `srcTexture` and `dstTexture`, you must make sure both render targets are\ninitialized e.g. via {@link .initRenderTarget}().\n@param srcTexture Specifies the source texture.\n@param dstTexture Specifies the destination texture.\n@param srcRegion Specifies the bounds\n@param dstPosition Specifies the pixel offset into the dstTexture where the copy will occur.\n@param dstLevel Specifies the destination mipmap level of the texture."
+        },
+        {
+          "nome": "copyTextureToTexture3D",
+          "tipo": "(srcTexture: Texture, dstTexture: Data3DTexture | DataArrayTexture, srcRegion?: Box3, dstPosition?: Vector3, level?: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use \"copyTextureToTexture\" instead.\n\nCopies the pixels of a texture in the bounds `srcRegion` in the destination texture starting from the given\nposition. The `depthTexture` and `texture` property of 3D render targets are supported as well.\n\nWhen using render target textures as `srcTexture` and `dstTexture`, you must make sure both render targets are\nintitialized e.g. via {@link .initRenderTarget}().\n@param srcTexture Specifies the source texture.\n@param dstTexture Specifies the destination texture.\n@param srcRegion Specifies the bounds\n@param dstPosition Specifies the pixel offset into the dstTexture where the copy will occur.\n@param level Specifies the destination mipmap level of the texture."
+        },
+        {
+          "nome": "debug",
+          "tipo": "WebGLDebug",
+          "obrigatoria": true,
+          "padrao": "{ checkShaderErrors: true }",
+          "descricao": "Debug configurations."
+        },
+        {
+          "nome": "dispose",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "domElement",
+          "tipo": "HTMLCanvasElement",
+          "obrigatoria": true,
+          "padrao": "document.createElementNS( 'http://www.w3.org/1999/xhtml', 'canvas' )",
+          "descricao": "A Canvas where the renderer draws its output.\nThis is automatically created by the renderer in the constructor (if not provided already); you just need to add it to your page."
+        },
+        {
+          "nome": "enableScissorTest",
+          "tipo": "(boolean: any) => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLRenderer#setScissorTest .setScissorTest()} instead."
+        },
+        {
+          "nome": "extensions",
+          "tipo": "WebGLExtensions",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "forceContextLoss",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "forceContextRestore",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "getActiveCubeFace",
+          "tipo": "() => number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns the current active cube face."
+        },
+        {
+          "nome": "getActiveMipmapLevel",
+          "tipo": "() => number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns the current active mipmap level."
+        },
+        {
+          "nome": "getClearAlpha",
+          "tipo": "() => number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a float with the current clear alpha. Ranges from 0 to 1."
+        },
+        {
+          "nome": "getClearColor",
+          "tipo": "(target: Color) => Color",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a THREE.Color instance with the current clear color."
+        },
+        {
+          "nome": "getContext",
+          "tipo": "() => WebGLRenderingContext | WebGL2RenderingContext",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Return the WebGL context."
+        },
+        {
+          "nome": "getContextAttributes",
+          "tipo": "() => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "getCurrentRenderTarget",
+          "tipo": "() => WebGLRenderTarget<Texture>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLRenderer#getRenderTarget .getRenderTarget()} instead."
+        },
+        {
+          "nome": "getCurrentViewport",
+          "tipo": "(target: Vector4) => Vector4",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "getDrawingBufferSize",
+          "tipo": "(target: Vector2) => Vector2",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "getMaxAnisotropy",
+          "tipo": "() => number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLCapabilities#getMaxAnisotropy .capabilities.getMaxAnisotropy()} instead."
+        },
+        {
+          "nome": "getPixelRatio",
+          "tipo": "() => number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "getPrecision",
+          "tipo": "() => string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLCapabilities#precision .capabilities.precision} instead."
+        },
+        {
+          "nome": "getRenderTarget",
+          "tipo": "() => WebGLRenderTarget<Texture>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns the current render target. If no render target is set, null is returned."
+        },
+        {
+          "nome": "getScissor",
+          "tipo": "(target: Vector4) => Vector4",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Copies the scissor area into target."
+        },
+        {
+          "nome": "getScissorTest",
+          "tipo": "() => boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns true if scissor test is enabled; returns false otherwise."
+        },
+        {
+          "nome": "getSize",
+          "tipo": "(target: Vector2) => Vector2",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "getViewport",
+          "tipo": "(target: Vector4) => Vector4",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Copies the viewport into target."
+        },
+        {
+          "nome": "info",
+          "tipo": "WebGLInfo",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "initRenderTarget",
+          "tipo": "(target: WebGLRenderTarget<Texture>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Initializes the given WebGLRenderTarget memory. Useful for initializing a render target so data can be copied\ninto it using {@link WebGLRenderer.copyTextureToTexture} before it has been rendered to.\n@param target"
+        },
+        {
+          "nome": "initTexture",
+          "tipo": "(texture: Texture) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Initializes the given texture. Can be used to preload a texture rather than waiting until first render (which can cause noticeable lags due to decode and GPU upload overhead).\n@param texture The texture to Initialize."
+        },
+        {
+          "nome": "localClippingEnabled",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "outputColorSpace",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": "THREE.SRGBColorSpace.",
+          "descricao": "Color space used for output to HTMLCanvasElement. Supported values are\n{@link SRGBColorSpace } and {@link LinearSRGBColorSpace }."
+        },
+        {
+          "nome": "pixelRatio",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "properties",
+          "tipo": "WebGLProperties",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "readRenderTargetPixels",
+          "tipo": "(renderTarget: WebGLRenderTarget<Texture> | WebGLRenderTarget<Texture[]>, x: number, y: number, width: number, height: number, buffer: TypedArray, activeCubeFaceIndex?: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "readRenderTargetPixelsAsync",
+          "tipo": "(renderTarget: WebGLRenderTarget<Texture> | WebGLRenderTarget<Texture[]>, x: number, y: number, width: number, height: number, buffer: TypedArray, activeCubeFaceIndex?: number) => Promise<...>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "render",
+          "tipo": "(scene: Object3D<Object3DEventMap>, camera: Camera) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Render a scene or an object using a camera.\nThe render is done to a previously specified {@link WebGLRenderTarget#renderTarget .renderTarget} set by calling\n{@link WebGLRenderer#setRenderTarget .setRenderTarget} or to the canvas as usual.\n\nBy default render buffers are cleared before rendering but you can prevent this by setting the property\n{@link WebGLRenderer#autoClear autoClear} to false. If you want to prevent only certain buffers being cleared\nyou can set either the {@link WebGLRenderer#autoClearColor autoClearColor},\n{@link WebGLRenderer#autoClearStencil autoClearStencil} or {@link WebGLRenderer#autoClearDepth autoClearDepth}\nproperties to false. To forcibly clear one ore more buffers call {@link WebGLRenderer#clear .clear}."
+        },
+        {
+          "nome": "renderBufferDirect",
+          "tipo": "(camera: Camera, scene: Scene, geometry: BufferGeometry<NormalBufferAttributes>, material: Material, object: Object3D<...>, geometryGroup: any) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "renderLists",
+          "tipo": "WebGLRenderLists",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "resetGLState",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLState#reset .state.reset()} instead."
+        },
+        {
+          "nome": "resetState",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Can be used to reset the internal WebGL state."
+        },
+        {
+          "nome": "setAnimationLoop",
+          "tipo": "(callback: XRFrameRequestCallback) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A build in function that can be used instead of requestAnimationFrame. For WebXR projects this function must be used.\n@param callback The function will be called every available frame. If `null` is passed it will stop any already ongoing animation."
+        },
+        {
+          "nome": "setClearAlpha",
+          "tipo": "(alpha: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "setClearColor",
+          "tipo": "(color: ColorRepresentation, alpha?: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Sets the clear color, using color for the color and alpha for the opacity."
+        },
+        {
+          "nome": "setDrawingBufferSize",
+          "tipo": "(width: number, height: number, pixelRatio: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "setOpaqueSort",
+          "tipo": "(method: (a: any, b: any) => number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Sets the custom opaque sort function for the WebGLRenderLists. Pass null to use the default painterSortStable function."
+        },
+        {
+          "nome": "setPixelRatio",
+          "tipo": "(value: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "setRenderTarget",
+          "tipo": "(renderTarget: WebGLRenderTarget<Texture> | WebGLRenderTarget<Texture[]>, activeCubeFace?: number, activeMipmapLevel?: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Sets the active render target.\n@param renderTarget The {@link WebGLRenderTarget renderTarget} that needs to be activated. When `null` is given, the canvas is set as the active render target instead.\n@param activeCubeFace Specifies the active cube side (PX 0, NX 1, PY 2, NY 3, PZ 4, NZ 5) of {@link WebGLCubeRenderTarget }.\n@param activeMipmapLevel Specifies the active mipmap level."
+        },
+        {
+          "nome": "setScissor",
+          "tipo": "(x: number | Vector4, y?: number, width?: number, height?: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Sets the scissor area from (x, y) to (x + width, y + height)."
+        },
+        {
+          "nome": "setScissorTest",
+          "tipo": "(enable: boolean) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Enable the scissor test. When this is enabled, only the pixels within the defined scissor area will be affected by further renderer actions."
+        },
+        {
+          "nome": "setSize",
+          "tipo": "(width: number, height: number, updateStyle?: boolean) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Resizes the output canvas to (width, height), and also sets the viewport to fit that size, starting in (0, 0)."
+        },
+        {
+          "nome": "setTransparentSort",
+          "tipo": "(method: (a: any, b: any) => number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Sets the custom transparent sort function for the WebGLRenderLists. Pass null to use the default reversePainterSortStable function."
+        },
+        {
+          "nome": "setViewport",
+          "tipo": "(x: number | Vector4, y?: number, width?: number, height?: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Sets the viewport to render from (x, y) to (x + width, y + height).\n(x, y) is the lower-left corner of the region."
+        },
+        {
+          "nome": "shadowMap",
+          "tipo": "WebGLShadowMap",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "shadowMapCullFace",
+          "tipo": "enum",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLShadowMap#cullFace .shadowMap.cullFace} instead.",
+          "valores": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ]
+        },
+        {
+          "nome": "shadowMapEnabled",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLShadowMap#enabled .shadowMap.enabled} instead."
+        },
+        {
+          "nome": "shadowMapType",
+          "tipo": "enum",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLShadowMap#type .shadowMap.type} instead.",
+          "valores": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ]
+        },
+        {
+          "nome": "sortObjects",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": "true",
+          "descricao": "Defines whether the renderer should sort objects. Default is true."
+        },
+        {
+          "nome": "state",
+          "tipo": "WebGLState",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "supportsBlendMinMax",
+          "tipo": "() => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLExtensions#get .extensions.get( 'EXT_blend_minmax' )} instead."
+        },
+        {
+          "nome": "supportsCompressedTexturePVRTC",
+          "tipo": "() => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLExtensions#get .extensions.get( 'WEBGL_compressed_texture_pvrtc' )} instead."
+        },
+        {
+          "nome": "supportsCompressedTextureS3TC",
+          "tipo": "() => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLExtensions#get .extensions.get( 'WEBGL_compressed_texture_s3tc' )} instead."
+        },
+        {
+          "nome": "supportsFloatTextures",
+          "tipo": "() => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLExtensions#get .extensions.get( 'OES_texture_float' )} instead."
+        },
+        {
+          "nome": "supportsHalfFloatTextures",
+          "tipo": "() => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLExtensions#get .extensions.get( 'OES_texture_half_float' )} instead."
+        },
+        {
+          "nome": "supportsInstancedArrays",
+          "tipo": "() => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLExtensions#get .extensions.get( 'ANGLE_instanced_arrays' )} instead."
+        },
+        {
+          "nome": "supportsStandardDerivatives",
+          "tipo": "() => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLExtensions#get .extensions.get( 'OES_standard_derivatives' )} instead."
+        },
+        {
+          "nome": "supportsVertexTextures",
+          "tipo": "() => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLCapabilities#vertexTextures .capabilities.vertexTextures} instead."
+        },
+        {
+          "nome": "toneMapping",
+          "tipo": "enum",
+          "obrigatoria": true,
+          "padrao": "THREE.NoToneMapping",
+          "descricao": null,
+          "valores": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"
+          ]
+        },
+        {
+          "nome": "toneMappingExposure",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": "1",
+          "descricao": null
+        },
+        {
+          "nome": "vr",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@deprecated Use {@link WebGLRenderer#xr .xr} instead."
+        },
+        {
+          "nome": "xr",
+          "tipo": "WebXRManager",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "roundCrown",
+      "descricao": "A copa redonda da referência (a árvore solitária na neblina).\n\nO `Oak Medium` cru sai alto e ralo; estes ajustes o deixam com a copa cheia e\nbaixa e o tronco aparente, que é o que faz a silhueta ler de longe, no meio\nda névoa. Só se aplica ao preset padrão: nos outros, mexer em ângulo e\ncontagem de galho deforma o que o preset tem de característico.",
+      "props": [
+        {
+          "nome": "add",
+          "tipo": "(...object: Object3D<Object3DEventMap>[]) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Adds another {@link Object3D} as child of this {@link Object3D}.\n@remarks An arbitrary number of objects may be added\nAny current parent on an {@link object } passed in here will be removed, since an {@link Object3D } can have at most one parent.\n@see {@link attach }\n@see {@link THREE.Group Group} for info on manually grouping objects.\n@param object"
+        },
+        {
+          "nome": "addEventListener",
+          "tipo": "<T extends keyof Object3DEventMap>(type: T, listener: EventListener<Object3DEventMap[T], T, Tree>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Adds a listener to an event type.\n@param type The type of event to listen to.\n@param listener The function that gets called when the event is fired."
+        },
+        {
+          "nome": "animations",
+          "tipo": "AnimationClip[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Array with object's animation clips.\n@defaultValue `[]`"
+        },
+        {
+          "nome": "applyMatrix4",
+          "tipo": "(matrix: Matrix4) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Applies the matrix transform to the object and updates the object's position, rotation and scale.\n@param matrix"
+        },
+        {
+          "nome": "applyQuaternion",
+          "tipo": "(quaternion: Quaternion) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Applies the rotation represented by the quaternion to the object.\n@param quaternion"
+        },
+        {
+          "nome": "attach",
+          "tipo": "(object: Object3D<Object3DEventMap>) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Adds a {@link Object3D} as a child of this, while maintaining the object's world transform.\n@remarks Note: This method does not support scene graphs having non-uniformly-scaled nodes(s).\n@see {@link add }\n@param object"
+        },
+        {
+          "nome": "branches",
+          "tipo": "{ verts: any[]; normals: any[]; indices: any[]; uvs: any[]; windFactor: any[]; }",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "branchesMesh",
+          "tipo": "Mesh<BufferGeometry<NormalBufferAttributes>, Material | Material[], Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "branchQueue",
+          "tipo": "Branch[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "calculateTrellisForce",
+          "tipo": "(position: Vector3, radius: number) => { direction: Vector3; strength: number; }",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Calculate the force vector toward the nearest trellis point\n@param position Current section position\n@param radius Current section radius\n@returns"
+        },
+        {
+          "nome": "castShadow",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Whether the object gets rendered into shadow map.\n@defaultValue `false`"
+        },
+        {
+          "nome": "children",
+          "tipo": "Object3D<Object3DEventMap>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Array with object's children.\n@see {@link THREE.Object3DGroup Group} for info on manually grouping objects.\n@defaultValue `[]`"
+        },
+        {
+          "nome": "clear",
+          "tipo": "() => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Removes all child objects."
+        },
+        {
+          "nome": "clone",
+          "tipo": "(recursive?: boolean) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a clone of `this` object and optionally all descendants.\n@param recursive If true, descendants of the object are also cloned. Default `true`"
+        },
+        {
+          "nome": "copy",
+          "tipo": "(object: Object3D<Object3DEventMap>, recursive?: boolean) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Copies the given object into this object.\n@remarks Event listeners and user-defined callbacks ({@link .onAfterRender} and {@link .onBeforeRender}) are not copied.\n@param object\n@param recursive If set to `true`, descendants of the object are copied next to the existing ones. If set to\n`false`, descendants are left unchanged. Default is `true`."
+        },
+        {
+          "nome": "createBranchesGeometry",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Generates the geometry for the branches"
+        },
+        {
+          "nome": "createLeavesGeometry",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Generates the geometry for the leaves"
+        },
+        {
+          "nome": "createTrellis",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Create or update the trellis geometry"
+        },
+        {
+          "nome": "dispatchEvent",
+          "tipo": "<T extends keyof Object3DEventMap>(event: BaseEvent<T> & Object3DEventMap[T]) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Fire an event type.\n@param event The event that gets fired."
+        },
+        {
+          "nome": "frustumCulled",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "When this is set, it checks every frame if the object is in the frustum of the camera before rendering the object.\nIf set to `false` the object gets rendered every frame even if it is not in the frustum of the camera.\n@defaultValue `true`"
+        },
+        {
+          "nome": "generate",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Generate a new tree"
+        },
+        {
+          "nome": "generateBranch",
+          "tipo": "(branch: Branch) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Generates a new branch\n@param branch\n@returns"
+        },
+        {
+          "nome": "generateBranchIndices",
+          "tipo": "(indexOffset: any, branch: Branch) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Generates the indices for branch geometry\n@param branch"
+        },
+        {
+          "nome": "generateChildBranches",
+          "tipo": "(count: number, level: number, sections: { origin: Vector3; orientation: Euler; radius: number; }[]) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Generate branches from a parent branch\n@param count The number of child branches to generate\n@param level The level of the child branches\n@param sections The parent branch's sections\n@returns"
+        },
+        {
+          "nome": "generateLeaf",
+          "tipo": "(origin: Vector3, orientation: Euler) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Generates a leaves\n@param origin The starting point of the branch\n@param orientation The starting orientation of the branch"
+        },
+        {
+          "nome": "generateLeaves",
+          "tipo": "(sections: { origin: Vector3; orientation: Euler; radius: number; }[]) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Logic for spawning child branches from a parent branch's section\n@param sections The parent branch's sections\n@returns"
+        },
+        {
+          "nome": "getNearestTrellisPoint",
+          "tipo": "(position: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Find the nearest point on the trellis grid to a given position\n@param position\n@returns"
+        },
+        {
+          "nome": "getObjectById",
+          "tipo": "(id: number) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Searches through an object and its children, starting with the object itself, and returns the first with a matching id.\n@remarks Note that ids are assigned in chronological order: 1, 2, 3, ..., incrementing by one for each new object.\n@see {@link id }\n@param id Unique number of the object instance. Expects a `Integer`"
+        },
+        {
+          "nome": "getObjectByName",
+          "tipo": "(name: string) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Searches through an object and its children, starting with the object itself, and returns the first with a matching name.\n@remarks Note that for most objects the name is an empty string by default\nYou will have to set it manually to make use of this method.\n@param name String to match to the children's Object3D.name property."
+        },
+        {
+          "nome": "getObjectByProperty",
+          "tipo": "(name: string, value: any) => Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Searches through an object and its children, starting with the object itself,\nand returns the first with a property that matches the value given.\n@param name - the property name to search for.\n@param value - value of the given property."
+        },
+        {
+          "nome": "getObjectsByProperty",
+          "tipo": "(name: string, value: any, optionalTarget?: Object3D<Object3DEventMap>[]) => Object3D<Object3DEventMap>[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Searches through an object and its children, starting with the object itself,\nand returns the first with a property that matches the value given.\n@param name The property name to search for.\n@param value Value of the given property.\n@param optionalTarget target to set the result. Otherwise a new Array is instantiated. If set, you must clear\nthis array prior to each call (i.e., array.length = 0;)."
+        },
+        {
+          "nome": "getWorldDirection",
+          "tipo": "(target: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a vector representing the direction of object's positive z-axis in world space.\n@param target The result will be copied into this Vector3."
+        },
+        {
+          "nome": "getWorldPosition",
+          "tipo": "(target: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a vector representing the position of the object in world space.\n@param target The result will be copied into this Vector3."
+        },
+        {
+          "nome": "getWorldQuaternion",
+          "tipo": "(target: Quaternion) => Quaternion",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a quaternion representing the rotation of the object in world space.\n@param target The result will be copied into this Quaternion."
+        },
+        {
+          "nome": "getWorldScale",
+          "tipo": "(target: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Returns a vector of the scaling factors applied to the object for each axis in world space.\n@param target The result will be copied into this Vector3."
+        },
+        {
+          "nome": "hasEventListener",
+          "tipo": "<T extends keyof Object3DEventMap>(type: T, listener: EventListener<Object3DEventMap[T], T, Tree>) => boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Checks if listener is added to an event type.\n@param type The type of event to listen to.\n@param listener The function that gets called when the event is fired."
+        },
+        {
+          "nome": "id",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Unique number for this {@link Object3D} instance.\n@remarks Note that ids are assigned in chronological order: 1, 2, 3, ..., incrementing by one for each new object.\nExpects a `Integer`"
+        },
+        {
+          "nome": "isGroup",
+          "tipo": "true",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Read-only flag to check if a given object is of type {@link Group}.\n@remarks This is a _constant_ value\n@defaultValue `true`"
+        },
+        {
+          "nome": "isObject3D",
+          "tipo": "true",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Flag to check if a given object is of type {@link Object3D}.\n@remarks This is a _constant_ value\n@defaultValue `true`"
+        },
+        {
+          "nome": "layers",
+          "tipo": "Layers",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "The layer membership of the object.\n@remarks The object is only visible if it has at least one layer in common with the {@link THREE.Object3DCamera Camera} in use.\nThis property can also be used to filter out unwanted objects in ray-intersection tests when using {@link THREE.Raycaster Raycaster}.\n@defaultValue `new THREE.Layers()`"
+        },
+        {
+          "nome": "leaves",
+          "tipo": "{ verts: any[]; normals: any[]; indices: any[]; uvs: any[]; }",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "leavesMesh",
+          "tipo": "Mesh<BufferGeometry<NormalBufferAttributes>, Material | Material[], Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "loadFromJson",
+          "tipo": "(json: TreeOptions) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Loads a tree from JSON\n@param json"
+        },
+        {
+          "nome": "loadPreset",
+          "tipo": "(name: any) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Loads a preset tree from JSON\n@param preset"
+        },
+        {
+          "nome": "localToWorld",
+          "tipo": "(vector: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Converts the vector from this object's local space to world space.\n@param vector A vector representing a position in this object's local space."
+        },
+        {
+          "nome": "lookAt",
+          "tipo": "{ (vector: Vector3): void; (x: number, y: number, z: number): void; }",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotates the object to face a point in world space.\n@remarks This method does not support objects having non-uniformly-scaled parent(s).\n@param vector A vector representing a position in world space to look at.\n@remarks This method does not support objects having non-uniformly-scaled parent(s).\n@param x Expects a `Float`\n@param y Expects a `Float`\n@param z Expects a `Float`"
+        },
+        {
+          "nome": "matrix",
+          "tipo": "Matrix4",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "The local transform matrix.\n@defaultValue `new THREE.Matrix4()`"
+        },
+        {
+          "nome": "matrixAutoUpdate",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "When this is set, it calculates the matrix of position, (rotation or quaternion) and\nscale every frame and also recalculates the matrixWorld property.\n@defaultValue {@link DEFAULT_MATRIX_AUTO_UPDATE } - that is `(true)`."
+        },
+        {
+          "nome": "matrixWorld",
+          "tipo": "Matrix4",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "The global transform of the object.\n@remarks If the {@link Object3D } has no parent, then it's identical to the local transform {@link THREE.Object3D.matrix .matrix}.\n@defaultValue `new THREE.Matrix4()`"
+        },
+        {
+          "nome": "matrixWorldAutoUpdate",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "If set, then the renderer checks every frame if the object and its children need matrix updates.\nWhen it isn't, then you have to maintain all matrices in the object and its children yourself.\n@defaultValue {@link DEFAULT_MATRIX_WORLD_AUTO_UPDATE } - that is `(true)`."
+        },
+        {
+          "nome": "matrixWorldNeedsUpdate",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "When this is set, it calculates the matrixWorld in that frame and resets this property to false.\n@defaultValue `false`"
+        },
+        {
+          "nome": "modelViewMatrix",
+          "tipo": "Matrix4",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@defaultValue `new THREE.Matrix4()`"
+        },
+        {
+          "nome": "name",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Optional name of the object\n@remarks _(doesn't need to be unique)_.\n@defaultValue `\"\"`"
+        },
+        {
+          "nome": "normalMatrix",
+          "tipo": "Matrix3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "@defaultValue `new THREE.Matrix3()`"
+        },
+        {
+          "nome": "onAfterRender",
+          "tipo": "(renderer: WebGLRenderer, scene: Scene, camera: Camera, geometry: BufferGeometry<NormalBufferAttributes>, material: Material, group: Group<...>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "An optional callback that is executed immediately after a 3D object is rendered.\n@remarks This function is called with the following parameters: renderer, scene, camera, geometry, material, group.\nPlease notice that this callback is only executed for `renderable` 3D objects. Meaning 3D objects which\ndefine their visual appearance with geometries and materials like instances of {@link Mesh }, {@link Line },\n{@link Points } or {@link Sprite }. Instances of {@link Object3D }, {@link Group } or {@link Bone } are not renderable\nand thus this callback is not executed for such objects."
+        },
+        {
+          "nome": "onAfterShadow",
+          "tipo": "(renderer: WebGLRenderer, scene: Scene, camera: Camera, shadowCamera: Camera, geometry: BufferGeometry<NormalBufferAttributes>, depthMaterial: Material, group: Group<...>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "An optional callback that is executed immediately after a 3D object is rendered to a shadow map.\n@remarks This function is called with the following parameters: renderer, scene, camera, shadowCamera, geometry,\ndepthMaterial, group.\nPlease notice that this callback is only executed for `renderable` 3D objects. Meaning 3D objects which\ndefine their visual appearance with geometries and materials like instances of {@link Mesh }, {@link Line },\n{@link Points } or {@link Sprite }. Instances of {@link Object3D }, {@link Group } or {@link Bone } are not renderable\nand thus this callback is not executed for such objects."
+        },
+        {
+          "nome": "onBeforeRender",
+          "tipo": "(renderer: WebGLRenderer, scene: Scene, camera: Camera, geometry: BufferGeometry<NormalBufferAttributes>, material: Material, group: Group<...>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "An optional callback that is executed immediately before a 3D object is rendered.\n@remarks This function is called with the following parameters: renderer, scene, camera, geometry, material, group.\nPlease notice that this callback is only executed for `renderable` 3D objects. Meaning 3D objects which\ndefine their visual appearance with geometries and materials like instances of {@link Mesh }, {@link Line },\n{@link Points } or {@link Sprite }. Instances of {@link Object3D }, {@link Group } or {@link Bone } are not renderable\nand thus this callback is not executed for such objects."
+        },
+        {
+          "nome": "onBeforeShadow",
+          "tipo": "(renderer: WebGLRenderer, scene: Scene, camera: Camera, shadowCamera: Camera, geometry: BufferGeometry<NormalBufferAttributes>, depthMaterial: Material, group: Group<...>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "An optional callback that is executed immediately before a 3D object is rendered to a shadow map.\n@remarks This function is called with the following parameters: renderer, scene, camera, shadowCamera, geometry,\ndepthMaterial, group.\nPlease notice that this callback is only executed for `renderable` 3D objects. Meaning 3D objects which\ndefine their visual appearance with geometries and materials like instances of {@link Mesh }, {@link Line },\n{@link Points } or {@link Sprite }. Instances of {@link Object3D }, {@link Group } or {@link Bone } are not renderable\nand thus this callback is not executed for such objects."
+        },
+        {
+          "nome": "options",
+          "tipo": "TreeOptions",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "parent",
+          "tipo": "Object3D<Object3DEventMap>",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Object's parent in the {@link https://en.wikipedia.org/wiki/Scene_graph scene graph}.\n@remarks An object can have at most one parent.\n@defaultValue `null`"
+        },
+        {
+          "nome": "position",
+          "tipo": "Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Object's local position.\n@defaultValue `new THREE.Vector3()` - that is `(0, 0, 0)`."
+        },
+        {
+          "nome": "quaternion",
+          "tipo": "Quaternion",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Object's local rotation as a {@link THREE.Quaternion Quaternion}.\n@defaultValue `new THREE.Quaternion()` - that is `(0,  0, 0, 1)`."
+        },
+        {
+          "nome": "raycast",
+          "tipo": "(raycaster: Raycaster, intersects: Intersection<Object3D<Object3DEventMap>>[]) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Abstract (empty) method to get intersections between a casted ray and this object\n@remarks Subclasses such as {@link THREE.Mesh Mesh}, {@link THREE.Line Line}, and {@link THREE.Points Points} implement this method in order to use raycasting.\n@see {@link THREE.Raycaster Raycaster}\n@param raycaster\n@param intersects\n@defaultValue `() => {}`"
+        },
+        {
+          "nome": "receiveShadow",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Whether the material receives shadows.\n@defaultValue `false`"
+        },
+        {
+          "nome": "remove",
+          "tipo": "(...object: Object3D<Object3DEventMap>[]) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Removes a {@link Object3D} as child of this {@link Object3D}.\n@remarks An arbitrary number of objects may be removed.\n@see {@link THREE.Group Group} for info on manually grouping objects.\n@param object"
+        },
+        {
+          "nome": "removeEventListener",
+          "tipo": "<T extends keyof Object3DEventMap>(type: T, listener: EventListener<Object3DEventMap[T], T, Tree>) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Removes a listener from an event type.\n@param type The type of the listener that gets removed.\n@param listener The listener function that gets removed."
+        },
+        {
+          "nome": "removeFromParent",
+          "tipo": "() => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Removes this object from its current parent."
+        },
+        {
+          "nome": "renderOrder",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "This value allows the default rendering order of {@link https://en.wikipedia.org/wiki/Scene_graph scene graph}\nobjects to be overridden although opaque and transparent objects remain sorted independently.\n@remarks When this property is set for an instance of {@link Group Group}, all descendants objects will be sorted and rendered together.\nSorting is from lowest to highest renderOrder.\n@defaultValue `0`"
+        },
+        {
+          "nome": "rng",
+          "tipo": "RNG",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "rotateOnAxis",
+          "tipo": "(axis: Vector3, angle: number) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotate an object along an axis in object space.\n@remarks The axis is assumed to be normalized.\n@param axis A normalized vector in object space.\n@param angle The angle in radians. Expects a `Float`"
+        },
+        {
+          "nome": "rotateOnWorldAxis",
+          "tipo": "(axis: Vector3, angle: number) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotate an object along an axis in world space.\n@remarks The axis is assumed to be normalized\nMethod Assumes no rotated parent.\n@param axis A normalized vector in world space.\n@param angle The angle in radians. Expects a `Float`"
+        },
+        {
+          "nome": "rotateX",
+          "tipo": "(angle: number) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotates the object around _x_ axis in local space.\n@param rad The angle to rotate in radians. Expects a `Float`"
+        },
+        {
+          "nome": "rotateY",
+          "tipo": "(angle: number) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotates the object around _y_ axis in local space.\n@param rad The angle to rotate in radians. Expects a `Float`"
+        },
+        {
+          "nome": "rotateZ",
+          "tipo": "(angle: number) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rotates the object around _z_ axis in local space.\n@param rad The angle to rotate in radians. Expects a `Float`"
+        },
+        {
+          "nome": "rotation",
+          "tipo": "Euler",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Object's local rotation ({@link https://en.wikipedia.org/wiki/Euler_angles Euler angles}), in radians.\n@defaultValue `new THREE.Euler()` - that is `(0, 0, 0, Euler.DEFAULT_ORDER)`."
+        },
+        {
+          "nome": "scale",
+          "tipo": "Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "The object's local scale.\n@defaultValue `new THREE.Vector3( 1, 1, 1 )`"
+        },
+        {
+          "nome": "setRotationFromAxisAngle",
+          "tipo": "(axis: Vector3, angle: number) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Calls {@link THREE.Quaternion.setFromAxisAngle setFromAxisAngle}({@link axis}, {@link angle}) on the {@link quaternion.quaternion}.\n@param axis A normalized vector in object space.\n@param angle Angle in radians. Expects a `Float`"
+        },
+        {
+          "nome": "setRotationFromEuler",
+          "tipo": "(euler: Euler) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Calls {@link THREE.Quaternion.setFromEuler setFromEuler}({@link euler}) on the {@link quaternion.quaternion}.\n@param euler Euler angle specifying rotation amount."
+        },
+        {
+          "nome": "setRotationFromMatrix",
+          "tipo": "(m: Matrix4) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Calls {@link THREE.Quaternion.setFromRotationMatrix setFromRotationMatrix}({@link m}) on the {@link quaternion.quaternion}.\n@remarks Note that this assumes that the upper 3x3 of m is a pure rotation matrix (i.e, unscaled).\n@param m Rotate the quaternion by the rotation component of the matrix."
+        },
+        {
+          "nome": "setRotationFromQuaternion",
+          "tipo": "(q: Quaternion) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Copy the given {@link THREE.Quaternion Quaternion} into {@link quaternion.quaternion}.\n@param q Normalized Quaternion."
+        },
+        {
+          "nome": "toJSON",
+          "tipo": "(meta?: JSONMeta) => Object3DJSON",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Convert the object to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 JSON Object/Scene format}.\n@param meta Object containing metadata such as materials, textures or images for the object."
+        },
+        {
+          "nome": "translateOnAxis",
+          "tipo": "(axis: Vector3, distance: number) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Translate an object by distance along an axis in object space\n@remarks The axis is assumed to be normalized.\n@param axis A normalized vector in object space.\n@param distance The distance to translate. Expects a `Float`"
+        },
+        {
+          "nome": "translateX",
+          "tipo": "(distance: number) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Translates object along x axis in object space by {@link distance} units.\n@param distance Expects a `Float`"
+        },
+        {
+          "nome": "translateY",
+          "tipo": "(distance: number) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Translates object along _y_ axis in object space by {@link distance} units.\n@param distance Expects a `Float`"
+        },
+        {
+          "nome": "translateZ",
+          "tipo": "(distance: number) => Tree",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Translates object along _z_ axis in object space by {@link distance} units.\n@param distance Expects a `Float`"
+        },
+        {
+          "nome": "traverse",
+          "tipo": "(callback: (object: Object3D<Object3DEventMap>) => any) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Executes the callback on this object and all descendants.\n@remarks Note: Modifying the scene graph inside the callback is discouraged.\n@param callback A function with as first argument an {@link Object3D } object."
+        },
+        {
+          "nome": "traverseAncestors",
+          "tipo": "(callback: (object: Object3D<Object3DEventMap>) => any) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Executes the callback on all ancestors.\n@remarks Note: Modifying the scene graph inside the callback is discouraged.\n@param callback A function with as first argument an {@link Object3D } object."
+        },
+        {
+          "nome": "traverseVisible",
+          "tipo": "(callback: (object: Object3D<Object3DEventMap>) => any) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Like traverse, but the callback will only be executed for visible objects\n@remarks Descendants of invisible objects are not traversed.\nNote: Modifying the scene graph inside the callback is discouraged.\n@param callback A function with as first argument an {@link Object3D } object."
+        },
+        {
+          "nome": "trellisMesh",
+          "tipo": "Trellis",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "triangleCount",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "type",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A Read-only _string_ to check `this` object type.\n@remarks This can be used to find a specific type of Object3D in a scene.\nSub-classes will update this value.\n@defaultValue `Object3D`"
+        },
+        {
+          "nome": "up",
+          "tipo": "Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "This is used by the {@link lookAtlookAt} method, for example, to determine the orientation of the result.\n@defaultValue {@link DEFAULT_UP Object3D.DEFAULT_UP} - that is `(0, 1, 0)`."
+        },
+        {
+          "nome": "update",
+          "tipo": "(elapsedTime: any) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "updateMatrix",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Updates local transform."
+        },
+        {
+          "nome": "updateMatrixWorld",
+          "tipo": "(force?: boolean) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Updates the global transform of the object.\nAnd will update the object descendants if {@link matrixWorldNeedsUpdate.matrixWorldNeedsUpdate} is set to true or if the {@link force} parameter is set to `true`.\n@param force A boolean that can be used to bypass {@link matrixWorldAutoUpdate .matrixWorldAutoUpdate}, to recalculate the world matrix of the object and descendants on the current frame.\nUseful if you cannot wait for the renderer to update it on the next frame, assuming {@link matrixWorldAutoUpdate .matrixWorldAutoUpdate} set to `true`."
+        },
+        {
+          "nome": "updateWorldMatrix",
+          "tipo": "(updateParents: boolean, updateChildren: boolean) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Updates the global transform of the object.\n@param updateParents Recursively updates global transform of ancestors.\n@param updateChildren Recursively updates global transform of descendants."
+        },
+        {
+          "nome": "userData",
+          "tipo": "Record<string, any>",
+          "obrigatoria": true,
+          "padrao": "`{}`",
+          "descricao": "An object that can be used to store custom data about the {@link Object3D}.\n@remarks It should not hold references to _functions_ as these **will not** be cloned."
+        },
+        {
+          "nome": "uuid",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "{@link http://en.wikipedia.org/wiki/Universally_unique_identifier UUID} of this object instance.\n@remarks This gets automatically assigned and shouldn't be edited."
+        },
+        {
+          "nome": "vertexCount",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "visible",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Object gets rendered if `true`.\n@defaultValue `true`"
+        },
+        {
+          "nome": "worldToLocal",
+          "tipo": "(vector: Vector3) => Vector3",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Converts the vector from world space to this object's local space.\n@param vector A vector representing a position in world space."
+        },
+        {
+          "nome": "customDepthMaterial",
+          "tipo": "Material",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Custom depth material to be used when rendering to the depth map.\n@remarks Can only be used in context of meshes.\nWhen shadow-casting with a {@link THREE.DirectionalLight DirectionalLight} or {@link THREE.SpotLight SpotLight},\nif you are modifying vertex positions in the vertex shader you must specify a customDepthMaterial for proper shadows.\n@defaultValue `undefined`"
+        },
+        {
+          "nome": "customDistanceMaterial",
+          "tipo": "Material",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Same as {@link customDepthMaterial}, but used with {@link THREE.Object3DPointLight PointLight}.\n@defaultValue `undefined`"
+        }
+      ]
+    },
+    {
+      "nome": "growTree",
+      "descricao": "Gera uma árvore em cinza, pronta para o duotone.\n\n`options.copy` em vez de `loadPreset`: o `loadPreset` do ez-tree já chama\n`generate()` por dentro, e gerar de novo depois do ajuste dobrava o custo —\nno jardim são sete variantes, e cada geração bloqueia a thread principal.",
+      "props": []
+    },
+    {
+      "nome": "createFogTreeScene",
+      "descricao": "`null` quando não há WebGL — o componente fica com o papel liso.",
+      "props": []
+    },
+    {
+      "nome": "TREE_GRAYS",
+      "descricao": "Cinzas do tronco e da copa, em luminância sRGB.\n\nTronco bem escuro e copa no meio da escala: depois do duotone o tronco lê\ncomo tinta e a copa como tinta diluída, que é como a névoa come a folhagem\nantes do tronco numa foto de verdade. Copa escura demais vira um borrão\nchapado; clara demais some na névoa antes do tronco aparecer.",
+      "props": []
+    },
+    {
+      "nome": "FogTree",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Camada por cima da cena, para o texto da seção. Função recebe o progresso\nefetivo (já com mola no modo `scroll`), para o texto chegar junto da câmera.\nA camada é `pointer-events: none` — dê `pointer-events-auto` ao que clica."
+        },
+        {
+          "nome": "draggable",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Girar arrastando. Padrão: só com ponteiro fino (mouse, caneta)."
+        },
+        {
+          "nome": "fog",
+          "tipo": "{ start?: number; end?: number; }",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Densidade da névoa no começo e no fim do progresso. ~0.5 a 1.5."
+        },
+        {
+          "nome": "grain",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.05",
+          "descricao": "Grão de película.",
+          "faixa": {
+            "min": 0,
+            "max": 0.2,
+            "step": 0.01
+          }
+        },
+        {
+          "nome": "ink",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--foreground)",
+          "descricao": "Cor das sombras. O padrão é o token de texto."
+        },
+        {
+          "nome": "paper",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--background)",
+          "descricao": "Cor das luzes. Qualquer cor CSS; o padrão é o token de fundo."
+        },
+        {
+          "nome": "preset",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "Oak Medium",
+          "descricao": "Espécie (preset do ez-tree). O `Oak Medium` ganha a copa redonda.",
+          "valores": [
+            "Ash Small",
+            "Ash Medium",
+            "Ash Large",
+            "Aspen Small",
+            "Aspen Medium",
+            "Aspen Large",
+            "Bush 1",
+            "Bush 2",
+            "Bush 3",
+            "Oak Small",
+            "Oak Medium",
+            "Oak Large",
+            "Pine Small",
+            "Pine Medium",
+            "Pine Large"
+          ]
+        },
+        {
+          "nome": "progress",
+          "tipo": "number | MotionValue<number>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Progresso 0..1 da caminhada: 0 é a árvore inteira ao longe, 1 é a câmera\ndebaixo da copa com a névoa aberta. Número ou `MotionValue` (o de um\n`useScroll` seu, por exemplo). Ignorado com `scroll`."
+        },
+        {
+          "nome": "scroll",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Prende o progresso ao scroll da própria seção: a peça vira uma `<section>`\ncom `scrollLength` de altura e o palco fica preso (sticky) na tela."
+        },
+        {
+          "nome": "scrollLength",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "220vh",
+          "descricao": "Altura da seção no modo `scroll`. Quanto maior, mais lenta a caminhada."
+        },
+        {
+          "nome": "seed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "4242",
+          "descricao": "Semente do ez-tree. Mesma semente, mesma árvore — em toda visita.",
+          "faixa": {
+            "min": 1,
+            "max": 9999,
+            "step": 1
+          }
+        },
+        {
+          "nome": "trail",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.86",
+          "descricao": "Rastro de longa exposição. 0 desliga.",
+          "faixa": {
+            "min": 0,
+            "max": 0.98,
+            "step": 0.01
+          }
+        }
+      ]
+    },
+    {
+      "nome": "FogTreePreset",
+      "descricao": "Os presets do ez-tree, menos a treliça (que não é árvore).",
+      "props": []
+    }
+  ],
+  "fog-garden": [
+    {
+      "nome": "FogGarden",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "stops",
+          "tipo": "FogGardenStop[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "clearings",
+          "tipo": "number[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Pontos 0..1 da trilha com clareira. Padrão: derivados das paradas."
+        },
+        {
+          "nome": "container",
+          "tipo": "RefObject<HTMLElement>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Scroller que não é a janela (um painel com `overflow: auto`). O progresso\npassa a ser medido nele."
+        },
+        {
+          "nome": "counter",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Contador \"01 / 05\" no canto."
+        },
+        {
+          "nome": "density",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "78",
+          "descricao": "Posições de plantio ao longo da trilha. O modo leve usa 60% disso.",
+          "faixa": {
+            "min": 8,
+            "max": 140,
+            "step": 1
+          }
+        },
+        {
+          "nome": "grain",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.05",
+          "descricao": "Grão de película.",
+          "faixa": {
+            "min": 0,
+            "max": 0.2,
+            "step": 0.01
+          }
+        },
+        {
+          "nome": "heightPerStop",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "120vh",
+          "descricao": "Comprimento de scroll de cada parada. A seção mede `n × heightPerStop`."
+        },
+        {
+          "nome": "ink",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--foreground)",
+          "descricao": null
+        },
+        {
+          "nome": "landmark",
+          "tipo": "GardenLandmark",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Objeto para cada clareira (ver `GardenLandmark`). Lido uma vez, quando a\ncena nasce: uma função inline mudaria a cada render e replantaria o jardim."
+        },
+        {
+          "nome": "paper",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--background)",
+          "descricao": null
+        },
+        {
+          "nome": "seed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2026",
+          "descricao": "Semente do plantio. Mesma semente, mesmo jardim.",
+          "faixa": {
+            "min": 1,
+            "max": 9999,
+            "step": 1
+          }
+        },
+        {
+          "nome": "trail",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.84",
+          "descricao": "Rastro de longa exposição. 0 desliga.",
+          "faixa": {
+            "min": 0,
+            "max": 0.98,
+            "step": 0.01
+          }
+        },
+        {
+          "nome": "viewport",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Altura do palco preso. Com `container`, o padrão é a altura do container\n(medida), porque `svh` é da janela e não do scroller."
+        }
+      ]
+    },
+    {
+      "nome": "GardenLandmark",
+      "descricao": "Fábrica de marco para as clareiras (um objeto, um produto, uma escultura).\n\nRecebe o índice da clareira e devolve o objeto em unidades da cena (uma\nárvore de fundo tem ~25 de altura; a câmera anda a 13 do chão). A cena\nposiciona, gira `userData.spin` rad/s se houver, e DESCARTA geometria e\nmaterial do que for devolvido no fim — não reaproveite fora daqui.",
+      "props": []
+    },
+    {
+      "nome": "FogGarden",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "stops",
+          "tipo": "FogGardenStop[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "clearings",
+          "tipo": "number[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Pontos 0..1 da trilha com clareira. Padrão: derivados das paradas."
+        },
+        {
+          "nome": "container",
+          "tipo": "RefObject<HTMLElement>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Scroller que não é a janela (um painel com `overflow: auto`). O progresso\npassa a ser medido nele."
+        },
+        {
+          "nome": "counter",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Contador \"01 / 05\" no canto."
+        },
+        {
+          "nome": "density",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "78",
+          "descricao": "Posições de plantio ao longo da trilha. O modo leve usa 60% disso.",
+          "faixa": {
+            "min": 8,
+            "max": 140,
+            "step": 1
+          }
+        },
+        {
+          "nome": "grain",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.05",
+          "descricao": "Grão de película.",
+          "faixa": {
+            "min": 0,
+            "max": 0.2,
+            "step": 0.01
+          }
+        },
+        {
+          "nome": "heightPerStop",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "120vh",
+          "descricao": "Comprimento de scroll de cada parada. A seção mede `n × heightPerStop`."
+        },
+        {
+          "nome": "ink",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--foreground)",
+          "descricao": null
+        },
+        {
+          "nome": "landmark",
+          "tipo": "GardenLandmark",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Objeto para cada clareira (ver `GardenLandmark`). Lido uma vez, quando a\ncena nasce: uma função inline mudaria a cada render e replantaria o jardim."
+        },
+        {
+          "nome": "paper",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--background)",
+          "descricao": null
+        },
+        {
+          "nome": "seed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2026",
+          "descricao": "Semente do plantio. Mesma semente, mesmo jardim.",
+          "faixa": {
+            "min": 1,
+            "max": 9999,
+            "step": 1
+          }
+        },
+        {
+          "nome": "trail",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.84",
+          "descricao": "Rastro de longa exposição. 0 desliga.",
+          "faixa": {
+            "min": 0,
+            "max": 0.98,
+            "step": 0.01
+          }
+        },
+        {
+          "nome": "viewport",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Altura do palco preso. Com `container`, o padrão é a altura do container\n(medida), porque `svh` é da janela e não do scroller."
+        }
+      ]
+    },
+    {
+      "nome": "GardenLandmark",
+      "descricao": "Fábrica de marco para as clareiras (um objeto, um produto, uma escultura).\n\nRecebe o índice da clareira e devolve o objeto em unidades da cena (uma\nárvore de fundo tem ~25 de altura; a câmera anda a 13 do chão). A cena\nposiciona, gira `userData.spin` rad/s se houver, e DESCARTA geometria e\nmaterial do que for devolvido no fim — não reaproveite fora daqui.",
+      "props": []
     }
   ]
 }

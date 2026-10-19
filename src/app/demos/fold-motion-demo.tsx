@@ -133,6 +133,19 @@ function Diagrama({ v }: { v: FoldVariant }) {
         </>
       ) : null}
 
+      {v === "mist" ? (
+        <>
+          {/* a névoa: o mesmo traço, borrado, assentando no nítido */}
+          <rect x="12" y="8" width="28" height="14" rx="2.5" fill="currentColor" opacity="0.18" filter="url(#fold-mist-blur)" />
+          <rect x="15" y="10" width="22" height="10" rx="2" stroke={MARCA} strokeWidth="1.6" />
+          <defs>
+            <filter id="fold-mist-blur" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="2.4" />
+            </filter>
+          </defs>
+        </>
+      ) : null}
+
       {v === "invert" ? (
         <>
           <rect x="5" y="6" width="19" height="18" rx="2.5" fill="currentColor" opacity="0.85" />
@@ -151,6 +164,7 @@ const VARIANTES: { v: FoldVariant; glosa: string }[] = [
   { v: "settle", glosa: "assenta de 1.03" },
   { v: "climax", glosa: "sobe menos, demora mais" },
   { v: "invert", glosa: "o fundo troca de cor" },
+  { v: "mist", glosa: "sai da névoa, sem deslizar" },
 ];
 
 /** Cadência da cascata e o respiro antes de a rodada recomeçar. */
@@ -219,12 +233,12 @@ export default function FoldMotionDemo({ props }: DemoProps) {
         </Chip>
       </div>
 
-      {/* Quatro colunas, duas linhas de altura igual, e a sétima ocupando duas
-          colunas: 4+3 fecha o retângulo. Sem o `col-span-2` sobra um terço de
-          linha vazio, que é o "ar" que o report cobrou. */}
+      {/* Quatro colunas, duas linhas de altura igual: com a oitava variante
+          (`mist`) a grade fecha 4+4 sozinha. Com número ímpar, a última pedia
+          `col-span-2` para não sobrar um terço de linha vazio. */}
       <div className="grid flex-1 grid-cols-4 grid-rows-2 gap-2.5">
         {VARIANTES.map(({ v, glosa }, i) => (
-          <div key={v} className={i === VARIANTES.length - 1 ? "col-span-2" : undefined}>
+          <div key={v} className={VARIANTES.length % 2 && i === VARIANTES.length - 1 ? "col-span-2" : undefined}>
             {i < liberados ? (
               // A entrada é uma vez só por contrato; remontar por `key` é o
               // único jeito honesto de rever, sem método imperativo inventado.

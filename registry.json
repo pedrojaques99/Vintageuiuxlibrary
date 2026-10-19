@@ -1388,7 +1388,7 @@
       "name": "fold-motion",
       "type": "registry:lib",
       "title": "Fold Motion",
-      "description": "Hierarquia de entradas por dobra: rise, drift, mask, settle, climax e invert em vez de trinta entradas iguais. O esconderijo é aplicado pelo componente, nunca por CSS estático.",
+      "description": "Hierarquia de entradas por dobra: rise, drift, mask, settle, climax, invert e mist em vez de trinta entradas iguais. O esconderijo é aplicado pelo componente, nunca por CSS estático.",
       "dependencies": [
         "react"
       ],
@@ -1471,6 +1471,17 @@
           ".visant-fold[data-fold=\"invert\"][data-armed][data-in]": {
             "background": "var(--foreground)",
             "color": "var(--background)"
+          },
+          ".visant-fold[data-fold=\"mist\"][data-armed]": {
+            "opacity": "0",
+            "filter": "blur(12px)",
+            "transform": "translateY(12px)",
+            "transition": "opacity var(--dur-slow, 700ms) var(--ease-out), filter var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-out)"
+          },
+          ".visant-fold[data-fold=\"mist\"][data-armed][data-in]": {
+            "opacity": "1",
+            "filter": "none",
+            "transform": "none"
           }
         },
         "@media (prefers-reduced-motion: reduce)": {
@@ -1481,6 +1492,12 @@
           },
           ".visant-fold[data-armed] :is(h1, h2, h3)": {
             "clip-path": "none",
+            "transform": "none",
+            "transition": "none"
+          },
+          ".visant-fold[data-fold=\"mist\"][data-armed]": {
+            "opacity": "1",
+            "filter": "none",
             "transform": "none",
             "transition": "none"
           }
@@ -2427,6 +2444,9 @@
           "path": "registry/visant/ui/book-3d.tsx",
           "type": "registry:ui"
         }
+      ],
+      "devDependencies": [
+        "@types/three@^0.170.0"
       ]
     },
     {
@@ -2491,6 +2511,288 @@
           "path": "registry/visant/ui/carousel-3d.tsx",
           "type": "registry:ui"
         }
+      ],
+      "devDependencies": [
+        "@types/three@^0.170.0"
+      ]
+    },
+    {
+      "name": "css-color",
+      "type": "registry:lib",
+      "title": "CSS Color",
+      "description": "Resolve qualquer cor CSS ou token (var(--x), oklch, color-mix) para sRGB 0..1 e avisa na troca de tema, para shader e canvas pintarem com a cor da marca.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "files": [
+        {
+          "path": "registry/visant/lib/css-color.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "ink-wordmark",
+      "type": "registry:ui",
+      "title": "Ink Wordmark",
+      "description": "Assinatura de ponta a ponta que condensa da fumaça conforme entra na tela, respira como tinta e se agita com a velocidade do ponteiro, só com filtro SVG.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/ink-wordmark.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "fog-hero",
+      "type": "registry:block",
+      "title": "Fog Hero",
+      "description": "Hero de tela cheia que abre uma clareira na névoa, troca uma playlist de vídeo P&B pela própria fumaça e sai em desfoque no scroll, com papel e tinta vindos dos tokens.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "three@^0.170.0",
+        "framer-motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/blocks/fog-hero/fog-hero.tsx",
+          "type": "registry:component",
+          "target": "~/components/fog-hero/fog-hero.tsx"
+        },
+        {
+          "path": "registry/visant/blocks/fog-hero/shader.ts",
+          "type": "registry:component",
+          "target": "~/components/fog-hero/shader.ts"
+        },
+        {
+          "path": "registry/visant/blocks/fog-hero/params.ts",
+          "type": "registry:component",
+          "target": "~/components/fog-hero/params.ts"
+        },
+        {
+          "path": "registry/visant/blocks/fog-hero/index.ts",
+          "type": "registry:component",
+          "target": "~/components/fog-hero/index.ts"
+        }
+      ],
+      "devDependencies": [
+        "@types/three@^0.170.0"
+      ]
+    },
+    {
+      "name": "lathe-object",
+      "type": "registry:ui",
+      "title": "Lathe Object",
+      "description": "Produto de revolução em WebGL a partir de um perfil de meia silhueta (frasco, vela, pote, difusor com varetas), com giro sozinho, arrasto para orbitar e vento no hover.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "three@^0.170.0"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/lathe-object.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "devDependencies": [
+        "@types/three@^0.170.0"
+      ]
+    },
+    {
+      "name": "mist-text",
+      "type": "registry:ui",
+      "title": "Mist Text",
+      "description": "Texto que sai da névoa por palavra ou letra (desfoque, opacidade e subida mínima): entra uma vez ao chegar na tela, ou acompanha a rolagem ida e volta com mola que não erra a faixa dentro de sticky.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/mist-text.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mist-swap",
+      "type": "registry:ui",
+      "title": "Mist Swap",
+      "description": "Troca de slides em névoa: o que sai se desfaz no desfoque enquanto o próximo assenta no mesmo lugar, só gira em tela e para sob movimento reduzido; preenche o pai, que precisa ter tamanho.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/mist-swap.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dot-cursor",
+      "type": "registry:ui",
+      "title": "Dot Cursor",
+      "description": "Ponto de 6px que segue o ponteiro com mola calma e abre num anel vazado sobre link, botão ou [data-cursor], em mix-blend-difference; só existe em ponteiro fino e sem movimento reduzido.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/dot-cursor.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mist-dialog",
+      "type": "registry:ui",
+      "title": "Mist Dialog",
+      "description": "Modal em <dialog> nativo que entra e sai em névoa só com CSS (@starting-style + allow-discrete), controlado, fecha no Esc e no clique fora, com ganchos onOpen/onClose para pausar o scroll suave.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/mist-dialog.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "css": {
+        "@layer components": {
+          ".mist-dialog": {
+            "opacity": "0",
+            "filter": "blur(14px)",
+            "transform": "scale(0.98)",
+            "transition": "opacity var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), filter var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), transform var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), overlay var(--mist-dialog-dur, 700ms) allow-discrete, display var(--mist-dialog-dur, 700ms) allow-discrete"
+          },
+          ".mist-dialog[open]": {
+            "opacity": "1",
+            "filter": "none",
+            "transform": "none"
+          },
+          ".mist-dialog::backdrop": {
+            "background": "color-mix(in oklab, var(--foreground) 40%, transparent)",
+            "backdrop-filter": "blur(12px)",
+            "opacity": "0",
+            "transition": "opacity var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), overlay var(--mist-dialog-dur, 700ms) allow-discrete, display var(--mist-dialog-dur, 700ms) allow-discrete"
+          },
+          ".mist-dialog[open]::backdrop": {
+            "opacity": "1"
+          }
+        },
+        "@starting-style": {
+          ".mist-dialog[open]": {
+            "opacity": "0",
+            "filter": "blur(14px)",
+            "transform": "scale(0.98)"
+          },
+          ".mist-dialog[open]::backdrop": {
+            "opacity": "0"
+          }
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          ".mist-dialog, .mist-dialog[open]": {
+            "filter": "none",
+            "transform": "none",
+            "transition": "opacity var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), overlay var(--mist-dialog-dur, 700ms) allow-discrete, display var(--mist-dialog-dur, 700ms) allow-discrete"
+          }
+        }
+      }
+    },
+    {
+      "name": "fog-tree",
+      "type": "registry:ui",
+      "title": "Fog Tree",
+      "description": "Uma árvore procedural sozinha na névoa, em duotone da marca: a cena é cinza e o último passe pinta com --background e --foreground, então o tema escuro inverte a foto sem segunda paleta.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "three@^0.170.0",
+        "@dgreenheck/ez-tree@^1.1.0",
+        "framer-motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/fog-post.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/fog-tree-scene.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/ui/fog-tree.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "devDependencies": [
+        "@types/three@^0.170.0"
+      ]
+    },
+    {
+      "name": "fog-garden",
+      "type": "registry:block",
+      "title": "Fog Garden",
+      "description": "A caminhada por um jardim na névoa presa ao scroll: cada parada de texto sai da névoa e volta para ela, em mix-blend-difference sobre as copas, com clareiras derivadas das paradas e plantio semeado.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "three@^0.170.0",
+        "@dgreenheck/ez-tree@^1.1.0",
+        "framer-motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color",
+        "@visant/fog-tree"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/blocks/fog-garden/garden-scene.ts",
+          "type": "registry:component",
+          "target": "~/components/fog-garden/garden-scene.ts"
+        },
+        {
+          "path": "registry/visant/blocks/fog-garden/FogGarden.tsx",
+          "type": "registry:component",
+          "target": "~/components/fog-garden/FogGarden.tsx"
+        },
+        {
+          "path": "registry/visant/blocks/fog-garden/index.ts",
+          "type": "registry:component",
+          "target": "~/components/fog-garden/index.ts"
+        }
+      ],
+      "devDependencies": [
+        "@types/three@^0.170.0"
       ]
     }
   ]

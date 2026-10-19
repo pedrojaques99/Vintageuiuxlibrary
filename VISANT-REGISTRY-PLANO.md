@@ -397,6 +397,33 @@ O que foi **desacoplado** na colheita (a origem continua funcionando; os headers
 - `VHSText` — depende de `PersistentShaderRenderer` e carrega altura fixa de
   1710px. É peça de campanha, não primitiva.
 
+### De `@Clients - Web/yura` — COLHIDO em 19/10/2026
+
+A linguagem "névoa" da YURA (aromas para casa): toda entrada sai do desfoque,
+nada desliza. Veio como família porque as peças só fazem sentido juntas: o
+texto, a foto e o modal precisam dissolver do mesmo jeito.
+
+| Item | Origem | Por que vale |
+|---|---|---|
+| `fold-motion` → variante `mist` | `ScrollReveal.tsx` | **Versão**, não item novo: o oitavo movimento da hierarquia (desfoque + opacidade + subida mínima) |
+| `mist-text` | `BlurText.tsx` + `ScrollWords.tsx` | Duas peças viraram uma com `mode="view|scroll"`. Corrige a última palavra que parava em 70% |
+| `mist-swap` | `TrocaNevoa.tsx` | Troca de foto por névoa, só em tela. `photo-frame` revela uma foto, este alterna várias |
+| `mist-dialog` | `VitrineProduto.tsx` | `<dialog>` nativo com `@starting-style`: o modal que faltava na casa |
+| `dot-cursor` | `Cursor.tsx` | Cursor mínimo (ponto → anel), a versão não intrusiva que o cliente pediu |
+| `ink-wordmark` | `YuraGigante.tsx` | Assinatura de ponta a ponta que condensa da fumaça. Qualquer path SVG |
+| `fog-hero` | `HeroFog.tsx` + shader | Hero em shader com playlist de vídeo trocada pela própria fumaça |
+| `fog-tree` | `fogTreeScene.ts` | Árvore ez-tree na névoa em duotone de token: o escuro inverte sem paleta nova |
+| `fog-garden` | `gardenScene.ts` + `Caminho.tsx` | Caminhada por scroll com paradas em `mix-blend-difference` |
+| `lathe-object` | `diffuserScene.ts` | Produto de revolução (frasco, vela, difusor) por perfil, arrastável |
+| `css-color` | novo | A ponte token → WebGL: resolve `var(--x)`/oklch por pixel de canvas |
+
+**Não colhidos**: `Tilt` (o `gleam` já faz, com luz e borda), `SmoothScroll`
+(`smooth-scroll-provider`), `Parallax` e `NaVista` (curtos demais para item).
+
+**Defeito latente achado no caminho**: nenhum item 3D declarava `@types/three`.
+No repo de origem os tipos já estavam instalados, então só o `test:install` em
+projeto limpo pegou. Corrigido também em `book-3d` e `carousel-3d`.
+
 ### Dos outros repos (levantamento raso — confirmar antes de colher)
 
 - **visantlabs-os** → `packages/brand-tokens` é candidato natural a `registry:theme`

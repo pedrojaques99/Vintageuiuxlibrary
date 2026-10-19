@@ -78,6 +78,15 @@ const ChipDemo = React.lazy(() => import("./demos/chip-demo"));
 const CountUpDemo = React.lazy(() => import("./demos/count-up-demo"));
 const Book3DDemo = React.lazy(() => import("./demos/book-3d-demo"));
 const Carousel3DDemo = React.lazy(() => import("./demos/carousel-3d-demo"));
+const MistTextDemo = React.lazy(() => import("./demos/mist-text-demo"));
+const MistSwapDemo = React.lazy(() => import("./demos/mist-swap-demo"));
+const DotCursorDemo = React.lazy(() => import("./demos/dot-cursor-demo"));
+const MistDialogDemo = React.lazy(() => import("./demos/mist-dialog-demo"));
+const InkWordmarkDemo = React.lazy(() => import("./demos/ink-wordmark-demo"));
+const FogHeroDemo = React.lazy(() => import("./demos/fog-hero-demo"));
+const LatheObjectDemo = React.lazy(() => import("./demos/lathe-object-demo"));
+const FogTreeDemo = React.lazy(() => import("./demos/fog-tree-demo"));
+const FogGardenDemo = React.lazy(() => import("./demos/fog-garden-demo"));
 const BookShelfDemo = React.lazy(() => import("./demos/book-shelf-demo"));
 const CoverArtDemo = React.lazy(() => import("./demos/cover-art-demo"));
 const DropOverlayDemo = React.lazy(() => import("./demos/drop-overlay-demo"));
@@ -575,6 +584,15 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Provider e hook que aplicam em runtime o tema compilado de uma brand guideline. Uma folha de estilo só, trocada sem recarregar a página.",
     tags: ["marca", "tokens", "runtime", "provider"],
+  },
+  {
+    name: "css-color",
+    title: "CSS Color",
+    type: "lib",
+    family: "marca",
+    description:
+      "Resolve qualquer cor CSS ou token (var(--x), oklch, color-mix) para sRGB 0..1 e avisa na troca de tema, para shader e canvas pintarem com a cor da marca.",
+    tags: ["marca", "tokens", "webgl", "canvas", "oklch", "tema"],
   },
   {
     name: "theme-visant",
@@ -1427,7 +1445,7 @@ export const CATALOG: CatalogItem[] = [
     type: "lib",
     family: "motion",
     description:
-      "Hierarquia de entradas por dobra: rise, drift, mask, settle, climax e invert em vez de trinta entradas iguais. O esconderijo é aplicado pelo componente, nunca por CSS estático.",
+      "Hierarquia de entradas por dobra: rise, drift, mask, settle, climax, invert e mist em vez de trinta entradas iguais. O esconderijo é aplicado pelo componente, nunca por CSS estático.",
     tags: ["scroll", "entrada", "reveal", "dobra", "hierarquia"],
     demo: FoldMotionDemo,
     knobs: "Fold",
@@ -1573,6 +1591,89 @@ export const CATALOG: CatalogItem[] = [
     // largura por 1 de altura, e numa caixa larga ele vira uma peça pequena no
     // meio de dois corredores de vazio.
     preview: { w: 330, h: 430 },
+  },
+  {
+    name: "mist-text", title: "Mist Text", type: "ui", family: "motion",
+    description: "Texto que sai da névoa por palavra ou letra (desfoque, opacidade e subida mínima): entra uma vez ao chegar na tela, ou acompanha a rolagem ida e volta com mola que não erra a faixa dentro de sticky.",
+    tags: ["texto", "blur", "névoa", "reveal", "scroll", "palavra", "letra", "tipografia"],
+    demo: MistTextDemo,
+    preview: { w: 690, h: 300 },
+  },
+  {
+    name: "mist-swap", title: "Mist Swap", type: "ui", family: "motion",
+    description: "Troca de slides em névoa: o que sai se desfaz no desfoque enquanto o próximo assenta no mesmo lugar, só gira em tela e para sob movimento reduzido; preenche o pai, que precisa ter tamanho.",
+    tags: ["foto", "slideshow", "crossfade", "blur", "névoa", "troca", "atmosfera"],
+    demo: MistSwapDemo,
+    preview: { w: 690, h: 440 },
+  },
+  {
+    name: "dot-cursor", title: "Dot Cursor", type: "ui", family: "motion",
+    description: "Ponto de 6px que segue o ponteiro com mola calma e abre num anel vazado sobre link, botão ou [data-cursor], em mix-blend-difference; só existe em ponteiro fino e sem movimento reduzido.",
+    tags: ["cursor", "ponteiro", "hover", "mola", "blend", "minimal"],
+    demo: DotCursorDemo,
+    preview: { w: 690, h: 300 },
+  },
+  {
+    name: "mist-dialog", title: "Mist Dialog", type: "ui", family: "motion",
+    description: "Modal em <dialog> nativo que entra e sai em névoa só com CSS (@starting-style + allow-discrete), controlado, fecha no Esc e no clique fora, com ganchos onOpen/onClose para pausar o scroll suave.",
+    tags: ["modal", "dialog", "névoa", "blur", "vitrine", "starting-style", "overlay"],
+    demo: MistDialogDemo,
+    preview: { w: 690, h: 240 },
+  },
+  {
+    name: "ink-wordmark",
+    title: "Ink Wordmark",
+    type: "ui",
+    family: "marca",
+    description: "Assinatura de ponta a ponta que condensa da fumaça conforme entra na tela, respira como tinta e se agita com a velocidade do ponteiro, só com filtro SVG.",
+    tags: ["assinatura", "logo", "rodapé", "fumaça", "tinta", "svg", "scroll"],
+    demo: InkWordmarkDemo,
+    preview: { w: 640, h: 400 },
+  },
+  {
+    name: "fog-hero",
+    title: "Fog Hero",
+    type: "block",
+    family: "marca",
+    description: "Hero de tela cheia que abre uma clareira na névoa, troca uma playlist de vídeo P&B pela própria fumaça e sai em desfoque no scroll, com papel e tinta vindos dos tokens.",
+    tags: ["hero", "névoa", "webgl", "shader", "vídeo", "abertura", "grão"],
+    demo: FogHeroDemo,
+    preview: { w: 640, h: 400 },
+  },
+  {
+    name: "lathe-object",
+    title: "Lathe Object",
+    type: "ui",
+    family: "trabalho",
+    description: "Produto de revolução em WebGL a partir de um perfil de meia silhueta (frasco, vela, pote, difusor com varetas), com giro sozinho, arrasto para orbitar e vento no hover.",
+    tags: ["3d", "webgl", "produto", "embalagem", "objeto", "difusor"],
+    demo: LatheObjectDemo,
+    // Palco em retrato, como o book-3d: o objeto é alto e estreito.
+    preview: { w: 360, h: 440 },
+  },
+  {
+    name: "fog-tree",
+    title: "Fog Tree",
+    type: "ui",
+    family: "marca",
+    description:
+      "Uma árvore procedural sozinha na névoa, em duotone da marca: a cena é cinza e o último passe pinta com --background e --foreground, então o tema escuro inverte a foto sem segunda paleta.",
+    tags: ["3d", "webgl", "névoa", "árvore", "scroll", "duotone", "ez-tree"],
+    demo: FogTreeDemo,
+    knobs: "FogTree",
+    preview: { w: 640, h: 520 },
+  },
+  {
+    name: "fog-garden",
+    title: "Fog Garden",
+    type: "block",
+    family: "motion",
+    description:
+      "A caminhada por um jardim na névoa presa ao scroll: cada parada de texto sai da névoa e volta para ela, em mix-blend-difference sobre as copas, com clareiras derivadas das paradas e plantio semeado.",
+    tags: ["3d", "webgl", "scroll", "sticky", "névoa", "storytelling", "jardim"],
+    demo: FogGardenDemo,
+    knobs: "FogGarden",
+    preview: { w: 1360, h: 620 },
   },
   {
     name: "book-shelf",

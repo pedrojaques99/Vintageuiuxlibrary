@@ -132,5 +132,34 @@
     "@react-three/fiber@^8.18.0",
     "lucide-react",
     "three@^0.170.0"
+  ],
+  "ink-wordmark": [
+    "framer-motion"
+  ],
+  "fog-hero": [
+    "framer-motion",
+    "three@^0.170.0"
+  ],
+  "lathe-object": [
+    "three@^0.170.0"
+  ],
+  "mist-text": [
+    "framer-motion"
+  ],
+  "mist-swap": [
+    "framer-motion"
+  ],
+  "dot-cursor": [
+    "framer-motion"
+  ],
+  "fog-tree": [
+    "@dgreenheck/ez-tree@^1.1.0",
+    "framer-motion",
+    "three@^0.170.0"
+  ],
+  "fog-garden": [
+    "@dgreenheck/ez-tree@^1.1.0",
+    "framer-motion",
+    "three@^0.170.0"
   ]
 }

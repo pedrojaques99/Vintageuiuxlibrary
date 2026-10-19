@@ -1,0 +1,59 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "mist-dialog",
+  "title": "Mist Dialog",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Modal em <dialog> nativo que entra e sai em névoa só com CSS (@starting-style + allow-discrete), controlado, fecha no Esc e no clique fora, com ganchos onOpen/onClose para pausar o scroll suave.",
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/mist-dialog.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Mist Dialog — um `<dialog>` modal que entra e sai em névoa.\n *\n * Abre de um desfoque de 14px e de `scale(0.98)` até assentar nítido; fecha\n * voltando para a névoa, e o fundo escurece e desfoca junto. Todo o movimento\n * é CSS (o bloco `css` do item); o JS só chama `showModal()` e `close()`.\n *\n * ── Por que `<dialog>` nativo e não um portal com `div` ────────────────────\n *\n * O navegador entrega de graça o que um modal feito à mão sempre esquece:\n * camada de topo (sem guerra de `z-index`, sem portal), o resto da página\n * `inert`, foco preso dentro e devolvido ao gatilho no fechamento, e o Esc. Nada\n * disso precisa de biblioteca.\n *\n * ── Como a saída anima, se `close()` tira o elemento de cena ───────────────\n *\n * `transition-behavior: allow-discrete` em `display` e `overlay`: o navegador\n * segura o `display: block` e a camada de topo até a transição de opacidade e\n * desfoque terminar. A entrada usa `@starting-style`, que dá ao `[open]` um\n * ponto de partida no primeiro quadro (sem ele não há \"de onde\" transicionar e\n * o modal surge seco). Navegador sem suporte simplesmente abre e fecha sem\n * névoa — o modal funciona igual, que é o degrau certo.\n *\n * A duração passa do teto de 300ms de propósito: isto não é controle\n * respondendo a clique, é uma passagem rara, de vitrine. Ajuste por\n * `--mist-dialog-dur` no próprio elemento ou num ancestral.\n *\n * ── As armadilhas ──────────────────────────────────────────────────────────\n *\n * 1. **Clique no fundo é clique no próprio `<dialog>`.** O `::backdrop` não é\n *    alvo de evento; quem recebe é o elemento. Por isso o conteúdo tem que\n *    preencher a caixa (o dialog é `p-0`): qualquer clique cujo alvo seja o\n *    dialog em si veio de fora do conteúdo.\n * 2. **Arrastar uma seleção para fora NÃO é clique no fundo.** Quem seleciona\n *    texto dentro e solta o mouse no fundo gera um `click` com alvo no dialog\n *    (o ancestral comum) — e o modal fecharia no meio de uma cópia. Só fecha se\n *    o `pointerdown` TAMBÉM nasceu no fundo.\n * 3. **O Esc fecha pelo navegador, sem perguntar ao React.** O evento `close`\n *    é a única fonte de verdade do fechamento: ele dispara no Esc, no\n *    `close()` e no `<form method=\"dialog\">`, e é nele que o estado controlado\n *    é avisado. Sem isso o `open` do pai ficaria `true` com o modal fechado, e o\n *    próximo clique no gatilho não faria nada.\n * 4. **Scroll suave da página rouba a roda.** Lenis e afins escutam a janela;\n *    `data-lenis-prevent` devolve a rolagem interna ao modal. Para PAUSAR o\n *    scroll suave enquanto aberto, use `onOpen`/`onClose` — o item não importa\n *    lenis nenhum, porque a próxima página pode usar outro.\n * 5. **Desmontar aberto deixaria o `onClose` sem chamar.** Se o componente sai\n *    da árvore com o modal aberto (troca de rota), o efeito de limpeza chama o\n *    `onClose` — senão o scroll suave pausado em `onOpen` nunca voltaria.\n * 6. **`::backdrop` herda variáveis só nos navegadores atuais.** Em motor\n *    antigo `var(--foreground)` não chega ao fundo e ele fica transparente —\n *    o modal continua utilizável, só sem o véu.\n * 7. **Aberto, o filtro é `none`, não `blur(0)`.** Qualquer `filter` diferente\n *    de `none` vira bloco contentor de `position: fixed`: um toast, um menu ou\n *    um botão flutuante dentro do conteúdo passaria a ser posicionado pela\n *    caixa do modal em vez da tela. O desfoque existe só durante a passagem.\n *\n * `prefers-reduced-motion`: fica a opacidade, saem desfoque e escala.\n */\n\nexport interface MistDialogProps\n  extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, \"open\" | \"onClose\"> {\n  /** Estado controlado. */\n  open: boolean;\n  /** Pedido de troca: Esc, clique no fundo, `close()` vindo de dentro. */\n  onOpenChange: (open: boolean) => void;\n  /** Depois de abrir. Lugar de pausar o scroll suave da página. */\n  onOpen?: () => void;\n  /** Depois de fechar (inclusive por Esc). Lugar de retomar o scroll suave. */\n  onClose?: () => void;\n  /** `id` do título dentro do conteúdo — vira `aria-labelledby`. */\n  labelledBy?: string;\n  /** Fecha ao clicar fora do conteúdo. */\n  closeOnBackdrop?: boolean;\n  children?: React.ReactNode;\n}\n\nexport function MistDialog({\n  open,\n  onOpenChange,\n  onOpen,\n  onClose,\n  labelledBy,\n  closeOnBackdrop = true,\n  className,\n  children,\n  ...props\n}: MistDialogProps) {\n  const ref = React.useRef<HTMLDialogElement>(null);\n  const downNoFundo = React.useRef(false);\n\n  // Os ganchos vão por ref: o efeito de abrir não pode re-disparar porque o pai\n  // recriou uma arrow function a cada render.\n  const ganchos = React.useRef({ onOpen, onClose, onOpenChange });\n  ganchos.current = { onOpen, onClose, onOpenChange };\n\n  React.useEffect(() => {\n    const d = ref.current;\n    if (!d) return;\n    if (open && !d.open) {\n      d.showModal();\n      ganchos.current.onOpen?.();\n    } else if (!open && d.open) {\n      d.close(); // o evento `close` avisa o `onClose`\n    }\n  }, [open]);\n\n  // Armadilha 5: sair da árvore aberto ainda conta como fechar.\n  React.useEffect(() => {\n    const d = ref.current;\n    return () => {\n      if (d?.open) ganchos.current.onClose?.();\n    };\n  }, []);\n\n  return (\n    <dialog\n      ref={ref}\n      data-lenis-prevent\n      aria-labelledby={labelledBy}\n      onClose={() => {\n        ganchos.current.onClose?.();\n        ganchos.current.onOpenChange(false);\n      }}\n      onPointerDown={(e) => {\n        downNoFundo.current = e.target === ref.current;\n      }}\n      onClick={(e) => {\n        if (closeOnBackdrop && downNoFundo.current && e.target === ref.current) onOpenChange(false);\n        downNoFundo.current = false;\n      }}\n      className={cn(\n        \"mist-dialog m-auto max-h-[calc(100svh-32px)] w-[min(1100px,calc(100vw-32px))] max-w-none overflow-y-auto overscroll-contain rounded-[var(--r-surface,16px)] border border-border bg-background p-0 text-foreground\",\n        className,\n      )}\n      {...props}\n    >\n      {children}\n    </dialog>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "css": {
+    "@layer components": {
+      ".mist-dialog": {
+        "opacity": "0",
+        "filter": "blur(14px)",
+        "transform": "scale(0.98)",
+        "transition": "opacity var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), filter var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), transform var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), overlay var(--mist-dialog-dur, 700ms) allow-discrete, display var(--mist-dialog-dur, 700ms) allow-discrete"
+      },
+      ".mist-dialog[open]": {
+        "opacity": "1",
+        "filter": "none",
+        "transform": "none"
+      },
+      ".mist-dialog::backdrop": {
+        "background": "color-mix(in oklab, var(--foreground) 40%, transparent)",
+        "backdrop-filter": "blur(12px)",
+        "opacity": "0",
+        "transition": "opacity var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), overlay var(--mist-dialog-dur, 700ms) allow-discrete, display var(--mist-dialog-dur, 700ms) allow-discrete"
+      },
+      ".mist-dialog[open]::backdrop": {
+        "opacity": "1"
+      }
+    },
+    "@starting-style": {
+      ".mist-dialog[open]": {
+        "opacity": "0",
+        "filter": "blur(14px)",
+        "transform": "scale(0.98)"
+      },
+      ".mist-dialog[open]::backdrop": {
+        "opacity": "0"
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".mist-dialog, .mist-dialog[open]": {
+        "filter": "none",
+        "transform": "none",
+        "transition": "opacity var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), overlay var(--mist-dialog-dur, 700ms) allow-discrete, display var(--mist-dialog-dur, 700ms) allow-discrete"
+      }
+    }
+  },
+  "type": "registry:ui"
+}

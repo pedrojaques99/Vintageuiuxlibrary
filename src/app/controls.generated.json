@@ -2738,8 +2738,7 @@
             "aside"
           ],
           "padrao": "section",
-          "resumo": null,
-          "inicial": "div"
+          "resumo": null
         },
         {
           "prop": "variant",
@@ -2751,7 +2750,8 @@
             "mask",
             "settle",
             "climax",
-            "invert"
+            "invert",
+            "mist"
           ],
           "padrao": "rise",
           "resumo": null
@@ -4019,6 +4019,675 @@
           "tipo": "texto",
           "padrao": "Ver projeto",
           "resumo": "Texto do botão."
+        }
+      ]
+    }
+  },
+  "ink-wordmark": {
+    "componentes": {
+      "InkWordmark": [
+        {
+          "prop": "smoke",
+          "tipo": "numero",
+          "min": 0,
+          "max": 90,
+          "step": 1,
+          "padrao": 34,
+          "resumo": "Deslocamento máximo, em unidades do `viewBox`, quando a marca ainda é fumaça."
+        },
+        {
+          "prop": "path",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "`d` de um path único (a marca convertida em contorno). Use com `viewBox`."
+        },
+        {
+          "prop": "viewBox",
+          "tipo": "texto",
+          "padrao": "0 0 1000 300",
+          "resumo": "`viewBox` do SVG. Obrigatório com `path`; com `children` também é o que dá a proporção."
+        }
+      ]
+    }
+  },
+  "fog-hero": {
+    "componentes": {
+      "FogHero": [
+        {
+          "prop": "swapDuration",
+          "tipo": "numero",
+          "min": 10,
+          "max": 5600,
+          "step": 10,
+          "padrao": 2800,
+          "resumo": "Duração da dissolução entre dois vídeos, em ms. Longa de propósito: é cena, não corte."
+        },
+        {
+          "prop": "swapEvery",
+          "tipo": "numero",
+          "min": 0,
+          "max": 18000,
+          "step": 10,
+          "padrao": 9000,
+          "resumo": "Intervalo entre trocas de vídeo, em ms."
+        },
+        {
+          "prop": "ink",
+          "tipo": "texto",
+          "padrao": "var(--foreground)",
+          "resumo": "Cor da tinta (fumaça, vídeo, logo). Qualquer cor CSS ou `var(--token)`."
+        },
+        {
+          "prop": "logo",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Imagem com alpha (PNG/WebP) desenhada em tinta no centro. Opcional."
+        },
+        {
+          "prop": "paper",
+          "tipo": "texto",
+          "padrao": "var(--background)",
+          "resumo": "Cor do papel. Qualquer cor CSS ou `var(--token)`."
+        }
+      ]
+    }
+  },
+  "lathe-object": {
+    "componentes": {
+      "LatheObject": [
+        {
+          "prop": "autoRotate",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Gira sozinho enquanto ninguém arrasta. Ignorado com movimento reduzido."
+        },
+        {
+          "prop": "body",
+          "tipo": "texto",
+          "padrao": "var(--muted-foreground)",
+          "resumo": "Cor do corpo. Qualquer cor CSS ou `var(--token)`."
+        },
+        {
+          "prop": "detail",
+          "tipo": "texto",
+          "padrao": "var(--foreground)",
+          "resumo": "Cor das varetas. Qualquer cor CSS ou `var(--token)`."
+        }
+      ]
+    }
+  },
+  "mist-text": {
+    "componentes": {
+      "MistText": [
+        {
+          "prop": "as",
+          "tipo": "escolha",
+          "valores": [
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "p",
+            "span"
+          ],
+          "padrao": "p",
+          "resumo": "Elemento raiz. `span` para usar dentro de outra linha."
+        },
+        {
+          "prop": "by",
+          "tipo": "escolha",
+          "valores": [
+            "word",
+            "letter"
+          ],
+          "padrao": "word",
+          "resumo": "`word` para frase, `letter` para título curto."
+        },
+        {
+          "prop": "mode",
+          "tipo": "escolha",
+          "valores": [
+            "view",
+            "scroll"
+          ],
+          "padrao": "view",
+          "resumo": "`view` entra uma vez; `scroll` acompanha a rolagem, ida e volta."
+        },
+        {
+          "prop": "delay",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Atraso antes da primeira fatia, em segundos. Só no modo `view`."
+        },
+        {
+          "prop": "text",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A frase. Fatiada por espaço (palavra) ou por caractere (letra)."
+        }
+      ]
+    }
+  },
+  "mist-swap": {
+    "componentes": {
+      "MistSwap": [
+        {
+          "prop": "interval",
+          "tipo": "numero",
+          "min": 10,
+          "max": 10400,
+          "step": 10,
+          "padrao": 5200,
+          "resumo": "Milissegundos entre trocas. Defase entre molduras vizinhas."
+        },
+        {
+          "prop": "start",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Índice inicial, para molduras vizinhas não abrirem no mesmo slide."
+        },
+        {
+          "prop": "transition",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 1.4,
+          "resumo": "Duração do cruzamento, em segundos."
+        }
+      ]
+    }
+  },
+  "dot-cursor": {
+    "componentes": {
+      "DotCursor": [
+        {
+          "prop": "blend",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "`mix-blend-mode: difference`. Desligue para um ponto de cor fixa."
+        },
+        {
+          "prop": "ink",
+          "tipo": "texto",
+          "padrao": "var(--background)",
+          "resumo": "Tinta do ponto. Precisa ser clara com `blend` ligado (armadilha 4)."
+        },
+        {
+          "prop": "selector",
+          "tipo": "texto",
+          "padrao": "[data-cursor], a, button",
+          "resumo": "O que conta como interativo. O anel abre sobre o mais próximo deles."
+        }
+      ]
+    }
+  },
+  "mist-dialog": {
+    "componentes": {
+      "MistDialog": [
+        {
+          "prop": "closeOnBackdrop",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Fecha ao clicar fora do conteúdo."
+        },
+        {
+          "prop": "open",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Estado controlado."
+        },
+        {
+          "prop": "labelledBy",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "`id` do título dentro do conteúdo — vira `aria-labelledby`."
+        }
+      ]
+    }
+  },
+  "fog-tree": {
+    "componentes": {
+      "disposeTree": [
+        {
+          "prop": "castShadow",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Whether the object gets rendered into shadow map."
+        },
+        {
+          "prop": "frustumCulled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "When this is set, it checks every frame if the object is in the frustum of the camera before rendering the object."
+        },
+        {
+          "prop": "matrixAutoUpdate",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "When this is set, it calculates the matrix of position, (rotation or quaternion) and"
+        },
+        {
+          "prop": "matrixWorldAutoUpdate",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "If set, then the renderer checks every frame if the object and its children need matrix updates."
+        },
+        {
+          "prop": "matrixWorldNeedsUpdate",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "When this is set, it calculates the matrixWorld in that frame and resets this property to false."
+        },
+        {
+          "prop": "receiveShadow",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Whether the material receives shadows."
+        },
+        {
+          "prop": "visible",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Object gets rendered if `true`.",
+          "secundario": true
+        },
+        {
+          "prop": "name",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Optional name of the object",
+          "secundario": true
+        },
+        {
+          "prop": "type",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A Read-only _string_ to check `this` object type.",
+          "secundario": true
+        },
+        {
+          "prop": "uuid",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "{@link http://en.wikipedia.org/wiki/Universally_unique_identifier UUID} of this object instance.",
+          "secundario": true
+        }
+      ],
+      "releaseRenderer": [
+        {
+          "prop": "shadowMapCullFace",
+          "tipo": "escolha",
+          "valores": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "padrao": null,
+          "resumo": "@deprecated Use {@link WebGLShadowMap#cullFace .shadowMap.cullFace} instead."
+        },
+        {
+          "prop": "shadowMapType",
+          "tipo": "escolha",
+          "valores": [
+            "0",
+            "1",
+            "2",
+            "3"
+          ],
+          "padrao": null,
+          "resumo": "@deprecated Use {@link WebGLShadowMap#type .shadowMap.type} instead."
+        },
+        {
+          "prop": "toneMapping",
+          "tipo": "escolha",
+          "valores": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"
+          ],
+          "padrao": "THREE.NoToneMapping",
+          "resumo": null
+        },
+        {
+          "prop": "autoClear",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Defines whether the renderer should automatically clear its output before rendering."
+        },
+        {
+          "prop": "autoClearColor",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "If autoClear is true, defines whether the renderer should clear the color buffer. Default is true."
+        },
+        {
+          "prop": "autoClearDepth",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "If autoClear is true, defines whether the renderer should clear the depth buffer. Default is true."
+        },
+        {
+          "prop": "autoClearStencil",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "If autoClear is true, defines whether the renderer should clear the stencil buffer. Default is true.",
+          "secundario": true
+        },
+        {
+          "prop": "localClippingEnabled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "shadowMapEnabled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "@deprecated Use {@link WebGLShadowMap#enabled .shadowMap.enabled} instead.",
+          "secundario": true
+        },
+        {
+          "prop": "sortObjects",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Defines whether the renderer should sort objects. Default is true.",
+          "secundario": true
+        },
+        {
+          "prop": "vr",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "@deprecated Use {@link WebGLRenderer#xr .xr} instead.",
+          "secundario": true
+        },
+        {
+          "prop": "pixelRatio",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "toneMappingExposure",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 1,
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "outputColorSpace",
+          "tipo": "texto",
+          "padrao": "THREE.SRGBColorSpace.",
+          "resumo": "Color space used for output to HTMLCanvasElement. Supported values are",
+          "secundario": true
+        }
+      ],
+      "roundCrown": [
+        {
+          "prop": "castShadow",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Whether the object gets rendered into shadow map."
+        },
+        {
+          "prop": "frustumCulled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "When this is set, it checks every frame if the object is in the frustum of the camera before rendering the object."
+        },
+        {
+          "prop": "matrixAutoUpdate",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "When this is set, it calculates the matrix of position, (rotation or quaternion) and"
+        },
+        {
+          "prop": "matrixWorldAutoUpdate",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "If set, then the renderer checks every frame if the object and its children need matrix updates."
+        },
+        {
+          "prop": "matrixWorldNeedsUpdate",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "When this is set, it calculates the matrixWorld in that frame and resets this property to false."
+        },
+        {
+          "prop": "receiveShadow",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Whether the material receives shadows."
+        },
+        {
+          "prop": "visible",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Object gets rendered if `true`.",
+          "secundario": true
+        },
+        {
+          "prop": "triangleCount",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "vertexCount",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "name",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Optional name of the object",
+          "secundario": true
+        },
+        {
+          "prop": "type",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A Read-only _string_ to check `this` object type.",
+          "secundario": true
+        },
+        {
+          "prop": "uuid",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "{@link http://en.wikipedia.org/wiki/Universally_unique_identifier UUID} of this object instance.",
+          "secundario": true
+        }
+      ],
+      "FogTree": [
+        {
+          "prop": "preset",
+          "tipo": "escolha",
+          "valores": [
+            "Ash Small",
+            "Ash Medium",
+            "Ash Large",
+            "Aspen Small",
+            "Aspen Medium",
+            "Aspen Large",
+            "Bush 1",
+            "Bush 2",
+            "Bush 3",
+            "Oak Small",
+            "Oak Medium",
+            "Oak Large",
+            "Pine Small",
+            "Pine Medium",
+            "Pine Large"
+          ],
+          "padrao": "Oak Medium",
+          "resumo": "Espécie (preset do ez-tree). O `Oak Medium` ganha a copa redonda."
+        },
+        {
+          "prop": "draggable",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Girar arrastando. Padrão: só com ponteiro fino (mouse, caneta).",
+          "inicial": true
+        },
+        {
+          "prop": "scroll",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Prende o progresso ao scroll da própria seção: a peça vira uma `<section>`"
+        },
+        {
+          "prop": "grain",
+          "tipo": "numero",
+          "min": 0,
+          "max": 0.2,
+          "step": 0.01,
+          "padrao": 0.05,
+          "resumo": "Grão de película."
+        },
+        {
+          "prop": "seed",
+          "tipo": "numero",
+          "min": 1,
+          "max": 9999,
+          "step": 1,
+          "padrao": 4242,
+          "resumo": "Semente do ez-tree. Mesma semente, mesma árvore — em toda visita."
+        },
+        {
+          "prop": "trail",
+          "tipo": "numero",
+          "min": 0,
+          "max": 0.98,
+          "step": 0.01,
+          "padrao": 0.86,
+          "resumo": "Rastro de longa exposição. 0 desliga."
+        },
+        {
+          "prop": "ink",
+          "tipo": "texto",
+          "padrao": "var(--foreground)",
+          "resumo": "Cor das sombras. O padrão é o token de texto.",
+          "secundario": true
+        },
+        {
+          "prop": "paper",
+          "tipo": "texto",
+          "padrao": "var(--background)",
+          "resumo": "Cor das luzes. Qualquer cor CSS; o padrão é o token de fundo.",
+          "secundario": true
+        },
+        {
+          "prop": "scrollLength",
+          "tipo": "texto",
+          "padrao": "220vh",
+          "resumo": "Altura da seção no modo `scroll`. Quanto maior, mais lenta a caminhada.",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "fog-garden": {
+    "componentes": {
+      "FogGarden": [
+        {
+          "prop": "counter",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Contador \"01 / 05\" no canto."
+        },
+        {
+          "prop": "density",
+          "tipo": "numero",
+          "min": 8,
+          "max": 140,
+          "step": 1,
+          "padrao": 78,
+          "resumo": "Posições de plantio ao longo da trilha. O modo leve usa 60% disso."
+        },
+        {
+          "prop": "grain",
+          "tipo": "numero",
+          "min": 0,
+          "max": 0.2,
+          "step": 0.01,
+          "padrao": 0.05,
+          "resumo": "Grão de película."
+        },
+        {
+          "prop": "seed",
+          "tipo": "numero",
+          "min": 1,
+          "max": 9999,
+          "step": 1,
+          "padrao": 2026,
+          "resumo": "Semente do plantio. Mesma semente, mesmo jardim."
+        },
+        {
+          "prop": "trail",
+          "tipo": "numero",
+          "min": 0,
+          "max": 0.98,
+          "step": 0.01,
+          "padrao": 0.84,
+          "resumo": "Rastro de longa exposição. 0 desliga."
+        },
+        {
+          "prop": "heightPerStop",
+          "tipo": "texto",
+          "padrao": "120vh",
+          "resumo": "Comprimento de scroll de cada parada. A seção mede `n × heightPerStop`.",
+          "inicial": "560px"
+        },
+        {
+          "prop": "ink",
+          "tipo": "texto",
+          "padrao": "var(--foreground)",
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "paper",
+          "tipo": "texto",
+          "padrao": "var(--background)",
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "viewport",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Altura do palco preso. Com `container`, o padrão é a altura do container",
+          "secundario": true
         }
       ]
     }

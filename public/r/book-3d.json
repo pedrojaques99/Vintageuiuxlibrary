@@ -9,6 +9,9 @@
     "@react-three/fiber@^8.18.0",
     "@react-three/drei@^9.122.0"
   ],
+  "devDependencies": [
+    "@types/three@^0.170.0"
+  ],
   "registryDependencies": [
     "utils",
     "@visant/cover-art"

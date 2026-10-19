@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "css-color",
+  "title": "CSS Color",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Resolve qualquer cor CSS ou token (var(--x), oklch, color-mix) para sRGB 0..1 e avisa na troca de tema, para shader e canvas pintarem com a cor da marca.",
+  "files": [
+    {
+      "path": "registry/visant/lib/css-color.ts",
+      "content": "/**\n * CSS Color — a ponte entre os tokens da marca e o que não é CSS (WebGL, canvas).\n *\n * Shader não lê `var(--brand)`. A tentação é passar um hex por prop, e é\n * exatamente isso que o registry proíbe: componente com cor própria some no\n * primeiro cliente de outra cor. Aqui a cor vem do token, resolvida pelo\n * próprio navegador.\n *\n * ── Por que pintar um pixel em vez de ler a string ─────────────────────────\n *\n * O motor de tokens emite OKLCH. `getComputedStyle` devolve a string do jeito\n * que veio (`oklch(0.98 0.004 91)`), e nem o `THREE.Color` nem um parser\n * caseiro entendem isso de forma confiável. Um canvas 1×1 entende qualquer cor\n * que o CSS entende, inclusive `color-mix()`: pinta, lê o pixel, devolve sRGB\n * 0..1. Custa um `getImageData` por troca de tema, não por quadro.\n */\n\nexport type RGB = [number, number, number];\n\nlet ctx: CanvasRenderingContext2D | null = null;\n\n/** Resolve uma cor CSS qualquer (ou `var(--token)`) para sRGB 0..1. */\nexport function resolveCssColor(color: string, el: Element = document.documentElement): RGB {\n  // var(--x) precisa passar pelo cascade do elemento para resolver o tema certo\n  let valor = color.trim();\n  const m = valor.match(/^var\\((--[^,)]+)(?:,([^)]*))?\\)$/);\n  if (m) valor = getComputedStyle(el).getPropertyValue(m[1]).trim() || (m[2] ?? \"\").trim();\n  if (!ctx) {\n    const c = document.createElement(\"canvas\");\n    c.width = c.height = 1;\n    ctx = c.getContext(\"2d\", { willReadFrequently: true });\n  }\n  if (!ctx || !valor) return [0, 0, 0];\n  ctx.clearRect(0, 0, 1, 1);\n  ctx.fillStyle = \"rgb(0 0 0)\";\n  ctx.fillStyle = valor;\n  ctx.fillRect(0, 0, 1, 1);\n  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;\n  return [r / 255, g / 255, b / 255];\n}\n\n/**\n * Avisa quando o tema muda (classe, data-theme ou style no <html>), para a cena\n * reler os tokens. Devolve o unsubscribe.\n */\nexport function onThemeChange(cb: () => void, el: Element = document.documentElement): () => void {\n  const mo = new MutationObserver(cb);\n  mo.observe(el, { attributes: true, attributeFilter: [\"class\", \"data-theme\", \"style\"] });\n  return () => mo.disconnect();\n}\n",
+      "type": "registry:lib"
+    }
+  ],
+  "type": "registry:lib"
+}
