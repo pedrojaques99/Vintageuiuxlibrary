@@ -85,6 +85,7 @@ const MistDialogDemo = React.lazy(() => import("./demos/mist-dialog-demo"));
 const InkWordmarkDemo = React.lazy(() => import("./demos/ink-wordmark-demo"));
 const FogHeroDemo = React.lazy(() => import("./demos/fog-hero-demo"));
 const LatheObjectDemo = React.lazy(() => import("./demos/lathe-object-demo"));
+const CssColorDemo = React.lazy(() => import("./demos/css-color-demo"));
 const FogTreeDemo = React.lazy(() => import("./demos/fog-tree-demo"));
 const FogGardenDemo = React.lazy(() => import("./demos/fog-garden-demo"));
 const BookShelfDemo = React.lazy(() => import("./demos/book-shelf-demo"));
@@ -593,6 +594,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Resolve qualquer cor CSS ou token (var(--x), oklch, color-mix) para sRGB 0..1 e avisa na troca de tema, para shader e canvas pintarem com a cor da marca.",
     tags: ["marca", "tokens", "webgl", "canvas", "oklch", "tema"],
+    demo: CssColorDemo,
+    preview: { w: 520, h: 320 },
   },
   {
     name: "theme-visant",
