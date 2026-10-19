@@ -145,7 +145,7 @@ export function FogHero({
       uGrain: U(0), uGrainSize: U(1), uGrainFps: U(24), uSoft: U(0), uSpray: U(0),
       uFogOpacity: U(1), uSmokeLift: U(0), uContrast: U(1), uHaze: U(0), uClear: U(0.9),
       uCenter: U(0.8), uScale: U(1), uSpeed: U(1), uWarp: U(0.7), uDetail: U(0.06),
-      uPhoto: U(0.7), uFlipY: U(1), uVideoZoom: U(1), uVideoY: U(0), uVignette: U(0.15),
+      uPhoto: U(0.7), uInvert: U(0), uFlipY: U(1), uVideoZoom: U(1), uVideoY: U(0), uVignette: U(0.15),
       uLogoSize: U(0.3), uLogoBleed: U(0.006), uCursor: U(0.5),
     };
 
@@ -302,7 +302,7 @@ export function FogHero({
       u.uSmokeLift.value = p.smokeLift; u.uContrast.value = p.contrast; u.uHaze.value = p.haze;
       u.uClear.value = p.clear; u.uCenter.value = p.center; u.uScale.value = p.scale;
       u.uSpeed.value = p.speed; u.uWarp.value = p.warp; u.uDetail.value = p.detail;
-      u.uPhoto.value = p.photo; u.uFlipY.value = p.flipY ? 1 : 0;
+      u.uPhoto.value = p.photo; u.uInvert.value = p.invertVideo ? 1 : 0; u.uFlipY.value = p.flipY ? 1 : 0;
       u.uVideoZoom.value = p.videoZoom; u.uVideoY.value = p.videoY; u.uVignette.value = p.vignette;
       u.uLogoSize.value = p.logoSize; u.uLogoBleed.value = p.logoBleed; u.uCursor.value = p.cursor;
 

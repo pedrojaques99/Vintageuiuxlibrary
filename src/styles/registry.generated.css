@@ -6,7 +6,7 @@
  * delas — e foi assim que o fold-motion virou bug reportado como "muito
  * simples" quando na verdade não animava nada.
  *
- * 22 itens: book-shelf, fold-motion, gleam, line-reveal, magnetic-cta, marquee, measure-bar, measure-picker, nav-drawer, photo-compare, photo-flip, photo-frame, sfx-toggle, sim-slider, spine-card, testimonial-wall, theme-grao-editora, theme-norte-verde, theme-vega-noturno, theme-visant, vintage-base, working-glyph
+ * 23 itens: book-shelf, fold-motion, gleam, line-reveal, magnetic-cta, marquee, measure-bar, measure-picker, mist-dialog, nav-drawer, photo-compare, photo-flip, photo-frame, sfx-toggle, sim-slider, spine-card, testimonial-wall, theme-grao-editora, theme-norte-verde, theme-vega-noturno, theme-visant, vintage-base, working-glyph
  */
 
 @layer components {
@@ -82,6 +82,17 @@
   .visant-fold[data-fold="invert"][data-armed][data-in] {
     background: var(--foreground);
     color: var(--background);
+  }
+  .visant-fold[data-fold="mist"][data-armed] {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(12px);
+    transition: opacity var(--dur-slow, 700ms) var(--ease-out), filter var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-out);
+  }
+  .visant-fold[data-fold="mist"][data-armed][data-in] {
+    opacity: 1;
+    filter: none;
+    transform: none;
   }
   .gleam-stage {
     perspective: 900px;
@@ -184,6 +195,26 @@
     border-radius: 999px;
     border: 3px solid var(--foreground);
     background: var(--background);
+  }
+  .mist-dialog {
+    opacity: 0;
+    filter: blur(14px);
+    transform: scale(0.98);
+    transition: opacity var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), filter var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), transform var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), overlay var(--mist-dialog-dur, 700ms) allow-discrete, display var(--mist-dialog-dur, 700ms) allow-discrete;
+  }
+  .mist-dialog[open] {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+  .mist-dialog::backdrop {
+    background: color-mix(in oklab, var(--foreground) 40%, transparent);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    transition: opacity var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), overlay var(--mist-dialog-dur, 700ms) allow-discrete, display var(--mist-dialog-dur, 700ms) allow-discrete;
+  }
+  .mist-dialog[open]::backdrop {
+    opacity: 1;
   }
   .photo-compare {
     position: relative;
@@ -467,6 +498,12 @@
     transform: none;
     transition: none;
   }
+  .visant-fold[data-fold="mist"][data-armed] {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+  }
   .gleam {
     transform: none;
     transition: none;
@@ -488,6 +525,11 @@
   }
   .measure-bar-fill {
     transition: none;
+  }
+  .mist-dialog, .mist-dialog[open] {
+    filter: none;
+    transform: none;
+    transition: opacity var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), overlay var(--mist-dialog-dur, 700ms) allow-discrete, display var(--mist-dialog-dur, 700ms) allow-discrete;
   }
   .nav-drawer-overlay, .nav-drawer-panel, .nav-drawer-panel[data-state=open] .nav-drawer-list > li, .nav-drawer-panel[data-state=closed] .nav-drawer-list > li {
     animation-duration: 1ms;
@@ -539,6 +581,16 @@
 }
 .magnet-field[data-magnet=rest] .magnet-sheen {
   transition-duration: var(--dur-fast, 140ms);
+}
+@starting-style {
+  .mist-dialog[open] {
+    opacity: 0;
+    filter: blur(14px);
+    transform: scale(0.98);
+  }
+  .mist-dialog[open]::backdrop {
+    opacity: 0;
+  }
 }
 @keyframes nav-drawer-veil-in {
   from {

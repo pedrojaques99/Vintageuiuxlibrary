@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -50,6 +50,11 @@ export interface InkWordmarkProps
    * (painel, modal, vitrine) precisa disto, senão o progresso nunca anda.
    */
   container?: React.RefObject<HTMLElement | null>;
+  /**
+   * Progresso 0..1 vindo de fora (timeline própria, palco sem rolagem, intro).
+   * Quando passado, substitui a rolagem: 0 é fumaça, 1 é tinta assentada.
+   */
+  progress?: MotionValue<number> | number;
 }
 
 export function InkWordmark({
@@ -59,6 +64,7 @@ export function InkWordmark({
   "aria-label": ariaLabel,
   smoke = 34,
   container,
+  progress,
   className,
   onPointerMove,
   onPointerLeave,
@@ -84,7 +90,13 @@ export function InkWordmark({
   // promovido a ScrollTimeline nativo, e o nativo mede o alcance do `offset` de
   // outro jeito: a opacidade chegava a 1 antes da marca entrar na tela. Passar
   // por `useSpring` força o cálculo em JS, que respeita o offset pedido.
-  const prog = useSpring(scrollYProgress, { stiffness: 90, damping: 28, restDelta: 0.0005 });
+  // Progresso externo tem precedência; número vira MotionValue para a mesma mola.
+  const fixo = useMotionValue(typeof progress === "number" ? progress : 0);
+  React.useEffect(() => {
+    if (typeof progress === "number") fixo.set(progress);
+  }, [progress, fixo]);
+  const fonte = progress === undefined ? scrollYProgress : typeof progress === "number" ? fixo : progress;
+  const prog = useSpring(fonte, { stiffness: 90, damping: 28, restDelta: 0.0005 });
   const opacity = useTransform(prog, [0, 0.55], reduce ? [1, 1] : [0, 1]);
 
   // O laço de quadros só existe com a marca perto da tela. `requestAnimationFrame`

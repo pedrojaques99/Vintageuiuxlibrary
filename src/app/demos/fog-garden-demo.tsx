@@ -118,9 +118,11 @@ const STOPS: FogGardenStop[] = [
 export default function FogGardenDemo({ props }: DemoProps) {
   const scrollerRef = React.useRef<HTMLDivElement>(null);
 
+  // max-h: na rota solo o palco não tem altura, e sem teto o contêiner de rolagem
+  // crescia até o conteúdo (canvas de 2240px, capa em branco).
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border">
-      <div ref={scrollerRef} className="relative h-full w-full overflow-y-auto overscroll-contain">
+    <div className="relative h-[min(620px,100%)] min-h-[520px] w-full overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border">
+      <div ref={scrollerRef} className="absolute inset-0 overflow-y-auto overscroll-contain">
         <FogGarden
           container={scrollerRef}
           heightPerStop="560px"

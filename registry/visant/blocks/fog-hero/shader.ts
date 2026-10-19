@@ -18,7 +18,7 @@ uniform float uTime, uIntro, uLogoIn, uScroll, uVideoReady, uSwap, uLogoOn;
 uniform vec3 uPaper, uInk;
 uniform float uGrain, uGrainSize, uGrainFps, uSoft, uSpray, uFogOpacity, uSmokeLift;
 uniform float uContrast, uHaze, uClear, uCenter, uScale, uSpeed, uWarp, uDetail;
-uniform float uPhoto, uFlipY, uVideoZoom, uVideoY, uVignette, uLogoSize, uLogoBleed, uCursor;
+uniform float uPhoto, uInvert, uFlipY, uVideoZoom, uVideoY, uVignette, uLogoSize, uLogoBleed, uCursor;
 varying vec2 vUv;
 
 // Simplex 2D (Ashima Arts / Stefan Gustavson, MIT)
@@ -107,8 +107,15 @@ void main(){
   // clamp-to-edge da textura estica a última linha em listras pela tela.
   vec2 inA = step(vec2(0.0), vuv) * step(vuv, vec2(1.0));
   vec2 inB = step(vec2(0.0), vuvB) * step(vuvB, vec2(1.0));
-  float La = mix(1.0, texture2D(uVideo, vuv).r, inA.x * inA.y);
-  float Lb = mix(1.0, texture2D(uVideoB, vuvB).r, inB.x * inB.y);
+  // Filmagem escura (vinheta de marca em fundo preto) entra invertida: o fundo
+  // vira névoa e a forma vira tinta. Inverte ANTES da borda, para o que fica
+  // fora do quadro continuar papel, e não virar tinta junto.
+  float sa = texture2D(uVideo, vuv).r;
+  float sb = texture2D(uVideoB, vuvB).r;
+  sa = mix(sa, 1.0 - sa, uInvert);
+  sb = mix(sb, 1.0 - sb, uInvert);
+  float La = mix(1.0, sa, inA.x * inA.y);
+  float Lb = mix(1.0, sb, inB.x * inB.y);
   float nm = fbm3(p * 1.4 + vec2(t * 3.0, -t * 2.0)) * 0.5 + 0.5;
   float troca = smoothstep(nm - 0.18, nm + 0.18, uSwap * 1.36 - 0.18);
   float L = mix(La, Lb, troca);

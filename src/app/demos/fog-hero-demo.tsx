@@ -29,7 +29,7 @@ export default function FogHeroDemo({ props }: DemoProps) {
 
   return (
     <div className="h-full w-full overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border">
-      <FogHero videos={videos} className="h-full" swapEvery={6000} {...props}>
+      <FogHero videos={videos} className="h-full" swapEvery={6000} params={{ invertVideo: true }} {...props}>
         <div className="flex h-full items-end p-5">
           <p className="text-[1.6rem] font-semibold leading-none tracking-[-0.03em]" style={{ fontFamily: "var(--font-display, inherit)" }}>
             A abertura em névoa

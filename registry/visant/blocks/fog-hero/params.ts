@@ -20,6 +20,8 @@ export const FOG_HERO_PRESET = {
   // dela. Como padrão genérico eles viravam o vídeo de cabeça para baixo (o
   // `VideoTexture` já chega na orientação certa) e afastavam o quadro além da
   // borda. Para reproduzir a YURA, passe os três por `params`.
+  /** Inverte a luminância do vídeo: use com filmagem escura (vinheta em fundo preto), que senão pinta tinta chapada. */
+  invertVideo: false,
   /** Inverte o vídeo no eixo Y. Só para fonte gravada invertida. */
   flipY: false,
   /** < 1 afasta o vídeo (a sobra vira papel), > 1 aproxima. */

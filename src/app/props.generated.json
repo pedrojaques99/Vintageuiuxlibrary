@@ -5869,6 +5869,13 @@
           "descricao": "`d` de um path único (a marca convertida em contorno). Use com `viewBox`."
         },
         {
+          "nome": "progress",
+          "tipo": "number | MotionValue<number>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Progresso 0..1 vindo de fora (timeline própria, palco sem rolagem, intro).\nQuando passado, substitui a rolagem: 0 é fumaça, 1 é tinta assentada."
+        },
+        {
           "nome": "smoke",
           "tipo": "number",
           "obrigatoria": false,
@@ -5920,7 +5927,7 @@
         },
         {
           "nome": "params",
-          "tipo": "Partial<{ vignette: number; flipY: boolean; videoZoom: number; videoY: number; logoSize: number; logoBleed: number; cursor: number; trailFade: number; introDur: number; scrollClose: boolean; grain: number; ... 14 more ...; photo: number; }>",
+          "tipo": "Partial<{ vignette: number; invertVideo: boolean; flipY: boolean; videoZoom: number; videoY: number; logoSize: number; logoBleed: number; cursor: number; trailFade: number; introDur: number; scrollClose: boolean; ... 15 more ...; photo: number; }>",
           "obrigatoria": false,
           "padrao": null,
           "descricao": "Ajuste parcial do preset aprovado (`FOG_HERO_PRESET`)."
@@ -5961,6 +5968,11 @@
     {
       "nome": "vignette",
       "descricao": "Escurece as bordas para a tinta. 0 = sem vinheta.",
+      "props": []
+    },
+    {
+      "nome": "invertVideo",
+      "descricao": "Inverte a luminância do vídeo: use com filmagem escura (vinheta em fundo preto), que senão pinta tinta chapada.",
       "props": []
     },
     {
@@ -6122,7 +6134,7 @@
         },
         {
           "nome": "params",
-          "tipo": "Partial<{ vignette: number; flipY: boolean; videoZoom: number; videoY: number; logoSize: number; logoBleed: number; cursor: number; trailFade: number; introDur: number; scrollClose: boolean; grain: number; ... 14 more ...; photo: number; }>",
+          "tipo": "Partial<{ vignette: number; invertVideo: boolean; flipY: boolean; videoZoom: number; videoY: number; logoSize: number; logoBleed: number; cursor: number; trailFade: number; introDur: number; scrollClose: boolean; ... 15 more ...; photo: number; }>",
           "obrigatoria": false,
           "padrao": null,
           "descricao": "Ajuste parcial do preset aprovado (`FOG_HERO_PRESET`)."
@@ -6163,6 +6175,11 @@
     {
       "nome": "vignette",
       "descricao": "Escurece as bordas para a tinta. 0 = sem vinheta.",
+      "props": []
+    },
+    {
+      "nome": "invertVideo",
+      "descricao": "Inverte a luminância do vídeo: use com filmagem escura (vinheta em fundo preto), que senão pinta tinta chapada.",
       "props": []
     },
     {

@@ -136,6 +136,14 @@ async function subirServidor() {
  */
 async function assentar(pagina, recorte) {
   await pagina.evaluate(() => document.fonts?.ready);
+  /* Peça WebGL nasce tarde: o canvas existe desde o início, mas a cena chega por
+     import dinâmico e leva segundos para o primeiro quadro. Até lá o palco é
+     branco e PARADO, e "parou de mudar" passava por assentado — a capa do
+     fog-garden saiu com 0,48% de tinta. Com canvas na página, dá um prazo antes
+     de começar a comparar. */
+  if (await pagina.evaluate(() => !!document.querySelector("canvas"))) {
+    await new Promise((r) => setTimeout(r, 4500));
+  }
   let anterior = null;
   for (let i = 0; i < 8; i++) {
     const agora = await pagina.screenshot(recorte ? { clip: recorte } : undefined);
