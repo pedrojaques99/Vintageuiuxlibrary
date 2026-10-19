@@ -182,18 +182,16 @@ async function criarCena(
     const h = canvas.clientHeight || 1;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    // Distância que faz caber a altura OU a largura (a que apertar mais), com
-    // um respiro curto: a peça é o assunto, e o original ocupava o quadro quase
-    // inteiro. Somar meio raio compensa a face da frente, que fica mais perto
-    // da câmera que o eixo. Levemente de cima, como no original (3.2 / 13.5).
-    const meiaVert = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-    const raio = Math.max(tamanho.x, tamanho.z) / 2;
-    // Folga de 20%, não 4%: a caixa é medida parada, mas a câmera vem de cima, as
-    // varetas balançam e o arrasto inclina até ±0.12π. Com 4% as pontas das
-    // varetas saíam cortadas no topo do canvas (visto em tamanho real na vitrine).
-    // Um raio inteiro (era meio): em peça larga (vela, pote) a borda frontal de
-    // baixo fica perto da câmera e crescia até encostar no pé do canvas.
-    const dist = Math.max(tamanho.y / 2 / meiaVert, raio / (meiaVert * camera.aspect)) * 1.2 + raio;
+    // Enquadra a ESFERA que envolve a peça, não a caixa vista de frente: a
+    // distância r / sen(meio campo) faz caber em qualquer ângulo da órbita e em
+    // qualquer perfil. As tentativas com folga fixa (4%, 20%, meio raio, um raio)
+    // sempre deixavam um caso encostando: vareta no topo, pote no pé, porque a
+    // câmera vem de cima e a borda da frente cresce na projeção. Visto em
+    // tamanho real na vitrine. O 1.04 final é só respiro.
+    const meiaVert = THREE.MathUtils.degToRad(camera.fov / 2);
+    const meiaHoriz = Math.atan(Math.tan(meiaVert) * camera.aspect);
+    const esfera = tamanho.length() / 2;
+    const dist = (esfera / Math.sin(Math.min(meiaVert, meiaHoriz))) * 1.04;
     const dir = new THREE.Vector3(0, 0.237, 1).normalize();
     camera.position.copy(dir.multiplyScalar(dist));
     camera.updateProjectionMatrix();
