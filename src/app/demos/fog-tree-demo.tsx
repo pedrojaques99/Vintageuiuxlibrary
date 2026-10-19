@@ -18,7 +18,8 @@ import type { DemoProps } from "../catalog";
 export default function FogTreeDemo({ props }: DemoProps) {
   return (
     <FogTree
-      className="h-full min-h-0 rounded-[var(--r-surface,0.875rem)] border border-border"
+      // min-h: na rota solo o palco não tem altura, e com min-h-0 a cena virava uma faixa achatada
+      className="h-full min-h-[480px] rounded-[var(--r-surface,0.875rem)] border border-border"
       progress={0.35}
       draggable
       {...props}

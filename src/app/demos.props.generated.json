@@ -135,7 +135,7 @@
     "cta": "Ver projeto"
   },
   "fog-tree": {
-    "className": "h-full min-h-0 rounded-[var(--r-surface,0.875rem)] border border-border",
+    "className": "h-full min-h-[480px] rounded-[var(--r-surface,0.875rem)] border border-border",
     "progress": 0.35,
     "draggable": true
   },
