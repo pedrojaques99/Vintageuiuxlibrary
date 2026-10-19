@@ -18,6 +18,14 @@ import { FogHero } from "../../../registry/visant/blocks/fog-hero";
 import { midia } from "../media";
 import type { DemoProps } from "../catalog";
 
+/*
+ * O preset é o da YURA, suave de propósito (marca de aroma). Na vitrine, com as
+ * vinhetas escuras da casa, ele lia como cinza chapado: aqui o tom sobe o
+ * contraste, tira o haze e abre mais a clareira, para a névoa enquadrar as
+ * bordas e a marca ler nítida no centro. `invertVideo` porque a filmagem é escura.
+ */
+const TOM_VITRINE = { invertVideo: true, contrast: 1.1, haze: 0.04, smokeLift: 0.12, photo: 0.95, clear: 0.72 };
+
 export default function FogHeroDemo({ props }: DemoProps) {
   const videos = React.useMemo(() => {
     const webm = document.createElement("video").canPlayType("video/webm") !== "";
@@ -29,9 +37,10 @@ export default function FogHeroDemo({ props }: DemoProps) {
 
   return (
     <div className="h-full w-full overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border">
-      <FogHero videos={videos} className="h-full" swapEvery={6000} params={{ invertVideo: true }} {...props}>
-        <div className="flex h-full items-end p-5">
-          <p className="text-[1.6rem] font-semibold leading-none tracking-[-0.03em]" style={{ fontFamily: "var(--font-display, inherit)" }}>
+      <FogHero videos={videos} className="h-full" swapEvery={6000} params={TOM_VITRINE} {...props}>
+        <div className="flex h-full items-end p-6 text-[var(--background)] mix-blend-difference">
+          {/* difference: lê sobre a névoa escura do canto e sobre a clareira */}
+          <p className="text-[2rem] font-semibold leading-none tracking-[-0.03em]" style={{ fontFamily: "var(--font-display, inherit)" }}>
             A abertura em névoa
           </p>
         </div>
