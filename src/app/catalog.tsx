@@ -1421,6 +1421,7 @@ export const CATALOG: CatalogItem[] = [
   },
   {
     name: "ink-wordmark",
+    // palco-check: o viewBox se ajusta à fonte depois que ela carrega, e a medida pega a caixa de antes
     title: "Ink Wordmark",
     type: "ui",
     family: "texto",

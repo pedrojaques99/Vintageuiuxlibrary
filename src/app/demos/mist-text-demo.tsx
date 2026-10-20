@@ -31,7 +31,7 @@ export default function MistTextDemo({ props }: DemoProps) {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-6 px-6">
-      <div key={`${atual}-${rodada}`} className="flex w-full max-w-[30rem] flex-col gap-3">
+      <div key={`${atual}-${rodada}`} className="flex w-full max-w-[30rem] flex-col items-center gap-3 text-center">
         <MistText
           as="h3"
           by="letter"
