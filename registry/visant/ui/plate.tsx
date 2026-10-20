@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 /**
  * Plate — a placa onde a foto de catálogo senta.
  *
- * Colhida do concept Hockey Direct, e resolve um problema chato de verdade:
+ * Colhida de um concept de e-commerce, e resolve um problema chato de verdade:
  * **foto de catálogo vem recortada sobre branco.** Jogada num fundo colorido ou
  * escuro, ela aparece como um retângulo branco duro — o defeito que a auditoria
  * chamou de "duas placas concorrentes" quando metade da página usava recorte e

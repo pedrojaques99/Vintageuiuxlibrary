@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 /**
  * Chip — pastilha de filtro.
  *
- * Colhida do concept Hockey Direct. É o gesto que o comprador de loja grande já
+ * Colhida de um concept de e-commerce. É o gesto que o comprador de loja grande já
  * tem no dedo: nada de inventar controle novo numa superfície de compra.
  *
  * Duas coisas que parecem detalhe e não são:
@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
  *    mostra "(0)" ocupa espaço para dizer que não serve. Ele some.
  *
  * O `icon` existe para o caso em que o dado da loja cabe dentro do controle:
- * no Hockey Direct é a curva do bow desenhada em SVG, herdando `currentColor`,
+ * no concept é a curva do bow desenhada em SVG, herdando `currentColor`,
  * então ela acompanha o estado sem uma linha de CSS a mais.
  *
  * ── O que faltava: a pastilha não tinha anatomia ───────────────────────────

@@ -1,5 +1,5 @@
 /**
- * O preset da hero de névoa, como foi aprovado na YURA (19/10/2026).
+ * O preset da hero de névoa, como foi aprovado num projeto de cliente (19/10/2026).
  *
  * Os valores de cena (fumaça, grão, clareira, logo) são os aprovados; os três de
  * enquadramento de vídeo foram neutralizados (ver abaixo).
@@ -15,11 +15,11 @@
 export const FOG_HERO_PRESET = {
   /** Escurece as bordas para a tinta. 0 = sem vinheta. */
   vignette: 0,
-  // Os três próximos são do MATERIAL, não da cena: a YURA aprovou com
+  // Os três próximos são do MATERIAL, não da cena: o cliente aprovou com
   // `flipY: true`, `videoZoom: 0.8` e `videoY: -0.07`, ajustados aos vídeos
   // dela. Como padrão genérico eles viravam o vídeo de cabeça para baixo (o
   // `VideoTexture` já chega na orientação certa) e afastavam o quadro além da
-  // borda. Para reproduzir a YURA, passe os três por `params`.
+  // borda. Para reproduzir o preset aprovado, passe os três por `params`.
   /** Inverte a luminância do vídeo: use com filmagem escura (vinheta em fundo preto), que senão pinta tinta chapada. */
   invertVideo: false,
   /** Inverte o vídeo no eixo Y. Só para fonte gravada invertida. */

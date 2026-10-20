@@ -6,13 +6,13 @@ import { cn } from "@/lib/utils";
 /**
  * StickyFilterbar — barra de filtro que gruda e condensa.
  *
- * Colhida do concept Hockey Direct. É utilidade antes de ser efeito: com a
+ * Colhida de um concept de e-commerce. É utilidade antes de ser efeito: com a
  * barra alta grudada, sobra menos grade na tela — e a grade é o que o comprador
  * veio ver. Cada pixel da barra é um pixel a menos de produto.
  *
  * ── O gotcha que custou caro ────────────────────────────────────────────────
  * A altura do cabeçalho **não pode ser chutada**. Ela muda com o viewport: no
- * Hockey Direct mediu 123px no desktop e **163px a 390px**, porque a busca
+ * O concept mediu 123px no desktop e **163px a 390px**, porque a busca
  * desce de linha. Um número fixo no CSS deixa a barra escondida atrás do header
  * em um dos dois casos.
  *

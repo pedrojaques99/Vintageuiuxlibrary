@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 /**
  * StoreStatus — "aberto agora" de loja física.
  *
- * Colhido do concept Hockey Direct, e a razão dele existir é uma regra de
+ * Colhido de um concept de e-commerce, e a razão dele existir é uma regra de
  * honestidade, não de UI:
  *
  * **O visitante pode estar em qualquer fuso.** Se você resolver a hora no

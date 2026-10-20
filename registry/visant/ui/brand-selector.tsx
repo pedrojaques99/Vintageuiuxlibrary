@@ -166,7 +166,7 @@ export function BrandSelector({ className, shortcut = "b" }: BrandSelectorProps)
         {/*
          * A paleta no gatilho, e não só dentro da lista.
          *
-         * Fechado, o botão dizia "Kastrup · Geist" — nome e fonte, nenhuma cor.
+         * Fechado, o botão dizia "Marca · Geist" — nome e fonte, nenhuma cor.
          * Só que a coisa que ele troca é justamente a COR do produto inteiro, e
          * o único lugar onde ela aparecia era atrás do clique. Três amostras
          * custam 30px e fazem o controle dizer o que ele é sem abrir nada.

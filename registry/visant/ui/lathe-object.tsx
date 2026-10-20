@@ -9,7 +9,7 @@ import { onThemeChange, resolveCssColor } from "@/lib/css-color";
 /**
  * Lathe Object — um produto de revolução em 3D, a partir de um perfil.
  *
- * Colhido do rodapé da YURA (2026-10), onde um difusor de varetas girava ao
+ * Colhido do rodapé de um site de cliente (2026-10), onde um difusor de varetas girava ao
  * lado do fecho. Quase todo objeto de embalagem é um torno: frasco, vela, pote,
  * garrafa, xícara. Um perfil de meia silhueta (`[x, y][]`) revolvido em 64
  * segmentos dá o objeto inteiro, sem modelo baixado, sem GLTF, sem textura.
@@ -42,7 +42,7 @@ import { onThemeChange, resolveCssColor } from "@/lib/css-color";
 
 export type LatheProfile = [number, number][];
 
-/** O frasco do difusor YURA: base arredondada, ombro, gargalo e tampa. */
+/** O frasco do difusor: base arredondada, ombro, gargalo e tampa. */
 export const DIFFUSER_PROFILE: LatheProfile = [
   [0, 0], [0.86, 0], [0.98, 0.06], [1, 0.2], [1, 2.05], [0.96, 2.35], [0.82, 2.58],
   [0.5, 2.74], [0.4, 2.8], [0.4, 3.02], [0.48, 3.04], [0.5, 3.1], [0.5, 3.36], [0.44, 3.4], [0, 3.4],

@@ -43,19 +43,19 @@ build, o cliente só lê JSON público.
 nome, logo, paleta crua, par tipográfico, vault% e uma amostra de 8 tokens por
 modo. O tema completo só desce quando alguém escolhe (ou espia) a marca.
 
-**Papéis compostos são expandidos.** A guideline da Kastrup® publica
+**Papéis compostos são expandidos.** A guideline da uma marca de cliente publica
 `background/text` e `accent/cta`. O motor casa papel por igualdade exata, então
 `background/text` não resolvia o slot `background` e o fallback pintava o tema
 claro com o preto da marca — sem erro nenhum no build. O sync quebra cada papel
 em segmentos antes de compilar.
 
 **Empate de papel decide por saturação (ou por claridade, se for fundo).**
-Kastrup® tem duas cores no papel `accent`: um creme e o vermelho da marca. Sem
+uma marca de cliente tem duas cores no papel `accent`: um creme e o vermelho da marca. Sem
 desempate, `--brand` saía creme. Regra: papel de identidade → mais saturada;
 papel de fundo → mais clara.
 
 **Duas formas de tipografia convivem na API.** A atual (`family/role/size`) e uma
-legada (`fontFamily/name/fontSize`, em Padoo® e Build + Partners®). Ler só a
+legada (`fontFamily/name/fontSize`, em marcas antigas do vault). Ler só a
 atual descartava a tipografia dessas marcas e o motor recusava a marca inteira.
 
 **A folha do runtime usa `:root:root`.** Empatar especificidade com o

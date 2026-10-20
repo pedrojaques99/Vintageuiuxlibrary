@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 /**
  * Rail — trilho horizontal com scroll-snap nativo.
  *
- * Colhido do concept Hockey Direct. Carrossel de produto é padrão de loja
+ * Colhido de um concept de e-commerce. Carrossel de produto é padrão de loja
  * grande, e aqui é CSS nativo: sem biblioteca, sem sequestro de rolagem,
  * arrasta no telefone de graça.
  *

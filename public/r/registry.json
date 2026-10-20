@@ -3807,6 +3807,30 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "agent-rules",
+      "type": "registry:item",
+      "title": "Agent Rules",
+      "description": "Regras pro seu agente de IA (Cursor, Claude Code, Copilot): procurar no @visant antes de escrever UI do zero e escolher a peça certa pela situação.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "files": [
+        {
+          "path": "registry/visant/rules/visant-ui.mdc",
+          "type": "registry:file",
+          "target": "~/.cursor/rules/visant-ui.mdc"
+        },
+        {
+          "path": "registry/visant/rules/SKILL.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/visant-ui/SKILL.md"
+        },
+        {
+          "path": "registry/visant/rules/visant-ui.instructions.md",
+          "type": "registry:file",
+          "target": "~/.github/instructions/visant-ui.instructions.md"
+        }
+      ]
     }
   ]
 }

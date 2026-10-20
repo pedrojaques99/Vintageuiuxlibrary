@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 /**
  * Marquee — faixa contínua, dirigida pelo scroll.
  *
- * Colhida do concept Hockey Direct, onde ela nasceu com API em vez de virar
+ * Colhida de um concept de e-commerce, onde ela nasceu com API em vez de virar
  * um `@keyframes` solto. Nenhuma cor mora aqui: `band` pinta com `--brand` e o
  * texto com `--brand-foreground`, então a mesma faixa sai lime numa marca e
  * âmbar noutra sem fork.

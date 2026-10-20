@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 /**
  * MeasurePicker — escolher por medida em vez de por código.
  *
- * Colhido do concept Hockey Direct, e a ideia vale muito além de hóquei:
+ * Colhido de um concept de e-commerce, e a ideia vale muito além de hóquei:
  *
  * **Pergunte o que o cliente SABE responder.** Ele sabe a altura dele; não sabe
  * quantas polegadas o cabo deve ter. Toda vez que a loja pede a conversão ao

@@ -6205,12 +6205,12 @@
     },
     {
       "nome": "fragmentShader",
-      "descricao": "Shader da hero \"noir dissolve fog\" (protótipo YURA, 2026-10).\n\nSó duas cores entram aqui, `uPaper` e `uInk`, e as duas vêm dos tokens da\nmarca resolvidos no navegador. Todo o resto é mistura entre elas: a fumaça é\ntinta, a clareira é papel, o vídeo vira luminância e é pintado de tinta sobre\npapel. Por isso a hero troca de tema sem uma linha de cor no GLSL — os únicos\nliterais são 0 e 1 de matemática.\n\nO vídeo é lido só no canal R: a hero é P&B por desenho, e a luminância de um\ncanal basta para virar mancha de tinta.",
+      "descricao": "Shader da hero \"noir dissolve fog\" (protótipo de cliente, 2026-10).\n\nSó duas cores entram aqui, `uPaper` e `uInk`, e as duas vêm dos tokens da\nmarca resolvidos no navegador. Todo o resto é mistura entre elas: a fumaça é\ntinta, a clareira é papel, o vídeo vira luminância e é pintado de tinta sobre\npapel. Por isso a hero troca de tema sem uma linha de cor no GLSL — os únicos\nliterais são 0 e 1 de matemática.\n\nO vídeo é lido só no canal R: a hero é P&B por desenho, e a luminância de um\ncanal basta para virar mancha de tinta.",
       "props": []
     },
     {
       "nome": "FOG_HERO_PRESET",
-      "descricao": "O preset da hero de névoa, como foi aprovado na YURA (19/10/2026).\n\nOs valores de cena (fumaça, grão, clareira, logo) são os aprovados; os três de\nenquadramento de vídeo foram neutralizados (ver abaixo).\n\nAs cores NÃO moram aqui. No original havia quatro hex (papel e fumaça, claro e\nescuro); na colheita viraram duas props do componente, `paper` e `ink`, que\npor padrão leem `--background` e `--foreground`. O tema escuro deixa de ser um\nsegundo par de hex e passa a ser só o tema da marca virando.\n\nMexa no preset por `params` (parcial) em vez de editar este arquivo: assim a\natualização do registry não pisa no ajuste do projeto.",
+      "descricao": "O preset da hero de névoa, como foi aprovado num projeto de cliente (19/10/2026).\n\nOs valores de cena (fumaça, grão, clareira, logo) são os aprovados; os três de\nenquadramento de vídeo foram neutralizados (ver abaixo).\n\nAs cores NÃO moram aqui. No original havia quatro hex (papel e fumaça, claro e\nescuro); na colheita viraram duas props do componente, `paper` e `ink`, que\npor padrão leem `--background` e `--foreground`. O tema escuro deixa de ser um\nsegundo par de hex e passa a ser só o tema da marca virando.\n\nMexa no preset por `params` (parcial) em vez de editar este arquivo: assim a\natualização do registry não pisa no ajuste do projeto.",
       "props": []
     },
     {
@@ -6412,12 +6412,12 @@
     },
     {
       "nome": "FogHeroProps",
-      "descricao": "Fog Hero — a dobra de abertura que nasce da névoa.\n\nColhido da hero da YURA (2026-10). Uma tela cheia de fumaça (fbm com domain\nwarp) abre uma clareira do centro, e pela borda da fumaça aparece uma\nplaylist de vídeo em P&B, pintada de tinta sobre papel. O logo, se houver,\nsurge por um dissolve de ruído depois da clareira. Ao rolar, a dobra inteira\nperde nitidez e some.\n\nDecisões que sobrevivem à colheita:\n\n1. **Duas cores, ambas tokens.** `paper` e `ink` (padrão `--background` e\n   `--foreground`) são resolvidas pelo navegador via `css-color` e relidas a\n   cada troca de tema. O original tinha dois pares de hex, claro e escuro; o\n   tema escuro agora é só a marca virando.\n2. **A cor vai crua para o shader.** O uniform é `Vector3`, não `THREE.Color`:\n   o `Color` converte sRGB para linear e o `ShaderMaterial` não converte de\n   volta, então a borda da hero sairia mais escura que o `bg-background` da\n   página. Assim o papel do shader é o MESMO pixel do papel do site.\n3. **A troca de vídeo acontece no shader, pela névoa.** O próximo vídeo\n   aparece através do mesmo ruído da fumaça (`uSwap`), e a borda da\n   dissolução clareia. Cortar seco num `<video>` quebraria a ilusão de que é\n   tudo a mesma matéria.\n4. **Para quando ninguém vê.** Fora da tela ou com a aba escondida o laço sai\n   e o vídeo pausa. O relógio da hero só anda com ela rodando, então a\n   abertura e a agenda da troca não \"pulam\" ao voltar.\n5. **Movimento reduzido:** clareira já aberta, logo já assentado, fumaça e\n   grão congelados, sem troca de vídeo (o primeiro fica parado no primeiro\n   quadro). O rastro do cursor continua, porque é gesto de quem usa.\n\n**O `<h1>` é de quem consome.** O canvas é `aria-hidden`; a hero não sabe o\ntítulo da página. Ponha o título em `children` (visível) ou como\n`<h1 className=\"sr-only\">` dentro dele — sem isso a página fica sem h1.\n\nVídeo e logo de outro domínio precisam de CORS (`Access-Control-Allow-Origin`):\ntextura sem isso suja o canvas e o three recusa.\n\nRequer `three` e `framer-motion`.",
+      "descricao": "Fog Hero — a dobra de abertura que nasce da névoa.\n\nColhido da hero de um site de cliente (2026-10). Uma tela cheia de fumaça (fbm com domain\nwarp) abre uma clareira do centro, e pela borda da fumaça aparece uma\nplaylist de vídeo em P&B, pintada de tinta sobre papel. O logo, se houver,\nsurge por um dissolve de ruído depois da clareira. Ao rolar, a dobra inteira\nperde nitidez e some.\n\nDecisões que sobrevivem à colheita:\n\n1. **Duas cores, ambas tokens.** `paper` e `ink` (padrão `--background` e\n   `--foreground`) são resolvidas pelo navegador via `css-color` e relidas a\n   cada troca de tema. O original tinha dois pares de hex, claro e escuro; o\n   tema escuro agora é só a marca virando.\n2. **A cor vai crua para o shader.** O uniform é `Vector3`, não `THREE.Color`:\n   o `Color` converte sRGB para linear e o `ShaderMaterial` não converte de\n   volta, então a borda da hero sairia mais escura que o `bg-background` da\n   página. Assim o papel do shader é o MESMO pixel do papel do site.\n3. **A troca de vídeo acontece no shader, pela névoa.** O próximo vídeo\n   aparece através do mesmo ruído da fumaça (`uSwap`), e a borda da\n   dissolução clareia. Cortar seco num `<video>` quebraria a ilusão de que é\n   tudo a mesma matéria.\n4. **Para quando ninguém vê.** Fora da tela ou com a aba escondida o laço sai\n   e o vídeo pausa. O relógio da hero só anda com ela rodando, então a\n   abertura e a agenda da troca não \"pulam\" ao voltar.\n5. **Movimento reduzido:** clareira já aberta, logo já assentado, fumaça e\n   grão congelados, sem troca de vídeo (o primeiro fica parado no primeiro\n   quadro). O rastro do cursor continua, porque é gesto de quem usa.\n\n**O `<h1>` é de quem consome.** O canvas é `aria-hidden`; a hero não sabe o\ntítulo da página. Ponha o título em `children` (visível) ou como\n`<h1 className=\"sr-only\">` dentro dele — sem isso a página fica sem h1.\n\nVídeo e logo de outro domínio precisam de CORS (`Access-Control-Allow-Origin`):\ntextura sem isso suja o canvas e o three recusa.\n\nRequer `three` e `framer-motion`.",
       "props": []
     },
     {
       "nome": "__object",
-      "descricao": "O preset da hero de névoa, como foi aprovado na YURA (19/10/2026).\n\nOs valores de cena (fumaça, grão, clareira, logo) são os aprovados; os três de\nenquadramento de vídeo foram neutralizados (ver abaixo).\n\nAs cores NÃO moram aqui. No original havia quatro hex (papel e fumaça, claro e\nescuro); na colheita viraram duas props do componente, `paper` e `ink`, que\npor padrão leem `--background` e `--foreground`. O tema escuro deixa de ser um\nsegundo par de hex e passa a ser só o tema da marca virando.\n\nMexa no preset por `params` (parcial) em vez de editar este arquivo: assim a\natualização do registry não pisa no ajuste do projeto.",
+      "descricao": "O preset da hero de névoa, como foi aprovado num projeto de cliente (19/10/2026).\n\nOs valores de cena (fumaça, grão, clareira, logo) são os aprovados; os três de\nenquadramento de vídeo foram neutralizados (ver abaixo).\n\nAs cores NÃO moram aqui. No original havia quatro hex (papel e fumaça, claro e\nescuro); na colheita viraram duas props do componente, `paper` e `ink`, que\npor padrão leem `--background` e `--foreground`. O tema escuro deixa de ser um\nsegundo par de hex e passa a ser só o tema da marca virando.\n\nMexa no preset por `params` (parcial) em vez de editar este arquivo: assim a\natualização do registry não pisa no ajuste do projeto.",
       "props": []
     },
     {
@@ -6593,7 +6593,7 @@
           "nome": "profile",
           "tipo": "LatheProfile",
           "obrigatoria": false,
-          "padrao": "[\r\n  [0, 0], [0.86, 0], [0.98, 0.06], [1, 0.2], [1, 2.05], [0.96, 2.35], [0.82, 2.58],\r\n  [0.5, 2.74], [0.4, 2.8], [0.4, 3.02], [0.48, 3.04], [0.5, 3.1], [0.5, 3.36], [0.44, 3.4], [0, 3.4],\r\n]",
+          "padrao": "[\n  [0, 0], [0.86, 0], [0.98, 0.06], [1, 0.2], [1, 2.05], [0.96, 2.35], [0.82, 2.58],\n  [0.5, 2.74], [0.4, 2.8], [0.4, 3.02], [0.48, 3.04], [0.5, 3.1], [0.5, 3.36], [0.44, 3.4], [0, 3.4],\n]",
           "descricao": "Meia silhueta, de baixo para cima: `[raio, altura]`. Feche no eixo (`x = 0`) nas pontas."
         },
         {
@@ -6607,7 +6607,7 @@
     },
     {
       "nome": "DIFFUSER_PROFILE",
-      "descricao": "O frasco do difusor YURA: base arredondada, ombro, gargalo e tampa.",
+      "descricao": "O frasco do difusor: base arredondada, ombro, gargalo e tampa.",
       "props": []
     }
   ],

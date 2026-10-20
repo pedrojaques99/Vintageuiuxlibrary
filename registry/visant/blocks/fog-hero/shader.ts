@@ -1,5 +1,5 @@
 /**
- * Shader da hero "noir dissolve fog" (protótipo YURA, 2026-10).
+ * Shader da hero "noir dissolve fog" (protótipo de cliente, 2026-10).
  *
  * Só duas cores entram aqui, `uPaper` e `uInk`, e as duas vêm dos tokens da
  * marca resolvidos no navegador. Todo o resto é mistura entre elas: a fumaça é

@@ -19,7 +19,7 @@ import { midia } from "../media";
 import type { DemoProps } from "../catalog";
 
 /*
- * O preset é o da YURA, suave de propósito (marca de aroma). Na vitrine, com as
+ * O preset é o aprovado no projeto de origem, suave de propósito (marca de aroma). Na vitrine, com as
  * vinhetas escuras da casa, ele lia como cinza chapado: aqui o tom sobe o
  * contraste, tira o haze e abre mais a clareira, para a névoa enquadrar as
  * bordas e a marca ler nítida no centro. `invertVideo` porque a filmagem é escura.

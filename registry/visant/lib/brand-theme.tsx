@@ -6,7 +6,7 @@
  *
  * A ideia inteira do registry é que nenhum componente saiba a cor da marca: ele
  * lê `var(--brand)`, `var(--card)`, `var(--font-display)`. Um tema instalado por
- * `npx shadcn add @visant/theme-kastrup` escreve esses tokens no `globals.css`
+ * `npx shadcn add @visant/theme-<marca>` escreve esses tokens no `globals.css`
  * em tempo de build. Este arquivo faz a MESMA coisa em tempo de execução, para
  * o caso em que a marca só se decide com o app no ar: showroom, preview de
  * proposta, um app multi-cliente.

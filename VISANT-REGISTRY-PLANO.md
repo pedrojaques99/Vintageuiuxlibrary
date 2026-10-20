@@ -48,11 +48,11 @@ Verificado num projeto limpo, não em teoria:
 | Instalação a partir do registry publicado | 4 arquivos + 80 CSS vars escritas |
 | Keyframes e `prefers-reduced-motion` do marquee | chegaram no `globals.css` |
 | Hex hardcoded nos três componentes | **zero** |
-| Trocar Hockey Direct → Visant | `--brand` e `--font-display` mudaram, **componentes byte a byte idênticos** |
+| Trocar um concept de e-commerce → Visant | `--brand` e `--font-display` mudaram, **componentes byte a byte idênticos** |
 
 Feito: **F1** (publicado), **F1b** (motor consertado, 39 testes), **F2** (os três
 repos com shadcn apontam para `@visant`), **F3** (17 itens colhidos — 7 do
-Hockey Direct, 9 do visant-board, 1 bloco).
+um concept de e-commerce, 9 do visant-board, 1 bloco).
 
 Falta: **F4**, a trilha Shopify por `registry:file` com `target: ~/assets` e
 `~/sections`. E o domínio `ui.visantlabs.com` pende de um CNAME — a URL da
@@ -138,7 +138,7 @@ declarar isso, ou quebra silenciosamente no jaques-os.
 ├── registry:theme   ← A CAMADA "POR TEMA". Só cssVars, zero componente.
 │   ├── visant-core      paleta, tipo e motion da casa
 │   ├── vintage          o kit de áudio que já existe
-│   └── client-<nome>    um por cliente (hockey-direct, kastrup, days…)
+│   └── client-<nome>    um por cliente (hockey-direct, uma marca de cliente, days…)
 │
 ├── registry:base    ← fundação: reset, tokens de motion SSoT, cn()
 │   └── visant-base
@@ -263,7 +263,7 @@ três vocabulários diferentes:
 | Marca | Roles de cor | Roles de tipo |
 |---|---|---|
 | Visant® | `background · primary · secondary · accent · text` | `primary · secondary` |
-| Hockey Direct | `background · surface · secondary · accent · accent-secondary · text-on-dark · muted · text` | `display · body · label · feature` |
+| um concept de e-commerce | `background · surface · secondary · accent · accent-secondary · text-on-dark · muted · text` | `display · body · label · feature` |
 | Days n' Days | `text · accent` (só 3 cores) | `heading` |
 
 Consequência direta no gerador: **não é um mapa fixo, é um mapa de sinônimos com
@@ -303,7 +303,7 @@ node scripts/build.js /tmp/hockey.json
 --font-display: 'Oswald'    ✗  a marca é Archivo/Syncopate
 ```
 
-**As fontes da Visant vazaram para a Hockey Direct, sem erro nenhum.** A marca
+**As fontes da Visant vazaram para a um concept de e-commerce, sem erro nenhum.** A marca
 não tem `role: primary`, então o fallback entrou calado. Um site inteiro sairia
 fora da marca, e o defeito só apareceria quando um humano olhasse.
 
@@ -344,7 +344,7 @@ de decidir se o gerador deriva ou lê.
 
 ## 3. Inventário de colheita — o que já está pronto para virar item
 
-### De `@Clients - Web/Hockey Direct` (auditado a fundo, alta confiança)
+### De `@Clients - Web/um concept de e-commerce` (auditado a fundo, alta confiança)
 
 | Item | Tipo | Onde está | Por que vale |
 |---|---|---|---|
@@ -397,9 +397,9 @@ O que foi **desacoplado** na colheita (a origem continua funcionando; os headers
 - `VHSText` — depende de `PersistentShaderRenderer` e carrega altura fixa de
   1710px. É peça de campanha, não primitiva.
 
-### De `@Clients - Web/yura` — COLHIDO em 19/10/2026
+### De `@Clients - Web/um cliente` — COLHIDO em 19/10/2026
 
-A linguagem "névoa" da YURA (aromas para casa): toda entrada sai do desfoque,
+A linguagem "névoa" da um cliente (aromas para casa): toda entrada sai do desfoque,
 nada desliza. Veio como família porque as peças só fazem sentido juntas: o
 texto, a foto e o modal precisam dissolver do mesmo jeito.
 
@@ -410,7 +410,7 @@ texto, a foto e o modal precisam dissolver do mesmo jeito.
 | `mist-swap` | `TrocaNevoa.tsx` | Troca de foto por névoa, só em tela. `photo-frame` revela uma foto, este alterna várias |
 | `mist-dialog` | `VitrineProduto.tsx` | `<dialog>` nativo com `@starting-style`: o modal que faltava na casa |
 | `dot-cursor` | `Cursor.tsx` | Cursor mínimo (ponto → anel), a versão não intrusiva que o cliente pediu |
-| `ink-wordmark` | `YuraGigante.tsx` | Assinatura de ponta a ponta que condensa da fumaça. Qualquer path SVG |
+| `ink-wordmark` | `NomeGigante.tsx` | Assinatura de ponta a ponta que condensa da fumaça. Qualquer path SVG |
 | `fog-hero` | `HeroFog.tsx` + shader | Hero em shader com playlist de vídeo trocada pela própria fumaça |
 | `fog-tree` | `fogTreeScene.ts` | Árvore ez-tree na névoa em duotone de token: o escuro inverte sem paleta nova |
 | `fog-garden` | `gardenScene.ts` + `Caminho.tsx` | Caminhada por scroll com paradas em `mix-blend-difference` |
@@ -475,7 +475,7 @@ Nos três `components.json` que já existem, adicionar:
 ```
 Teste real: `npx shadcn add @visant/visant-motion` no visantlabs-os.
 
-### F3 — Colher a safra do Hockey Direct *(1–2 dias)*
+### F3 — Colher a safra do um concept de e-commerce *(1–2 dias)*
 Subir os 12 itens da tabela §3. Eles já estão escritos, comentados e verificados
 a 390px. É a colheita mais barata que existe.
 

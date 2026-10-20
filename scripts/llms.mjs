@@ -107,7 +107,16 @@ function fichaEmMarkdown(item) {
   const pacotes = deps[item.name] ?? [];
   l.push(`- Dependências npm: ${pacotes.length ? pacotes.join(", ") : "nenhuma"}`);
   l.push(`- Demo: ${SITE}/c/${item.name}`);
+  if (item.categories?.length) l.push(`- Categorias: ${item.categories.join(", ")}`);
   l.push("");
+  // O que o agente lê pra ESCOLHER entre peças parecidas (scripts/registry-meta.mjs).
+  if (item.meta?.uso?.quando) {
+    l.push("## Quando usar");
+    l.push("");
+    l.push(`- Use quando: ${item.meta.uso.quando}`);
+    if (item.meta.uso.evite) l.push(`- Evite quando: ${item.meta.uso.evite}`);
+    l.push("");
+  }
   l.push("## Instalar");
   l.push("");
   l.push("```bash");
@@ -182,7 +191,8 @@ for (const [tipo, lista] of Object.entries(porTipo).sort()) {
   indice.push("");
   for (const item of lista) {
     const desc = (item.description ?? "").split(/(?<=\.)\s/)[0];
-    indice.push(`- [${item.name}](${SITE}/r/${item.name}.md): ${desc}`);
+    const quando = item.meta?.uso?.quando ? ` Use quando: ${item.meta.uso.quando}` : "";
+    indice.push(`- [${item.name}](${SITE}/r/${item.name}.md): ${desc}${quando}`);
   }
   indice.push("");
 }

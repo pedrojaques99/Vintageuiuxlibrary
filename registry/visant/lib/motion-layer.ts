@@ -1,7 +1,7 @@
 /**
  * MotionLayer — a camada de movimento, ligável por atributo.
  *
- * Colhida do concept Hockey Direct. Duas coisas a tornam reaproveitável:
+ * Colhida de um concept de e-commerce. Duas coisas a tornam reaproveitável:
  *
  * ── 1. Ela não conhece o layout ──────────────────────────────────────────────
  * Tudo se liga por `data-*`. O designer compõe onde quiser; o código se pluga.

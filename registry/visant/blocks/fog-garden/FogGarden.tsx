@@ -3,7 +3,7 @@
 /**
  * FogGarden — a caminhada por um jardim na névoa, presa ao scroll.
  *
- * Colhido da rota `/jardim` do site da YURA (2026-10). A seção é alta (uma
+ * Colhido da rota de jardim de um site de cliente (2026-10). A seção é alta (uma
  * janela de scroll por parada) e o palco fica preso na tela: rolar leva a
  * câmera pela trilha, e cada parada de texto sai da névoa, fica, e volta para
  * ela. Nenhuma cor própria — a cena é cinza até o duotone do `fog-post` pintar

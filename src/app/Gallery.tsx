@@ -47,6 +47,7 @@ import { GRID_GAP, useFundoEscuro } from "./mosaic";
 import { ehNovo } from "./novidades";
 import { WireframeToggle } from "./media";
 import { Aba } from "./casa-ui";
+import { abrirConectar } from "./conectar";
 import { Miniatura } from "./miniatura";
 import { BugButton } from "./bug-report";
 import { CURADORIA_ATIVA, arquivada, useNotas } from "./curadoria";
@@ -514,7 +515,14 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
             {/* Conta componente, não tema: o mesmo número que a descrição de SEO
                 (`prerender.mjs`) tira do registry. */}
             {CATALOG.filter((i) => i.type !== "theme" && !arquivada(notas[i.name])).length} componentes pra React. Cada um
-            veste a marca que você escolher.
+            veste a marca que você escolher.{" "}
+            <button
+              type="button"
+              onClick={abrirConectar}
+              className="rounded-control text-casa-fg underline decoration-casa-line underline-offset-4 transition-colors [transition-duration:var(--dur-fast)] hover:decoration-casa-fg focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]"
+            >
+              Use no seu agente de IA
+            </button>
           </p>
         )}
       </section>

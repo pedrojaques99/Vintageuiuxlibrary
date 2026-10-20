@@ -27,6 +27,7 @@ import { Busca, BotaoDeBusca, useAtalhoDeBusca } from "./busca";
 import { ComponentFocus } from "./ComponentFocus";
 import { BrandSelector } from "../../registry/visant/ui/brand-selector";
 import { SfxToggle } from "../../registry/visant/ui/sfx-toggle";
+import { Conectar } from "./conectar";
 import { useSfxWiring, SFX_DEFAULT_SELECTOR } from "@/lib/sfx-bus";
 import { Gallery } from "./Gallery";
 import { CATALOG, FAMILIA_ANTIGA, FAMILIES, type Family } from "./catalog";
@@ -326,6 +327,8 @@ function Shell() {
           <div className="ml-auto flex items-center gap-1.5">
             <BotaoDeBusca onClick={abrirBusca} />
             {/* O liga e desliga do som, no tom dos outros ícones da casa. */}
+            {/* O catálogo no agente de IA de quem chegou: MCP do shadcn + @visant. */}
+            <Conectar className="max-lg:!hidden" />
             <SfxToggle className={SOM_DA_CASA} />
             <button
               type="button"

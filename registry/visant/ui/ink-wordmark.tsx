@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 /**
  * Ink Wordmark — a assinatura de ponta a ponta que condensa da fumaça.
  *
- * Colhido do fecho da página da YURA (2026-10), onde o "yura" gigante fecha o
+ * Colhido do fecho da página de um cliente (2026-10), onde o nome gigante fecha o
  * site. A peça é só um SVG com um filtro: `feTurbulence` → `feDisplacementMap`
  * → `feGaussianBlur`. Nada de canvas, nada de WebGL — por isso dá pra pôr no
  * rodapé de qualquer página sem gastar contexto de GPU.

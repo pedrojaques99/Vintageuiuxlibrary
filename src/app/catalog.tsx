@@ -163,7 +163,7 @@ export interface CatalogItem {
   /** Nome no registry — é o que vai no `shadcn add @visant/<name>`. */
   name: string;
   title: string;
-  type: "ui" | "block" | "lib" | "hook" | "theme" | "base";
+  type: "ui" | "block" | "lib" | "hook" | "theme" | "base" | "item";
   family: Family;
   description: string;
   tags: string[];
@@ -223,6 +223,7 @@ export const TYPE_LABEL: Record<CatalogItem["type"], string> = {
   hook: "Hook",
   theme: "Tema",
   base: "CSS base",
+  item: "Regras",
 };
 
 export const FAMILIES: { key: Family; label: string }[] = [
@@ -2242,6 +2243,15 @@ export const CATALOG: CatalogItem[] = [
     tags: ["didática", "aula", "terminal", "permissão"],
     demo: AnatomiaPermissaoDemo,
     preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "agent-rules",
+    title: "Agent Rules",
+    type: "item",
+    family: "base",
+    description:
+      "Regras pro seu agente de IA (Cursor, Claude Code, Copilot): procurar no @visant antes de escrever UI do zero e escolher a peça certa pela situação.",
+    tags: ["ia", "agente", "mcp", "cursor", "claude", "copilot", "regras"],
   },
 ];
 

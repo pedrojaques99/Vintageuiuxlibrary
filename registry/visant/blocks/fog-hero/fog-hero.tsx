@@ -12,7 +12,7 @@ import { FOG_HERO_PRESET, type FogHeroParams } from "./params";
 /**
  * Fog Hero — a dobra de abertura que nasce da névoa.
  *
- * Colhido da hero da YURA (2026-10). Uma tela cheia de fumaça (fbm com domain
+ * Colhido da hero de um site de cliente (2026-10). Uma tela cheia de fumaça (fbm com domain
  * warp) abre uma clareira do centro, e pela borda da fumaça aparece uma
  * playlist de vídeo em P&B, pintada de tinta sobre papel. O logo, se houver,
  * surge por um dissolve de ruído depois da clareira. Ao rolar, a dobra inteira

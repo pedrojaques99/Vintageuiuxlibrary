@@ -105,7 +105,12 @@
           "input": "#2a2a2a",
           "ring": "#ffd700"
         }
-      }
+      },
+      "categories": [
+        "vintage",
+        "tema",
+        "css"
+      ]
     },
     {
       "name": "vintage-base",
@@ -139,7 +144,12 @@
       },
       "css": {
         "@import \"https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Red+Hat+Mono:wght@400;500;600;700&display=swap\"": {}
-      }
+      },
+      "categories": [
+        "vintage",
+        "css",
+        "base"
+      ]
     },
     {
       "name": "use-knob-drag",
@@ -159,6 +169,11 @@
       ],
       "registryDependencies": [
         "@visant/sfx-bus"
+      ],
+      "categories": [
+        "base",
+        "hook",
+        "gesto"
       ]
     },
     {
@@ -176,6 +191,12 @@
           "type": "registry:hook",
           "target": "@hooks/use-media-query.ts"
         }
+      ],
+      "categories": [
+        "base",
+        "hook",
+        "responsivo",
+        "ssr"
       ]
     },
     {
@@ -193,6 +214,11 @@
           "path": "registry/vintage/ui/vintage-button.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "botao"
       ]
     },
     {
@@ -211,6 +237,11 @@
           "path": "registry/vintage/ui/vintage-slider.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "fader"
       ]
     },
     {
@@ -228,6 +259,11 @@
           "path": "registry/vintage/ui/vintage-meter.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "medidor"
       ]
     },
     {
@@ -246,6 +282,11 @@
           "path": "registry/vintage/ui/vintage-knob.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "knob"
       ]
     },
     {
@@ -264,6 +305,11 @@
           "path": "registry/vintage/ui/vintage-large-knob.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "knob"
       ]
     },
     {
@@ -282,6 +328,11 @@
           "path": "registry/vintage/ui/vintage-toggle.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "chave"
       ]
     },
     {
@@ -300,6 +351,13 @@
           "path": "registry/vintage/ui/vintage-eq.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "eq",
+        "faders",
+        "grafico"
       ]
     },
     {
@@ -317,6 +375,14 @@
           "path": "registry/vintage/ui/vintage-parametric-eq.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "eq",
+        "curva",
+        "parametrico",
+        "filtro"
       ]
     },
     {
@@ -334,6 +400,11 @@
           "path": "registry/vintage/ui/vintage-led.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "estado"
       ]
     },
     {
@@ -351,6 +422,11 @@
           "path": "registry/vintage/ui/vintage-command-palette.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "comando",
+        "teclado"
       ]
     },
     {
@@ -371,6 +447,11 @@
           "path": "registry/vintage/ui/vintage-tv-frame.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "moldura",
+        "crt"
       ]
     },
     {
@@ -390,6 +471,11 @@
           "path": "registry/vintage/ui/vintage-soundboard-pad.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "pad"
       ]
     },
     {
@@ -408,6 +494,11 @@
           "path": "registry/vintage/ui/vintage-xy-pad.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "gesto"
       ]
     },
     {
@@ -425,6 +516,11 @@
           "path": "registry/vintage/ui/vintage-oscilloscope.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "vintage",
+        "audio",
+        "canvas"
       ]
     },
     {
@@ -456,7 +552,15 @@
             "display": "none"
           }
         }
-      }
+      },
+      "categories": [
+        "secoes",
+        "faixa",
+        "loop",
+        "scroll",
+        "gsap",
+        "vitrine"
+      ]
     },
     {
       "name": "logo-wall",
@@ -477,6 +581,15 @@
           "path": "registry/visant/ui/logo-wall.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "secoes",
+        "logos",
+        "clientes",
+        "prova-social",
+        "faixa",
+        "marquee",
+        "gsap"
       ]
     },
     {
@@ -493,6 +606,11 @@
           "path": "registry/visant/ui/rail.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "navegacao",
+        "carrossel",
+        "snap"
       ]
     },
     {
@@ -514,6 +632,15 @@
       ],
       "dependencies": [
         "lucide-react"
+      ],
+      "categories": [
+        "midia",
+        "video",
+        "reels",
+        "shorts",
+        "vertical",
+        "carrossel",
+        "trilho"
       ]
     },
     {
@@ -530,6 +657,11 @@
           "path": "registry/visant/ui/plate.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "midia",
+        "produto",
+        "foto"
       ]
     },
     {
@@ -546,6 +678,11 @@
           "path": "registry/visant/ui/chip.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "controles",
+        "filtro",
+        "loja"
       ]
     },
     {
@@ -562,6 +699,11 @@
           "path": "registry/visant/ui/sticky-filterbar.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "navegacao",
+        "filtro",
+        "scroll"
       ]
     },
     {
@@ -578,6 +720,11 @@
           "path": "registry/visant/ui/store-status.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "dados",
+        "loja",
+        "fuso"
       ]
     },
     {
@@ -631,7 +778,12 @@
             "background": "var(--background)"
           }
         }
-      }
+      },
+      "categories": [
+        "controles",
+        "slider",
+        "recomendacao"
+      ]
     },
     {
       "name": "motion-layer",
@@ -647,6 +799,11 @@
           "path": "registry/visant/lib/motion-layer.ts",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "efeitos",
+        "gsap",
+        "scroll"
       ]
     },
     {
@@ -696,6 +853,12 @@
           "type": "registry:file",
           "target": "~/styles/kanban.css"
         }
+      ],
+      "categories": [
+        "dados",
+        "board",
+        "dnd",
+        "selecao"
       ]
     },
     {
@@ -727,6 +890,12 @@
         "lucide-react",
         "next",
         "next-auth"
+      ],
+      "categories": [
+        "dados",
+        "tabela",
+        "fila",
+        "tanstack"
       ]
     },
     {
@@ -746,6 +915,11 @@
       ],
       "dependencies": [
         "lucide-react"
+      ],
+      "categories": [
+        "controles",
+        "controle",
+        "apple"
       ]
     },
     {
@@ -765,6 +939,11 @@
       ],
       "dependencies": [
         "lucide-react"
+      ],
+      "categories": [
+        "controles",
+        "edicao",
+        "formulario"
       ]
     },
     {
@@ -785,6 +964,12 @@
           "path": "registry/visant/ui/auth-button.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "controles",
+        "conta",
+        "sessao",
+        "menu"
       ]
     },
     {
@@ -805,6 +990,12 @@
           "path": "registry/visant/ui/profile-form.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "controles",
+        "conta",
+        "formulario",
+        "validacao"
       ]
     },
     {
@@ -824,6 +1015,11 @@
       ],
       "dependencies": [
         "framer-motion"
+      ],
+      "categories": [
+        "secoes",
+        "scroll",
+        "narrativa"
       ]
     },
     {
@@ -841,6 +1037,11 @@
           "path": "registry/visant/ui/assignee-stack.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "dados",
+        "avatar",
+        "equipe"
       ]
     },
     {
@@ -860,6 +1061,11 @@
       ],
       "dependencies": [
         "framer-motion"
+      ],
+      "categories": [
+        "efeitos",
+        "hover",
+        "mola"
       ]
     },
     {
@@ -877,6 +1083,11 @@
           "path": "registry/visant/lib/smooth-scroll-provider.tsx",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "efeitos",
+        "lenis",
+        "gsap"
       ]
     },
     {
@@ -893,6 +1104,11 @@
           "path": "registry/visant/ui/glitch-chars.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "texto",
+        "textura",
+        "mono"
       ]
     },
     {
@@ -911,6 +1127,12 @@
           "path": "registry/visant/ui/status-ticker.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "feedback",
+        "espera",
+        "ia",
+        "estado"
       ]
     },
     {
@@ -927,6 +1149,11 @@
           "path": "registry/visant/ui/turbulence-field.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "efeitos",
+        "ruido",
+        "svg"
       ]
     },
     {
@@ -948,6 +1175,11 @@
           "path": "registry/visant/ui/working-glyph.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "feedback",
+        "espera",
+        "icone"
       ]
     },
     {
@@ -967,6 +1199,11 @@
           "path": "registry/visant/ui/paper-shuttle.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "feedback",
+        "progresso",
+        "export"
       ]
     },
     {
@@ -983,6 +1220,11 @@
           "path": "registry/visant/ui/masonry-gallery.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "midia",
+        "galeria",
+        "grid"
       ]
     },
     {
@@ -999,6 +1241,11 @@
           "path": "registry/visant/ui/scrub-input.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "controles",
+        "numero",
+        "gesto"
       ]
     },
     {
@@ -1015,6 +1262,11 @@
           "path": "registry/visant/ui/grid-dots.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "efeitos",
+        "fundo",
+        "grid"
       ]
     },
     {
@@ -1034,6 +1286,11 @@
       ],
       "dependencies": [
         "lucide-react"
+      ],
+      "categories": [
+        "feedback",
+        "upload",
+        "dnd"
       ]
     },
     {
@@ -1047,6 +1304,13 @@
           "path": "registry/visant/lib/brand-theme.tsx",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "base",
+        "marca",
+        "tokens",
+        "runtime",
+        "provider"
       ]
     },
     {
@@ -1069,6 +1333,13 @@
           "path": "registry/visant/ui/brand-selector.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "controles",
+        "marca",
+        "tema",
+        "cmdk",
+        "vault"
       ]
     },
     {
@@ -1085,6 +1356,12 @@
           "path": "registry/visant/ui/section-intro.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "secoes",
+        "dobra",
+        "titulo",
+        "landing"
       ]
     },
     {
@@ -1101,6 +1378,12 @@
           "path": "registry/visant/ui/cta-surface.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "secoes",
+        "cta",
+        "conversao",
+        "dobra"
       ]
     },
     {
@@ -1117,6 +1400,12 @@
           "path": "registry/visant/ui/showcase-card.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "cards",
+        "servico",
+        "card",
+        "vitrine"
       ]
     },
     {
@@ -1139,6 +1428,12 @@
           "type": "registry:component",
           "target": "~/components/step-cards/index.ts"
         }
+      ],
+      "categories": [
+        "secoes",
+        "passos",
+        "como-funciona",
+        "onboarding"
       ]
     },
     {
@@ -1175,7 +1470,13 @@
             "opacity": "1"
           }
         }
-      }
+      },
+      "categories": [
+        "secoes",
+        "depoimento",
+        "prova-social",
+        "masonry"
+      ]
     },
     {
       "name": "quote-block",
@@ -1191,6 +1492,14 @@
           "path": "registry/visant/ui/quote-block.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "secoes",
+        "depoimento",
+        "prova-social",
+        "citacao",
+        "cliente",
+        "retrato"
       ]
     },
     {
@@ -1207,7 +1516,16 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "efeitos",
+        "fundo",
+        "canvas",
+        "ponteiro",
+        "cta",
+        "revelar",
+        "raspar"
+      ]
     },
     {
       "name": "spring-dots",
@@ -1223,7 +1541,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "efeitos",
+        "fundo",
+        "canvas",
+        "ponteiro",
+        "fisica",
+        "mola"
+      ]
     },
     {
       "name": "sfx-bus",
@@ -1239,7 +1565,17 @@
           "type": "registry:lib"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "base",
+        "som",
+        "audio",
+        "webaudio",
+        "feedback",
+        "tato",
+        "clique",
+        "analogico"
+      ]
     },
     {
       "name": "sfx-toggle",
@@ -1273,7 +1609,14 @@
           }
         }
       },
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "som",
+        "toggle",
+        "preferencia",
+        "acessibilidade"
+      ]
     },
     {
       "name": "count-up",
@@ -1289,7 +1632,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "dados",
+        "numero",
+        "contagem",
+        "prova",
+        "estatistica",
+        "animar"
+      ]
     },
     {
       "name": "use-pointer-parallax",
@@ -1306,7 +1657,15 @@
           "target": "@hooks/use-pointer-parallax.ts"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "base",
+        "paralaxe",
+        "ponteiro",
+        "profundidade",
+        "colagem",
+        "hero"
+      ]
     },
     {
       "name": "fold-motion",
@@ -1427,7 +1786,15 @@
           }
         }
       },
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "efeitos",
+        "scroll",
+        "entrada",
+        "reveal",
+        "dobra",
+        "hierarquia"
+      ]
     },
     {
       "name": "measure-bar",
@@ -1463,7 +1830,15 @@
           }
         }
       },
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "dados",
+        "numero",
+        "regua",
+        "evidencia",
+        "prova",
+        "metrica"
+      ]
     },
     {
       "name": "spine-card",
@@ -1530,7 +1905,15 @@
           }
         }
       },
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "cards",
+        "card",
+        "livro",
+        "estante",
+        "produto",
+        "lombada"
+      ]
     },
     {
       "name": "cover-art",
@@ -1550,7 +1933,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "midia",
+        "capa",
+        "placeholder",
+        "catalogo",
+        "deterministico",
+        "sem-imagem"
+      ]
     },
     {
       "name": "empty-state",
@@ -1566,7 +1957,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "feedback",
+        "vazio",
+        "empty",
+        "onboarding",
+        "primeiro-uso"
+      ]
     },
     {
       "name": "skeleton-rail",
@@ -1582,7 +1980,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "feedback",
+        "skeleton",
+        "carregando",
+        "trilho",
+        "espera"
+      ]
     },
     {
       "name": "use-local-search",
@@ -1599,7 +2004,14 @@
           "target": "@hooks/use-local-search.ts"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "base",
+        "busca",
+        "filtro",
+        "acento",
+        "catalogo"
+      ]
     },
     {
       "name": "line-reveal",
@@ -1625,7 +2037,17 @@
             "will-change": "transform"
           }
         }
-      }
+      },
+      "categories": [
+        "texto",
+        "titulo",
+        "reveal",
+        "linha",
+        "split",
+        "gsap",
+        "heroi",
+        "tipografia"
+      ]
     },
     {
       "name": "gleam",
@@ -1706,7 +2128,17 @@
             "transition": "none"
           }
         }
-      }
+      },
+      "categories": [
+        "efeitos",
+        "hover",
+        "card",
+        "ponteiro",
+        "tilt",
+        "luz",
+        "spotlight",
+        "magnetico"
+      ]
     },
     {
       "name": "sim-slider",
@@ -1758,7 +2190,17 @@
             "animation": "none"
           }
         }
-      }
+      },
+      "categories": [
+        "controles",
+        "simulador",
+        "calculadora",
+        "slider",
+        "projecao",
+        "roi",
+        "curva",
+        "premissa"
+      ]
     },
     {
       "name": "magnetic-cta",
@@ -1813,7 +2255,15 @@
         ".magnet-field[data-magnet=rest] .magnet-sheen": {
           "transition-duration": "var(--dur-fast, 140ms)"
         }
-      }
+      },
+      "categories": [
+        "controles",
+        "cta",
+        "botao",
+        "ima",
+        "hover",
+        "conversao"
+      ]
     },
     {
       "name": "nav-drawer",
@@ -1981,7 +2431,14 @@
             "transition": "none"
           }
         }
-      }
+      },
+      "categories": [
+        "navegacao",
+        "menu",
+        "mobile",
+        "drawer",
+        "acessibilidade"
+      ]
     },
     {
       "name": "side-nav",
@@ -1997,6 +2454,14 @@
           "path": "registry/visant/ui/side-nav.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "navegacao",
+        "sidebar",
+        "app",
+        "colapsar",
+        "atalho",
+        "teclado"
       ]
     },
     {
@@ -2016,6 +2481,14 @@
           "path": "registry/visant/ui/pinned-scene.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "secoes",
+        "scroll",
+        "sticky",
+        "passos",
+        "storytelling",
+        "gsap"
       ]
     },
     {
@@ -2071,7 +2544,17 @@
             "display": "block"
           }
         }
-      }
+      },
+      "categories": [
+        "midia",
+        "foto",
+        "moldura",
+        "imagem",
+        "reveal",
+        "paralaxe",
+        "scroll",
+        "gsap"
+      ]
     },
     {
       "name": "photo-split",
@@ -2096,6 +2579,16 @@
           "path": "registry/visant/ui/photo-split.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "secoes",
+        "dobra",
+        "secao",
+        "foto",
+        "texto",
+        "alternado",
+        "scroll",
+        "gsap"
       ]
     },
     {
@@ -2212,7 +2705,17 @@
             "animation": "none"
           }
         }
-      }
+      },
+      "categories": [
+        "midia",
+        "foto",
+        "galeria",
+        "lightbox",
+        "flip",
+        "morph",
+        "grade",
+        "gsap"
+      ]
     },
     {
       "name": "photo-compare",
@@ -2332,7 +2835,17 @@
             "transition": "none"
           }
         }
-      }
+      },
+      "categories": [
+        "midia",
+        "foto",
+        "antes",
+        "depois",
+        "comparar",
+        "cortina",
+        "rebrand",
+        "slider"
+      ]
     },
     {
       "name": "book-3d",
@@ -2373,6 +2886,14 @@
       ],
       "devDependencies": [
         "@types/three@^0.170.0"
+      ],
+      "categories": [
+        "3d",
+        "livro",
+        "webgl",
+        "catalogo",
+        "capa",
+        "objeto"
       ]
     },
     {
@@ -2411,7 +2932,15 @@
             "transition": "none"
           }
         }
-      }
+      },
+      "categories": [
+        "3d",
+        "estante",
+        "prateleira",
+        "catalogo",
+        "grade",
+        "hover"
+      ]
     },
     {
       "name": "carousel-3d",
@@ -2440,6 +2969,14 @@
       ],
       "devDependencies": [
         "@types/three@^0.170.0"
+      ],
+      "categories": [
+        "3d",
+        "carrossel",
+        "webgl",
+        "portfolio",
+        "capa",
+        "vitrine"
       ]
     },
     {
@@ -2453,6 +2990,15 @@
           "path": "registry/visant/lib/css-color.ts",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "base",
+        "marca",
+        "tokens",
+        "webgl",
+        "canvas",
+        "oklch",
+        "tema"
       ]
     },
     {
@@ -2472,6 +3018,16 @@
           "path": "registry/visant/ui/ink-wordmark.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "texto",
+        "assinatura",
+        "logo",
+        "rodape",
+        "fumaca",
+        "tinta",
+        "svg",
+        "scroll"
       ]
     },
     {
@@ -2512,6 +3068,16 @@
       ],
       "devDependencies": [
         "@types/three@^0.170.0"
+      ],
+      "categories": [
+        "shaders",
+        "hero",
+        "nevoa",
+        "webgl",
+        "shader",
+        "video",
+        "abertura",
+        "grao"
       ]
     },
     {
@@ -2535,6 +3101,14 @@
       ],
       "devDependencies": [
         "@types/three@^0.170.0"
+      ],
+      "categories": [
+        "3d",
+        "webgl",
+        "produto",
+        "embalagem",
+        "objeto",
+        "difusor"
       ]
     },
     {
@@ -2554,6 +3128,16 @@
           "path": "registry/visant/ui/mist-text.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "texto",
+        "blur",
+        "nevoa",
+        "reveal",
+        "scroll",
+        "palavra",
+        "letra",
+        "tipografia"
       ]
     },
     {
@@ -2573,6 +3157,16 @@
           "path": "registry/visant/ui/mist-swap.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "midia",
+        "foto",
+        "slideshow",
+        "crossfade",
+        "blur",
+        "nevoa",
+        "troca",
+        "atmosfera"
       ]
     },
     {
@@ -2592,6 +3186,15 @@
           "path": "registry/visant/ui/dot-cursor.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "efeitos",
+        "cursor",
+        "ponteiro",
+        "hover",
+        "mola",
+        "blend",
+        "minimal"
       ]
     },
     {
@@ -2649,7 +3252,17 @@
             "transition": "opacity var(--mist-dialog-dur, 700ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), overlay var(--mist-dialog-dur, 700ms) allow-discrete, display var(--mist-dialog-dur, 700ms) allow-discrete"
           }
         }
-      }
+      },
+      "categories": [
+        "feedback",
+        "modal",
+        "dialog",
+        "nevoa",
+        "blur",
+        "vitrine",
+        "starting-style",
+        "overlay"
+      ]
     },
     {
       "name": "fog-tree",
@@ -2682,6 +3295,15 @@
       ],
       "devDependencies": [
         "@types/three@^0.170.0"
+      ],
+      "categories": [
+        "3d",
+        "webgl",
+        "nevoa",
+        "arvore",
+        "scroll",
+        "duotone",
+        "ez-tree"
       ]
     },
     {
@@ -2719,6 +3341,15 @@
       ],
       "devDependencies": [
         "@types/three@^0.170.0"
+      ],
+      "categories": [
+        "3d",
+        "webgl",
+        "scroll",
+        "sticky",
+        "nevoa",
+        "storytelling",
+        "jardim"
       ]
     },
     {
@@ -2738,7 +3369,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "dados",
+        "calendario",
+        "heatmap",
+        "ritmo",
+        "grafico"
+      ]
     },
     {
       "name": "billing-toggle",
@@ -2757,7 +3395,16 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "preco",
+        "pricing",
+        "toggle",
+        "assinatura",
+        "desconto",
+        "radiogroup"
+      ]
     },
     {
       "name": "card-stack",
@@ -2776,7 +3423,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "cards",
+        "pilha",
+        "arrastar",
+        "gesto",
+        "depoimentos"
+      ]
     },
     {
       "name": "confirm-morph",
@@ -2796,7 +3450,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "botao",
+        "confirmacao",
+        "destrutivo",
+        "desfazer"
+      ]
     },
     {
       "name": "elastic-slider",
@@ -2816,7 +3477,16 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "slider",
+        "range",
+        "fisica",
+        "mola",
+        "formulario",
+        "teclado"
+      ]
     },
     {
       "name": "expandable-card",
@@ -2836,7 +3506,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "cards",
+        "card",
+        "expandir",
+        "detalhe",
+        "resumo",
+        "layout"
+      ]
     },
     {
       "name": "expanding-search",
@@ -2856,7 +3534,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "busca",
+        "search",
+        "combobox",
+        "cabecalho",
+        "barra-de-ferramentas"
+      ]
     },
     {
       "name": "gauge",
@@ -2875,7 +3561,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "dados",
+        "medidor",
+        "cota",
+        "grafico",
+        "meter"
+      ]
     },
     {
       "name": "hold-to-confirm",
@@ -2896,7 +3589,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "botao",
+        "confirmacao",
+        "destrutivo",
+        "gesto"
+      ]
     },
     {
       "name": "icon-morph",
@@ -2915,7 +3615,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "icone",
+        "botao",
+        "estado",
+        "micro-interacao"
+      ]
     },
     {
       "name": "morph-select",
@@ -2935,7 +3642,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "select",
+        "listbox",
+        "formulario",
+        "morph",
+        "teclado"
+      ]
     },
     {
       "name": "slot-text",
@@ -2954,7 +3669,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texto",
+        "numero",
+        "preco",
+        "contador",
+        "slot"
+      ]
     },
     {
       "name": "swipe-actions",
@@ -2975,7 +3697,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "cards",
+        "lista",
+        "gesto",
+        "arrastar",
+        "triagem"
+      ]
     },
     {
       "name": "text-morph",
@@ -2994,7 +3723,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texto",
+        "morph",
+        "botao",
+        "estado",
+        "micro-interacao"
+      ]
     },
     {
       "name": "toast-stack",
@@ -3014,7 +3750,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "feedback",
+        "avisos",
+        "toast",
+        "notificacao",
+        "pilha"
+      ]
     },
     {
       "name": "dynamic-island",
@@ -3033,7 +3776,17 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "feedback",
+        "pilula",
+        "atividade",
+        "morph",
+        "spring",
+        "timer",
+        "player",
+        "chamada"
+      ]
     },
     {
       "name": "folding-bill",
@@ -3052,7 +3805,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "cards",
+        "recibo",
+        "pedido",
+        "3d",
+        "arrastar",
+        "acordeao"
+      ]
     },
     {
       "name": "heat-word",
@@ -3070,7 +3831,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texto",
+        "canvas",
+        "cursor",
+        "hover",
+        "calor",
+        "efeito"
+      ]
     },
     {
       "name": "liquid-toggle",
@@ -3089,7 +3858,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "switch",
+        "toggle",
+        "formulario",
+        "mola"
+      ]
     },
     {
       "name": "magnetic-select",
@@ -3108,7 +3884,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "selecao",
+        "radio",
+        "ima",
+        "hover",
+        "escolha"
+      ]
     },
     {
       "name": "magnify-dock",
@@ -3128,7 +3912,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "navegacao",
+        "dock",
+        "toolbar",
+        "icones",
+        "ampliacao",
+        "spring"
+      ]
     },
     {
       "name": "slosh-slider",
@@ -3148,7 +3940,16 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "slider",
+        "range",
+        "volume",
+        "fisica",
+        "spring",
+        "teclado"
+      ]
     },
     {
       "name": "tilt-card",
@@ -3167,7 +3968,16 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "efeitos",
+        "card",
+        "3d",
+        "tilt",
+        "hover",
+        "brilho",
+        "foto"
+      ]
     },
     {
       "name": "eclipse-switch",
@@ -3186,7 +3996,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "tema",
+        "modo-escuro",
+        "chave",
+        "eclipse",
+        "toggle"
+      ]
     },
     {
       "name": "black-hole",
@@ -3206,7 +4024,16 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "cards",
+        "lista",
+        "apagar",
+        "desfazer",
+        "inbox",
+        "canvas",
+        "transicao"
+      ]
     },
     {
       "name": "countdown",
@@ -3225,7 +4052,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "dados",
+        "contagem",
+        "lancamento",
+        "prazo",
+        "timer",
+        "evento"
+      ]
     },
     {
       "name": "cover-flow",
@@ -3244,7 +4079,16 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "midia",
+        "galeria",
+        "carrossel",
+        "3d",
+        "portfolio",
+        "arrastar",
+        "capas"
+      ]
     },
     {
       "name": "date-reel",
@@ -3263,7 +4107,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "data",
+        "calendario",
+        "rolo",
+        "seletor",
+        "agendar"
+      ]
     },
     {
       "name": "eye-tracker",
@@ -3282,7 +4134,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "efeitos",
+        "mascote",
+        "estado-vazio",
+        "cursor",
+        "personalidade"
+      ]
     },
     {
       "name": "orbit-menu",
@@ -3302,7 +4161,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "navegacao",
+        "menu",
+        "acoes",
+        "gesto",
+        "arco",
+        "mola"
+      ]
     },
     {
       "name": "page-curl",
@@ -3322,7 +4189,16 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "midia",
+        "revista",
+        "catalogo",
+        "pagina",
+        "dobra",
+        "arrastar",
+        "editorial"
+      ]
     },
     {
       "name": "pull-to-refresh",
@@ -3342,7 +4218,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "feedback",
+        "atualizar",
+        "arrasto",
+        "widget",
+        "carregando"
+      ]
     },
     {
       "name": "reactions",
@@ -3363,7 +4246,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "reacao",
+        "comentario",
+        "contador",
+        "emoji",
+        "feedback"
+      ]
     },
     {
       "name": "signature-pad",
@@ -3383,7 +4274,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "assinatura",
+        "formulario",
+        "contrato",
+        "aceite",
+        "desenho"
+      ]
     },
     {
       "name": "slide-to-confirm",
@@ -3404,7 +4303,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "confirmacao",
+        "arrasto",
+        "pagamento",
+        "gesto"
+      ]
     },
     {
       "name": "sticker-peel",
@@ -3423,7 +4329,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "efeitos",
+        "adesivo",
+        "arrastar",
+        "dobra",
+        "papel",
+        "sticker"
+      ]
     },
     {
       "name": "streamgraph",
@@ -3442,7 +4356,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "dados",
+        "grafico",
+        "serie-temporal",
+        "camadas",
+        "dashboard"
+      ]
     },
     {
       "name": "time-dial",
@@ -3461,7 +4382,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "controles",
+        "hora",
+        "relogio",
+        "fuso",
+        "seletor",
+        "agenda"
+      ]
     },
     {
       "name": "voice-note",
@@ -3481,7 +4410,14 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "midia",
+        "audio",
+        "chat",
+        "player",
+        "forma-de-onda"
+      ]
     },
     {
       "name": "wallet-stack",
@@ -3501,7 +4437,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "cards",
+        "carteira",
+        "cartoes",
+        "fintech",
+        "pilha",
+        "saldo"
+      ]
     },
     {
       "name": "shader-ascii",
@@ -3519,7 +4463,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "shaders",
+        "shader",
+        "webgl",
+        "imagem",
+        "ascii",
+        "caracteres"
+      ]
     },
     {
       "name": "shader-halftone",
@@ -3537,7 +4489,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "shaders",
+        "shader",
+        "webgl",
+        "imagem",
+        "reticula",
+        "impressao"
+      ]
     },
     {
       "name": "shader-neon",
@@ -3555,7 +4515,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "shaders",
+        "shader",
+        "webgl",
+        "fundo",
+        "neon",
+        "onda"
+      ]
     },
     {
       "name": "shader-riso",
@@ -3573,7 +4541,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "shaders",
+        "shader",
+        "webgl",
+        "imagem",
+        "riso",
+        "impressao"
+      ]
     },
     {
       "name": "shader-tunnel",
@@ -3591,7 +4567,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "shaders",
+        "shader",
+        "webgl",
+        "fundo",
+        "tunel",
+        "espiral"
+      ]
     },
     {
       "name": "shader-voronoi",
@@ -3609,7 +4593,15 @@
           "type": "registry:ui"
         }
       ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "shaders",
+        "shader",
+        "webgl",
+        "fundo",
+        "voronoi",
+        "textura"
+      ]
     },
     {
       "name": "anatomia",
@@ -3638,6 +4630,15 @@
           "path": "registry/visant/ui/anatomia.tsx",
           "type": "registry:ui"
         }
+      ],
+      "categories": [
+        "anatomia",
+        "didatica",
+        "aula",
+        "isometrico",
+        "explicacao",
+        "web-component",
+        "passo-a-passo"
       ]
     },
     {
@@ -3662,6 +4663,15 @@
           "path": "registry/visant/lib/anatomia-como-sobe-controlador.ts",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "anatomia",
+        "didatica",
+        "aula",
+        "git",
+        "github",
+        "gitignore",
+        "vercel"
       ]
     },
     {
@@ -3686,6 +4696,15 @@
           "path": "registry/visant/lib/anatomia-tomadas-controlador.ts",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "anatomia",
+        "didatica",
+        "aula",
+        "conector",
+        "chave-de-api",
+        "mcp",
+        "claude"
       ]
     },
     {
@@ -3710,6 +4729,14 @@
           "path": "registry/visant/lib/anatomia-fichario-controlador.ts",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "anatomia",
+        "didatica",
+        "aula",
+        "skill",
+        "receita",
+        "claude"
       ]
     },
     {
@@ -3734,6 +4761,13 @@
           "path": "registry/visant/lib/anatomia-memoria-controlador.ts",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "anatomia",
+        "didatica",
+        "aula",
+        "memoria",
+        "claude.md"
       ]
     },
     {
@@ -3758,6 +4792,13 @@
           "path": "registry/visant/lib/anatomia-tokens-controlador.ts",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "anatomia",
+        "didatica",
+        "aula",
+        "tokens",
+        "contexto"
       ]
     },
     {
@@ -3782,6 +4823,13 @@
           "path": "registry/visant/lib/anatomia-script-controlador.ts",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "anatomia",
+        "didatica",
+        "aula",
+        "script",
+        "automacao"
       ]
     },
     {
@@ -3806,6 +4854,47 @@
           "path": "registry/visant/lib/anatomia-permissao-controlador.ts",
           "type": "registry:lib"
         }
+      ],
+      "categories": [
+        "anatomia",
+        "didatica",
+        "aula",
+        "terminal",
+        "permissao"
+      ]
+    },
+    {
+      "name": "agent-rules",
+      "type": "registry:item",
+      "title": "Agent Rules",
+      "description": "Regras pro seu agente de IA (Cursor, Claude Code, Copilot): procurar no @visant antes de escrever UI do zero e escolher a peça certa pela situação.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "files": [
+        {
+          "path": "registry/visant/rules/visant-ui.mdc",
+          "type": "registry:file",
+          "target": "~/.cursor/rules/visant-ui.mdc"
+        },
+        {
+          "path": "registry/visant/rules/SKILL.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/visant-ui/SKILL.md"
+        },
+        {
+          "path": "registry/visant/rules/visant-ui.instructions.md",
+          "type": "registry:file",
+          "target": "~/.github/instructions/visant-ui.instructions.md"
+        }
+      ],
+      "categories": [
+        "base",
+        "ia",
+        "agente",
+        "mcp",
+        "cursor",
+        "claude",
+        "copilot",
+        "regras"
       ]
     }
   ]

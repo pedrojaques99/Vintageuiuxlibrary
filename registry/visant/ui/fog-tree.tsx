@@ -3,7 +3,7 @@
 /**
  * Fog Tree — uma árvore procedural sozinha na névoa, em duotone da marca.
  *
- * Colhido do site da YURA (2026-10), onde a seção do tema central leva a câmera
+ * Colhido de um site de cliente (2026-10), onde a seção do tema central leva a câmera
  * para dentro do jardim com o scroll enquanto a névoa abre. A peça vale fora
  * dali porque o efeito é de marca nenhuma: a cena é desenhada em cinza e só o
  * último passe pinta com `--background` (papel) e `--foreground` (tinta). Troca
