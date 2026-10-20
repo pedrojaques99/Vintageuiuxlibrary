@@ -17,5 +17,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Pilha de cards arrastáveis pra passar depoimentos ou dicas um a um, em landing ou onboarding",
+      "evite": "Cartões de pagamento com saldo: wallet-stack; depoimentos todos à vista, testimonial-wall"
+    }
+  },
+  "categories": [
+    "cards",
+    "pilha",
+    "arrastar",
+    "gesto",
+    "depoimentos"
+  ],
   "type": "registry:ui"
 }

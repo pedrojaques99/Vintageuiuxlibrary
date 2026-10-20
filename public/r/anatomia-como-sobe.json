@@ -24,5 +24,20 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Explicar em aula o que vai pro GitHub, o que o .gitignore segura e quando a Vercel publica",
+      "evite": "Falar de chave de API e conector: anatomia-tomadas; de permissão no terminal, anatomia-permissao"
+    }
+  },
+  "categories": [
+    "anatomia",
+    "didatica",
+    "aula",
+    "git",
+    "github",
+    "gitignore",
+    "vercel"
+  ],
   "type": "registry:lib"
 }

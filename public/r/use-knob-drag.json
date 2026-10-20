@@ -18,5 +18,16 @@
       "target": "@hooks/use-knob-drag.ts"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Criar um controle giratório próprio com arraste vertical, trava de curso e passo fino no shift",
+      "evite": "Se um knob pronto serve, use vintage-knob ou vintage-large-knob; número em campo de editor, scrub-input"
+    }
+  },
+  "categories": [
+    "base",
+    "hook",
+    "gesto"
+  ],
   "type": "registry:hook"
 }

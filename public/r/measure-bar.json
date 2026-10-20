@@ -34,5 +34,19 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Mostrar métrica com régua, qualificador e evidência, em landing de prova ou relatório",
+      "evite": "Medidor de cota em arco: gauge; número que só apura ao entrar, count-up"
+    }
+  },
+  "categories": [
+    "dados",
+    "numero",
+    "regua",
+    "evidencia",
+    "prova",
+    "metrica"
+  ],
   "type": "registry:ui"
 }

@@ -24,5 +24,19 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Explicar como o agente lê só as etiquetas das skills e abre a receita que casa com o pedido",
+      "evite": "Falar de memória do agente: anatomia-memoria; de contexto e tokens, anatomia-tokens"
+    }
+  },
+  "categories": [
+    "anatomia",
+    "didatica",
+    "aula",
+    "skill",
+    "receita",
+    "claude"
+  ],
   "type": "registry:lib"
 }

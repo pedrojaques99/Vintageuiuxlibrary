@@ -15,5 +15,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Mostrar nível de sinal ao vivo com ponteiro de VU num painel de áudio",
+      "evite": "Métrica de dashboard ou cota: gauge; número com régua e evidência, measure-bar"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "medidor"
+  ],
   "type": "registry:ui"
 }

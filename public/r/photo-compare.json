@@ -118,5 +118,21 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Comparar antes e depois de rebrand, retoque ou obra com cortina arrastável",
+      "evite": "Fotos diferentes em sequência: mist-swap; uma foto em tela cheia, photo-flip"
+    }
+  },
+  "categories": [
+    "midia",
+    "foto",
+    "antes",
+    "depois",
+    "comparar",
+    "cortina",
+    "rebrand",
+    "slider"
+  ],
   "type": "registry:ui"
 }

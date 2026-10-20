@@ -18,5 +18,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Avisos passageiros empilhados no canto, com o carregando que vira feito no lugar",
+      "evite": "Atividade em curso com controles: dynamic-island; erro de formulário vai no próprio campo"
+    }
+  },
+  "categories": [
+    "feedback",
+    "avisos",
+    "toast",
+    "notificacao",
+    "pilha"
+  ],
   "type": "registry:ui"
 }

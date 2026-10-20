@@ -11,5 +11,20 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Pintar shader, canvas ou WebGL com a cor dos tokens da marca e reagir à troca de tema",
+      "evite": "Cor só no CSS ou Tailwind: use var(--token) direto, sem converter"
+    }
+  },
+  "categories": [
+    "base",
+    "marca",
+    "tokens",
+    "webgl",
+    "canvas",
+    "oklch",
+    "tema"
+  ],
   "type": "registry:lib"
 }

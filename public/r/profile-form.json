@@ -18,5 +18,17 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Página de configurações da conta com foto, nome e e-mail verificado, erro no próprio campo",
+      "evite": "Editar um campo solto no lugar: inline-edit; só o acesso à conta no cabeçalho, auth-button"
+    }
+  },
+  "categories": [
+    "controles",
+    "conta",
+    "formulario",
+    "validacao"
+  ],
   "type": "registry:ui"
 }

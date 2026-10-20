@@ -119,5 +119,19 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Dar hierarquia às entradas de uma landing, cada dobra com seu tipo de entrada ao rolar",
+      "evite": "Só um título: line-reveal ou mist-text; app ou dashboard não pede entrada por scroll"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "scroll",
+    "entrada",
+    "reveal",
+    "dobra",
+    "hierarquia"
+  ],
   "type": "registry:lib"
 }

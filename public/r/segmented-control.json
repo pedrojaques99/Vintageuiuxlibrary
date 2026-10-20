@@ -17,5 +17,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Alternar entre 2 a 5 opções que cabem na tela, como lista ou grade, ou o período de um gráfico",
+      "evite": "Mensal e anual com desconto: billing-toggle; muitas opções, morph-select; liga e desliga, liquid-toggle"
+    }
+  },
+  "categories": [
+    "controles",
+    "controle",
+    "apple"
+  ],
   "type": "registry:ui"
 }

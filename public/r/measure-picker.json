@@ -51,5 +51,16 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Loja que recomenda tamanho ou modelo a partir de uma medida que o cliente sabe, como a altura",
+      "evite": "Valor livre sem recomendação: elastic-slider; projeção de ROI com premissa, sim-slider"
+    }
+  },
+  "categories": [
+    "controles",
+    "slider",
+    "recomendacao"
+  ],
   "type": "registry:ui"
 }

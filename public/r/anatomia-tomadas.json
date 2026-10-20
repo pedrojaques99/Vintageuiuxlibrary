@@ -24,5 +24,20 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Explicar a diferença entre conector do claude.ai e chave de API no .env, em aula ou onboarding",
+      "evite": "Falar de permissão de arquivos: anatomia-permissao; de publicar código, anatomia-como-sobe"
+    }
+  },
+  "categories": [
+    "anatomia",
+    "didatica",
+    "aula",
+    "conector",
+    "chave-de-api",
+    "mcp",
+    "claude"
+  ],
   "type": "registry:lib"
 }

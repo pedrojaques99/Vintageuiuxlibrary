@@ -18,5 +18,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Busca no cabeçalho ou barra de ferramentas que fica num ícone até alguém ir buscar",
+      "evite": "Busca é a ação principal da tela: campo sempre aberto; lógica de filtro local, use-local-search"
+    }
+  },
+  "categories": [
+    "controles",
+    "busca",
+    "search",
+    "combobox",
+    "cabecalho",
+    "barra-de-ferramentas"
+  ],
   "type": "registry:ui"
 }

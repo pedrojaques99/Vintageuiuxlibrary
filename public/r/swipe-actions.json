@@ -19,5 +19,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Lista de triagem no celular, como inbox ou tarefas, arrastando a linha pra revelar ações",
+      "evite": "Apagar vários de uma vez: black-hole; tabela no desktop, data-table"
+    }
+  },
+  "categories": [
+    "cards",
+    "lista",
+    "gesto",
+    "arrastar",
+    "triagem"
+  ],
   "type": "registry:ui"
 }

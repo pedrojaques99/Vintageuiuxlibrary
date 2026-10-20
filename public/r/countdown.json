@@ -17,5 +17,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Contagem até lançamento, evento ou prazo que vira aviso de ao vivo quando chega a zero",
+      "evite": "Número que só apura: count-up; horário de loja aberta, store-status"
+    }
+  },
+  "categories": [
+    "dados",
+    "contagem",
+    "lancamento",
+    "prazo",
+    "timer",
+    "evento"
+  ],
   "type": "registry:ui"
 }

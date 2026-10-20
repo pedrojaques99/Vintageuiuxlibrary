@@ -41,5 +41,21 @@
       "target": "~/components/fog-hero/index.ts"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Hero de tela cheia com névoa em shader, vídeo P&B e saída em desfoque, pra abertura de marca",
+      "evite": "Hero leve ou de produto: section-intro com spring-dots; fundo abstrato sem vídeo, shader-neon"
+    }
+  },
+  "categories": [
+    "shaders",
+    "hero",
+    "nevoa",
+    "webgl",
+    "shader",
+    "video",
+    "abertura",
+    "grao"
+  ],
   "type": "registry:block"
 }

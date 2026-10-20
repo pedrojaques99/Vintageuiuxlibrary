@@ -17,5 +17,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Mostrar ritmo diário de atividade ao longo de meses, como entregas ou hábitos, em perfil ou dashboard",
+      "evite": "Mistura de categorias no tempo: streamgraph; um valor só de cota, gauge"
+    }
+  },
+  "categories": [
+    "dados",
+    "calendario",
+    "heatmap",
+    "ritmo",
+    "grafico"
+  ],
   "type": "registry:ui"
 }

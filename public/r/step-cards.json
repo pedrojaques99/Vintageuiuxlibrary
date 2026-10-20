@@ -21,5 +21,17 @@
       "target": "~/components/step-cards/index.ts"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Seção de como funciona em passos numerados com arte por passo, em landing ou onboarding",
+      "evite": "História longa ou changelog: timeline; passos com a arte presa no scroll, pinned-scene"
+    }
+  },
+  "categories": [
+    "secoes",
+    "passos",
+    "como-funciona",
+    "onboarding"
+  ],
   "type": "registry:block"
 }

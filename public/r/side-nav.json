@@ -14,5 +14,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Navegação lateral de app ou dashboard, colapsável por atalho e com a rota ativa marcada",
+      "evite": "Menu de site no celular: nav-drawer; poucas ações num botão flutuante, orbit-menu"
+    }
+  },
+  "categories": [
+    "navegacao",
+    "sidebar",
+    "app",
+    "colapsar",
+    "atalho",
+    "teclado"
+  ],
   "type": "registry:ui"
 }

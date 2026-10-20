@@ -14,5 +14,17 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Card de serviço ou pacote com mídia, título clicável e lista do que está incluso, em site de agência",
+      "evite": "Produto com cara de objeto: spine-card; card que abre detalhe no lugar, expandable-card"
+    }
+  },
+  "categories": [
+    "cards",
+    "servico",
+    "card",
+    "vitrine"
+  ],
   "type": "registry:ui"
 }

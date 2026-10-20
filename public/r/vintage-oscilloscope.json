@@ -15,5 +15,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Desenhar forma de onda ao vivo a partir de um buffer de áudio, em synth ou analisador",
+      "evite": "Áudio gravado com play e busca: voice-note; série de dados no tempo, streamgraph"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "canvas"
+  ],
   "type": "registry:ui"
 }

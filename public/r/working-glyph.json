@@ -19,5 +19,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Ícone pequeno mostrando que algo trabalha, ao lado de rótulo ou botão, numa espera curta",
+      "evite": "Espera longa que pede explicação: status-ticker; transferência de arquivo, paper-shuttle"
+    }
+  },
+  "categories": [
+    "feedback",
+    "espera",
+    "icone"
+  ],
   "type": "registry:ui"
 }

@@ -17,5 +17,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Mostrar como a mistura de várias categorias muda no tempo, em dashboard ou relatório",
+      "evite": "Ritmo diário de uma atividade: activity-heatmap; valor único de cota, gauge"
+    }
+  },
+  "categories": [
+    "dados",
+    "grafico",
+    "serie-temporal",
+    "camadas",
+    "dashboard"
+  ],
   "type": "registry:ui"
 }

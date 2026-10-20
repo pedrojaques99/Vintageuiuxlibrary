@@ -16,5 +16,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Foto com retícula de uma tinta e lupa sob o cursor, em editorial ou campanha com cara de jornal",
+      "evite": "Duas tintas com grão: shader-riso; caracteres em vez de pontos, shader-ascii"
+    }
+  },
+  "categories": [
+    "shaders",
+    "shader",
+    "webgl",
+    "imagem",
+    "reticula",
+    "impressao"
+  ],
   "type": "registry:ui"
 }

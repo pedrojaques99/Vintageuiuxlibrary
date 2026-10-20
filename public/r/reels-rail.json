@@ -19,5 +19,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Trilho de vídeos 9:16 em landing ou loja, tocando um por vez como reels",
+      "evite": "Cards estáticos ou produtos: use rail; vídeo de abertura em tela cheia, fog-hero"
+    }
+  },
+  "categories": [
+    "midia",
+    "video",
+    "reels",
+    "shorts",
+    "vertical",
+    "carrossel",
+    "trilho"
+  ],
   "type": "registry:ui"
 }

@@ -14,5 +14,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Estatística de landing que apura até o valor ao entrar na tela, como 120 projetos entregues",
+      "evite": "Número que muda ao vivo: slot-text; contagem até data, countdown; número com régua, measure-bar"
+    }
+  },
+  "categories": [
+    "dados",
+    "numero",
+    "contagem",
+    "prova",
+    "estatistica",
+    "animar"
+  ],
   "type": "registry:ui"
 }

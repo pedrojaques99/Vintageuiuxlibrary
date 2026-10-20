@@ -32,5 +32,18 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Botão de ligar e desligar o som da interface, obrigatório quando o site usa sfx-bus",
+      "evite": "Site sem som de interface; mute de vídeo ou música fica no controle do próprio player"
+    }
+  },
+  "categories": [
+    "controles",
+    "som",
+    "toggle",
+    "preferencia",
+    "acessibilidade"
+  ],
   "type": "registry:ui"
 }

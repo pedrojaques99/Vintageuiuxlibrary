@@ -18,5 +18,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Botão flutuante que abre poucas ações em arco, escolhidas arrastando o dedo, em app mobile",
+      "evite": "Navegação principal: side-nav ou nav-drawer; barra de atalhos no desktop, magnify-dock"
+    }
+  },
+  "categories": [
+    "navegacao",
+    "menu",
+    "acoes",
+    "gesto",
+    "arco",
+    "mola"
+  ],
   "type": "registry:ui"
 }

@@ -14,5 +14,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Hero ou CTA com fundo em canvas que a pessoa raspa pra revelar a luz, convidando a mexer",
+      "evite": "Malha que só reage ao ponteiro: spring-dots; fundo calmo atrás de texto longo, grid-dots"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "fundo",
+    "canvas",
+    "ponteiro",
+    "cta",
+    "revelar",
+    "raspar"
+  ],
   "type": "registry:ui"
 }

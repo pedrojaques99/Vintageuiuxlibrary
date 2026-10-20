@@ -18,5 +18,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Select de formulário em que o gatilho cresce e vira a lista, pra listas médias de opções",
+      "evite": "Até 5 opções visíveis: segmented-control; escolha lúdica entre poucas, magnetic-select"
+    }
+  },
+  "categories": [
+    "controles",
+    "select",
+    "listbox",
+    "formulario",
+    "morph",
+    "teclado"
+  ],
   "type": "registry:ui"
 }

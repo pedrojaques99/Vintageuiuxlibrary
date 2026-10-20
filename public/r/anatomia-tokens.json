@@ -24,5 +24,18 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Explicar que o agente relê a conversa toda a cada volta e por que um print economiza",
+      "evite": "Falar do que persiste entre sessões: anatomia-memoria; de automatizar repetição, anatomia-script"
+    }
+  },
+  "categories": [
+    "anatomia",
+    "didatica",
+    "aula",
+    "tokens",
+    "contexto"
+  ],
   "type": "registry:lib"
 }

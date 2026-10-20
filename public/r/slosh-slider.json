@@ -18,5 +18,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Slider de volume ou intensidade em que o preenchimento tem peso e balança ao soltar",
+      "evite": "Formulário neutro: elastic-slider; simulação com projeção, sim-slider; console de áudio, vintage-slider"
+    }
+  },
+  "categories": [
+    "controles",
+    "slider",
+    "range",
+    "volume",
+    "fisica",
+    "spring",
+    "teclado"
+  ],
   "type": "registry:ui"
 }

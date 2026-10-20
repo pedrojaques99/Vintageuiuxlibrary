@@ -16,5 +16,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Fundo hipnótico de túnel em espiral pra abertura de evento, lançamento ou música",
+      "evite": "Fundo calmo atrás de texto: shader-neon ou grid-dots; textura em células, shader-voronoi"
+    }
+  },
+  "categories": [
+    "shaders",
+    "shader",
+    "webgl",
+    "fundo",
+    "tunel",
+    "espiral"
+  ],
   "type": "registry:ui"
 }

@@ -14,5 +14,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Campo numérico arrastável em editor ou ferramenta de design, como tamanho, opacidade ou ângulo",
+      "evite": "Valor numa faixa visível pro público geral: elastic-slider ou slosh-slider"
+    }
+  },
+  "categories": [
+    "controles",
+    "numero",
+    "gesto"
+  ],
   "type": "registry:ui"
 }

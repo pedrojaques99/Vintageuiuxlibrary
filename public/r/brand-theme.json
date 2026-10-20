@@ -11,5 +11,18 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "App que troca de marca em runtime, como multi-cliente ou white-label, aplicando o tema compilado",
+      "evite": "Projeto de uma marca só: importe o CSS do tema da marca direto, sem provider"
+    }
+  },
+  "categories": [
+    "base",
+    "marca",
+    "tokens",
+    "runtime",
+    "provider"
+  ],
   "type": "registry:lib"
 }

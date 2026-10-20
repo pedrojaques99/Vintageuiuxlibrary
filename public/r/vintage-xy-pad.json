@@ -16,5 +16,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Controlar dois parâmetros juntos num gesto só, como filtro e ressonância, em app de áudio",
+      "evite": "Um parâmetro só: vintage-knob ou vintage-slider"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "gesto"
+  ],
   "type": "registry:ui"
 }

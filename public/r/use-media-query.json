@@ -15,5 +15,17 @@
       "target": "@hooks/use-media-query.ts"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Trocar layout ou comportamento por breakpoint em React, sem piscar no primeiro render e seguro em SSR",
+      "evite": "Mudança só visual por largura: resolva com media query no CSS, sem hook nem re-render"
+    }
+  },
+  "categories": [
+    "base",
+    "hook",
+    "responsivo",
+    "ssr"
+  ],
   "type": "registry:hook"
 }

@@ -65,5 +65,19 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Card de livro, disco ou produto que lê como objeto na estante, com lombada e tombo no hover",
+      "evite": "Livro em 3D de verdade: book-3d; card de serviço com lista, showcase-card"
+    }
+  },
+  "categories": [
+    "cards",
+    "card",
+    "livro",
+    "estante",
+    "produto",
+    "lombada"
+  ],
   "type": "registry:ui"
 }

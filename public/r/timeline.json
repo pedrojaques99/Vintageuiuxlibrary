@@ -17,5 +17,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Changelog, história da empresa ou processo longo com progresso amarrado ao scroll",
+      "evite": "Poucos passos de como funciona: step-cards; arte presa avançando por passos, pinned-scene"
+    }
+  },
+  "categories": [
+    "secoes",
+    "scroll",
+    "narrativa"
+  ],
   "type": "registry:ui"
 }

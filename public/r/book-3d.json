@@ -43,5 +43,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Mostrar livro, revista ou catálogo como objeto 3D com capa, lombada e espessura reais",
+      "evite": "Muitos itens numa grade leve: spine-card ou book-shelf; item sem arte de capa, cover-art"
+    }
+  },
+  "categories": [
+    "3d",
+    "livro",
+    "webgl",
+    "catalogo",
+    "capa",
+    "objeto"
+  ],
   "type": "registry:ui"
 }

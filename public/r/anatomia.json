@@ -31,5 +31,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Montar figura didática interativa com pinos e passo a passo; é a base de toda anatomia-*",
+      "evite": "Diagrama estático ou explicação sem interação: imagem ou SVG simples"
+    }
+  },
+  "categories": [
+    "anatomia",
+    "didatica",
+    "aula",
+    "isometrico",
+    "explicacao",
+    "web-component",
+    "passo-a-passo"
+  ],
   "type": "registry:ui"
 }

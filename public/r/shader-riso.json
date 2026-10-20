@@ -16,5 +16,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Foto impressa em duas tintas de risografia com grão, em editorial, zine ou evento",
+      "evite": "Uma tinta só com retícula: shader-halftone; caracteres, shader-ascii"
+    }
+  },
+  "categories": [
+    "shaders",
+    "shader",
+    "webgl",
+    "imagem",
+    "riso",
+    "impressao"
+  ],
   "type": "registry:ui"
 }

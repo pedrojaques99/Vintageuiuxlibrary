@@ -17,5 +17,21 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Texto que sai da névoa por palavra ou letra, uma vez ou acompanhando a rolagem",
+      "evite": "Título que sobe linha por linha: line-reveal; troca de palavra em rótulo, text-morph"
+    }
+  },
+  "categories": [
+    "texto",
+    "blur",
+    "nevoa",
+    "reveal",
+    "scroll",
+    "palavra",
+    "letra",
+    "tipografia"
+  ],
   "type": "registry:ui"
 }

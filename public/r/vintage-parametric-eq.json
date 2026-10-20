@@ -15,5 +15,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Editar curva de EQ com bandas móveis, Q na roda e bypass, em DAW ou plugin web",
+      "evite": "Ajuste simples de graves e agudos em bandas fixas: vintage-eq resolve com menos curva de aprendizado"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "eq",
+    "curva",
+    "parametrico",
+    "filtro"
+  ],
   "type": "registry:ui"
 }

@@ -17,5 +17,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Escolha única lúdica entre poucas opções redondas, como humor, cor ou objetivo no onboarding",
+      "evite": "Formulário sério ou muitas opções: morph-select; opções em linha, segmented-control"
+    }
+  },
+  "categories": [
+    "controles",
+    "selecao",
+    "radio",
+    "ima",
+    "hover",
+    "escolha"
+  ],
   "type": "registry:ui"
 }

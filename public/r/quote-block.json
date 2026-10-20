@@ -14,5 +14,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Um depoimento só em tamanho de dobra, citação em corpo de manchete e assinatura depois",
+      "evite": "Vários depoimentos de tipos diferentes: testimonial-wall; pilha arrastável, card-stack"
+    }
+  },
+  "categories": [
+    "secoes",
+    "depoimento",
+    "prova-social",
+    "citacao",
+    "cliente",
+    "retrato"
+  ],
   "type": "registry:ui"
 }

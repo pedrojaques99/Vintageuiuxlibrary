@@ -15,5 +15,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Paleta de comandos por teclado dentro de app no kit vintage, como lista de efeitos ou presets",
+      "evite": "App de produto comum: use o command menu do tema; só buscar no cabeçalho, expanding-search"
+    }
+  },
+  "categories": [
+    "vintage",
+    "comando",
+    "teclado"
+  ],
   "type": "registry:ui"
 }

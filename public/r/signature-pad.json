@@ -18,5 +18,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Coletar assinatura à mão em contrato, aceite ou comprovante de entrega, com desfazer e limpar",
+      "evite": "Aceite simples de termos: checkbox do tema; confirmar pagamento, slide-to-confirm"
+    }
+  },
+  "categories": [
+    "controles",
+    "assinatura",
+    "formulario",
+    "contrato",
+    "aceite",
+    "desenho"
+  ],
   "type": "registry:ui"
 }

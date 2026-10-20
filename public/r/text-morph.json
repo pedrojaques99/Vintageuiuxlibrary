@@ -17,5 +17,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Rótulo de botão ou status que vira outra palavra letra por letra, como Salvar pra Salvo",
+      "evite": "Número mudando: slot-text; título de seção entrando, line-reveal ou mist-text"
+    }
+  },
+  "categories": [
+    "texto",
+    "morph",
+    "botao",
+    "estado",
+    "micro-interacao"
+  ],
   "type": "registry:ui"
 }

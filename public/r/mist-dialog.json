@@ -55,5 +55,21 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Modal de vitrine ou editorial que entra em névoa, como detalhe de projeto ou contato",
+      "evite": "Confirmar ação destrutiva: confirm-morph; aviso passageiro, toast-stack"
+    }
+  },
+  "categories": [
+    "feedback",
+    "modal",
+    "dialog",
+    "nevoa",
+    "blur",
+    "vitrine",
+    "starting-style",
+    "overlay"
+  ],
   "type": "registry:ui"
 }

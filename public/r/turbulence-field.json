@@ -14,5 +14,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Fundo de névoa leve em tile de espera, inclusive vários na mesma grade, sem WebGL",
+      "evite": "Fundo de hero que reage ao ponteiro: spring-dots ou um shader-*; malha parada, grid-dots"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "ruido",
+    "svg"
+  ],
   "type": "registry:ui"
 }

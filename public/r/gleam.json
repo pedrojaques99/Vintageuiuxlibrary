@@ -79,5 +79,21 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Grade de cards em que cada um acende luz sob o cursor e inclina leve, em vitrine ou pricing",
+      "evite": "Card único que inclina forte em 3D: tilt-card; profundidade da cena inteira, use-pointer-parallax"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "hover",
+    "card",
+    "ponteiro",
+    "tilt",
+    "luz",
+    "spotlight",
+    "magnetico"
+  ],
   "type": "registry:ui"
 }

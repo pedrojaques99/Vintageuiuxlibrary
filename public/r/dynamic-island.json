@@ -17,5 +17,21 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Pílula de atividade em curso, como timer, player ou chamada, que cresce com controles ao tocar",
+      "evite": "Aviso que some sozinho: toast-stack; espera de IA com etapas, status-ticker"
+    }
+  },
+  "categories": [
+    "feedback",
+    "pilula",
+    "atividade",
+    "morph",
+    "spring",
+    "timer",
+    "player",
+    "chamada"
+  ],
   "type": "registry:ui"
 }

@@ -14,5 +14,21 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Dar som de clique analógico a botões, knobs e alavancas sem arquivo de áudio, em site com tato",
+      "evite": "Produto de uso diário ou ambiente de trabalho: sem som; e nunca sem sfx-toggle pra desligar"
+    }
+  },
+  "categories": [
+    "base",
+    "som",
+    "audio",
+    "webaudio",
+    "feedback",
+    "tato",
+    "clique",
+    "analogico"
+  ],
   "type": "registry:lib"
 }

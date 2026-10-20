@@ -17,5 +17,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Recibo ou resumo de pedido que dobra em três como papel, com o total sempre à vista",
+      "evite": "Card genérico que expande: expandable-card; lista longa de itens, tabela do tema"
+    }
+  },
+  "categories": [
+    "cards",
+    "recibo",
+    "pedido",
+    "3d",
+    "arrastar",
+    "acordeao"
+  ],
   "type": "registry:ui"
 }

@@ -24,5 +24,18 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Explicar a caixa de permissão do terminal e o que o don't ask again deixa gravado",
+      "evite": "Falar de chave de API e conector: anatomia-tomadas; de memória, anatomia-memoria"
+    }
+  },
+  "categories": [
+    "anatomia",
+    "didatica",
+    "aula",
+    "terminal",
+    "permissao"
+  ],
   "type": "registry:lib"
 }

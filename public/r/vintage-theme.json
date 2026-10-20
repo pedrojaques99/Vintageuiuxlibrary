@@ -101,5 +101,16 @@
       "ring": "#ffd700"
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Montar app ou ferramenta de áudio com o kit vintage: é o tema escuro de painel que as peças vintage-* pressupõem",
+      "evite": "Projeto de marca de cliente: use o tema da marca via brand-theme e deixe o kit vintage de fora"
+    }
+  },
+  "categories": [
+    "vintage",
+    "tema",
+    "css"
+  ],
   "type": "registry:theme"
 }

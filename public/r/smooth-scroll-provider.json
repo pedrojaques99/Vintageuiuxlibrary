@@ -15,5 +15,16 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Landing ou editorial com rolagem suave Lenis sincronizada ao GSAP ScrollTrigger",
+      "evite": "App de produto, dashboard ou formulário longo: deixe a rolagem nativa, scroll suave atrapalha ali"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "lenis",
+    "gsap"
+  ],
   "type": "registry:lib"
 }

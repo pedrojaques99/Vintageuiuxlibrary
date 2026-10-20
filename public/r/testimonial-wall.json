@@ -35,5 +35,17 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Parede de prova social com citação, número, retrato e vídeo misturados numa landing",
+      "evite": "Um depoimento forte só: quote-block; logos de clientes, logo-wall"
+    }
+  },
+  "categories": [
+    "secoes",
+    "depoimento",
+    "prova-social",
+    "masonry"
+  ],
   "type": "registry:block"
 }

@@ -24,5 +24,21 @@
       "target": "~/.github/instructions/visant-ui.instructions.md"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Projeto em que um agente de IA escreve a UI: instala as regras que fazem ele buscar a peça @visant certa antes de criar",
+      "evite": "Projeto sem agente de IA escrevendo código; quem escolhe à mão consulta o catálogo direto"
+    }
+  },
+  "categories": [
+    "base",
+    "ia",
+    "agente",
+    "mcp",
+    "cursor",
+    "claude",
+    "copilot",
+    "regras"
+  ],
   "type": "registry:item"
 }

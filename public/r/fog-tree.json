@@ -33,5 +33,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Abertura ou dobra de marca com uma árvore 3D na névoa em duotone que acompanha o scroll",
+      "evite": "Percurso com várias paradas de texto: fog-garden; hero com vídeo, fog-hero"
+    }
+  },
+  "categories": [
+    "3d",
+    "webgl",
+    "nevoa",
+    "arvore",
+    "scroll",
+    "duotone",
+    "ez-tree"
+  ],
   "type": "registry:ui"
 }

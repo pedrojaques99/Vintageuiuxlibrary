@@ -17,5 +17,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Dobra de storytelling que prende a arte e avança em passos enquanto o texto rola",
+      "evite": "Passos sem prender a tela: step-cards; caminhada 3D na névoa, fog-garden"
+    }
+  },
+  "categories": [
+    "secoes",
+    "scroll",
+    "sticky",
+    "passos",
+    "storytelling",
+    "gsap"
+  ],
   "type": "registry:ui"
 }

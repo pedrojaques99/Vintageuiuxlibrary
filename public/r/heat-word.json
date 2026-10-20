@@ -16,5 +16,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Palavra de destaque ou grade de gotas que derrete num mapa de calor sob o cursor, em hero",
+      "evite": "Fundo de pontos que reage: spring-dots; título que precisa ler animado, line-reveal"
+    }
+  },
+  "categories": [
+    "texto",
+    "canvas",
+    "cursor",
+    "hover",
+    "calor",
+    "efeito"
+  ],
   "type": "registry:ui"
 }

@@ -29,5 +29,17 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Tabela densa de admin ou dashboard com ordenação, seleção e edição inline, em app Next",
+      "evite": "Fluxo por etapas visível: kanban; fora de Next ainda depende de next-auth, adapte antes de usar"
+    }
+  },
+  "categories": [
+    "dados",
+    "tabela",
+    "fila",
+    "tanstack"
+  ],
   "type": "registry:ui"
 }

@@ -18,5 +18,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Emoldurar vídeo, preview ou tela em interface retrô com cara de tubo CRT",
+      "evite": "Moldura de foto em landing ou editorial: use photo-frame"
+    }
+  },
+  "categories": [
+    "vintage",
+    "moldura",
+    "crt"
+  ],
   "type": "registry:ui"
 }

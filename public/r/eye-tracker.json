@@ -17,5 +17,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Mascote que segue o cursor e dá personalidade a estado vazio, login ou página 404",
+      "evite": "Interface séria ou densa; estado vazio padrão, empty-state com arte parada"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "mascote",
+    "estado-vazio",
+    "cursor",
+    "personalidade"
+  ],
   "type": "registry:ui"
 }

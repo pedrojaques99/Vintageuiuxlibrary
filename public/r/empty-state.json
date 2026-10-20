@@ -14,5 +14,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Lista, painel ou busca sem conteúdo ainda: frase do que vai aparecer ali e no máximo uma ação",
+      "evite": "Conteúdo carregando: skeleton-rail; vazio com personalidade, ponha eye-tracker no slot da arte"
+    }
+  },
+  "categories": [
+    "feedback",
+    "vazio",
+    "empty",
+    "onboarding",
+    "primeiro-uso"
+  ],
   "type": "registry:ui"
 }

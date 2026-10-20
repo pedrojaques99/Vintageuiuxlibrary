@@ -17,5 +17,21 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Slideshow atmosférico de fotos que se trocam em névoa, em hero ou dobra editorial",
+      "evite": "Galeria que a pessoa navega: rail ou cover-flow; antes e depois, photo-compare"
+    }
+  },
+  "categories": [
+    "midia",
+    "foto",
+    "slideshow",
+    "crossfade",
+    "blur",
+    "nevoa",
+    "troca",
+    "atmosfera"
+  ],
   "type": "registry:ui"
 }

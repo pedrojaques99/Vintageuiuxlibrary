@@ -17,5 +17,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Preço, placar ou contador que muda ao vivo girando como rolo de caça-níquel",
+      "evite": "Número que só apura ao entrar na tela: count-up; palavra de botão trocando, text-morph"
+    }
+  },
+  "categories": [
+    "texto",
+    "numero",
+    "preco",
+    "contador",
+    "slot"
+  ],
   "type": "registry:ui"
 }

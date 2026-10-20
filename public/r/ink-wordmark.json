@@ -17,5 +17,21 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Assinatura grande de rodapé ou abertura que condensa da fumaça ao entrar na tela",
+      "evite": "Título de seção que precisa ler rápido: line-reveal ou mist-text; logo oficial, use o SVG da marca"
+    }
+  },
+  "categories": [
+    "texto",
+    "assinatura",
+    "logo",
+    "rodape",
+    "fumaca",
+    "tinta",
+    "svg",
+    "scroll"
+  ],
   "type": "registry:ui"
 }

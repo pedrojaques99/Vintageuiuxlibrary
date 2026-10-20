@@ -14,5 +14,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Fundo de hero com malha de pontos que o ponteiro empurra e acende na cor da marca",
+      "evite": "Fundo parado: grid-dots; revelar raspando, erase-field; textura mais densa em WebGL, shader-voronoi"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "fundo",
+    "canvas",
+    "ponteiro",
+    "fisica",
+    "mola"
+  ],
   "type": "registry:ui"
 }

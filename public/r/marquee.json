@@ -29,5 +29,19 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Faixa infinita de texto ou itens numa landing, com ritmo empurrado ou amarrado ao scroll",
+      "evite": "Faixa de logos de clientes: use logo-wall, que já normaliza tamanho e cor"
+    }
+  },
+  "categories": [
+    "secoes",
+    "faixa",
+    "loop",
+    "scroll",
+    "gsap",
+    "vitrine"
+  ],
   "type": "registry:ui"
 }

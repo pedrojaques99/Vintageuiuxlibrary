@@ -15,5 +15,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Mostrar responsáveis de tarefa ou projeto em pilha de avatares com excedente contado",
+      "evite": "Lista de pessoas com detalhe e ação: lista do tema; contagem de reações, reactions"
+    }
+  },
+  "categories": [
+    "dados",
+    "avatar",
+    "equipe"
+  ],
   "type": "registry:ui"
 }

@@ -14,5 +14,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Filtro de loja ou catálogo com contagem por faceta, apagando a que não tem resultado",
+      "evite": "Escolha única entre poucas opções: segmented-control; tag só de leitura, badge do tema"
+    }
+  },
+  "categories": [
+    "controles",
+    "filtro",
+    "loja"
+  ],
   "type": "registry:ui"
 }

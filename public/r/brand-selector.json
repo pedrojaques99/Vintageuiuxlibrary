@@ -20,5 +20,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Ferramenta interna ou vitrine multi-marca em que a pessoa escolhe a marca e vê o tema aplicado",
+      "evite": "Site de uma marca só; pra alternar claro e escuro, use eclipse-switch"
+    }
+  },
+  "categories": [
+    "controles",
+    "marca",
+    "tema",
+    "cmdk",
+    "vault"
+  ],
   "type": "registry:ui"
 }

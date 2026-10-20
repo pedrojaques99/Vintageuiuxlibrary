@@ -21,5 +21,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Mostrar produto de revolução, como frasco, vela ou pote, em 3D que gira e orbita no arrasto",
+      "evite": "Livro ou catálogo: book-3d; produto com foto real, plate ou tilt-card"
+    }
+  },
+  "categories": [
+    "3d",
+    "webgl",
+    "produto",
+    "embalagem",
+    "objeto",
+    "difusor"
+  ],
   "type": "registry:ui"
 }

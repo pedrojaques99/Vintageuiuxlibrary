@@ -14,5 +14,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Placeholder com a medida exata de cards, listas ou mídia enquanto o conteúdo carrega",
+      "evite": "Lista que voltou vazia: empty-state; operação longa em segundo plano, status-ticker"
+    }
+  },
+  "categories": [
+    "feedback",
+    "skeleton",
+    "carregando",
+    "trilho",
+    "espera"
+  ],
   "type": "registry:ui"
 }

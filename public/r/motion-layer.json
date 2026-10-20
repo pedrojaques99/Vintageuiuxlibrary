@@ -14,5 +14,16 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Ligar reveal, parallax e magnético por data-attribute em tema Shopify ou página montada em builder",
+      "evite": "App React com componentes: use fold-motion, line-reveal e magnetic-cta direto, sem camada global"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "gsap",
+    "scroll"
+  ],
   "type": "registry:lib"
 }

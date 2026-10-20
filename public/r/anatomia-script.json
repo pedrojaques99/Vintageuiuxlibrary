@@ -24,5 +24,18 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Explicar quando um pedido que se repete deve virar script que roda sem IA",
+      "evite": "Falar de custo por mensagem: anatomia-tokens; de skills e receitas, anatomia-fichario"
+    }
+  },
+  "categories": [
+    "anatomia",
+    "didatica",
+    "aula",
+    "script",
+    "automacao"
+  ],
   "type": "registry:lib"
 }

@@ -24,5 +24,18 @@
       "type": "registry:lib"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Explicar o que o agente esquece ao fechar a conversa e o que fica gravado no CLAUDE.md",
+      "evite": "Falar de custo e contexto da conversa: anatomia-tokens; de skills, anatomia-fichario"
+    }
+  },
+  "categories": [
+    "anatomia",
+    "didatica",
+    "aula",
+    "memoria",
+    "claude.md"
+  ],
   "type": "registry:lib"
 }

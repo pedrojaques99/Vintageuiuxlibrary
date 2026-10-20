@@ -16,5 +16,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Ajustar parâmetro contínuo num painel de áudio onde vários knobs dividem pouco espaço",
+      "evite": "Parâmetro principal com escala e leitura: vintage-large-knob; número em editor, scrub-input"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "knob"
+  ],
   "type": "registry:ui"
 }

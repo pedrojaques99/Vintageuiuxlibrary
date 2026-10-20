@@ -18,5 +18,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Apagar item com confirmação no próprio botão, andamento e desfazer, quando a ação é reversível",
+      "evite": "Ação irreversível e cara: hold-to-confirm; pagamento ou envio no celular, slide-to-confirm"
+    }
+  },
+  "categories": [
+    "controles",
+    "botao",
+    "confirmacao",
+    "destrutivo",
+    "desfazer"
+  ],
   "type": "registry:ui"
 }

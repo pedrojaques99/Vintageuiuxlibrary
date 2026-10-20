@@ -17,5 +17,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Adesivo decorativo de marca que levanta o canto e descola, em landing ou página de campanha",
+      "evite": "Conteúdo que precisa ficar parado e legível; card que inclina com o mouse, tilt-card"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "adesivo",
+    "arrastar",
+    "dobra",
+    "papel",
+    "sticker"
+  ],
   "type": "registry:ui"
 }

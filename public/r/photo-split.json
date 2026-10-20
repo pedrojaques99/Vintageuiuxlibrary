@@ -23,5 +23,21 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Seções alternadas de foto e texto em landing ou case, invertendo o lado a cada dobra",
+      "evite": "Foto sozinha com reveal: photo-frame; arte presa avançando em passos, pinned-scene"
+    }
+  },
+  "categories": [
+    "secoes",
+    "dobra",
+    "secao",
+    "foto",
+    "texto",
+    "alternado",
+    "scroll",
+    "gsap"
+  ],
   "type": "registry:ui"
 }

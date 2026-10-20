@@ -28,5 +28,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Vitrine de poucas capas num carrossel circular em WebGL, como portfólio curto",
+      "evite": "Está aposentado da listagem: prefira cover-flow, mais leve; muitos itens, rail"
+    }
+  },
+  "categories": [
+    "3d",
+    "carrossel",
+    "webgl",
+    "portfolio",
+    "capa",
+    "vitrine"
+  ],
   "type": "registry:ui"
 }

@@ -17,5 +17,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Editar nome ou campo curto onde ele aparece, em tabela, card ou cabeçalho de página",
+      "evite": "Vários campos com validação: profile-form; número arrastável, scrub-input"
+    }
+  },
+  "categories": [
+    "controles",
+    "edicao",
+    "formulario"
+  ],
   "type": "registry:ui"
 }

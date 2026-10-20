@@ -17,5 +17,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Card de foto, capa ou cartão de membro que inclina forte em 3D com brilho sob o mouse",
+      "evite": "Grade de muitos cards com luz sutil: gleam; objeto 3D de verdade, book-3d ou lathe-object"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "card",
+    "3d",
+    "tilt",
+    "hover",
+    "brilho",
+    "foto"
+  ],
   "type": "registry:ui"
 }

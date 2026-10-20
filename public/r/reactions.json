@@ -19,5 +19,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Barra de reações em post, comentário ou mensagem, com a contagem rolando",
+      "evite": "Avaliação formal de produto: estrelas ou nota; quem está numa tarefa, assignee-stack"
+    }
+  },
+  "categories": [
+    "controles",
+    "reacao",
+    "comentario",
+    "contador",
+    "emoji",
+    "feedback"
+  ],
   "type": "registry:ui"
 }

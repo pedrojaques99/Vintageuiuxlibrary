@@ -50,5 +50,21 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Simulador de ROI ou economia numa landing: o visitante move o valor e vê a projeção com premissa",
+      "evite": "Escolher valor sem projeção: elastic-slider; recomendar produto por medida, measure-picker"
+    }
+  },
+  "categories": [
+    "controles",
+    "simulador",
+    "calculadora",
+    "slider",
+    "projecao",
+    "roi",
+    "curva",
+    "premissa"
+  ],
   "type": "registry:ui"
 }

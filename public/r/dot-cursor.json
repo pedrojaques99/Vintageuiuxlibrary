@@ -17,5 +17,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Cursor customizado mínimo em site editorial ou portfólio, abrindo anel sobre links",
+      "evite": "App de produto ou formulário: cursor do sistema; efeito de calor sob o cursor, heat-word"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "cursor",
+    "ponteiro",
+    "hover",
+    "mola",
+    "blend",
+    "minimal"
+  ],
   "type": "registry:ui"
 }

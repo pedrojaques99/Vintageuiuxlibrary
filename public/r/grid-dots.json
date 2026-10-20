@@ -14,5 +14,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Fundo parado de malha de pontos que dá profundidade sem competir com o conteúdo",
+      "evite": "Fundo que reage ao ponteiro: spring-dots; textura animada, turbulence-field ou shader-voronoi"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "fundo",
+    "grid"
+  ],
   "type": "registry:ui"
 }

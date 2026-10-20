@@ -18,5 +18,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Atualizar feed ou widget no celular puxando pra baixo, com a marca girando enquanto carrega",
+      "evite": "Desktop ou conteúdo que atualiza sozinho: botão de atualizar; carga inicial, skeleton-rail"
+    }
+  },
+  "categories": [
+    "feedback",
+    "atualizar",
+    "arrasto",
+    "widget",
+    "carregando"
+  ],
   "type": "registry:ui"
 }

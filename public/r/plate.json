@@ -14,5 +14,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Assentar foto de produto recortada sobre branco num fundo colorido de loja, sem o retângulo branco",
+      "evite": "Foto com fundo próprio ou editorial: photo-frame; item sem foto nenhuma, cover-art"
+    }
+  },
+  "categories": [
+    "midia",
+    "produto",
+    "foto"
+  ],
   "type": "registry:ui"
 }

@@ -19,5 +19,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Seção de clientes ou parceiros numa landing, com logos de proporções diferentes normalizados",
+      "evite": "Texto ou itens que não são logo: marquee; prova social com citação, testimonial-wall"
+    }
+  },
+  "categories": [
+    "secoes",
+    "logos",
+    "clientes",
+    "prova-social",
+    "faixa",
+    "marquee",
+    "gsap"
+  ],
   "type": "registry:ui"
 }

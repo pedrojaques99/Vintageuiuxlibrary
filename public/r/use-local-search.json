@@ -15,5 +15,18 @@
       "target": "@hooks/use-local-search.ts"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Filtrar lista em memória tolerando acento e termos em qualquer ordem, como catálogo ou menu",
+      "evite": "Base grande ou paginada no servidor: busque na API; o campo visual da busca, expanding-search"
+    }
+  },
+  "categories": [
+    "base",
+    "busca",
+    "filtro",
+    "acento",
+    "catalogo"
+  ],
   "type": "registry:hook"
 }

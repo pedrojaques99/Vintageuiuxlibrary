@@ -16,5 +16,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Ligar e desligar função num painel de áudio, como bypass ou phantom, com cara de chave física",
+      "evite": "Switch de configuração em produto comum: liquid-toggle; tema claro e escuro, eclipse-switch"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "chave"
+  ],
   "type": "registry:ui"
 }

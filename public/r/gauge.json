@@ -17,5 +17,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Medidor de cota ou uso em dashboard, com o nome da faixa trocando ao cruzar o limite",
+      "evite": "Métrica com régua e evidência: measure-bar; nível de áudio ao vivo, vintage-meter"
+    }
+  },
+  "categories": [
+    "dados",
+    "medidor",
+    "cota",
+    "grafico",
+    "meter"
+  ],
   "type": "registry:ui"
 }

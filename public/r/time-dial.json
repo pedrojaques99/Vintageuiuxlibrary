@@ -17,5 +17,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Escolher hora num mostrador de 24h com o expediente marcado, em agenda ou conversão de fuso",
+      "evite": "Escolher data: date-reel; mostrar se a loja está aberta agora, store-status"
+    }
+  },
+  "categories": [
+    "controles",
+    "hora",
+    "relogio",
+    "fuso",
+    "seletor",
+    "agenda"
+  ],
   "type": "registry:ui"
 }

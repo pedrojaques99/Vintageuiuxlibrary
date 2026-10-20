@@ -24,5 +24,21 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Título de hero ou dobra que sobe linha por linha de dentro do próprio corte",
+      "evite": "Texto saindo do desfoque por palavra: mist-text; rótulo curto trocando, text-morph"
+    }
+  },
+  "categories": [
+    "texto",
+    "titulo",
+    "reveal",
+    "linha",
+    "split",
+    "gsap",
+    "heroi",
+    "tipografia"
+  ],
   "type": "registry:ui"
 }

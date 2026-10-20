@@ -14,5 +14,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Galeria de fotos de alturas diferentes com rolagem infinita, sem reordenar o que já carregou",
+      "evite": "Abrir foto em tela cheia: photo-flip; trilho horizontal, rail; poucas capas em destaque, cover-flow"
+    }
+  },
+  "categories": [
+    "midia",
+    "galeria",
+    "grid"
+  ],
   "type": "registry:ui"
 }

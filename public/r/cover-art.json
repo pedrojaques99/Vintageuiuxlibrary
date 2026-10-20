@@ -19,5 +19,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Gerar capa de livro, app ou placa para item sem imagem, a partir do nome e da cor da marca",
+      "evite": "Item com foto real: plate ou photo-frame; imagem ainda carregando, skeleton-rail"
+    }
+  },
+  "categories": [
+    "midia",
+    "capa",
+    "placeholder",
+    "catalogo",
+    "deterministico",
+    "sem-imagem"
+  ],
   "type": "registry:ui"
 }

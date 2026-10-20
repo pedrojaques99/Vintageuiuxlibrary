@@ -17,5 +17,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Escolher data em rolos de dia, mês e ano, como nascimento ou agendamento no celular",
+      "evite": "Escolher hora: time-dial; intervalo de datas ou mês inteiro, use o date picker do tema"
+    }
+  },
+  "categories": [
+    "controles",
+    "data",
+    "calendario",
+    "rolo",
+    "seletor",
+    "agendar"
+  ],
   "type": "registry:ui"
 }

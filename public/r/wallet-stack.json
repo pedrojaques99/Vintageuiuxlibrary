@@ -18,5 +18,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Carteira de cartões em app fintech: um sobe com saldo e movimento, os outros recolhem",
+      "evite": "Pilha de depoimentos ou dicas: card-stack; recibo de pedido, folding-bill"
+    }
+  },
+  "categories": [
+    "cards",
+    "carteira",
+    "cartoes",
+    "fintech",
+    "pilha",
+    "saldo"
+  ],
   "type": "registry:ui"
 }

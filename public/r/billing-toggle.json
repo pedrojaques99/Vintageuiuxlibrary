@@ -17,5 +17,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Alternar mensal e anual numa página de preços, com selo de desconto e preço rolando junto",
+      "evite": "Alternar opções que não são cobrança: segmented-control"
+    }
+  },
+  "categories": [
+    "controles",
+    "preco",
+    "pricing",
+    "toggle",
+    "assinatura",
+    "desconto",
+    "radiogroup"
+  ],
   "type": "registry:ui"
 }

@@ -17,5 +17,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Chave de tema claro e escuro no cabeçalho, com a lua cobrindo o sol",
+      "evite": "Switch de configuração comum: liquid-toggle; trocar de marca, brand-selector"
+    }
+  },
+  "categories": [
+    "controles",
+    "tema",
+    "modo-escuro",
+    "chave",
+    "eclipse",
+    "toggle"
+  ],
   "type": "registry:ui"
 }

@@ -16,5 +16,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Equalizador gráfico de bandas fixas em app de áudio, cada banda um fader com a curva desenhada",
+      "evite": "Precisa de sino, Q e frequência livre por banda: use vintage-parametric-eq"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "eq",
+    "faders",
+    "grafico"
+  ],
   "type": "registry:ui"
 }

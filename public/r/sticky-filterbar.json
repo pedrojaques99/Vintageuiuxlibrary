@@ -14,5 +14,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Barra de filtros que gruda sob o cabeçalho numa listagem longa de loja ou catálogo",
+      "evite": "Navegação principal do app: side-nav; poucos filtros no topo de página curta, chip sem grudar"
+    }
+  },
+  "categories": [
+    "navegacao",
+    "filtro",
+    "scroll"
+  ],
   "type": "registry:ui"
 }

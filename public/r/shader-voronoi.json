@@ -16,5 +16,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Fundo de textura orgânica em células que derivam e reagem ao ponteiro, na cor da marca",
+      "evite": "Fundo leve sem WebGL: spring-dots ou turbulence-field; ondas de luz, shader-neon"
+    }
+  },
+  "categories": [
+    "shaders",
+    "shader",
+    "webgl",
+    "fundo",
+    "voronoi",
+    "textura"
+  ],
   "type": "registry:ui"
 }

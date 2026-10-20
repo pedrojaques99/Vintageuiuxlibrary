@@ -14,5 +14,17 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Abrir uma dobra de landing com rótulo, título grande e linha de contexto",
+      "evite": "Título de hero animado: line-reveal ou mist-text; chamada com ação de conversão, cta-surface"
+    }
+  },
+  "categories": [
+    "secoes",
+    "dobra",
+    "titulo",
+    "landing"
+  ],
   "type": "registry:ui"
 }

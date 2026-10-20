@@ -18,5 +18,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Card de resumo que abre no lugar pra mostrar detalhe, como pedido, plano ou tarefa",
+      "evite": "Detalhe que pede foco total: mist-dialog; recibo dobrável com total à vista, folding-bill"
+    }
+  },
+  "categories": [
+    "cards",
+    "card",
+    "expandir",
+    "detalhe",
+    "resumo",
+    "layout"
+  ],
   "type": "registry:ui"
 }

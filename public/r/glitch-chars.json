@@ -14,5 +14,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Textura de caracteres trocando ou palavra decodificando, em hero tech, terminal ou espera curta",
+      "evite": "Título que precisa ser lido de primeira: line-reveal ou mist-text; rótulo trocando, text-morph"
+    }
+  },
+  "categories": [
+    "texto",
+    "textura",
+    "mono"
+  ],
   "type": "registry:ui"
 }

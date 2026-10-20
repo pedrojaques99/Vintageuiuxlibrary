@@ -16,5 +16,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Redesenhar foto em caracteres na cor da marca, em hero tech ou capa de campanha",
+      "evite": "Imagem com cara de impressão: shader-halftone ou shader-riso; fundo sem imagem, shader-neon"
+    }
+  },
+  "categories": [
+    "shaders",
+    "shader",
+    "webgl",
+    "imagem",
+    "ascii",
+    "caracteres"
+  ],
   "type": "registry:ui"
 }

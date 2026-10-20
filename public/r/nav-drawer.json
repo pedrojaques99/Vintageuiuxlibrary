@@ -166,5 +166,18 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Menu mobile de site ou landing, em gaveta lateral ou página inteira com imagem",
+      "evite": "Navegação lateral fixa de app no desktop: side-nav; atalhos de ícone, magnify-dock"
+    }
+  },
+  "categories": [
+    "navegacao",
+    "menu",
+    "mobile",
+    "drawer",
+    "acessibilidade"
+  ],
   "type": "registry:ui"
 }

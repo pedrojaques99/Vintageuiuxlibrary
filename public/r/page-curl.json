@@ -18,5 +18,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Folhear revista, catálogo ou lookbook puxando o canto da página, em editorial",
+      "evite": "Galeria de fotos: masonry-gallery ou cover-flow; livro como objeto 3D, book-3d"
+    }
+  },
+  "categories": [
+    "midia",
+    "revista",
+    "catalogo",
+    "pagina",
+    "dobra",
+    "arrastar",
+    "editorial"
+  ],
   "type": "registry:ui"
 }

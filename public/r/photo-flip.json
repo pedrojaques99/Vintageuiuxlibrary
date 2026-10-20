@@ -114,5 +114,21 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Abrir foto da grade em tela cheia com transição contínua, como lightbox de portfólio",
+      "evite": "Só exibir a grade: masonry-gallery; comparar duas versões, photo-compare"
+    }
+  },
+  "categories": [
+    "midia",
+    "foto",
+    "galeria",
+    "lightbox",
+    "flip",
+    "morph",
+    "grade",
+    "gsap"
+  ],
   "type": "registry:ui"
 }

@@ -16,5 +16,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Fader de console pra volume ou mix em interface de áudio do kit vintage",
+      "evite": "Slider de formulário ou produto: elastic-slider ou slosh-slider; simular conta, sim-slider"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "fader"
+  ],
   "type": "registry:ui"
 }

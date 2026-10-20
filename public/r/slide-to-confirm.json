@@ -19,5 +19,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Confirmar pagamento, envio ou check-in no celular arrastando até o fim, sem toque acidental",
+      "evite": "Apagar com desfazer: confirm-morph; ação destrutiva no desktop, hold-to-confirm"
+    }
+  },
+  "categories": [
+    "controles",
+    "confirmacao",
+    "arrasto",
+    "pagamento",
+    "gesto"
+  ],
   "type": "registry:ui"
 }

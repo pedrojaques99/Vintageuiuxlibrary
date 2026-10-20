@@ -37,5 +37,20 @@
       "target": "~/components/fog-garden/index.ts"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Storytelling longo de marca: caminhada 3D na névoa com paradas de texto presas ao scroll",
+      "evite": "Uma imagem só de atmosfera: fog-tree; passos sem 3D, pinned-scene"
+    }
+  },
+  "categories": [
+    "3d",
+    "webgl",
+    "scroll",
+    "sticky",
+    "nevoa",
+    "storytelling",
+    "jardim"
+  ],
   "type": "registry:block"
 }

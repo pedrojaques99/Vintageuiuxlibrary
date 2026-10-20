@@ -36,5 +36,19 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Catálogo de livros ou produtos com silhueta, soltos como numa estante, rótulo só no hover",
+      "evite": "Item que precisa de moldura e texto visível: showcase-card; objeto único em 3D, book-3d"
+    }
+  },
+  "categories": [
+    "3d",
+    "estante",
+    "prateleira",
+    "catalogo",
+    "grade",
+    "hover"
+  ],
   "type": "registry:ui"
 }

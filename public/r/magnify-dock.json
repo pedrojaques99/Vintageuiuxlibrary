@@ -18,5 +18,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Barra de atalhos de ícones que amplia em onda, em portfólio ou app de criação no desktop",
+      "evite": "Navegação principal de app: side-nav; mobile, nav-drawer; poucas ações num botão, orbit-menu"
+    }
+  },
+  "categories": [
+    "navegacao",
+    "dock",
+    "toolbar",
+    "icones",
+    "ampliacao",
+    "spring"
+  ],
   "type": "registry:ui"
 }

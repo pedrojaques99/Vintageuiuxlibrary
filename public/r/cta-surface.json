@@ -14,5 +14,17 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Bloco de conversão no fim de dobra ou página: barra, painel ou card com a ação principal",
+      "evite": "Só o botão ganhar presença: magnetic-cta; abertura de seção sem ação, section-intro"
+    }
+  },
+  "categories": [
+    "secoes",
+    "cta",
+    "conversao",
+    "dobra"
+  ],
   "type": "registry:ui"
 }

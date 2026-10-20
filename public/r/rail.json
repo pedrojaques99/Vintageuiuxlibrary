@@ -14,5 +14,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Trilho horizontal de cards ou produtos com snap, arrasto e teclado, em loja ou catálogo",
+      "evite": "Vídeos verticais: reels-rail; capas em perspectiva, cover-flow; fotos em mosaico, masonry-gallery"
+    }
+  },
+  "categories": [
+    "navegacao",
+    "carrossel",
+    "snap"
+  ],
   "type": "registry:ui"
 }

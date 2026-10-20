@@ -17,5 +17,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Switch de liga e desliga em configuração ou formulário, com a bolinha escorrendo como gota",
+      "evite": "Tema claro e escuro: eclipse-switch; mais de duas opções, segmented-control"
+    }
+  },
+  "categories": [
+    "controles",
+    "switch",
+    "toggle",
+    "formulario",
+    "mola"
+  ],
   "type": "registry:ui"
 }

@@ -17,5 +17,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Galeria de capas em perspectiva com arrasto, pra portfólio, discos ou livros em destaque",
+      "evite": "Muitos itens pra navegar: rail; fotos em mosaico, masonry-gallery"
+    }
+  },
+  "categories": [
+    "midia",
+    "galeria",
+    "carrossel",
+    "3d",
+    "portfolio",
+    "arrastar",
+    "capas"
+  ],
   "type": "registry:ui"
 }

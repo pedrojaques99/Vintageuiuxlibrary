@@ -17,5 +17,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Botão de ícone com dois estados que viram um no outro, como menu e fechar ou copiar e copiado",
+      "evite": "Rótulo de texto trocando: text-morph; tema claro e escuro, eclipse-switch"
+    }
+  },
+  "categories": [
+    "controles",
+    "icone",
+    "botao",
+    "estado",
+    "micro-interacao"
+  ],
   "type": "registry:ui"
 }

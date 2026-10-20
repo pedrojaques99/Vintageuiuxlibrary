@@ -14,5 +14,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Mostrar aberto ou fechado de loja física calculado no fuso dela, em site de varejo ou restaurante",
+      "evite": "Status de processo ou sistema: status-ticker; contagem até um horário, countdown"
+    }
+  },
+  "categories": [
+    "dados",
+    "loja",
+    "fuso"
+  ],
   "type": "registry:ui"
 }

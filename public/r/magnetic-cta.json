@@ -53,5 +53,19 @@
       "transition-duration": "var(--dur-fast, 140ms)"
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Botão principal de landing que vem buscar o ponteiro, numa dobra de conversão com espaço em volta",
+      "evite": "Botão em formulário ou lista densa: botão do tema; bloco completo de conversão, cta-surface"
+    }
+  },
+  "categories": [
+    "controles",
+    "cta",
+    "botao",
+    "ima",
+    "hover",
+    "conversao"
+  ],
   "type": "registry:ui"
 }

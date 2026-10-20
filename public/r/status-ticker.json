@@ -16,5 +16,17 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Espera longa de IA ou processamento, segurando a pessoa com texto, etapas ou cronômetro",
+      "evite": "Mover arquivo: paper-shuttle; layout carregando, skeleton-rail; espera curta ao lado do rótulo, working-glyph"
+    }
+  },
+  "categories": [
+    "feedback",
+    "espera",
+    "ia",
+    "estado"
+  ],
   "type": "registry:ui"
 }

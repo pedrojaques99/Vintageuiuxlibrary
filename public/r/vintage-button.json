@@ -15,5 +15,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Botão de painel que afunda no clique, em app de áudio, synth ou ferramenta com cara de hardware",
+      "evite": "Botão comum de produto ou landing: use o botão do tema; CTA de conversão, magnetic-cta"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "botao"
+  ],
   "type": "registry:ui"
 }

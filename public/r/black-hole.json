@@ -18,5 +18,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Apagar em lote numa lista ou inbox, com as linhas sugadas e o desfazer devolvendo tudo",
+      "evite": "Apagar um item só: confirm-morph; triagem linha a linha no celular, swipe-actions"
+    }
+  },
+  "categories": [
+    "cards",
+    "lista",
+    "apagar",
+    "desfazer",
+    "inbox",
+    "canvas",
+    "transicao"
+  ],
   "type": "registry:ui"
 }

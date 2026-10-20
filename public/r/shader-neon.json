@@ -16,5 +16,19 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Fundo abstrato de hero com fios de luz ondulando na cor da marca",
+      "evite": "Espiral com profundidade: shader-tunnel; textura orgânica, shader-voronoi; leve sem WebGL, spring-dots"
+    }
+  },
+  "categories": [
+    "shaders",
+    "shader",
+    "webgl",
+    "fundo",
+    "neon",
+    "onda"
+  ],
   "type": "registry:ui"
 }

@@ -18,5 +18,20 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Slider de formulário ou configuração que estica além do limite e volta com mola",
+      "evite": "Valor com peso visual: slosh-slider; projeção com premissa, sim-slider; editor, scrub-input"
+    }
+  },
+  "categories": [
+    "controles",
+    "slider",
+    "range",
+    "fisica",
+    "mola",
+    "formulario",
+    "teclado"
+  ],
   "type": "registry:ui"
 }

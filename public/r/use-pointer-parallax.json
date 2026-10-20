@@ -15,5 +15,19 @@
       "target": "@hooks/use-pointer-parallax.ts"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Hero de colagem em que várias camadas se movem com o ponteiro, profundidade decidida no CSS",
+      "evite": "Luz por card numa grade: gleam; um card que inclina sozinho, tilt-card"
+    }
+  },
+  "categories": [
+    "base",
+    "paralaxe",
+    "ponteiro",
+    "profundidade",
+    "colagem",
+    "hero"
+  ],
   "type": "registry:hook"
 }

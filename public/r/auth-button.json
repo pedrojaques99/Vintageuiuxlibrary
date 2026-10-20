@@ -18,5 +18,17 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Canto da conta no cabeçalho do app: entrar, carregando e avatar com menu, sem pular de tamanho",
+      "evite": "Tela de cadastro ou edição dos dados da conta: profile-form"
+    }
+  },
+  "categories": [
+    "controles",
+    "conta",
+    "sessao",
+    "menu"
+  ],
   "type": "registry:ui"
 }

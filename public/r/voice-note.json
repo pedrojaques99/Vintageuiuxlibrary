@@ -18,5 +18,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Player de nota de voz em chat ou mensagem, com onda, play e busca arrastando",
+      "evite": "Sinal de áudio ao vivo: vintage-oscilloscope; vídeo vertical, reels-rail"
+    }
+  },
+  "categories": [
+    "midia",
+    "audio",
+    "chat",
+    "player",
+    "forma-de-onda"
+  ],
   "type": "registry:ui"
 }

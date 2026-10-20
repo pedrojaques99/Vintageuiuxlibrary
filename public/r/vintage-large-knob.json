@@ -16,5 +16,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Parâmetro principal do painel que pede escala marcada e leitura do valor, como ganho ou master",
+      "evite": "Vários parâmetros secundários lado a lado: use vintage-knob, que ocupa menos"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "knob"
+  ],
   "type": "registry:ui"
 }

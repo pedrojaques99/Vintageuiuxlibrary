@@ -53,5 +53,21 @@
       }
     }
   },
+  "meta": {
+    "uso": {
+      "quando": "Foto editorial ou de case que se revela por máscara ao entrar na tela, com proporção fixa",
+      "evite": "Foto ao lado de texto alternando lados: photo-split; foto de produto recortada, plate"
+    }
+  },
+  "categories": [
+    "midia",
+    "foto",
+    "moldura",
+    "imagem",
+    "reveal",
+    "paralaxe",
+    "scroll",
+    "gsap"
+  ],
   "type": "registry:ui"
 }

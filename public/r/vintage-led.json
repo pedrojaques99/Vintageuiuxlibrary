@@ -15,5 +15,16 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Indicar estado on/off num painel do kit vintage, como clip, gravando ou ligado",
+      "evite": "Status de sistema em produto comum: store-status ou um ponto do tema, não o LED com halo"
+    }
+  },
+  "categories": [
+    "vintage",
+    "audio",
+    "estado"
+  ],
   "type": "registry:ui"
 }

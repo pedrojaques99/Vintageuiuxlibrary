@@ -19,5 +19,18 @@
       "type": "registry:ui"
     }
   ],
+  "meta": {
+    "uso": {
+      "quando": "Ação irreversível e cara, como excluir conta ou projeto, exigindo segurar o botão",
+      "evite": "Ação reversível e frequente: confirm-morph; pagamento por arrasto no celular, slide-to-confirm"
+    }
+  },
+  "categories": [
+    "controles",
+    "botao",
+    "confirmacao",
+    "destrutivo",
+    "gesto"
+  ],
   "type": "registry:ui"
 }
