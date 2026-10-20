@@ -19,10 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-The MIT license covers the source code. Photos, videos and other media under
-`public/media` and `public/shots` are © Visant Labs, all rights reserved, and
-are included only to demo the components. Third-party code and assets keep
-their own licenses, listed in ATTRIBUTIONS.md.
