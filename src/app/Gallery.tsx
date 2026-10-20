@@ -440,7 +440,10 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
         </h1>
         {familia ? null : (
           <p className="mt-3 max-w-xl text-casa-lg text-casa-fg-2">
-            {CATALOG.length} peças pra React. Cada uma veste a marca que você escolher.
+            {/* Conta componente, não tema: o mesmo número que a descrição de SEO
+                (`prerender.mjs`) tira do registry. */}
+            {CATALOG.filter((i) => i.type !== "theme").length} componentes pra React. Cada um
+            veste a marca que você escolher.
           </p>
         )}
       </section>
