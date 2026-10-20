@@ -3,183 +3,69 @@
 /**
  * Motion e estado: o kit montado como um gerador de imagens de exemplo.
  *
- * A versão anterior era a linha do tempo de um job contada em seis trechos
- * numerados ("01 enfileirado", "02 trabalhando"...), cada um com legenda. Lia
- * como aula. Aqui é UMA tela de app: o pedido à esquerda (texto, referência,
- * fila), os resultados chegando no meio e as exportações embaixo, com um erro
- * de verdade no meio delas. Os mesmos estados, no lugar em que a pessoa vai
- * encontrar cada um no produto dela. Quem quer o nome da peça passa o mouse.
+ * A versão anterior punha o job inteiro numa tela só: pedido, fila, quatro
+ * resultados chegando, duas exportações com porcentagem e um erro, tudo
+ * animando junto. O dono leu como "espremido e acontecendo ao mesmo tempo", e
+ * era isso: com seis coisas se mexendo, nenhuma é o estado.
+ *
+ * Agora é UM job, contado em sequência no mesmo lugar: na fila, gerando,
+ * pronto, exportando. A tela avança sozinha num ciclo calmo, e as etapas no
+ * topo são botões: quem quer ver um estado com calma clica nele. Em cada
+ * momento só uma região se mexe; o resto está parado esperando a vez.
  *
  * ── CPU ─────────────────────────────────────────────────────────────────────
  *
- * Um relógio só para a tela inteira, e ele para quando a aba some
- * (`usePageVisible`) ou quando a tela sai de vista (`useInView`). As peças que
- * rodam sozinhas por dentro (o ticker, a névoa) são desmontadas junto: fora de
- * vista os tiles ficam "prontos", que é o estado sem loop.
- *
- * O resultado que ainda não chegou é um `SkeletonMedia` com `shimmer` (o
- * `generating-tile` saiu do acervo em 2026-10-20), e o "tentar de novo" mostra
- * o `status-ticker` na variante `barra`.
+ * O relógio para quando a aba some (`usePageVisible`) ou quando a tela sai de
+ * vista (`useInView`). Parado, a linha de status vira texto e o esqueleto perde
+ * o brilho: nenhuma peça fica rodando loop fora da vista.
  */
 
 import * as React from "react";
-import { ImagePlus, RotateCcw, Sparkles } from "lucide-react";
+import { Download, FileText, ImagePlus, Sparkles } from "lucide-react";
 
 import { StatusTicker } from "../../../registry/visant/ui/status-ticker";
 import { WorkingGlyph } from "../../../registry/visant/ui/working-glyph";
 import { SkeletonMedia } from "../../../registry/visant/ui/skeleton-rail";
 import { PaperShuttle } from "../../../registry/visant/ui/paper-shuttle";
-import { GlitchChars } from "../../../registry/visant/ui/glitch-chars";
-import { TurbulenceField } from "../../../registry/visant/ui/turbulence-field";
-import { GridDots } from "../../../registry/visant/ui/grid-dots";
 import { DropOverlay } from "../../../registry/visant/ui/drop-overlay";
+import { ToastStack, ToastStackProvider, useToastStack } from "../../../registry/visant/ui/toast-stack";
 import { Fold, FoldPart } from "../../../registry/visant/lib/fold-motion";
-import { usePointerParallax } from "../../../registry/visant/hooks/use-pointer-parallax";
 import { Media } from "../media";
 import { usePageVisible, useInView } from "../stage";
 import { Janela, Pecas } from "./sala";
 
-/* Meio degrau acima do chão. Separa sem desenhar borda em todo nível. */
-const DEGRAU = "bg-[color-mix(in_oklab,var(--card)_82%,var(--foreground)_6%)]";
+type Fase = "fila" | "gerando" | "pronto" | "exportando";
+
+const FASES: { id: Fase; rotulo: string }[] = [
+  { id: "fila", rotulo: "Na fila" },
+  { id: "gerando", rotulo: "Gerando" },
+  { id: "pronto", rotulo: "Pronto" },
+  { id: "exportando", rotulo: "Exportando" },
+];
+
+/* Quanto cada fase segura antes de passar a vez. Exportar termina sozinho. */
+const DURACAO: Record<Exclude<Fase, "exportando">, number> = {
+  fila: 3400,
+  gerando: 5600,
+  pronto: 3600,
+};
 
 const CHEGADA =
   "animate-in fade-in [animation-duration:var(--dur-base)] [animation-timing-function:var(--ease-out)]";
 
-const ROTULO = "text-micro text-muted-foreground";
+const BOTAO =
+  "alvo-toque inline-flex items-center justify-center gap-1.5 rounded-[var(--r-control,0.5rem)] px-3.5 py-2 text-apoio font-medium outline-none transition-[background-color,border-color,color,opacity] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] focus-visible:[box-shadow:var(--focus)]";
 
-function Botao({
-  children,
-  onClick,
-  forte,
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  forte?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={
-        "alvo-toque inline-flex items-center justify-center gap-1.5 rounded-[var(--r-control,0.5rem)] px-3 py-2 text-apoio font-medium outline-none transition-[background-color,border-color,color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] focus-visible:[box-shadow:var(--focus)] " +
-        (forte
-          ? "w-full bg-[var(--brand)] text-[var(--brand-foreground)] hover:bg-[color-mix(in_oklab,var(--brand)_88%,var(--foreground))]"
-          : "border border-border text-muted-foreground hover:border-[color-mix(in_oklab,var(--foreground)_30%,transparent)] hover:text-foreground")
-      }
-    >
-      {children}
-    </button>
-  );
-}
+const BOTAO_FORTE = `${BOTAO} bg-[var(--brand)] text-[var(--brand-foreground)] hover:bg-[color-mix(in_oklab,var(--brand)_88%,var(--foreground))]`;
 
-/** O pedido foi aceito e ainda não começou: o lugar onde ele está na fila. */
-function Fila({ posicao, ativo }: { posicao: number; ativo: boolean }) {
-  return (
-    <div className={`relative overflow-hidden rounded-[var(--r-surface,0.875rem)] ${DEGRAU} p-3.5`}>
-      <GridDots opacity={0.16} spacing={18} />
-      {ativo ? <TurbulenceField intensity={0.14} /> : null}
-      <p className={`relative ${ROTULO}`}>Próximo na fila</p>
-      <div className="relative mt-2 grid grid-cols-4 gap-1.5">
-        {[1, 2, 3, 4].map((n) => {
-          const meu = n === posicao;
-          return (
-            <div
-              key={n}
-              className={`grid h-11 place-items-center rounded-[var(--r-control,0.5rem)] border font-mono text-micro tabular-nums transition-[color,border-color] [transition-duration:var(--dur-base)] [transition-timing-function:var(--ease-out)] ${
-                meu ? "border-[var(--brand)] text-foreground" : "border-dashed border-border text-muted-foreground"
-              }`}
-            >
-              {n}
-            </div>
-          );
-        })}
-      </div>
-      <p className="relative mt-2.5 text-apoio text-muted-foreground">
-        Seu pedido é o <span className="font-mono tabular-nums text-foreground">{posicao}º</span>.
-        Nada foi cobrado ainda.
-      </p>
-    </div>
-  );
-}
+const BOTAO_CONTORNO = `${BOTAO} border border-border text-foreground hover:border-[color-mix(in_oklab,var(--foreground)_30%,transparent)] disabled:pointer-events-none disabled:opacity-40`;
 
-/** A grade de resultados: o esqueleto ocupa o lugar do resultado até ele existir. */
-function Resultados({ prontos }: { prontos: boolean[] }) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  usePointerParallax(ref);
-  const profundidade = [14, 6, 16, 9];
-
-  return (
-    <div ref={ref} className="relative">
-      <GridDots opacity={0.14} spacing={18} />
-      <div className="relative grid grid-cols-2 gap-3 xl:grid-cols-4">
-        {prontos.map((pronto, i) => (
-          <div
-            key={i}
-            className={`overflow-hidden rounded-[var(--r-control,0.5rem)] ${DEGRAU}`}
-            style={{
-              transform: `translate3d(calc(var(--px, 0) * ${profundidade[i]}px), calc(var(--py, 0) * ${profundidade[i]}px), 0)`,
-            }}
-          >
-            {pronto ? (
-              <Media papel="cena" indice={i} ratio="1/1" className={`size-full ${CHEGADA}`} />
-            ) : (
-              <SkeletonMedia ratio="1 / 1" radius="0" motion="shimmer" label={false} delay={i * 90} />
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/** A exportação que falhou: a caixa não encolhe e o "tentar de novo" mora nela. */
-function Falha() {
-  type Estado = "erro" | "tentando" | "refeito";
-  const [estado, setEstado] = React.useState<Estado>("erro");
-
-  React.useEffect(() => {
-    if (estado !== "tentando") return;
-    const id = setTimeout(() => setEstado("refeito"), 2400);
-    return () => clearTimeout(id);
-  }, [estado]);
-
-  return (
-    <div className={`flex h-full min-h-[150px] flex-col rounded-[var(--r-surface,0.875rem)] ${DEGRAU} p-4`} role="status" aria-live="polite">
-      <p className={ROTULO}>Variação 5, em 4K</p>
-      <div className="grid flex-1 place-items-center">
-        {estado === "tentando" ? (
-          <div className="w-full">
-            <StatusTicker variant="barra" steps={["Refazendo", "Reenviando"]} showTimer={false} />
-          </div>
-        ) : estado === "refeito" ? (
-          <div className={`flex w-full items-center gap-3 ${CHEGADA}`}>
-            <Media papel="cena" indice={2} ratio="1/1" className="size-12 shrink-0 rounded-[var(--r-control,0.5rem)]" />
-            <p className="text-apoio text-foreground">Pronta na segunda tentativa.</p>
-          </div>
-        ) : (
-          <div className="w-full">
-            <p className="text-apoio leading-relaxed text-foreground">
-              Falhou em 0:22. O modelo recusou o pedido e nada foi cobrado.
-            </p>
-            <div className="mt-3">
-              <Botao onClick={() => setEstado("tentando")}>
-                <RotateCcw className="h-3.5 w-3.5" />
-                Tentar de novo
-              </Botao>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-/** A área de referência: vazia até chegar o primeiro arquivo. */
+/** A referência do pedido: um encaixe pequeno que acende quando algo passa por cima. */
 function Referencia() {
   const [sobre, setSobre] = React.useState(false);
   return (
     <div
-      className="relative"
+      className="relative size-11 shrink-0"
       onMouseEnter={() => setSobre(true)}
       onMouseLeave={() => setSobre(false)}
       onDragOver={(e) => {
@@ -192,115 +78,291 @@ function Referencia() {
         setSobre(false);
       }}
     >
-      <div className="relative grid h-[104px] place-items-center overflow-hidden rounded-[var(--r-control,0.5rem)] border border-dashed border-border px-4 text-center">
-        <GridDots opacity={0.2} spacing={16} />
-        <p className="relative flex items-center gap-2 text-apoio text-muted-foreground">
-          <ImagePlus className="h-4 w-4" aria-hidden="true" />
-          Arraste uma imagem de referência
-        </p>
+      <div
+        className="grid size-full place-items-center rounded-[var(--r-control,0.5rem)] border border-dashed border-border text-muted-foreground"
+        title="Arraste uma imagem de referência"
+      >
+        <ImagePlus className="h-4 w-4" aria-hidden="true" />
+        <span className="sr-only">Arraste uma imagem de referência</span>
       </div>
-      <DropOverlay visible={sobre} message="Solte para usar como referência" />
+      <DropOverlay visible={sobre} message="Solte aqui" />
+    </div>
+  );
+}
+
+/** A linha que diz o que está acontecendo agora. Uma frase, nunca duas. */
+function Status({ fase, ativo, formato }: { fase: Fase; ativo: boolean; formato: "png" | "pdf" }) {
+  if (fase === "fila") {
+    return (
+      <Pecas nomes={["status-ticker"]} className={CHEGADA}>
+        {ativo ? (
+          <StatusTicker
+            variant="pulso"
+            steps={["2º na fila", "1º na fila"]}
+            rotateEverySec={1.6}
+            loop={false}
+            showTimer={false}
+          />
+        ) : (
+          <p className="text-apoio text-muted-foreground">1º na fila</p>
+        )}
+      </Pecas>
+    );
+  }
+  if (fase === "gerando") {
+    return (
+      <Pecas nomes={["working-glyph", "status-ticker"]} className={`flex items-center gap-2.5 ${CHEGADA}`}>
+        <WorkingGlyph variant="pincel" size={16} framed={false} />
+        <div className="min-w-0 max-w-xs flex-1">
+          {ativo ? (
+            <StatusTicker steps={["Desenhando", "Refinando", "Lapidando"]} rotateEverySec={1.8} loop={false} />
+          ) : (
+            <p className="text-apoio text-muted-foreground">Refinando</p>
+          )}
+        </div>
+      </Pecas>
+    );
+  }
+  return (
+    <p className={`text-apoio text-muted-foreground ${CHEGADA}`}>
+      {fase === "pronto"
+        ? "4 imagens prontas em 0:18"
+        : formato === "png"
+          ? "Exportando 4 imagens em PNG"
+          : "Montando a prancha em PDF"}
+    </p>
+  );
+}
+
+/** O lugar das quatro imagens. O tamanho é o mesmo em toda fase: nada pula. */
+function Grade({ fase, ativo, ciclo }: { fase: Fase; ativo: boolean; ciclo: number }) {
+  const classeGrade = "grid grid-cols-2 gap-3 sm:grid-cols-4";
+
+  if (fase === "fila") {
+    return (
+      <div className={classeGrade} aria-hidden="true">
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="aspect-square rounded-[var(--r-control,0.5rem)] border border-dashed border-border"
+          />
+        ))}
+      </div>
+    );
+  }
+
+  if (fase === "gerando") {
+    return (
+      <Pecas nomes={["skeleton-rail"]}>
+        <div className={classeGrade}>
+          {[0, 1, 2, 3].map((i) => (
+            <SkeletonMedia
+              key={i}
+              ratio="1 / 1"
+              radius="var(--r-control, 0.5rem)"
+              motion={ativo ? "shimmer" : "none"}
+              label={i === 0 ? "Gerando as imagens" : false}
+              delay={i * 120}
+            />
+          ))}
+        </div>
+      </Pecas>
+    );
+  }
+
+  const imagens = (
+    <div className={classeGrade}>
+      {[0, 1, 2, 3].map((i) => (
+        <div key={i} className="overflow-hidden rounded-[var(--r-control,0.5rem)]">
+          <Media papel="cena" indice={i} ratio="1/1" className="size-full" />
+        </div>
+      ))}
+    </div>
+  );
+
+  /* A chegada acontece uma vez por ciclo: em "exportando" as imagens já estão lá. */
+  if (fase === "pronto") {
+    return (
+      <Pecas nomes={["fold-motion"]}>
+        <Fold key={ciclo} variant="mist" as="div">
+          <FoldPart>{imagens}</FoldPart>
+        </Fold>
+      </Pecas>
+    );
+  }
+  return imagens;
+}
+
+/** O rodapé do job: as saídas, e o envio delas quando a pessoa pede. */
+function Saida({
+  fase,
+  progresso,
+  formato,
+  exportar,
+}: {
+  fase: Fase;
+  progresso: number;
+  formato: "png" | "pdf";
+  exportar: (f: "png" | "pdf") => void;
+}) {
+  const pronto = fase === "pronto";
+  return (
+    <Pecas nomes={["paper-shuttle", "toast-stack"]} className="grid min-h-[7.5rem] place-items-center">
+      {fase === "exportando" && progresso >= 100 ? (
+        /* Envio terminado: o rodapé fica livre pro aviso ocupar o mesmo lugar. */
+        <span aria-hidden="true" />
+      ) : fase === "exportando" ? (
+        <PaperShuttle
+          className={CHEGADA}
+          progress={formato === "png" ? progresso : undefined}
+          label={formato === "pdf" ? "Montando o PDF" : undefined}
+        />
+      ) : (
+        <div className="flex flex-wrap items-center justify-center gap-2.5">
+          <button type="button" disabled={!pronto} onClick={() => exportar("png")} className={BOTAO_CONTORNO}>
+            <Download className="h-4 w-4" aria-hidden="true" />
+            Baixar PNG
+          </button>
+          <button type="button" disabled={!pronto} onClick={() => exportar("pdf")} className={BOTAO_CONTORNO}>
+            <FileText className="h-4 w-4" aria-hidden="true" />
+            Prancha em PDF
+          </button>
+        </div>
+      )}
+      <ToastStack contained position="bottom-center" label="Avisos do gerador" />
+    </Pecas>
+  );
+}
+
+function Gerador() {
+  const [raiz, naTela] = useInView<HTMLDivElement>("200px");
+  const abaVisivel = usePageVisible();
+  const ativo = naTela && abaVisivel;
+  const { toast } = useToastStack();
+
+  const [fase, setFase] = React.useState<Fase>("fila");
+  const [ciclo, setCiclo] = React.useState(0);
+  const [formato, setFormato] = React.useState<"png" | "pdf">("png");
+  const [progresso, setProgresso] = React.useState(0);
+  const avisado = React.useRef(-1);
+
+  const recomecar = React.useCallback(() => {
+    setCiclo((c) => c + 1);
+    setFase("fila");
+  }, []);
+
+  const exportar = React.useCallback((f: "png" | "pdf") => {
+    avisado.current = -1;
+    setFormato(f);
+    setProgresso(0);
+    setFase("exportando");
+  }, []);
+
+  /* As três primeiras fases passam a vez por tempo. */
+  React.useEffect(() => {
+    if (!ativo || fase === "exportando") return;
+    const id = window.setTimeout(() => {
+      if (fase === "pronto") exportar(ciclo % 2 ? "pdf" : "png");
+      else setFase(fase === "fila" ? "gerando" : "pronto");
+    }, DURACAO[fase]);
+    return () => window.clearTimeout(id);
+  }, [ativo, fase, ciclo, exportar]);
+
+  /* Exportar anda até o fim, avisa e recomeça o ciclo depois de um respiro. */
+  React.useEffect(() => {
+    if (!ativo || fase !== "exportando") return;
+    if (progresso >= 100) {
+      /* Voltar à vista com o envio já completo não repete o aviso. */
+      if (avisado.current !== ciclo) {
+        avisado.current = ciclo;
+        toast({
+          type: "success",
+          title: formato === "png" ? "4 imagens exportadas" : "Prancha pronta",
+          description: formato === "png" ? "garrafa-ambar.zip" : "garrafa-ambar.pdf",
+          duration: 3200,
+        });
+      }
+      const id = window.setTimeout(recomecar, 3600);
+      return () => window.clearTimeout(id);
+    }
+    const id = window.setTimeout(() => setProgresso((p) => Math.min(100, p + 4)), 140);
+    return () => window.clearTimeout(id);
+  }, [ativo, fase, progresso, formato, toast, recomecar]);
+
+  const escolher = (f: Fase) => {
+    if (f === "exportando") exportar(formato);
+    else setFase(f);
+  };
+
+  return (
+    <div ref={raiz}>
+      <Janela endereco="prisma.app/gerar">
+        <div className="mx-auto flex max-w-3xl flex-col px-4 py-8 sm:px-8 sm:py-12">
+          {/* o pedido */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <p className="min-w-0 flex-1 rounded-[var(--r-control,0.5rem)] border border-border bg-background px-3.5 py-2.5 text-apoio leading-relaxed text-foreground">
+              Garrafa de vidro âmbar sobre mesa de pedra, luz de fim de tarde.
+            </p>
+            <div className="flex items-center gap-3">
+              <Pecas nomes={["drop-overlay"]}>
+                <Referencia />
+              </Pecas>
+              <button type="button" onClick={recomecar} className={`${BOTAO_FORTE} flex-1 sm:flex-none`}>
+                <Sparkles className="h-4 w-4" aria-hidden="true" />
+                Gerar
+              </button>
+            </div>
+          </div>
+
+          {/* as etapas: dizem onde o job está e deixam ir direto a uma delas */}
+          <ol className="mt-10 grid grid-cols-4 gap-2 sm:mt-12" aria-label="Etapas do pedido">
+            {FASES.map((f) => {
+              const atual = f.id === fase;
+              return (
+                <li key={f.id}>
+                  <button
+                    type="button"
+                    onClick={() => escolher(f.id)}
+                    aria-current={atual ? "step" : undefined}
+                    className={`alvo-toque flex w-full flex-col gap-2 rounded-[var(--r-control,0.5rem)] pb-1 text-left text-micro outline-none transition-[color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] focus-visible:[box-shadow:var(--focus)] sm:text-apoio ${
+                      atual ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={`h-0.5 w-full rounded-full transition-[background-color] [transition-duration:var(--dur-base)] [transition-timing-function:var(--ease-out)] ${
+                        atual ? "bg-[var(--brand)]" : "bg-border"
+                      }`}
+                    />
+                    {f.rotulo}
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+
+          {/* o estado atual, num lugar só */}
+          <div className="mt-8 flex min-h-[2rem] items-center" role="status" aria-live="polite">
+            <Status key={`${fase}-${ciclo}`} fase={fase} ativo={ativo} formato={formato} />
+          </div>
+
+          <div className="mt-4">
+            <Grade fase={fase} ativo={ativo} ciclo={ciclo} />
+          </div>
+
+          <div className="mt-6">
+            <Saida fase={fase} progresso={progresso} formato={formato} exportar={exportar} />
+          </div>
+        </div>
+      </Janela>
     </div>
   );
 }
 
 export default function MotionEEstado() {
-  const [raiz, naTela] = useInView<HTMLDivElement>("200px");
-  const abaVisivel = usePageVisible();
-  const ativo = naTela && abaVisivel;
-
-  /* Um relógio só; cada parte deriva o estado dela por aritmética. */
-  const [tique, setTique] = React.useState(0);
-  React.useEffect(() => {
-    if (!ativo) return;
-    const id = setInterval(() => setTique((t) => t + 1), 120);
-    return () => clearInterval(id);
-  }, [ativo]);
-
-  const posicaoNaFila = 4 - Math.floor((tique % 96) / 24);
-  /* Sobe até 100 e segura alguns segundos antes de recomeçar. */
-  const progresso = Math.min(100, (tique % 96) * 1.6);
-  const prontos = [0, 1, 2, 3].map((i) => (ativo ? (tique + i * 19) % 116 > 58 : true));
-  const quantos = prontos.filter(Boolean).length;
-
   return (
-    <div ref={raiz}>
-      <Janela endereco="prisma.app/gerar">
-        <div className="grid lg:grid-cols-[19rem_1fr]">
-          {/* o pedido */}
-          <aside className="flex flex-col gap-4 border-b border-border p-4 sm:p-5 lg:border-b-0 lg:border-r">
-            <div>
-              <p className={ROTULO}>Descreva a imagem</p>
-              <p className="mt-1.5 rounded-[var(--r-control,0.5rem)] border border-border bg-background px-3 py-2.5 text-apoio leading-relaxed text-foreground">
-                Garrafa de vidro âmbar sobre mesa de pedra, luz de fim de tarde, fundo desfocado.
-              </p>
-            </div>
-            <Pecas nomes={["drop-overlay", "grid-dots"]}>
-              <Referencia />
-            </Pecas>
-            <div className="flex items-center justify-between text-apoio text-muted-foreground">
-              <span>4 variações</span>
-              <span className="font-mono tabular-nums">1:1 · 2048 px</span>
-            </div>
-            <Botao forte>
-              <Sparkles className="h-4 w-4" aria-hidden="true" />
-              Gerar de novo
-            </Botao>
-            <Pecas nomes={["turbulence-field", "grid-dots"]}>
-              <Fila posicao={posicaoNaFila} ativo={ativo} />
-            </Pecas>
-          </aside>
-
-          {/* o que está chegando */}
-          <main className="min-w-0 p-4 sm:p-5">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pb-4">
-              <Pecas nomes={["working-glyph", "status-ticker"]} className="flex min-w-0 flex-1 basis-full items-center gap-3 sm:basis-0">
-                <WorkingGlyph size={22} />
-                <div className="min-h-[1.75rem] min-w-0 max-w-xs flex-1">{ativo ? <StatusTicker /> : null}</div>
-              </Pecas>
-              <Pecas nomes={["glitch-chars"]} canto="base-fim">
-                <span className="font-mono text-apoio text-muted-foreground">
-                  pedido #{ativo ? <GlitchChars length={4} /> : "7f3a"}
-                </span>
-              </Pecas>
-              <span className="font-mono text-micro tabular-nums text-muted-foreground">
-                {quantos} de 4 prontas
-              </span>
-            </div>
-
-            <Fold variant="mask" as="div">
-              <FoldPart>
-                <Pecas nomes={["skeleton-rail", "use-pointer-parallax", "fold-motion"]}>
-                  <Resultados prontos={prontos} />
-                </Pecas>
-              </FoldPart>
-            </Fold>
-
-            <h3 className="mt-7 text-apoio font-medium">Exportações</h3>
-            <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
-              <Pecas nomes={["paper-shuttle"]}>
-                <div className={`flex min-h-[150px] flex-col rounded-[var(--r-surface,0.875rem)] ${DEGRAU} p-4`}>
-                  <p className={ROTULO}>4 imagens em PNG</p>
-                  <div className="grid flex-1 place-items-center">
-                    {ativo ? <PaperShuttle progress={progresso} /> : null}
-                  </div>
-                </div>
-              </Pecas>
-              <Pecas nomes={["paper-shuttle"]}>
-                <div className={`flex min-h-[150px] flex-col rounded-[var(--r-surface,0.875rem)] ${DEGRAU} p-4`}>
-                  <p className={ROTULO}>Prancha em PDF</p>
-                  <div className="grid flex-1 place-items-center">
-                    {ativo ? <PaperShuttle label="Montando o PDF" /> : null}
-                  </div>
-                </div>
-              </Pecas>
-              <Pecas nomes={["status-ticker"]}>
-                <Falha />
-              </Pecas>
-            </div>
-          </main>
-        </div>
-      </Janela>
-    </div>
+    <ToastStackProvider>
+      <Gerador />
+    </ToastStackProvider>
   );
 }

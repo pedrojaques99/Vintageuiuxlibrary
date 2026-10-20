@@ -1,4 +1,10 @@
 {
+  "cover-art": {
+    "nota": 2,
+    "comentario": "mt slop, pode esconder",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
   "css-color": {
     "nota": 2,
     "comentario": "pode esconder",
@@ -14,6 +20,12 @@
   "fog-garden": {
     "nota": 3,
     "comentario": "tem que ser mais compacta e com texto genérico, 2 posicoes, bem mais reduzido, mantém a estética, tirar o scroll bar (ta aprecendo texto do meu cliente, tem q ser agnostico, todos os da library)",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
+  "plate": {
+    "nota": 2,
+    "comentario": "inutil quase",
     "excluir": false,
     "data": "2026-10-20"
   },

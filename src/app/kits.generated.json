@@ -37,13 +37,10 @@
   "motion-e-estado": [
     "drop-overlay",
     "fold-motion",
-    "glitch-chars",
-    "grid-dots",
     "paper-shuttle",
     "skeleton-rail",
     "status-ticker",
-    "turbulence-field",
-    "use-pointer-parallax",
+    "toast-stack",
     "working-glyph"
   ],
   "rig-vintage": [

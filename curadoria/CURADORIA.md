@@ -2,7 +2,7 @@
 
 <!-- Gerado por scripts/vite-curadoria.mjs a partir de notas.json. Não edite à mão. -->
 
-**1 na vitrine** · 4 arquivada(s) (nota ≤ 2) · 0 pra excluir
+**1 na vitrine** · 6 arquivada(s) (nota ≤ 2) · 0 pra excluir
 
 ## Na vitrine
 
@@ -14,8 +14,10 @@
 
 | peça | nota | comentário |
 |---|---|---|
+| `cover-art` | ★★☆☆☆ | mt slop, pode esconder |
 | `css-color` | ★★☆☆☆ | pode esconder |
 | `dot-cursor` | ★★☆☆☆ | posicao do cursor super bugada, e ta com scroll horizontal e vertical, refaça o shell disso |
+| `plate` | ★★☆☆☆ | inutil quase |
 | `sfx-toggle` | ★★☆☆☆ | deixar fora do cat�logo (segue no cabe�alho) |
 | `vintage-command-palette` | ★☆☆☆☆ | mal apresentado, meio inutil; fica s� como a paleta do Rig vintage, fora da vitrine |
 

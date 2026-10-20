@@ -67,7 +67,7 @@ export const KITS: Kit[] = [
     slug: "motion-e-estado",
     label: "Motion e estado",
     title: "Motion e estado",
-    tese: "Um gerador de imagens de exemplo, com fila, espera, progresso, erro e vazio rodando de verdade. Passe o mouse pra ver qual peça é.",
+    tese: "Um gerador de imagens de exemplo: o mesmo pedido passa por fila, espera, resultado e exportação, um estado de cada vez. Passe o mouse pra ver qual peça é.",
     escura: true,
     Composicao: React.lazy(() => import("./kits/motion-e-estado")),
   },
