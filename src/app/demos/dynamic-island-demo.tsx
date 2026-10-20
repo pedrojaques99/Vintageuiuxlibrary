@@ -171,7 +171,7 @@ export default function DynamicIslandDemo({ props }: DemoProps) {
             onClick={() => setAtividade(a)}
             className={
               "rounded-[var(--r-control)] px-1.5 py-1 text-xs outline-none transition-[color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] focus-visible:[box-shadow:var(--focus)] " +
-              (atividade === a ? "text-foreground" : "text-muted-foreground/70 hover:text-muted-foreground")
+              (atividade === a ? "text-foreground" : "text-muted-foreground hover:text-foreground")
             }
           >
             {NOMES[a]}

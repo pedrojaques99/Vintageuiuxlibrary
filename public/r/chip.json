@@ -3,7 +3,7 @@
   "name": "chip",
   "title": "Chip",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Pastilha de filtro com contagem que nunca renderiza zero.",
+  "description": "Pastilha de filtro com contagem; a faceta sem resultado apaga em vez de mostrar zero.",
   "registryDependencies": [
     "utils"
   ],

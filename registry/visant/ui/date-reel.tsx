@@ -86,7 +86,9 @@ function Rolo({ itens, indice, onIndice, label, reduzir, className }: RoloProps)
       const d = i - pos;
       const longe = Math.abs(d) > MEIO + 1;
       linha.style.transform = longe ? "" : `rotateX(${-d * GRAU_POR_LINHA}deg)`;
-      linha.style.opacity = String(Math.max(0, 1 - Math.abs(d) * 0.28));
+      // Piso de 0,45 nos vizinhos visíveis: abaixo disso o número some no branco
+      // (o teste de fundo branco mediu 1,8:1). Além da janela, apaga de vez.
+      linha.style.opacity = String(Math.abs(d) > MEIO + 0.5 ? 0 : Math.max(0.45, 1 - Math.abs(d) * 0.22));
     });
   }, []);
 
@@ -230,7 +232,7 @@ function Rolo({ itens, indice, onIndice, label, reduzir, className }: RoloProps)
           onClick={() => mover(i)}
           className={cn(
             "flex snap-center items-center justify-center whitespace-nowrap px-2 text-[17px] tabular-nums [backface-visibility:hidden]",
-            i === indice ? "font-medium text-foreground" : "text-muted-foreground",
+            i === indice ? "font-medium text-foreground" : "text-foreground",
           )}
           style={{ height: LINHA }}
         >

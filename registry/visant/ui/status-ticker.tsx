@@ -166,7 +166,7 @@ export function StatusTicker({
   }, [stepsKey, rotateEverySec]);
 
   const relogio = showTimer ? (
-    <span aria-hidden="true" className="ml-auto pl-3 text-[10px] tabular-nums text-muted-foreground">
+    <span aria-hidden="true" className="ml-auto shrink-0 pl-3 text-[10px] tabular-nums text-muted-foreground">
       {timer}
     </span>
   ) : null;
@@ -213,7 +213,7 @@ export function StatusTicker({
               {agora ? (
                 palavra
               ) : (
-                <span className={cn("min-w-[120px]", feito ? "text-muted-foreground" : "text-muted-foreground/50")}>
+                <span className={cn("min-w-[120px]", feito ? "text-muted-foreground line-through decoration-1" : "text-muted-foreground")}>
                   {passo}
                 </span>
               )}

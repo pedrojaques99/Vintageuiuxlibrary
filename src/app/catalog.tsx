@@ -754,7 +754,7 @@ export const CATALOG: CatalogItem[] = [
       "O texto que segura a pessoa durante uma espera longa, em quatro desenhos: linha com cronômetro, barra que varre, etapas e pulso.",
     tags: ["espera", "ia", "estado"],
     demo: StatusTickerDemo,
-    preview: { w: 600, h: 300 },
+    preview: { w: 440, h: 240 },
   },
   {
     name: "working-glyph",
@@ -765,7 +765,7 @@ export const CATALOG: CatalogItem[] = [
       "Ícone que trabalha enquanto o sistema trabalha: picareta, martelo, engrenagem, pincel ou faísca, e o brilho corre só no traço.",
     tags: ["espera", "ícone"],
     demo: WorkingGlyphDemo,
-    preview: { w: 540, h: 200 },
+    preview: { w: 320, h: 220 },
   },
   {
     name: "paper-shuttle",

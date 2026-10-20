@@ -3,7 +3,7 @@
   "name": "working-glyph",
   "title": "Working Glyph",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Ícone que bate com faísca. O sistema mostra esforço em vez de pedir paciência.",
+  "description": "Ícone que trabalha enquanto o sistema trabalha: picareta, martelo, engrenagem, pincel ou faísca, e o brilho corre só no traço.",
   "dependencies": [
     "lucide-react"
   ],
@@ -15,55 +15,9 @@
   "files": [
     {
       "path": "registry/visant/ui/working-glyph.tsx",
-      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Pickaxe } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\nimport { GlitchChars } from \"@/components/ui/glitch-chars\";\n\n/**\n * Um ícone que \"bate\" com faíscas — trabalho manual acontecendo, não espera.\n *\n * A diferença para um spinner é de narrativa: spinner é o sistema pedindo\n * paciência, isto é o sistema mostrando esforço. Em geração de imagem (20–60s)\n * essa leitura é o que segura o usuário na tela.\n *\n * O ícone entra por prop — a picareta é só o default da casa. Troque por\n * `Hammer`, `Wand`, `Cog` conforme a metáfora do produto; a mecânica (balanço +\n * brilho + faísca) é o que se colhe aqui.\n *\n * Balanço em 0.9s com `transform-origin` em 60%/80%: o pivô fica onde a mão\n * seguraria o cabo. Centralizar o pivô mata o gesto na hora.\n *\n * `prefers-reduced-motion`: ícone parado, faísca congelada (regra no bloco `css`\n * do item — se o glifo não parar, o CSS do registry não foi instalado).\n */\nexport function WorkingGlyph({\n  icon,\n  size = 20,\n  framed = true,\n  className,\n}: {\n  /** Glifo animado. Default: picareta (lucide). */\n  icon?: React.ReactNode;\n  size?: number;\n  /** Moldura discreta atrás do ícone. Desligue ao usar sobre imagem. */\n  framed?: boolean;\n  className?: string;\n}) {\n  return (\n    <div\n      className={cn(\n        \"relative inline-flex items-center justify-center overflow-visible text-brand\",\n        framed &&\n          \"rounded-[var(--r-control)] border border-border bg-background/30 px-3 py-2\",\n        className,\n      )}\n      aria-hidden=\"true\"\n    >\n      <span className=\"working-glyph-swing working-glyph-shine relative z-10 inline-block\">\n        {icon ?? <Pickaxe size={size} />}\n      </span>\n\n      {/* Faísca na zona de impacto da ponta, mais rápida que o texto de status.\n          Sem moldura a caixa é do tamanho do ícone, então a faísca sai para fora\n          dela — dentro, ela caía em cima do próprio glifo e virava sujeira. */}\n      <GlitchChars\n        length={1}\n        intervalMs={120}\n        className={cn(\n          \"absolute text-[10px] font-bold leading-none opacity-80\",\n          framed ? \"bottom-1 right-1.5\" : \"-bottom-1.5 -right-1.5\",\n        )}\n      />\n    </div>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Cog, Hammer, Paintbrush, Pickaxe, Sparkles, type LucideIcon } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\nimport { GlitchChars } from \"@/components/ui/glitch-chars\";\n\n/**\n * Um ícone trabalhando: o sistema mostrando esforço em vez de pedir paciência.\n *\n * A diferença para um spinner é de narrativa: spinner é o sistema pedindo\n * paciência, isto é o sistema mostrando esforço. Em geração de imagem (20–60s)\n * essa leitura é o que segura o usuário na tela.\n *\n * ── Cinco ofícios, cada um com o gesto dele ────────────────────────────────\n *\n * | `variant` | ícone | gesto |\n * |---|---|---|\n * | `picareta` | Pickaxe | balanço com pivô no cabo, faísca na ponta |\n * | `martelo` | Hammer | golpe seco e volta lenta, faísca no impacto |\n * | `engrenagem` | Cog | giro contínuo, sem faísca (máquina, não mão) |\n * | `pincel` | Paintbrush | pincelada curta indo e voltando |\n * | `faisca` | Sparkles | respiro de escala, pra espera de \"mágica\" |\n *\n * O `icon` continua aberto: passe outro glifo e ele herda o gesto da variante.\n *\n * ── O brilho mora no traço, não na caixa ───────────────────────────────────\n *\n * A versão anterior varria um gradiente por cima da caixa inteira, e com a\n * moldura ligada o brilho atravessava o quadrado todo em vez do ícone. Agora o\n * brilho é uma CÓPIA do próprio ícone em tom cheio sobre a base um tom abaixo,\n * revelada por uma faixa inclinada em `clip-path`. Só os pixels do traço acendem.\n *\n * Toda animação é Web Animations API, sem bloco `css` a instalar à parte. Sob\n * `prefers-reduced-motion` o ícone fica parado e sem brilho.\n */\n\nexport type WorkingGlyphVariant = \"picareta\" | \"martelo\" | \"engrenagem\" | \"pincel\" | \"faisca\";\n\ntype Gesto = {\n  icone: LucideIcon;\n  quadros: Keyframe[];\n  opcoes: KeyframeAnimationOptions;\n  origem: string;\n  faisca: boolean;\n};\n\nconst GESTOS: Record<WorkingGlyphVariant, Gesto> = {\n  picareta: {\n    icone: Pickaxe,\n    // Pivô em 60%/80%: onde a mão seguraria o cabo. Centralizar mata o gesto.\n    quadros: [\n      { transform: \"rotate(-8deg) translateY(0)\" },\n      { transform: \"rotate(6deg) translateY(1px)\", offset: 0.4 },\n      { transform: \"rotate(3deg) translateY(2px)\", offset: 0.6 },\n      { transform: \"rotate(-8deg) translateY(0)\" },\n    ],\n    opcoes: { duration: 900, iterations: Infinity, easing: \"ease-in-out\" },\n    origem: \"60% 80%\",\n    faisca: true,\n  },\n  martelo: {\n    icone: Hammer,\n    // Golpe em 25% do ciclo, volta no resto: a assimetria é o peso do martelo.\n    quadros: [\n      { transform: \"rotate(-28deg)\", easing: \"cubic-bezier(0.55, 0, 1, 0.45)\" },\n      { transform: \"rotate(6deg)\", offset: 0.25, easing: \"ease-out\" },\n      { transform: \"rotate(2deg)\", offset: 0.35, easing: \"cubic-bezier(0.22, 0.61, 0.36, 1)\" },\n      { transform: \"rotate(-28deg)\" },\n    ],\n    opcoes: { duration: 1000, iterations: Infinity },\n    origem: \"20% 85%\",\n    faisca: true,\n  },\n  engrenagem: {\n    icone: Cog,\n    quadros: [{ transform: \"rotate(0deg)\" }, { transform: \"rotate(360deg)\" }],\n    opcoes: { duration: 2800, iterations: Infinity, easing: \"linear\" },\n    origem: \"50% 50%\",\n    faisca: false,\n  },\n  pincel: {\n    icone: Paintbrush,\n    quadros: [\n      { transform: \"translate(-2px, 1px) rotate(-6deg)\" },\n      { transform: \"translate(2px, -1px) rotate(4deg)\", offset: 0.5 },\n      { transform: \"translate(-2px, 1px) rotate(-6deg)\" },\n    ],\n    opcoes: { duration: 1100, iterations: Infinity, easing: \"ease-in-out\" },\n    origem: \"80% 20%\",\n    faisca: false,\n  },\n  faisca: {\n    icone: Sparkles,\n    quadros: [\n      { transform: \"scale(0.9) rotate(-4deg)\", opacity: 0.75 },\n      { transform: \"scale(1.08) rotate(4deg)\", opacity: 1, offset: 0.5 },\n      { transform: \"scale(0.9) rotate(-4deg)\", opacity: 0.75 },\n    ],\n    opcoes: { duration: 1600, iterations: Infinity, easing: \"ease-in-out\" },\n    origem: \"50% 50%\",\n    faisca: false,\n  },\n};\n\n/** Faixa inclinada atravessando o glifo, e depois pausa: brilho, não estrobo. */\nconst BRILHO: Keyframe[] = [\n  { clipPath: \"polygon(-40% 0%, -10% 0%, -30% 100%, -60% 100%)\" },\n  { clipPath: \"polygon(110% 0%, 140% 0%, 120% 100%, 90% 100%)\", offset: 0.45 },\n  { clipPath: \"polygon(110% 0%, 140% 0%, 120% 100%, 90% 100%)\" },\n];\n\nfunction useAnimacao(\n  ref: React.RefObject<HTMLElement | null>,\n  quadros: Keyframe[] | null,\n  opcoes: KeyframeAnimationOptions,\n  chave: string,\n) {\n  React.useEffect(() => {\n    const el = ref.current;\n    if (!el || !quadros || typeof el.animate !== \"function\") return;\n    const media = window.matchMedia?.(\"(prefers-reduced-motion: reduce)\");\n    let anim: Animation | null = null;\n    const aplicar = () => {\n      anim?.cancel();\n      anim = media?.matches ? null : el.animate(quadros, opcoes);\n    };\n    aplicar();\n    media?.addEventListener?.(\"change\", aplicar);\n    return () => {\n      anim?.cancel();\n      media?.removeEventListener?.(\"change\", aplicar);\n    };\n    // `chave` resume quadros + opções: os objetos vêm de uma tabela estável.\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n  }, [chave]);\n}\n\nexport function WorkingGlyph({\n  variant = \"picareta\",\n  icon,\n  size = 20,\n  framed = true,\n  shine = true,\n  className,\n}: {\n  /** O ofício: ícone + gesto. Ver a tabela acima. */\n  variant?: WorkingGlyphVariant;\n  /** Troca o glifo e mantém o gesto da variante. */\n  icon?: React.ReactNode;\n  size?: number;\n  /** Moldura discreta atrás do ícone. Desligue ao usar sobre imagem. */\n  framed?: boolean;\n  /** Faixa de luz passando pelo traço do ícone. */\n  shine?: boolean;\n  className?: string;\n}) {\n  const gesto = GESTOS[variant] ?? GESTOS.picareta;\n  const Icone = gesto.icone;\n  const glifo = icon ?? <Icone size={size} />;\n\n  const corpo = React.useRef<HTMLSpanElement>(null);\n  const luz = React.useRef<HTMLSpanElement>(null);\n  useAnimacao(corpo, gesto.quadros, gesto.opcoes, variant);\n  useAnimacao(\n    luz,\n    shine ? BRILHO : null,\n    { duration: 2600, iterations: Infinity, easing: \"ease-in-out\", delay: 300 },\n    `${variant}-${shine}`,\n  );\n\n  return (\n    <div\n      className={cn(\n        \"relative inline-flex items-center justify-center overflow-visible text-foreground\",\n        framed && \"rounded-[var(--r-control)] border border-border bg-background/30 px-3 py-2\",\n        className,\n      )}\n      aria-hidden=\"true\"\n    >\n      <span ref={corpo} className=\"relative inline-grid\" style={{ transformOrigin: gesto.origem }}>\n        {/* Com brilho, o glifo de base descansa um tom abaixo e a faixa devolve\n            o tom cheio: a luz aparece em qualquer cor de marca e em qualquer\n            tema, porque é contraste com o próprio ícone, não uma cor nova. */}\n        <span className={cn(\"col-start-1 row-start-1 inline-flex\", shine && \"opacity-70\")}>{glifo}</span>\n        {shine ? (\n          // A cópia que acende. Começa fora do quadro (clip vazio), então sem\n          // animação, ou com movimento reduzido, ela simplesmente não aparece.\n          <span\n            ref={luz}\n            className=\"col-start-1 row-start-1 inline-flex [filter:brightness(1.35)]\"\n            style={{ clipPath: \"polygon(-40% 0%, -10% 0%, -30% 100%, -60% 100%)\" }}\n          >\n            {glifo}\n          </span>\n        ) : null}\n      </span>\n\n      {/* Faísca só nos ofícios de impacto. Sem moldura a caixa é do tamanho do\n          ícone, então a faísca sai pra fora dela; dentro, cairia em cima do\n          próprio glifo e viraria sujeira. */}\n      {gesto.faisca ? (\n        <GlitchChars\n          length={1}\n          intervalMs={120}\n          className={cn(\n            \"absolute text-[10px] font-bold leading-none opacity-80\",\n            framed ? \"bottom-1 right-1.5\" : \"-bottom-1.5 -right-1.5\",\n          )}\n        />\n      ) : null}\n    </div>\n  );\n}\n",
       "type": "registry:ui"
     }
   ],
-  "css": {
-    ".working-glyph-swing": {
-      "animation": "visant-glyph-swing .9s ease-in-out infinite",
-      "transform-origin": "60% 80%"
-    },
-    "@keyframes visant-glyph-swing": {
-      "0%": {
-        "transform": "rotate(-8deg) translateY(0)"
-      },
-      "40%": {
-        "transform": "rotate(6deg) translateY(1px)"
-      },
-      "60%": {
-        "transform": "rotate(3deg) translateY(2px)"
-      },
-      "100%": {
-        "transform": "rotate(-8deg) translateY(0)"
-      }
-    },
-    ".working-glyph-shine": {
-      "position": "relative",
-      "overflow": "hidden"
-    },
-    ".working-glyph-shine::before": {
-      "content": "''",
-      "position": "absolute",
-      "inset": "-50%",
-      "background-image": "linear-gradient(115deg, transparent 40%, color-mix(in oklch, currentColor 45%, transparent) 50%, transparent 60%)",
-      "background-size": "250% 250%",
-      "animation": "visant-glyph-shine 2.4s linear infinite",
-      "pointer-events": "none"
-    },
-    "@keyframes visant-glyph-shine": {
-      "0%": {
-        "background-position": "-200% -200%"
-      },
-      "100%": {
-        "background-position": "200% 200%"
-      }
-    },
-    "@media (prefers-reduced-motion: reduce)": {
-      ".working-glyph-swing, .working-glyph-shine::before": {
-        "animation": "none"
-      }
-    }
-  },
   "type": "registry:ui"
 }

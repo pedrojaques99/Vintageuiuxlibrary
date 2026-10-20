@@ -156,6 +156,9 @@
           "type": "registry:hook",
           "target": "@hooks/use-knob-drag.ts"
         }
+      ],
+      "registryDependencies": [
+        "@visant/sfx-bus"
       ]
     },
     {
@@ -200,7 +203,8 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -270,7 +274,8 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -287,7 +292,8 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -357,7 +363,8 @@
         "@visant/vintage-theme",
         "utils",
         "https://visant-ui.vercel.app/r/vintage-oscilloscope.json",
-        "@visant/vintage-oscilloscope"
+        "@visant/vintage-oscilloscope",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -393,7 +400,8 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -475,7 +483,7 @@
       "name": "rail",
       "type": "registry:ui",
       "title": "Rail",
-      "description": "Trilho horizontal com snap, setas que somem nas pontas e scroll por teclado.",
+      "description": "Trilho horizontal com snap: anda por arrasto, Shift + roda, setas e teclado; as setas somem nas pontas.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -503,6 +511,9 @@
           "path": "registry/visant/ui/reels-rail.tsx",
           "type": "registry:ui"
         }
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -525,7 +536,7 @@
       "name": "chip",
       "type": "registry:ui",
       "title": "Chip",
-      "description": "Pastilha de filtro com contagem que nunca renderiza zero.",
+      "description": "Pastilha de filtro com contagem; a faceta sem resultado apaga em vez de mostrar zero.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -738,26 +749,6 @@
       ]
     },
     {
-      "name": "octahedron-loader",
-      "type": "registry:ui",
-      "title": "Octahedron Loader",
-      "description": "Carregamento com sólido girando. A marca da casa em espera curta.",
-      "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": [
-        "utils"
-      ],
-      "files": [
-        {
-          "path": "registry/visant/ui/octahedron-loader.tsx",
-          "type": "registry:ui"
-        }
-      ],
-      "dependencies": [
-        "@lottiefiles/dotlottie-react",
-        "framer-motion"
-      ]
-    },
-    {
       "name": "inline-edit",
       "type": "registry:ui",
       "title": "Inline Edit",
@@ -892,7 +883,7 @@
       "name": "glitch-chars",
       "type": "registry:ui",
       "title": "Glitch Chars",
-      "description": "Caracteres que trocam sozinhos. Textura de máquina trabalhando, em duas letras.",
+      "description": "Caracteres que trocam sozinhos, em cinco sotaques (símbolos, blocos, braille, binário, hex), ou decodificando até virar uma palavra.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -908,7 +899,7 @@
       "name": "status-ticker",
       "type": "registry:ui",
       "title": "Status Ticker",
-      "description": "O texto que segura a pessoa durante uma espera longa: passo atual, cronômetro e glitch de máquina.",
+      "description": "O texto que segura a pessoa durante uma espera longa, em quatro desenhos: linha com cronômetro, barra que varre, etapas e pulso.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils",
@@ -942,7 +933,7 @@
       "name": "working-glyph",
       "type": "registry:ui",
       "title": "Working Glyph",
-      "description": "Ícone que bate com faísca. O sistema mostra esforço em vez de pedir paciência.",
+      "description": "Ícone que trabalha enquanto o sistema trabalha: picareta, martelo, engrenagem, pincel ou faísca, e o brilho corre só no traço.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "dependencies": [
         "lucide-react"
@@ -957,53 +948,7 @@
           "path": "registry/visant/ui/working-glyph.tsx",
           "type": "registry:ui"
         }
-      ],
-      "css": {
-        ".working-glyph-swing": {
-          "animation": "visant-glyph-swing .9s ease-in-out infinite",
-          "transform-origin": "60% 80%"
-        },
-        "@keyframes visant-glyph-swing": {
-          "0%": {
-            "transform": "rotate(-8deg) translateY(0)"
-          },
-          "40%": {
-            "transform": "rotate(6deg) translateY(1px)"
-          },
-          "60%": {
-            "transform": "rotate(3deg) translateY(2px)"
-          },
-          "100%": {
-            "transform": "rotate(-8deg) translateY(0)"
-          }
-        },
-        ".working-glyph-shine": {
-          "position": "relative",
-          "overflow": "hidden"
-        },
-        ".working-glyph-shine::before": {
-          "content": "''",
-          "position": "absolute",
-          "inset": "-50%",
-          "background-image": "linear-gradient(115deg, transparent 40%, color-mix(in oklch, currentColor 45%, transparent) 50%, transparent 60%)",
-          "background-size": "250% 250%",
-          "animation": "visant-glyph-shine 2.4s linear infinite",
-          "pointer-events": "none"
-        },
-        "@keyframes visant-glyph-shine": {
-          "0%": {
-            "background-position": "-200% -200%"
-          },
-          "100%": {
-            "background-position": "200% 200%"
-          }
-        },
-        "@media (prefers-reduced-motion: reduce)": {
-          ".working-glyph-swing, .working-glyph-shine::before": {
-            "animation": "none"
-          }
-        }
-      }
+      ]
     },
     {
       "name": "paper-shuttle",
@@ -1015,35 +960,11 @@
         "framer-motion"
       ],
       "registryDependencies": [
-        "utils",
-        "https://visant-ui.vercel.app/r/glitch-chars.json",
-        "@visant/glitch-chars"
+        "utils"
       ],
       "files": [
         {
           "path": "registry/visant/ui/paper-shuttle.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "generating-tile",
-      "type": "registry:ui",
-      "title": "Generating Tile",
-      "description": "O quadro que ocupa o lugar do resultado enquanto ele não existe.",
-      "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": [
-        "utils",
-        "https://visant-ui.vercel.app/r/status-ticker.json",
-        "https://visant-ui.vercel.app/r/turbulence-field.json",
-        "https://visant-ui.vercel.app/r/working-glyph.json",
-        "@visant/status-ticker",
-        "@visant/turbulence-field",
-        "@visant/working-glyph"
-      ],
-      "files": [
-        {
-          "path": "registry/visant/ui/generating-tile.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1110,6 +1031,9 @@
           "path": "registry/visant/ui/drop-overlay.tsx",
           "type": "registry:ui"
         }
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1221,7 +1145,7 @@
       "name": "testimonial-wall",
       "type": "registry:block",
       "title": "Testimonial Wall",
-      "description": "Parede de prova social com tipos misturados: citação, número, retrato e depoimento em vídeo na mesma malha.",
+      "description": "Parede de prova social com tipos misturados: citação, número, retrato e depoimento em vídeo na mesma malha, em colunas ou em grade que ocupa a altura, com faixa de fechamento.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -1305,7 +1229,7 @@
       "name": "sfx-bus",
       "type": "registry:lib",
       "title": "SFX Bus",
-      "description": "Dois sons de interface em WebAudio puro, hover e clique, com throttle, debounce por alvo, contexto armado no primeiro gesto e mudo sob prefers-reduced-motion.",
+      "description": "Cliques de objeto analógico em WebAudio puro, sem arquivo: botão de câmera, dente de knob, alavanca e agulha pousando, com throttle, contexto armado no primeiro gesto e mudo sob prefers-reduced-motion.",
       "dependencies": [
         "react"
       ],
@@ -1632,7 +1556,7 @@
       "name": "empty-state",
       "type": "registry:ui",
       "title": "Empty State",
-      "description": "O estado vazio canônico: arte por slot com véu de contraste garantido, eyebrow, frase que diz o que vai aparecer ali, e no máximo uma ação.",
+      "description": "O estado vazio canônico: arte por slot, frase do que vai aparecer ali e no máximo uma ação; com ou sem caixa.",
       "registryDependencies": [
         "utils"
       ],
@@ -1648,7 +1572,7 @@
       "name": "skeleton-rail",
       "type": "registry:ui",
       "title": "Skeleton Rail",
-      "description": "O esqueleto do trilho com as mesmas medidas do trilho: mesmos nomes de prop, overflow hidden em vez de auto, e pulse em vez de shimmer.",
+      "description": "Esqueletos com as medidas do que substituem (trilho, card, lista, texto, mídia), em quatro movimentos: pulse, shimmer, wave ou parado.",
       "registryDependencies": [
         "utils"
       ],
@@ -1707,7 +1631,7 @@
       "name": "gleam",
       "type": "registry:ui",
       "title": "Gleam",
-      "description": "A superfície que sabe onde o cursor está: luz sob o ponteiro, borda acesa do lado da luz e inclinação de 5 graus. Quatro números por quadro no JS, o desenho inteiro no CSS.",
+      "description": "A superfície que sabe onde o cursor está: luz sob o ponteiro, borda acesa do lado da luz e inclinação de 5 graus. Quatro números por quadro no JS, o desenho inteiro no CSS; nasce inclinado e aceso (rest).",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -1792,7 +1716,8 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils",
-        "slider"
+        "slider",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -1894,7 +1819,7 @@
       "name": "nav-drawer",
       "type": "registry:ui",
       "title": "Nav Drawer",
-      "description": "O menu mobile feito uma vez direito: foco preso, Escape, retorno do foco e trava de rolagem vindos do Radix Dialog; entrada em cascata com teto, e ícone que lê o estado em vez de guardar o seu.",
+      "description": "O menu mobile feito uma vez direito, em dois desenhos: gaveta lateral ou página inteira brutalista com imagem. Foco preso, Escape, retorno do foco e trava de rolagem vindos do Radix Dialog.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -2296,7 +2221,8 @@
       "description": "A cortina entre o antes e o depois: a camada de cima é RECORTADA, nunca redimensionada, então as duas fotos ficam na mesma escala. O arrasto, o teclado e o leitor de tela vêm de um input range invisível.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "dependencies": [
-        "gsap"
+        "gsap",
+        "lucide-react"
       ],
       "registryDependencies": [
         "utils"
@@ -2533,7 +2459,7 @@
       "name": "ink-wordmark",
       "type": "registry:ui",
       "title": "Ink Wordmark",
-      "description": "Assinatura de ponta a ponta que condensa da fumaça conforme entra na tela, respira como tinta e se agita com a velocidade do ponteiro, só com filtro SVG.",
+      "description": "Assinatura de ponta a ponta que condensa da fumaça conforme entra na tela, respira como tinta e se agita com a velocidade do ponteiro, só com filtro SVG, ou escrita por prop, com fonte, peso, caixa e ®.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "dependencies": [
         "framer-motion"
@@ -2615,7 +2541,7 @@
       "name": "mist-text",
       "type": "registry:ui",
       "title": "Mist Text",
-      "description": "Texto que sai da névoa por palavra ou letra (desfoque, opacidade e subida mínima): entra uma vez ao chegar na tela, ou acompanha a rolagem ida e volta com mola que não erra a faixa dentro de sticky.",
+      "description": "Texto que sai da névoa por palavra ou letra (desfoque, opacidade e subida mínima): entra uma vez ao chegar na tela, ou acompanha a rolagem ida e volta com mola que não erra a faixa dentro de sticky; cinco entradas por variant: mist, rise, mask, drift e settle.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "dependencies": [
         "framer-motion"
@@ -2672,7 +2598,7 @@
       "name": "mist-dialog",
       "type": "registry:ui",
       "title": "Mist Dialog",
-      "description": "Modal em <dialog> nativo que entra e sai em névoa só com CSS (@starting-style + allow-discrete), controlado, fecha no Esc e no clique fora, com ganchos onOpen/onClose para pausar o scroll suave.",
+      "description": "Modal em <dialog> nativo que entra e sai em névoa só com CSS (@starting-style + allow-discrete), controlado, fecha no Esc e no clique fora, com ganchos onOpen/onClose para pausar o scroll suave; quatro entradas por variant: mist, rise, zoom e wipe.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -2881,7 +2807,8 @@
         "motion"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -2960,7 +2887,8 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -3191,7 +3119,8 @@
         "motion"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -3210,7 +3139,8 @@
         "motion"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -3257,6 +3187,626 @@
         }
       ],
       "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "black-hole",
+      "type": "registry:ui",
+      "title": "Black Hole",
+      "description": "Apagar em lote com as linhas sugadas para um ponto só, a lista se inclinando em volta e o desfazer devolvendo tudo do mesmo lugar.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/black-hole.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "countdown",
+      "type": "registry:ui",
+      "title": "Countdown",
+      "description": "Contagem regressiva em que cada dígito gira pelo caminho curto e vira o aviso de ao vivo quando chega a zero.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/countdown.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "cover-flow",
+      "type": "registry:ui",
+      "title": "Cover Flow",
+      "description": "Uma prateleira de capas em perspectiva: a da vez fica de frente, as vizinhas giram de lado e você arrasta ou joga pra trocar.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/cover-flow.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "date-reel",
+      "type": "registry:ui",
+      "title": "Date Reel",
+      "description": "Seletor de data em rolos de dia, mês e ano que encaixam sozinhos, como no telefone.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/date-reel.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "eye-tracker",
+      "type": "registry:ui",
+      "title": "Eye Tracker",
+      "description": "Um mascote que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique. Quatro rostos (card, orbe, vidro, marca) e quatro olhares.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/eye-tracker.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "orbit-menu",
+      "type": "registry:ui",
+      "title": "Orbit Menu",
+      "description": "Botão que abre as ações em arco ao redor dele, com mola, pra escolher arrastando o dedo ou clicando.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/orbit-menu.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "page-curl",
+      "type": "registry:ui",
+      "title": "Page Curl",
+      "description": "Uma revistinha que você folheia puxando o canto da página, com a dobra, o verso do papel e a próxima página aparecendo por baixo.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/page-curl.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "pull-to-refresh",
+      "type": "registry:ui",
+      "title": "Pull to Refresh",
+      "description": "Painel que estica quando você puxa pra baixo, conta os pontos até a marca e gira enquanto atualiza.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@visant/sfx-bus"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/pull-to-refresh.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "reactions",
+      "type": "registry:ui",
+      "title": "Reactions",
+      "description": "Barra de reações em que a contagem rola pro lado que andou e o ícone dá um pulinho quando você reage.",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "@radix-ui/react-popover"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/reactions.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "signature-pad",
+      "type": "registry:ui",
+      "title": "Signature Pad",
+      "description": "Campo de assinatura com tinta que engrossa e afina como caneta de verdade, com desfazer e limpar.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/signature-pad.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "slide-to-confirm",
+      "type": "registry:ui",
+      "title": "Slide to Confirm",
+      "description": "Trilho que só confirma quando você arrasta o polegar até o fim, e volta com mola se soltar antes.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@visant/sfx-bus"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/slide-to-confirm.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "sticker-peel",
+      "type": "registry:ui",
+      "title": "Sticker Peel",
+      "description": "Um adesivo que levanta o canto quando o mouse chega perto, arrasta pra mudar de lugar e, com um clique, descola inteiro da página.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/sticker-peel.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "streamgraph",
+      "type": "registry:ui",
+      "title": "Streamgraph",
+      "description": "Gráfico de fluxo empilhado que mostra como a mistura de várias partes muda no tempo, com camadas que ligam e desligam.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/streamgraph.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "time-dial",
+      "type": "registry:ui",
+      "title": "Time Dial",
+      "description": "Mostrador de 24 horas que você gira com o dedo ou com as setas, com a faixa do expediente desenhada no aro.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/time-dial.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "voice-note",
+      "type": "registry:ui",
+      "title": "Voice Note",
+      "description": "Nota de voz de chat com forma de onda, play e pausa, e busca clicando ou arrastando na onda.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/voice-note.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "wallet-stack",
+      "type": "registry:ui",
+      "title": "Wallet Stack",
+      "description": "Carteira de cartões empilhados em que um sobe pra mostrar saldo e movimento e os outros se recolhem no pé.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/wallet-stack.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-ascii",
+      "type": "registry:ui",
+      "title": "Shader ASCII",
+      "description": "Uma imagem redesenhada em caracteres, com seis jogos de glifo e as células mais cheias na cor da marca.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-ascii.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-halftone",
+      "type": "registry:ui",
+      "title": "Shader Halftone",
+      "description": "Retícula de uma tinta só sobre uma imagem, em pontos, quadrados ou linhas, com uma lupa que amplia debaixo do cursor.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-halftone.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-neon",
+      "type": "registry:ui",
+      "title": "Shader Neon",
+      "description": "Fios de luz que ondulam num campo liso na cor da marca e engrossam quando o ponteiro passa rápido.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-neon.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-riso",
+      "type": "registry:ui",
+      "title": "Shader Riso",
+      "description": "Uma imagem impressa em duas tintas de risografia, com grão, ângulo próprio por tinta e registro fora do lugar.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-riso.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-tunnel",
+      "type": "registry:ui",
+      "title": "Shader Tunnel",
+      "description": "Túnel de anéis em espiral que corre pro centro na cor da marca e acelera com o ponteiro.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-tunnel.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-voronoi",
+      "type": "registry:ui",
+      "title": "Shader Voronoi",
+      "description": "Mosaico de células que derivam devagar com um núcleo aceso na cor da marca, empurradas pelo ponteiro.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-voronoi.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "anatomia",
+      "type": "registry:ui",
+      "title": "Anatomia",
+      "description": "O núcleo das figuras didáticas: o web component <visant-anatomia> (pinos, painel de peças, passo a passo, pausa, tela cheia, teclado) e o wrapper React. A figura em si vem de um item anatomia-<nome>.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-kit.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-estilo.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-nucleo.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/ui/anatomia.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-como-sobe",
+      "type": "registry:lib",
+      "title": "Anatomia: como a ferramenta sobe",
+      "description": "Fig 1.4 do curso IA para Designers: o que sobe pro GitHub, o que o .gitignore segura no computador e quando a Vercel põe no ar.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-como-sobe.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-como-sobe-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-tomadas",
+      "type": "registry:lib",
+      "title": "Anatomia: conector e chave de API",
+      "description": "Fig 2.2 do curso IA para Designers: os programas entram pelo conector do claude.ai, com a tua conta; o serviço pago entra pela chave de API, que mora no .env e conta cada chamada.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-tomadas.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-tomadas-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-fichario",
+      "type": "registry:lib",
+      "title": "Anatomia: o fichário de receitas",
+      "description": "Fig 2.6 do curso IA para Designers: o agente lê só as etiquetas das skills e abre a receita que casa com o pedido; a pasta references/ só sobe quando a receita pede.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-fichario.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-fichario-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-memoria",
+      "type": "registry:lib",
+      "title": "Anatomia: a memória do agente",
+      "description": "Fig 2.7 do curso IA para Designers: o agente esquece a conversa quando a janela fecha e lembra o que está no CLAUDE.md, com regra parafusada e fato com data.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-memoria.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-memoria-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-tokens",
+      "type": "registry:lib",
+      "title": "Anatomia: o tanque da conversa",
+      "description": "Fig B.7 do curso IA para Designers: cada mensagem fica na conversa e o agente relê tudo a cada volta; um print resolve em uma volta o que o parágrafo leva três.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-tokens.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-tokens-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-script",
+      "type": "registry:lib",
+      "title": "Anatomia: do briefing ao script",
+      "description": "Fig B.8 do curso IA para Designers: o agente resolve o pedido novo e gasta uso; o que se repete vira script, que roda sem IA e para quando não entende.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-script.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-script-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-permissao",
+      "type": "registry:lib",
+      "title": "Anatomia: a caixa de permissão",
+      "description": "Fig 2.3b do curso IA para Designers: nada do agente entra na tua pasta sem Yes, Yes and don't ask again ou No, e só o don't ask again fica escrito.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-permissao.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-permissao-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }

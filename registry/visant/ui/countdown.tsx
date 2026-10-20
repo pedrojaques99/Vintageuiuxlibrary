@@ -396,7 +396,7 @@ export function Countdown({
                   return (
                     <span key={p.unit} className="inline-flex items-start">
                       {!compacto && g > 0 && (
-                        <span className="-translate-y-[0.06em] px-[0.12em] leading-none text-muted-foreground opacity-60">
+                        <span className="-translate-y-[0.06em] px-[0.12em] leading-none text-muted-foreground">
                           :
                         </span>
                       )}

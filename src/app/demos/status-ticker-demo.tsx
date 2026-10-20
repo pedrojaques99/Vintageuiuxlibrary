@@ -1,41 +1,39 @@
 "use client";
 
 /**
- * As quatro esperas do ticker lado a lado, rodando no mesmo instante.
+ * Uma espera por vez, grande, com o seletor quieto embaixo.
  *
- * O nome em cima de cada uma é o valor de `variant`: é o que a pessoa escolhe e
- * copia, e nada além disso. `etapas` fica sozinha na coluna da direita porque é
- * a única que cresce pra baixo.
+ * As quatro lado a lado espremiam cada uma e nenhuma aparecia (e a linha com o
+ * cronômetro vazava a 360px). O nome no seletor é o valor de `variant`: é o que
+ * a pessoa escolhe e copia.
  */
 
 import { useStageActive } from "../stage";
 import { StatusTicker, type StatusTickerVariant } from "../../../registry/visant/ui/status-ticker";
+import type { DemoProps } from "../catalog";
+import { Trocador, useUmPorVez } from "./um-por-vez";
 
+const VARIACOES: StatusTickerVariant[] = ["linha", "barra", "etapas", "pulso"];
 const PASSOS = ["Lendo", "Desenhando", "Refinando", "Exportando"];
 
-function Opcao({ variant }: { variant: StatusTickerVariant }) {
+export default function StatusTickerDemo({ props }: DemoProps) {
   const ativo = useStageActive();
-  return (
-    <div className="flex min-w-0 flex-col gap-3">
-      <span className="font-mono text-micro text-muted-foreground/70">{variant}</span>
-      <div className="min-h-[1.5rem]">
-        {ativo ? <StatusTicker variant={variant} steps={variant === "etapas" ? PASSOS : undefined} /> : null}
-      </div>
-    </div>
-  );
-}
+  const { variant: _v } = (props ?? {}) as { variant?: StatusTickerVariant };
+  const { atual, rodada, passo, repetir } = useUmPorVez(VARIACOES, _v);
 
-export default function StatusTickerDemo() {
   return (
-    <div className="flex h-full w-full items-center justify-center p-6">
-      <div className="grid w-[520px] max-w-full grid-cols-2 gap-x-12 gap-y-8">
-        <div className="flex flex-col gap-8">
-          <Opcao variant="linha" />
-          <Opcao variant="barra" />
-          <Opcao variant="pulso" />
-        </div>
-        <Opcao variant="etapas" />
+    <div className="flex h-full w-full flex-col items-center justify-center gap-6 p-6">
+      <div className="flex w-[360px] max-w-full items-center">
+        {ativo ? (
+          <StatusTicker
+            key={`${atual}-${rodada}`}
+            variant={atual}
+            steps={atual === "etapas" ? PASSOS : undefined}
+            className="w-full"
+          />
+        ) : null}
       </div>
+      <Trocador nome={atual} onPasso={passo} onRepetir={repetir} />
     </div>
   );
 }

@@ -1,28 +1,28 @@
 "use client";
 
 /**
- * Os cinco ofícios do glifo numa fileira, cada um com o nome da variante embaixo.
+ * Um ofício por vez, grande, com o seletor quieto embaixo. O nome no seletor é
+ * o valor de `variant`.
  */
 
 import { useStageActive } from "../stage";
 import { WorkingGlyph, type WorkingGlyphVariant } from "../../../registry/visant/ui/working-glyph";
+import type { DemoProps } from "../catalog";
+import { Trocador, useUmPorVez } from "./um-por-vez";
 
 const OFICIOS: WorkingGlyphVariant[] = ["picareta", "martelo", "engrenagem", "pincel", "faisca"];
 
-export default function WorkingGlyphDemo() {
+export default function WorkingGlyphDemo({ props }: DemoProps) {
   const ativo = useStageActive();
+  const { variant: _v } = (props ?? {}) as { variant?: WorkingGlyphVariant };
+  const { atual, rodada, passo, repetir } = useUmPorVez(OFICIOS, _v);
+
   return (
-    <div className="flex h-full w-full items-center justify-center p-6">
-      <div className="flex w-[480px] max-w-full items-end justify-between">
-        {OFICIOS.map((v) => (
-          <div key={v} className="flex flex-col items-center gap-4">
-            <div className="grid size-12 place-items-center">
-              {ativo ? <WorkingGlyph variant={v} size={30} framed={false} /> : null}
-            </div>
-            <span className="font-mono text-micro text-muted-foreground/70">{v}</span>
-          </div>
-        ))}
+    <div className="flex h-full w-full flex-col items-center justify-center gap-6 p-6">
+      <div className="grid size-24 place-items-center">
+        {ativo ? <WorkingGlyph key={`${atual}-${rodada}`} variant={atual} size={56} framed={false} /> : null}
       </div>
+      <Trocador nome={atual} onPasso={passo} onRepetir={repetir} />
     </div>
   );
 }

@@ -555,13 +555,13 @@ test.describe("painel de controles", () => {
 
     const dialog = ficha(page);
     /*
-     * `fade`, `progress` e `remainder` têm padrão `false` no componente e a demo
-     * passa os três ligados. A primeira versão do painel lia o padrão do código
+     * `fade` e `progress` têm padrão `false` no componente e a demo passa os
+     * dois ligados (o `remainder` saiu da demo na rodada de 2026-10-20). A primeira versão do painel lia o padrão do código
      * e desenhava três chaves DESLIGADAS embaixo de um trilho com as três
      * ligadas — clicar pra ligar não mudava nada, e a conclusão de quem clica é
      * que a peça está quebrada.
      */
-    for (const prop of ["fade", "progress", "remainder"]) {
+    for (const prop of ["fade", "progress"]) {
       await expect(
         dialog.getByRole("switch", { name: prop }),
         `a chave ${prop} não reflete o palco`,
