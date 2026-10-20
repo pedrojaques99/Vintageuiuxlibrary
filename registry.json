@@ -3610,6 +3610,203 @@
         }
       ],
       "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "anatomia",
+      "type": "registry:ui",
+      "title": "Anatomia",
+      "description": "O núcleo das figuras didáticas: o web component <visant-anatomia> (pinos, painel de peças, passo a passo, pausa, tela cheia, teclado) e o wrapper React. A figura em si vem de um item anatomia-<nome>.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-kit.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-estilo.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-nucleo.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/ui/anatomia.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-como-sobe",
+      "type": "registry:lib",
+      "title": "Anatomia: como a ferramenta sobe",
+      "description": "Fig 1.4 do curso IA para Designers: o que sobe pro GitHub, o que o .gitignore segura no computador e quando a Vercel põe no ar.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-como-sobe.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-como-sobe-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-tomadas",
+      "type": "registry:lib",
+      "title": "Anatomia: conector e chave de API",
+      "description": "Fig 2.2 do curso IA para Designers: os programas entram pelo conector do claude.ai, com a tua conta; o serviço pago entra pela chave de API, que mora no .env e conta cada chamada.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-tomadas.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-tomadas-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-fichario",
+      "type": "registry:lib",
+      "title": "Anatomia: o fichário de receitas",
+      "description": "Fig 2.6 do curso IA para Designers: o agente lê só as etiquetas das skills e abre a receita que casa com o pedido; a pasta references/ só sobe quando a receita pede.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-fichario.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-fichario-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-memoria",
+      "type": "registry:lib",
+      "title": "Anatomia: a memória do agente",
+      "description": "Fig 2.7 do curso IA para Designers: o agente esquece a conversa quando a janela fecha e lembra o que está no CLAUDE.md, com regra parafusada e fato com data.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-memoria.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-memoria-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-tokens",
+      "type": "registry:lib",
+      "title": "Anatomia: o tanque da conversa",
+      "description": "Fig B.7 do curso IA para Designers: cada mensagem fica na conversa e o agente relê tudo a cada volta; um print resolve em uma volta o que o parágrafo leva três.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-tokens.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-tokens-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-script",
+      "type": "registry:lib",
+      "title": "Anatomia: do briefing ao script",
+      "description": "Fig B.8 do curso IA para Designers: o agente resolve o pedido novo e gasta uso; o que se repete vira script, que roda sem IA e para quando não entende.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-script.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-script-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-permissao",
+      "type": "registry:lib",
+      "title": "Anatomia: a caixa de permissão",
+      "description": "Fig 2.3b do curso IA para Designers: nada do agente entra na tua pasta sem Yes, Yes and don't ask again ou No, e só o don't ask again fica escrito.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-permissao.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-permissao-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }
