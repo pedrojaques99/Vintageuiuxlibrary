@@ -218,7 +218,7 @@ export default function figura({ k, logo }) {
     id: "tomadas",
     fig: "Fig 2.2",
     titulo: "Conector e chave de API",
-    resumo: "Uma central de tomadas: os programas entram pelo conector do claude.ai, com a tua conta e sem instalar nada; o serviço pago entra pela chave de API, que mora no .env e conta cada chamada.",
+    resumo: "Uma central de tomadas: os programas entram pelo conector do claude.ai, com a tua conta e sem instalar nada. O serviço pago entra pela chave de API, que mora no .env e conta cada chamada.",
     width: WIDTH,
     height: HEIGHT,
     svg,
@@ -260,7 +260,7 @@ export default function figura({ k, logo }) {
         pose: { plugged: [true, true, true, true, false, false], cardOn: true, calls: 2, pedido: true },
       },
     ],
-    leitura: "4 conectores ligados · chave no .env · 0 chamadas contadas",
+    leitura: "4 conectores ligados, chave no .env, 0 chamadas contadas",
     css: `[data-led] .iso-top,[data-led] .iso-shade,[data-part="reader-led"] .iso-top,[data-part="reader-led"] .iso-shade{transition:fill .35s}
 [data-led][data-state="on"] .iso-top,[data-part="reader-led"][data-state="on"] .iso-top{fill:var(--anatomy-green)}
 [data-led][data-state="on"] .iso-shade,[data-part="reader-led"][data-state="on"] .iso-shade{fill:color-mix(in oklab, var(--anatomy-green) 75%, black)}

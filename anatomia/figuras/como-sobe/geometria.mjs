@@ -267,7 +267,7 @@ export default function figura({ k, G }) {
     id: "como-sobe",
     fig: "Fig 1.4",
     titulo: "Como a ferramenta sobe",
-    resumo: "Uma bancada de expedição: os arquivos saem do teu computador num carrinho, o .gitignore tira o .env do caminho e o GitHub guarda o resto; quando chega, a Vercel põe no ar.",
+    resumo: "Uma bancada de expedição: os arquivos saem do teu computador num carrinho, o .gitignore tira o .env do caminho e o GitHub guarda o resto. Quando chega, a Vercel põe no ar.",
     width: WIDTH,
     height: HEIGHT,
     svg,

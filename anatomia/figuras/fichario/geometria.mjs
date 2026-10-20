@@ -210,7 +210,7 @@ export default function figura({ k }) {
   const PECAS = [
     { n: 1, nome: "O pedido.", texto: "O que você escreve pro agente. Troque pra ver três casos: um pedido que casa com uma receita, outro que casa com outra, e uma conversa à toa que não casa com nenhuma.", ancora: [SLIP.x, 0, SLIP_TOP + 8], acao: "Trocar o pedido" },
     { n: 2, nome: "O leitor.", texto: "O agente passa os olhos só nas etiquetas, de divisória em divisória. Ele não abre receita nenhuma pra decidir.", ancora: [HEAD_PARK, POST_Y, BEAM_Z + 14] },
-    { n: 3, nome: "As etiquetas.", texto: `O nome e a descrição de cada skill, umas poucas linhas. É a única parte que fica sempre na cabeça do agente. Aqui são ${RECEITAS.length}; no computador da Visant são ${NA_CASA.receitas}, com ${NA_CASA.letras.toLocaleString("pt-BR")} letras somadas.`, ancora: [xOf(1), TAB_Y[1] + TAB.d / 2, DIV.top + TAB.h + 6] },
+    { n: 3, nome: "As etiquetas.", texto: `O nome e a descrição de cada skill, umas poucas linhas. É a única parte que fica sempre na cabeça do agente. Aqui são ${RECEITAS.length}. No computador da Visant são ${NA_CASA.receitas}, com ${NA_CASA.letras.toLocaleString("pt-BR")} letras somadas.`, ancora: [xOf(1), TAB_Y[1] + TAB.d / 2, DIV.top + TAB.h + 6] },
     { n: 4, nome: "A receita aberta.", texto: "Quando o pedido casa com uma etiqueta, só essa receita sai da caixa e o agente lê inteira. O canto de leitura diz qual e quantas linhas.", ancora: [xOf(2) + CARD_X[0], 0, CARD_TOP[0] + 6], acao: "Abrir a pasta references/" },
     { n: 5, nome: "A pasta references/.", texto: "Material de apoio da receita. Só sai da caixa quando a própria receita manda buscar, e nem toda receita tem.", ancora: [xOf(2) + REF.dx, REF.y + REF.d / 2, REF.top + 6], acao: "Abrir a pasta references/" },
     { n: 6, nome: "As outras receitas.", texto: "Continuam fechadas. Ter cinquenta receitas na caixa não pesa, porque ninguém lê o que não foi chamado.", ancora: [xOf(5) + 6, 18, CARD_TOP[1] + 4] },
@@ -221,7 +221,7 @@ export default function figura({ k }) {
     width: WIDTH,
     height: HEIGHT,
     label:
-      "Uma caixa de receitas com seis divisórias. Cada divisória tem uma aba com a etiqueta da receita. Um leitor corre num trilho por cima e passa sobre as abas sem abrir nada. À esquerda, o pedido preso num suporte. Quando o pedido casa com uma etiqueta, a aba acende e só aquela receita sobe da caixa; a pasta de apoio dela só sobe quando a receita pede.",
+      "Uma caixa de receitas com seis divisórias. Cada divisória tem uma aba com a etiqueta da receita. Um leitor corre num trilho por cima e passa sobre as abas sem abrir nada. À esquerda, o pedido preso num suporte. Quando o pedido casa com uma etiqueta, a aba acende e só aquela receita sobe da caixa. A pasta de apoio dela só sobe quando a receita pede.",
     body: [
       peca(0, plate()),
       peca(2, gantryBack()),
@@ -242,7 +242,7 @@ export default function figura({ k }) {
     id: "fichario",
     fig: "Fig 2.6",
     titulo: "O fichário de receitas",
-    resumo: `Uma caixa de receitas: o agente lê só as etiquetas e abre a receita que casa com o pedido. Os números são das skills de verdade do computador da Visant: ${NA_CASA.receitas} receitas, ${NA_CASA.letras.toLocaleString("pt-BR")} letras de etiqueta. Na vida real ele recebe todas as etiquetas de uma vez; o leitor passa uma por uma só pra dar pra ver.`,
+    resumo: `Uma caixa de receitas: o agente lê só as etiquetas e abre a receita que casa com o pedido. Os números são das skills do computador da Visant: ${NA_CASA.receitas} receitas, ${NA_CASA.letras.toLocaleString("pt-BR")} letras de etiqueta. Na prática, ele recebe todas as etiquetas de uma vez. O leitor passa uma por uma só pra dar pra ver.`,
     width: WIDTH,
     height: HEIGHT,
     svg,
@@ -254,7 +254,7 @@ export default function figura({ k }) {
     pecas: PECAS,
     passos: [
       { titulo: "Chega um pedido", texto: `Você escreve "${PEDIDOS[0].texto}". O agente ainda não abriu receita nenhuma.`, foco: [1], pose: { pedido: 0, marca: "pedido" } },
-      { titulo: "Ele lê só as etiquetas", texto: `O leitor passa por cima das ${RECEITAS.length} divisórias e lê o nome e a descrição de cada receita. Aqui são ${LETRAS.toLocaleString("pt-BR")} letras; na máquina da Visant, ${NA_CASA.letras.toLocaleString("pt-BR")}.`, foco: [2, 3], pose: { pedido: 0, marca: "lendo" } },
+      { titulo: "Ele lê só as etiquetas", texto: `O leitor passa por cima das ${RECEITAS.length} divisórias e lê o nome e a descrição de cada receita. Aqui são ${LETRAS.toLocaleString("pt-BR")} letras. Na máquina da Visant, ${NA_CASA.letras.toLocaleString("pt-BR")}.`, foco: [2, 3], pose: { pedido: 0, marca: "lendo" } },
       { titulo: "Uma etiqueta casa", texto: `A etiqueta da ${ART.nome} casa com o pedido. Só essa receita sobe da caixa e é lida inteira: ${ART.corpo} linhas.`, foco: [3, 4], pose: { pedido: 0, marca: "fim" } },
       { titulo: "A pasta de apoio, se precisar", texto: `Quando a receita manda buscar, a pasta references/ sobe junto: mais ${ART.refs} arquivos, ${ART.refsLinhas} linhas. As outras receitas continuam fechadas.`, foco: [4, 5, 6], pose: { pedido: 0, marca: "fim", refs: true } },
       { titulo: "Pedido sem receita", texto: `"${PEDIDOS[2].texto}" não casa com etiqueta nenhuma. O agente responde sem abrir a caixa.`, foco: [1, 7], pose: { pedido: 2, marca: "fim" } },

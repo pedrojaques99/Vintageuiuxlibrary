@@ -220,7 +220,7 @@ function figuraBase({ k }) {
     width: WIDTH,
     height: HEIGHT,
     label:
-      "O quadro CLAUDE.md na parede do estúdio, com duas regras parafusadas e fatos presos em clipe. Na frente, um agente anda num trilho entre a porta, o quadro e a mesa da conversa, onde fica um bloco de folhas. O que está no quadro ele lê toda vez que entra; o que ficou só no bloco some quando a janela fecha.",
+      "O quadro CLAUDE.md na parede do estúdio, com duas regras parafusadas e fatos presos em clipe. Na frente, um agente anda num trilho entre a porta, o quadro e a mesa da conversa, onde fica um bloco de folhas. O que está no quadro ele lê toda vez que entra. O que ficou só no bloco some quando a janela fecha.",
     body: [
       peca(0, plate()),
       peca(5, board()),
@@ -240,7 +240,7 @@ function figuraBase({ k }) {
   const pecas = [
     { n: 1, nome: "O agente.", texto: "Começa toda conversa sem saber nada de você. O que ele sabe de saída chega pelo arquivo que ele lê ao entrar.", ancora: [AT_DESK, TRACK_Y, 48], acao: "Fechar e abrir a janela" },
     { n: 2, nome: "A mesa da conversa.", texto: "O que você fala no chat vira folha neste bloco. Fechou a janela, o bloco vai pro lixo.", ancora: [DESK.x + DESK.w - 2, DESK.y + DESK.d - 2, DESK_TOP + 6], acao: "Guardar no arquivo" },
-    { n: 3, nome: "As regras parafusadas.", texto: "Regra vale sempre: fale em português, com as palavras da mesa; logo nunca distorcido. Ninguém tira toda semana.", ancora: [REGRAS[0].x + 4, FACE + 2, REGRAS[0].z + REGRAS[0].h + 2] },
+    { n: 3, nome: "As regras parafusadas.", texto: "Regra vale sempre: fale em português, com as palavras da mesa. Logo nunca distorcido. Ninguém tira toda semana.", ancora: [REGRAS[0].x + 4, FACE + 2, REGRAS[0].z + REGRAS[0].h + 2] },
     { n: 4, nome: "Os fatos no clipe.", texto: "Fato vale enquanto for verdade, com motivo e data. A dona da padaria reprovou o marrom escuro: achou que parecia pão queimado.", ancora: [SLOT_X[1] + CARD_W / 2, FACE + 3, CARD_TOP + 6], acao: "A cliente mudou de ideia" },
     { n: 5, nome: "O quadro CLAUDE.md.", texto: "O arquivo que ele lê antes de te responder, em toda conversa nova. Usa outra IA também? Uma cópia chamada AGENTS.md vale pra ela.", ancora: [BOARD.x + BOARD.w - 4, HEAD.y + HEAD.d, HEAD_Z1 + 3] },
     { n: 6, nome: "A porta.", texto: "Toda conversa nova entra por aqui, de mãos vazias. Por isso peça arquivo e diga a pasta: \"guarda isso no CLAUDE.md da pasta do cliente\".", ancora: [DOOR_X + 2, DOOR_Y0 + 2, DOOR_H + 9] },

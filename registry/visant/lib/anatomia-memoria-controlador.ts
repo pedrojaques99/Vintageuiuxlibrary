@@ -1,5 +1,5 @@
 // Movimento da Fig 2.7. Contrato: anatomia/CONTRATO.md. A pose é função pura do tempo (poseAt).
-import type { AnatomiaApi, Controle, Ponto3 } from "./anatomia-tipos";
+import type { AnatomiaApi, Ponto3 } from "./anatomia-tipos";
 
 export default function controlador(raiz: ParentNode, bruto: Record<string, unknown>, api: AnatomiaApi) {
   // O modelo vem do JSON da geometria; o formato está em anatomia/figuras/memoria/geometria.mjs.
@@ -84,7 +84,7 @@ export default function controlador(raiz: ParentNode, bruto: Record<string, unkn
     // volta pra mesa (15,6 a 17)
     if (t >= 15.6) {
       p.agenteX = lerp(M.AT_BOARD, M.AT_DESK, ease(fase(t, 15.6, 17)));
-      p.say = "lembrou o que está no quadro; o Manrope, que ficou só no chat, ele não sabe";
+      p.say = "lembrou o que está no quadro. O Manrope, que ficou só no chat, ele não sabe";
     }
     // a dona mudou de ideia (17,6 a 19,6): o fato velho sai, o novo entra
     if (t >= 17.6) {

@@ -1,6 +1,6 @@
 // Movimento da Fig 2.3b. Contrato: Vintageuiuxlibrary-anatomia/anatomia/CONTRATO.md
 // Tudo sai de um plano de trechos; a pose em qualquer instante é função pura do tempo.
-import type { AnatomiaApi, Controle, Ponto3 } from "./anatomia-tipos";
+import type { AnatomiaApi } from "./anatomia-tipos";
 
 export default function controlador(raiz: ParentNode, bruto: Record<string, unknown>, api: AnatomiaApi) {
   // O modelo vem do JSON da geometria; o formato está em anatomia/figuras/permissao/geometria.mjs.

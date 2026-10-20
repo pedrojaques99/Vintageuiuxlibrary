@@ -103,7 +103,7 @@ export default function controlador(raiz: ParentNode, bruto: Record<string, unkn
       add(0.35, (u, st) => {
         st.head = M.X[i];
         st.raio = u < 1 ? i : -1;
-        st.say = `lendo a etiqueta ${lida + 1} de ${N} · ${fmt(soma)} letras`;
+        st.say = `lendo a etiqueta ${lida + 1} de ${N}, ${fmt(soma)} letras`;
       });
       from = M.X[i];
     });
@@ -119,13 +119,13 @@ export default function controlador(raiz: ParentNode, bruto: Record<string, unkn
       add(0.7, (u, st) => void (st.head = lerp(M.X[m], M.HEAD_PARK, ease(u))));
       add(1.1, (u, st) => {
         st.rise[m] = M.RISE * ease(u);
-        st.say = `abriu ${M.RECEITAS[m].nome} · ${M.RECEITAS[m].corpo} linhas`;
+        st.say = `abriu ${M.RECEITAS[m].nome}, ${M.RECEITAS[m].corpo} linhas`;
       });
     } else {
       const a = from;
       add(0.7, (u, st) => {
         st.head = lerp(a, M.HEAD_PARK, ease(u));
-        st.say = `${N} etiquetas lidas · nenhuma casou`;
+        st.say = `${N} etiquetas lidas, nenhuma casou`;
       });
     }
     marcas.fim = t;
@@ -181,10 +181,10 @@ export default function controlador(raiz: ParentNode, bruto: Record<string, unkn
       api.moverPino(4, [M.BOX.x + M.BOX.w / 2, 0, M.CARD_TOP[0] + 8]);
     }
     // 4 e 5 só aparecem no palco quando existem de fato; o painel explica os dois sempre
-    api.mostrarPino(4, subida >= 0.35);
+    api.mostrarPino(4, !(subida < 0.35));
     api.mostrarPino(5, !(subida < 0.35 || m < 0 || !M.RECEITAS[m].refs || refsVal < 0.35));
     let say = st.say;
-    if (m >= 0 && refsVal > 0.5 && M.RECEITAS[m].refs) say = `${M.RECEITAS[m].nome} + references/ · ${fmt(M.RECEITAS[m].corpo + M.RECEITAS[m].refsLinhas)} linhas`;
+    if (m >= 0 && refsVal > 0.5 && M.RECEITAS[m].refs) say = `${M.RECEITAS[m].nome} + references/, ${fmt(M.RECEITAS[m].corpo + M.RECEITAS[m].refsLinhas)} linhas`;
     api.dizer(say);
   }
 

@@ -1,5 +1,5 @@
 // Movimento da Fig B.7. Contrato: anatomia/CONTRATO.md. A pose é função pura do tempo (poseAt).
-import type { AnatomiaApi, Controle, Ponto3 } from "./anatomia-tipos";
+import type { AnatomiaApi, Ponto3 } from "./anatomia-tipos";
 
 export default function controlador(raiz: ParentNode, bruto: Record<string, unknown>, api: AnatomiaApi) {
   // O modelo vem do JSON da geometria; o formato está em anatomia/figuras/tokens/geometria.mjs.

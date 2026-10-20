@@ -1,6 +1,6 @@
 // Movimento da Fig B.8. Contrato: Vintageuiuxlibrary-anatomia/anatomia/CONTRATO.md
 // Um plano de trechos; a pose em qualquer instante é função pura do tempo.
-import type { AnatomiaApi, Controle, Ponto3 } from "./anatomia-tipos";
+import type { AnatomiaApi, Ponto3 } from "./anatomia-tipos";
 
 export default function controlador(raiz: ParentNode, bruto: Record<string, unknown>, api: AnatomiaApi) {
   // O modelo vem do JSON da geometria; o formato está em anatomia/figuras/script/geometria.mjs.
@@ -38,7 +38,7 @@ export default function controlador(raiz: ParentNode, bruto: Record<string, unkn
     fichas: 0, saidas: 0, lotes: 0, agente: 0, script: 0, pronto: false, parado: false, onde: null, say: "esperando o briefing",
   });
   const copia = (st: any) => ({ ...st, lote: { ...st.lote, p: [...st.lote.p] } });
-  const resumo = (st: any) => `${s(st.lotes, "lote", "lotes")} · agente ${st.agente} (${s(st.fichas, "ficha", "fichas")}) · script ${st.script} (0 ficha)`;
+  const resumo = (st: any) => `${s(st.lotes, "lote", "lotes")}, agente ${st.agente} (${s(st.fichas, "ficha", "fichas")}), script ${st.script} (0 ficha)`;
 
   function novoPlano(base: any): any {
     return { base: copia(base), segs: [], fim: 0, marcas: {} };
@@ -77,7 +77,7 @@ export default function controlador(raiz: ParentNode, bruto: Record<string, unkn
         st.fichas = Math.min(st.fichas + 1, 99);
         st.fichasMarcadas = st.lotes;
       }
-      st.say = "o agente lê o briefing e pega ImageMagick e PyMuPDF · 1 ficha";
+      st.say = "o agente lê o briefing e pega ImageMagick e PyMuPDF, 1 ficha";
     });
   }
 
@@ -87,7 +87,7 @@ export default function controlador(raiz: ParentNode, bruto: Record<string, unkn
       st.onde = "script";
       st.cabeca = ate < 1 ? ease(u) * ate : Math.sin(Math.PI * u);
       st.lamp = ate < 1 ? (u > 0.6 ? "red" : "off") : u > 0.3 && u < 0.8 ? "green" : "off";
-      st.say = ate < 1 ? `parou e perguntou: o que eu faço com ${M.ESTRANHO}?` : "o carimbo resolve sozinho · 0 ficha";
+      st.say = ate < 1 ? `parou e perguntou: o que eu faço com ${M.ESTRANHO}?` : "o carimbo resolve sozinho, 0 ficha";
       if (ate < 1) st.parado = true;
     });
   }

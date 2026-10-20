@@ -284,7 +284,7 @@ function figuraBase({ k, G }) {
     id: "script",
     fig: "Fig B.8",
     titulo: "Do briefing ao script",
-    resumo: "O agente resolve o pedido novo e gasta uso; o que se repete vira carimbo, que roda sem IA e para quando não entende.",
+    resumo: "O agente resolve o pedido novo e gasta uso. O que se repete vira carimbo, que roda sem IA e para quando não entende.",
     width: WIDTH,
     height: HEIGHT,
     svg,

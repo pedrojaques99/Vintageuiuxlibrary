@@ -142,7 +142,7 @@ export default function controlador(raiz: ParentNode, bruto: Record<string, unkn
     });
     t = add(0.01, (_u, st) => {
       st.lamp = on ? "green" : "red";
-      st.say = on ? `${N - binN} de ${N} no GitHub · .env ficou em casa · no ar` : `${N} de ${N} no GitHub · a chave ficou à mostra`;
+      st.say = on ? `${N - binN} de ${N} no GitHub, .env ficou em casa, no ar` : `${N} de ${N} no GitHub, a chave ficou à mostra`;
     });
     marcas.fim = t + 0.05;
     return { segs, fim: t, total: t + 4.5, marcas };

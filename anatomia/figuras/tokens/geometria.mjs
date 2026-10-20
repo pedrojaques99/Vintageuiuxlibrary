@@ -268,7 +268,7 @@ function figuraBase({ k, G }) {
     id: "tokens",
     fig: "Fig B.7",
     titulo: "O tanque da conversa",
-    resumo: "Cada mensagem e cada resposta ficam na conversa, e a cada volta o agente relê tudo. Print resolve em uma volta o que o parágrafo leva três; conversa nova esvazia o tanque.",
+    resumo: "Cada mensagem e cada resposta ficam na conversa, e a cada volta o agente relê tudo. Print resolve em uma volta o que o parágrafo leva três. Conversa nova esvazia o tanque.",
     width: WIDTH,
     height: HEIGHT,
     svg,

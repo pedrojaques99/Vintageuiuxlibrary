@@ -86,7 +86,7 @@ export default function controlador(raiz: ParentNode, bruto: Record<string, unkn
 
   const ligados = () => st.plugged.filter(Boolean).length;
   const resumo = () =>
-    `${plural(ligados(), "conector ligado", "conectores ligados")} · chave ${st.cardOn ? "no leitor" : "no .env"} · ${plural(st.calls, "chamada contada", "chamadas contadas")}`;
+    `${plural(ligados(), "conector ligado", "conectores ligados")}, chave ${st.cardOn ? "no leitor" : "no .env"}, ${plural(st.calls, "chamada contada", "chamadas contadas")}`;
   const avisar = (texto: string, segundos = 2.4) => (st.aviso = { texto, ate: agora + segundos });
 
   function plugPos(i: number): Ponto3 {
