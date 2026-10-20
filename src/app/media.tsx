@@ -49,6 +49,18 @@ const PORmPAPEL = ACERVO.reduce<Record<string, Midia[]>>((acc, m) => {
   return acc;
 }, {});
 
+/*
+ * Os retratos do banco (`retrato-0X`) são miniaturas de bastidor esticadas até
+ * 720×900 e saíam borrados em toda demo que pedia "retrato". Até chegarem as
+ * originais, o papel retrato sorteia entre as imagens verticais NÍTIDAS do
+ * acervo (renders e texturas de 1200px). Quem precisa de um rosto (quote-block)
+ * usa o recorte pequeno direto pelo caminho.
+ */
+const RETRATOS_NITIDOS = ["cena-cartao", "textura-bruma", "cena-estojo", "textura-vidro", "cena-trofeu", "textura-papel", "cena-radio"];
+PORmPAPEL.retrato = RETRATOS_NITIDOS.map((id) => ACERVO.find((m) => m.id === id)).filter(
+  (m): m is Midia => Boolean(m),
+);
+
 /**
  * A peça de acervo daquele papel, na posição pedida.
  *
