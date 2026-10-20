@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "slot-text",
+    "title": "Slot Text",
+    "type": "ui",
+    "family": "motion",
+    "description": "Número ou palavra que gira como rolo de caça-níquel e assenta da esquerda pra direita, sem passar do alvo.",
+    "tags": [
+      "texto",
+      "numero",
+      "preco",
+      "contador",
+      "slot"
+    ],
+    "demoImport": "./demos/slot-text-demo",
+    "knobs": "SlotText",
+    "preview": {
+      "w": 360,
+      "h": 230
+    }
+  },
+  "registry": {
+    "name": "slot-text",
+    "type": "registry:ui",
+    "title": "Slot Text",
+    "description": "Número ou palavra que gira como rolo de caça-níquel e assenta da esquerda pra direita, sem passar do alvo.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/slot-text.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Slot Text (https://uiarc.dev/components/slot-text), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

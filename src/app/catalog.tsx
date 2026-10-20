@@ -508,6 +508,30 @@ function NavDrawerDemo() {
 const MarqueeVariantes = React.lazy(() => import("./demos/marquee-demo"));
 
 const CenaPresa = React.lazy(() => import("./demos/pinned-scene-demo"));
+const ActivityHeatmapColheitaDemo = React.lazy(() => import("./demos/activity-heatmap-demo"));
+const BillingToggleColheitaDemo = React.lazy(() => import("./demos/billing-toggle-demo"));
+const CardStackColheitaDemo = React.lazy(() => import("./demos/card-stack-demo"));
+const ConfirmMorphColheitaDemo = React.lazy(() => import("./demos/confirm-morph-demo"));
+const ElasticSliderColheitaDemo = React.lazy(() => import("./demos/elastic-slider-demo"));
+const ExpandableCardColheitaDemo = React.lazy(() => import("./demos/expandable-card-demo"));
+const ExpandingSearchColheitaDemo = React.lazy(() => import("./demos/expanding-search-demo"));
+const GaugeColheitaDemo = React.lazy(() => import("./demos/gauge-demo"));
+const HoldToConfirmColheitaDemo = React.lazy(() => import("./demos/hold-to-confirm-demo"));
+const IconMorphColheitaDemo = React.lazy(() => import("./demos/icon-morph-demo"));
+const MorphSelectColheitaDemo = React.lazy(() => import("./demos/morph-select-demo"));
+const SlotTextColheitaDemo = React.lazy(() => import("./demos/slot-text-demo"));
+const SwipeActionsColheitaDemo = React.lazy(() => import("./demos/swipe-actions-demo"));
+const TextMorphColheitaDemo = React.lazy(() => import("./demos/text-morph-demo"));
+const ThemeSwitchColheitaDemo = React.lazy(() => import("./demos/theme-switch-demo"));
+const ToastStackColheitaDemo = React.lazy(() => import("./demos/toast-stack-demo"));
+const DynamicIslandColheitaDemo = React.lazy(() => import("./demos/dynamic-island-demo"));
+const FoldingBillColheitaDemo = React.lazy(() => import("./demos/folding-bill-demo"));
+const HeatWordColheitaDemo = React.lazy(() => import("./demos/heat-word-demo"));
+const LiquidToggleColheitaDemo = React.lazy(() => import("./demos/liquid-toggle-demo"));
+const MagneticSelectColheitaDemo = React.lazy(() => import("./demos/magnetic-select-demo"));
+const MagnifyDockColheitaDemo = React.lazy(() => import("./demos/magnify-dock-demo"));
+const SloshSliderColheitaDemo = React.lazy(() => import("./demos/slosh-slider-demo"));
+const TiltCardColheitaDemo = React.lazy(() => import("./demos/tilt-card-demo"));
 
 /** Mesmo trato do marquee: GSAP só chega quando o card chega. */
 function PinnedSceneDemoCard() {
@@ -1799,6 +1823,296 @@ export const CATALOG: CatalogItem[] = [
     demo: PinnedSceneDemoCard,
     knobs: "PinnedScene",
     preview: { w: 1360, h: 620 },
+  },
+  {
+    name: "activity-heatmap",
+    title: "Activity Heatmap",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Um quadrado por dia mostra o ritmo de meses de trabalho, com bolha que desliza entre os dias e teclado de calendário.",
+    tags: ["dados","calendario","heatmap","ritmo","grafico"],
+    demo: ActivityHeatmapColheitaDemo,
+    knobs: "ActivityHeatmap",
+    preview: { w: 480, h: 290 },
+  },
+  {
+    name: "billing-toggle",
+    title: "Billing Toggle",
+    type: "ui",
+    family: "aquisicao",
+    description:
+      "Interruptor mensal e anual com o selo de desconto que vira recibo quando o anual é escolhido, e o preço rolando junto.",
+    tags: ["preço","pricing","toggle","assinatura","desconto","radiogroup"],
+    demo: BillingToggleColheitaDemo,
+    knobs: "BillingToggle",
+    preview: { w: 420, h: 200 },
+  },
+  {
+    name: "card-stack",
+    title: "Card Stack",
+    type: "ui",
+    family: "motion",
+    description:
+      "Pilha de cards em que o de cima vai pro fundo quando você arrasta e solta, como baralho de verdade.",
+    tags: ["pilha","arrastar","gesto","depoimentos","cards"],
+    demo: CardStackColheitaDemo,
+    knobs: "CardStack",
+    preview: { w: 420, h: 380 },
+  },
+  {
+    name: "confirm-morph",
+    title: "Confirm Morph",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Botão de apagar que vira a pergunta no próprio lugar, depois o andamento e o resultado com desfazer.",
+    tags: ["botão","confirmação","destrutivo","desfazer"],
+    demo: ConfirmMorphColheitaDemo,
+    knobs: "ConfirmMorph",
+    preview: { w: 460, h: 120 },
+  },
+  {
+    name: "elastic-slider",
+    title: "Elastic Slider",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Slider que estica feito elástico quando você puxa além do limite e volta com a velocidade da soltura.",
+    tags: ["slider","range","física","mola","formulário","teclado"],
+    demo: ElasticSliderColheitaDemo,
+    knobs: "ElasticSlider",
+    preview: { w: 368, h: 140 },
+  },
+  {
+    name: "expandable-card",
+    title: "Expandable Card",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Card de resumo que cresce pros lados e pra baixo ao abrir, e rola só a palavra que mudou no resumo.",
+    tags: ["card","expandir","detalhe","resumo","layout"],
+    demo: ExpandableCardColheitaDemo,
+    knobs: "ExpandableCard",
+    preview: { w: 520, h: 320 },
+  },
+  {
+    name: "expanding-search",
+    // palco-check: a barra fica no terço de cima de propósito, os resultados abrem pra baixo
+    title: "Expanding Search",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Busca que fica guardada num ícone de lupa e só abre o campo quando alguém vai mesmo buscar.",
+    tags: ["busca","search","combobox","cabeçalho","barra de ferramentas"],
+    demo: ExpandingSearchColheitaDemo,
+    knobs: "ExpandingSearch",
+    preview: { w: 450, h: 350 },
+  },
+  {
+    name: "gauge",
+    title: "Gauge",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Medidor em arco com ponteiro que enche quando entra em vista e troca o nome da faixa na hora em que a contagem cruza o limite.",
+    tags: ["dados","medidor","cota","grafico","meter"],
+    demo: GaugeColheitaDemo,
+    knobs: "Gauge",
+    preview: { w: 340, h: 250 },
+  },
+  {
+    name: "hold-to-confirm",
+    title: "Hold to Confirm",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Botão que só confirma se você segurar, com o preenchimento enchendo e voltando se soltar antes.",
+    tags: ["botão","confirmação","destrutivo","gesto"],
+    demo: HoldToConfirmColheitaDemo,
+    knobs: "HoldToConfirm",
+    preview: { w: 400, h: 200 },
+  },
+  {
+    name: "icon-morph",
+    title: "Icon Morph",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Ícone de dois estados que vira o outro em vez de trocar, como menu e fechar ou copiar e copiado.",
+    tags: ["ícone","botão","estado","micro-interação"],
+    demo: IconMorphColheitaDemo,
+    knobs: "IconMorph",
+    preview: { w: 340, h: 120 },
+  },
+  {
+    name: "morph-select",
+    // palco-check: o gatilho fica no terço de cima de propósito, a lista abre pra baixo e precisa do espaço
+    title: "Morph Select",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Select em que o próprio gatilho cresce e vira a lista, sem uma segunda caixa aparecendo embaixo.",
+    tags: ["select","listbox","formulário","morph","teclado"],
+    demo: MorphSelectColheitaDemo,
+    knobs: "MorphSelect",
+    preview: { w: 330, h: 310 },
+  },
+  {
+    name: "slot-text",
+    title: "Slot Text",
+    type: "ui",
+    family: "motion",
+    description:
+      "Número ou palavra que gira como rolo de caça-níquel e assenta da esquerda pra direita, sem passar do alvo.",
+    tags: ["texto","numero","preco","contador","slot"],
+    demo: SlotTextColheitaDemo,
+    knobs: "SlotText",
+    preview: { w: 360, h: 230 },
+  },
+  {
+    name: "swipe-actions",
+    title: "Swipe Actions",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Lista em que a linha arrasta pro lado e mostra as ações, com o mesmo menu pra quem usa teclado.",
+    tags: ["lista","gesto","arrastar","triagem"],
+    demo: SwipeActionsColheitaDemo,
+    knobs: "SwipeActions",
+    preview: { w: 440, h: 320 },
+  },
+  {
+    name: "text-morph",
+    title: "Text Morph",
+    type: "ui",
+    family: "motion",
+    description:
+      "Rótulo que vira a próxima palavra letra por letra, com as letras em comum deslizando e a largura indo junto numa mola.",
+    tags: ["texto","morph","botao","estado","micro-interacao"],
+    demo: TextMorphColheitaDemo,
+    knobs: "TextMorph",
+    preview: { w: 300, h: 150 },
+  },
+  {
+    name: "theme-switch",
+    title: "Theme Switch",
+    type: "ui",
+    family: "fundacao",
+    description:
+      "Chave de tema claro e escuro em que a lua cobre o sol num eclipse, sem mexer na página por conta própria.",
+    tags: ["tema","modo escuro","chave","eclipse","toggle"],
+    demo: ThemeSwitchColheitaDemo,
+    knobs: "ThemeSwitch",
+    preview: { w: 460, h: 220 },
+  },
+  {
+    name: "toast-stack",
+    title: "Toast Stack",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Avisos que se empilham no canto e abrem em leque quando o ponteiro chega, com o carregando que vira feito no lugar.",
+    tags: ["avisos","toast","notificacao","pilha","feedback"],
+    demo: ToastStackColheitaDemo,
+    knobs: "ToastStack",
+    preview: { w: 560, h: 380 },
+  },
+  {
+    name: "dynamic-island",
+    title: "Dynamic Island",
+    type: "ui",
+    family: "motion",
+    description:
+      "A pílula que mostra a atividade em curso e cresce no lugar com os controles quando alguém toca nela.",
+    tags: ["pílula","atividade","morph","spring","timer","player","chamada"],
+    demo: DynamicIslandColheitaDemo,
+    knobs: "DynamicIsland",
+    preview: { w: 380, h: 200 },
+  },
+  {
+    name: "folding-bill",
+    title: "Folding Bill",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Uma conta que dobra em três como papel e abre quando você puxa ou toca, com o total sempre à vista no cabeçalho.",
+    tags: ["recibo","pedido","3d","arrastar","acordeão"],
+    demo: FoldingBillColheitaDemo,
+    knobs: "FoldingBill",
+    preview: { w: 300, h: 320 },
+  },
+  {
+    name: "heat-word",
+    title: "Heat Word",
+    type: "ui",
+    family: "motion",
+    description:
+      "Uma grade de gotas ou uma palavra que derrete num mapa de calor por onde o cursor passa, pintada com as cores da marca.",
+    tags: ["canvas","cursor","hover","calor","efeito"],
+    demo: HeatWordColheitaDemo,
+    knobs: "HeatWord",
+    preview: { w: 520, h: 280 },
+  },
+  {
+    name: "liquid-toggle",
+    title: "Liquid Toggle",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Um interruptor cuja bolinha escorre como gota de um lado pro outro, esticando no caminho e se recolhendo ao chegar.",
+    tags: ["switch","toggle","formulário","mola"],
+    demo: LiquidToggleColheitaDemo,
+    knobs: "LiquidToggle",
+    preview: { w: 320, h: 200 },
+  },
+  {
+    name: "magnetic-select",
+    title: "Magnetic Select",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Um cacho de opções redondas em que a escolhida incha e empurra as outras, e o cursor puxa a opção que está debaixo dele.",
+    tags: ["seleção","radio","ímã","hover","escolha"],
+    demo: MagneticSelectColheitaDemo,
+    knobs: "MagneticSelect",
+    preview: { w: 240, h: 260 },
+  },
+  {
+    name: "magnify-dock",
+    title: "Magnify Dock",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "A barra de atalhos em que os ícones crescem em onda conforme o cursor chega perto, com o nome em cima do mais próximo.",
+    tags: ["dock","navegação","toolbar","ícones","ampliação","spring"],
+    demo: MagnifyDockColheitaDemo,
+    knobs: "MagnifyDock",
+    preview: { w: 420, h: 180 },
+  },
+  {
+    name: "slosh-slider",
+    title: "Slosh Slider",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Um slider em que o preenchimento tem peso: arrastou rápido, a tinta passa do polegar, balança e assenta.",
+    tags: ["slider","range","volume","física","spring","teclado"],
+    demo: SloshSliderColheitaDemo,
+    knobs: "SloshSlider",
+    preview: { w: 400, h: 120 },
+  },
+  {
+    name: "tilt-card",
+    title: "Tilt Card",
+    type: "ui",
+    family: "motion",
+    description:
+      "O card que inclina em 3D seguindo o mouse, com um brilho que corre pela superfície.",
+    tags: ["card","3d","tilt","hover","brilho","foto"],
+    demo: TiltCardColheitaDemo,
+    knobs: "TiltCard",
+    preview: { w: 320, h: 420 },
   },
 ];
 

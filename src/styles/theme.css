@@ -56,8 +56,10 @@
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
+  /* O vermelho do shadcn v4: legível como TEXTO sobre o escuro (o antigo, 0.396,
+     era cor de preenchimento e sumia em "Segure pra apagar", em erro de campo). */
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.21 0.04 25);
   --border: oklch(0.269 0 0);
   --input: oklch(0.269 0 0);
   --ring: oklch(0.439 0 0);
@@ -128,54 +130,18 @@
     @apply bg-background text-foreground;
   }
 
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
+  /*
+   * Sem tipografia de base para h1–h4, label, button e input.
+   *
+   * O bloco que morava aqui veio do template do Figma Make e não existe num
+   * projeto shadcn de verdade, onde o preflight do Tailwind faz botão e título
+   * herdarem a fonte. Com ele, a vitrine mostrava as peças diferente do que o
+   * `add` entrega: o botão do morph-select saía em 16px medium, o molde dele
+   * media em 14px, e o rótulo virava reticências só aqui. A vitrine tem de
+   * renderizar como o projeto de quem instala.
+   */
 
   html {
     font-size: var(--font-size);
-  }
-
-  h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h2 {
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  h4 {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  label {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  button {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  input {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
   }
 }

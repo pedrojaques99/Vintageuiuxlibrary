@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "activity-heatmap",
+    "title": "Activity Heatmap",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Um quadrado por dia mostra o ritmo de meses de trabalho, com bolha que desliza entre os dias e teclado de calendário.",
+    "tags": [
+      "dados",
+      "calendario",
+      "heatmap",
+      "ritmo",
+      "grafico"
+    ],
+    "demoImport": "./demos/activity-heatmap-demo",
+    "knobs": "ActivityHeatmap",
+    "preview": {
+      "w": 480,
+      "h": 290
+    }
+  },
+  "registry": {
+    "name": "activity-heatmap",
+    "type": "registry:ui",
+    "title": "Activity Heatmap",
+    "description": "Um quadrado por dia mostra o ritmo de meses de trabalho, com bolha que desliza entre os dias e teclado de calendário.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/activity-heatmap.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Activity Heatmap (https://uiarc.dev/components/activity-heatmap), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "magnify-dock",
+    "title": "Magnify Dock",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "A barra de atalhos em que os ícones crescem em onda conforme o cursor chega perto, com o nome em cima do mais próximo.",
+    "tags": [
+      "dock",
+      "navegação",
+      "toolbar",
+      "ícones",
+      "ampliação",
+      "spring"
+    ],
+    "demoImport": "./demos/magnify-dock-demo",
+    "knobs": "MagnifyDock",
+    "preview": {
+      "w": 420,
+      "h": 180
+    }
+  },
+  "registry": {
+    "name": "magnify-dock",
+    "type": "registry:ui",
+    "title": "Magnify Dock",
+    "description": "A barra de atalhos em que os ícones crescem em onda conforme o cursor chega perto, com o nome em cima do mais próximo.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/magnify-dock.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/dock"
+}

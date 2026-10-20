@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "toast-stack",
+    "title": "Toast Stack",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Avisos que se empilham no canto e abrem em leque quando o ponteiro chega, com o carregando que vira feito no lugar.",
+    "tags": [
+      "avisos",
+      "toast",
+      "notificacao",
+      "pilha",
+      "feedback"
+    ],
+    "demoImport": "./demos/toast-stack-demo",
+    "knobs": "ToastStack",
+    "preview": {
+      "w": 560,
+      "h": 380
+    }
+  },
+  "registry": {
+    "name": "toast-stack",
+    "type": "registry:ui",
+    "title": "Toast Stack",
+    "description": "Avisos que se empilham no canto e abrem em leque quando o ponteiro chega, com o carregando que vira feito no lugar.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/toast-stack.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Toast stack (https://uiarc.dev/components/toast-stack), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "card-stack",
+    "title": "Card Stack",
+    "type": "ui",
+    "family": "motion",
+    "description": "Pilha de cards em que o de cima vai pro fundo quando você arrasta e solta, como baralho de verdade.",
+    "tags": [
+      "pilha",
+      "arrastar",
+      "gesto",
+      "depoimentos",
+      "cards"
+    ],
+    "demoImport": "./demos/card-stack-demo",
+    "knobs": "CardStack",
+    "preview": {
+      "w": 420,
+      "h": 380
+    }
+  },
+  "registry": {
+    "name": "card-stack",
+    "type": "registry:ui",
+    "title": "Card Stack",
+    "description": "Pilha de cards em que o de cima vai pro fundo quando você arrasta e solta, como baralho de verdade.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/card-stack.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Card stack (https://uiarc.dev/components/card-stack), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

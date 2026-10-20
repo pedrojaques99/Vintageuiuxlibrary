@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "liquid-toggle",
+    "title": "Liquid Toggle",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Um interruptor cuja bolinha escorre como gota de um lado pro outro, esticando no caminho e se recolhendo ao chegar.",
+    "tags": [
+      "switch",
+      "toggle",
+      "formulário",
+      "mola"
+    ],
+    "demoImport": "./demos/liquid-toggle-demo",
+    "knobs": "LiquidToggle",
+    "preview": {
+      "w": 320,
+      "h": 200
+    }
+  },
+  "registry": {
+    "name": "liquid-toggle",
+    "type": "registry:ui",
+    "title": "Liquid Toggle",
+    "description": "Um interruptor cuja bolinha escorre como gota de um lado pro outro, esticando no caminho e se recolhendo ao chegar.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/liquid-toggle.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/liq-toggle"
+}

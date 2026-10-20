@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "swipe-actions",
+    "title": "Swipe Actions",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Lista em que a linha arrasta pro lado e mostra as ações, com o mesmo menu pra quem usa teclado.",
+    "tags": [
+      "lista",
+      "gesto",
+      "arrastar",
+      "triagem"
+    ],
+    "demoImport": "./demos/swipe-actions-demo",
+    "knobs": "SwipeActions",
+    "preview": {
+      "w": 440,
+      "h": 320
+    }
+  },
+  "registry": {
+    "name": "swipe-actions",
+    "type": "registry:ui",
+    "title": "Swipe Actions",
+    "description": "Lista em que a linha arrasta pro lado e mostra as ações, com o mesmo menu pra quem usa teclado.",
+    "dependencies": [
+      "motion",
+      "lucide-react",
+      "@radix-ui/react-dropdown-menu"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/swipe-actions.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Swipe actions (https://uiarc.dev/components/swipe-actions), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

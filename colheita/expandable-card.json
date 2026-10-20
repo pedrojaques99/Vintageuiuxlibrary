@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "expandable-card",
+    "title": "Expandable Card",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Card de resumo que cresce pros lados e pra baixo ao abrir, e rola só a palavra que mudou no resumo.",
+    "tags": [
+      "card",
+      "expandir",
+      "detalhe",
+      "resumo",
+      "layout"
+    ],
+    "demoImport": "./demos/expandable-card-demo",
+    "knobs": "ExpandableCard",
+    "preview": {
+      "w": 520,
+      "h": 320
+    }
+  },
+  "registry": {
+    "name": "expandable-card",
+    "type": "registry:ui",
+    "title": "Expandable Card",
+    "description": "Card de resumo que cresce pros lados e pra baixo ao abrir, e rola só a palavra que mudou no resumo.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/expandable-card.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Expandable card (https://uiarc.dev/components/expandable-card), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

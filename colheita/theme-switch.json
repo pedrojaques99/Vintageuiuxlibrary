@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "theme-switch",
+    "title": "Theme Switch",
+    "type": "ui",
+    "family": "fundacao",
+    "description": "Chave de tema claro e escuro em que a lua cobre o sol num eclipse, sem mexer na página por conta própria.",
+    "tags": [
+      "tema",
+      "modo escuro",
+      "chave",
+      "eclipse",
+      "toggle"
+    ],
+    "demoImport": "./demos/theme-switch-demo",
+    "knobs": "ThemeSwitch",
+    "preview": {
+      "w": 460,
+      "h": 220
+    }
+  },
+  "registry": {
+    "name": "theme-switch",
+    "type": "registry:ui",
+    "title": "Theme Switch",
+    "description": "Chave de tema claro e escuro em que a lua cobre o sol num eclipse, sem mexer na página por conta própria.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/theme-switch.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Eclipse (https://uiarc.dev/components/theme-switch-eclipse), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

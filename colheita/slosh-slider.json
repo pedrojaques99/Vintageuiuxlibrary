@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "slosh-slider",
+    "title": "Slosh Slider",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Um slider em que o preenchimento tem peso: arrastou rápido, a tinta passa do polegar, balança e assenta.",
+    "tags": [
+      "slider",
+      "range",
+      "volume",
+      "física",
+      "spring",
+      "teclado"
+    ],
+    "demoImport": "./demos/slosh-slider-demo",
+    "knobs": "SloshSlider",
+    "preview": {
+      "w": 400,
+      "h": 120
+    }
+  },
+  "registry": {
+    "name": "slosh-slider",
+    "type": "registry:ui",
+    "title": "Slosh Slider",
+    "description": "Um slider em que o preenchimento tem peso: arrastou rápido, a tinta passa do polegar, balança e assenta.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/slosh-slider.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/slosh"
+}

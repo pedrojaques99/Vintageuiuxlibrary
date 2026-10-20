@@ -1,0 +1,44 @@
+{
+  "catalogo": {
+    "name": "expanding-search",
+    "title": "Expanding Search",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Busca que fica guardada num ícone de lupa e só abre o campo quando alguém vai mesmo buscar.",
+    "tags": [
+      "busca",
+      "search",
+      "combobox",
+      "cabeçalho",
+      "barra de ferramentas"
+    ],
+    "demoImport": "./demos/expanding-search-demo",
+    "knobs": "ExpandingSearch",
+    "preview": {
+      "w": 450,
+      "h": 350
+    }
+  },
+  "registry": {
+    "name": "expanding-search",
+    "type": "registry:ui",
+    "title": "Expanding Search",
+    "description": "Busca que fica guardada num ícone de lupa e só abre o campo quando alguém vai mesmo buscar.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/expanding-search.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Expanding Search (https://uiarc.dev/components/expanding-search), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null,
+  "palcoCheck": "a barra fica no terço de cima de propósito, os resultados abrem pra baixo"
+}

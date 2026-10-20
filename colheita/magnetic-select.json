@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "magnetic-select",
+    "title": "Magnetic Select",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Um cacho de opções redondas em que a escolhida incha e empurra as outras, e o cursor puxa a opção que está debaixo dele.",
+    "tags": [
+      "seleção",
+      "radio",
+      "ímã",
+      "hover",
+      "escolha"
+    ],
+    "demoImport": "./demos/magnetic-select-demo",
+    "knobs": "MagneticSelect",
+    "preview": {
+      "w": 240,
+      "h": 260
+    }
+  },
+  "registry": {
+    "name": "magnetic-select",
+    "type": "registry:ui",
+    "title": "Magnetic Select",
+    "description": "Um cacho de opções redondas em que a escolhida incha e empurra as outras, e o cursor puxa a opção que está debaixo dele.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/magnetic-select.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/magnet-select"
+}

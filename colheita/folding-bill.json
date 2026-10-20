@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "folding-bill",
+    "title": "Folding Bill",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Uma conta que dobra em três como papel e abre quando você puxa ou toca, com o total sempre à vista no cabeçalho.",
+    "tags": [
+      "recibo",
+      "pedido",
+      "3d",
+      "arrastar",
+      "acordeão"
+    ],
+    "demoImport": "./demos/folding-bill-demo",
+    "knobs": "FoldingBill",
+    "preview": {
+      "w": 300,
+      "h": 320
+    }
+  },
+  "registry": {
+    "name": "folding-bill",
+    "type": "registry:ui",
+    "title": "Folding Bill",
+    "description": "Uma conta que dobra em três como papel e abre quando você puxa ou toca, com o total sempre à vista no cabeçalho.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/folding-bill.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/folding-bill"
+}
