@@ -26,7 +26,7 @@
  */
 
 import * as React from "react";
-import { ArrowUpRight, LayoutGrid, List, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight, Grid2x2, Grid3x3, LayoutGrid, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   CATALOG,
@@ -51,7 +51,27 @@ import { Miniatura } from "./miniatura";
 import { BugButton } from "./bug-report";
 import { CURADORIA_ATIVA, arquivada, useNotas } from "./curadoria";
 
-type Mode = "vitrine" | "lista";
+/**
+ * O tamanho do card, num clique só. A lista em texto saiu (2026-10-20): o
+ * catálogo vende peça viva, e uma linha de descrição sem palco não vendia nada.
+ * No lugar, a pessoa escolhe quanto de cada peça quer ver de uma vez.
+ */
+type Tamanho = "g" | "m" | "p";
+const TAMANHOS: Record<Tamanho, { colunas: string; rotulo: string; Icone: typeof LayoutGrid }> = {
+  g: { colunas: "grid-cols-1 lg:grid-cols-2", rotulo: "grandes", Icone: Grid2x2 },
+  m: { colunas: "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3", rotulo: "médios", Icone: Grid3x3 },
+  p: { colunas: "grid-cols-2 sm:grid-cols-3 xl:grid-cols-4", rotulo: "pequenos", Icone: LayoutGrid },
+};
+const PROXIMO: Record<Tamanho, Tamanho> = { m: "g", g: "p", p: "m" };
+const CHAVE_TAMANHO = "visant:ui:tamanho";
+function tamanhoSalvo(): Tamanho {
+  try {
+    const v = localStorage.getItem(CHAVE_TAMANHO);
+    return v === "g" || v === "p" ? v : "m";
+  } catch {
+    return "m";
+  }
+}
 type TipoFilter = CatalogItem["type"] | null;
 
 /**
@@ -319,7 +339,17 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
   /** `null` = não filtra por dependência. `SEM_DEPS` = só o que não puxa nada. */
   const [dep, setDep] = React.useState<string | null>(null);
   const [tipo, setTipo] = React.useState<TipoFilter>(null);
-  const [mode, setMode] = React.useState<Mode>("vitrine");
+  const [tamanho, setTamanho] = React.useState<Tamanho>(tamanhoSalvo);
+  const trocarTamanho = () => {
+    const proximo = PROXIMO[tamanho];
+    setTamanho(proximo);
+    try {
+      localStorage.setItem(CHAVE_TAMANHO, proximo);
+    } catch {
+      /* sem armazenamento: vale só nesta visita */
+    }
+  };
+  const { Icone: IconeTamanho } = TAMANHOS[tamanho];
   /**
    * Os eixos secundários ficam recolhidos atrás de um ícone, que mostra quantos
    * estão ligados: recolher nunca esconde um filtro ATIVO.
@@ -419,7 +449,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
     const headerH = document.querySelector("header")?.offsetHeight ?? 0;
     const target = Math.max(0, hero.getBoundingClientRect().bottom + window.scrollY - headerH);
     if (window.scrollY > target) window.scrollTo({ top: target, behavior: "auto" });
-  }, [familia, dep, tipo, mode, results.length]);
+  }, [familia, dep, tipo, tamanho, results.length]);
 
   // Atalhos da grade. `/` abre a busca — convenção de quem usa o teclado — e as
   // setas percorrem os cards a partir do que estiver focado, com o número de
@@ -454,7 +484,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
 
       const grade = listRef.current.querySelector<HTMLElement>("[data-grade]");
       const cols =
-        mode === "vitrine" && grade && el && grade.contains(el)
+        grade && el && grade.contains(el)
           ? getComputedStyle(grade).gridTemplateColumns.split(" ").length
           : 1;
       if (e.key === "ArrowRight") move(1);
@@ -464,7 +494,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [mode, onBuscar]);
+  }, [onBuscar]);
 
   return (
     <div className="pb-24">
@@ -530,12 +560,12 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
             </button>
             <button
               type="button"
-              onClick={() => setMode(mode === "vitrine" ? "lista" : "vitrine")}
-              aria-label={mode === "vitrine" ? "Ver em lista" : "Ver em grade"}
-              title={mode === "vitrine" ? "Ver em lista" : "Ver em grade"}
+              onClick={trocarTamanho}
+              aria-label={`Tamanho dos cards: ${TAMANHOS[tamanho].rotulo}`}
+              title={`Tamanho dos cards: ${TAMANHOS[tamanho].rotulo}`}
               className="casa-icone alvo-toque"
             >
-              {mode === "vitrine" ? <List className="h-4 w-4" /> : <LayoutGrid className="h-4 w-4" />}
+              <IconeTamanho className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -612,8 +642,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
 
       <div className="shell">
         {results.length ? (
-          mode === "vitrine" ? (
-            <div ref={listRef} style={{ overflowAnchor: "none" }}>
+          <div ref={listRef} style={{ overflowAnchor: "none" }}>
               {/*
                 Uma grade de verdade, e nada de mosaico: com a moldura fixa do
                 `PalcoFixo` não há altura diferente pra encaixar. `overflow-anchor:
@@ -628,7 +657,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
                 <div
                   data-grade
                   style={{ gap: GRID_GAP }}
-                  className="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
+                  className={cn("mt-4 grid", TAMANHOS[tamanho].colunas)}
                 >
                   {comPalco.map((item, i) => (
                     <Ladrilho
@@ -665,13 +694,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
                 </section>
               ) : null}
             </div>
-          ) : (
-            <div ref={listRef} style={{ overflowAnchor: "none" }} className="casa mt-4 -mx-3">
-              {results.map((item, i) => (
-                <Row key={item.name} item={item} index={i} onOpen={() => onFocus(item.name)} />
-              ))}
-            </div>
-          )
+
         ) : (
           <div className="casa mt-20 text-center">
             <p className="text-casa-lg">Nada com esses filtros.</p>

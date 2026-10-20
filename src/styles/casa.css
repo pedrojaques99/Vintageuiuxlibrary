@@ -84,6 +84,17 @@
   body {
     background: var(--casa-bg);
   }
+
+  /*
+   * A barra de rolagem da casa: fina e no tom da linha, sem trilho. A padrão do
+   * sistema era um trilho branco com setas, a coisa mais clara da tela no tema
+   * escuro. `scrollbar-color` herda, então declarar na raiz cobre listas,
+   * diálogos e palcos sem ninguém lembrar de pôr classe.
+   */
+  :root {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--casa-fg) 18%, transparent) transparent;
+  }
 }
 
 @layer components {

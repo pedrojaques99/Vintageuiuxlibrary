@@ -126,7 +126,7 @@ export function Busca({
               </span>
             </div>
 
-            <Command.List className="max-h-[min(420px,60vh)] overflow-y-auto overscroll-contain border-t border-casa-line p-1.5">
+            <Command.List className="max-h-[min(420px,60vh)] overflow-y-auto overflow-x-hidden overscroll-contain border-t border-casa-line p-1.5">
               <Command.Empty className="px-3 py-10 text-center text-casa-base text-casa-fg-2">
                 Nada com esse nome. Tente uma tag, como &ldquo;foto&rdquo;, ou um pacote, como
                 &ldquo;gsap&rdquo;.
@@ -171,9 +171,10 @@ function Linha({ item, onEscolher }: { item: CatalogItem; onEscolher: (n: string
       {ehNovo(item.name) ? (
         <span className="h-1.5 w-1.5 shrink-0 rounded-[2px] bg-casa-fg-2" aria-label="novo" />
       ) : null}
-      <code className="ml-auto shrink-0 text-casa-sm text-casa-fg-3">{item.name}</code>
-      <span className="w-10 shrink-0 text-right text-casa-sm text-casa-fg-3">
-        {TYPE_LABEL[item.type]}
+      <code className="ml-auto hidden min-w-0 truncate text-casa-sm text-casa-fg-3 sm:block">{item.name}</code>
+      {/* Componente é o caso comum: dizer em toda linha era ruído. Só o que foge dele se anuncia. */}
+      <span className="shrink-0 text-right text-casa-sm text-casa-fg-3">
+        {item.type === "ui" ? null : TYPE_LABEL[item.type]}
       </span>
     </Command.Item>
   );
