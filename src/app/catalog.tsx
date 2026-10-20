@@ -1693,7 +1693,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Ponto de 6px que segue o ponteiro com mola calma e abre num anel vazado sobre link, botão ou [data-cursor], em mix-blend-difference; só existe em ponteiro fino e sem movimento reduzido.",
     tags: ["cursor", "ponteiro", "hover", "mola", "blend", "minimal"],
     demo: DotCursorDemo,
-    preview: { w: 690, h: 300 },
+    preview: { w: 480, h: 240 },
   },
   {
     name: "mist-dialog", title: "Mist Dialog", type: "ui", family: "feedback",

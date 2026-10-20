@@ -4,15 +4,18 @@
  * Um palco com o que o ponto reconhece: link, botão e um `[data-cursor]` sem
  * papel de controle nenhum (o caso da foto clicável que é só uma `div`).
  *
- * O cursor é montado AQUI e não na raiz da vitrine porque é a demo dele — mas
- * ele é `fixed` e segue a janela inteira enquanto a demo estiver montada. É o
- * comportamento real da peça: num site ele mora na raiz e vale para tudo.
+ * O cursor é `position: fixed`, e o palco da vitrine é escalado com
+ * `transform`: dentro dele o `fixed` passa a medir a partir da caixa
+ * transformada e o ponto aparecia longe do ponteiro. Por isso ele vai para o
+ * `body` por portal, como mora num site de verdade (na raiz), e só existe
+ * enquanto o ponteiro está sobre a demo: fora dela a vitrine segue sem ponto.
  *
  * `ink` usa `--foreground` sob tema escuro (armadilha 4 do componente): com
  * `difference`, tinta escura não inverte nada e o ponto sumiria.
  */
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 
 import { DotCursor } from "../../../registry/visant/ui/dot-cursor";
 import { Media } from "../media";
@@ -33,14 +36,25 @@ function useEscuro() {
 
 export default function DotCursorDemo(_: DemoProps) {
   const escuro = useEscuro();
+  const [dentro, setDentro] = React.useState(false);
 
   return (
-    <div className="grid h-full w-full grid-cols-[1fr_auto] items-center gap-6 px-6">
-      <DotCursor ink={escuro ? "var(--foreground)" : "var(--background)"} />
+    <div
+      className="flex h-full w-full items-center justify-center gap-8 overflow-hidden px-6"
+      onPointerEnter={() => setDentro(true)}
+      onPointerLeave={() => setDentro(false)}
+    >
+      {dentro
+        ? createPortal(<DotCursor ink={escuro ? "var(--foreground)" : "var(--background)"} />, document.body)
+        : null}
 
-      <div className="flex flex-col items-start gap-4">
-        <p className="max-w-[22rem] text-[1.05rem] leading-[1.5] text-muted-foreground">
-          Passe o ponteiro. Sobre um{" "}
+      <div data-cursor className="w-[132px] shrink-0 overflow-hidden rounded-[var(--r-surface,16px)]">
+        <Media papel="cena" indice={2} ratio="4/5" />
+      </div>
+
+      <div className="flex min-w-0 flex-col items-start gap-4">
+        <p className="max-w-[16rem] text-[1.05rem] leading-[1.5] text-muted-foreground">
+          Sobre um{" "}
           <a
             href="#dot-cursor"
             onClick={(e) => e.preventDefault()}
@@ -52,14 +66,10 @@ export default function DotCursorDemo(_: DemoProps) {
         </p>
         <button
           type="button"
-          className="rounded-full border border-current px-4 py-2 text-rotulo uppercase tracking-[0.08em] text-foreground"
+          className="rounded-[var(--r-control,10px)] border border-current px-4 py-2 text-rotulo text-foreground focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]"
         >
-          um botão
+          Um botão
         </button>
-      </div>
-
-      <div data-cursor className="w-[180px] overflow-hidden rounded-[var(--r-surface,16px)]">
-        <Media papel="cena" indice={2} ratio="4/5" />
       </div>
     </div>
   );
