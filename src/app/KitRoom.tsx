@@ -24,7 +24,7 @@
  */
 
 import * as React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ScanSearch } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { KITS, pecasDoKit, type Kit } from "./kits";
 import { kitInstallCommand } from "./registry-meta";
@@ -33,7 +33,7 @@ import { DepLogo } from "./dep-badges";
 import { allDeps } from "./deps";
 import { BugButton } from "./bug-report";
 import { Aba, Icone } from "./casa-ui";
-import { SfxToggle } from "../../registry/visant/ui/sfx-toggle";
+import { Inspecao } from "./kits/sala";
 
 /**
  * A tira de peças.
@@ -123,6 +123,8 @@ export function KitRoom({
   const kit = KITS[indice];
   const pecas = React.useMemo(() => pecasDoKit(kit), [kit]);
   const deps = React.useMemo(() => allDeps(pecas.map((p) => p.name)), [pecas]);
+  /* "Mostrar peças": o equivalente do hover para teclado e toque. */
+  const [mostrarPecas, setMostrarPecas] = React.useState(false);
 
   const passo = React.useCallback(
     (delta: number) => onSlug(KITS[(indice + delta + KITS.length) % KITS.length].slug),
@@ -165,7 +167,6 @@ export function KitRoom({
             ))}
           </div>
           <span className="flex shrink-0 items-center gap-1">
-            <SfxToggle />
             <Icone rotulo="Kit anterior" onClick={() => passo(-1)}>
               <ChevronLeft className="h-4 w-4" />
             </Icone>
@@ -189,12 +190,35 @@ export function KitRoom({
           <BugButton item={kit.slug} />
         </div>
 
-        {/* O comando, sozinho, e é o destaque da página. */}
-        <CopyCommand
-          variant="cta"
-          text={kitInstallCommand(pecas.map((p) => p.name))}
-          className="w-full min-w-0 sm:max-w-[34rem]"
-        />
+        {/*
+          O comando é o destaque; ao lado, a chave da camada de inspeção. A
+          sala é um mock de produto sem legenda nenhuma, e é esta chave (e o
+          hover) que responde "que peça é essa?". No toque não há hover: ela é
+          o único caminho, por isso fica à vista e não num menu.
+        */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <CopyCommand
+            variant="cta"
+            text={kitInstallCommand(pecas.map((p) => p.name))}
+            className="w-full min-w-0 sm:max-w-[34rem]"
+          />
+          <button
+            type="button"
+            aria-pressed={mostrarPecas}
+            onClick={() => setMostrarPecas((v) => !v)}
+            title="Ou passe o mouse sobre a tela de exemplo"
+            className={cn(
+              "alvo-toque inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-control px-3.5 text-casa-base outline-none",
+              "transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] focus-visible:[box-shadow:var(--focus)]",
+              mostrarPecas
+                ? "bg-casa-tile-2 text-casa-fg"
+                : "bg-casa-tile text-casa-fg-2 hover:text-casa-fg",
+            )}
+          >
+            <ScanSearch className="h-4 w-4" aria-hidden="true" />
+            Mostrar peças
+          </button>
+        </div>
       </header>
 
       {/*
@@ -222,7 +246,9 @@ export function KitRoom({
         */}
         <div className="shell py-14 sm:py-20">
           <React.Suspense fallback={<div className="min-h-[60vh] w-full" aria-busy="true" />}>
-            <kit.Composicao />
+            <Inspecao todas={mostrarPecas} onAbrir={onFocus}>
+              <kit.Composicao />
+            </Inspecao>
           </React.Suspense>
         </div>
       </section>

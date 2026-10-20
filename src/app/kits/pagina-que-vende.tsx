@@ -1,36 +1,22 @@
 "use client";
 
 /**
- * Página que vende — as 16 peças de aquisição na ordem em que uma landing usa.
+ * Página que vende: o kit montado como o site de um estúdio de exemplo.
  *
- * Este kit é o que mais sofria na vitrine solta: `count-up` sozinho é um número
- * animado (bonito e inútil), `measure-bar` sozinho é uma barrinha, `spine-card`
- * sozinho é um card torto. Juntos, em ordem, eles são uma página inteira, e é a
- * página que a pessoa quer, não o número.
+ * A versão anterior tinha "Dobra 1: promessa", "Dobra 2: categoria" em cima de
+ * cada trecho e uma frase de vitrine no fim. O dono leu como documentação, e
+ * estava certo: a pessoa não entendia que era uma página montada pra ver as
+ * peças em ação. Agora é um site normal, numa janela de navegador, do menu ao
+ * rodapé. Nenhum rótulo técnico: quem quer saber qual peça desenha a dobra passa
+ * o mouse (`Pecas`, em `sala.tsx`) e copia o comando ali mesmo.
  *
- * ── O defeito que esta versão mata ──────────────────────────────────────────
- *
- * A composição inteira morava dentro de `overflow-hidden rounded border bg-*`
- * DENTRO da sala, que já é superfície. Com a casca, o card da sala e o palco,
- * dava quatro molduras antes da primeira peça, e sobrava um filete claro entre
- * a borda arredondada e o herói preto. Uma landing não mora num card: ela é uma
- * sequência de dobras que sangram de ponta a ponta. Agora quem troca o chão
- * entre as dobras é `Faixa` (`kits/sala.tsx`), não uma caixa nova.
- *
- * ── A ordem, e por que ela não é decorativa ─────────────────────────────────
- *
- * promessa → categoria → serviço → passos → número → prova → acervo → chamada.
- * É a cascata de `revenue-centric-design`: quem chega está em algum degrau da
- * escada de consciência de Schwartz, e cada dobra empurra um degrau. Tirar uma
- * do meio quebra a costura, e é por isso que o kit se instala inteiro. Cada
- * dobra abaixo declara, no comentário, a alavanca que usa e a variável que move.
- *
- * O rótulo de cada dobra carrega as peças como `PecaTag`: o nome é o botão que
- * copia o `add` daquela peça. Dá pra levar a página inteira pelo comando do
- * cabeçalho, ou uma dobra de cada vez pelo nome.
+ * A ordem das dobras continua a de quem converte (promessa, categoria, serviço,
+ * passos, número, prova, acervo, chamada), só que ela não é mais anunciada: é
+ * vivida. O estúdio "Faro" e os clientes citados são inventados.
  */
 
 import * as React from "react";
+import { ArrowRight } from "lucide-react";
 
 import { EraseField } from "../../../registry/visant/ui/erase-field";
 import { RepulsiveHover } from "../../../registry/visant/ui/repulsive-hover";
@@ -48,204 +34,245 @@ import { Plate } from "../../../registry/visant/ui/plate";
 import { Rail } from "../../../registry/visant/ui/rail";
 import { Chip } from "../../../registry/visant/ui/chip";
 import { CtaSurface, CtaAction } from "../../../registry/visant/ui/cta-surface";
+import {
+  NavDrawer,
+  NavDrawerBurger,
+  NavDrawerClose,
+  NavDrawerContent,
+  NavDrawerItem,
+  NavDrawerList,
+  NavDrawerTrigger,
+} from "../../../registry/visant/ui/nav-drawer";
 import { Media, proporcao } from "../media";
-import { PEOPLE } from "../demo-fixtures";
-import { Atos, Bloco, Faixa, Fecho } from "./sala";
+import { Janela, Pecas } from "./sala";
 
 const PALAVRAS = ["MARCA", "SITE", "PRODUTO", "CAMPANHA", "EMBALAGEM", "MOTION"];
 
-const ACERVO = [
-  { papel: "cena" as const, indice: 0 },
-  { papel: "retrato" as const, indice: 1 },
-  { papel: "textura" as const, indice: 0 },
-  { papel: "cena" as const, indice: 3 },
-  { papel: "retrato" as const, indice: 4 },
-  { papel: "cena" as const, indice: 5 },
+const LINKS = ["Serviços", "Como funciona", "Trabalhos", "Loja"];
+
+type Papel = "cena" | "retrato" | "textura";
+
+const ACERVO: { papel: Papel; indice: number }[] = [
+  { papel: "cena", indice: 0 },
+  { papel: "retrato", indice: 1 },
+  { papel: "textura", indice: 0 },
+  { papel: "cena", indice: 3 },
+  { papel: "retrato", indice: 4 },
+  { papel: "cena", indice: 5 },
+  { papel: "textura", indice: 2 },
+  { papel: "retrato", indice: 2 },
+];
+
+const FILTROS: { id: "tudo" | Papel; rotulo: string }[] = [
+  { id: "tudo", rotulo: "Tudo" },
+  { id: "cena", rotulo: "Marca" },
+  { id: "retrato", rotulo: "Pessoas" },
+  { id: "textura", rotulo: "Impresso" },
 ];
 
 const LIVROS = ["Marca em 9 etapas", "O método do lote", "Imersão"];
 
-/**
- * O relógio da loja, em português.
- *
- * `store-status` vem com rótulo em inglês de fábrica, porque a peça não tem
- * idioma. Deixar o padrão passar era a única linha em inglês de uma landing
- * brasileira, no topo da dobra mais cara da página.
- */
+const LOJA = [
+  { nome: "Pôster Norte", preco: "R$ 120" },
+  { nome: "Caderno Faro", preco: "R$ 68" },
+  { nome: "Cartaz Maré", preco: "R$ 140" },
+  { nome: "Kit de cartões", preco: "R$ 45" },
+  { nome: "Pôster Duna", preco: "R$ 120" },
+  { nome: "Calendário 2027", preco: "R$ 89" },
+];
+
+/** O relógio da loja em português: a peça vem com rótulo em inglês de fábrica. */
 const HORARIO = {
   open: (c: number) => `Atende agora até as ${c}h`,
   closed: (o: number) => `Volta a atender às ${o}h`,
 };
 
-export default function PaginaQueVende() {
-  const acervo = React.useMemo(
-    () => ACERVO.map((it, i) => ({ ...it, i, ratio: proporcao(it.papel, it.indice) })),
-    [],
+function Wordmark() {
+  return (
+    <span
+      className="text-[1.15rem] font-semibold tracking-[-0.03em]"
+      style={{ fontFamily: "var(--font-display, inherit)" }}
+    >
+      faro<span className="text-muted-foreground">.</span>
+    </span>
   );
+}
+
+/** Dobra de site: largura de leitura e respiro de página, sem moldura. */
+function Dobra({
+  id,
+  children,
+  className,
+}: {
+  id?: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section id={id} className={`px-5 py-14 sm:px-10 sm:py-20 ${className ?? ""}`}>
+      {children}
+    </section>
+  );
+}
+
+export default function PaginaQueVende() {
+  const [filtro, setFiltro] = React.useState<(typeof FILTROS)[number]["id"]>("tudo");
+  const acervo = React.useMemo(
+    () =>
+      ACERVO.map((it, i) => ({ ...it, i, ratio: proporcao(it.papel, it.indice) })).filter(
+        (it) => filtro === "tudo" || it.papel === filtro,
+      ),
+    [filtro],
+  );
+  const contar = (id: (typeof FILTROS)[number]["id"]) =>
+    id === "tudo" ? ACERVO.length : ACERVO.filter((a) => a.papel === id).length;
 
   return (
-    <Atos>
-      {/* A abertura saiu. Numa sala que é uma LANDING, um parágrafo de vitrine
-          antes do herói é a pior coisa possível: ele empurra a promessa para
-          baixo e diz em prosa o que as oito dobras provam em seguida. */}
-      {/*
-        DOBRA 1 · promessa → move a taxa de conversão.
+    <Janela endereco="faro.studio">
+      {/* menu do site */}
+      <header className="flex items-center gap-6 border-b border-border px-5 py-3.5 sm:px-10">
+        <Wordmark />
+        <nav aria-label="Menu do site" className="hidden items-center gap-6 md:flex">
+          {LINKS.map((l) => (
+            <a
+              key={l}
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="rounded-sm text-apoio text-muted-foreground outline-none transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground focus-visible:[box-shadow:var(--focus)]"
+            >
+              {l}
+            </a>
+          ))}
+        </nav>
+        <span className="ml-auto hidden md:inline">
+          <Pecas nomes={["cta-surface"]} canto="base-fim">
+            <span data-tone="surface">
+              <CtaAction className="min-h-9 px-4 py-1.5 text-[14px]">Agendar conversa</CtaAction>
+            </span>
+          </Pecas>
+        </span>
+        <span className="ml-auto md:hidden">
+          <Pecas nomes={["nav-drawer"]} canto="base-fim">
+            <NavDrawer>
+              <NavDrawerTrigger asChild>
+                <NavDrawerBurger label="Abrir o menu" />
+              </NavDrawerTrigger>
+              <NavDrawerContent title="Menu do site" brand={<Wordmark />}>
+                <NavDrawerList>
+                  {LINKS.map((l) => (
+                    <NavDrawerClose asChild key={l}>
+                      <NavDrawerItem href="#" onClick={(e) => e.preventDefault()}>
+                        {l}
+                      </NavDrawerItem>
+                    </NavDrawerClose>
+                  ))}
+                </NavDrawerList>
+              </NavDrawerContent>
+            </NavDrawer>
+          </Pecas>
+        </span>
+      </header>
 
-        Alavanca: *pass the 5-second test* somada a *neutrality is omission*. A
-        headline nomeia a TAREFA que a pessoa foi ali resolver ("colocar a marca
-        de pé"), não o estado dela, e existe UMA ação primária na dobra. A linha
-        miúda embaixo do botão é o *click trigger*: responde o que acontece
-        depois do clique antes de a pessoa precisar imaginar.
-
-        `px-0` na faixa: o herói é o único bloco que precisa do fundo colado na
-        borda. Com o respiro da faixa por fora, sobrava o filete claro entre a
-        sala e a poeira do `erase-field` que esta versão veio matar.
-      */}
-      <Bloco
-        titulo="Dobra 1: promessa"
-        pecas={["erase-field", "store-status", "repulsive-hover"]}
-        nota="Passa a mão sobre o fundo: a poeira sai onde o cursor anda."
-      >
-        {/*
-          `dark` no herói, e não no documento.
-
-          O `erase-field` pinta poeira escura sobre luz de marca; ele nasceu numa
-          dobra de CTA preta e é lá que funciona. Com os tokens claros do papel a
-          promessa saía preta sobre preto e só aparecia depois que a pessoa
-          raspasse, que é o pior defeito possível numa dobra de herói.
-        */}
-        <Faixa tom="recuo" className="dark px-0 text-foreground sm:px-0">
-          <EraseField className="relative grid min-h-[380px] place-items-center bg-[var(--background)] px-6 py-14 text-center sm:px-10">
-            <div className="relative z-10 mx-auto max-w-2xl">
-              <div className="mb-5 flex justify-center">
-                <StoreStatus
-                  timeZone="America/Sao_Paulo"
-                  openHour={9}
-                  closeHour={18}
-                  labels={HORARIO}
-                />
-              </div>
-              <h2
-                className="text-[clamp(1.8rem,4.5vw,3rem)] font-semibold leading-[1.04] tracking-[-0.03em]"
-                style={{ fontFamily: "var(--font-display, inherit)" }}
-              >
-                Coloque a marca de pé sem juntar cinco fornecedores.
-              </h2>
-              <p className="mx-auto mt-4 max-w-lg text-corpo leading-relaxed text-muted-foreground">
-                Estratégia, identidade, site e produto saem do mesmo time. Nada é repassado pra
-                fora no meio do caminho.
-              </p>
-              <div className="mt-7 flex justify-center">
-                <RepulsiveHover strength={8} radius={160}>
-                  <span
-                    className="inline-block rounded-[var(--r-pill,9999px)] px-6 py-3 text-corpo font-medium"
-                    style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
-                  >
-                    Agendar 30 minutos
-                  </span>
-                </RepulsiveHover>
-              </div>
-              <p className="mt-3 text-apoio text-muted-foreground">
-                Resposta no mesmo dia útil. A conversa não vira proposta sem você pedir.
-              </p>
+      {/* promessa: o herói escuro em que a mão raspa a poeira */}
+      <Pecas nomes={["erase-field", "store-status", "repulsive-hover"]} className="dark text-foreground">
+        <EraseField className="relative grid min-h-[440px] place-items-center bg-[var(--background)] px-6 py-16 text-center sm:px-10">
+          <div className="relative z-10 mx-auto max-w-2xl">
+            <div className="mb-6 flex justify-center">
+              <StoreStatus timeZone="America/Sao_Paulo" openHour={9} closeHour={18} labels={HORARIO} />
             </div>
-          </EraseField>
-        </Faixa>
-      </Bloco>
+            <h1
+              className="text-[clamp(2rem,5vw,3.4rem)] font-semibold leading-[1.02] tracking-[-0.035em]"
+              style={{ fontFamily: "var(--font-display, inherit)" }}
+            >
+              Coloque a marca de pé sem juntar cinco fornecedores.
+            </h1>
+            <p className="mx-auto mt-5 max-w-lg text-corpo leading-relaxed text-muted-foreground">
+              Estratégia, identidade, site e produto saem do mesmo time. Nada é repassado pra fora
+              no meio do caminho.
+            </p>
+            <div className="mt-8 flex justify-center">
+              <RepulsiveHover strength={8} radius={160}>
+                <span
+                  className="inline-flex items-center gap-2 rounded-[var(--r-pill,9999px)] px-6 py-3 text-corpo font-medium"
+                  style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
+                >
+                  Agendar 30 minutos
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </span>
+              </RepulsiveHover>
+            </div>
+            <p className="mt-3 text-apoio text-muted-foreground">
+              Resposta no mesmo dia útil. A conversa não vira proposta sem você pedir.
+            </p>
+          </div>
+        </EraseField>
+      </Pecas>
 
-      {/*
-        DOBRA 2 · categoria → move a qualificação do lead.
-
-        Alavanca: *cut CAC by filtering on the landing page*. Seis palavras
-        dizem em um segundo o que a casa faz e, principalmente, o que ela não
-        faz. Quem procura tráfego pago lê "EMBALAGEM" e sai antes de virar uma
-        reunião que não fecha.
-
-        Duas faixas em sentidos opostos: uma só lê como enfeite, duas leem como
-        sistema. A peça já carrega `overflow-hidden`, então a faixa sangrada não
-        estoura o documento no celular.
-      */}
-      <Bloco
-        titulo="Dobra 2: categoria"
-        pecas={["marquee"]}
-        nota="O scroll acelera a faixa e inverte o sentido dela."
-      >
-        <Faixa tom="recuo" className="px-0 py-1 sm:px-0">
-          <Marquee
-            band
-            speed={38}
-            items={PALAVRAS.map((p) => (
-              <span key={p} className="font-mono text-rotulo tracking-[0.14em]">
-                {p}
-              </span>
-            ))}
-          />
-          <Marquee
-            reverse
-            speed={46}
-            fade
-            className="py-2.5"
-            items={PALAVRAS.map((p) => (
-              <span key={p} className="font-mono text-rotulo tracking-[0.14em] text-muted-foreground">
-                {p}
-              </span>
-            ))}
-          />
-        </Faixa>
-      </Bloco>
-
-      {/*
-        DOBRA 3 · serviço → move a taxa de conversão.
-
-        Alavanca: *specificity is the difference between decoration and
-        persuasion*. Os títulos dos cards descrevem a TRANSFORMAÇÃO ("site que
-        carrega rápido e converte"), nunca a categoria ("desenvolvimento web").
-        As tags embaixo fazem o trabalho que a lista de features faria, sem
-        gastar uma dobra inteira com ela.
-      */}
-      <Bloco titulo="Dobra 3: serviço" pecas={["section-intro", "showcase-card"]}>
-        <SectionIntro
-          eyebrow="Serviços"
-          title="O que a gente entrega"
-          lead="Três frentes que se sustentam sozinhas e ficam melhores juntas."
+      {/* categoria */}
+      <Pecas nomes={["marquee"]} className="border-b border-border py-1">
+        <Marquee
+          band
+          speed={38}
+          items={PALAVRAS.map((p) => (
+            <span key={p} className="font-mono text-rotulo tracking-[0.14em]">
+              {p}
+            </span>
+          ))}
         />
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <ShowcaseCard
-            href="#"
-            title="Identidade que quer dizer alguma coisa"
-            media={<Media papel="video" indice={0} className="size-full" />}
-            tags={["Estratégia", "Naming", "Logo", "Identidade visual"]}
-          />
-          <ShowcaseCard
-            href="#"
-            title="Site que carrega rápido e converte"
-            media={<Media papel="cena" indice={3} className="size-full" />}
-            tags={["Landing", "E-commerce", "Design system"]}
-          />
-          <ShowcaseCard
-            href="#"
-            title="Produto desenhado com quem constrói"
-            media={<Media papel="retrato" indice={4} className="size-full" />}
-            tags={["App", "Dashboard", "Componentes"]}
-          />
-        </div>
-      </Bloco>
+        <Marquee
+          reverse
+          speed={46}
+          fade
+          className="py-2.5"
+          items={PALAVRAS.map((p) => (
+            <span key={p} className="font-mono text-rotulo tracking-[0.14em] text-muted-foreground">
+              {p}
+            </span>
+          ))}
+        />
+      </Pecas>
 
-      {/*
-        DOBRA 4 · passos → move o custo percebido de começar.
+      {/* serviço */}
+      <Dobra id="servicos">
+        <Pecas nomes={["section-intro"]}>
+          <SectionIntro
+            eyebrow="Serviços"
+            title="O que a gente entrega"
+            lead="Três frentes que se sustentam sozinhas e ficam melhores juntas."
+          />
+        </Pecas>
+        <Pecas nomes={["showcase-card"]} className="mt-10">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <ShowcaseCard
+              href="#"
+              title="Identidade que quer dizer alguma coisa"
+              media={<Media papel="video" indice={0} className="size-full" />}
+              tags={["Estratégia", "Naming", "Logo", "Identidade visual"]}
+            />
+            <ShowcaseCard
+              href="#"
+              title="Site que carrega rápido e converte"
+              media={<Media papel="cena" indice={3} className="size-full" />}
+              tags={["Landing", "E-commerce", "Design system"]}
+            />
+            <ShowcaseCard
+              href="#"
+              title="Produto desenhado com quem constrói"
+              media={<Media papel="retrato" indice={4} className="size-full" />}
+              tags={["App", "Dashboard", "Componentes"]}
+            />
+          </div>
+        </Pecas>
+      </Dobra>
 
-        Alavanca: *construal level* aplicado ao esforço. Entre a promessa e o
-        preço mora a pergunta "quanto trabalho isso me dá?". Três passos com
-        prazo escrito respondem antes que ela vire objeção na reunião. O prazo
-        no lead é número cru, e é o que a dobra tem de mais caro.
-      */}
-      <Bloco titulo="Dobra 4: passos" pecas={["step-cards"]}>
+      {/* passos */}
+      <Dobra id="como-funciona" className="bg-[color-mix(in_oklab,var(--background)_92%,var(--foreground)_5%)]">
         <SectionIntro
           eyebrow="Como funciona"
           title="Três passos, sem mistério"
           lead="Do pedido ao primeiro entregável em sete dias."
         />
-        <div className="mt-8">
+        <Pecas nomes={["step-cards"]} className="mt-10">
           <StepCards
             columns={3}
             visualHeight={150}
@@ -267,67 +294,36 @@ export default function PaginaQueVende() {
               },
             ]}
           />
+        </Pecas>
+      </Dobra>
+
+      {/* número */}
+      <Dobra>
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
+          <Pecas nomes={["count-up"]}>
+            <CountUp className="block text-[2.6rem] font-semibold leading-none tracking-tight">
+              1.291
+            </CountUp>
+            <p className="mt-2 text-apoio text-muted-foreground">Projetos entregues em 6 anos</p>
+          </Pecas>
+          <Pecas nomes={["measure-bar"]}>
+            <MeasureBar value="9 em 10" qualifier="dos projetos no prazo" ratio={0.9} label="Entrega" />
+          </Pecas>
+          <Pecas nomes={["measure-bar"]}>
+            <MeasureBar
+              value="68%"
+              qualifier="dos clientes voltam no ano seguinte"
+              ratio={0.68}
+              label="Recompra"
+            />
+          </Pecas>
         </div>
-      </Bloco>
+      </Dobra>
 
-      {/*
-        DOBRA 5 · número → move a credibilidade da promessa.
-
-        Alavanca: *your promise is the size of your proof*. `count-up` apura o
-        número e `measure-bar` diz de quanto ele é: juntos são prova, separados
-        são enfeite e afirmação sem denominador. A terceira barra é o estado
-        desconhecido, e ela está aqui de propósito: dado que a API não devolveu
-        aparece tracejado, nunca como zero, porque uma UI que mente pro banco
-        corrompe a métrica pela qual a própria página é julgada.
-
-        Chão trocado nesta dobra. Depois de duas dobras de foto, o degrau de
-        superfície é o que faz o número parecer um dado apurado e não mais um
-        card. É separação por chão, sem desenhar caixa.
-      */}
-      <Bloco
-        titulo="Dobra 5: número"
-        pecas={["count-up", "measure-bar"]}
-        nota="A terceira barra é o dado que não chegou. Tracejado, e não zero."
-      >
-        <Faixa tom="recuo" className="py-8 sm:py-10">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            <div>
-              <CountUp className="block text-[2.4rem] font-semibold leading-none tracking-tight">
-                1.291
-              </CountUp>
-              <p className="mt-2 text-apoio text-muted-foreground">Projetos entregues em 6 anos</p>
-            </div>
-            <MeasureBar
-              value="R$450k"
-              qualifier="de uma meta de 600k"
-              ratio={0.75}
-              label="Faturado no trimestre"
-            />
-            {/* `value` escrito por extenso, e não um travessão de tabela: o
-                glifo de "sem dado" só é convenção pra quem já leu a legenda, e
-                aqui não há legenda. */}
-            <MeasureBar
-              value="sem dado"
-              qualifier="a API não respondeu"
-              state="unknown"
-              label="Em rota"
-            />
-          </div>
-        </Faixa>
-      </Bloco>
-
-      {/*
-        DOBRA 6 · prova → move a confiança antes do clique.
-
-        Alavanca: *aim for 4.2–4.5 stars, not a perfect 5*. Nota redonda lê como
-        catálogo comprado. Aqui a média é 4,4 com a contagem de avaliações ao
-        lado, e o depoimento de 4 estrelas conta um atraso. A parede mistura
-        citação, número e retrato porque prova de um formato só vira padrão e o
-        olho para de ler.
-      */}
-      <Bloco titulo="Dobra 6: prova" pecas={["testimonial-wall"]}>
-        <SectionIntro eyebrow="Prova" title="Quem já contratou" />
-        <div className="mt-8">
+      {/* prova */}
+      <Dobra className="pt-0 sm:pt-0">
+        <SectionIntro eyebrow="Quem contratou" title="O que dizem depois da entrega" />
+        <Pecas nomes={["testimonial-wall"]} className="mt-10">
           <TestimonialWall
             columns={3}
             items={[
@@ -337,8 +333,8 @@ export default function PaginaQueVende() {
                 headline: "Rápido e fácil de trabalhar junto",
                 quote:
                   "Entenderam o que a gente precisava e entregaram no padrão em projetos bem diferentes entre si.",
-                author: PEOPLE[1].name,
-                role: "Marketing @ Estúdio Ribalta",
+                author: "Ana Reis",
+                role: "Marketing, Padaria Miolo",
                 rating: 5,
               },
               {
@@ -352,8 +348,8 @@ export default function PaginaQueVende() {
                 id: "c",
                 kind: "portrait",
                 media: <Media papel="video" indice={2} className="size-full" />,
-                name: PEOPLE[3].name,
-                role: "Produto @ Casa Vinte",
+                name: "Marina Alves",
+                role: "Produto, Clínica Alvo",
                 onPlay: () => {},
               },
               {
@@ -362,8 +358,8 @@ export default function PaginaQueVende() {
                 tone: "muted",
                 quote:
                   "O time é atento e responde rápido. A primeira rodada de identidade atrasou uma semana, e avisaram antes.",
-                author: PEOPLE[2].name,
-                role: "Oficina Bandeira",
+                author: "Caio Duarte",
+                role: "Editora Pátio",
                 rating: 4,
               },
               {
@@ -376,61 +372,24 @@ export default function PaginaQueVende() {
               },
             ]}
           />
+        </Pecas>
+      </Dobra>
+
+      {/* acervo */}
+      <Dobra id="trabalhos" className="bg-[color-mix(in_oklab,var(--background)_92%,var(--foreground)_5%)]">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <SectionIntro eyebrow="Trabalhos" title="O que sai daqui" />
+          <Pecas nomes={["chip"]}>
+            <div className="flex flex-wrap gap-2">
+              {FILTROS.map((f) => (
+                <Chip key={f.id} pressed={filtro === f.id} count={contar(f.id)} onClick={() => setFiltro(f.id)}>
+                  {f.rotulo}
+                </Chip>
+              ))}
+            </div>
+          </Pecas>
         </div>
-      </Bloco>
-
-      {/*
-        DOBRA 7 · acervo → move a percepção de padrão.
-
-        Alavanca: *image superiority*. Depois do número e do depoimento, o que
-        fecha o argumento é o trabalho na tela. Estante, trilho e mosaico são as
-        três formas de mostrar acervo que o kit traz, na mesma dobra, para a
-        escolha de quem copia ser por olho e não por nome.
-
-        As capas saem do banco de mídia e não do `cover-art`. `cover-art` é peça
-        da família `trabalho`: usar aqui deixaria a sala bonita e o comando do
-        kit incompleto, porque quem copiasse a dobra receberia uma capa vazia.
-      */}
-      <Bloco
-        titulo="Dobra 7: acervo"
-        pecas={["chip", "spine-card", "rail", "plate", "masonry-gallery"]}
-        nota="Estante, trilho e mosaico: três jeitos de mostrar a mesma pasta."
-      >
-        <SectionIntro eyebrow="Acervo" title="O que sai daqui" />
-
-        <div className="mt-7 flex flex-wrap gap-2">
-          {["Tudo", "Marca", "Site", "Impresso"].map((t, i) => (
-            <Chip key={t} pressed={i === 0} count={[24, 11, 8, 5][i]}>
-              {t}
-            </Chip>
-          ))}
-        </div>
-
-        <div className="mt-7 flex flex-wrap items-end gap-6">
-          {LIVROS.map((t, i) => (
-            <SpineCard
-              key={t}
-              index={i}
-              href="#"
-              title={t}
-              action="ver"
-              className="w-[150px]"
-              cover={<Media papel="textura" indice={i + 2} ratio="2/3" className="w-full" />}
-            />
-          ))}
-        </div>
-
-        <div className="mt-9">
-          <Rail itemWidth={150} gap={12} label="Produtos">
-            {[0, 1, 2, 3, 4, 5].map((i) => (
-              <Plate key={i} ratio="4/5">
-                <Media papel="textura" indice={i} className="size-full" />
-              </Plate>
-            ))}
-          </Rail>
-        </div>
-
-        <div className="mt-9">
+        <Pecas nomes={["masonry-gallery"]} className="mt-8">
           <MasonryGallery
             items={acervo}
             cols={3}
@@ -441,37 +400,77 @@ export default function PaginaQueVende() {
                 papel={it.papel}
                 indice={it.indice}
                 ratio={it.ratio}
-                className="rounded-[var(--r-control,0.5rem)] border border-border"
+                className="rounded-[var(--r-control,0.5rem)]"
               />
             )}
           />
+        </Pecas>
+      </Dobra>
+
+      {/* publicações e loja */}
+      <Dobra id="loja">
+        <div className="grid gap-12 lg:grid-cols-[auto_1fr] lg:gap-16">
+          <div>
+            <h3 className="text-destaque font-medium">Publicações</h3>
+            <p className="mt-1 text-apoio text-muted-foreground">O método, por escrito.</p>
+            <Pecas nomes={["spine-card"]} className="mt-6">
+              <div className="flex flex-wrap items-end gap-5">
+                {LIVROS.map((t, i) => (
+                  <SpineCard
+                    key={t}
+                    index={i}
+                    href="#"
+                    title={t}
+                    action="ler"
+                    className="w-[132px]"
+                    cover={<Media papel="textura" indice={i + 2} ratio="2/3" className="w-full" />}
+                  />
+                ))}
+              </div>
+            </Pecas>
+          </div>
+          <div className="min-w-0">
+            <h3 className="text-destaque font-medium">Loja</h3>
+            <p className="mt-1 text-apoio text-muted-foreground">Impressos feitos aqui, em tiragem curta.</p>
+            <Pecas nomes={["rail", "plate"]} className="mt-6">
+              <Rail itemWidth={160} gap={14} label="Produtos da loja">
+                {LOJA.map((p, i) => (
+                  <a key={p.nome} href="#" onClick={(e) => e.preventDefault()} className="block rounded-[var(--r-control,0.5rem)] outline-none focus-visible:[box-shadow:var(--focus)]">
+                    <Plate ratio="4/5">
+                      <Media papel="textura" indice={i} className="size-full" />
+                    </Plate>
+                    <span className="mt-2 flex items-baseline justify-between gap-2 text-apoio">
+                      <span className="truncate">{p.nome}</span>
+                      <span className="shrink-0 tabular-nums text-muted-foreground">{p.preco}</span>
+                    </span>
+                  </a>
+                ))}
+              </Rail>
+            </Pecas>
+          </div>
         </div>
-      </Bloco>
+      </Dobra>
 
-      {/*
-        DOBRA 8 · chamada → move a taxa de conversão, de novo.
+      {/* chamada */}
+      <Dobra className="pt-0 sm:pt-0">
+        <Pecas nomes={["cta-surface"]}>
+          <CtaSurface
+            variant="panel"
+            tone="ink"
+            title="Comece pela conversa de estratégia"
+            lead="Marca, site e produto por um time sênior, com escopo fechado na primeira semana."
+            actions={<CtaAction>Agendar 30 minutos</CtaAction>}
+            footnote="Resposta no mesmo dia útil. A conversa não vira proposta sem você pedir."
+          />
+        </Pecas>
+      </Dobra>
 
-        Alavanca: *write the CTA microcopy, not the button color*, com a
-        redundância que a mesma fonte recomenda. É o MESMO rótulo do herói, e de
-        propósito: duas chamadas com textos diferentes na mesma página viram duas
-        ofertas na cabeça de quem lê. O `footnote` responde as duas perguntas que
-        sobram antes do clique, prazo de resposta e compromisso.
-      */}
-      <Bloco titulo="Dobra 8: chamada" pecas={["cta-surface"]}>
-        <CtaSurface
-          variant="panel"
-          tone="ink"
-          title="Comece pela conversa de estratégia"
-          lead="Marca, site e produto por um time sênior, com escopo fechado na primeira semana."
-          actions={<CtaAction>Agendar 30 minutos</CtaAction>}
-          footnote="Resposta no mesmo dia útil. A conversa não vira proposta sem você pedir."
-        />
-      </Bloco>
-
-      <Fecho>
-        Este kit entrega as oito dobras e a costura entre elas. Os números, os depoimentos e as
-        fotos aqui são de mentira, e é você que troca.
-      </Fecho>
-    </Atos>
+      <footer className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border px-5 py-6 text-apoio text-muted-foreground sm:px-10">
+        <Wordmark />
+        <span>Rua das Flores, 120 · São Paulo</span>
+        <span>oi@faro.studio</span>
+        <span className="sm:ml-auto">© 2026 Faro Estúdio</span>
+      </footer>
+    </Janela>
   );
 }

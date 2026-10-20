@@ -27,7 +27,7 @@
  */
 
 import * as React from "react";
-import { Check, Copy } from "lucide-react";
+import { ArrowUpRight, Check, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { installCommand } from "../registry-meta";
 import { useCopy } from "../copy-command";
@@ -136,10 +136,12 @@ export function Abertura({
 /* -------------------------------------------------------------------------- */
 
 /**
- * Um trecho da sala. **Sem moldura** — separa por respiro e rótulo.
+ * Um trecho da sala. **Sem moldura**: separa por respiro.
  *
- * O rótulo é uma linha só: título à esquerda, peças à direita. As peças são
- * `PecaTag`, então a linha que identifica também é a linha que instala.
+ * O título (quando há) é uma linha sussurrada. As peças NÃO aparecem mais em
+ * linha: moram na camada de inspeção (`Pecas`), que mostra o nome no hover ou
+ * no foco. Rótulo técnico fixo em cima de cada trecho era a página se
+ * explicando em vez de parecer o produto.
  */
 export function Bloco({
   titulo,
@@ -148,56 +150,237 @@ export function Bloco({
   children,
   className,
 }: {
-  titulo: string;
+  titulo?: string;
   /** Nomes de registry que este trecho está mostrando. */
   pecas?: string[];
-  /** Meia linha explicando o que olhar. Some se não houver o que dizer. */
+  /** Vira `title` do título, nunca linha própria. */
   nota?: string;
   children: React.ReactNode;
   className?: string;
 }) {
   return (
-    <section className={cn("group/bloco min-w-0", className)}>
-      {/*
-        Uma linha de cabeçalho, e ela sussurra.
-
-        Duas coisas foram cortadas aqui depois de ver a sala pronta:
-
-        - O rótulo era mono, CAIXA-ALTA e com `tracking-wider`. Cinco desses
-          empilhados numa página é o tell de dashboard genérico: cada trecho
-          gritando o próprio nome antes de mostrar qualquer coisa. Virou frase,
-          no mesmo corpo do resto, discreta.
-        - Título e nota ocupavam duas linhas dizendo a mesma coisa em dois
-          tamanhos. Agora dividem uma, e a nota entra só quando acrescenta —
-          quem escreve sente o peso de ocupar a linha do vizinho.
-
-        Um bloco sem `titulo` não renderiza cabeçalho nenhum. Seção de template
-        não precisa de legenda: precisa do conteúdo.
-      */}
-      {/*
-        A `nota` saiu da linha e virou `title` do título (2026-10): uma frase
-        explicando o que olhar, em cima de cada trecho, era a sala se explicando
-        em vez de se mostrar. A linha fica com o nome do trecho e as peças, na
-        voz da casa (`.casa`), porque é a vitrine falando, não a marca.
-      */}
-      {titulo || pecas?.length ? (
-        <div className="casa flex flex-wrap items-baseline gap-x-2 gap-y-1 pb-2.5">
-          {titulo ? (
-            <h3 className="text-casa-sm text-casa-fg-2" title={nota}>
-              {titulo}
-            </h3>
-          ) : null}
-          {pecas?.length ? (
-            <span className="ml-auto flex flex-wrap items-center justify-end gap-0.5">
-              {pecas.map((p) => (
-                <PecaTag key={p} name={p} />
-              ))}
-            </span>
-          ) : null}
-        </div>
+    <section className={cn("min-w-0", className)}>
+      {titulo ? (
+        <h3 className="casa pb-2.5 text-casa-sm text-casa-fg-2" title={nota}>
+          {titulo}
+        </h3>
       ) : null}
-      {children}
+      {pecas?.length ? <Pecas nomes={pecas}>{children}</Pecas> : children}
     </section>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* inspeção                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * A camada de inspeção: a sala parece o produto, e a peça aparece quando se
+ * pergunta por ela.
+ *
+ * O pedido do dono, literal: "finge que é um site normal, e no hover aparece
+ * quais componentes foram usados". O rótulo fixo em cima de cada trecho
+ * ("Dobra 3: serviço") transformava o mock em documentação. Aqui o nome da peça
+ * só existe quando o ponteiro está na região, quando o foco do teclado entra
+ * nela, ou quando a pessoa liga "Mostrar peças" na barra do kit (o caminho do
+ * toque, que não tem hover).
+ *
+ * Um provider por sala (`Inspecao`, montado pelo `KitRoom`) guarda QUAL região
+ * está sob o ponteiro. Sem ele, região dentro de região acenderia as duas,
+ * porque `:hover` vale para todos os ancestrais. O provider lê o
+ * `closest("[data-peca]")` do alvo: só a região mais interna acende.
+ */
+
+interface InspecaoValor {
+  ativo: string | null;
+  todas: boolean;
+  abrir?: (nome: string) => void;
+}
+
+const InspecaoCtx = React.createContext<InspecaoValor>({ ativo: null, todas: false });
+
+export function Inspecao({
+  children,
+  todas = false,
+  onAbrir,
+}: {
+  children: React.ReactNode;
+  /** Liga todas as etiquetas de uma vez (teclado, toque, ou curiosidade). */
+  todas?: boolean;
+  /** Abre a ficha da peça. Sem isto o link segue o `href` da ficha. */
+  onAbrir?: (nome: string) => void;
+}) {
+  const [ativo, setAtivo] = React.useState<string | null>(null);
+  const valor = React.useMemo(() => ({ ativo, todas, abrir: onAbrir }), [ativo, todas, onAbrir]);
+
+  return (
+    <InspecaoCtx.Provider value={valor}>
+      <div
+        onPointerOver={(e) => {
+          if (e.pointerType !== "mouse") return;
+          const alvo = e.target instanceof Element ? e.target.closest("[data-peca]") : null;
+          const id = alvo?.getAttribute("data-peca") ?? null;
+          setAtivo((antes) => (antes === id ? antes : id));
+        }}
+        onPointerLeave={() => setAtivo(null)}
+      >
+        {children}
+      </div>
+    </InspecaoCtx.Provider>
+  );
+}
+
+type Canto = "topo-fim" | "topo-inicio" | "base-fim" | "base-inicio";
+
+const CANTO: Record<Canto, string> = {
+  "topo-fim": "right-2 top-2",
+  "topo-inicio": "left-2 top-2",
+  "base-fim": "right-2 bottom-2",
+  "base-inicio": "left-2 bottom-2",
+};
+
+const ALVO =
+  "rounded-control outline-none transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] focus-visible:[box-shadow:var(--focus)]";
+
+/** Uma linha da etiqueta: o nome abre a ficha, o ícone copia o `add`. */
+function LinhaPeca({ nome }: { nome: string }) {
+  const { abrir } = React.useContext(InspecaoCtx);
+  const { done, copy } = useCopy(installCommand(nome));
+  const Icon = done ? Check : Copy;
+
+  return (
+    <li className="flex items-center gap-0.5">
+      <a
+        href={`/c/${encodeURIComponent(nome)}`}
+        onClick={(e) => {
+          if (!abrir || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+          e.preventDefault();
+          abrir(nome);
+        }}
+        title="Abrir a ficha da peça"
+        className={cn(
+          ALVO,
+          "inline-flex min-w-0 flex-1 items-center gap-1 px-1.5 py-1 font-casa-mono text-casa-sm text-casa-fg hover:bg-casa-tile-2",
+        )}
+      >
+        <span className="truncate">{nome}</span>
+        <ArrowUpRight className="h-3 w-3 shrink-0 text-casa-fg-3" aria-hidden="true" />
+      </a>
+      <button
+        type="button"
+        onClick={copy}
+        title={installCommand(nome)}
+        aria-label={done ? `Copiado: ${nome}` : `Copiar o comando de ${nome}`}
+        className={cn(
+          ALVO,
+          "grid size-6 shrink-0 place-items-center text-casa-fg-2 hover:bg-casa-tile-2 hover:text-casa-fg",
+        )}
+      >
+        <Icon className="h-3 w-3" />
+      </button>
+    </li>
+  );
+}
+
+/**
+ * Uma região do mock feita com peça(s) do registry.
+ *
+ * Em repouso não desenha nada: é o produto. Com o ponteiro em cima (ou o foco
+ * dentro, ou "Mostrar peças" ligado) ganha um contorno fino e a etiqueta no
+ * canto, com o nome de cada peça (abre a ficha) e o copiar do comando.
+ *
+ * A etiqueta FLUTUA sobre a região, nunca empurra layout. E os botões dela
+ * ficam sempre no DOM e na ordem do Tab: o teclado chega neles sem ponteiro, e
+ * o foco é o que os acende.
+ */
+export function Pecas({
+  nomes,
+  children,
+  className,
+  canto = "topo-fim",
+}: {
+  nomes: string[];
+  children: React.ReactNode;
+  className?: string;
+  canto?: Canto;
+}) {
+  const { ativo, todas } = React.useContext(InspecaoCtx);
+  const id = React.useId();
+  const aceso = todas || ativo === id;
+
+  return (
+    <div data-peca={id} className={cn("group/peca relative", className)}>
+      {children}
+      <span
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-0 z-20 rounded-[6px] opacity-0",
+          "[box-shadow:inset_0_0_0_1px_color-mix(in_oklab,var(--foreground)_40%,transparent)]",
+          "bg-[color-mix(in_oklab,var(--foreground)_3%,transparent)]",
+          "transition-opacity [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+          aceso && "opacity-100",
+        )}
+      />
+      <div
+        data-peca-etiqueta
+        className={cn(
+          "casa absolute z-30 w-max max-w-[min(20rem,calc(100vw-2rem))] rounded-control bg-casa-tile p-1 [box-shadow:var(--casa-shadow)]",
+          CANTO[canto],
+          "pointer-events-none opacity-0",
+          "transition-opacity [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+          "focus-within:pointer-events-auto focus-within:opacity-100",
+          aceso && "pointer-events-auto opacity-100",
+        )}
+      >
+        <ul aria-label="Peças usadas aqui" className="flex flex-col">
+          {nomes.map((n) => (
+            <LinhaPeca key={n} nome={n} />
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * A janela do mock: a borda de app ou de navegador em volta da tela inteira.
+ *
+ * É o sinal mais barato de "isto é um produto de exemplo": a pessoa reconhece
+ * uma janela sem ler nada. O endereço é o único texto, e ele é dado do mock.
+ */
+export function Janela({
+  endereco,
+  children,
+  className,
+}: {
+  endereco: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-background",
+        "[box-shadow:0_1px_2px_color-mix(in_oklab,var(--foreground)_6%,transparent),0_28px_64px_-28px_color-mix(in_oklab,var(--foreground)_28%,transparent)]",
+        className,
+      )}
+    >
+      <div className="flex items-center gap-3 border-b border-border bg-[color-mix(in_oklab,var(--card)_80%,var(--foreground)_4%)] px-3.5 py-2">
+        <span className="flex w-12 shrink-0 gap-1.5" aria-hidden="true">
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="size-2.5 rounded-full bg-[color-mix(in_oklab,var(--foreground)_16%,transparent)]"
+            />
+          ))}
+        </span>
+        <span className="mx-auto min-w-0 max-w-sm flex-1 truncate rounded-[var(--r-control,0.5rem)] bg-[color-mix(in_oklab,var(--foreground)_6%,transparent)] px-3 py-0.5 text-center font-mono text-micro text-muted-foreground">
+          {endereco}
+        </span>
+        <span className="w-12 shrink-0" aria-hidden="true" />
+      </div>
+      {children}
+    </div>
   );
 }
 

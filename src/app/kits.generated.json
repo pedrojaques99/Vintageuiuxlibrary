@@ -2,17 +2,18 @@
   "mesa-de-trabalho": [
     "assignee-stack",
     "chip",
+    "confirm-morph",
     "cover-art",
     "empty-state",
+    "expanding-search",
     "inline-edit",
     "kanban",
-    "measure-picker",
-    "rail",
+    "reactions",
     "scrub-input",
     "segmented-control",
-    "skeleton-rail",
+    "side-nav",
     "sticky-filterbar",
-    "timeline"
+    "toast-stack"
   ],
   "pagina-que-vende": [
     "chip",
@@ -22,6 +23,7 @@
     "marquee",
     "masonry-gallery",
     "measure-bar",
+    "nav-drawer",
     "plate",
     "rail",
     "repulsive-hover",
@@ -66,6 +68,7 @@
     "cta-surface",
     "empty-state",
     "sfx-toggle",
+    "side-nav",
     "use-local-search",
     "use-media-query"
   ]

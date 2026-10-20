@@ -2,7 +2,7 @@
 
 <!-- Gerado por scripts/vite-bug-report.mjs. Não edite à mão: use `npm run bugs -- --resolve <id>`. -->
 
-**33 aberto(s)** · 94 resolvido(s)
+**66 aberto(s)** · 96 resolvido(s)
 
 ## auth-button (2)
 
@@ -11,20 +11,17 @@
 - **auth-button-2** — foco no componente cara
   <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:27</sub>
 
+## slide-to-confirm (2)
+
+- **slide-to-confirm-1** — sfx ao completar, e cor de aprovação no botão
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:29</sub>
+- **slide-to-confirm-2** — tá cortando as bordas no catalogo, posicionar melhor
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:30</sub>
+
 ## vintage-command-palette (1)
 
 - **vintage-command-palette-2** — ficou meio vazio, redundante, acho q apaga
   <sub>Quebrado · 1920×911 · claro · marca: Grão Editora · 2026-08-14 21:06</sub>
-
-## mesa-de-trabalho (1)
-
-- **mesa-de-trabalho-1** — mt mal apresentada, faz uma pagina app mesmo montada com mocks data - tipo um linear-visant-board da vida, com mais data em cada demanda, pro user ver e entender de cara, e não um monte de componente solto sem sentido empilhado, tipo do kanban vai rpo slider "quanto cabe na semana" confuso pra caralho
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 12:13</sub>
-
-## pagina-que-vende (1)
-
-- **pagina-que-vende-1** — tem mt label e botão e o cara não consegue entender que é uma pagina montada de exemplo pra ele ver os componnentes em ação e no hover aparecer os dados pra ele ver mais ou copiar direto - redesenhe a ui ux dos modelos da /kit inteira pra ficar mais intuitivo e visual a parada, sem label tecnica falando de cada dobra pqp, finge q é um site normal,, mockup, interativo,  q no hover aparece qausi compnoentes foram usados
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 12:15</sub>
 
 ## motion-e-estado (1)
 
@@ -166,6 +163,171 @@
 - **sfx-toggle-1** — deixar fora
   <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
 
+## sim-slider (1)
+
+- **sim-slider-2** — faltou fsfx arrastand
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
+
+## hold-to-confirm (1)
+
+- **hold-to-confirm-1** — sfx de completo
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
+
+## icon-morph (1)
+
+- **icon-morph-1** — deixar mais rapidinho a animação
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
+
+## morph-select (1)
+
+- **morph-select-1** — fica cortado quando abre, melhorar e deixar melhor apresentado
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:29</sub>
+
+## liquid-toggle (1)
+
+- **liquid-toggle-1** — 1 só
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:29</sub>
+
+## slosh-slider (1)
+
+- **slosh-slider-1** — sfx ao arrastar
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:29</sub>
+
+## time-dial (1)
+
+- **time-dial-1** — deixar mais limpo
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:29</sub>
+
+## vintage-parametric-eq (1)
+
+- **vintage-parametric-eq-1** — tirar sfx de arrastar aq
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:30</sub>
+
+## vintage-xy-pad (1)
+
+- **vintage-xy-pad-2** — tá bugado o drag
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:30</sub>
+
+## vintage-soundboard-pad (1)
+
+- **vintage-soundboard-pad-2** — sfx pra cada tipo pra ficar coerente
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:31</sub>
+
+## vintage-oscilloscope (1)
+
+- **vintage-oscilloscope-2** — deixar interativo, play no som pra acionar o visual, um visual por vez
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:31</sub>
+
+## vintage-tv-frame (1)
+
+- **vintage-tv-frame-3** — tocar algo
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:31</sub>
+
+## use-pointer-parallax (1)
+
+- **use-pointer-parallax-3** — mt poluido e slop
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:32</sub>
+
+## css-color (1)
+
+- **css-color-1** — pode esconder
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:32</sub>
+
+## sfx-bus (1)
+
+- **sfx-bus-1** — som de drop tá zoado, deixe mais sopro tlg
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:32</sub>
+
+## photo-compare (1)
+
+- **photo-compare-3** — seta do meio ta mal posicionada fora do alinhamento com a linha central - e deixe menos azul slop
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:33</sub>
+
+## plate (1)
+
+- **plate-3** — slop
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:33</sub>
+
+## masonry-gallery (1)
+
+- **masonry-gallery-2** — mt coisa espremida, mal apresentado, quick controls no cotalaog
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:33</sub>
+
+## reels-rail (1)
+
+- **reels-rail-2** — deixe mais suave e menos itens, maior, mais visivel no catalogo
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:33</sub>
+
+## cover-art (1)
+
+- **cover-art-3** — mal apresentado no catalogo, fica tudo cortado
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:33</sub>
+
+## cover-flow (1)
+
+- **cover-flow-1** — deixe tudo no mesmo padrão de desenho,  com drop shadow, e mais visivel e focado no centro, hierarquia mais clara, opacidade reduzida nos latareis
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:34</sub>
+
+## voice-note (1)
+
+- **voice-note-1** — nao entendi o label, foco no componente pfvr
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:34</sub>
+
+## page-curl (1)
+
+- **page-curl-1** — ta feio e mal apresentado, tem q deixar nivel visant, com quase 3d mesmo
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:35</sub>
+
+## carousel-3d (1)
+
+- **carousel-3d-1** — mt bugado no catalogo, ta todo tordo
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:35</sub>
+
+## book-3d (1)
+
+- **book-3d-1** — mal posicionado
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:35</sub>
+
+## lathe-object (1)
+
+- **lathe-object-1** — botoes pra trocar estao mt intrusivos
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
+
+## fog-tree (1)
+
+- **fog-tree-1** — nova categoria de shaders e mostra os shaders usados na casa e repos da visantlabs etc
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
+
+## card-stack (1)
+
+- **card-stack-1** — precisa de um grau nivel visantr
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
+
+## spine-card (1)
+
+- **spine-card-3** — slop
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
+
+## folding-bill (1)
+
+- **folding-bill-1** — precisa de um grau forte
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
+
+## swipe-actions (1)
+
+- **swipe-actions-1** — deixa só um, mais intutivo e claro noq tem q fazer
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:37</sub>
+
+## black-hole (1)
+
+- **black-hole-1** — animacao ta mt amadora kkk deixa mais sutil
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:37</sub>
+
+## wallet-stack (1)
+
+- **wallet-stack-1** — mt label, foco no visual limpo
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:37</sub>
+
 ---
 
 <details><summary>Resolvidos</summary>
@@ -264,5 +426,7 @@
 - ~~timeline-4 · timeline — melhorar os cards e feedback visual das etapas, slop de ia mt label~~
 - ~~side-nav-1 · side-nav — container precisa ter mais height na galeria, e talvez mostrar a sidebar de fato abrindo no browser nativo do site, pra visualizer in cenario de fato~~
 - ~~skeleton-rail-3 · skeleton-rail — paia, tinha q ter varios tipos de skeleton entção~~
+- ~~mesa-de-trabalho-1 · mesa-de-trabalho — mt mal apresentada, faz uma pagina app mesmo montada com mocks data - tipo um linear-visant-board da vida, com mais data em cada demanda, pro user ver e entender de cara, e não um monte de componente solto sem sentido empilhado, tipo do kanban vai rpo slider "quanto cabe na semana" confuso pra caralho~~
+- ~~pagina-que-vende-1 · pagina-que-vende — tem mt label e botão e o cara não consegue entender que é uma pagina montada de exemplo pra ele ver os componnentes em ação e no hover aparecer os dados pra ele ver mais ou copiar direto - redesenhe a ui ux dos modelos da /kit inteira pra ficar mais intuitivo e visual a parada, sem label tecnica falando de cada dobra pqp, finge q é um site normal,, mockup, interativo,  q no hover aparece qausi compnoentes foram usados~~
 
 </details>
