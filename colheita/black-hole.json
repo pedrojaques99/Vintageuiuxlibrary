@@ -3,7 +3,7 @@
     "name": "black-hole",
     "title": "Black Hole",
     "type": "ui",
-    "family": "motion",
+    "family": "cards",
     "description": "Apagar em lote com as linhas sugadas para um ponto só, a lista se inclinando em volta e o desfazer devolvendo tudo do mesmo lugar.",
     "tags": [
       "lista",
@@ -40,5 +40,6 @@
     ]
   },
   "atribuicao": null,
-  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/black-hole"
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/black-hole",
+  "palcoCheck": "a barra de desfazer nasce embaixo depois de apagar, e a caixa reserva o lugar dela"
 }

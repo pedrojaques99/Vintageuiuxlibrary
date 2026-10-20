@@ -3,7 +3,7 @@
     "name": "swipe-actions",
     "title": "Swipe Actions",
     "type": "ui",
-    "family": "trabalho",
+    "family": "cards",
     "description": "Lista em que a linha arrasta pro lado e mostra as ações, com o mesmo menu pra quem usa teclado.",
     "tags": [
       "lista",

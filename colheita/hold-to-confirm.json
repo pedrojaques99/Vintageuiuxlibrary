@@ -3,7 +3,7 @@
     "name": "hold-to-confirm",
     "title": "Hold to Confirm",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Botão que só confirma se você segurar, com o preenchimento enchendo e voltando se soltar antes.",
     "tags": [
       "botão",

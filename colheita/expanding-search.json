@@ -3,7 +3,7 @@
     "name": "expanding-search",
     "title": "Expanding Search",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Busca que fica guardada num ícone de lupa e só abre o campo quando alguém vai mesmo buscar.",
     "tags": [
       "busca",

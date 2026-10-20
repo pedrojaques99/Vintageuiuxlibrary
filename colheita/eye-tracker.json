@@ -3,7 +3,7 @@
     "name": "eye-tracker",
     "title": "Eye Tracker",
     "type": "ui",
-    "family": "motion",
+    "family": "efeitos",
     "description": "Um rosto de dois olhos que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique.",
     "tags": [
       "mascote",

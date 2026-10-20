@@ -3,7 +3,7 @@
     "name": "dynamic-island",
     "title": "Dynamic Island",
     "type": "ui",
-    "family": "motion",
+    "family": "feedback",
     "description": "A pílula que mostra a atividade em curso e cresce no lugar com os controles quando alguém toca nela.",
     "tags": [
       "pílula",

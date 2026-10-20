@@ -3,7 +3,7 @@
     "name": "activity-heatmap",
     "title": "Activity Heatmap",
     "type": "ui",
-    "family": "trabalho",
+    "family": "dados",
     "description": "Um quadrado por dia mostra o ritmo de meses de trabalho, com bolha que desliza entre os dias e teclado de calendário.",
     "tags": [
       "dados",

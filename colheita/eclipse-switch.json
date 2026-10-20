@@ -3,7 +3,7 @@
     "name": "eclipse-switch",
     "title": "Eclipse Switch",
     "type": "ui",
-    "family": "fundacao",
+    "family": "controles",
     "description": "Chave de tema claro e escuro em que a lua cobre o sol num eclipse, sem mexer na página por conta própria.",
     "tags": [
       "tema",

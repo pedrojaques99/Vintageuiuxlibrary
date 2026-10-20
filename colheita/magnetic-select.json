@@ -3,7 +3,7 @@
     "name": "magnetic-select",
     "title": "Magnetic Select",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Um cacho de opções redondas em que a escolhida incha e empurra as outras, e o cursor puxa a opção que está debaixo dele.",
     "tags": [
       "seleção",

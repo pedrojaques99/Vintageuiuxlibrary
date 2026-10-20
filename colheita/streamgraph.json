@@ -3,7 +3,7 @@
     "name": "streamgraph",
     "title": "Streamgraph",
     "type": "ui",
-    "family": "trabalho",
+    "family": "dados",
     "description": "Gráfico de fluxo empilhado que mostra como a mistura de várias partes muda no tempo, com camadas que ligam e desligam.",
     "tags": [
       "grafico",

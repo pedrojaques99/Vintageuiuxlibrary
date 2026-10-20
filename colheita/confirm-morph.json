@@ -3,7 +3,7 @@
     "name": "confirm-morph",
     "title": "Confirm Morph",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Botão de apagar que vira a pergunta no próprio lugar, depois o andamento e o resultado com desfazer.",
     "tags": [
       "botão",

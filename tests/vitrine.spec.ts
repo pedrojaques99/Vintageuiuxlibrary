@@ -49,12 +49,12 @@ const ficha = (page: Page) => page.locator("[data-ficha]");
  * nada aparece cortado, a altura não oscila) mudaram de endereço, não de força:
  * eles valem onde há palco, e agora o palco é a fatia.
  *
- * `motion` é a fatia usada como cobaia de propósito: é a maior (22 peças) e a
- * que carrega scroll-driven, canvas e loop — se algum layout quebra, quebra ali.
+ * `secoes` é a fatia usada como cobaia de propósito: é a que carrega
+ * scroll-driven, pin e loop — se algum layout quebra, quebra ali.
  */
 const INDICE = "/catalogo";
-const FATIA = "/catalogo/motion";
-/** Peça de OUTRA família (`trabalho`), para provar que a fatia não vaza. */
+const FATIA = "/catalogo/secoes";
+/** Peça de OUTRA família (`dados`), para provar que a fatia não vaza. */
 const FORA_DA_FATIA = "kanban";
 /** Peça desta fatia, para provar que ela está lá. */
 const DENTRO_DA_FATIA = "pinned-scene";
@@ -127,10 +127,10 @@ test.describe("catálogo — índice de categorias", () => {
     await page.goto(INDICE);
     await page.waitForTimeout(400);
 
-    await page.getByRole("button", { name: /^Motion\s*\d+$/ }).click();
+    await page.getByRole("button", { name: /^Seções\s*\d+$/ }).click();
     await page.waitForTimeout(500);
 
-    expect(new URL(page.url()).pathname).toBe("/catalogo/motion");
+    expect(new URL(page.url()).pathname).toBe("/catalogo/secoes");
     await expect(page.locator(peca(DENTRO_DA_FATIA))).toHaveCount(1);
   });
 
@@ -179,7 +179,7 @@ test.describe("catálogo — fatia por família", () => {
     await expect(page.locator(peca(FORA_DA_FATIA))).toHaveCount(0);
 
     /* A contagem na linha de categorias é a promessa; as peças são a entrega. */
-    const cabecalho = page.getByRole("button", { name: /^Motion\s*\d+$/ });
+    const cabecalho = page.getByRole("button", { name: /^Seções\s*\d+$/ });
     const prometido = Number((await cabecalho.textContent())?.match(/\d+/)?.[0]);
     expect(prometido, "a fatia veio vazia").toBeGreaterThan(0);
     expect(await page.locator(PECA).count()).toBe(prometido);
@@ -203,7 +203,9 @@ test.describe("catálogo — fatia por família", () => {
         const dentroDeRolagem = (el: HTMLElement) => {
           for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
             const overflowX = getComputedStyle(p).overflowX;
-            if (overflowX === "auto" || overflowX === "scroll") return true;
+            // `hidden`/`clip` também: o que passa dali é cortado, não vaza (a
+            // faixa do marquee anda por fora da caixa de propósito).
+            if (["auto", "scroll", "hidden", "clip"].includes(overflowX)) return true;
           }
           return false;
         };
@@ -280,7 +282,7 @@ test.describe("catálogo — fatia por família", () => {
     await esperarGrade(page);
 
     await page.getByRole("button", { name: "Filtrar por tipo e dependência" }).click();
-    for (const tipo of ["hook", "lib", "ui"]) {
+    for (const tipo of ["Hook", "Utilitário", "Componente"]) {
       const aba = page.getByRole("button", { name: new RegExp(`^${tipo}\\s*\\d+$`) });
       if (!(await aba.count())) continue;
       await page.evaluate(() => window.scrollTo(0, 3000));
@@ -410,10 +412,10 @@ test.describe("vista de foco", () => {
     /*
      * Sair tem de voltar para a grade: senão o botão voltar do navegador
      * mente. Com o catálogo fatiado, a grade de `/c/kanban` é a fatia da peça —
-     * `kanban` é da família `trabalho`. É o que faz as setas terem lista para
+     * `kanban` é da família `dados`. É o que faz as setas terem lista para
      * percorrer e o Esc entregar vizinhança em vez de uma página de capas.
      */
-    expect(new URL(page.url()).pathname).toBe("/catalogo/trabalho");
+    expect(new URL(page.url()).pathname).toBe("/catalogo/dados");
   });
 
   /*
@@ -508,13 +510,14 @@ test.describe("dependências npm", () => {
   });
 
   test("recolhido nunca esconde filtro ativo, e o eixo de tipo filtra", async ({ page }) => {
-    await page.goto(FATIA);
+    // `base` é a fatia que tem hook: o eixo de tipo precisa de mais de um tipo pra filtrar.
+    await page.goto("/catalogo/base");
     await esperarGrade(page);
 
     const botao = page.getByRole("button", { name: "Filtrar por tipo e dependência" });
     await botao.click();
 
-    const hook = page.locator("[aria-pressed]", { hasText: /^hook\s*\d+$/ });
+    const hook = page.locator("[aria-pressed]", { hasText: /^Hook\s*\d+$/ });
     const esperado = Number((await hook.textContent())?.match(/\d+/)?.[0]);
     expect(esperado, "a fatia não tem hook nenhum").toBeGreaterThan(0);
 

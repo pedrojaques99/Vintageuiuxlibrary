@@ -1,4 +1,10 @@
 {
+  "dot-cursor": {
+    "nota": 2,
+    "comentario": "posicao do cursor super bugada, e ta com scroll horizontal e vertical, refaça o shell disso",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
   "fog-garden": {
     "nota": 3,
     "comentario": "tem que ser mais compacta e com texto genérico, 2 posicoes, bem mais reduzido, mantém a estética, tirar o scroll bar (ta aprecendo texto do meu cliente, tem q ser agnostico, todos os da library)",

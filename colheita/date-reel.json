@@ -3,7 +3,7 @@
     "name": "date-reel",
     "title": "Date Reel",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Seletor de data em rolos de dia, mês e ano que encaixam sozinhos, como no telefone.",
     "tags": [
       "data",

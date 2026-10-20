@@ -79,14 +79,7 @@ const porNovidade = (lista: CatalogItem[]) =>
  * título da fatia; na linha de sete palavras ele virava a palavra mais comprida
  * da tela e empurrava as outras pra segunda linha no laptop.
  */
-const CURTO: Record<Family, string> = {
-  trabalho: "Trabalho",
-  aquisicao: "Aquisição",
-  motion: "Motion",
-  marca: "Marca",
-  vintage: "Vintage",
-  fundacao: "Fundação",
-};
+const CURTO: Record<Family, string> = Object.fromEntries(FAMILIES.map((f) => [f.key, f.label])) as Record<Family, string>;
 
 /**
  * Avisa quando a peça viva já pintou.
@@ -507,7 +500,8 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
             <Aba ativa={!familia} onClick={() => onFamilia?.(null)} count={CATALOG.filter(naVitrine).length}>
               Tudo
             </Aba>
-            {FAMILIES.map((f) => (
+            {/* Categoria sem peça na vitrine não vira palavra morta na barra. */}
+            {FAMILIES.filter((f) => CATALOG.some((i) => i.family === f.key && naVitrine(i))).map((f) => (
               <Aba
                 key={f.key}
                 ativa={familia === f.key}

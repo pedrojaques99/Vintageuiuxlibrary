@@ -3,7 +3,7 @@
     "name": "morph-select",
     "title": "Morph Select",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Select em que o próprio gatilho cresce e vira a lista, sem uma segunda caixa aparecendo embaixo.",
     "tags": [
       "select",

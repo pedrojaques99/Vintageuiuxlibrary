@@ -3,7 +3,7 @@
     "name": "card-stack",
     "title": "Card Stack",
     "type": "ui",
-    "family": "motion",
+    "family": "cards",
     "description": "Pilha de cards em que o de cima vai pro fundo quando você arrasta e solta, como baralho de verdade.",
     "tags": [
       "pilha",

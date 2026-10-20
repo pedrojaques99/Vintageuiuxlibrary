@@ -3,7 +3,7 @@
     "name": "tilt-card",
     "title": "Tilt Card",
     "type": "ui",
-    "family": "motion",
+    "family": "efeitos",
     "description": "O card que inclina em 3D seguindo o mouse, com um brilho que corre pela superfície.",
     "tags": [
       "card",

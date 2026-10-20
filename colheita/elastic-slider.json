@@ -3,7 +3,7 @@
     "name": "elastic-slider",
     "title": "Elastic Slider",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Slider que estica feito elástico quando você puxa além do limite e volta com a velocidade da soltura.",
     "tags": [
       "slider",

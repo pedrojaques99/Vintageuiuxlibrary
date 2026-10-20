@@ -3,7 +3,7 @@
     "name": "slot-text",
     "title": "Slot Text",
     "type": "ui",
-    "family": "motion",
+    "family": "texto",
     "description": "Número ou palavra que gira como rolo de caça-níquel e assenta da esquerda pra direita, sem passar do alvo.",
     "tags": [
       "texto",

@@ -26,8 +26,10 @@ import { Solo, fundoDoSolo, propsDaQuery } from "./Solo";
 import { Busca, BotaoDeBusca, useAtalhoDeBusca } from "./busca";
 import { ComponentFocus } from "./ComponentFocus";
 import { BrandSelector } from "../../registry/visant/ui/brand-selector";
+import { SfxToggle } from "../../registry/visant/ui/sfx-toggle";
+import { useSfxWiring, SFX_DEFAULT_SELECTOR } from "@/lib/sfx-bus";
 import { Gallery } from "./Gallery";
-import { CATALOG, FAMILIES, type Family } from "./catalog";
+import { CATALOG, FAMILIA_ANTIGA, FAMILIES, type Family } from "./catalog";
 
 /*
  * Studio e bancada chegam quando alguém abre a aba.
@@ -70,7 +72,7 @@ interface Route {
  * criaria ambiguidade — e roubaria o endereço curto de uma seção inteira.
  */
 const familiaDe = (parte: string | undefined): Family | null =>
-  FAMILIES.find((f) => f.key === parte)?.key ?? null;
+  FAMILIES.find((f) => f.key === parte)?.key ?? (parte ? FAMILIA_ANTIGA[parte] : undefined) ?? null;
 
 /**
  * Link direto de peça (`/c/kanban`) abre dentro da fatia dela.
@@ -220,6 +222,12 @@ function useDarkMode() {
 function Shell() {
   const [route, navigate] = useRoute();
   const [dark, setDark] = useDarkMode();
+  /*
+   * O som da casa: só clique, nunca hover. Passar o ponteiro pela grade não é
+   * agir, e sessenta cards estalando sob o mouse é o som que faz desligar.
+   * Armado por padrão, mudo sob reduced-motion, e a escolha salva vence.
+   */
+  useSfxWiring(SFX_DEFAULT_SELECTOR, { hover: false });
 
   const setView = React.useCallback(
     // Clicar na aba "Catálogo" volta ao índice das categorias, nunca à última
@@ -317,6 +325,8 @@ function Shell() {
 
           <div className="ml-auto flex items-center gap-1.5">
             <BotaoDeBusca onClick={abrirBusca} />
+            {/* O liga e desliga do som, no tom dos outros ícones da casa. */}
+            <SfxToggle className={SOM_DA_CASA} />
             <button
               type="button"
               onClick={() => setDark(!dark)}
@@ -404,6 +414,12 @@ function Shell() {
  * que não decide nada aqui: a linha de fonte e versão, as amostras e a tecla.
  */
 // casa-lint/vidro: aqui o blur é DESLIGADO — a peça publicada traz o vidro de fábrica
+/** O `SfxToggle` do registry vestido de ícone da casa: tom e raio da casca,
+ *  nunca os da marca. As ondas recolhendo continuam dizendo o estado. Some
+ *  abaixo de lg: no toque o bus não toca, e no tablet o cabeçalho não tem folga. */
+const SOM_DA_CASA =
+  "max-lg:!hidden size-8 rounded-control text-casa-fg-2 hover:border-transparent hover:bg-casa-tile hover:text-casa-fg data-[state=on]:text-casa-fg-2 focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]";
+
 const GATILHO_DE_MARCA = [
   "h-8 gap-2 !rounded-control !border-0 !bg-transparent !py-0 !pl-1 !pr-2.5 !backdrop-blur-none",
   "hover:!bg-casa-tile hover:![box-shadow:none] active:!scale-100",

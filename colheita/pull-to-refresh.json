@@ -3,7 +3,7 @@
     "name": "pull-to-refresh",
     "title": "Pull to Refresh",
     "type": "ui",
-    "family": "trabalho",
+    "family": "feedback",
     "description": "Painel que estica quando você puxa pra baixo, conta os pontos até a marca e gira enquanto atualiza.",
     "tags": [
       "atualizar",

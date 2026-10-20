@@ -3,7 +3,7 @@
     "name": "gauge",
     "title": "Gauge",
     "type": "ui",
-    "family": "trabalho",
+    "family": "dados",
     "description": "Medidor em arco com ponteiro que enche quando entra em vista e troca o nome da faixa na hora em que a contagem cruza o limite.",
     "tags": [
       "dados",

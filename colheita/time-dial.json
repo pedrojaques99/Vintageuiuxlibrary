@@ -3,7 +3,7 @@
     "name": "time-dial",
     "title": "Time Dial",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Mostrador de 24 horas que você gira com o dedo ou com as setas, com a faixa do expediente desenhada no aro.",
     "tags": [
       "hora",
@@ -16,7 +16,7 @@
     "knobs": "TimeDial",
     "preview": {
       "w": 516,
-      "h": 272
+      "h": 300
     }
   },
   "registry": {

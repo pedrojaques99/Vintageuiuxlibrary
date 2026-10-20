@@ -3,7 +3,7 @@
     "name": "billing-toggle",
     "title": "Billing Toggle",
     "type": "ui",
-    "family": "aquisicao",
+    "family": "controles",
     "description": "Interruptor mensal e anual com o selo de desconto que vira recibo quando o anual é escolhido, e o preço rolando junto.",
     "tags": [
       "preço",

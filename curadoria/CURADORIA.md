@@ -2,7 +2,7 @@
 
 <!-- Gerado por scripts/vite-curadoria.mjs a partir de notas.json. Não edite à mão. -->
 
-**1 na vitrine** · 1 arquivada(s) (nota ≤ 2) · 0 pra excluir
+**1 na vitrine** · 2 arquivada(s) (nota ≤ 2) · 0 pra excluir
 
 ## Na vitrine
 
@@ -14,6 +14,7 @@
 
 | peça | nota | comentário |
 |---|---|---|
+| `dot-cursor` | ★★☆☆☆ | posicao do cursor super bugada, e ta com scroll horizontal e vertical, refaça o shell disso |
 | `vintage-command-palette` | ★★☆☆☆ | mal apresentado, meio inutil |
 
 ## Pra excluir de vez (`npm run curadoria -- --excluir`)

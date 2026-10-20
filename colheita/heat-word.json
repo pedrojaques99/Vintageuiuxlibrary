@@ -3,7 +3,7 @@
     "name": "heat-word",
     "title": "Heat Word",
     "type": "ui",
-    "family": "motion",
+    "family": "texto",
     "description": "Uma grade de gotas ou uma palavra que derrete num mapa de calor por onde o cursor passa, pintada com as cores da marca.",
     "tags": [
       "canvas",

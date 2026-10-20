@@ -3,7 +3,7 @@
     "name": "slosh-slider",
     "title": "Slosh Slider",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Um slider em que o preenchimento tem peso: arrastou rápido, a tinta passa do polegar, balança e assenta.",
     "tags": [
       "slider",

@@ -3,7 +3,7 @@
     "name": "toast-stack",
     "title": "Toast Stack",
     "type": "ui",
-    "family": "trabalho",
+    "family": "feedback",
     "description": "Avisos que se empilham no canto e abrem em leque quando o ponteiro chega, com o carregando que vira feito no lugar.",
     "tags": [
       "avisos",

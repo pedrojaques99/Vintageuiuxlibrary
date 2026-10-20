@@ -102,9 +102,9 @@ async function centralizarFaixa(page: Page) {
    * `/catalogo` virou ÍNDICE de categorias — capas estáticas, zero demo montada
    * — quando a página única de 26.000px foi fatiada por família. Rolar ali
    * procurando `.marquee-track` roda 200 vezes e não acha nada, porque não há
-   * marquee nenhum para achar. O marquee mora em aquisição.
+   * marquee nenhum para achar. O marquee mora em seções.
    */
-  await page.goto("/catalogo/aquisicao");
+  await page.goto("/catalogo/secoes");
   /*
    * Rede parada antes de medir velocidade.
    *

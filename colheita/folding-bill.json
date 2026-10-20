@@ -3,7 +3,7 @@
     "name": "folding-bill",
     "title": "Folding Bill",
     "type": "ui",
-    "family": "trabalho",
+    "family": "cards",
     "description": "Uma conta que dobra em três como papel e abre quando você puxa ou toca, com o total sempre à vista no cabeçalho.",
     "tags": [
       "recibo",

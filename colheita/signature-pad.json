@@ -3,7 +3,7 @@
     "name": "signature-pad",
     "title": "Signature Pad",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Campo de assinatura com tinta que engrossa e afina como caneta de verdade, com desfazer e limpar.",
     "tags": [
       "assinatura",

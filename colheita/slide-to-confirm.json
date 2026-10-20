@@ -3,7 +3,7 @@
     "name": "slide-to-confirm",
     "title": "Slide to Confirm",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Trilho que só confirma quando você arrasta o polegar até o fim, e volta com mola se soltar antes.",
     "tags": [
       "confirmação",

@@ -3,7 +3,7 @@
     "name": "reactions",
     "title": "Reactions",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Barra de reações em que a contagem rola pro lado que andou e o ícone dá um pulinho quando você reage.",
     "tags": [
       "reacao",

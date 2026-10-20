@@ -2,12 +2,169 @@
 
 <!-- Gerado por scripts/vite-bug-report.mjs. Não edite à mão: use `npm run bugs -- --resolve <id>`. -->
 
-**1 aberto(s)** · 94 resolvido(s)
+**33 aberto(s)** · 94 resolvido(s)
+
+## auth-button (2)
+
+- **auth-button-1** — mal apresentado, mt simlpes
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:27</sub>
+- **auth-button-2** — foco no componente cara
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:27</sub>
 
 ## vintage-command-palette (1)
 
 - **vintage-command-palette-2** — ficou meio vazio, redundante, acho q apaga
   <sub>Quebrado · 1920×911 · claro · marca: Grão Editora · 2026-08-14 21:06</sub>
+
+## mesa-de-trabalho (1)
+
+- **mesa-de-trabalho-1** — mt mal apresentada, faz uma pagina app mesmo montada com mocks data - tipo um linear-visant-board da vida, com mais data em cada demanda, pro user ver e entender de cara, e não um monte de componente solto sem sentido empilhado, tipo do kanban vai rpo slider "quanto cabe na semana" confuso pra caralho
+  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 12:13</sub>
+
+## pagina-que-vende (1)
+
+- **pagina-que-vende-1** — tem mt label e botão e o cara não consegue entender que é uma pagina montada de exemplo pra ele ver os componnentes em ação e no hover aparecer os dados pra ele ver mais ou copiar direto - redesenhe a ui ux dos modelos da /kit inteira pra ficar mais intuitivo e visual a parada, sem label tecnica falando de cada dobra pqp, finge q é um site normal,, mockup, interativo,  q no hover aparece qausi compnoentes foram usados
+  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 12:15</sub>
+
+## motion-e-estado (1)
+
+- **motion-e-estado-1** — ler buf da pagina q vende
+  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 12:15</sub>
+
+## rig-vintage (1)
+
+- **rig-vintage-1** — ler bug da pagina q vende e resolver da mesma forma
+  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 12:15</sub>
+
+## marca-viva (1)
+
+- **marca-viva-1** — troque por "brand system" e redesenhe a pagina pra ficar mais pica e coerente
+  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 12:16</sub>
+
+## nav-drawer (1)
+
+- **nav-drawer-2** — tá feio, precisa de mais variações de estilo, faça um mais brutalista e full page com imagem na esquerda
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:19</sub>
+
+## magnify-dock (1)
+
+- **magnify-dock-1** — hover sfx mini tic de knub de volume estilo ao ir trocando o hover dos icons, deixar menos bordas dentro de bordas o componente em si
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:19</sub>
+
+## orbit-menu (1)
+
+- **orbit-menu-1** — nao entendi a necessidade do card, deixa direto o botão q abre, sem label ou texto desnecessário
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:20</sub>
+
+## rail (1)
+
+- **rail-3** — bugado o scroll horizontal, e tá mt pqeno, e limpa label desnecessária, tem q funcionar por scroll shift, drag, arrwos, etc
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:20</sub>
+
+## side-nav (1)
+
+- **side-nav-2** — mt grande a parte horizontal, mal da pra ver a sidebar, o foco é ela
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:21</sub>
+
+## sticky-filterbar (1)
+
+- **sticky-filterbar-5** — mt pequeno os itens, tá mt espremido esse componente
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:21</sub>
+
+## status-ticker (1)
+
+- **status-ticker-2** — sub-categoria loading state, faça um upgrade sem perder a estética, faça variações de loading states pro user escolher
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:22</sub>
+
+## working-glyph (1)
+
+- **working-glyph-2** — tá um shine meio zoado q cobre o quadrado todo ao inves de só na picareta, faça variações com outros icons e animacoes
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:22</sub>
+
+## octahedron-loader (1)
+
+- **octahedron-loader-3** — excluir
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
+
+## paper-shuttle (1)
+
+- **paper-shuttle-2** — remover o glitche  etch vibe, deixar generico
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
+
+## generating-tile (1)
+
+- **generating-tile-2** — excluir
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
+
+## drop-overlay (1)
+
+- **drop-overlay-2** — mal apresentado, foco no componente em si
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
+
+## empty-state (1)
+
+- **empty-state-3** — slop
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
+
+## skeleton-rail (1)
+
+- **skeleton-rail-4** — mt espremido, reduzir a quantidade e deixar mais mininal, apresentar variaçõe sde estilo de skewletons motions
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:24</sub>
+
+## pull-to-refresh (1)
+
+- **pull-to-refresh-1** — precisa ficar mais claro o q faz, ta escondido a funçaão num label q ngm le
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:24</sub>
+
+## toast-stack (1)
+
+- **toast-stack-1** — mal posicionado e focado
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:24</sub>
+
+## dynamic-island (1)
+
+- **dynamic-island-1** — os botões de baixo "ligacao" timer etc, estão mais aparecendo e evidentes doq o componente em si, melhore a hierarquia
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:25</sub>
+
+## confirm-morph (1)
+
+- **confirm-morph-1** — mt label, limpar
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:26</sub>
+
+## elastic-slider (1)
+
+- **elastic-slider-1** — sfx ao arrastar, tipo barulho da lete mudando o foco numa camera analogica
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:26</sub>
+
+## brand-selector (1)
+
+- **brand-selector-2** — confuso e mt coisa pra apresentar um componente simples
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:26</sub>
+
+## inline-edit (1)
+
+- **inline-edit-2** — mt simples, sem sentido, mal apresentado
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:26</sub>
+
+## segmented-control (1)
+
+- **segmented-control-2** — variações de animacoes pra ficar mais rico
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:27</sub>
+
+## scrub-input (1)
+
+- **scrub-input-2** — deixar mais respiro visual, melhorar pra mostrar só quando precisa
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:27</sub>
+
+## chip (1)
+
+- **chip-2** — mal apresentado, mt slop e mt coisa aprecendo de vez
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
+
+## sfx-toggle (1)
+
+- **sfx-toggle-1** — deixar fora
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
 
 ---
 

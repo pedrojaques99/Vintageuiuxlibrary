@@ -3,7 +3,7 @@
     "name": "magnify-dock",
     "title": "Magnify Dock",
     "type": "ui",
-    "family": "trabalho",
+    "family": "navegacao",
     "description": "A barra de atalhos em que os ícones crescem em onda conforme o cursor chega perto, com o nome em cima do mais próximo.",
     "tags": [
       "dock",

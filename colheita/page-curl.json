@@ -3,7 +3,7 @@
     "name": "page-curl",
     "title": "Page Curl",
     "type": "ui",
-    "family": "motion",
+    "family": "midia",
     "description": "Uma revistinha que você folheia puxando o canto da página, com a dobra, o verso do papel e a próxima página aparecendo por baixo.",
     "tags": [
       "revista",

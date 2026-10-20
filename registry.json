@@ -1305,7 +1305,7 @@
       "name": "sfx-bus",
       "type": "registry:lib",
       "title": "SFX Bus",
-      "description": "Dois sons de interface em WebAudio puro, hover e clique, com throttle, debounce por alvo, contexto armado no primeiro gesto e mudo sob prefers-reduced-motion.",
+      "description": "Cliques de objeto analógico em WebAudio puro, sem arquivo: botão de câmera, dente de knob, alavanca e agulha pousando, com throttle, contexto armado no primeiro gesto e mudo sob prefers-reduced-motion.",
       "dependencies": [
         "react"
       ],

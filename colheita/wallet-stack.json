@@ -3,7 +3,7 @@
     "name": "wallet-stack",
     "title": "Wallet Stack",
     "type": "ui",
-    "family": "trabalho",
+    "family": "cards",
     "description": "Carteira de cartões empilhados em que um sobe pra mostrar saldo e movimento e os outros se recolhem no pé.",
     "tags": [
       "carteira",
@@ -39,5 +39,6 @@
     ]
   },
   "atribuicao": null,
-  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/wallet-stack"
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/wallet-stack",
+  "palcoCheck": "o detalhe do cartão abre embaixo da pilha, e a caixa reserva o lugar dele"
 }

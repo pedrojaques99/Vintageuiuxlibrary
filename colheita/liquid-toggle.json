@@ -3,7 +3,7 @@
     "name": "liquid-toggle",
     "title": "Liquid Toggle",
     "type": "ui",
-    "family": "trabalho",
+    "family": "controles",
     "description": "Um interruptor cuja bolinha escorre como gota de um lado pro outro, esticando no caminho e se recolhendo ao chegar.",
     "tags": [
       "switch",

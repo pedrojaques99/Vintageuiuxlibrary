@@ -3,7 +3,7 @@
     "name": "voice-note",
     "title": "Voice Note",
     "type": "ui",
-    "family": "trabalho",
+    "family": "midia",
     "description": "Nota de voz de chat com forma de onda, play e pausa, e busca clicando ou arrastando na onda.",
     "tags": [
       "áudio",

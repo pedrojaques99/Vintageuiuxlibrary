@@ -3,7 +3,7 @@
     "name": "expandable-card",
     "title": "Expandable Card",
     "type": "ui",
-    "family": "trabalho",
+    "family": "cards",
     "description": "Card de resumo que cresce pros lados e pra baixo ao abrir, e rola só a palavra que mudou no resumo.",
     "tags": [
       "card",

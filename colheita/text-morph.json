@@ -3,7 +3,7 @@
     "name": "text-morph",
     "title": "Text Morph",
     "type": "ui",
-    "family": "motion",
+    "family": "texto",
     "description": "Rótulo que vira a próxima palavra letra por letra, com as letras em comum deslizando e a largura indo junto numa mola.",
     "tags": [
       "texto",
