@@ -10,10 +10,12 @@
  *
  * Duas decisões que sustentam o resto do arquivo:
  *
- * - **A lista de peças de um kit é DERIVADA do catálogo**, por família. Uma
- *   lista escrita à mão aqui envelheceria na primeira colheita: peça nova
- *   entraria no catálogo e ficaria fora do kit sem ninguém perceber, e o
- *   comando único passaria a entregar menos do que a sala mostra.
+ * - **A lista de peças de um kit é DERIVADA dos imports da sala**
+ *   (`scripts/kits-pecas.mjs` → `kits.generated.json`). Foi por família até a
+ *   colheita de 2026-10, que pôs 24 peças novas nas famílias: o comando único
+ *   da Mesa passou a instalar 34 peças, e a sala só monta 13. Escrita à mão, a
+ *   lista envelheceria; por família, ela mente. O import é o único lugar que diz
+ *   o que a sala usa.
  * - **A composição é lazy.** Cinco salas montadas de uma vez seriam o dobro do
  *   peso da vitrine antiga — a página que vende puxa GSAP, a mesa puxa dnd-kit,
  *   o rig são treze peças skeuomórficas. Cada sala paga o que usa, quando é
@@ -21,7 +23,8 @@
  */
 
 import * as React from "react";
-import { CATALOG, type CatalogItem, type Family } from "./catalog";
+import { CATALOG, type CatalogItem } from "./catalog";
+import PECAS from "./kits.generated.json";
 
 export interface Kit {
   /** Vai na URL e no `shadcn add @visant/<slug>`. */
@@ -31,8 +34,6 @@ export interface Kit {
   title: string;
   /** Uma frase. O que a pessoa leva se instalar isto. */
   tese: string;
-  /** De onde saem as peças. A ordem aqui é a ordem da tira. */
-  familias: Family[];
   /**
    * Sala escura: inverte os tokens no container (`.dark`) em vez de no
    * documento. É o que impede o painel de metal do rig de encostar no papel
@@ -43,14 +44,6 @@ export interface Kit {
   /** Fundo da sala. Ausente = o fundo do tema da marca. */
   fundo?: string;
   Composicao: React.LazyExoticComponent<React.ComponentType>;
-  /**
-   * Peça que existe no kit e NÃO aparece na composição, com o motivo.
-   *
-   * Sem isto, a tira embaixo da sala vira uma promessa que a sala desmente: a
-   * pessoa conta onze nomes, acha nove na tela e conclui que a demo está
-   * quebrada. O motivo aparece ao lado do nome.
-   */
-  ausentes?: Record<string, string>;
 }
 
 export const KITS: Kit[] = [
@@ -59,19 +52,13 @@ export const KITS: Kit[] = [
     label: "Mesa de trabalho",
     title: "Mesa de trabalho",
     tese: "A tela de dentro do app: board, trilho, linha do tempo e os controles que editam onde se lê.",
-    familias: ["trabalho"],
     Composicao: React.lazy(() => import("./kits/mesa-de-trabalho")),
-    ausentes: {
-      "data-table":
-        "acoplada a Next (next-auth + next/navigation). Só roda dentro de um app Next",
-    },
   },
   {
     slug: "pagina-que-vende",
     label: "Página que vende",
     title: "Página que vende",
     tese: "A landing inteira na ordem que converte: promessa, serviço, passos, número, prova, acervo, chamada.",
-    familias: ["aquisicao"],
     Composicao: React.lazy(() => import("./kits/pagina-que-vende")),
   },
   {
@@ -79,30 +66,14 @@ export const KITS: Kit[] = [
     label: "Motion e estado",
     title: "Motion e estado",
     tese: "O que a interface mostra enquanto o resultado não existe. Tudo rodando, porque parado não se julga.",
-    familias: ["motion"],
     escura: true,
     Composicao: React.lazy(() => import("./kits/motion-e-estado")),
-    ausentes: {
-      "motion-layer": "biblioteca de scroll que sustenta o marquee da página que vende",
-      "smooth-scroll-provider": "provider de página inteira. Não cabe dentro de um painel",
-      /*
-       * Estes dois estavam aqui por defeito, e o defeito foi consertado. O que
-       * os mantém fora da composição agora é outra coisa, e o motivo precisa
-       * dizer qual — motivo desatualizado é pior que motivo nenhum, porque
-       * descreve à pessoa um problema que ela não vai encontrar.
-       */
-      "octahedron-loader":
-        "consertado (o src virou prop); sem o .lottie da marca no repo ele mostra a forma genérica, que não vale como demo",
-      "spring-dots":
-        "consertado (a sonda lia oklch como se fosse rgb); ainda não entrou na composição desta sala",
-    },
   },
   {
     slug: "rig-vintage",
     label: "Rig vintage",
     title: "Rig vintage",
     tese: "A bancada skeuomórfica completa: knob, fader, VU, osciloscópio e pads, no painel escuro em que foram desenhados.",
-    familias: ["vintage"],
     escura: true,
     fundo:
       "radial-gradient(120% 100% at 50% 0%, var(--vintage-surface-2), var(--vintage-surface-1))",
@@ -113,27 +84,15 @@ export const KITS: Kit[] = [
     label: "Marca viva",
     title: "Marca viva",
     tese: "O que faz os outros quatro trocarem de cor: tema compilado, provider de runtime, hooks e o estado vazio.",
-    familias: ["marca", "fundacao"],
     Composicao: React.lazy(() => import("./kits/marca-viva")),
-    ausentes: {
-      "vintage-base": "fundação do rig: as variáveis de painel vivem na sala vintage",
-      "vintage-theme": "idem: é o tema que a sala vintage aplica",
-      "use-knob-drag": "o gesto do knob. Se vê arrastando um knob na sala vintage",
-      "sfx-bus": "o barramento por trás do botão de som ao lado",
-    },
   },
 ];
 
-/** As peças de um kit, na ordem do catálogo. Fonte única: o catálogo. */
-export const pecasDoKit = (kit: Kit): CatalogItem[] =>
-  CATALOG.filter((i) => kit.familias.includes(i.family));
+/** As peças de um kit, na ordem do catálogo: as que a sala importa. */
+export const pecasDoKit = (kit: Kit): CatalogItem[] => {
+  const nomes = new Set((PECAS as Record<string, string[]>)[kit.slug] ?? []);
+  return CATALOG.filter((i) => nomes.has(i.name));
+};
 
 export const kitPorSlug = (slug: string | null) =>
   KITS.find((k) => k.slug === slug) ?? null;
-
-/** Em que kit uma peça mora. Usado para levar do catálogo de volta à sala. */
-export const kitDaPeca = (name: string): Kit | null => {
-  const item = CATALOG.find((i) => i.name === name);
-  if (!item) return null;
-  return KITS.find((k) => k.familias.includes(item.family)) ?? null;
-};

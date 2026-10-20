@@ -13,10 +13,13 @@ import { useBrandTheme } from "@/lib/brand-theme";
 import { CopyCommand } from "./copy-command";
 import { DEFAULT_BRAND, installCommand } from "./registry-meta";
 import { cn } from "@/lib/utils";
-import { Plate } from "../../registry/visant/ui/plate";
 import { Marquee } from "../../registry/visant/ui/marquee";
 import { StatusTicker } from "../../registry/visant/ui/status-ticker";
-import { WorkingGlyph } from "../../registry/visant/ui/working-glyph";
+
+/* As demos da vitrine, lazy: só esta página paga por elas. */
+const GaugeDemo = React.lazy(() => import("./demos/gauge-demo"));
+const BillingDemo = React.lazy(() => import("./demos/billing-toggle-demo"));
+const HeatmapDemo = React.lazy(() => import("./demos/activity-heatmap-demo"));
 
 // --- leitura dos tokens vivos ------------------------------------------------
 
@@ -176,28 +179,28 @@ export function BrandStudioBody() {
 
       <Section title="Componentes, repintados">
         <Palco className="p-4 sm:p-6">
-          <div className="grid gap-4 sm:grid-cols-3">
-            {[
-              { t: "Plate", d: "placa de catálogo" },
-              { t: "Rail", d: "trilho horizontal" },
-              { t: "Kanban", d: "board com marquee" },
-            ].map((c) => (
-              <Plate key={c.t} ratio="4/3">
-                <div className="flex h-full flex-col items-start justify-end p-5">
-                  <WorkingGlyph size={18} />
-                  <p
-                    className="mt-3 font-medium"
-                    style={{ fontFamily: "var(--font-display, inherit)" }}
-                  >
-                    {c.t}
-                  </p>
-                  <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
-                    {c.d}
-                  </p>
-                </div>
-              </Plate>
-            ))}
-          </div>
+          {/*
+            Peças de verdade, não placas com nome. Eram três `Plate` vazias com
+            "Plate", "Rail" e "Kanban" escritos — duas delas nem eram o que
+            diziam ser. A promessa da seção é "os componentes repintam", e a
+            prova é trocar a marca no seletor e ver o arco do medidor, o selo
+            de desconto e os dias do heatmap mudarem de cor. São as mesmas
+            demos da vitrine, carregadas só quando esta página abre.
+          */}
+          <React.Suspense fallback={<div className="h-[420px]" aria-busy="true" />}>
+            {/* casa-lint/raio-da-marca: estas superfícies estão no palco; vestir o raio da marca é a prova */}
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid h-60 place-items-center rounded-[var(--r-surface)] bg-card">
+                <GaugeDemo props={{}} />
+              </div>
+              <div className="grid h-60 place-items-center rounded-[var(--r-surface)] bg-card">
+                <BillingDemo props={{}} />
+              </div>
+              <div className="grid min-h-60 place-items-center overflow-x-auto rounded-[var(--r-surface)] bg-card p-4 md:col-span-2">
+                <HeatmapDemo props={{}} />
+              </div>
+            </div>
+          </React.Suspense>
 
           <div className="mt-4">
             <Marquee

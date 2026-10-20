@@ -6,7 +6,7 @@
   "author": "Visant Labs <visantsupply@gmail.com>",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/registry-css.mjs && node scripts/build-docs.mjs && vite build && node scripts/prerender.mjs && node scripts/llms.mjs",
+    "build": "node scripts/kits-pecas.mjs && node scripts/registry-css.mjs && node scripts/build-docs.mjs && vite build && node scripts/prerender.mjs && node scripts/llms.mjs",
     "build:registry": "npx shadcn@latest build",
     "preview": "vite preview",
     "check:catalog": "node scripts/catalog-check.mjs",
@@ -35,6 +35,7 @@
     "check:casa": "node scripts/casa-lint.mjs",
     "check:palco": "node scripts/palco-check.mjs",
     "check:interacao": "node scripts/interacao-check.mjs --todas",
+    "build:kits": "node scripts/kits-pecas.mjs",
     "bugs": "node scripts/bugs.mjs",
     "build:registry-css": "node scripts/registry-css.mjs"
   },

@@ -268,3 +268,20 @@ Fluxo para a próxima colheita: briefing comum → agentes escrevem só peça, d
 `colheita/<nome>.json` → `node scripts/colheita-merge.mjs` → `node scripts/folha-de-contato.mjs
 <png> --colheita` (revisão de olho) → `npm run check:palco` → commit → `npm run build:novidades`
 → `npm run build && npm run build:shots`.
+
+## 11. Audit de Kits e Marca (2026-10-20)
+
+Continuam fora do menu (decisão do usuário) até ele aprovar a volta. O que o audit achou e consertou:
+
+- **Kits instalavam o que não mostravam.** As peças de cada kit eram derivadas da família, e
+  a colheita pôs 24 peças nas famílias: o comando da Mesa de trabalho trazia 34 peças para uma
+  sala que monta 13. Agora `scripts/kits-pecas.mjs` lê os imports de cada sala (com um nível de
+  demo) e grava `kits.generated.json`; roda no `build`. Saíram `familias` e `ausentes`.
+- **Salas que se explicavam.** Cada trecho abria com título, frase explicando o que olhar e
+  nomes em mono na fonte da marca. A frase virou `title`; a linha ficou com o nome do trecho e
+  as peças, na voz da casa. Abertura e fecho idem.
+- **Marca prometia com placeholder.** "Componentes, repintados" eram três placas vazias com
+  "Plate", "Rail" e "Kanban" escritos. Viraram as peças reais (gauge, billing-toggle,
+  activity-heatmap), que mudam de cor ao trocar a marca.
+
+Para voltar ao menu: decidir se Kits é porta de entrada (tese de venda) ou seção de exemplo.

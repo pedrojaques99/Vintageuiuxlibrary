@@ -40,8 +40,7 @@ import { SfxToggle } from "../../registry/visant/ui/sfx-toggle";
  *
  * É onde a peça solta continua existindo — e onde a promessa do comando único
  * se verifica: a pessoa conta os nomes e vê que são os mesmos que o `add`
- * traz. Peça que a composição não monta aparece esmaecida, com o motivo no
- * `title`, em vez de sumir e virar promessa quebrada.
+ * traz, e que são exatamente os que a sala monta (a lista sai dos imports).
  *
  * Os nomes são texto, não pílula: uma fila de onze pastilhas contornadas lia
  * como textura de tags; onze palavras se leem como lista.
@@ -88,16 +87,14 @@ function Tira({
           confrontar com o comando. */}
       <div data-tira-pecas className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5">
         {pecas.map((p) => {
-          const motivo = kit.ausentes?.[p.name];
           return (
             <button
               key={p.name}
               type="button"
               onClick={() => onFocus(p.name)}
-              title={motivo ? `${p.description}\n\nNão está na composição: ${motivo}` : p.description}
+              title={p.description}
               className={cn(
-                "rounded-control text-casa-base text-casa-fg-2 outline-none transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-casa-fg",
-                motivo && "opacity-55",
+                "rounded-control text-casa-base text-casa-fg-2 outline-none transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-casa-fg focus-visible:[box-shadow:var(--focus)]",
               )}
             >
               {p.title}

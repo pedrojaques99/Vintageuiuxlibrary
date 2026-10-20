@@ -54,11 +54,12 @@ export function PecaTag({ name, className }: { name: string; className?: string 
       title={`Copiar: ${installCommand(name)}`}
       aria-label={`Copiar comando de ${name}`}
       className={cn(
-        "inline-flex shrink-0 items-center gap-1 rounded-[var(--r-pill,9999px)] border border-transparent px-1.5 py-0.5",
-        "font-mono text-micro text-muted-foreground/70 outline-none",
-        "transition-[color,border-color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-        "hover:border-border hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:[box-shadow:var(--focus)]",
-        done && "border-[var(--brand)] text-[var(--brand)]",
+        // Voz da casa, não da marca: o nome é a vitrine apontando pra peça.
+        "inline-flex shrink-0 items-center gap-1 rounded-control px-1.5 py-0.5",
+        "font-casa-mono text-casa-sm text-casa-fg-3 outline-none",
+        "transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+        "hover:text-casa-fg focus-visible:[box-shadow:var(--focus)]",
+        done && "text-casa-fg",
         className,
       )}
     >
@@ -124,9 +125,7 @@ export function Abertura({
    */
   return (
     <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 pb-6" title={contexto}>
-      <p className="min-w-0 max-w-2xl text-corpo leading-relaxed text-muted-foreground">
-        {children}
-      </p>
+      <p className="casa min-w-0 max-w-2xl text-casa-base text-casa-fg-2">{children}</p>
       {acao ? <div className="flex shrink-0 items-center gap-2">{acao}</div> : null}
     </div>
   );
@@ -175,10 +174,19 @@ export function Bloco({
         Um bloco sem `titulo` não renderiza cabeçalho nenhum. Seção de template
         não precisa de legenda: precisa do conteúdo.
       */}
-      {titulo || nota || pecas?.length ? (
-        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 pb-2.5">
-          {titulo ? <h3 className="text-apoio text-foreground/80">{titulo}</h3> : null}
-          {nota ? <p className="min-w-0 text-apoio text-muted-foreground">{nota}</p> : null}
+      {/*
+        A `nota` saiu da linha e virou `title` do título (2026-10): uma frase
+        explicando o que olhar, em cima de cada trecho, era a sala se explicando
+        em vez de se mostrar. A linha fica com o nome do trecho e as peças, na
+        voz da casa (`.casa`), porque é a vitrine falando, não a marca.
+      */}
+      {titulo || pecas?.length ? (
+        <div className="casa flex flex-wrap items-baseline gap-x-2 gap-y-1 pb-2.5">
+          {titulo ? (
+            <h3 className="text-casa-sm text-casa-fg-2" title={nota}>
+              {titulo}
+            </h3>
+          ) : null}
           {pecas?.length ? (
             <span className="ml-auto flex flex-wrap items-center justify-end gap-0.5">
               {pecas.map((p) => (
@@ -273,9 +281,7 @@ export function Faixa({
  */
 export function Fecho({ children }: { children: React.ReactNode }) {
   return (
-    <p className="max-w-2xl border-t border-border pt-5 text-corpo leading-relaxed text-muted-foreground">
-      {children}
-    </p>
+    <p className="casa max-w-2xl border-t border-casa-line pt-5 text-casa-base text-casa-fg-2">{children}</p>
   );
 }
 
