@@ -42,19 +42,25 @@ import { installCommand } from "./registry-meta";
 import { CopyCommand } from "./copy-command";
 import { DepLogo } from "./dep-badges";
 import { SEM_DEPS, allDeps, matchesDep } from "./deps";
-import { PalcoFixo, useLazyDemo } from "./stage";
+import { PalcoFixo, useInView, useLazyDemo } from "./stage";
 import { GRID_GAP, useFundoEscuro } from "./mosaic";
 import { ehNovo } from "./novidades";
 import { WireframeToggle } from "./media";
+import { Aba } from "./casa-ui";
+import { Miniatura } from "./miniatura";
+import { BugButton } from "./bug-report";
 
 type Mode = "vitrine" | "lista";
 type TipoFilter = CatalogItem["type"] | null;
 
-/** Quanto o cursor precisa ficar parado sobre o card pra a peça acordar. */
-const ATRASO_HOVER = 140;
-
-/** E quanto ela espera antes de voltar a ser foto, pra resvalo não piscar. */
-const ATRASO_SAIDA = 220;
+/**
+ * A distância da tela em que a peça do acervo monta (e além da qual desmonta).
+ *
+ * Uma tela inteira acima e abaixo: quem rola em velocidade normal nunca alcança
+ * uma peça que ainda está montando, e o que fica vivo de uma vez são umas três
+ * fileiras — o custo que a página aguenta, mesmo com as peças WebGL.
+ */
+const PERTO = "100% 0px";
 
 /**
  * A ordem do acervo: o que entrou por último primeiro.
@@ -82,49 +88,56 @@ const CURTO: Record<Family, string> = {
 };
 
 /**
- * Uma palavra da linha de filtro: tom cheio quando ativa, tom de apoio quando
- * não. A contagem vai no terceiro tom, colada, e some no celular.
+ * Avisa quando a peça viva já pintou.
+ *
+ * Mora DENTRO do `Suspense`, depois da demo: só monta quando o chunk dela
+ * resolveu e a árvore foi commitada. Dois quadros depois disso a peça está na
+ * tela — e só aí a foto pode sair, senão a troca passa por um quadro vazio.
  */
-function Aba({
-  ativa,
-  onClick,
-  children,
-  count,
-}: {
-  ativa: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  count?: number;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={ativa}
-      className={cn(
-        "flex shrink-0 items-baseline gap-1.5 rounded-control py-1 text-casa-base transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-        ativa ? "text-casa-fg" : "text-casa-fg-2 hover:text-casa-fg",
-      )}
-    >
-      {children}
-      {count !== undefined ? (
-        <span className="text-casa-sm tabular-nums text-casa-fg-3">{count}</span>
-      ) : null}
-    </button>
-  );
+function Pronto({ onPronto }: { onPronto: () => void }) {
+  React.useEffect(() => {
+    let r2 = 0;
+    const r1 = requestAnimationFrame(() => {
+      r2 = requestAnimationFrame(onPronto);
+    });
+    return () => {
+      cancelAnimationFrame(r1);
+      cancelAnimationFrame(r2);
+    };
+  }, [onPronto]);
+  return null;
 }
 
 /**
  * O ladrilho da grade: o palco, e mais nada.
  *
  * A moldura é fixa e a peça cabe dentro dela (`PalcoFixo`). O fundo é o da
- * MARCA (`.palco`): a peça foi desenhada para viver sobre ele, e a foto da
- * captura também — um ladrilho cinza da casa em volta de uma foto com fundo de
- * marca era um bloco dentro de outro bloco.
+ * MARCA (`.palco`): a peça foi desenhada para viver sobre ele.
  *
  * O nome aparece no canto quando o cursor chega (e fica fixo no toque, via
  * `no-hover`). Ele é o botão de verdade do card: é por ele que o teclado entra e
  * que as setas percorrem a grade.
+ *
+ * ── A peça acorda ANTES de aparecer, não no hover ───────────────────────────
+ *
+ * A primeira versão do acervo mostrava foto em repouso e montava a peça viva no
+ * hover. A troca pulava duas vezes: a foto vinha de outro enquadramento (escala
+ * e centro diferentes) e de outra marca (a captura sai na padrão, o ladrilho
+ * veste a escolhida). Por mais bem feita que fosse a transição, o hover era o
+ * instante em que a pessoa olhava fixo pro card — o pior momento pra qualquer
+ * coisa mudar.
+ *
+ * Agora a troca acontece fora da tela. A peça monta quando o ladrilho chega a
+ * uma tela de distância do viewport (`PERTO`) e desmonta quando se afasta além
+ * disso — então quem rola encontra a peça já viva, na marca certa, e o hover
+ * não troca nada: só mostra o nome. O custo continua limitado ao que está perto
+ * da tela (umas três fileiras), e os relógios das peças param fora do viewport
+ * (`active`).
+ *
+ * A foto sobra como espera do primeiro carregamento. Ela é capturada no mesmo
+ * enquadramento da caixa do palco e sem fundo (`?solo=1&caixa=1`), mora dentro
+ * do mesmo `PalcoFixo`, e só desbota quando a peça já pintou (`Pronto`) —
+ * nenhum quadro mostra as duas fora de registro, e nenhum mostra o palco vazio.
  */
 const Ladrilho = React.memo(function Ladrilho({
   item,
@@ -135,95 +148,35 @@ const Ladrilho = React.memo(function Ladrilho({
   item: CatalogItem;
   onOpen: () => void;
   index: number;
-  /**
-   * Foto em repouso, peça viva no hover.
-   *
-   * Grade de foto parada é lápide: metade destas peças SÃO movimento, e uma foto
-   * delas mostra justamente o quadro em que elas não estão fazendo nada. Então a
-   * demo de verdade monta quando o cursor chega e desmonta quando sai — uma peça
-   * viva por vez, que é o custo que a página aguenta.
-   */
+  /** Acervo inteiro: a peça monta e desmonta com a distância da tela. */
   foto?: boolean;
 }) {
   const Demo = item.demo;
   const { w, h } = previewOf(item);
-  const { ref, mounted, active } = useLazyDemo<HTMLElement>();
-  const escuro = useFundoEscuro();
-  // Foto que ainda não foi gerada não pode virar moldura vazia: cai no nome.
-  const [semFoto, setSemFoto] = React.useState(false);
-  /*
-   * O fundo da foto, lido da própria foto.
-   *
-   * As capturas saem na marca padrão (`npm run build:shots`), e o ladrilho veste
-   * a marca escolhida. Com marcas diferentes, a foto aparecia como um retângulo
-   * de outro tom dentro do ladrilho — bloco dentro de bloco. Um pixel do canto
-   * diz qual é o fundo da captura, e o ladrilho em repouso veste esse tom.
-   */
-  const [fundoFoto, setFundoFoto] = React.useState<string | undefined>(undefined);
-  const lerFundo = React.useCallback((img: HTMLImageElement) => {
-    try {
-      const c = document.createElement("canvas");
-      c.width = c.height = 1;
-      const ctx = c.getContext("2d");
-      if (!ctx) return;
-      ctx.drawImage(img, 0, 0, 1, 1, 0, 0, 1, 1);
-      const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-      setFundoFoto(`rgb(${r} ${g} ${b})`);
-    } catch {
-      /* imagem de outra origem: fica o fundo da marca */
-    }
-  }, []);
-
-  /*
-   * O hover que acorda a peça.
-   *
-   * `ATRASO_HOVER` existe porque o gesto mais comum na grade é atravessá-la a
-   * caminho de outra coisa. Sem espera, varrer três fileiras montaria e
-   * desmontaria vinte demos em meio segundo. `focus-within` entra junto: quem
-   * percorre a grade pelo teclado tem o mesmo direito de ver a peça se mexendo.
-   */
-  const [acordado, setAcordado] = React.useState(false);
-  const relogio = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  React.useEffect(() => () => clearTimeout(relogio.current), []);
-
-  const acordar = React.useCallback(() => {
-    clearTimeout(relogio.current);
-    relogio.current = setTimeout(() => setAcordado(true), ATRASO_HOVER);
-  }, []);
-
-  const dormir = React.useCallback(() => {
-    clearTimeout(relogio.current);
-    relogio.current = setTimeout(() => setAcordado(false), ATRASO_SAIDA);
-  }, []);
-
-  const viva = Boolean(Demo) && (!foto || acordado);
-
-  /*
-   * A moldura de foto, uma vez só: é o card em repouso e a espera enquanto o
-   * chunk da demo chega. Duplicar o markup faria a troca no hover ganhar um
-   * pulinho no primeiro ajuste de padding.
-   */
-  const moldura = (
-    <div
-      role="button"
-      tabIndex={-1}
-      onClick={onOpen}
-      className="flex aspect-[16/10] cursor-pointer items-center justify-center overflow-hidden p-4"
-      style={stageSurfaceOf(item)}
-    >
-      {/* `object-contain`: a captura já vem recortada no conteúdo, e `cover`
-          cortava palavra no meio — que lê como defeito, não como miniatura. */}
-      <img
-        src={`/shots/${item.name}-${escuro ? "escuro" : "claro"}.webp`}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        className="h-full w-full object-contain"
-        onLoad={(e) => lerFundo(e.currentTarget)}
-        onError={() => setSemFoto(true)}
-      />
-    </div>
+  const { ref: refLazy, mounted, active } = useLazyDemo<HTMLElement>();
+  const [refPerto, perto] = useInView<HTMLElement>(PERTO);
+  const ref = React.useCallback(
+    (el: HTMLElement | null) => {
+      refLazy.current = el;
+      refPerto.current = el;
+    },
+    [refLazy, refPerto],
   );
+  const escuro = useFundoEscuro();
+  // Foto que ainda não foi gerada não pode virar moldura vazia: a peça fica viva.
+  const [semFoto, setSemFoto] = React.useState(false);
+  const [pronto, setPronto] = React.useState(false);
+  const marcarPronto = React.useCallback(() => setPronto(true), []);
+
+  const comFoto = foto && Boolean(Demo) && !semFoto;
+  // Na fatia a peça monta uma vez e fica; no acervo ela vive enquanto está perto.
+  const viva = Boolean(Demo) && (foto ? perto : mounted);
+
+  React.useEffect(() => {
+    if (!viva) setPronto(false);
+  }, [viva]);
+
+  const fotoVisivel = comFoto && !(viva && pronto);
 
   return (
     <article
@@ -231,45 +184,47 @@ const Ladrilho = React.memo(function Ladrilho({
       /* Âncora é atributo, não texto: o card mostra o TÍTULO, e o nome do
          registry é o que a suíte usa pra achar a peça. */
       data-name={item.name}
-      onPointerEnter={foto ? acordar : undefined}
-      onPointerLeave={foto ? dormir : undefined}
-      onFocusCapture={foto ? acordar : undefined}
-      onBlurCapture={foto ? dormir : undefined}
-      style={!viva && fundoFoto ? { background: fundoFoto } : undefined}
-      className="palco group relative overflow-hidden rounded-tile has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--casa-fg-2)]"
+      /* Peça viva montada agora. A foto mora no mesmo `PalcoFixo`, então o
+         `data-palco` dele não distingue mais as duas: é por aqui que a suíte
+         prova que só o que está perto da tela fica montado. */
+      data-viva={viva ? "" : undefined}
+      className="palco group relative isolate overflow-hidden rounded-tile [contain:paint] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--casa-fg-2)]"
     >
-      {/*
-        A moldura NÃO é um botão enquanto a peça está viva: toda demo que tem
-        botão dentro produziria `<button>` dentro de `<button>`, e o clique no
-        knob viraria clique no card. Acordada, a peça é dela; o nome é o botão
-        que sempre abre.
-      */}
-      {Demo && !viva && !semFoto ? (
-        moldura
-      ) : viva ? (
-        <PalcoFixo w={w} h={h} ratio={16 / 10} active={active} style={stageSurfaceOf(item)}>
-          {/*
-            A FOTO é a espera, não um esqueleto: a captura já está na tela e é a
-            mesma peça. A fronteira fica AQUI dentro, senão a suspensão sobe até
-            o topo da árvore e a grade inteira pisca por causa de um card.
-          */}
-          <React.Suspense fallback={foto ? moldura : <div className="h-full w-full" />}>
-            {mounted && Demo ? <Demo /> : <div className="h-full w-full" />}
-          </React.Suspense>
-        </PalcoFixo>
-      ) : (
-        /* Lib, hook e tema não têm superfície. Recebem a mesma moldura com o
-           nome desenhado nela: nove peças invisíveis são nove peças que
-           ninguém descobre. */
-        <div
-          role="button"
-          tabIndex={-1}
-          onClick={onOpen}
-          className="casa flex aspect-[16/10] cursor-pointer items-center justify-center bg-casa-tile px-6"
-        >
-          <code className="text-center text-casa-sm text-casa-fg-2">{item.name}</code>
+      {Demo ? (
+        /*
+          A moldura abre a ficha enquanto mostra a foto. Com a peça viva, o
+          clique é DELA (arrastar o knob de dentro da grade) — e o nome no canto
+          continua sendo o botão que sempre abre.
+        */
+        <div onClick={fotoVisivel ? onOpen : undefined} className={fotoVisivel ? "cursor-pointer" : undefined}>
+          <PalcoFixo w={w} h={h} ratio={16 / 10} active={active} style={stageSurfaceOf(item)}>
+            {viva ? (
+              <React.Suspense fallback={null}>
+                <Demo />
+                {comFoto ? <Pronto onPronto={marcarPronto} /> : null}
+              </React.Suspense>
+            ) : null}
+            {comFoto ? (
+              <img
+                src={`/shots/${item.name}-${escuro ? "escuro" : "claro"}.webp`}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                onError={() => setSemFoto(true)}
+                className="pointer-events-none absolute inset-0 h-full w-full transition-opacity [transition-duration:var(--dur-base)] [transition-timing-function:var(--ease-out)]"
+                style={{ opacity: fotoVisivel ? 1 : 0 }}
+              />
+            ) : null}
+          </PalcoFixo>
         </div>
-      )}
+      ) : null}
+
+      {/* Reportar bug: só existe com o reporte ligado (modo dev), e aparece
+          junto com o nome. Nunca é ação de quem visita a vitrine. */}
+      <div className="casa no-hover absolute right-3 top-3 rounded-[10px] bg-casa-bg empty:hidden">
+        <BugButton item={item.name} />
+      </div>
 
       <div className="casa no-hover pointer-events-none absolute bottom-3 left-3 max-w-[calc(100%-24px)]">
         <button
@@ -304,6 +259,7 @@ function Row({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; i
         onClick={onOpen}
         className="flex min-w-0 flex-1 items-baseline gap-3 text-left outline-none"
       >
+        <Miniatura item={item} className="h-10 w-16 self-center" />
         <span className="w-40 shrink-0 truncate text-casa-base text-casa-fg">{item.title}</span>
         <span className="min-w-0 flex-1 truncate text-casa-base text-casa-fg-2">
           {item.description}
@@ -354,6 +310,8 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
     () => pool.filter((i) => (tipo === null || i.type === tipo) && matchesDep(i.name, dep)),
     [pool, dep, tipo],
   );
+  const comPalco = React.useMemo(() => results.filter((i) => i.demo), [results]);
+  const semPalco = React.useMemo(() => results.filter((i) => !i.demo), [results]);
 
   /*
    * O filtro de dependência se monta do que EXISTE ali, com a contagem junto —
@@ -453,9 +411,10 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
         cards[target]?.scrollIntoView({ block: "nearest" });
       };
 
+      const grade = listRef.current.querySelector<HTMLElement>("[data-grade]");
       const cols =
-        mode === "vitrine"
-          ? getComputedStyle(listRef.current).gridTemplateColumns.split(" ").length
+        mode === "vitrine" && grade && el && grade.contains(el)
+          ? getComputedStyle(grade).gridTemplateColumns.split(" ").length
           : 1;
       if (e.key === "ArrowRight") move(1);
       else if (e.key === "ArrowLeft") move(-1);
@@ -489,7 +448,9 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
       {/* controles */}
       <div className="casa sticky top-[var(--shell-header-h)] z-30 bg-casa-bg">
         <div className="shell flex items-center gap-5 py-2">
-          <div className="flex min-w-0 flex-1 items-center gap-5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {/* No celular a linha rola de lado; o esmaecido na borda é o que diz
+              que tem mais palavra depois da última visível. */}
+          <div className="flex min-w-0 flex-1 items-center gap-5 overflow-x-auto [mask-image:linear-gradient(to_right,black_85%,transparent)] [scrollbar-width:none] sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
             {/* A categoria NAVEGA: cada palavra é uma rota (`/catalogo/motion`),
                 então o link de uma fatia pode ser mandado no chat. */}
             <Aba ativa={!familia} onClick={() => onFamilia?.(null)} count={CATALOG.length}>
@@ -597,26 +558,56 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
       <div className="shell">
         {results.length ? (
           mode === "vitrine" ? (
-            <div
-              ref={listRef}
-              /*
-               * Uma grade de verdade, e nada de mosaico: com a moldura fixa do
-               * `PalcoFixo` não há altura diferente pra encaixar. `overflow-anchor:
-               * none` fica — ao filtrar, a âncora do Chrome desfazia a reposição
-               * logo depois de nós a fazermos.
-               */
-              style={{ overflowAnchor: "none", gap: GRID_GAP }}
-              className="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
-            >
-              {results.map((item, i) => (
-                <Ladrilho
-                  key={item.name}
-                  item={item}
-                  index={i}
-                  foto={!familia}
-                  onOpen={() => onFocus(item.name)}
-                />
-              ))}
+            <div ref={listRef} style={{ overflowAnchor: "none" }}>
+              {/*
+                Uma grade de verdade, e nada de mosaico: com a moldura fixa do
+                `PalcoFixo` não há altura diferente pra encaixar. `overflow-anchor:
+                none` fica — ao filtrar, a âncora do Chrome desfazia a reposição
+                logo depois de nós a fazermos.
+
+                Só entra na grade quem tem palco. Hook, lib, tema e base não têm
+                superfície: num ladrilho viravam um nome em código no meio de
+                fotos, e liam como peça quebrada.
+              */}
+              {comPalco.length ? (
+                <div
+                  data-grade
+                  style={{ gap: GRID_GAP }}
+                  className="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
+                >
+                  {comPalco.map((item, i) => (
+                    <Ladrilho
+                      key={item.name}
+                      item={item}
+                      index={i}
+                      foto={!familia}
+                      onOpen={() => onFocus(item.name)}
+                    />
+                  ))}
+                </div>
+              ) : null}
+
+              {/* O que não tem superfície: uma lista de texto depois da grade.
+                  Continua na busca e na fatia da família — só não finge ser
+                  uma imagem. */}
+              {semPalco.length ? (
+                <section className="casa mt-16">
+                  <h2 className="flex items-baseline gap-2 text-casa-lg font-medium">
+                    Hooks, temas e utilitários
+                    <span className="text-casa-sm tabular-nums text-casa-fg-3">{semPalco.length}</span>
+                  </h2>
+                  <div className="-mx-3 mt-3">
+                    {semPalco.map((item, i) => (
+                      <Row
+                        key={item.name}
+                        item={item}
+                        index={comPalco.length + i}
+                        onOpen={() => onFocus(item.name)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              ) : null}
             </div>
           ) : (
             <div ref={listRef} style={{ overflowAnchor: "none" }} className="casa mt-4 -mx-3">

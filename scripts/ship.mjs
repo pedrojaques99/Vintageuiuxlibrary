@@ -185,6 +185,12 @@ run("node scripts/deps-extract.mjs");
 say("Portão de tipos (tsc)");
 run("npx tsc --noEmit");
 
+// ── Portão 6: a casca ────────────────────────────────────────────────────────
+// Cor e raio da marca, pílula, caixa-alta, contorno e vidro voltam na casca uma
+// classe por vez, e nenhum portão acima vê. Ver PLANO-REDESIGN-CASA.md.
+say("Portão da casca (casa-lint)");
+run("node scripts/casa-lint.mjs");
+
 // ── Builds ───────────────────────────────────────────────────────────────────
 say("Build do registry (shadcn)");
 run("npx shadcn@latest build");

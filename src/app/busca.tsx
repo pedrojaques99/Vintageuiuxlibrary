@@ -27,8 +27,9 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Command } from "cmdk";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CATALOG, FAMILIES, TYPE_LABEL, fold, haystack, type CatalogItem } from "./catalog";
+import { CATALOG, FAMILIES, TYPE_LABEL, fold, haystack, matches, type CatalogItem } from "./catalog";
 import { ehNovo } from "./novidades";
+import { Miniatura } from "./miniatura";
 
 /** O índice, montado uma vez: `haystack` normaliza texto de 81 itens. */
 const INDICE = CATALOG.map((item) => ({ item, texto: haystack(item) }));
@@ -50,9 +51,11 @@ function nota(entrada: { item: CatalogItem; texto: string }, termo: string) {
   if (titulo.startsWith(t)) return 70;
   if (nome.includes(t)) return 60;
   if (titulo.includes(t)) return 50;
-  // O último degrau é o texto inteiro da ficha: descrição, tags, dependências.
-  // É o que faz "gsap" listar quem puxa gsap.
-  return entrada.texto.includes(t) ? 20 : -1;
+  // O último degrau é o texto inteiro da ficha: descrição, tags, dependências,
+  // com radical em português — `matches` é o mesmo casamento que a busca da
+  // grade usava, e é o que faz "arrastar" achar a peça que "se arrasta". Sem
+  // ele, a busca única da casa achava menos do que a que ela substituiu.
+  return entrada.texto.includes(t) || matches(entrada.item, t) ? 20 : -1;
 }
 
 export function Busca({
@@ -157,8 +160,9 @@ function Linha({ item, onEscolher }: { item: CatalogItem; onEscolher: (n: string
       value={item.name}
       onSelect={() => onEscolher(item.name)}
       // O item ativo é um tom acima, como em qualquer lista da casa.
-      className="flex cursor-pointer items-center gap-3 rounded-control px-2.5 py-2 data-[selected=true]:bg-casa-tile-2"
+      className="flex cursor-pointer items-center gap-3 rounded-control px-2 py-1.5 data-[selected=true]:bg-casa-tile-2"
     >
+      <Miniatura item={item} className="h-9 w-14" />
       <span className="min-w-0 truncate text-casa-base text-casa-fg">{item.title}</span>
       {ehNovo(item.name) ? (
         <span className="h-1.5 w-1.5 shrink-0 rounded-[2px] bg-casa-fg-2" aria-label="novo" />

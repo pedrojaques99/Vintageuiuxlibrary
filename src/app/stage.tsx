@@ -241,6 +241,32 @@ export function FitStage({
  * Nunca amplia. Peça de 380px numa caixa de 420 fica em 380, centrada; esticar
  * pra preencher mostraria a peça num tamanho em que ela não foi desenhada.
  */
+/**
+ * O miolo da caixa `w×h` do palco — o mesmo na grade e na captura da foto.
+ *
+ * Medido no acervo inteiro (2026-10-19): onze peças apareciam descentradas no
+ * ladrilho, e por três causas que esta caixa resolve de uma vez:
+ *
+ * - **Trilho que pinta além da caixa** (rail, marquee, logo-wall): o conteúdo
+ *   começava na borda esquerda da caixa e escorria até a borda do ladrilho, e a
+ *   peça parecia empurrada pra direita. `overflow: hidden` recorta na caixa,
+ *   e as margens ficam iguais dos dois lados.
+ * - **Demo mais baixa que a caixa** (testimonial-wall, kanban): encostava no
+ *   topo. Coluna flex com `justify-content: center` centra na vertical —
+ *   e, ao contrário de `place-items`, mantém a largura cheia dos filhos e não
+ *   quebra quem usa `h-full` (a altura da caixa é definida).
+ * - **Demo mais alta que a caixa**: recortada embaixo em vez de vazar.
+ *
+ * A captura (`Solo` com `?caixa=1`) usa o MESMO objeto: se os dois divergirem,
+ * a foto sai fora de registro com a peça viva e o crossfade volta a pular.
+ */
+export const CAIXA_DO_PALCO: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  overflow: "hidden",
+};
+
 export function PalcoFixo({
   w,
   h,
@@ -289,6 +315,7 @@ export function PalcoFixo({
           height: h,
           transform: `translate(-50%, -50%) scale(${escala})`,
           willChange: escala === 1 ? undefined : "transform",
+          ...CAIXA_DO_PALCO,
         }}
       >
         <StageActiveCtx.Provider value={active && pageVisible}>{children}</StageActiveCtx.Provider>

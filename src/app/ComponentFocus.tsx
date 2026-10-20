@@ -7,18 +7,16 @@
  * caso?" — pra isso a pessoa precisa *usar* a peça: arrastar o knob, largar um
  * card no board, ver o que acontece a 360px de largura. É o que esta vista faz.
  *
- * ── Por que deixou de ser modal ────────────────────────────────────────────
+ * ── Por que é página, e não modal ──────────────────────────────────────────
  *
- * Ela nasceu como `Dialog` do Radix, e isso fez sentido enquanto o site não
- * tinha sidebar: um overlay em cima da grade dava a peça em tela cheia sem
- * inventar rota. Quando a coluna do acervo entrou no site, o modal passou a
- * cobri-la — e a ficha ganhou uma lista PRÓPRIA por dentro pra compensar. Duas
- * listas do mesmo acervo, desenhadas duas vezes, escondendo uma à outra.
+ * Ela nasceu como `Dialog` do Radix. Como página, `/c/<item>` tem o scroll do
+ * documento (o modal tinha o seu, e a roda do mouse parava na borda), a grade
+ * atrás deixa de ficar montada gastando CPU, e o endereço passa a ser um lugar
+ * de verdade em vez de um estado por cima de outro lugar.
  *
- * Como página, `/c/<item>` usa a sidebar que já existe, o scroll volta a ser o
- * scroll do documento (o modal tinha o seu, e a roda do mouse parava na borda),
- * e o endereço passa a ser um lugar de verdade em vez de um estado por cima de
- * outro lugar.
+ * O desenho é o do painel do Bench: um palco grande no fundo da marca, e uma
+ * coluna de 340px da casa com nome, uma frase, os controles e as duas ações —
+ * o destaque único é o comando de instalar.
  *
  * O que se perde: `Esc` deixa de ser "fechar" e vira "voltar pra categoria" —
  * mesmo destino, outro nome. As setas continuam percorrendo, só que agora
@@ -205,7 +203,7 @@ function UsoAoVivo({
   const { done, copy } = useCopy(codigo);
 
   return (
-    <div className="mx-5 mt-5 rounded-control bg-casa-tile-2 sm:mx-6">
+    <div data-uso className="mx-5 mt-5 rounded-control bg-casa-tile-2 sm:mx-6">
       <div className="flex items-center gap-2 pl-4 pr-1 pt-1">
         <span className="text-casa-sm text-casa-fg-3">Com os seus ajustes</span>
         <button
@@ -304,7 +302,7 @@ export function ComponentFocus({
 
   const preset = VIEWPORTS.find((v) => v.value === viewport)!;
   // O palco tem respiro de 32px de cada lado; a peça mede o que sobra.
-  const util = Math.max(available - 64, 0);
+  const util = Math.max(available - (available < 640 ? 40 : 64), 0);
   const frameW = preset.px || Math.max(util, 320);
   const frameH = Math.max(natural.h, MIN_STAGE_H);
 
@@ -331,7 +329,7 @@ export function ComponentFocus({
       <section
         ref={stageRef}
         className={cn(
-          "relative min-w-0 flex-1 overflow-hidden rounded-tile",
+          "relative isolate min-w-0 flex-1 overflow-hidden rounded-tile [contain:paint]",
           aba === "demo" && Demo ? "palco" : "casa bg-casa-tile",
         )}
         style={aba === "demo" && Demo ? stageSurfaceOf(item) : undefined}
@@ -345,8 +343,9 @@ export function ComponentFocus({
             ))}
           </div>
 
+          {/* Largura de teste não faz sentido num celular: ele já é a largura. */}
           {aba === "demo" && Demo ? (
-            <div className="pointer-events-auto flex gap-0.5 rounded-[12px] bg-casa-bg p-1">
+            <div className="pointer-events-auto hidden gap-0.5 rounded-[12px] bg-casa-bg p-1 md:flex">
               {VIEWPORTS.map(({ value, ariaLabel, icon: Icone }) => (
                 <IconeDoPalco
                   key={value}
@@ -390,7 +389,7 @@ export function ComponentFocus({
              * O palco cresce com a peça, com piso — não com a tela. Esticar até
              * o fim da viewport dava 200px de vazio em cima de peça pequena.
              */
-            className="flex min-h-[min(72vh,640px)] items-center justify-center overflow-auto px-8 pb-8 pt-16"
+            className="flex min-h-[min(48vh,420px)] items-center justify-center overflow-auto px-5 pb-8 pt-16 sm:px-8 lg:min-h-[min(72vh,640px)]"
           >
             {preset.px ? (
               /*

@@ -12,7 +12,7 @@ import { test, expect, type Page } from "@playwright/test";
  *    meio da sala principal. Painel vazio não quebra build nem typecheck.
  * 2. **Composição que estoura a tela.** São cinco páginas inteiras montadas com
  *    peça de verdade; qualquer uma pode empurrar a página de lado no celular.
- * 3. **Promessa da tira.** O cabeçalho diz "as N peças" e a tira embaixo tem de
+ * 3. **Promessa da tira.** O cabeçalho diz "N peças" e a tira embaixo tem de
  *    listar exatamente N — é o número que sustenta o comando único.
  */
 
@@ -54,7 +54,7 @@ test.describe("salas de kit", () => {
       await esperarSala(page, kit.titulo);
 
       // A tira é a promessa do comando: N no cabeçalho, N na lista.
-      const cabecalho = page.getByRole("heading", { name: /^as \d+ peças$/ });
+      const cabecalho = page.getByRole("heading", { name: /^\d+ peças$/ });
       await expect(cabecalho).toBeVisible();
       const anunciadas = Number((await cabecalho.textContent())!.match(/\d+/)![0]);
       const listadas = await page.locator("[data-tira-pecas] > button").count();
@@ -82,15 +82,15 @@ test.describe("salas de kit", () => {
 
   test("a seta atravessa as salas e a URL acompanha", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
+    await page.goto("/kits");
     await esperarSala(page, KITS[0].titulo);
 
     await page.getByRole("button", { name: /Próximo kit/i }).first().click();
     await expect(page).toHaveURL(/\/kit\/pagina-que-vende$/);
     await esperarSala(page, KITS[1].titulo);
 
-    /* Voltar leva ao slug explícito, não à raiz: `/` é só o apelido da primeira
-       sala, e reescrevê-lo aqui esconderia em qual sala a pessoa está. */
+    /* Voltar leva ao slug explícito: `/kits` é só o apelido da primeira sala,
+       e reescrevê-lo aqui esconderia em qual sala a pessoa está. */
     await page.getByRole("button", { name: /Kit anterior/i }).first().click();
     await expect(page).toHaveURL(/\/kit\/mesa-de-trabalho$/);
     await esperarSala(page, KITS[0].titulo);
@@ -117,6 +117,9 @@ test.describe("salas de kit", () => {
   });
 
   test("a sala escura não escurece a página", async ({ page }) => {
+    // A casa abre escura por padrão; o teste só prova alguma coisa com a
+    // pessoa no tema claro, que é onde a sala escura poderia vazar.
+    await page.addInitScript(() => localStorage.setItem("visant:ui:tema", "claro"));
     await page.goto("/kit/motion-e-estado");
     await esperarSala(page, "Motion e estado");
 

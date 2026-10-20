@@ -32,6 +32,8 @@
     "build:media": "node scripts/media-bank.mjs",
     "build:pages": "node scripts/prerender.mjs",
     "check:css-tokens": "node scripts/css-tokens-check.mjs",
+    "check:casa": "node scripts/casa-lint.mjs",
+    "check:palco": "node scripts/palco-check.mjs",
     "bugs": "node scripts/bugs.mjs",
     "build:registry-css": "node scripts/registry-css.mjs"
   },

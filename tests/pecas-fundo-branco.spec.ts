@@ -34,6 +34,28 @@ for (const nome of ITENS) {
     await page.setViewportSize({ width: 900, height: 900 });
     await page.goto(`/c/${nome}?solo=1&bg=${BRANCO}`);
     await page.waitForTimeout(500);
+    /*
+     * Mede o estado ASSENTADO, não o meio da entrada.
+     *
+     * Peça que entra por opacidade (o `line-reveal`) passa uns quadros com o
+     * texto a 40% — e um tempo fixo de espera mede esse quadro ou não conforme
+     * a página carrega mais rápido ou mais devagar. Foi assim que ela ficou
+     * vermelha no dia em que a casa parou de puxar fonte do Google no load: a
+     * peça não mudou, o relógio do teste é que caiu no meio da animação.
+     * Esperam-se as animações FINITAS; as em loop (marquee) nunca terminam.
+     */
+    await page.evaluate(() =>
+      Promise.race([
+        Promise.all(
+          document
+            .getAnimations()
+            .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+            .map((a) => a.finished.catch(() => undefined)),
+        ),
+        new Promise((r) => setTimeout(r, 4000)),
+      ]),
+    );
+    await page.waitForTimeout(150);
 
     const sumidos = await page.evaluate(() => {
       const canal = (c: number) => {
@@ -117,6 +139,50 @@ for (const nome of ITENS) {
           return false;
         })();
         if (sobreImagem) continue;
+
+        /*
+         * O mesmo vale para texto sobre uma <img>, <video> ou <canvas> que está
+         * ATRÁS dele (o card do carrossel: título branco sobre a foto). A cor
+         * computada do pai é a do papel, mas o que está pintado é a foto —
+         * medir contra o papel acusava 1:1 em texto perfeitamente legível.
+         */
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+
+        /*
+         * Texto recortado pelo próprio contêiner não está na tela: a parada 3 de
+         * um scroller interno (o fog-garden) existe no DOM e ninguém a vê até
+         * rolar. Medir esse texto contra o papel dava 1:1 em nada visível.
+         */
+        const recortado = (() => {
+          if (cx < 0 || cy < 0 || cx > innerWidth || cy > innerHeight) return true;
+          for (let p = el.parentElement; p; p = p.parentElement) {
+            const o = getComputedStyle(p);
+            if (o.overflowX === "visible" && o.overflowY === "visible") continue;
+            const k = p.getBoundingClientRect();
+            if (cx < k.left || cx > k.right || cy < k.top || cy > k.bottom) return true;
+          }
+          return false;
+        })();
+        if (recortado) continue;
+
+        /*
+         * Texto em `mix-blend-mode` (o negativo do fog-garden: cor do papel em
+         * `difference` sobre a névoa) pinta a DIFERENÇA com o que está atrás. A
+         * cor computada é o papel por desenho, e a conta daria 1:1 sempre.
+         */
+        let mistura = false;
+        for (let p: Element | null = el; p; p = p.parentElement) {
+          if (getComputedStyle(p).mixBlendMode !== "normal") {
+            mistura = true;
+            break;
+          }
+        }
+        if (mistura) continue;
+        const sobreMidia = document
+          .elementsFromPoint(cx, cy)
+          .some((m) => m !== el && /^(IMG|VIDEO|CANVAS)$/.test(m.tagName));
+        if (sobreMidia) continue;
 
         /*
          * Controle desabilitado não entra na conta.

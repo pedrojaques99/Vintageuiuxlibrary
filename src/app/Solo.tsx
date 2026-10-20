@@ -29,7 +29,8 @@
  */
 
 import * as React from "react";
-import { CATALOG } from "./catalog";
+import { CATALOG, previewOf } from "./catalog";
+import { CAIXA_DO_PALCO } from "./stage";
 
 /** O pai escuta por este nome; mudar aqui quebra a medição do iframe. */
 export const MSG_ALTURA = "visant:solo:altura";
@@ -62,7 +63,27 @@ export function propsDaQuery(params: URLSearchParams): Record<string, unknown> {
   }
 }
 
-export function Solo({ name, props: iniciais }: { name: string; props?: Record<string, unknown> }) {
+export function Solo({
+  name,
+  props: iniciais,
+  caixa = false,
+}: {
+  name: string;
+  props?: Record<string, unknown>;
+  /**
+   * `?caixa=1`: a peça na caixa `w×h` do palco, no canto, sem fundo.
+   *
+   * É o enquadramento da captura (`npm run build:shots`). O ladrilho da grade
+   * mostra a foto dentro do MESMO `PalcoFixo` que depois monta a peça viva —
+   * então a foto precisa ter exatamente a geometria daquela caixa. Fotografada
+   * no viewport solto, recortada no conteúdo e encaixada com `object-contain`,
+   * ela tinha outra escala e outro centro, e o hover dava um pulo.
+   *
+   * Sem fundo pelo mesmo motivo: a foto sai na marca padrão, e o ladrilho veste
+   * a marca escolhida. Transparente, a foto herda o chão da marca atual.
+   */
+  caixa?: boolean;
+}) {
   const item = CATALOG.find((i) => i.name === name);
   const Demo = item?.demo;
   const ref = React.useRef<HTMLDivElement>(null);
@@ -115,6 +136,17 @@ export function Solo({ name, props: iniciais }: { name: string; props?: Record<s
     return (
       <div className="p-6 text-corpo text-muted-foreground">
         <span className="font-mono">{name}</span> não tem demo.
+      </div>
+    );
+  }
+
+  if (caixa) {
+    const { w, h } = previewOf(item!);
+    return (
+      <div data-caixa style={{ width: w, height: h, position: "relative", ...CAIXA_DO_PALCO }}>
+        <React.Suspense fallback={null}>
+          <Demo props={props} />
+        </React.Suspense>
       </div>
     );
   }

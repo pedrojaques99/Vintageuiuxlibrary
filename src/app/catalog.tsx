@@ -410,7 +410,7 @@ function LargeKnobDemo() {
 function PadDemo({ props }: DemoProps) {
   const [on, setOn] = React.useState<Set<number>>(new Set([1]));
   return (
-    <Frame className="grid grid-cols-2 gap-2">
+    <Frame className="grid grid-cols-[repeat(2,auto)] place-content-center gap-2">
       {PAD_VOICES.slice(0, 4).map((voice, i) => (
         <VintageSoundboardPad
           key={voice.label}
@@ -629,7 +629,7 @@ export const CATALOG: CatalogItem[] = [
     // Largura pra caber as colunas sem barra de rolagem horizontal — que dentro
     // de um card de vitrine é sempre defeito; 220 de altura porque o que sobrava
     // era buraco, não respiro.
-    preview: { w: 1020, h: 220 },
+    preview: { w: 1020, h: 130 },
   },
   {
     name: "inline-edit",
@@ -815,7 +815,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["loja", "fuso"],
     demo: StoreStatusDemo,
     knobs: "StoreStatus",
-    preview: { w: 420, h: 250 },
+    preview: { w: 420, h: 280 },
   },
   {
     name: "masonry-gallery",
@@ -1114,7 +1114,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["áudio", "pad"],
     demo: PadDemo,
     knobs: "VintageSoundboardPad",
-    preview: { w: 440, h: 265 },
+    preview: { w: 310, h: 265 },
   },
   {
     name: "vintage-xy-pad",
@@ -1247,7 +1247,7 @@ export const CATALOG: CatalogItem[] = [
         lead="Da estratégia de marca ao desenvolvimento, sem repassar o trabalho para fora no meio do caminho."
       />
     ),
-    preview: { w: 620, h: 300 },
+    preview: { w: 620, h: 320 },
   },
   {
     name: "cta-surface",
@@ -1274,7 +1274,7 @@ export const CATALOG: CatalogItem[] = [
         />
       </div>
     ),
-    preview: { w: 640, h: 480 },
+    preview: { w: 640, h: 500 },
   },
   {
     name: "showcase-card",
@@ -1310,7 +1310,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["depoimento", "prova social", "citação", "cliente", "retrato"],
     demo: QuoteBlockDemo,
     knobs: "QuoteBlock",
-    preview: { w: 660, h: 380 },
+    preview: { w: 660, h: 400 },
   },
   {
     name: "testimonial-wall",
@@ -1578,7 +1578,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["carrossel", "3d", "webgl", "portfólio", "capa", "vitrine"],
     demo: Carousel3DDemo,
     knobs: "Carousel3D",
-    preview: { w: 640, h: 420 },
+    preview: { w: 640, h: 460 },
   },
   {
     name: "book-3d",
@@ -1600,7 +1600,7 @@ export const CATALOG: CatalogItem[] = [
     description: "Texto que sai da névoa por palavra ou letra (desfoque, opacidade e subida mínima): entra uma vez ao chegar na tela, ou acompanha a rolagem ida e volta com mola que não erra a faixa dentro de sticky.",
     tags: ["texto", "blur", "névoa", "reveal", "scroll", "palavra", "letra", "tipografia"],
     demo: MistTextDemo,
-    preview: { w: 690, h: 300 },
+    preview: { w: 560, h: 300 },
   },
   {
     name: "mist-swap", title: "Mist Swap", type: "ui", family: "motion",
@@ -1744,7 +1744,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["skeleton", "carregando", "trilho", "espera"],
     demo: SkeletonRailDemo,
     knobs: "SkeletonRail",
-    preview: { w: 1360, h: 740 },
+    preview: { w: 1360, h: 760 },
   },
   {
     name: "use-local-search",

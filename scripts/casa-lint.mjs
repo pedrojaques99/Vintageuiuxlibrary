@@ -12,8 +12,10 @@
  * O alvo é SÓ a casca (a lista abaixo). Demos, kits e peças do registry
  * desenham com a marca de propósito e ficam fora.
  *
- * Exceção escrita, na mesma linha ou nas 3 acima:
+ * Exceção escrita, na mesma linha ou nas 8 acima (o mesmo contrato dos
+ * scanners do visant-killer). Uma linha pode liberar várias regras:
  *   casa-lint/<regra>: motivo de verdade
+ *   casa-lint/<regra>,<outra>: motivo de verdade
  *
  *   node scripts/casa-lint.mjs            # lista e sai 1 se houver achado
  *   node scripts/casa-lint.mjs --self-test
@@ -88,7 +90,8 @@ export const REGRAS = [
   },
 ];
 
-const EXCECAO = (regra) => new RegExp(`casa-lint/${regra}:\\s*\\S.{6,}`);
+const EXCECAO = (regra) =>
+  new RegExp(`casa-lint/(?:[\\w-]+,)*${regra}(?:,[\\w-]+)*:\\s*\\S.{6,}`);
 
 export function lint(texto, arquivo = "<texto>") {
   const linhas = texto.split(/\r?\n/);
@@ -99,7 +102,7 @@ export function lint(texto, arquivo = "<texto>") {
     if (t.startsWith("//") || t.startsWith("*") || t.startsWith("/*")) return;
     for (const r of REGRAS) {
       if (!r.re.test(linha)) continue;
-      const janela = linhas.slice(Math.max(0, i - 3), i + 1).join("\n");
+      const janela = linhas.slice(Math.max(0, i - 8), i + 1).join("\n");
       if (EXCECAO(r.id).test(janela)) continue;
       achados.push({ arquivo, linha: i + 1, regra: r.id, por: r.por, trecho: t.slice(0, 90) });
     }
@@ -119,6 +122,8 @@ function selfTest() {
     ["// text-[var(--brand)] num comentário", []],
     ['{/* casa-lint/pilula: o ponto de cor da marca é um círculo de verdade */}\n<i className="rounded-full" />', []],
     ['{/* casa-lint/pilula: x */}\n<i className="rounded-full" />', ["pilula"]],
+    ['// casa-lint/vidro,pilula: desfaz o vidro da peça publicada\n<i className="rounded-full backdrop-blur-none" />', []],
+    ['// casa-lint/pilula: é um círculo de verdade\n<i className="backdrop-blur" />', ["vidro"]],
   ];
   let falhas = 0;
   for (const [texto, esperado] of casos) {

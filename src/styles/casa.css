@@ -28,7 +28,8 @@
   --casa-tile-2: oklch(0.925 0 0);
   --casa-fg: oklch(0.17 0 0);
   --casa-fg-2: oklch(0.45 0 0);
-  --casa-fg-3: oklch(0.6 0 0);
+  /* 4,5:1 até sobre o tile: o tom mais baixo ainda passa AA em 12px. */
+  --casa-fg-3: oklch(0.52 0 0);
   /* Divisor de painel. Nunca contorno de card. */
   --casa-line: oklch(0 0 0 / 0.08);
   /* O único destaque da casa: o botão que instala. */
@@ -43,7 +44,7 @@
   --casa-tile-2: oklch(0.24 0 0);
   --casa-fg: oklch(0.97 0 0);
   --casa-fg-2: oklch(0.7 0 0);
-  --casa-fg-3: oklch(0.52 0 0);
+  --casa-fg-3: oklch(0.61 0 0);
   --casa-line: oklch(1 0 0 / 0.07);
   --casa-cta: oklch(0.98 0 0);
   --casa-cta-fg: oklch(0.15 0 0);
@@ -144,6 +145,11 @@
    *
    * A casca define a família da página inteira; sem isto a peça herdaria a Geist
    * em vez da fonte do cliente, e o palco mentiria sobre o que o `add` entrega.
+   */
+  /*
+   * `isolate` + `contain: paint` nos ladrilhos (em `Gallery`/`ComponentFocus`):
+   * peça com `z-index` alto ou `position: fixed` (o fog-hero, os overlays) não
+   * pode escapar do palco e pintar por cima do cabeçalho da casa.
    */
   .palco {
     font-family: var(--font-sans, ui-sans-serif, system-ui);

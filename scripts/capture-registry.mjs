@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 /**
- * A capa estática de cada peça — claro e escuro — para o índice do catálogo.
+ * A foto de cada peça — claro e escuro — que o acervo mostra enquanto a peça
+ * viva ainda não montou.
  *
- * O índice mostra 80 peças. Montar 80 demos vivas numa página é o que produziu
- * os 26.253px e os tickers todos ligados ao mesmo tempo; a foto resolve isso
- * sem inventar nada: é o mesmo caminho que o shadcn usa no fallback mobile do
- * `block-viewer` (`{name}-light.png`). Demo viva continua existindo — só que
- * dentro da categoria, onde são 10 e não 80.
+ * No acervo a peça viva monta quando o ladrilho chega perto da tela; a foto é a
+ * espera do primeiro carregamento e é trocada por crossfade. Para a troca não
+ * pular, a foto é tirada no enquadramento EXATO do palco: a caixa `w×h` do
+ * catálogo, num viewport de desktop, sem fundo (`?solo=1&caixa=1`). É o mesmo
+ * caminho que o shadcn usa no fallback do `block-viewer` (`{name}-light.png`).
  *
  * Irmão do `og-images.mjs`: mesmo Chromium do `@playwright/test`, mesma postura
  * sobre o deploy. As imagens saem em `public/shots/` e são **versionadas de
@@ -42,9 +43,9 @@ const DIST = join(ROOT, "dist");
 const PORTA = 4319;
 const BASE = `http://127.0.0.1:${PORTA}`;
 
-/* O contrato publicado no plano. A frente C consome por caminho. */
-const LARGURA = 1200;
-const ALTURA = 750;
+/* O viewport de desktop em que a grade roda — ver o laço. */
+const LARGURA = 1440;
+const ALTURA = 900;
 const DENSIDADE = 2;
 
 const argv = process.argv.slice(2);
@@ -146,7 +147,7 @@ async function assentar(pagina, recorte) {
   }
   let anterior = null;
   for (let i = 0; i < 8; i++) {
-    const agora = await pagina.screenshot(recorte ? { clip: recorte } : undefined);
+    const agora = await pagina.screenshot({ clip: recorte, omitBackground: true });
     if (anterior && Buffer.compare(anterior, agora) === 0) return agora;
     anterior = agora;
     await new Promise((r) => setTimeout(r, 350));
@@ -154,158 +155,45 @@ async function assentar(pagina, recorte) {
   return anterior;
 }
 
-/**
- * A caixa que a peça REALMENTE ocupa, com um respiro em volta.
- *
- * O viewport é esticado até 1.6:1 para a media query enxergar o tamanho certo —
- * e isso está correto. Mas fotografar o viewport inteiro punha um board de
- * 220px de altura no meio de 657px de vazio, e na miniatura de 104px do índice
- * a peça virava uma tira de 7px: capa que não mostra nada.
- *
- * Aqui a foto passa a ser recortada no conteúdo. O respiro é proporcional (6%
- * da maior dimensão, com piso de 24px) porque peça pequena precisa de menos ar
- * absoluto que faixa cheia, e um valor fixo dá os dois errados.
- */
-async function caixaDaPeca(pagina) {
-  return pagina.evaluate(() => {
-    const raiz = document.querySelector("#root > div > div") ?? document.querySelector("#root");
-    if (!raiz) return null;
-    // A união das caixas dos filhos, e não a do container: o container é
-    // esticado por `justify-content: center` e devolveria o viewport de volta.
-    let x1 = Infinity, y1 = Infinity, x2 = -Infinity, y2 = -Infinity;
-
-    /*
-     * Só entra na conta o que PINTA.
-     *
-     * Contar toda caixa visível devolvia o viewport de volta: as demos têm um
-     * invólucro `h-full w-full` de centralização, ele é "visível" por qualquer
-     * critério geométrico e é do tamanho da tela. O que interessa é onde há
-     * tinta — folha da árvore (texto, ícone, imagem, canvas) ou caixa com fundo
-     * ou borda própria. Contêiner de layout não desenha nada e não deve ditar o
-     * enquadramento.
-     */
-    const pinta = (el, cs) => {
-      if (!el.children.length) return true;
-      if (cs.backgroundImage !== "none") return true;
-      const bg = cs.backgroundColor;
-      const m = bg.match(/[\d.]+/g);
-      if (m && (m.length < 4 || Number(m[3]) > 0.02)) return true;
-      return ["Top", "Right", "Bottom", "Left"].some(
-        (l) => parseFloat(cs[`border${l}Width`]) > 0 && cs[`border${l}Style`] !== "none",
-      );
-    };
-
-    const visitar = (el) => {
-      const r = el.getBoundingClientRect();
-      const cs = getComputedStyle(el);
-      const visivel =
-        r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && +cs.opacity > 0.02;
-      if (visivel && pinta(el, cs)) {
-        x1 = Math.min(x1, r.left);
-        y1 = Math.min(y1, r.top);
-        x2 = Math.max(x2, r.right);
-        y2 = Math.max(y2, r.bottom);
-      }
-      if (visivel) for (const f of el.children) visitar(f);
-    };
-    for (const f of raiz.children) visitar(f);
-    if (!Number.isFinite(x1) || x2 <= x1 || y2 <= y1) return null;
-
-    const respiro = Math.max(24, Math.round(Math.max(x2 - x1, y2 - y1) * 0.06));
-    const x = Math.max(0, Math.floor(x1 - respiro));
-    const y = Math.max(0, Math.floor(y1 - respiro));
-    return {
-      x,
-      y,
-      width: Math.min(window.innerWidth - x, Math.ceil(x2 - x1 + respiro * 2)),
-      height: Math.min(window.innerHeight - y, Math.ceil(y2 - y1 + respiro * 2)),
-    };
-  });
-}
-
 /*
  * A conversão para webp acontece dentro do próprio Chromium.
  *
  * O `page.screenshot` do Playwright só sabe png e jpeg, e `sharp` não é
- * dependência deste repo — instalar um binário nativo para converter imagem
- * quando o browser que já está aberto sabe fazer isso seria peso sem troco.
- * `OffscreenCanvas.convertToBlob({type:"image/webp"})` é o encoder do Chromium.
+ * dependência deste repo. `OffscreenCanvas.convertToBlob({type:"image/webp"})`
+ * é o encoder do Chromium, e ele guarda o canal alfa — que é o que a foto
+ * precisa desde que passou a sair sem fundo.
  *
- * Este mesmo passo faz a moldura: a peça é fotografada no tamanho declarado
- * dela (que é o que o `FitStage` desenha na vitrine, e o que faz media query
- * valer) e depois assentada, centrada, na tela de 1200×750 do contrato. O
- * sobrando é pintado com o fundo do tema — não com branco, que apareceria como
- * uma faixa clara no escuro.
- *
- * De quebra devolve a `tinta`: a fração de pixels que difere do fundo. É como o
+ * De quebra devolve a `tinta`: a fração de pixels não transparentes. É como o
  * script descobre sozinho que uma peça saiu vazia.
  */
-async function moldurar(encoder, pngBase64, fundo, comoPng, recorte) {
-  const { larguraAlvo, alturaAlvo } = telaDaCapa(
-    recorte?.width || LARGURA,
-    recorte?.height || ALTURA,
-  );
+async function codificar(encoder, pngBase64, comoPng) {
   return encoder.evaluate(
-    async ({ pngBase64, fundo, larguraAlvo, alturaAlvo, comoPng }) => {
+    async ({ pngBase64, comoPng }) => {
       const bmp = await createImageBitmap(
         await (await fetch(`data:image/png;base64,${pngBase64}`)).blob(),
       );
-      const tela = new OffscreenCanvas(larguraAlvo, alturaAlvo);
+      const tela = new OffscreenCanvas(bmp.width, bmp.height);
       const ctx = tela.getContext("2d");
-      ctx.fillStyle = fundo;
-      ctx.fillRect(0, 0, larguraAlvo, alturaAlvo);
+      ctx.drawImage(bmp, 0, 0);
 
-      const escala = Math.min(larguraAlvo / bmp.width, alturaAlvo / bmp.height);
-      const w = Math.round(bmp.width * escala);
-      const h = Math.round(bmp.height * escala);
-      ctx.drawImage(bmp, Math.round((larguraAlvo - w) / 2), Math.round((alturaAlvo - h) / 2), w, h);
-
-      // Quanto da foto não é fundo. Amostra de 4 em 4 pixels: precisão de sobra
-      // para separar "peça" de "retângulo liso".
-      const px = ctx.getImageData(0, 0, larguraAlvo, alturaAlvo).data;
-      const base = ctx.getImageData(0, 0, 1, 1).data;
-      let diferentes = 0;
+      const px = ctx.getImageData(0, 0, bmp.width, bmp.height).data;
+      let pintados = 0;
       let olhados = 0;
-      for (let i = 0; i < px.length; i += 16) {
+      for (let i = 3; i < px.length; i += 16) {
         olhados++;
-        if (
-          Math.abs(px[i] - base[0]) > 8 ||
-          Math.abs(px[i + 1] - base[1]) > 8 ||
-          Math.abs(px[i + 2] - base[2]) > 8
-        )
-          diferentes++;
+        if (px[i] > 8) pintados++;
       }
 
       const blob = await tela.convertToBlob(
-        comoPng ? { type: "image/png" } : { type: "image/webp", quality: 0.92 },
+        comoPng ? { type: "image/png" } : { type: "image/webp", quality: 0.9 },
       );
       const buf = new Uint8Array(await blob.arrayBuffer());
       let bin = "";
       for (let i = 0; i < buf.length; i++) bin += String.fromCharCode(buf[i]);
-      return { tipo: blob.type, dados: btoa(bin), tinta: diferentes / olhados };
+      return { dados: btoa(bin), tinta: pintados / olhados };
     },
-    { pngBase64, fundo, larguraAlvo, alturaAlvo, comoPng },
+    { pngBase64, comoPng },
   );
-}
-
-/**
- * A tela da capa acompanha a PROPORÇÃO DA PEÇA — não uma moldura de 1.6:1.
- *
- * Assentar tudo num 1200×750 fixo parecia dar uniformidade e dava o oposto: um
- * board de 1020×220 vira uma tira no meio de meia tela de fundo liso, e na
- * miniatura de 104px do índice sobra uma linha de 7px. A capa mostrava a moldura,
- * não a peça — que é exatamente o defeito que ela existe para não ter.
- *
- * O teto de área mantém arquivo e memória sob controle sem impor forma; o piso
- * de 1.2:1 impede que uma peça altíssima vire um poste na miniatura, que é o
- * único caso em que o letterbox ainda ajuda.
- */
-function telaDaCapa(larguraFoto, alturaFoto) {
-  const AREA = LARGURA * ALTURA * DENSIDADE * DENSIDADE;
-  const proporcao = larguraFoto / alturaFoto;
-  const alvo = Math.max(1.2, Math.min(3.2, proporcao));
-  const altura = Math.round(Math.sqrt(AREA / alvo));
-  return { larguraAlvo: Math.round(altura * alvo), alturaAlvo: altura };
 }
 
 // --- laço --------------------------------------------------------------------
@@ -342,43 +230,35 @@ for (const peca of alvos) {
   }
 
   /*
-   * O viewport é o tamanho declarado da peça, esticado até a proporção da capa.
+   * O enquadramento é o do PALCO, não o do solo.
    *
-   * Duas coisas de uma vez. Primeiro, fotografar no tamanho declarado é o que
-   * mantém a foto honesta: um controle de 380px num viewport de 1200 não é o
-   * mesmo componente, porque media query lê o viewport — é o mesmo motivo pelo
-   * qual o solo existe. Segundo, crescer a dimensão que sobra até 1200×750 dá
-   * respiro de verdade em vez de faixa de fundo: um board de 1020×220 numa capa
-   * 1.6:1 renderizado na proporção dele sairia como uma tira no meio de um
-   * retângulo vazio.
+   * O ladrilho da grade mostra a foto dentro do mesmo `PalcoFixo` que depois
+   * monta a peça viva, na caixa `w×h` declarada no catálogo. Para a troca do
+   * hover não pular, a foto tem de ser exatamente essa caixa: `?caixa=1` desenha
+   * a peça nela, no canto, e a foto recorta a caixa — sem respiro, sem
+   * `object-contain`, sem letterbox.
    *
-   * O `+32` é o `p-4` do solo, que também ocupa viewport — sem ele o board de
-   * 1020 declarados perdia a última coluna pela direita.
+   * O viewport é de desktop (`LARGURA`×`ALTURA`, ou maior se a peça não couber),
+   * porque é nele que a grade roda: media query lê o viewport, e uma caixa de
+   * 380px num viewport de 380 acionaria o layout de celular que o ladrilho
+   * nunca mostra.
+   *
+   * Sem fundo (`omitBackground`): a foto sai na marca padrão, e o ladrilho veste
+   * a marca escolhida. Transparente, ela herda o chão da marca atual.
    */
-  const largura0 = peca.w + 32;
-  const altura0 = peca.h + 32;
-  const vw = Math.max(largura0, Math.round((altura0 * LARGURA) / ALTURA));
-  const vh = Math.max(altura0, Math.round((largura0 * ALTURA) / LARGURA));
-
-  /*
-   * A densidade acompanha, em vez de ficar presa em 2.
-   *
-   * Um viewport de 412px ampliado até 1200 no canvas sairia borrado. Subir a
-   * densidade resolve na origem: o Chromium desenha o texto nítido já no
-   * tamanho final. Teto em 4 porque acima disso é memória a troco de nada.
-   */
-  const densidade = Math.min(4, Math.max(1, (LARGURA * DENSIDADE) / vw));
+  const vw = Math.max(LARGURA, peca.w);
+  const vh = Math.max(ALTURA, peca.h);
+  /* Densidade 2, com teto de 2400px no lado maior: retina sem arquivo gigante
+     para as faixas de 1280px. */
+  const densidade = Math.min(DENSIDADE, 2400 / Math.max(peca.w, peca.h));
 
   const contexto = await navegador.newContext({
     viewport: { width: vw, height: vh },
     deviceScaleFactor: densidade,
     /*
-     * Movimento LIGADO de propósito.
-     *
-     * `reduced-motion: reduce` daria foto estável de graça, mas neste repo
-     * várias demos entram animando a partir de opacidade 0 — congelar no
-     * primeiro quadro fotografaria o vazio. Como `assentar()` já espera a
-     * imagem parar de mudar, a estabilidade vem de medir, não de desligar.
+     * Movimento LIGADO de propósito: várias demos entram animando a partir de
+     * opacidade 0, e congelar no primeiro quadro fotografaria o vazio. A
+     * estabilidade vem de `assentar()`, que espera a imagem parar de mudar.
      */
     reducedMotion: "no-preference",
   });
@@ -389,45 +269,27 @@ for (const peca of alvos) {
 
     const pagina = await contexto.newPage();
     try {
-      const url = `${BASE}/c/${peca.nome}?solo=1${tema.escuro ? "&dark=1" : ""}`;
+      const url = `${BASE}/c/${peca.nome}?solo=1&caixa=1${tema.escuro ? "&dark=1" : ""}`;
       await pagina.goto(url, { waitUntil: "networkidle" });
-
-      /* O solo desenha a peça no topo e para. Numa foto isso vira um bloco
-         colado na borda de cima com meia tela de vazio embaixo — centrar é a
-         única correção, e ela é de enquadramento, então mora aqui e não no
-         componente. */
-      await pagina.addStyleTag({
-        content: "#root > div { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }",
-      });
 
       if (await pagina.getByText("não tem demo").count()) {
         throw new Error("a rota solo respondeu “não tem demo”");
       }
+      await pagina.waitForSelector("[data-caixa]");
 
-      // Uma primeira passada sem recorte deixa a cena assentar; só então a
-      // caixa da peça é medida (antes disso ela ainda está entrando) e a foto
-      // final sai recortada nela.
-      await assentar(pagina);
-      const recorte = await caixaDaPeca(pagina);
-      const png = await assentar(pagina, recorte ?? undefined);
-      /* O fundo do letterbox sai do tema pintado na página, não de um hex
-         escrito aqui: a marca da casa repinta `--background`, e um hex fixo
-         viraria uma faixa de cor errada no dia da repintura. */
-      const fundo = await pagina.evaluate(
-        () => getComputedStyle(document.querySelector("#root > div")).backgroundColor,
-      );
+      const caixa = { x: 0, y: 0, width: peca.w, height: peca.h };
+      const png = await assentar(pagina, caixa);
 
-      const { dados, tinta } = await moldurar(encoder, png.toString("base64"), fundo, SO_PNG, recorte);
+      const { dados, tinta } = await codificar(encoder, png.toString("base64"), SO_PNG);
       const bytes = Buffer.from(dados, "base64");
-      if (bytes.length < 1024) throw new Error(`arquivo degenerado (${bytes.length} bytes)`);
+      if (bytes.length < 512) throw new Error(`arquivo degenerado (${bytes.length} bytes)`);
 
       writeFileSync(arquivo, bytes);
       escritas++;
       if (tinta < 0.01) vazias.push(`${peca.nome}-${tema.sufixo} (${(tinta * 100).toFixed(2)}% de tinta)`);
     } catch (erro) {
-      // Falhar alto e sem deixar meia imagem no disco: uma capa quebrada
-      // versionada é pior que capa nenhuma — sem o arquivo, a frente C cai no
-      // palco vivo, que é degradação e não erro.
+      // Falhar alto e sem deixar meia imagem no disco: sem o arquivo, o
+      // ladrilho cai na peça viva, que é degradação e não erro.
       falhas.push(`${peca.nome}-${tema.sufixo}: ${erro.message}`);
     } finally {
       await pagina.close();

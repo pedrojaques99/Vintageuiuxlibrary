@@ -115,13 +115,13 @@ async function centralizarFaixa(page: Page) {
    */
   await page.waitForLoadState("networkidle").catch(() => {});
   for (let i = 0; i < 200; i++) {
-    if (await page.evaluate(() => !!document.querySelector(".marquee-track"))) break;
+    if (await page.evaluate(() => !!document.querySelector('article[data-name="marquee"] .marquee-track'))) break;
     await page.evaluate(() => window.scrollBy(0, 400));
     await page.waitForTimeout(50);
   }
-  await page.waitForSelector(".marquee-track");
+  await page.waitForSelector('article[data-name="marquee"] .marquee-track');
   await page.evaluate(() =>
-    document.querySelector(".marquee-track")!.scrollIntoView({ block: "center" }),
+    document.querySelector('article[data-name="marquee"] .marquee-track')!.scrollIntoView({ block: "center" }),
   );
   // A faixa precisa de um respiro depois de entrar na vista: o `ScrollTrigger`
   // recalcula na primeira rolagem e a velocidade só estabiliza depois disso.
@@ -212,7 +212,7 @@ test("fora da tela ela para", async ({ page }) => {
    * Agora o alvo é a posição do próprio elemento.
    */
   await page.evaluate(() => {
-    const faixa = document.querySelector(".marquee-track");
+    const faixa = document.querySelector('article[data-name="marquee"] .marquee-track');
     if (!faixa) throw new Error("faixa não encontrada");
     const topo = faixa.getBoundingClientRect().top + window.scrollY;
     // Uma tela inteira ABAIXO do fim da faixa: fora da viewport e fora da
@@ -225,9 +225,22 @@ test("fora da tela ela para", async ({ page }) => {
 
 test("o ponteiro pausa e devolve", async ({ page }) => {
   await centralizarFaixa(page);
+  /*
+   * O centro da parte VISÍVEL da faixa, não da faixa inteira.
+   *
+   * A faixa é mais larga que o palco e o palco recorta o que vaza
+   * (`CAIXA_DO_PALCO`). O centro geométrico dela pode cair fora do ladrilho,
+   * onde o ponteiro pousa em outra coisa — e aí "não pausou" seria o teste
+   * mirando no lugar errado, não a peça falhando. A pessoa passa o mouse onde
+   * vê a faixa.
+   */
   const centro = await page.evaluate(() => {
-    const r = document.querySelector(".marquee-track")!.getBoundingClientRect();
-    return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
+    const trilho = document.querySelector('article[data-name="marquee"] .marquee-track')!;
+    const r = trilho.getBoundingClientRect();
+    const k = (trilho.closest("[data-palco]") ?? document.documentElement).getBoundingClientRect();
+    const x1 = Math.max(r.left, k.left, 0);
+    const x2 = Math.min(r.right, k.right, window.innerWidth);
+    return { x: (x1 + x2) / 2, y: r.y + r.height / 2 };
   });
 
   await page.mouse.move(centro.x, centro.y);

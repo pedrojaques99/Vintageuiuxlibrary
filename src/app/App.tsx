@@ -93,8 +93,8 @@ const familiaDaPeca = (nome: string | null): Family | null =>
  * quem já sabe o nome do que quer.
  */
 const VIEWS: { value: View; label: string }[] = [
-  { value: "kits", label: "Kits" },
   { value: "catalogo", label: "Catálogo" },
+  { value: "kits", label: "Kits" },
   { value: "marca", label: "Marca" },
 ];
 
@@ -126,12 +126,14 @@ function parsePath(loc: Location): Route {
      entra nela em vez de dar 404 em quem tinha o endereço salvo. */
   if (partes[0] === "rig")
     return { view: "kits", focus: null, kit: "rig-vintage", familia: null };
+  /* `/` é o catálogo. Os kits ficam em `/kits` enquanto não forem redesenhados:
+     eram a porta de entrada e ainda não se explicam sozinhos. */
   const view = VIEWS.find((v) => v.value === partes[0]);
   /* A família só é lida sob `catalogo`: é o que mantém `/marca` (o estúdio)
      separado de `/catalogo/marca` (a fatia do catálogo). Nome de família que não
      existe cai no índice, em vez de mostrar uma fatia vazia. */
   const familia = view?.value === "catalogo" ? familiaDe(partes[1]) : null;
-  return { view: view?.value ?? "kits", focus: null, kit: null, familia };
+  return { view: view?.value ?? "catalogo", focus: null, kit: null, familia };
 }
 
 function parseLegacyHash(hash: string): Route {
@@ -144,13 +146,13 @@ function parseLegacyHash(hash: string): Route {
   const view = VIEWS.find((v) => v.value !== "kits" && hash.startsWith(`#/${v.value}`));
   const familia =
     view?.value === "catalogo" ? familiaDe(hash.replace(/^#\//, "").split("/")[1]) : null;
-  return { view: view?.value ?? "kits", focus: null, kit: null, familia };
+  return { view: view?.value ?? "catalogo", focus: null, kit: null, familia };
 }
 
 function formatPath({ view, focus, kit, familia }: Route): string {
   if (focus) return `/c/${encodeURIComponent(focus)}`;
-  if (view === "kits") return kit ? `/kit/${encodeURIComponent(kit)}` : "/";
-  if (view === "catalogo" && familia) return `/catalogo/${familia}`;
+  if (view === "kits") return kit ? `/kit/${encodeURIComponent(kit)}` : "/kits";
+  if (view === "catalogo") return familia ? `/catalogo/${familia}` : "/";
   return `/${view}`;
 }
 
@@ -299,14 +301,19 @@ function Shell() {
         <div className="shell flex h-[var(--shell-header-h)] items-center gap-6">
           <button
             type="button"
-            onClick={() => setView("kits")}
+            onClick={() => setView("catalogo")}
             className="flex shrink-0 items-center gap-2 rounded-control text-casa-base font-medium"
           >
             <span className="h-4 w-4 rounded-[5px] bg-casa-fg" aria-hidden />
             visant/ui
           </button>
 
-          <Secoes view={route.view} onView={setView} className="hidden sm:flex" />
+          {/*
+            Sem menu de seções: Kits e Marca saíram dele até ganharem um
+            redesenho próprio (as rotas continuam no ar, por endereço). Com uma
+            seção só, um menu seria uma palavra apontando pra onde a pessoa já
+            está.
+          */}
 
           <div className="ml-auto flex items-center gap-1.5">
             <BotaoDeBusca onClick={abrirBusca} />
@@ -328,11 +335,6 @@ function Shell() {
             <MinhasMarcas />
           </div>
         </div>
-
-        {/* No celular as seções descem para uma segunda linha em vez de sumirem. */}
-        <div className="shell pb-2 sm:hidden">
-          <Secoes view={route.view} onView={setView} />
-        </div>
       </header>
 
       {route.view === "kits" && (
@@ -340,7 +342,6 @@ function Shell() {
           slug={route.kit ?? KITS[0].slug}
           onSlug={setKit}
           onFocus={setFocus}
-          onCatalogo={() => setView("catalogo")}
         />
       )}
 
@@ -398,6 +399,7 @@ function Shell() {
  * editar a peça (o que mudaria o que o `add` entrega), a casa esconde por fora o
  * que não decide nada aqui: a linha de fonte e versão, as amostras e a tecla.
  */
+// casa-lint/vidro: aqui o blur é DESLIGADO — a peça publicada traz o vidro de fábrica
 const GATILHO_DE_MARCA = [
   "h-8 gap-2 !rounded-control !border-0 !bg-transparent !py-0 !pl-1 !pr-2.5 !backdrop-blur-none",
   "hover:!bg-casa-tile hover:![box-shadow:none] active:!scale-100",
@@ -405,42 +407,6 @@ const GATILHO_DE_MARCA = [
   "[&>span:nth-child(2)>span:last-child]:hidden [&>span:nth-child(2)>span:first-child]:!text-casa-base [&>span:nth-child(2)>span:first-child]:!font-normal",
   "[&>span:nth-child(3)]:!hidden [&>kbd]:!hidden",
 ].join(" ");
-
-/**
- * As três portas da casa, em texto.
- *
- * Eram um `SegmentedControl` (abaixo de `lg`) e uma coluna de sidebar (acima) —
- * o mesmo controle desenhado duas vezes. Agora são três palavras: a ativa em
- * tom cheio, as outras no tom de apoio. Sem fundo, sem borda, sem pílula.
- */
-function Secoes({
-  view,
-  onView,
-  className,
-}: {
-  view: View;
-  onView: (v: View) => void;
-  className?: string;
-}) {
-  return (
-    <nav aria-label="Seção" className={cn("flex items-center gap-5", className)}>
-      {VIEWS.map((v) => (
-        <button
-          key={v.value}
-          type="button"
-          onClick={() => onView(v.value)}
-          aria-current={view === v.value ? "page" : undefined}
-          className={cn(
-            "rounded-control text-casa-base transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-            view === v.value ? "text-casa-fg" : "text-casa-fg-2 hover:text-casa-fg",
-          )}
-        >
-          {v.label}
-        </button>
-      ))}
-    </nav>
-  );
-}
 
 /**
  * `?solo=1` corta a casca inteira: cabeçalho, abas, grade, tudo.
@@ -471,6 +437,16 @@ function Raiz() {
   if (ehSolo) {
     const nome = decodeURIComponent(window.location.pathname.split("/").filter(Boolean)[1] ?? "");
     const fundo = fundoDoSolo(params);
+    if (params.get("caixa") === "1") {
+      // A captura no enquadramento do palco: sem fundo nenhum, nem o da casa.
+      document.documentElement.style.background = "transparent";
+      document.body.style.background = "transparent";
+      return (
+        <div className="palco" style={{ background: "transparent" }}>
+          <Solo name={nome} props={propsDaQuery(params)} caixa />
+        </div>
+      );
+    }
     return (
       <div
         className={fundo ? "text-foreground" : "bg-background text-foreground"}

@@ -68,12 +68,11 @@ function escrever(caminhoRelativo, html) {
 
 // --- páginas -----------------------------------------------------------------
 
-/* A home é a primeira sala de kit desde que os kits viraram a porta de entrada.
-   A descrição acompanha: quem chega não compra componente solto, compra a
-   composição montada. */
+/* A home é o catálogo. Os kits foram a porta de entrada por um tempo, e saíram
+   dela até serem redesenhados — ainda não se explicavam sozinhos. */
 const HOME = {
   titulo: "@visant/ui — a library da Visant",
-  descricao: `Cinco kits montados — mesa de trabalho, landing, motion, bancada vintage e marca viva — sobre ${registry.items.length} componentes React em registry shadcn, com tema de marca compilado.`,
+  descricao: `${registry.items.length} componentes React em registry shadcn. Cada um veste a marca que você escolher.`,
 };
 
 writeFileSync(
@@ -82,6 +81,11 @@ writeFileSync(
 );
 
 const SECOES = [
+  {
+    slug: "kits",
+    titulo: "Kits — @visant/ui",
+    descricao: "Cinco composições montadas com as peças do registry: mesa de trabalho, landing, motion, bancada vintage e marca viva.",
+  },
   {
     slug: "catalogo",
     titulo: "Catálogo — @visant/ui",

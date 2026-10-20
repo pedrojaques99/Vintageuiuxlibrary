@@ -226,3 +226,28 @@ reintroduzir rótulo gritado sem uma exceção escrita.
    Também dá pra ir pro popover do seletor de marca, já que o login só serve pra puxar marca.
 3. **Bug report nos cards** (memória: botão grava em `bugs/REPORTS.md`). Com o tile só demo,
    ele vai pro painel de foco, como ícone ao lado do ✕. Ok?
+
+---
+
+## 8. Decisões tomadas na execução (2026-10-19)
+
+- **Geist**, "Entrar" curto, bug report no painel de foco e no canto do tile (só em dev).
+- **O catálogo é a home** (`/`). Kits e Marca **saíram do menu**: as rotas seguem no ar
+  (`/kits`, `/kit/<sala>`, `/marca`) até ganharem um audit próprio. Sem menu de seções.
+- **A peça acorda antes de aparecer, não no hover.** No acervo, a peça viva monta a uma
+  tela de distância do viewport e desmonta além disso. A foto é só a espera do primeiro
+  carregamento e sai por crossfade quando a peça pintou. O hover só revela o nome.
+- **A foto tem a geometria do palco:** capturada com `?solo=1&caixa=1` (caixa `w×h`,
+  viewport de desktop, sem fundo). Grade e captura usam o mesmo `CAIXA_DO_PALCO`
+  (coluna flex centrada, recorta o que vaza).
+- **Só peça com thumb na grade.** Hook, lib, tema e base vão para "Hooks, temas e
+  utilitários", em lista abaixo da grade. Lista e busca mostram miniatura.
+- **Portões novos:** `npm run check:casa` (casca) e `npm run check:palco` (toda peça
+  centrada no ladrilho; `--fix` corrige o `h` de quem transborda).
+
+## 9. Próximos audits (fora deste redesign)
+
+- **Kits:** a sala ainda não se explica; precisa de tese, ordem e porta própria.
+- **Marca:** o estúdio mistura espécime, tokens e instalação; precisa decidir o que é.
+- **Demos com selo mono/caixa-alta interno** (`kits/sala.tsx`, captions das demos): são
+  palco, mas carregam o vocabulário antigo.
