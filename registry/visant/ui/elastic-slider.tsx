@@ -7,6 +7,7 @@
 import * as React from "react";
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 
+import { playSfx } from "@/lib/sfx-bus";
 import { cn } from "@/lib/utils";
 
 /**
@@ -46,6 +47,8 @@ const MOLA_POLEGAR = { type: "spring" as const, stiffness: 520, damping: 40 };
 const MOLA_VOLTA = { type: "spring" as const, stiffness: 260, damping: 13, restDelta: 0.05 };
 /** Velocidade (px/s) com que uma tecla contra o limite bate no trilho. */
 const TRANCO = 260;
+/** Dentes do anel de foco no curso inteiro: um `focus` a cada dente cruzado no arrasto. */
+const DENTES = 40;
 
 const limitar = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 const casas = (v: number) => (String(v).split(".")[1] ?? "").length;
@@ -81,7 +84,14 @@ export interface ElasticSliderProps {
   className?: string;
 }
 
-type Arrasto = { ponteiro: number; pega: number; amostras: { t: number; p: number }[]; borda: number };
+type Arrasto = {
+  ponteiro: number;
+  pega: number;
+  amostras: { t: number; p: number }[];
+  borda: number;
+  /** Último dente do anel cruzado, pra soar só quando muda. */
+  dente: number;
+};
 
 export function ElasticSlider({
   label,
@@ -170,6 +180,12 @@ export function ElasticSlider({
     alem.set(reduzido ? 0 : borracha(((cru - borda) / 100) * largura.current, stretch));
     pos.set(borda);
     estado.borda = borda;
+    // Som de anel de foco girando: um dente a cada 1/40 do curso, só no arrasto.
+    const dente = Math.round((borda / 100) * DENTES);
+    if (dente !== estado.dente) {
+      estado.dente = dente;
+      playSfx("focus");
+    }
     estado.amostras.push({ t: tempo, p: borda });
     if (estado.amostras.length > 6) estado.amostras.shift();
     emitir(ajustar(valorEm(borda)));
@@ -184,7 +200,7 @@ export function ElasticSlider({
     // Pegou o polegar: ele fica onde está sob o dedo. Apertou o trilho: o polegar vem até o dedo.
     const pegouPolegar = !!(e.target as HTMLElement).closest("[data-polegar]");
     e.currentTarget.setPointerCapture(e.pointerId);
-    const estado: Arrasto = { ponteiro: e.pointerId, pega: pegouPolegar ? em - pos.get() : 0, amostras: [], borda: pos.get() };
+    const estado: Arrasto = { ponteiro: e.pointerId, pega: pegouPolegar ? em - pos.get() : 0, amostras: [], borda: pos.get(), dente: Math.round((pos.get() / 100) * DENTES) };
     arrasto.current = estado;
     setArrastando(true);
     polegarRef.current?.focus({ preventScroll: true });

@@ -26,9 +26,25 @@ interface SegmentedControlProps<T extends string> {
    * que abreviar o rótulo, porque a abreviação some da leitura e o tamanho não.
    */
   size?: "sm" | "md";
+  /**
+   * Como o polegar vai de uma opção pra outra.
+   *
+   * - `slide` (padrão): desliza reto, sem passar do ponto. O da casa.
+   * - `spring`: desliza e passa um tico do alvo antes de assentar, como mola.
+   * - `stretch`: a borda da frente sai primeiro e a de trás vem depois; o
+   *   polegar estica na direção do clique e encolhe ao chegar, como gota.
+   * - `fade`: o polegar não viaja; some de um lado e acende no outro, com um
+   *   leve crescer. Pra quando a ordem das opções não diz nada.
+   */
+  animation?: "slide" | "spring" | "stretch" | "fade";
   className?: string;
   "aria-label"?: string;
 }
+
+/** Overshoot curto da mola em CSS: passa ~6% e volta, dentro de 280 ms. */
+const MOLA_CSS = "cubic-bezier(0.34,1.4,0.64,1)";
+/** No `stretch`, quanto a borda de trás espera a da frente sair, em ms. */
+const ATRASO_ESTICA = 70;
 
 /**
  * Apple-like segmented control (trilho + pill ativo). Fonte única reusada pelo
@@ -71,6 +87,7 @@ export function SegmentedControl<T extends string>({
   options,
   variant = "fill",
   size = "md",
+  animation = "slide",
   className,
   "aria-label": ariaLabel,
 }: SegmentedControlProps<T>) {
@@ -80,6 +97,15 @@ export function SegmentedControl<T extends string>({
     options.findIndex((o) => o.value === value),
   );
   const n = options.length || 1;
+
+  // Direção do último passo, pro `stretch` saber qual borda sai primeiro. A
+  // ref só anda depois do commit: re-render sem troca dá direção 0, e mudar o
+  // atraso com a transição já rodando não a reinicia.
+  const anterior = React.useRef(activeIndex);
+  const direcao = Math.sign(activeIndex - anterior.current);
+  React.useEffect(() => {
+    anterior.current = activeIndex;
+  }, [activeIndex]);
 
   /*
    * O foco vai num efeito, não dentro do handler.
@@ -143,17 +169,43 @@ export function SegmentedControl<T extends string>({
     >
       {/* O polegar. `inset` de 4px = o `p-1` do trilho; a largura é uma fração
           exata das colunas, então nada precisa ser medido em runtime. */}
-      <span
-        aria-hidden="true"
-        className={cn(
-          "pointer-events-none absolute inset-y-1 left-1 -z-10 rounded-lg bg-background shadow-sm",
-          "transition-transform [transition-duration:var(--dur-base,200ms)] [transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
-        )}
-        style={{
-          width: `calc((100% - 0.5rem) / ${n})`,
-          transform: `translateX(${activeIndex * 100}%)`,
-        }}
-      />
+      {animation === "stretch" ? (
+        // As duas bordas andam separadas (`left` e `right`), e a da frente
+        // não espera: é isso que estica. 200 ms + 70 de atraso cabem no teto
+        // de 300 ms de resposta a gesto.
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-1 -z-10 rounded-lg bg-background shadow-sm"
+          style={{
+            left: `calc(0.25rem + (100% - 0.5rem) * ${activeIndex} / ${n})`,
+            right: `calc(0.25rem + (100% - 0.5rem) * ${n - 1 - activeIndex} / ${n})`,
+            transitionProperty: "left, right",
+            transitionDuration: "var(--dur-base,200ms)",
+            transitionTimingFunction: "var(--ease-out,cubic-bezier(0.23,1,0.32,1))",
+            transitionDelay:
+              direcao > 0
+                ? `${ATRASO_ESTICA}ms, 0ms`
+                : direcao < 0
+                  ? `0ms, ${ATRASO_ESTICA}ms`
+                  : "0ms",
+          }}
+        />
+      ) : animation !== "fade" ? (
+        <span
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute inset-y-1 left-1 -z-10 rounded-lg bg-background shadow-sm",
+            animation === "spring"
+              ? "transition-transform [transition-duration:280ms]"
+              : "transition-transform [transition-duration:var(--dur-base,200ms)] [transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+          )}
+          style={{
+            width: `calc((100% - 0.5rem) / ${n})`,
+            transform: `translateX(${activeIndex * 100}%)`,
+            transitionTimingFunction: animation === "spring" ? MOLA_CSS : undefined,
+          }}
+        />
+      ) : null}
       {options.map((opt, i) => {
         const Icon = opt.icon;
         const active = value === opt.value;
@@ -192,6 +244,18 @@ export function SegmentedControl<T extends string>({
                 "before:absolute before:inset-y-1.5 before:left-0 before:w-px before:bg-border before:content-['']",
             )}
           >
+            {animation === "fade" && (
+              // No `fade` cada opção tem o próprio polegar: apaga num lado e
+              // acende no outro, crescendo de 96% a 100%.
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "pointer-events-none absolute inset-0 -z-10 rounded-lg bg-background shadow-sm",
+                  "transition-[opacity,transform] [transition-duration:var(--dur-base,200ms)] [transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+                  active ? "scale-100 opacity-100" : "scale-[0.96] opacity-0",
+                )}
+              />
+            )}
             {Icon && <Icon className="h-3.5 w-3.5" />}
             {opt.label && <span className="whitespace-nowrap">{opt.label}</span>}
           </button>

@@ -232,9 +232,11 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
     <div
       data-scrubbing={scrubbing || undefined}
       className={cn(
-        "group relative isolate overflow-hidden rounded-[var(--r-control)] border border-border bg-card px-2 py-1.5",
+        // Respiro: 12 px de lado e 8 de cima e baixo. Com menos, o rótulo
+        // encostava na borda e a coluna de parâmetros lia como planilha.
+        "group relative isolate overflow-hidden rounded-[var(--r-control)] border border-border bg-card px-3 py-2",
         "transition-colors [transition-duration:var(--dur-fast)] ease-[var(--ease-out)]",
-        "hover:border-ring/40 focus-within:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "hover:border-ring/40 focus-within:border-ring focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]",
         // Repouso · hover · foco · arrastando · desabilitado, os cinco
         // distinguíveis: enquanto arrasta a borda vira a cor da marca, que é o
         // único estado que o cursor sozinho não conta (o ponteiro já saiu do
@@ -242,8 +244,8 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
         "data-[scrubbing]:border-[var(--brand)]",
         disabled && "pointer-events-none opacity-50",
         layout === "row"
-          ? "flex items-center justify-between gap-2"
-          : "flex flex-col gap-1",
+          ? "flex items-center justify-between gap-3"
+          : "flex flex-col gap-1.5",
         className,
       )}
       onWheel={disabled ? undefined : onWheel}
@@ -299,10 +301,14 @@ export const ScrubInput = React.memo<ScrubInputProps>(function ScrubInput({
        * A régua. Fio no pé do campo, só `transform` (nada de largura animada) e
        * SEM transição: o valor está sendo produzido pela mão da pessoa, então
        * ele segue o dedo. Transição aqui seria latência com boa aparência.
+       *
+       * Só aparece quando precisa: no hover, no foco e no arrasto. Em repouso,
+       * doze fios coloridos numa coluna eram doze riscos disputando o olho com
+       * os números.
        */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-[var(--brand)] opacity-40 transition-opacity [transition-duration:var(--dur-fast)] ease-[var(--ease-out)] group-hover:opacity-100 group-focus-within:opacity-100 group-data-[scrubbing]:opacity-100"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left bg-[var(--brand)] opacity-0 transition-opacity [transition-duration:var(--dur-fast)] ease-[var(--ease-out)] group-hover:opacity-100 group-focus-within:opacity-100 group-data-[scrubbing]:opacity-100"
         style={{ transform: `scaleX(${ratio})` }}
       />
     </div>

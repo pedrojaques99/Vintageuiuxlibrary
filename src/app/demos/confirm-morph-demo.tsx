@@ -1,9 +1,11 @@
 "use client";
 
 /**
- * A pílula no rodapé de uma seleção, que é onde "apagar" mora num app de
- * trabalho. O `onConfirm` devolve uma promessa de quase um segundo pra o
- * "apagando" aparecer, e o `onUndo` existe pra o resultado mostrar o Desfazer.
+ * Só a pílula, no meio do palco: o morph é a peça, e texto em volta só
+ * disputava com ele. Rótulos curtos em cada rosto (Apagar, Tem certeza?,
+ * Apagado) pra largura andar sem a frase virar o assunto. O `onConfirm`
+ * devolve uma promessa curta pra o "Apagando" aparecer, e o `onUndo` dá o
+ * Desfazer no resultado.
  */
 
 import * as React from "react";
@@ -15,29 +17,20 @@ import type { DemoProps } from "../catalog";
 const espera = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export default function ConfirmMorphDemo({ props }: DemoProps) {
-  const [apagados, setApagados] = React.useState(false);
-
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="flex w-[460px] max-w-full items-center justify-between gap-4 rounded-[var(--r-surface)] border border-border bg-card py-3 pl-5 pr-3 text-foreground">
-        <p className="min-w-0 truncate text-sm text-muted-foreground">
-          {apagados ? "Nenhum arquivo selecionado" : "3 arquivos selecionados"}
-        </p>
-        <ConfirmMorph
-          label="Apagar"
-          icon={<Trash2 strokeWidth={1.75} />}
-          prompt="Apagar 3 arquivos?"
-          {...props}
-          onConfirm={async () => {
-            await espera(900);
-            setApagados(true);
-          }}
-          onUndo={async () => {
-            await espera(600);
-            setApagados(false);
-          }}
-        />
-      </div>
+    <div className="flex h-full w-full items-center justify-center p-6">
+      <ConfirmMorph
+        label="Apagar"
+        icon={<Trash2 strokeWidth={1.75} />}
+        prompt="Tem certeza?"
+        cancelLabel="Não"
+        confirmLabel="Apagar"
+        pendingLabel="Apagando"
+        doneLabel="Apagado"
+        {...props}
+        onConfirm={() => espera(700)}
+        onUndo={() => espera(500)}
+      />
     </div>
   );
 }

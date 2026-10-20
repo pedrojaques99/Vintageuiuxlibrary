@@ -5,6 +5,13 @@
       "descricao": null,
       "props": [
         {
+          "nome": "detent",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.5",
+          "descricao": "Detente, na escala normalizada (0…1). O arraste \"cai\" nele e precisa de um\nempurrão a mais pra sair, como o clique do meio de um pot de EQ. `null`\ndesliga. Teclado e roda passam reto: são passos exatos, não mão."
+        },
+        {
           "nome": "log",
           "tipo": "boolean",
           "obrigatoria": false,
@@ -52,7 +59,7 @@
   "vintage-button": [
     {
       "nome": "VintageButton",
-      "descricao": null,
+      "descricao": "Botão de painel: capa de baquelite num poço do painel, lâmpada-piloto em cima.\n\nAntes a capa inteira virava laranja quando ativa — um disco de cor chapada\nque não existe em equipamento nenhum e brigava com o resto do kit, onde o\naceso é sempre uma lâmpada pequena. Aqui o estado mora onde mora num rack:\nno LED acima da capa, e na capa que fica travada um pouco mais funda.\n\nTrês alturas, uma luz só (de cima): solta, travada (ativa) e apertada.",
       "props": [
         {
           "nome": "label",
@@ -116,7 +123,7 @@
           "tipo": "boolean",
           "obrigatoria": false,
           "padrao": "false",
-          "descricao": "Aperta a caixa de ~124px para ~75px, sem tirar nada: rótulo, trilho e faixa\nmin/valor/max continuam lá.\n\nExiste porque o rig nasceu para uma bancada larga, com poucos controles\ngrandes. Num painel de parâmetros — dez ou quinze sliders empilhados numa\ncoluna de 300px — a folga do rig vira rolagem, e o operador perde de vista\nmetade dos controles que precisa comparar entre si.\n\nA LARGURA não é assunto desta prop: `cn` roda tailwind-merge, então\n`className=\"w-full\"` já ganha do w-[220px] padrão."
+          "descricao": "Aperta a caixa pra ~56px: rótulo, leitura e trilho continuam, só a régua\nmin/max de baixo sai (os limites não mudam de um fader pro vizinho).\n\nExiste porque o rig nasceu para uma bancada larga, com poucos controles\ngrandes. Num painel de parâmetros — dez ou quinze sliders empilhados numa\ncoluna de 300px — a folga do rig vira rolagem, e o operador perde de vista\nmetade dos controles que precisa comparar entre si.\n\nA LARGURA não é assunto desta prop: `cn` roda tailwind-merge, então\n`className=\"w-full\"` já ganha do w-[220px] padrão."
         },
         {
           "nome": "fmt",
@@ -837,6 +844,25 @@
           "obrigatoria": false,
           "padrao": "96",
           "descricao": null
+        },
+        {
+          "nome": "voice",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Que som o pad faz. Sem ela, a voz sai do rótulo (\"KICK\" toca bumbo); rótulo\nque não nomeia voz nenhuma toca o `drop` da casa.",
+          "valores": [
+            "kick",
+            "snare",
+            "hat",
+            "clap",
+            "tom",
+            "ride",
+            "bass",
+            "synth",
+            "fx",
+            "vox"
+          ]
         }
       ]
     }
@@ -857,7 +883,7 @@
           "nome": "color",
           "tipo": "string",
           "obrigatoria": false,
-          "padrao": "var(--vintage-accent)",
+          "padrao": "var(--vintage-value)",
           "descricao": null
         },
         {
@@ -2233,6 +2259,19 @@
           "descricao": null
         },
         {
+          "nome": "animation",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "slide",
+          "descricao": "Como o polegar vai de uma opção pra outra.\n\n- `slide` (padrão): desliza reto, sem passar do ponto. O da casa.\n- `spring`: desliza e passa um tico do alvo antes de assentar, como mola.\n- `stretch`: a borda da frente sai primeiro e a de trás vem depois; o\n  polegar estica na direção do clique e encolhe ao chegar, como gota.\n- `fade`: o polegar não viaja; some de um lado e acende no outro, com um\n  leve crescer. Pra quando a ordem das opções não diz nada.",
+          "valores": [
+            "slide",
+            "spring",
+            "stretch",
+            "fade"
+          ]
+        },
+        {
           "nome": "aria-label",
           "tipo": "string",
           "obrigatoria": false,
@@ -2717,7 +2756,7 @@
   "status-ticker": [
     {
       "nome": "StatusTicker",
-      "descricao": "Linha de status para espera longa: ruído + verbo que gira + cronômetro.\n\nO problema que resolve não é técnico, é de percepção. Numa geração de 20–60s\numa barra de progresso mente (não existe progresso real para medir) e um\nspinner some da consciência em 5s. Uma palavra que TROCA — \"Criando\",\n\"Refinando\", \"Lapidando\" — mantém a leitura de que há trabalho acontecendo, e\no cronômetro dá ao usuário o direito de decidir se vale esperar.\n\nOs verbos entram por prop de propósito: são a voz da marca, não do componente.\n\nA troca é revelada caractere a caractere (7 passos de 50ms) em vez de cortar\nseco — o corte seco lê como bug de render, a revelação lê como escrita.\n\n`prefers-reduced-motion`: sem ruído, sem revelação; a palavra troca direto e o\ncronômetro continua (informação, não animação).",
+      "descricao": null,
       "props": [
         {
           "nome": "className",
@@ -2725,6 +2764,13 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": null
+        },
+        {
+          "nome": "loop",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Volta ao primeiro passo depois do último. `false` segura no último, que é\no honesto quando a lista descreve um processo de verdade (`etapas`)."
         },
         {
           "nome": "rotateEverySec",
@@ -2746,6 +2792,19 @@
           "obrigatoria": false,
           "padrao": "[\"Criando\", \"Desenhando\", \"Refinando\", \"Compondo\", \"Lapidando\"]",
           "descricao": "Verbos rotativos. A voz da marca entra aqui."
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "linha",
+          "descricao": "Como a espera aparece. Ver a tabela acima.",
+          "valores": [
+            "linha",
+            "barra",
+            "etapas",
+            "pulso"
+          ]
         }
       ]
     }
@@ -2789,7 +2848,7 @@
   "working-glyph": [
     {
       "nome": "WorkingGlyph",
-      "descricao": "Um ícone que \"bate\" com faíscas — trabalho manual acontecendo, não espera.\n\nA diferença para um spinner é de narrativa: spinner é o sistema pedindo\npaciência, isto é o sistema mostrando esforço. Em geração de imagem (20–60s)\nessa leitura é o que segura o usuário na tela.\n\nO ícone entra por prop — a picareta é só o default da casa. Troque por\n`Hammer`, `Wand`, `Cog` conforme a metáfora do produto; a mecânica (balanço +\nbrilho + faísca) é o que se colhe aqui.\n\nBalanço em 0.9s com `transform-origin` em 60%/80%: o pivô fica onde a mão\nseguraria o cabo. Centralizar o pivô mata o gesto na hora.\n\n`prefers-reduced-motion`: ícone parado, faísca congelada (regra no bloco `css`\ndo item — se o glifo não parar, o CSS do registry não foi instalado).",
+      "descricao": null,
       "props": [
         {
           "nome": "className",
@@ -2810,7 +2869,14 @@
           "tipo": "any",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": "Glifo animado. Default: picareta (lucide)."
+          "descricao": "Troca o glifo e mantém o gesto da variante."
+        },
+        {
+          "nome": "shine",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Faixa de luz passando pelo traço do ícone."
         },
         {
           "nome": "size",
@@ -2818,6 +2884,20 @@
           "obrigatoria": false,
           "padrao": "20",
           "descricao": null
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "picareta",
+          "descricao": "O ofício: ícone + gesto. Ver a tabela acima.",
+          "valores": [
+            "picareta",
+            "martelo",
+            "engrenagem",
+            "pincel",
+            "faisca"
+          ]
         }
       ]
     }
@@ -2825,7 +2905,7 @@
   "paper-shuttle": [
     {
       "nome": "PaperShuttle",
-      "descricao": "Papéis voando de uma pasta para outra — o loader de transferência.\n\nExiste para uma classe específica de espera: quando o sistema está MOVENDO\nalgo (importar, extrair, converter, sincronizar). Um spinner nesse caso não\nconta nada; a metáfora da pasta conta a operação inteira sem uma palavra, e o\nusuário entende que fechar a aba interrompe algo.\n\nTrês papéis com delay escalonado (0 / .35 / .7 de um loop de 1.2s) dão fluxo\ncontínuo com uma única animação declarada. Mais que três vira confete.\n\nA parábola (`y` sobe e volta) importa: linha reta lê como barra de progresso\ndisfarçada; o arco lê como objeto atravessando espaço.\n\nSem cor própria — a pasta usa `currentColor` (default: `--brand`) e o papel os\ntokens de superfície, então o loader troca de marca junto com o tema.\n\n`prefers-reduced-motion`: papéis parados no meio do trajeto, texto e barra\n(que são informação real) intactos.",
+      "descricao": "Papéis voando de uma pasta para outra — o loader de transferência.\n\nExiste para uma classe específica de espera: quando o sistema está MOVENDO\nalgo (importar, extrair, converter, sincronizar). Um spinner nesse caso não\nconta nada; a metáfora da pasta conta a operação inteira sem uma palavra, e o\nusuário entende que fechar a aba interrompe algo.\n\nTrês papéis com delay escalonado (0 / .35 / .7 de um loop de 1.2s) dão fluxo\ncontínuo com uma única animação declarada. Mais que três vira confete.\n\nA parábola (`y` sobe e volta) importa: linha reta lê como barra de progresso\ndisfarçada; o arco lê como objeto atravessando espaço.\n\nSem cor própria: a pasta usa `currentColor` (default: `--muted-foreground`,\nneutra; passe `className=\"text-...\"` pra tingir) e o papel os\ntokens de superfície, então o loader troca de marca junto com o tema.\n\n`prefers-reduced-motion`: papéis parados no meio do trajeto, texto e barra\n(que são informação real) intactos.",
       "props": [
         {
           "nome": "className",
@@ -2839,7 +2919,7 @@
           "tipo": "string",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": "Texto sob a animação. Default: a porcentagem, ou \"Processando…\"."
+          "descricao": "Texto sob a animação. Default: \"Transferindo\" (com a porcentagem ao lado) ou \"Processando…\"."
         },
         {
           "nome": "progress",
@@ -3011,14 +3091,24 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": "Colunas fixas. Omita para responsivo."
+          "descricao": "Colunas fixas. Omita para responsivo.",
+          "faixa": {
+            "min": 1,
+            "max": 8,
+            "step": 1
+          }
         },
         {
           "nome": "gap",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "12",
-          "descricao": "Espaço entre itens e colunas, em px."
+          "descricao": "Espaço entre itens e colunas, em px.",
+          "faixa": {
+            "min": 0,
+            "max": 40,
+            "step": 2
+          }
         }
       ]
     }
@@ -3899,19 +3989,36 @@
   ],
   "sfx-bus": [
     {
+      "nome": "playSfx",
+      "descricao": "Toca um timbre. É a porta pra gesto contínuo: o knob chama\n`playSfx(\"detent\")` cada vez que cruza um passo, e o portão de 30 ms segura\no giro rápido sem perder o ritmo dos dentes.",
+      "props": []
+    },
+    {
+      "nome": "renderSfx",
+      "descricao": "Renderiza um timbre fora do ar, num `OfflineAudioContext`. Serve pra teste e\npra medir nível; nunca toca nada e não precisa de gesto.",
+      "props": []
+    },
+    {
       "nome": "useSfxWiring",
       "descricao": "Liga o bus ao documento. Um por app, no topo.\n\nA fiação é por **delegação no documento** e não por prop em cada botão, e é\nessa a decisão que faz o item valer: um `<SfxProvider/>` na raiz sonoriza\nbotão que ainda nem foi escrito, inclusive de biblioteca de terceiro.",
       "props": []
     },
     {
       "nome": "useSfxEnabled",
-      "descricao": "Estado reativo do bus, pra desenhar o toggle. `null` até hidratar — a\npreferência mora no `localStorage`, que o servidor não enxerga, e chutar no\nHTML é um estado errado piscando na tela até a hidratação corrigir.",
+      "descricao": "Estado reativo do bus, pra desenhar o toggle. `null` até hidratar: a\npreferência mora no `localStorage`, que o servidor não enxerga, e chutar no\nHTML é um estado errado piscando na tela até a hidratação corrigir.",
       "props": []
     },
     {
       "nome": "SfxProvider",
       "descricao": null,
       "props": [
+        {
+          "nome": "hover",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Som de hover. Desligue onde passar o ponteiro não é agir."
+        },
         {
           "nome": "selector",
           "tipo": "string",
@@ -4286,6 +4393,13 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": null
+        },
+        {
+          "nome": "framed",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Caixa com borda e fundo de card, arte sangrando no topo. `false` tira a\ncaixa: o vazio pousa direto na superfície que o recebeu (painel, coluna,\nlista), com a arte como um selo pequeno em cima do texto. É o modo certo\nquando o vazio mora DENTRO de um card, pra não virar caixa dentro de caixa."
         }
       ]
     },
@@ -4355,6 +4469,19 @@
           "descricao": "O que o leitor de tela ouve enquanto a lista não chegou. `false` cala a\npeça — pra quando quem anuncia é o container que embrulha vários.\n\n`role=\"status\"` no lugar de um `aria-hidden` seco: escondido de todo mundo,\no esqueleto deixava quem usa leitor de tela sem NENHUM sinal entre o clique\ne a lista chegar — só silêncio, que se lê como travou. Os blocos visuais\nseguem escondidos, porque eles são forma, não conteúdo."
         },
         {
+          "nome": "motion",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo.",
+          "valores": [
+            "pulse",
+            "shimmer",
+            "wave",
+            "none"
+          ]
+        },
+        {
           "nome": "ratio",
           "tipo": "string",
           "obrigatoria": false,
@@ -4387,6 +4514,19 @@
           "obrigatoria": false,
           "padrao": "2",
           "descricao": "Quantas linhas de texto abaixo da mídia."
+        },
+        {
+          "nome": "motion",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo.",
+          "valores": [
+            "pulse",
+            "shimmer",
+            "wave",
+            "none"
+          ]
         },
         {
           "nome": "ratio",
@@ -4435,6 +4575,19 @@
           "obrigatoria": false,
           "padrao": "3",
           "descricao": null
+        },
+        {
+          "nome": "motion",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo.",
+          "valores": [
+            "pulse",
+            "shimmer",
+            "wave",
+            "none"
+          ]
         }
       ]
     },
@@ -4462,6 +4615,19 @@
           "obrigatoria": false,
           "padrao": "true",
           "descricao": "A coluna miúda da direita: valor, data, contagem."
+        },
+        {
+          "nome": "motion",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo.",
+          "valores": [
+            "pulse",
+            "shimmer",
+            "wave",
+            "none"
+          ]
         },
         {
           "nome": "rowHeight",
@@ -4503,6 +4669,19 @@
           "obrigatoria": false,
           "padrao": "Carregando a mídia",
           "descricao": null
+        },
+        {
+          "nome": "motion",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo.",
+          "valores": [
+            "pulse",
+            "shimmer",
+            "wave",
+            "none"
+          ]
         },
         {
           "nome": "radius",
@@ -4862,6 +5041,13 @@
           "descricao": "Rodapé do painel: idioma, telefone, redes. Fica colado embaixo."
         },
         {
+          "nome": "media",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A imagem da metade esquerda no `variant=\"full\"`. Slot pelo mesmo motivo do\n`brand`: cada projeto tem o seu componente de imagem otimizada. Some abaixo\nde `md`, onde não há largura pra dividir a tela. Ignorado no `panel`."
+        },
+        {
           "nome": "showTitle",
           "tipo": "boolean",
           "obrigatoria": false,
@@ -4878,6 +5064,17 @@
             "right",
             "left",
             "top"
+          ]
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "panel",
+          "descricao": "O desenho do painel.\n\n· `panel` (padrão): a gaveta de 26rem que entra pela borda, com cantos do tema.\n· `full`: página inteira e brutalista. Sem raio, régua de 1px entre os\n  links, tipo enorme em caixa alta, e o hover inverte a linha inteira. Com\n  `media`, a tela divide: imagem à esquerda, menu à direita.",
+          "valores": [
+            "panel",
+            "full"
           ]
         }
       ]
@@ -9899,6 +10096,13 @@
           "descricao": "Ações sob a borda esquerda (arrasta pra direita). A primeira executa no arrasto longo."
         },
         {
+          "nome": "peek",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Ao montar, a linha dá uma espiada curta pro lado das ações e volta: ensina\no gesto sem texto. Use numa linha só (a primeira), nunca na lista toda."
+        },
+        {
           "nome": "trailing",
           "tipo": "SwipeAction[]",
           "obrigatoria": false,
@@ -10985,6 +11189,13 @@
           "obrigatoria": false,
           "padrao": "22",
           "descricao": "Quanto o canto levanta com o ponteiro perto, em px."
+        },
+        {
+          "nome": "width",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Largura da folha em px. A altura segue 3:4. Sem valor, 240px."
         }
       ]
     }
@@ -11009,6 +11220,13 @@
           "descricao": "Pontos no anel."
         },
         {
+          "nome": "handle",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Alça no topo do painel, o sinal de \"isto puxa\". Default `true`."
+        },
+        {
           "nome": "label",
           "tipo": "string",
           "obrigatoria": false,
@@ -11016,11 +11234,25 @@
           "descricao": "Nome do painel pra leitor de tela."
         },
         {
+          "nome": "labels",
+          "tipo": "false | { pull?: string; release?: string; refreshing?: string; }",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "As frases ao lado do anel. `false` some com elas e deixa só o anel."
+        },
+        {
           "nome": "max",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "120",
           "descricao": "Teto do esticão, em px."
+        },
+        {
+          "nome": "nudge",
+          "tipo": "number | boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Puxadinha sozinha a cada `nudge` ms (`true` = 4000) enquanto ninguém mexeu\nno painel. Para no primeiro toque, tecla ou foco. Desligada sob movimento\nreduzido."
         },
         {
           "nome": "onRefresh",
@@ -11214,6 +11446,17 @@
           "obrigatoria": false,
           "padrao": "false",
           "descricao": null
+        },
+        {
+          "nome": "doneTone",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "success",
+          "descricao": "Cor do trilho depois de confirmado. `success` (padrão) pinta polegar e\nrastro de aprovação, lido do token `--success` com verde de reserva;\n`tone` mantém a cor de antes.",
+          "valores": [
+            "success",
+            "tone"
+          ]
         },
         {
           "nome": "label",
@@ -11609,6 +11852,310 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": "O que aparece embaixo do cartão aberto. Sem isto, o cartão não abre."
+        }
+      ]
+    }
+  ],
+  "shader-ascii": [
+    {
+      "nome": "ShaderAscii",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a redesenhar. Fundo branco ou transparente vira célula vazia."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem em caracteres",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "cell",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "12",
+          "descricao": "6–24. Tamanho da célula de cada caractere, em px."
+        },
+        {
+          "nome": "charset",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "classic",
+          "descricao": "Jogo de caracteres.",
+          "valores": [
+            "blocks",
+            "dots",
+            "lines",
+            "classic",
+            "binary",
+            "braille"
+          ]
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas: fundo, tinta e destaque. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "contrast",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "55",
+          "descricao": "0–100. Contraste antes de escolher o glifo."
+        }
+      ]
+    }
+  ],
+  "shader-halftone": [
+    {
+      "nome": "ShaderHalftone",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a reticular. Fundo branco ou transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem em retícula",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "angle",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "45",
+          "descricao": "0–90. Ângulo da retícula, em graus."
+        },
+        {
+          "nome": "cell",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "9",
+          "descricao": "4–32. Tamanho da célula da retícula, em px."
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas: papel e tinta. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "contrast",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "55",
+          "descricao": "0–100. Contraste antes de reticular."
+        },
+        {
+          "nome": "lens",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Lupa que amplia a imagem debaixo do cursor."
+        },
+        {
+          "nome": "shape",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "dots",
+          "descricao": "Forma do ponto da retícula.",
+          "valores": [
+            "dots",
+            "squares",
+            "lines"
+          ]
+        }
+      ]
+    }
+  ],
+  "shader-neon": [
+    {
+      "nome": "ShaderNeon",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "amplitude",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "0–100. Altura da onda."
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas da rampa: fundo, linha e núcleo. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "glow",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "0–100. Brilho de cada fio."
+        },
+        {
+          "nome": "lines",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5",
+          "descricao": "1–8. Quantos fios de luz."
+        },
+        {
+          "nome": "speed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "40",
+          "descricao": "0–100. Velocidade da onda."
+        }
+      ]
+    }
+  ],
+  "shader-riso": [
+    {
+      "nome": "ShaderRiso",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a imprimir. Fundo branco ou transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem em risografia",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "cell",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "4",
+          "descricao": "2–16. Tamanho da célula de tinta, em px."
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas: papel, primeira tinta e segunda tinta. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "misregistration",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "35",
+          "descricao": "0–100. Quanto as duas tintas saem do registro."
+        },
+        {
+          "nome": "mode",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "grain",
+          "descricao": "Como a tinta assenta: grão de riso, ponto de retícula ou Bayer.",
+          "valores": [
+            "grain",
+            "halftone",
+            "bayer"
+          ]
+        },
+        {
+          "nome": "paper",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "40",
+          "descricao": "0–100. Textura do papel."
+        }
+      ]
+    }
+  ],
+  "shader-tunnel": [
+    {
+      "nome": "ShaderTunnel",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas da rampa: fundo, meio e núcleo. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "density",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "40",
+          "descricao": "0–100. Densidade dos anéis."
+        },
+        {
+          "nome": "speed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "40",
+          "descricao": "0–100. Velocidade de cruzeiro do túnel."
+        },
+        {
+          "nome": "twist",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "0–100. Quanto os anéis torcem em espiral."
+        }
+      ]
+    }
+  ],
+  "shader-voronoi": [
+    {
+      "nome": "ShaderVoronoi",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas: fundo, célula e núcleo. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "core",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "40",
+          "descricao": "0–100. Tamanho do núcleo aceso de cada célula."
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "0–100. Tamanho das células: maior é menos célula na tela."
+        },
+        {
+          "nome": "speed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "35",
+          "descricao": "0–100. Velocidade da deriva."
         }
       ]
     }

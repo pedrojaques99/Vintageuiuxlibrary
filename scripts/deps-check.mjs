@@ -15,7 +15,9 @@
  *   - `./types`, `./inline-edit`         → outro arquivo do próprio item, ou
  *                                          um item nosso em `registryDependencies`
  *
- * `--fix` escreve as dependências npm que faltam direto no `registry.json`.
+ * `--fix` escreve as dependências npm que faltam direto no `registry.json`, e
+ * também os itens nossos importados por `@/` (`@visant/<dono>`). Peça de colheita
+ * recebe a mesma linha no `colheita/<nome>.json`, senão o merge desfazia o conserto.
  * O resto é decisão humana: pode ser arquivo esquecido, pode ser import morto.
  */
 
@@ -123,7 +125,21 @@ for (const item of registry.items) {
           alvo !== "utils"
         ) {
           const pedido = dono === alvo ? `"${alvo}"` : `"${dono}" (dono de ${alvo})`;
-          problemas.push(`${item.name}: importa ${spec} sem declarar ${pedido} em registryDependencies`);
+          if (FIX) {
+            const dep = `@visant/${dono}`;
+            item.registryDependencies = [...new Set([...(item.registryDependencies ?? []), dep])];
+            declaradasRegistry.add(dono);
+            const frag = join(ROOT, "colheita", `${item.name}.json`);
+            if (existsSync(frag)) {
+              const f = JSON.parse(readFileSync(frag, "utf8"));
+              f.registry.registryDependencies = [...new Set([...(f.registry.registryDependencies ?? []), dep])];
+              writeFileSync(frag, JSON.stringify(f, null, 2) + "\n");
+            }
+            corrigidos += 1;
+            console.log(`  + ${item.name}: ${dep}`);
+          } else {
+            problemas.push(`${item.name}: importa ${spec} sem declarar ${pedido} em registryDependencies`);
+          }
         }
         continue;
       }
@@ -158,7 +174,7 @@ for (const item of registry.items) {
 
 if (FIX) {
   writeFileSync(join(ROOT, "registry.json"), JSON.stringify(registry, null, 2) + "\n");
-  console.log(`\n${corrigidos} dependência(s) npm declarada(s).`);
+  console.log(`\n${corrigidos} dependência(s) declarada(s).`);
 }
 
 if (!problemas.length) {

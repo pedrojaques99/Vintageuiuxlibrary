@@ -16,8 +16,8 @@
     "demoImport": "./demos/page-curl-demo",
     "knobs": "PageCurl",
     "preview": {
-      "w": 240,
-      "h": 364
+      "w": 400,
+      "h": 470
     }
   },
   "registry": {

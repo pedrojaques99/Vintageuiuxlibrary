@@ -12,6 +12,7 @@ import {
 } from "motion/react";
 import { ArrowRight, Check } from "lucide-react";
 
+import { playSfx } from "@/lib/sfx-bus";
 import { cn } from "@/lib/utils";
 
 /**
@@ -53,6 +54,12 @@ export interface SlideToConfirmProps
   threshold?: number;
   /** Cor do polegar e do rastro: `brand`, `neutral` ou `danger` pra destruir. */
   tone?: "brand" | "neutral" | "danger";
+  /**
+   * Cor do trilho depois de confirmado. `success` (padrão) pinta polegar e
+   * rastro de aprovação, lido do token `--success` com verde de reserva;
+   * `tone` mantém a cor de antes.
+   */
+  doneTone?: "success" | "tone";
   /** Controla o estado confirmado. Volte pra `false` pra rearmar o trilho. */
   confirmed?: boolean;
   disabled?: boolean;
@@ -77,12 +84,21 @@ const TINTA = {
   danger: "text-destructive-foreground",
 } as const;
 
+// Aprovado: token do tema quando existe, verde da paleta do Tailwind quando não.
+const APROVADO =
+  "bg-[var(--success,var(--color-emerald-600))] text-[var(--success-foreground,var(--color-white))]";
+const TINTA_APROVADO = "text-[var(--success-foreground,var(--color-white))]";
+// A troca de cor no fim é resposta ao gesto: curta, só a cor.
+const TROCA_COR =
+  "transition-[background-color,color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]";
+
 export function SlideToConfirm({
   label = "Deslize pra confirmar",
   confirmedLabel = "Confirmado",
   onConfirm,
   threshold = 0.85,
   tone = "neutral",
+  doneTone = "success",
   confirmed,
   disabled = false,
   className,
@@ -128,6 +144,8 @@ export function SlideToConfirm({
   function confirmar() {
     window.clearTimeout(voltaTimer.current);
     setValor(100);
+    // Obturador armando e soltando: o fim do trilho tem som próprio.
+    playSfx("complete");
     setFeitoProprio(true);
     onConfirm?.();
   }
@@ -167,6 +185,8 @@ export function SlideToConfirm({
   );
 
   const parado = feito || disabled;
+  const aprovado = feito && doneTone === "success";
+  const cor = aprovado ? APROVADO : TOM[tone];
 
   function soltar() {
     const g = gesto.current;
@@ -213,7 +233,7 @@ export function SlideToConfirm({
       {/* O rastro nasce atrás do polegar e cresce com ele: o caminho andado fica pintado. */}
       <motion.div
         aria-hidden="true"
-        className={cn("absolute bottom-1 left-1 top-1 rounded-[var(--r-pill)]", TOM[tone])}
+        className={cn("absolute bottom-1 left-1 top-1 rounded-[var(--r-pill)]", TROCA_COR, cor)}
         style={{ width: rastro }}
       />
 
@@ -229,7 +249,7 @@ export function SlideToConfirm({
         aria-hidden="true"
         className={cn(
           "pointer-events-none absolute inset-y-0 left-0 right-[calc(var(--slide-thumb)+0.25rem)] flex items-center justify-center gap-1.5 text-sm font-medium",
-          TINTA[tone],
+          aprovado ? TINTA_APROVADO : TINTA[tone],
         )}
         initial={false}
         animate={{ opacity: feito ? 1 : 0 }}
@@ -281,7 +301,8 @@ export function SlideToConfirm({
         onKeyDown={teclar}
         className={cn(
           "absolute left-1 top-1 grid size-[var(--slide-thumb)] place-items-center rounded-[var(--r-pill)] outline-none [touch-action:none] focus-visible:[box-shadow:var(--focus)]",
-          TOM[tone],
+          TROCA_COR,
+          cor,
           parado ? "cursor-default" : arrastando ? "cursor-grabbing" : "cursor-grab",
         )}
       >

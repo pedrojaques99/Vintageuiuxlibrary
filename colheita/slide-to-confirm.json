@@ -14,8 +14,8 @@
     "demoImport": "./demos/slide-to-confirm-demo",
     "knobs": "SlideToConfirm",
     "preview": {
-      "w": 360,
-      "h": 170
+      "w": 420,
+      "h": 200
     }
   },
   "registry": {
@@ -28,7 +28,8 @@
       "lucide-react"
     ],
     "registryDependencies": [
-      "utils"
+      "utils",
+      "@visant/sfx-bus"
     ],
     "files": [
       {

@@ -30,6 +30,8 @@
 
 import * as React from "react";
 
+import { BarChart3, Folder, LayoutDashboard, Package, Settings, Users } from "lucide-react";
+
 import { useStageActive } from "../stage";
 import type { DemoProps } from "../catalog";
 import {
@@ -38,27 +40,13 @@ import {
   SideNavItem,
 } from "../../../registry/visant/ui/side-nav";
 
-/* Ícones desenhados aqui, no traço do resto do registry: 16px de caixa, 1.4 de
-   espessura, cantos redondos. Um pacote de ícones inteiro pra seis glifos numa
-   demo seria bundle por conveniência. */
-const Icone = ({ d }: { d: string }) => (
-  <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-    <path
-      d={d}
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const PAINEL = "M2 2.5h5v4H2zM9 2.5h5v7H9zM2 9h5v4.5H2zM9 12h5v1.5H9z";
-const PASTA = "M2 4.5h4l1.2 1.5H14v7.5H2z";
-const PESSOAS = "M6 7.5a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4ZM1.5 13.5c0-2.2 2-3.6 4.5-3.6s4.5 1.4 4.5 3.6M11 4.2a2 2 0 0 1 0 3.8m1 2.2c1.6.4 2.5 1.5 2.5 3.3";
-const GRAFICO = "M2 13.5h12M4.5 11V7M8 11V3.5M11.5 11V8.5";
-const ENGRENAGEM = "M8 10.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4ZM8 1.8v1.6M8 12.6v1.6M14.2 8h-1.6M3.4 8H1.8M12.4 3.6l-1.1 1.1M4.7 11.3l-1.1 1.1M12.4 12.4l-1.1-1.1M4.7 4.7 3.6 3.6";
-const CAIXA = "M2.5 5 8 2.2 13.5 5v6L8 13.8 2.5 11zM2.5 5 8 7.8 13.5 5M8 7.8v6";
+// Ícones de biblioteca, no tamanho que a peça dá (16px).
+const PAINEL = <LayoutDashboard aria-hidden="true" />;
+const PASTA = <Folder aria-hidden="true" />;
+const CAIXA = <Package aria-hidden="true" />;
+const PESSOAS = <Users aria-hidden="true" />;
+const GRAFICO = <BarChart3 aria-hidden="true" />;
+const ENGRENAGEM = <Settings aria-hidden="true" />;
 
 export default function SideNavDemo({ props }: DemoProps) {
   const [rota, setRota] = React.useState("visao");
@@ -90,7 +78,9 @@ export default function SideNavDemo({ props }: DemoProps) {
   };
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-background">
+    // Janela estreita de propósito: a barra é a peça, e a área de trabalho só
+    // precisa existir pra mostrar que cede junto. Larga, ela engolia a barra.
+    <div className="mx-auto flex h-full w-[640px] max-w-full flex-col overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-background">
       {/*
        * A barra da janela. Ela não é enfeite: sem uma moldura de navegador em
        * volta, uma coluna colada na borda esquerda de um card lê como parte do
@@ -142,7 +132,7 @@ export default function SideNavDemo({ props }: DemoProps) {
               href="#"
               onClick={ir("visao")}
               active={rota === "visao"}
-              icon={<Icone d={PAINEL} />}
+              icon={PAINEL}
             >
               Visão geral
             </SideNavItem>
@@ -150,7 +140,7 @@ export default function SideNavDemo({ props }: DemoProps) {
               href="#"
               onClick={ir("projetos")}
               active={rota === "projetos"}
-              icon={<Icone d={PASTA} />}
+              icon={PASTA}
               meta="12"
             >
               Projetos
@@ -159,7 +149,7 @@ export default function SideNavDemo({ props }: DemoProps) {
               href="#"
               onClick={ir("entregas")}
               active={rota === "entregas"}
-              icon={<Icone d={CAIXA} />}
+              icon={CAIXA}
               meta="3"
             >
               Entregas
@@ -171,7 +161,7 @@ export default function SideNavDemo({ props }: DemoProps) {
               href="#"
               onClick={ir("pessoas")}
               active={rota === "pessoas"}
-              icon={<Icone d={PESSOAS} />}
+              icon={PESSOAS}
             >
               Pessoas
             </SideNavItem>
@@ -179,7 +169,7 @@ export default function SideNavDemo({ props }: DemoProps) {
               href="#"
               onClick={ir("relatorios")}
               active={rota === "relatorios"}
-              icon={<Icone d={GRAFICO} />}
+              icon={GRAFICO}
             >
               Relatórios
             </SideNavItem>
@@ -187,7 +177,7 @@ export default function SideNavDemo({ props }: DemoProps) {
               href="#"
               onClick={ir("ajustes")}
               active={rota === "ajustes"}
-              icon={<Icone d={ENGRENAGEM} />}
+              icon={ENGRENAGEM}
             >
               Ajustes
             </SideNavItem>
@@ -196,15 +186,11 @@ export default function SideNavDemo({ props }: DemoProps) {
 
         {/* A área de trabalho é maquete: blocos sem texto, porque qualquer frase
             aqui competiria com a peça que está sendo mostrada. */}
-        <div className="flex min-w-0 flex-1 flex-col gap-4 p-5">
-          <div className="flex items-center gap-3">
-            <span className="h-2.5 w-28 rounded-full bg-muted" />
-            <span className="ml-auto h-8 w-20 rounded-[var(--r-control,0.5rem)] bg-muted" />
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            {[0, 1, 2].map((i) => (
-              <span key={i} className="h-16 rounded-[var(--r-surface,0.875rem)] bg-muted" />
-            ))}
+        <div className="flex min-w-0 flex-1 flex-col gap-3 p-4">
+          <span className="h-2.5 w-24 rounded-full bg-muted" />
+          <div className="grid grid-cols-2 gap-3">
+            <span className="h-14 rounded-[var(--r-surface,0.875rem)] bg-muted" />
+            <span className="h-14 rounded-[var(--r-surface,0.875rem)] bg-muted" />
           </div>
           <div className="flex-1 rounded-[var(--r-surface,0.875rem)] bg-muted/60" />
         </div>

@@ -3,7 +3,11 @@
 import * as React from "react";
 
 import { Slider } from "@/components/ui/slider";
+import { playSfx } from "@/lib/sfx-bus";
 import { cn } from "@/lib/utils";
+
+/** Dentes do anel de foco no curso inteiro: um `focus` a cada dente cruzado. */
+const DENTES = 40;
 
 /**
  * Sim Slider — a dobra que deixa o visitante fazer a conta em vez de ler a conta.
@@ -131,12 +135,18 @@ export function SimSlider({
 }: SimSliderProps) {
   const [value, setValue] = React.useState(defaultValue ?? Math.round((min + max) / 2));
 
+  const dente = React.useRef<number | null>(null);
   const handle = React.useCallback(
     (v: number[]) => {
+      // Som de anel de foco de lente girando, por dente de curso. O portão de
+      // 45 ms do bus segura o arrasto rápido.
+      const d = Math.round(((v[0] - min) / (max - min || 1)) * DENTES);
+      if (dente.current !== d) playSfx("focus");
+      dente.current = d;
       setValue(v[0]);
       onValueChange?.(v[0]);
     },
-    [onValueChange],
+    [onValueChange, min, max],
   );
 
   // A largura de cada leitura é travada pela maior string possível — medida nos

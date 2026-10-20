@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-halftone",
+    "title": "Shader Halftone",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Retícula de uma tinta só sobre uma imagem, em pontos, quadrados ou linhas, com uma lupa que amplia debaixo do cursor.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "retícula",
+      "impressão"
+    ],
+    "demoImport": "./demos/shader-halftone-demo",
+    "knobs": "ShaderHalftone",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-halftone",
+    "type": "registry:ui",
+    "title": "Shader Halftone",
+    "description": "Retícula de uma tinta só sobre uma imagem, em pontos, quadrados ou linhas, com uma lupa que amplia debaixo do cursor.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-halftone.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/halftone.ts (Visant Labs)"
+}

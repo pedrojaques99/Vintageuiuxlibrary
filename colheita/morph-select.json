@@ -15,8 +15,8 @@
     "demoImport": "./demos/morph-select-demo",
     "knobs": "MorphSelect",
     "preview": {
-      "w": 330,
-      "h": 310
+      "w": 320,
+      "h": 330
     }
   },
   "registry": {

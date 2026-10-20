@@ -37,10 +37,10 @@
   "motion-e-estado": [
     "drop-overlay",
     "fold-motion",
-    "generating-tile",
     "glitch-chars",
     "grid-dots",
     "paper-shuttle",
+    "skeleton-rail",
     "status-ticker",
     "turbulence-field",
     "use-pointer-parallax",

@@ -11,6 +11,7 @@ import {
   useVelocity,
 } from "motion/react";
 
+import { playSfx } from "@/lib/sfx-bus";
 import { cn } from "@/lib/utils";
 
 /**
@@ -65,6 +66,8 @@ export interface SloshSliderProps
 
 /** Meia largura do polegar, em px: o recuo da pista em cada ponta. */
 const RESPIRO = 12;
+/** Dentes do anel de foco no curso inteiro: um `focus` a cada dente cruzado no arrasto. */
+const DENTES = 40;
 const limitar = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const casas = (v: number) => (String(v).split(".")[1] ?? "").length;
 
@@ -127,10 +130,16 @@ export function SloshSlider({
     if (!r || r.width === 0) return;
     const util = r.width - 2 * RESPIRO;
     if (util <= 0) return;
-    definir(min + ((clientX - r.left - RESPIRO) / util) * (max - min));
+    const fracao = limitar((clientX - r.left - RESPIRO) / util, 0, 1);
+    // Som de anel de foco girando: só quando o arrasto cruza um dente novo.
+    const d = Math.round(fracao * DENTES);
+    if (dente.current !== null && d !== dente.current) playSfx("focus");
+    dente.current = d;
+    definir(min + fracao * (max - min));
   };
 
   const arrastando = React.useRef(false);
+  const dente = React.useRef<number | null>(null);
 
   const teclas = (e: React.KeyboardEvent) => {
     const grande = step * 10;
@@ -166,6 +175,7 @@ export function SloshSlider({
         onPointerDown={(e) => {
           if (e.button !== 0) return;
           arrastando.current = true;
+          dente.current = null;
           e.currentTarget.setPointerCapture(e.pointerId);
           doPonteiro(e.clientX);
           // O foco vai pro polegar, pra que as setas continuem de onde o dedo parou.

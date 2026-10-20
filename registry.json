@@ -483,7 +483,7 @@
       "name": "rail",
       "type": "registry:ui",
       "title": "Rail",
-      "description": "Trilho horizontal com snap, setas que somem nas pontas e scroll por teclado.",
+      "description": "Trilho horizontal com snap: anda por arrasto, Shift + roda, setas e teclado; as setas somem nas pontas.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -511,6 +511,9 @@
           "path": "registry/visant/ui/reels-rail.tsx",
           "type": "registry:ui"
         }
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -533,7 +536,7 @@
       "name": "chip",
       "type": "registry:ui",
       "title": "Chip",
-      "description": "Pastilha de filtro com contagem que nunca renderiza zero.",
+      "description": "Pastilha de filtro com contagem; a faceta sem resultado apaga em vez de mostrar zero.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -1118,6 +1121,9 @@
           "path": "registry/visant/ui/drop-overlay.tsx",
           "type": "registry:ui"
         }
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1800,7 +1806,8 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils",
-        "slider"
+        "slider",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -1902,7 +1909,7 @@
       "name": "nav-drawer",
       "type": "registry:ui",
       "title": "Nav Drawer",
-      "description": "O menu mobile feito uma vez direito: foco preso, Escape, retorno do foco e trava de rolagem vindos do Radix Dialog; entrada em cascata com teto, e ícone que lê o estado em vez de guardar o seu.",
+      "description": "O menu mobile feito uma vez direito, em dois desenhos: gaveta lateral ou página inteira brutalista com imagem. Foco preso, Escape, retorno do foco e trava de rolagem vindos do Radix Dialog.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -2304,7 +2311,8 @@
       "description": "A cortina entre o antes e o depois: a camada de cima é RECORTADA, nunca redimensionada, então as duas fotos ficam na mesma escala. O arrasto, o teclado e o leitor de tela vêm de um input range invisível.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "dependencies": [
-        "gsap"
+        "gsap",
+        "lucide-react"
       ],
       "registryDependencies": [
         "utils"
@@ -2889,7 +2897,8 @@
         "motion"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -2968,7 +2977,8 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -3199,7 +3209,8 @@
         "motion"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -3218,7 +3229,8 @@
         "motion"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -3411,7 +3423,8 @@
         "motion"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -3472,7 +3485,8 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -3574,6 +3588,114 @@
       "files": [
         {
           "path": "registry/visant/ui/wallet-stack.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-ascii",
+      "type": "registry:ui",
+      "title": "Shader ASCII",
+      "description": "Uma imagem redesenhada em caracteres, com seis jogos de glifo e as células mais cheias na cor da marca.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-ascii.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-halftone",
+      "type": "registry:ui",
+      "title": "Shader Halftone",
+      "description": "Retícula de uma tinta só sobre uma imagem, em pontos, quadrados ou linhas, com uma lupa que amplia debaixo do cursor.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-halftone.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-neon",
+      "type": "registry:ui",
+      "title": "Shader Neon",
+      "description": "Fios de luz que ondulam num campo liso na cor da marca e engrossam quando o ponteiro passa rápido.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-neon.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-riso",
+      "type": "registry:ui",
+      "title": "Shader Riso",
+      "description": "Uma imagem impressa em duas tintas de risografia, com grão, ângulo próprio por tinta e registro fora do lugar.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-riso.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-tunnel",
+      "type": "registry:ui",
+      "title": "Shader Tunnel",
+      "description": "Túnel de anéis em espiral que corre pro centro na cor da marca e acelera com o ponteiro.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-tunnel.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "shader-voronoi",
+      "type": "registry:ui",
+      "title": "Shader Voronoi",
+      "description": "Mosaico de células que derivam devagar com um núcleo aceso na cor da marca, empurradas pelo ponteiro.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/shader-voronoi.tsx",
           "type": "registry:ui"
         }
       ],

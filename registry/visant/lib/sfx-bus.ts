@@ -44,6 +44,16 @@ import * as React from "react";
  * |          |                                | 22 ms · alta · 4500 · 0.7 · 0.012 · 5 ms (brilho)        |
  * | `drop`   | agulha pousando no disco       | 0 ms · baixa · 380 · 1 · 0.16 · 70 ms (baque surdo)      |
  * |          |                                | 30 a 110 ms · alta · 3000 · 0.7 · 0.01 · 3 ms (2 chiados)|
+ * | `focus`  | anel de foco de lente girando  | 0 ms · banda · 3400 · 8 · 0.03 · 4 ms (dente da catraca) |
+ * |          | (slider arrastando, por passo) | 0 ms · banda · 900 · 1.5 · 0.012 · 18 ms (atrito, graxa) |
+ * |`complete`| obturador armando e soltando   | 0 ms · banda · 1600 · 4 · 0.04 · 12 ms (alavanca engata) |
+ * |          | (segurar ou deslizar até o fim)| 45 ms · banda · 4200 · 5 · 0.09 · 8 ms (lâminas caem)    |
+ * |          |                                | 50 ms · banda · 1100 · 2 · 0.05 · 30 ms (corpo responde) |
+ *
+ * - **`focus` é o mais baixo da paleta** porque vem em rajada mais longa que o
+ *   knob (um arraste inteiro). Portão 45 ms: o dente aparece, a rajada não.
+ * - **`complete` é o fim de um gesto longo**, então tem três tempos e portão
+ *   de 300 ms; a pausa de 45 ms entre armar e soltar é o que lê como câmera.
  *
  * Por que cada escolha:
  *
@@ -72,6 +82,8 @@ import * as React from "react";
  * | `drop`    | -47 dBFS  | 130 ms  |
  * | `toggle`  | -52 dBFS  | 50 ms   |
  * | `detent`  | -54 dBFS  | 5 ms    |
+ * | `complete`| -53 dBFS  | 60 ms   |
+ * | `focus`   | -56 dBFS  | 5 ms    |
  *
  * Tudo abaixo do clique antigo, e mais curto. É o nível que se ouve com fone
  * sem notar o volume.
@@ -100,7 +112,8 @@ import * as React from "react";
  *    toca áudio antes disso, e criar o contexto cedo (num hover) só gera aviso
  *    no console. "Ligado por padrão" quer dizer **armado**. Nada de banner.
  * 2. **Portão por timbre**: `click` 60 ms, `detent` 30 ms, `toggle` 90 ms,
- *    `drop` 250 ms. O hover ainda respeita 60 ms contra qualquer som.
+ *    `drop` 250 ms, `focus` 45 ms, `complete` 300 ms. O hover ainda respeita
+ *    60 ms contra qualquer som.
  * 3. **Debounce por alvo.** O mesmo botão não re-dispara hover sem o ponteiro sair.
  * 4. **Hover só em `(hover: hover) and (pointer: fine)`.** No toque, o hover
  *    falso do tap daria dois sons por dedo.
@@ -122,7 +135,15 @@ const KEY = "visant-sfx";
 export const SFX_DEFAULT_SELECTOR = "button, [role='button'], a[data-sfx-target]";
 
 /** Os timbres que o bus sabe tocar. */
-export type SfxTimbre = "click" | "detent" | "toggle" | "drop" | "hover" | "chimbau";
+export type SfxTimbre =
+  | "click"
+  | "detent"
+  | "toggle"
+  | "drop"
+  | "hover"
+  | "chimbau"
+  | "focus"
+  | "complete";
 
 export const SFX_TIMBRES: readonly SfxTimbre[] = [
   "click",
@@ -131,6 +152,8 @@ export const SFX_TIMBRES: readonly SfxTimbre[] = [
   "drop",
   "hover",
   "chimbau",
+  "focus",
+  "complete",
 ];
 
 /** Uma batida: ruído curto passando por um filtro, com envelope próprio. */
@@ -164,10 +187,11 @@ const TIMBRES: Record<SfxTimbre, Camada[]> = {
     { em: 0.022, tipo: "bandpass", hz: 1300, q: 3, pico: 0.07, atk: 0.0008, dur: 0.018 },
     { em: 0.022, tipo: "highpass", hz: 4500, q: 0.7, pico: 0.012, atk: 0.0004, dur: 0.005 },
   ],
+  // Sopro, não baque: ruído largo com ataque lento (ar saindo), um corpo
+  // morno embaixo bem mais baixo que antes, e o volume total no mesmo piso.
   drop: [
-    { em: 0, tipo: "lowpass", hz: 380, q: 1, pico: 0.16, atk: 0.003, dur: 0.07 },
-    { em: 0.03, sorteio: 0.08, tipo: "highpass", hz: 3000, q: 0.7, pico: 0.01, atk: 0.0003, dur: 0.003 },
-    { em: 0.03, sorteio: 0.08, tipo: "highpass", hz: 3000, q: 0.7, pico: 0.01, atk: 0.0003, dur: 0.003 },
+    { em: 0, tipo: "bandpass", hz: 1400, q: 0.6, pico: 0.045, atk: 0.025, dur: 0.17, corte: 450 },
+    { em: 0.01, tipo: "lowpass", hz: 520, q: 0.7, pico: 0.035, atk: 0.018, dur: 0.12 },
   ],
   // Os dois da primeira versão: chimbau fechado, dois passa-altas em série.
   hover: [
@@ -175,6 +199,19 @@ const TIMBRES: Record<SfxTimbre, Camada[]> = {
   ],
   chimbau: [
     { em: 0, tipo: "highpass", hz: 6400, q: 0.7, pico: 0.034, atk: 0.006, dur: 0.062, corte: 6400 },
+  ],
+  // Anel de foco de lente: um dente de catraca miúdo e o atrito da graxa.
+  // Mais baixo que o `detent`, porque arrastar slider dispara em rajada.
+  focus: [
+    { em: 0, tipo: "bandpass", hz: 3400, q: 8, pico: 0.03, atk: 0.0004, dur: 0.004, corte: 1800 },
+    { em: 0, tipo: "bandpass", hz: 900, q: 1.5, pico: 0.012, atk: 0.002, dur: 0.018 },
+  ],
+  // Obturador armando e soltando: a alavanca engata, as lâminas caem e o
+  // corpo da câmera responde. Curto, sem cauda.
+  complete: [
+    { em: 0, tipo: "bandpass", hz: 1600, q: 4, pico: 0.04, atk: 0.0008, dur: 0.012 },
+    { em: 0.045, tipo: "bandpass", hz: 4200, q: 5, pico: 0.09, atk: 0.0005, dur: 0.008, corte: 1500 },
+    { em: 0.05, tipo: "bandpass", hz: 1100, q: 2, pico: 0.05, atk: 0.001, dur: 0.03 },
   ],
 };
 
@@ -186,6 +223,8 @@ const PORTAO: Record<SfxTimbre, number> = {
   drop: 250,
   hover: 60,
   chimbau: 60,
+  focus: 45,
+  complete: 300,
 };
 
 /** ±metade da faixa: `variar(1000, 0.12)` cai entre 940 e 1060. */

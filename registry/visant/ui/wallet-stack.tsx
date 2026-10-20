@@ -193,8 +193,12 @@ export function WalletStack({
       onPointerLeave={() => setLeque(false)}
       onKeyDown={onKeyDown}
     >
-      <div className="flex h-8 items-center justify-between px-1">
-        <span className="text-sm font-medium text-foreground">{label}</span>
+      {/* A faixa de cima só tem trabalho com o cartão aberto (o "voltar"). O
+          nome do grupo e o "1 de 4" já estão no `aria-label` e no aviso
+          falado; escritos na tela, eram legenda em cima de uma pilha que se
+          explica sozinha. A faixa fica com a altura reservada pra abrir não
+          empurrar os cartões. */}
+      <div className="flex h-8 items-center justify-end px-1">
         {aberto ? (
           <button
             type="button"
@@ -207,11 +211,7 @@ export function WalletStack({
             <ChevronLeft aria-hidden="true" className="size-3.5" />
             Todos
           </button>
-        ) : (
-          <span className="text-xs tabular-nums text-muted-foreground">
-            {ativo + 1} de {total}
-          </span>
-        )}
+        ) : null}
       </div>
 
       <div className="relative w-full overflow-hidden" style={{ height: CAIXA }}>

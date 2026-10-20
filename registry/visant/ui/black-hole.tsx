@@ -20,8 +20,8 @@ import { cn } from "@/lib/utils";
  *
  * - Marcar linhas acende o botão "Apagar N" no cabeçalho.
  * - Apagar: nasce uma singularidade no centro de massa das linhas marcadas.
- *   Elas encolhem girando até ela, com poeira (canvas 2D) espiralando junto;
- *   as linhas que ficam são puxadas uns pixels para o centro e voltam. Tudo em
+ *   Elas deslizam encolhendo até ela, com um pouco de poeira (canvas 2D)
+ *   junto; as linhas que ficam são puxadas uns pixels para o centro e voltam. Tudo em
  *   300ms. Depois a lista fecha o buraco em mola.
  * - Aparece "N apagadas · Desfazer". Desfazer reabre o espaço e as linhas
  *   saem do mesmo ponto, girando no sentido oposto.
@@ -67,6 +67,13 @@ export interface BlackHoleProps<T extends { id: string }>
 type Lote<T> = { itens: { item: T; pos: number }[]; vetores: Record<string, { x: number; y: number }> };
 
 const SUGAR = 300; // --dur-slow
+/**
+ * Graus de giro na ida (e ao contrário na volta). A primeira versão girava
+ * 200°, encolhia a zero e soltava 22 grãos de poeira por linha: lia como efeito
+ * de apresentação de slides. O buraco convence pelo caminho até o ponto, não
+ * pelo giro. Doze graus, chega a 40% do tamanho e some no caminho.
+ */
+const GIRO = 12;
 
 export function BlackHole<T extends { id: string }>({
   items,
@@ -124,14 +131,14 @@ export function BlackHole<T extends { id: string }>({
     ctx.scale(dpr, dpr);
     const cor = getComputedStyle(cv).color;
     const pontos = caixas.flatMap((b) =>
-      Array.from({ length: 22 }, () => {
+      Array.from({ length: 12 }, () => {
         const x = b.x + Math.random() * b.w;
         const y = b.y + Math.random() * b.h;
         return {
           r0: Math.hypot(x - c.x, y - c.y),
           a0: Math.atan2(y - c.y, x - c.x),
-          giro: 1.2 + Math.random() * 1.6,
-          tam: 0.8 + Math.random() * 1.6,
+          giro: 0.25 + Math.random() * 0.35,
+          tam: 0.5 + Math.random() * 0.9,
         };
       }),
     );
@@ -144,7 +151,8 @@ export function BlackHole<T extends { id: string }>({
       for (const p of pontos) {
         const r = p.r0 * (1 - e);
         const a = p.a0 + e * p.giro * Math.PI;
-        ctx.globalAlpha = 0.55 * (1 - t) + 0.1;
+        // Poeira é sugestão, não confete: some antes de chegar no ponto.
+        ctx.globalAlpha = 0.3 * (1 - t);
         ctx.beginPath();
         ctx.arc(c.x + Math.cos(a) * r, c.y + Math.sin(a) * r, p.tam * (1 - e * 0.7), 0, Math.PI * 2);
         ctx.fill();
@@ -244,7 +252,7 @@ export function BlackHole<T extends { id: string }>({
               // As que ficam são puxadas ~6% do caminho e voltam: a "curvatura".
               const puxa = sumindo && !marcada;
               const d = Math.hypot(v.x, v.y) || 1;
-              const forca = Math.min(10, 900 / (d + 40));
+              const forca = Math.min(4, 400 / (d + 40));
               return (
                 <motion.div
                   key={item.id}
@@ -253,12 +261,12 @@ export function BlackHole<T extends { id: string }>({
                   data-linha={item.id}
                   initial={
                     volta && !reduzir
-                      ? { x: v.x, y: v.y, scale: 0, rotate: 200, opacity: 0, filter: "blur(4px)" }
+                      ? { x: v.x * 0.8, y: v.y * 0.8, scale: 0.4, rotate: GIRO, opacity: 0, filter: "blur(3px)" }
                       : false
                   }
                   animate={
                     vai
-                      ? { x: v.x, y: v.y, scale: 0, rotate: -200, opacity: 0, filter: "blur(4px)" }
+                      ? { x: v.x * 0.8, y: v.y * 0.8, scale: 0.4, rotate: -GIRO, opacity: 0, filter: "blur(3px)" }
                       : puxa
                         ? {
                             x: [0, (v.x / d) * forca, 0],
@@ -273,7 +281,7 @@ export function BlackHole<T extends { id: string }>({
                   exit={{ opacity: 0, transition: { duration: 0 } }}
                   transition={
                     vai || puxa
-                      ? { duration: SUGAR / 1000, ease: [0.55, 0, 0.75, 0.2] }
+                      ? { duration: SUGAR / 1000, ease: [0.4, 0, 0.7, 0.2] }
                       : { type: "spring", stiffness: 320, damping: 32, mass: 0.8 }
                   }
                   onAnimationComplete={() => {
@@ -327,17 +335,16 @@ export function BlackHole<T extends { id: string }>({
             {buraco && (
               <motion.span
                 aria-hidden
-                className="pointer-events-none absolute z-10 size-3 rounded-[50%] bg-foreground"
+                className="pointer-events-none absolute z-10 size-1.5 rounded-[50%] bg-foreground"
                 style={{
-                  left: buraco.x - 6,
-                  top: buraco.y - 6,
-                  boxShadow:
-                    "0 0 0 6px color-mix(in oklab, var(--foreground) 12%, transparent), 0 0 18px 10px color-mix(in oklab, var(--card) 70%, transparent)",
+                  left: buraco.x - 3,
+                  top: buraco.y - 3,
+                  boxShadow: "0 0 0 5px color-mix(in oklab, var(--foreground) 6%, transparent)",
                 }}
-                initial={{ scale: 0 }}
-                animate={{ scale: [0, 1.3, 1] }}
-                exit={{ scale: 0, transition: { duration: 0.12 } }}
-                transition={{ duration: SUGAR / 1000, ease: "easeOut" }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 0.8 }}
+                exit={{ scale: 0, opacity: 0, transition: { duration: 0.12 } }}
+                transition={{ duration: SUGAR / 2000, ease: [0.22, 1, 0.36, 1] }}
               />
             )}
           </AnimatePresence>

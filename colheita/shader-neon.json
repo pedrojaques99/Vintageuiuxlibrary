@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-neon",
+    "title": "Shader Neon",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Fios de luz que ondulam num campo liso na cor da marca e engrossam quando o ponteiro passa rápido.",
+    "tags": [
+      "shader",
+      "webgl",
+      "fundo",
+      "neon",
+      "onda"
+    ],
+    "demoImport": "./demos/shader-neon-demo",
+    "knobs": "ShaderNeon",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "shader-neon",
+    "type": "registry:ui",
+    "title": "Shader Neon",
+    "description": "Fios de luz que ondulam num campo liso na cor da marca e engrossam quando o ponteiro passa rápido.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-neon.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de 7panel_studio/keyboard-ui/src/lib/visualizers/shaders.ts (SHADER_NEON) (Visant Labs)"
+}

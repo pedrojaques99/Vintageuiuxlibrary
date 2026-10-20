@@ -1,4 +1,10 @@
 {
+  "css-color": {
+    "nota": 2,
+    "comentario": "pode esconder",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
   "dot-cursor": {
     "nota": 2,
     "comentario": "posicao do cursor super bugada, e ta com scroll horizontal e vertical, refaça o shell disso",
@@ -11,10 +17,28 @@
     "excluir": false,
     "data": "2026-10-20"
   },
-  "vintage-command-palette": {
+  "generating-tile": {
+    "nota": 1,
+    "comentario": "excluir (bug report)",
+    "excluir": true,
+    "data": "2026-10-20"
+  },
+  "octahedron-loader": {
+    "nota": 1,
+    "comentario": "excluir (bug report)",
+    "excluir": true,
+    "data": "2026-10-20"
+  },
+  "sfx-toggle": {
     "nota": 2,
-    "comentario": "mal apresentado, meio inutil",
+    "comentario": "deixar fora do cat�logo (segue no cabe�alho)",
     "excluir": false,
+    "data": "2026-10-20"
+  },
+  "vintage-command-palette": {
+    "nota": 1,
+    "comentario": "mal apresentado, meio inutil; ficou vazio, redundante, apaga",
+    "excluir": true,
     "data": "2026-10-20"
   }
 }

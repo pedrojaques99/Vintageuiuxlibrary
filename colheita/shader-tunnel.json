@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-tunnel",
+    "title": "Shader Tunnel",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Túnel de anéis em espiral que corre pro centro na cor da marca e acelera com o ponteiro.",
+    "tags": [
+      "shader",
+      "webgl",
+      "fundo",
+      "tunel",
+      "espiral"
+    ],
+    "demoImport": "./demos/shader-tunnel-demo",
+    "knobs": "ShaderTunnel",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "shader-tunnel",
+    "type": "registry:ui",
+    "title": "Shader Tunnel",
+    "description": "Túnel de anéis em espiral que corre pro centro na cor da marca e acelera com o ponteiro.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-tunnel.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de 7panel_studio/keyboard-ui/src/lib/visualizers/shaders.ts (SHADER_WARP) (Visant Labs)"
+}

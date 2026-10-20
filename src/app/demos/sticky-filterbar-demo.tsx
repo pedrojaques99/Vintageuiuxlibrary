@@ -66,15 +66,12 @@ export default function StickyFilterbarDemo({ props }: DemoProps) {
     <div className="h-full w-full overflow-y-auto rounded-[var(--r-surface,0.875rem)] border border-border bg-background">
       <div
         data-demo-header
-        className="sticky top-0 z-40 flex h-9 items-center justify-between border-b border-border bg-background px-4"
+        className="sticky top-0 z-40 flex h-14 items-center border-b border-border bg-background px-6"
       >
-        <span className="text-rotulo font-semibold tracking-tight">Acervo</span>
-        <span className="text-micro tabular-nums text-muted-foreground">
-          {ACERVO.length} marcas
-        </span>
+        <span className="text-destaque font-semibold tracking-tight">Acervo</span>
       </div>
 
-      <StickyFilterbar headerSelector="[data-demo-header]" className="px-4" {...props}>
+      <StickyFilterbar headerSelector="[data-demo-header]" className="px-6" {...props}>
         <FilterRow>
           <Chip pressed={estado === null} onClick={() => setEstado(null)}>
             Todos
@@ -91,7 +88,7 @@ export default function StickyFilterbarDemo({ props }: DemoProps) {
           ))}
           {/* A contagem do resultado mora na linha principal de propósito: é o
               que a pessoa precisa continuar vendo depois que a barra condensa. */}
-          <span className="ml-auto shrink-0 text-micro tabular-nums text-muted-foreground">
+          <span className="ml-auto shrink-0 text-apoio tabular-nums text-muted-foreground">
             {lista.length} de {ACERVO.length}
           </span>
         </FilterRow>
@@ -108,16 +105,16 @@ export default function StickyFilterbarDemo({ props }: DemoProps) {
         </FilterRow>
       </StickyFilterbar>
 
-      <div className="grid grid-cols-3 gap-3 p-4">
+      <div className="grid grid-cols-2 gap-4 p-6">
         {lista.map((p, i) => (
           <article
             key={p.nome}
             className="overflow-hidden rounded-[var(--r-control,0.5rem)] border border-border bg-card"
           >
-            <Media papel="cena" indice={i} ratio="4/3" className="w-full" />
-            <div className="flex items-baseline justify-between gap-2 px-2.5 py-2">
-              <span className="truncate text-rotulo font-medium">{p.nome}</span>
-              <span className="shrink-0 text-micro uppercase tracking-[0.1em] text-muted-foreground">
+            <Media papel="cena" indice={i} ratio="16/10" className="w-full" />
+            <div className="flex items-baseline justify-between gap-2 px-4 py-3">
+              <span className="truncate text-apoio font-medium">{p.nome}</span>
+              <span className="shrink-0 text-rotulo uppercase tracking-[0.1em] text-muted-foreground">
                 {p.familia}
               </span>
             </div>

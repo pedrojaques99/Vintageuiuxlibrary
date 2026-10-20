@@ -228,7 +228,10 @@ export function OrbitMenu({
     }
   };
 
-  const texto = feito ?? (aberto && mira !== null ? actions[mira]?.label : aberto ? label : null);
+  // Aberto sem nada na mira não escreve nada: o nome genérico do menu ("Ações")
+  // em cima do arco era texto repetindo o que os ícones já dizem. Ele segue no
+  // `aria-label` do gatilho, que é onde ele serve.
+  const texto = feito ?? (aberto && mira !== null ? actions[mira]?.label : null);
 
   return (
     <div

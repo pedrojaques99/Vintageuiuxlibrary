@@ -9,6 +9,15 @@
           "resumo": null
         },
         {
+          "prop": "detent",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.5,
+          "resumo": "Detente, na escala normalizada (0…1). O arraste \"cai\" nele e precisa de um"
+        },
+        {
           "prop": "max",
           "tipo": "numero",
           "min": 0,
@@ -78,7 +87,7 @@
           "prop": "dense",
           "tipo": "chave",
           "padrao": false,
-          "resumo": "Aperta a caixa de ~124px para ~75px, sem tirar nada: rótulo, trilho e faixa",
+          "resumo": "Aperta a caixa pra ~56px: rótulo, leitura e trilho continuam, só a régua",
           "inicial": true
         },
         {
@@ -515,15 +524,13 @@
           "max": 1000,
           "step": 10,
           "padrao": 480,
-          "resumo": "Largura natural em px — vira teto, não trava: a peça encolhe abaixo dela.",
-          "inicial": 300
+          "resumo": "Largura natural em px — vira teto, não trava: a peça encolhe abaixo dela."
         },
         {
           "prop": "showTimecode",
           "tipo": "texto",
           "padrao": null,
           "resumo": null,
-          "inicial": "00:12:34",
           "secundario": true
         },
         {
@@ -531,7 +538,6 @@
           "tipo": "texto",
           "padrao": "VISANT",
           "resumo": null,
-          "inicial": "VISANT TV",
           "secundario": true
         }
       ]
@@ -574,6 +580,24 @@
     "componentes": {
       "VintageSoundboardPad": [
         {
+          "prop": "voice",
+          "tipo": "escolha",
+          "valores": [
+            "kick",
+            "snare",
+            "hat",
+            "clap",
+            "tom",
+            "ride",
+            "bass",
+            "synth",
+            "fx",
+            "vox"
+          ],
+          "padrao": null,
+          "resumo": "Que som o pad faz. Sem ela, a voz sai do rótulo (\"KICK\" toca bumbo); rótulo"
+        },
+        {
           "prop": "active",
           "tipo": "chave",
           "padrao": false,
@@ -611,7 +635,8 @@
           "prop": "label",
           "tipo": "texto",
           "padrao": "PAD",
-          "resumo": null
+          "resumo": null,
+          "secundario": true
         }
       ]
     },
@@ -654,8 +679,9 @@
         {
           "prop": "color",
           "tipo": "texto",
-          "padrao": "var(--vintage-accent)",
-          "resumo": null
+          "padrao": "var(--vintage-value)",
+          "resumo": null,
+          "inicial": "var(--vintage-accent)"
         },
         {
           "prop": "labelX",
@@ -716,7 +742,7 @@
           "step": 10,
           "padrao": 120,
           "resumo": null,
-          "inicial": 132
+          "inicial": 180
         },
         {
           "prop": "width",
@@ -726,7 +752,7 @@
           "step": 10,
           "padrao": 320,
           "resumo": "Largura natural do desenho. Com `fill`, vira só o piso do buffer.",
-          "inicial": 250
+          "inicial": 380
         },
         {
           "prop": "color",
@@ -971,8 +997,7 @@
           "prop": "remainder",
           "tipo": "chave",
           "padrao": false,
-          "resumo": "`+N` na ponta que continua. Clicar anda um item.",
-          "inicial": true
+          "resumo": "`+N` na ponta que continua. Clicar anda um item."
         },
         {
           "prop": "gap",
@@ -992,7 +1017,7 @@
           "step": 10,
           "padrao": 240,
           "resumo": "Largura mínima de cada item.",
-          "inicial": 186
+          "inicial": 248
         },
         {
           "prop": "label",
@@ -1047,7 +1072,8 @@
           "prop": "arrows",
           "tipo": "chave",
           "padrao": true,
-          "resumo": null
+          "resumo": null,
+          "inicial": false
         },
         {
           "prop": "autoPlay",
@@ -1088,6 +1114,7 @@
           "step": 1,
           "padrao": 26,
           "resumo": "Velocidade da deriva, em px por segundo. Acima de ~60 vira esteira.",
+          "inicial": 14,
           "secundario": true
         },
         {
@@ -1098,6 +1125,7 @@
           "step": 1,
           "padrao": 16,
           "resumo": null,
+          "inicial": 20,
           "secundario": true
         },
         {
@@ -1108,7 +1136,7 @@
           "step": 10,
           "padrao": 260,
           "resumo": "Largura de cada card, em px. 9:16 em 260px dá ~462px de altura.",
-          "inicial": 230,
+          "inicial": 280,
           "secundario": true
         },
         {
@@ -1191,7 +1219,8 @@
           "prop": "ground",
           "tipo": "chave",
           "padrao": false,
-          "resumo": "Sombra de contato na base da placa. Faz o recorte pousar em vez de flutuar."
+          "resumo": "Sombra de contato na base da placa. Faz o recorte pousar em vez de flutuar.",
+          "inicial": true
         },
         {
           "prop": "zoomOnGroupHover",
@@ -1207,7 +1236,7 @@
           "step": 1,
           "padrao": 20,
           "resumo": "Respiro entre o produto e a borda da placa.",
-          "inicial": 16
+          "inicial": 18
         },
         {
           "prop": "ratio",
@@ -1564,6 +1593,18 @@
     "componentes": {
       "SegmentedControl": [
         {
+          "prop": "animation",
+          "tipo": "escolha",
+          "valores": [
+            "slide",
+            "spring",
+            "stretch",
+            "fade"
+          ],
+          "padrao": "slide",
+          "resumo": "Como o polegar vai de uma opção pra outra."
+        },
+        {
           "prop": "size",
           "tipo": "escolha",
           "valores": [
@@ -1820,6 +1861,24 @@
     "componentes": {
       "StatusTicker": [
         {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "linha",
+            "barra",
+            "etapas",
+            "pulso"
+          ],
+          "padrao": "linha",
+          "resumo": "Como a espera aparece. Ver a tabela acima."
+        },
+        {
+          "prop": "loop",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Volta ao primeiro passo depois do último. `false` segura no último, que é"
+        },
+        {
           "prop": "showTimer",
           "tipo": "chave",
           "padrao": true,
@@ -1897,10 +1956,29 @@
     "componentes": {
       "WorkingGlyph": [
         {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "picareta",
+            "martelo",
+            "engrenagem",
+            "pincel",
+            "faisca"
+          ],
+          "padrao": "picareta",
+          "resumo": "O ofício: ícone + gesto. Ver a tabela acima."
+        },
+        {
           "prop": "framed",
           "tipo": "chave",
           "padrao": true,
           "resumo": "Moldura discreta atrás do ícone. Desligue ao usar sobre imagem."
+        },
+        {
+          "prop": "shine",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Faixa de luz passando pelo traço do ícone."
         },
         {
           "prop": "size",
@@ -1930,7 +2008,7 @@
           "prop": "label",
           "tipo": "texto",
           "padrao": null,
-          "resumo": "Texto sob a animação. Default: a porcentagem, ou \"Processando…\"."
+          "resumo": "Texto sob a animação. Default: \"Transferindo\" (com a porcentagem ao lado) ou \"Processando…\"."
         }
       ]
     }
@@ -2028,22 +2106,22 @@
         {
           "prop": "cols",
           "tipo": "numero",
-          "min": 0,
-          "max": 100,
+          "min": 1,
+          "max": 8,
           "step": 1,
           "padrao": null,
           "resumo": "Colunas fixas. Omita para responsivo.",
-          "inicial": 5
+          "inicial": 4
         },
         {
           "prop": "gap",
           "tipo": "numero",
           "min": 0,
-          "max": 30,
-          "step": 1,
+          "max": 40,
+          "step": 2,
           "padrao": 12,
           "resumo": "Espaço entre itens e colunas, em px.",
-          "inicial": 10
+          "inicial": 16
         }
       ]
     }
@@ -2245,14 +2323,15 @@
           "prop": "doneMessage",
           "tipo": "texto",
           "padrao": "Recebido",
-          "resumo": null
+          "resumo": null,
+          "inicial": "Anexado"
         },
         {
           "prop": "message",
           "tipo": "texto",
           "padrao": "Solte o arquivo aqui",
           "resumo": null,
-          "inicial": "Solte os arquivos"
+          "inicial": "Solte pra anexar"
         }
       ]
     },
@@ -2675,6 +2754,12 @@
     "componentes": {
       "SfxProvider": [
         {
+          "prop": "hover",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Som de hover. Desligue onde passar o ponteiro não é agir."
+        },
+        {
           "prop": "selector",
           "tipo": "texto",
           "padrao": "button, [role='button'], a[data-sfx-target]",
@@ -2842,7 +2927,8 @@
           "prop": "tilt",
           "tipo": "chave",
           "padrao": false,
-          "resumo": "Liga o tombo. **Desligado por padrão** — ver a nota 2 do cabeçalho."
+          "resumo": "Liga o tombo. **Desligado por padrão** — ver a nota 2 do cabeçalho.",
+          "inicial": true
         },
         {
           "prop": "index",
@@ -2939,6 +3025,14 @@
   },
   "empty-state": {
     "componentes": {
+      "EmptyState": [
+        {
+          "prop": "framed",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Caixa com borda e fundo de card, arte sangrando no topo. `false` tira a"
+        }
+      ],
       "EmptyArt": [
         {
           "prop": "intensity",
@@ -2954,7 +3048,8 @@
           "prop": "seed",
           "tipo": "texto",
           "padrao": "vazio",
-          "resumo": "A semente. Passe o nome da coleção vazia (`\"favoritos\"`, `\"arquivados\"`) e"
+          "resumo": "A semente. Passe o nome da coleção vazia (`\"favoritos\"`, `\"arquivados\"`) e",
+          "inicial": "favoritos-vazio"
         }
       ]
     }
@@ -2963,10 +3058,23 @@
     "componentes": {
       "SkeletonRail": [
         {
+          "prop": "motion",
+          "tipo": "escolha",
+          "valores": [
+            "pulse",
+            "shimmer",
+            "wave",
+            "none"
+          ],
+          "padrao": null,
+          "resumo": "Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo."
+        },
+        {
           "prop": "heading",
           "tipo": "chave",
           "padrao": true,
-          "resumo": "Reserva a fileira de controle que o `@visant/rail` desenha acima do trilho"
+          "resumo": "Reserva a fileira de controle que o `@visant/rail` desenha acima do trilho",
+          "inicial": false
         },
         {
           "prop": "cards",
@@ -2975,7 +3083,8 @@
           "max": 20,
           "step": 1,
           "padrao": 5,
-          "resumo": "Quantos cards fantasma. Default 5."
+          "resumo": "Quantos cards fantasma. Default 5.",
+          "inicial": 1
         },
         {
           "prop": "gap",
@@ -2984,7 +3093,8 @@
           "max": 64,
           "step": 4,
           "padrao": 20,
-          "resumo": null
+          "resumo": null,
+          "inicial": 0
         },
         {
           "prop": "itemWidth",
@@ -2993,7 +3103,8 @@
           "max": 500,
           "step": 10,
           "padrao": 240,
-          "resumo": "Os mesmos valores do `@visant/rail` que este esqueleto representa."
+          "resumo": "Os mesmos valores do `@visant/rail` que este esqueleto representa.",
+          "inicial": 100
         },
         {
           "prop": "ratio",
@@ -3004,6 +3115,18 @@
         }
       ],
       "SkeletonCard": [
+        {
+          "prop": "motion",
+          "tipo": "escolha",
+          "valores": [
+            "pulse",
+            "shimmer",
+            "wave",
+            "none"
+          ],
+          "padrao": null,
+          "resumo": "Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo."
+        },
         {
           "prop": "delay",
           "tipo": "numero",
@@ -3025,6 +3148,18 @@
       ],
       "SkeletonText": [
         {
+          "prop": "motion",
+          "tipo": "escolha",
+          "valores": [
+            "pulse",
+            "shimmer",
+            "wave",
+            "none"
+          ],
+          "padrao": null,
+          "resumo": "Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo."
+        },
+        {
           "prop": "delay",
           "tipo": "numero",
           "min": 0,
@@ -3040,7 +3175,8 @@
           "max": 64,
           "step": 4,
           "padrao": 8,
-          "resumo": "Respiro entre linhas em px. O resto da entrelinha, na prática."
+          "resumo": "Respiro entre linhas em px. O resto da entrelinha, na prática.",
+          "inicial": 0
         },
         {
           "prop": "lineHeight",
@@ -3062,6 +3198,18 @@
         }
       ],
       "SkeletonList": [
+        {
+          "prop": "motion",
+          "tipo": "escolha",
+          "valores": [
+            "pulse",
+            "shimmer",
+            "wave",
+            "none"
+          ],
+          "padrao": null,
+          "resumo": "Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo."
+        },
         {
           "prop": "meta",
           "tipo": "chave",
@@ -3103,6 +3251,18 @@
         }
       ],
       "SkeletonMedia": [
+        {
+          "prop": "motion",
+          "tipo": "escolha",
+          "valores": [
+            "pulse",
+            "shimmer",
+            "wave",
+            "none"
+          ],
+          "padrao": null,
+          "resumo": "Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo."
+        },
         {
           "prop": "delay",
           "tipo": "numero",
@@ -3449,6 +3609,16 @@
           ],
           "padrao": "right",
           "resumo": "De onde o painel entra. `right` é o padrão do polegar destro."
+        },
+        {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "panel",
+            "full"
+          ],
+          "padrao": "panel",
+          "resumo": "O desenho do painel."
         },
         {
           "prop": "showTitle",
@@ -4853,7 +5023,8 @@
           "prop": "cancelLabel",
           "tipo": "texto",
           "padrao": "Cancelar",
-          "resumo": null
+          "resumo": null,
+          "inicial": "Não"
         },
         {
           "prop": "confirmLabel",
@@ -5375,6 +5546,12 @@
           "resumo": "Deixa o arrasto longo executar a ação da ponta sem toque."
         },
         {
+          "prop": "peek",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Ao montar, a linha dá uma espiada curta pro lado das ações e volta: ensina"
+        },
+        {
           "prop": "label",
           "tipo": "texto",
           "padrao": null,
@@ -5437,7 +5614,8 @@
             "bottom-left"
           ],
           "padrao": "bottom-right",
-          "resumo": null
+          "resumo": null,
+          "inicial": "bottom-center"
         },
         {
           "prop": "contained",
@@ -5630,7 +5808,8 @@
           "prop": "defaultChecked",
           "tipo": "chave",
           "padrao": false,
-          "resumo": "Estado inicial quando não controlado."
+          "resumo": "Estado inicial quando não controlado.",
+          "inicial": true
         },
         {
           "prop": "stroke",
@@ -5993,7 +6172,8 @@
           "max": 400,
           "step": 10,
           "padrao": 180,
-          "resumo": "Largura da capa em px. A altura segue 4:5."
+          "resumo": "Largura da capa em px. A altura segue 4:5.",
+          "inicial": 200
         },
         {
           "prop": "defaultIndex",
@@ -6160,11 +6340,21 @@
           "resumo": "Quanto o canto levanta com o ponteiro perto, em px."
         },
         {
+          "prop": "width",
+          "tipo": "numero",
+          "min": 0,
+          "max": 420,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Largura da folha em px. A altura segue 3:4. Sem valor, 240px.",
+          "inicial": 280
+        },
+        {
           "prop": "label",
           "tipo": "texto",
           "padrao": "Revista",
           "resumo": "Rótulo da revista para leitor de tela.",
-          "inicial": "Revista Objetos sem pressa"
+          "inicial": "Revista Sem pressa"
         }
       ]
     }
@@ -6177,6 +6367,12 @@
           "tipo": "chave",
           "padrao": false,
           "resumo": null
+        },
+        {
+          "prop": "handle",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Alça no topo do painel, o sinal de \"isto puxa\". Default `true`."
         },
         {
           "prop": "dots",
@@ -6281,6 +6477,16 @@
     "componentes": {
       "SlideToConfirm": [
         {
+          "prop": "doneTone",
+          "tipo": "escolha",
+          "valores": [
+            "success",
+            "tone"
+          ],
+          "padrao": "success",
+          "resumo": "Cor do trilho depois de confirmado. `success` (padrão) pinta polegar e"
+        },
+        {
           "prop": "tone",
           "tipo": "escolha",
           "valores": [
@@ -6324,7 +6530,8 @@
           "tipo": "texto",
           "padrao": "Deslize pra confirmar",
           "resumo": "Instrução no trilho, como \"Deslize pra pagar\".",
-          "inicial": "Deslize pra pagar"
+          "inicial": "Deslize pra pagar",
+          "secundario": true
         }
       ]
     }
@@ -6480,7 +6687,7 @@
           "tipo": "texto",
           "padrao": "Hora",
           "resumo": "Nome acessível do ponteiro.",
-          "inicial": "Hora em São Paulo"
+          "inicial": "Horário da reunião"
         }
       ]
     }
@@ -6535,6 +6742,289 @@
           "padrao": "Carteira",
           "resumo": "Título da carteira, no cabeçalho e no rótulo acessível.",
           "inicial": "Cartões da Marina"
+        }
+      ]
+    }
+  },
+  "shader-ascii": {
+    "componentes": {
+      "ShaderAscii": [
+        {
+          "prop": "charset",
+          "tipo": "escolha",
+          "valores": [
+            "blocks",
+            "dots",
+            "lines",
+            "classic",
+            "binary",
+            "braille"
+          ],
+          "padrao": "classic",
+          "resumo": "Jogo de caracteres."
+        },
+        {
+          "prop": "cell",
+          "tipo": "numero",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "padrao": 12,
+          "resumo": "6–24. Tamanho da célula de cada caractere, em px."
+        },
+        {
+          "prop": "contrast",
+          "tipo": "numero",
+          "min": 0,
+          "max": 140,
+          "step": 1,
+          "padrao": 55,
+          "resumo": "0–100. Contraste antes de escolher o glifo."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem em caracteres",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Globo em caracteres"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a redesenhar. Fundo branco ou transparente vira célula vazia.",
+          "inicial": "/media/cena-terra.webp"
+        }
+      ]
+    }
+  },
+  "shader-halftone": {
+    "componentes": {
+      "ShaderHalftone": [
+        {
+          "prop": "shape",
+          "tipo": "escolha",
+          "valores": [
+            "dots",
+            "squares",
+            "lines"
+          ],
+          "padrao": "dots",
+          "resumo": "Forma do ponto da retícula."
+        },
+        {
+          "prop": "lens",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Lupa que amplia a imagem debaixo do cursor."
+        },
+        {
+          "prop": "angle",
+          "tipo": "numero",
+          "min": 0,
+          "max": 120,
+          "step": 1,
+          "padrao": 45,
+          "resumo": "0–90. Ângulo da retícula, em graus."
+        },
+        {
+          "prop": "cell",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 9,
+          "resumo": "4–32. Tamanho da célula da retícula, em px."
+        },
+        {
+          "prop": "contrast",
+          "tipo": "numero",
+          "min": 0,
+          "max": 140,
+          "step": 1,
+          "padrao": 55,
+          "resumo": "0–100. Contraste antes de reticular."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem em retícula",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante em retícula"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a reticular. Fundo branco ou transparente vira papel.",
+          "inicial": "/media/cena-produto.webp",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "shader-neon": {
+    "componentes": {
+      "ShaderNeon": [
+        {
+          "prop": "amplitude",
+          "tipo": "numero",
+          "min": 0,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "0–100. Altura da onda."
+        },
+        {
+          "prop": "glow",
+          "tipo": "numero",
+          "min": 0,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "0–100. Brilho de cada fio."
+        },
+        {
+          "prop": "lines",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 5,
+          "resumo": "1–8. Quantos fios de luz."
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "0–100. Velocidade da onda."
+        }
+      ]
+    }
+  },
+  "shader-riso": {
+    "componentes": {
+      "ShaderRiso": [
+        {
+          "prop": "mode",
+          "tipo": "escolha",
+          "valores": [
+            "grain",
+            "halftone",
+            "bayer"
+          ],
+          "padrao": "grain",
+          "resumo": "Como a tinta assenta: grão de riso, ponto de retícula ou Bayer."
+        },
+        {
+          "prop": "cell",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 4,
+          "resumo": "2–16. Tamanho da célula de tinta, em px."
+        },
+        {
+          "prop": "misregistration",
+          "tipo": "numero",
+          "min": 0,
+          "max": 90,
+          "step": 1,
+          "padrao": 35,
+          "resumo": "0–100. Quanto as duas tintas saem do registro."
+        },
+        {
+          "prop": "paper",
+          "tipo": "numero",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "0–100. Textura do papel."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem em risografia",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Rádio impresso em risografia"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a imprimir. Fundo branco ou transparente vira papel.",
+          "inicial": "/media/cena-radio.webp"
+        }
+      ]
+    }
+  },
+  "shader-tunnel": {
+    "componentes": {
+      "ShaderTunnel": [
+        {
+          "prop": "density",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "0–100. Densidade dos anéis."
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "0–100. Velocidade de cruzeiro do túnel."
+        },
+        {
+          "prop": "twist",
+          "tipo": "numero",
+          "min": 0,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "0–100. Quanto os anéis torcem em espiral."
+        }
+      ]
+    }
+  },
+  "shader-voronoi": {
+    "componentes": {
+      "ShaderVoronoi": [
+        {
+          "prop": "core",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "0–100. Tamanho do núcleo aceso de cada célula."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 1,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "0–100. Tamanho das células: maior é menos célula na tela."
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 1,
+          "max": 90,
+          "step": 1,
+          "padrao": 35,
+          "resumo": "0–100. Velocidade da deriva."
         }
       ]
     }

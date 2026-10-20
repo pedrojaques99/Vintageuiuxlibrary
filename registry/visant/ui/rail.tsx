@@ -347,6 +347,63 @@ export function Rail({
     if (i > 0) ancorar(i);
   };
 
+  /**
+   * Arrastar com o mouse. No toque o navegador já arrasta sozinho; no mouse,
+   * sem isto, o único jeito de andar era achar a barra ou segurar Shift. O
+   * snap sai durante o gesto (com ele ligado o trilho briga com a mão e pula)
+   * e volta no fim, que é quando ele assenta no card mais perto.
+   *
+   * A distância divide pela escala da caixa: dentro de um palco com
+   * `transform: scale`, 100px de mouse não são 100px de rolagem.
+   */
+  const arrasto = React.useRef<{ x: number; inicio: number; escala: number; andou: boolean } | null>(null);
+  const aoApertar = (e: React.PointerEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el || e.pointerType !== "mouse" || e.button !== 0) return;
+    if (el.scrollWidth <= el.clientWidth) return;
+    const escala = el.offsetWidth ? el.getBoundingClientRect().width / el.offsetWidth : 1;
+    arrasto.current = { x: e.clientX, inicio: el.scrollLeft, escala: escala || 1, andou: false };
+  };
+  const aoMover = (e: React.PointerEvent<HTMLDivElement>) => {
+    const a = arrasto.current;
+    const el = ref.current;
+    if (!a || !el) return;
+    const dx = (e.clientX - a.x) / a.escala;
+    if (!a.andou) {
+      if (Math.abs(dx) < 5) return;
+      a.andou = true;
+      el.setPointerCapture(e.pointerId);
+      el.style.scrollSnapType = "none";
+      el.style.cursor = "grabbing";
+      el.style.userSelect = "none";
+    }
+    el.scrollLeft = a.inicio - dx;
+  };
+  const aoSoltar = (e: React.PointerEvent<HTMLDivElement>) => {
+    const a = arrasto.current;
+    const el = ref.current;
+    arrasto.current = null;
+    if (!a?.andou || !el) return;
+    if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
+    el.style.cursor = "";
+    el.style.userSelect = "";
+    // Devolver o snap com rolagem suave: sem isto o trilho pula seco pro card.
+    const antes = el.scrollLeft;
+    el.style.scrollSnapType = "";
+    const depois = el.scrollLeft;
+    if (antes !== depois) {
+      el.scrollLeft = antes;
+      el.scrollTo({ left: depois, behavior: "smooth" });
+    }
+    // O clique que vem junto do soltar não pode abrir o card que estava embaixo.
+    const engolir = (ev: MouseEvent) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+    };
+    el.addEventListener("click", engolir, { capture: true, once: true });
+    window.setTimeout(() => el.removeEventListener("click", engolir, { capture: true }), 0);
+  };
+
   const temCabeca = Boolean(heading || hint);
   // Seta que não rola nada é controle mentindo sobre a lista — em grade não há
   // rolagem nenhuma, então ela não existe (não é a versão desabilitada dela).
@@ -433,6 +490,13 @@ export function Rail({
           onScroll={grade ? undefined : sync}
           onKeyDown={grade ? undefined : teclado}
           onFocus={grade ? undefined : aoFocar}
+          onPointerDown={grade ? undefined : aoApertar}
+          onPointerMove={grade ? undefined : aoMover}
+          onPointerUp={grade ? undefined : aoSoltar}
+          onPointerCancel={grade ? undefined : aoSoltar}
+          // Link e imagem arrastam como arquivo por padrão, e o arrasto nativo
+          // engole o gesto antes de o trilho ver o ponteiro andar.
+          onDragStart={grade ? undefined : (e) => e.preventDefault()}
           className={cn(
             "grid pb-3 [&>*]:min-w-0",
             grade
@@ -441,7 +505,11 @@ export function Rail({
                   "grid-flow-col overflow-x-auto overscroll-x-contain",
                   "[scroll-snap-type:x_proximity]",
                   "[&>*]:[scroll-snap-align:start]",
-                  "[scrollbar-width:thin]",
+                  // Com a régua ligada a barra nativa é a mesma informação duas
+                  // vezes, e a cinza ainda some no Mac e aparece no Windows.
+                  progress
+                    ? "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                    : "[scrollbar-width:thin]",
                 ],
           )}
           style={{

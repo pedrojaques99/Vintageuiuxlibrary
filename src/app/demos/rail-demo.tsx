@@ -8,9 +8,9 @@
  * fim, a máscara mal tinha o que esconder e o corte na borda, que é a peça
  * inteira, virava um detalhe de 8px. Trilho é faixa; aqui ele tem faixa.
  *
- * As doze peças não são enfeite: `+N` só significa alguma coisa quando N é
- * grande, e a régua embaixo só responde "de seis ou de sessenta?" quando o
- * polegar é visivelmente menor que a pista.
+ * Card grande e cabeça só com o nome da coleção: a contagem e o `+N` eram
+ * legenda em cima de legenda, e a régua embaixo já responde "de seis ou de
+ * sessenta?". Anda por Shift + roda, arrasto do mouse, setas e teclado.
  *
  * O foco entra por Tab uma vez só — depois ←/→ andam pelos cards. É a promessa
  * de acessibilidade da peça, e ela só se verifica com o teclado numa lista que
@@ -42,16 +42,14 @@ export default function RailDemo({ props }: DemoProps) {
   return (
     <div className="flex h-full w-full flex-col justify-center px-6">
       <Rail
-        itemWidth={186}
+        itemWidth={248}
         gap={16}
         label="Coleção outono"
         heading="Coleção outono"
-        hint={`${PECAS.length} peças`}
         // O respiro do palco é `px-6`; a sangria devolve a fileira à borda sem
         // desalinhar o título do primeiro card.
         bleed={24}
         fade
-        remainder
         progress
         {...props}
       >
@@ -65,7 +63,7 @@ export default function RailDemo({ props }: DemoProps) {
             <Media
               papel={p.papel}
               indice={p.indice}
-              ratio="4/5"
+              ratio="1/1"
               className="rounded-[var(--r-control,0.5rem)] border border-border transition-colors [transition-duration:var(--dur-fast)] group-hover:border-[var(--brand)]"
             />
             <div className="mt-2 flex items-baseline justify-between gap-2">

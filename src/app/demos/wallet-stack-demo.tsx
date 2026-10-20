@@ -10,11 +10,13 @@ import { ArrowDownLeft, ShoppingBasket, Users } from "lucide-react";
 import { WalletStack, type WalletCard } from "../../../registry/visant/ui/wallet-stack";
 import type { DemoProps } from "../catalog";
 
+// Só o que se lê num cartão de longe: nome e final. Bandeira, titular e
+// validade são dado de cartão aberto, não da pilha.
 const CARTOES: WalletCard[] = [
-  { id: "conta", title: "Conta Visant", kind: "Débito", last4: "4821", holder: "Marina Alves", expiry: "09/29", tone: "brand" },
-  { id: "reserva", title: "Reserva", kind: "Crédito", last4: "0917", holder: "Marina Alves", expiry: "03/28", tone: "ink" },
-  { id: "bilhete", title: "Bilhete único", kind: "Transporte", last4: "3306", holder: "Marina Alves", tone: "muted" },
-  { id: "cafe", title: "Clube do café", kind: "Assinatura", last4: "7730", holder: "Marina Alves", expiry: "06/28", tone: "card" },
+  { id: "conta", title: "Conta", last4: "4821", tone: "brand" },
+  { id: "reserva", title: "Reserva", last4: "0917", tone: "ink" },
+  { id: "bilhete", title: "Transporte", last4: "3306", tone: "muted" },
+  { id: "cafe", title: "Clube do café", last4: "7730", tone: "card" },
 ];
 
 const SALDO: Record<string, string> = {

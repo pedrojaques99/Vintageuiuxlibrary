@@ -5,13 +5,28 @@
   "use-media-query": [
     "react"
   ],
+  "vintage-slider": [
+    "react"
+  ],
   "vintage-knob": [
     "react"
   ],
   "vintage-large-knob": [
     "react"
   ],
+  "vintage-toggle": [
+    "react"
+  ],
+  "vintage-eq": [
+    "react"
+  ],
+  "vintage-tv-frame": [
+    "react"
+  ],
   "vintage-soundboard-pad": [
+    "react"
+  ],
+  "vintage-xy-pad": [
     "react"
   ],
   "marquee": [
@@ -19,6 +34,9 @@
   ],
   "logo-wall": [
     "gsap"
+  ],
+  "reels-rail": [
+    "lucide-react"
   ],
   "motion-layer": [
     "gsap"
@@ -73,6 +91,9 @@
   "generating-tile": [
     "lucide-react"
   ],
+  "drop-overlay": [
+    "lucide-react"
+  ],
   "brand-selector": [
     "cmdk",
     "lucide-react"
@@ -95,6 +116,9 @@
   "line-reveal": [
     "gsap"
   ],
+  "sim-slider": [
+    "react"
+  ],
   "magnetic-cta": [
     "@radix-ui/react-slot"
   ],
@@ -115,7 +139,8 @@
     "gsap"
   ],
   "photo-compare": [
-    "gsap"
+    "gsap",
+    "lucide-react"
   ],
   "book-3d": [
     "@react-three/drei@^9.122.0",
@@ -176,7 +201,8 @@
     "motion"
   ],
   "elastic-slider": [
-    "motion"
+    "motion",
+    "react"
   ],
   "expandable-card": [
     "lucide-react",
@@ -191,7 +217,8 @@
   ],
   "hold-to-confirm": [
     "lucide-react",
-    "motion"
+    "motion",
+    "react"
   ],
   "icon-morph": [
     "motion"
@@ -228,10 +255,12 @@
     "motion"
   ],
   "magnify-dock": [
-    "motion"
+    "motion",
+    "react"
   ],
   "slosh-slider": [
-    "motion"
+    "motion",
+    "react"
   ],
   "tilt-card": [
     "motion"
@@ -264,7 +293,8 @@
     "motion"
   ],
   "pull-to-refresh": [
-    "motion"
+    "motion",
+    "react"
   ],
   "reactions": [
     "@radix-ui/react-popover",
@@ -277,7 +307,8 @@
   ],
   "slide-to-confirm": [
     "lucide-react",
-    "motion"
+    "motion",
+    "react"
   ],
   "sticker-peel": [
     "motion"

@@ -16,6 +16,7 @@ import {
 } from "motion/react";
 import { Check, Trash2 } from "lucide-react";
 
+import { playSfx } from "@/lib/sfx-bus";
 import { cn } from "@/lib/utils";
 
 /**
@@ -237,6 +238,8 @@ export function HoldToConfirm({
     if (!fonte.current) return;
     largar();
     if (tipoPonteiro.current === "touch") navigator.vibrate?.(12);
+    // Obturador armando e soltando: o fim do gesto longo tem som próprio.
+    playSfx("complete");
     setFeitoProprio(true);
     onConfirm?.();
   }

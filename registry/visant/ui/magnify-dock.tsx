@@ -11,6 +11,7 @@ import {
   type MotionValue,
 } from "motion/react";
 
+import { playSfx } from "@/lib/sfx-bus";
 import { cn } from "@/lib/utils";
 
 /**
@@ -95,6 +96,20 @@ export function MagnifyDock({
   // Distância em px onde a onda zera: `reach` passos de ícone + vão.
   const alcance = Math.max(1, reach) * (size + gap);
 
+  /*
+   * O tic de detente a cada ícone que o ponteiro cruza: o dock vira um seletor
+   * de dentes, como um knob de volume. Portão de 45 ms porque passar o mouse
+   * rápido pela barra cruza seis ícones em um piscar, e seis tics colados viram
+   * zumbido. O barramento já tem portão próprio; este é o da peça.
+   */
+  const ultimoTic = React.useRef(0);
+  const tic = () => {
+    const agora = performance.now();
+    if (agora - ultimoTic.current < 45) return;
+    ultimoTic.current = agora;
+    playSfx("detent");
+  };
+
   const mirar = (i: number) => {
     const casa = botoes.current[i]?.parentElement;
     if (casa) cursorX.set(casa.offsetLeft + casa.offsetWidth / 2);
@@ -152,7 +167,10 @@ export function MagnifyDock({
           ativo={item.id === active}
           tabIndex={i === foco ? 0 : -1}
           mostrarRotulo={rotulo === item.id}
-          onPointerEnter={() => setRotulo(item.id)}
+          onPointerEnter={() => {
+            setRotulo(item.id);
+            tic();
+          }}
           onFocus={(e) => {
             setFoco(i);
             setRotulo(item.id);
@@ -236,7 +254,11 @@ const DockIcone = React.forwardRef<HTMLButtonElement, DockIconeProps>(function D
         aria-label={item.label}
         aria-current={ativo ? "page" : undefined}
         className={cn(
-          "grid place-items-center rounded-[var(--r-control)] border border-border bg-background outline-none focus-visible:[box-shadow:var(--focus)]",
+          // Sem caixa própria: o ícone mora direto na barra. Borda em cada botão
+          // dentro da borda da barra era moldura dentro de moldura, e a onda de
+          // ampliação lia como caixas se empurrando em vez de ícones crescendo.
+          "grid place-items-center rounded-[var(--r-control)] outline-none focus-visible:[box-shadow:var(--focus)]",
+          "transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:bg-muted",
           "[&_svg]:size-[50%] [&_svg]:shrink-0",
           ativo || mostrarRotulo ? "text-foreground" : "text-muted-foreground",
         )}

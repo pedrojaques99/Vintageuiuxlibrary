@@ -77,6 +77,11 @@ export interface SwipeActionsRowProps {
   trailing?: SwipeAction[];
   /** Deixa o arrasto longo executar a ação da ponta sem toque. */
   fullSwipe?: boolean;
+  /**
+   * Ao montar, a linha dá uma espiada curta pro lado das ações e volta: ensina
+   * o gesto sem texto. Use numa linha só (a primeira), nunca na lista toda.
+   */
+  peek?: boolean;
   children: React.ReactNode;
   className?: string;
 }
@@ -166,6 +171,7 @@ export function SwipeActionsRow({
   leading = [],
   trailing = [],
   fullSwipe = true,
+  peek = false,
   children,
   className,
 }: SwipeActionsRowProps) {
@@ -387,6 +393,27 @@ export function SwipeActionsRow({
       setAbertaId((c) => (c === id ? null : c));
     };
   }, [id, linhas, setAbertaId]);
+
+  // A espiada: uma vez, depois de a linha assentar na tela, e só se ninguém
+  // já pegou nela. Vai pro lado que tem ação e volta sem passar do zero.
+  React.useEffect(() => {
+    if (!peek || reduzido) return;
+    const dir = trailing.length ? -1 : leading.length ? 1 : 0;
+    if (!dir) return;
+    let vivo = true;
+    const t = window.setTimeout(async () => {
+      if (arrasto.current || x.get() !== 0) return;
+      viagem.current = animate(x, dir * 44, MOLA_FIRME);
+      await viagem.current;
+      if (!vivo || arrasto.current || saindo.current) return;
+      viagem.current = animate(x, 0, MOLA_LISA);
+    }, 700);
+    return () => {
+      vivo = false;
+      window.clearTimeout(t);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [peek, reduzido]);
 
   // Outra linha abriu, ou tocaram fora: esta se recolhe. (Ref pro handler mais novo, sem refazer o efeito.)
   const fecharPorOutra = React.useRef(() => {});

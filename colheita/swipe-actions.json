@@ -14,8 +14,8 @@
     "demoImport": "./demos/swipe-actions-demo",
     "knobs": "SwipeActions",
     "preview": {
-      "w": 440,
-      "h": 320
+      "w": 420,
+      "h": 160
     }
   },
   "registry": {

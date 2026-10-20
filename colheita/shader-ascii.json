@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-ascii",
+    "title": "Shader ASCII",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem redesenhada em caracteres, com seis jogos de glifo e as células mais cheias na cor da marca.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "ascii",
+      "caracteres"
+    ],
+    "demoImport": "./demos/shader-ascii-demo",
+    "knobs": "ShaderAscii",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-ascii",
+    "type": "registry:ui",
+    "title": "Shader ASCII",
+    "description": "Uma imagem redesenhada em caracteres, com seis jogos de glifo e as células mais cheias na cor da marca.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-ascii.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/ascii.ts (Visant Labs)"
+}

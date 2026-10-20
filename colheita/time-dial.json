@@ -15,7 +15,7 @@
     "demoImport": "./demos/time-dial-demo",
     "knobs": "TimeDial",
     "preview": {
-      "w": 516,
+      "w": 300,
       "h": 300
     }
   },

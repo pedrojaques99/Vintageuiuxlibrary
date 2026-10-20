@@ -125,7 +125,11 @@ export function StickyFilterbar({
       const caixa = rolante();
       const topo = caixa ? caixa.getBoundingClientRect().top : 0;
       const grude = topo + (parseFloat(getComputedStyle(el).top) || 0);
-      setCondensed(box.top <= grude + 1);
+      // Encostar no topo não basta: uma barra que já nasce colada embaixo do
+      // cabeçalho estaria "grudada" com a rolagem em zero, e condensaria antes
+      // de a pessoa mexer, escondendo a linha secundária de cara.
+      const rolou = (caixa ? caixa.scrollTop : window.scrollY) > 0;
+      setCondensed(rolou && box.top <= grude + 1);
 
       // Quanto da região governada já passou. A região é o pai da barra: é
       // dentro dele que a barra gruda, então é ele que a barra "cobre".
@@ -189,7 +193,7 @@ export function StickyFilterbar({
         // Grudada o respiro fecha: cada pixel da barra é um pixel a menos de
         // produto na tela.
         "[&[data-condensed]_[data-collapsible]]:hidden",
-        "[&[data-condensed]_[data-filter-row]]:py-1.5",
+        "[&[data-condensed]_[data-filter-row]]:py-2",
         className,
       )}
       {...props}
@@ -239,7 +243,7 @@ export function FilterRow({
       // aqui isso significaria recalcular a altura da barra a cada quadro de
       // rolagem — o vizinho exato do defeito que já inchou esta página. Troca
       // seca, e durante o scroll ninguém lê a troca como corte.
-      className={cn("flex items-center gap-4 py-2", className)}
+      className={cn("flex items-center gap-4 py-3", className)}
       {...props}
     >
       {label ? (
@@ -247,7 +251,9 @@ export function FilterRow({
           {label}
         </p>
       ) : null}
-      <div className="flex flex-wrap gap-2">{children}</div>
+      {/* `flex-1`: sem ele um `ml-auto` dentro da linha (a contagem do
+          resultado, um "limpar") não tem pra onde empurrar e cai pra baixo. */}
+      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2.5">{children}</div>
     </div>
   );
 }

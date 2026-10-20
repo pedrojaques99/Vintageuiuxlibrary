@@ -14,8 +14,8 @@
     "demoImport": "./demos/liquid-toggle-demo",
     "knobs": "LiquidToggle",
     "preview": {
-      "w": 320,
-      "h": 200
+      "w": 300,
+      "h": 150
     }
   },
   "registry": {

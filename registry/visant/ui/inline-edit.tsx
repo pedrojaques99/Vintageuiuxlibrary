@@ -152,7 +152,7 @@ export function InlineEdit({
                             // também anima largura quando o valor muda, e deixar a
                             // largura entrar na transição faz o vizinho tremer.
                             'transition-[background-color,color] [transition-duration:var(--dur-fast,160ms)] [transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]',
-                            'hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                            'hover:bg-muted/60 focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]',
                             status === 'error' && 'text-destructive',
                             triggerClassName
                         )}
@@ -210,7 +210,7 @@ export function InlineEdit({
                                 type="button"
                                 onClick={handleSave}
                                 aria-label="Salvar"
-                                className="rounded p-1 text-emerald-600 transition-colors [transition-duration:var(--dur-press,120ms)] hover:bg-emerald-500/15 dark:text-emerald-400"
+                                className="rounded p-1 text-emerald-600 outline-none transition-colors [transition-duration:var(--dur-press,120ms)] hover:bg-emerald-500/15 focus-visible:[box-shadow:var(--focus)] dark:text-emerald-400"
                             >
                                 <Check className="h-3 w-3" />
                             </button>
@@ -218,7 +218,7 @@ export function InlineEdit({
                                 type="button"
                                 onClick={handleCancel}
                                 aria-label="Cancelar"
-                                className="rounded p-1 text-destructive transition-colors [transition-duration:var(--dur-press,120ms)] hover:bg-destructive/15"
+                                className="rounded p-1 text-destructive outline-none transition-colors [transition-duration:var(--dur-press,120ms)] hover:bg-destructive/15 focus-visible:[box-shadow:var(--focus)]"
                             >
                                 <X className="h-3 w-3" />
                             </button>

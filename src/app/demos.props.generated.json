@@ -8,7 +8,7 @@
   },
   "sticky-filterbar": {
     "headerSelector": "[data-demo-header]",
-    "className": "px-4"
+    "className": "px-6"
   },
   "measure-picker": {
     "min": 130,
@@ -24,27 +24,28 @@
     "speed": 64
   },
   "rail": {
-    "itemWidth": 186,
+    "itemWidth": 248,
     "gap": 16,
     "label": "Coleção outono",
     "heading": "Coleção outono",
     "bleed": 24,
     "fade": true,
-    "remainder": true,
     "progress": true
   },
   "plate": {
     "ratio": "4/5",
-    "inset": 16,
+    "inset": 18,
     "surface": "photo",
+    "blend": "multiply",
+    "ground": true,
     "className": "rounded-[var(--r-control,0.5rem)]"
   },
   "store-status": {
     "locale": "pt-BR"
   },
   "masonry-gallery": {
-    "cols": 5,
-    "gap": 10
+    "cols": 4,
+    "gap": 16
   },
   "grid-dots": {
     "opacity": 0.11,
@@ -53,8 +54,8 @@
     "spotlight": 170
   },
   "drop-overlay": {
-    "message": "Solte os arquivos",
-    "doneMessage": "Recebido"
+    "message": "Solte pra anexar",
+    "doneMessage": "Anexado"
   },
   "vintage-meter": {
     "label": "PROGRAM"
@@ -67,8 +68,8 @@
     "height": 210
   },
   "vintage-oscilloscope": {
-    "width": 250,
-    "height": 132
+    "width": 380,
+    "height": 180
   },
   "vintage-soundboard-pad": {
     "size": 72
@@ -78,11 +79,6 @@
     "labelX": "FREQ",
     "labelY": "GLOW",
     "color": "var(--vintage-accent)"
-  },
-  "vintage-tv-frame": {
-    "title": "VISANT TV",
-    "width": 300,
-    "showTimecode": "00:12:34"
   },
   "showcase-card": {
     "className": "mx-auto w-full max-w-[320px]",
@@ -127,12 +123,15 @@
     "afterLabel": "depois"
   },
   "reels-rail": {
-    "itemWidth": 230,
-    "heading": "Reels",
-    "hint": "mural contínuo"
+    "className": "w-full [&_[role=group]]:[scrollbar-width:none] [&_[role=group]::-webkit-scrollbar]:hidden",
+    "arrows": false,
+    "itemWidth": 280,
+    "gap": 20,
+    "driftSpeed": 14
   },
   "carousel-3d": {
-    "cta": "Ver projeto"
+    "cta": "Ver projeto",
+    "className": "h-[420px] min-h-0"
   },
   "fog-tree": {
     "className": "h-full min-h-[480px] rounded-[var(--r-surface,0.875rem)] border border-border",
@@ -143,16 +142,21 @@
     "heightPerStop": "420px"
   },
   "spine-card": {
+    "tilt": true,
     "href": "#",
-    "action": "ver →",
-    "className": "w-[190px]"
+    "className": "w-[168px]"
   },
   "empty-state": {
-    "className": "h-[200px] w-full"
+    "seed": "favoritos-vazio",
+    "className": "size-[72px] rounded-full border border-border"
   },
   "skeleton-rail": {
+    "cards": 1,
+    "heading": false,
+    "itemWidth": 100,
+    "gap": 0,
     "ratio": "4 / 5",
-    "label": "Carregando a coleção"
+    "label": false
   },
   "pinned-scene": {
     "stepHeight": "520px",
@@ -164,11 +168,16 @@
     "period": "seis meses"
   },
   "card-stack": {
+    "className": "w-[min(100%,21rem)] [--card-stack-h:18rem]",
     "label": "Depoimentos"
   },
   "confirm-morph": {
     "label": "Apagar",
-    "prompt": "Apagar 3 arquivos?"
+    "prompt": "Tem certeza?",
+    "cancelLabel": "Não",
+    "confirmLabel": "Apagar",
+    "pendingLabel": "Apagando",
+    "doneLabel": "Apagado"
   },
   "elastic-slider": {
     "label": "Volume"
@@ -200,16 +209,22 @@
     "className": "text-[3.25rem] font-semibold leading-none tracking-tight"
   },
   "swipe-actions": {
-    "label": "Caixa de entrada"
+    "label": "Caixa de entrada",
+    "className": "w-full"
   },
   "toast-stack": {
-    "contained": true
+    "position": "bottom-center",
+    "contained": true,
+    "className": "bottom-8"
   },
   "folding-bill": {
     "defaultFolded": false
   },
   "heat-word": {
     "className": "w-[480px] max-w-full"
+  },
+  "liquid-toggle": {
+    "defaultChecked": true
   },
   "magnetic-select": {
     "label": "Como está o seu dia?"
@@ -228,18 +243,21 @@
   },
   "cover-flow": {
     "defaultIndex": 2,
+    "cardWidth": 200,
     "label": "Projetos",
-    "className": "w-[560px] max-w-full"
+    "className": "w-[620px] max-w-full"
   },
   "orbit-menu": {
     "label": "Ações da nota"
   },
   "page-curl": {
-    "label": "Revista Objetos sem pressa"
+    "width": 280,
+    "label": "Revista Sem pressa"
   },
   "pull-to-refresh": {
     "label": "Caixa de hoje",
-    "className": "w-[320px] max-w-full"
+    "className": "w-[320px] max-w-full",
+    "nudge": true
   },
   "reactions": {
     "label": "Reações à versão 2.4"
@@ -264,13 +282,37 @@
     "height": 200
   },
   "time-dial": {
-    "caption": "São Paulo",
-    "label": "Hora em São Paulo"
+    "caption": "Expediente",
+    "label": "Horário da reunião"
   },
   "voice-note": {
     "duration": 9
   },
   "wallet-stack": {
     "label": "Cartões da Marina"
+  },
+  "shader-ascii": {
+    "src": "/media/cena-terra.webp",
+    "alt": "Globo em caracteres",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-halftone": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante em retícula",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-neon": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-riso": {
+    "src": "/media/cena-radio.webp",
+    "alt": "Rádio impresso em risografia",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-tunnel": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-voronoi": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
   }
 }

@@ -2,56 +2,12 @@
 
 <!-- Gerado por scripts/vite-bug-report.mjs. Não edite à mão: use `npm run bugs -- --resolve <id>`. -->
 
-**63 aberto(s)** · 99 resolvido(s)
-
-## auth-button (2)
-
-- **auth-button-1** — mal apresentado, mt simlpes
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:27</sub>
-- **auth-button-2** — foco no componente cara
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:27</sub>
-
-## slide-to-confirm (2)
-
-- **slide-to-confirm-1** — sfx ao completar, e cor de aprovação no botão
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:29</sub>
-- **slide-to-confirm-2** — tá cortando as bordas no catalogo, posicionar melhor
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:30</sub>
+**21 aberto(s)** · 141 resolvido(s)
 
 ## vintage-command-palette (1)
 
 - **vintage-command-palette-2** — ficou meio vazio, redundante, acho q apaga
   <sub>Quebrado · 1920×911 · claro · marca: Grão Editora · 2026-08-14 21:06</sub>
-
-## nav-drawer (1)
-
-- **nav-drawer-2** — tá feio, precisa de mais variações de estilo, faça um mais brutalista e full page com imagem na esquerda
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:19</sub>
-
-## magnify-dock (1)
-
-- **magnify-dock-1** — hover sfx mini tic de knub de volume estilo ao ir trocando o hover dos icons, deixar menos bordas dentro de bordas o componente em si
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:19</sub>
-
-## orbit-menu (1)
-
-- **orbit-menu-1** — nao entendi a necessidade do card, deixa direto o botão q abre, sem label ou texto desnecessário
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:20</sub>
-
-## rail (1)
-
-- **rail-3** — bugado o scroll horizontal, e tá mt pqeno, e limpa label desnecessária, tem q funcionar por scroll shift, drag, arrwos, etc
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:20</sub>
-
-## side-nav (1)
-
-- **side-nav-2** — mt grande a parte horizontal, mal da pra ver a sidebar, o foco é ela
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:21</sub>
-
-## sticky-filterbar (1)
-
-- **sticky-filterbar-5** — mt pequeno os itens, tá mt espremido esse componente
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:21</sub>
 
 ## status-ticker (1)
 
@@ -63,19 +19,9 @@
 - **working-glyph-2** — tá um shine meio zoado q cobre o quadrado todo ao inves de só na picareta, faça variações com outros icons e animacoes
   <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:22</sub>
 
-## octahedron-loader (1)
-
-- **octahedron-loader-3** — excluir
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
-
 ## paper-shuttle (1)
 
 - **paper-shuttle-2** — remover o glitche  etch vibe, deixar generico
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
-
-## generating-tile (1)
-
-- **generating-tile-2** — excluir
   <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
 
 ## drop-overlay (1)
@@ -108,119 +54,9 @@
 - **dynamic-island-1** — os botões de baixo "ligacao" timer etc, estão mais aparecendo e evidentes doq o componente em si, melhore a hierarquia
   <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:25</sub>
 
-## confirm-morph (1)
-
-- **confirm-morph-1** — mt label, limpar
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:26</sub>
-
-## elastic-slider (1)
-
-- **elastic-slider-1** — sfx ao arrastar, tipo barulho da lete mudando o foco numa camera analogica
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:26</sub>
-
-## brand-selector (1)
-
-- **brand-selector-2** — confuso e mt coisa pra apresentar um componente simples
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:26</sub>
-
-## inline-edit (1)
-
-- **inline-edit-2** — mt simples, sem sentido, mal apresentado
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:26</sub>
-
-## segmented-control (1)
-
-- **segmented-control-2** — variações de animacoes pra ficar mais rico
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:27</sub>
-
-## scrub-input (1)
-
-- **scrub-input-2** — deixar mais respiro visual, melhorar pra mostrar só quando precisa
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:27</sub>
-
-## chip (1)
-
-- **chip-2** — mal apresentado, mt slop e mt coisa aprecendo de vez
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
-
-## sfx-toggle (1)
-
-- **sfx-toggle-1** — deixar fora
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
-
-## sim-slider (1)
-
-- **sim-slider-2** — faltou fsfx arrastand
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
-
-## hold-to-confirm (1)
-
-- **hold-to-confirm-1** — sfx de completo
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
-
-## icon-morph (1)
-
-- **icon-morph-1** — deixar mais rapidinho a animação
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:28</sub>
-
-## morph-select (1)
-
-- **morph-select-1** — fica cortado quando abre, melhorar e deixar melhor apresentado
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:29</sub>
-
-## liquid-toggle (1)
-
-- **liquid-toggle-1** — 1 só
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:29</sub>
-
-## slosh-slider (1)
-
-- **slosh-slider-1** — sfx ao arrastar
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:29</sub>
-
-## time-dial (1)
-
-- **time-dial-1** — deixar mais limpo
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:29</sub>
-
-## vintage-parametric-eq (1)
-
-- **vintage-parametric-eq-1** — tirar sfx de arrastar aq
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:30</sub>
-
-## vintage-xy-pad (1)
-
-- **vintage-xy-pad-2** — tá bugado o drag
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:30</sub>
-
-## vintage-soundboard-pad (1)
-
-- **vintage-soundboard-pad-2** — sfx pra cada tipo pra ficar coerente
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:31</sub>
-
-## vintage-oscilloscope (1)
-
-- **vintage-oscilloscope-2** — deixar interativo, play no som pra acionar o visual, um visual por vez
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:31</sub>
-
-## vintage-tv-frame (1)
-
-- **vintage-tv-frame-3** — tocar algo
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:31</sub>
-
 ## use-pointer-parallax (1)
 
 - **use-pointer-parallax-3** — mt poluido e slop
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:32</sub>
-
-## css-color (1)
-
-- **css-color-1** — pode esconder
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:32</sub>
-
-## sfx-bus (1)
-
-- **sfx-bus-1** — som de drop tá zoado, deixe mais sopro tlg
   <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:32</sub>
 
 ## photo-compare (1)
@@ -253,11 +89,6 @@
 - **cover-flow-1** — deixe tudo no mesmo padrão de desenho,  com drop shadow, e mais visivel e focado no centro, hierarquia mais clara, opacidade reduzida nos latareis
   <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:34</sub>
 
-## voice-note (1)
-
-- **voice-note-1** — nao entendi o label, foco no componente pfvr
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:34</sub>
-
 ## page-curl (1)
 
 - **page-curl-1** — ta feio e mal apresentado, tem q deixar nivel visant, com quase 3d mesmo
@@ -277,41 +108,6 @@
 
 - **lathe-object-1** — botoes pra trocar estao mt intrusivos
   <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
-
-## fog-tree (1)
-
-- **fog-tree-1** — nova categoria de shaders e mostra os shaders usados na casa e repos da visantlabs etc
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
-
-## card-stack (1)
-
-- **card-stack-1** — precisa de um grau nivel visantr
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
-
-## spine-card (1)
-
-- **spine-card-3** — slop
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
-
-## folding-bill (1)
-
-- **folding-bill-1** — precisa de um grau forte
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
-
-## swipe-actions (1)
-
-- **swipe-actions-1** — deixa só um, mais intutivo e claro noq tem q fazer
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:37</sub>
-
-## black-hole (1)
-
-- **black-hole-1** — animacao ta mt amadora kkk deixa mais sutil
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:37</sub>
-
-## wallet-stack (1)
-
-- **wallet-stack-1** — mt label, foco no visual limpo
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:37</sub>
 
 ---
 
@@ -416,5 +212,47 @@
 - ~~motion-e-estado-1 · motion-e-estado — ler buf da pagina q vende~~
 - ~~rig-vintage-1 · rig-vintage — ler bug da pagina q vende e resolver da mesma forma~~
 - ~~marca-viva-1 · marca-viva — troque por "brand system" e redesenhe a pagina pra ficar mais pica e coerente~~
+- ~~nav-drawer-2 · nav-drawer — tá feio, precisa de mais variações de estilo, faça um mais brutalista e full page com imagem na esquerda~~
+- ~~magnify-dock-1 · magnify-dock — hover sfx mini tic de knub de volume estilo ao ir trocando o hover dos icons, deixar menos bordas dentro de bordas o componente em si~~
+- ~~orbit-menu-1 · orbit-menu — nao entendi a necessidade do card, deixa direto o botão q abre, sem label ou texto desnecessário~~
+- ~~rail-3 · rail — bugado o scroll horizontal, e tá mt pqeno, e limpa label desnecessária, tem q funcionar por scroll shift, drag, arrwos, etc~~
+- ~~side-nav-2 · side-nav — mt grande a parte horizontal, mal da pra ver a sidebar, o foco é ela~~
+- ~~sticky-filterbar-5 · sticky-filterbar — mt pequeno os itens, tá mt espremido esse componente~~
+- ~~octahedron-loader-3 · octahedron-loader — excluir~~
+- ~~generating-tile-2 · generating-tile — excluir~~
+- ~~confirm-morph-1 · confirm-morph — mt label, limpar~~
+- ~~elastic-slider-1 · elastic-slider — sfx ao arrastar, tipo barulho da lete mudando o foco numa camera analogica~~
+- ~~brand-selector-2 · brand-selector — confuso e mt coisa pra apresentar um componente simples~~
+- ~~inline-edit-2 · inline-edit — mt simples, sem sentido, mal apresentado~~
+- ~~auth-button-1 · auth-button — mal apresentado, mt simlpes~~
+- ~~auth-button-2 · auth-button — foco no componente cara~~
+- ~~segmented-control-2 · segmented-control — variações de animacoes pra ficar mais rico~~
+- ~~scrub-input-2 · scrub-input — deixar mais respiro visual, melhorar pra mostrar só quando precisa~~
+- ~~chip-2 · chip — mal apresentado, mt slop e mt coisa aprecendo de vez~~
+- ~~sfx-toggle-1 · sfx-toggle — deixar fora~~
+- ~~sim-slider-2 · sim-slider — faltou fsfx arrastand~~
+- ~~hold-to-confirm-1 · hold-to-confirm — sfx de completo~~
+- ~~icon-morph-1 · icon-morph — deixar mais rapidinho a animação~~
+- ~~morph-select-1 · morph-select — fica cortado quando abre, melhorar e deixar melhor apresentado~~
+- ~~liquid-toggle-1 · liquid-toggle — 1 só~~
+- ~~slosh-slider-1 · slosh-slider — sfx ao arrastar~~
+- ~~time-dial-1 · time-dial — deixar mais limpo~~
+- ~~slide-to-confirm-1 · slide-to-confirm — sfx ao completar, e cor de aprovação no botão~~
+- ~~slide-to-confirm-2 · slide-to-confirm — tá cortando as bordas no catalogo, posicionar melhor~~
+- ~~vintage-parametric-eq-1 · vintage-parametric-eq — tirar sfx de arrastar aq~~
+- ~~vintage-xy-pad-2 · vintage-xy-pad — tá bugado o drag~~
+- ~~vintage-soundboard-pad-2 · vintage-soundboard-pad — sfx pra cada tipo pra ficar coerente~~
+- ~~vintage-oscilloscope-2 · vintage-oscilloscope — deixar interativo, play no som pra acionar o visual, um visual por vez~~
+- ~~vintage-tv-frame-3 · vintage-tv-frame — tocar algo~~
+- ~~css-color-1 · css-color — pode esconder~~
+- ~~sfx-bus-1 · sfx-bus — som de drop tá zoado, deixe mais sopro tlg~~
+- ~~voice-note-1 · voice-note — nao entendi o label, foco no componente pfvr~~
+- ~~fog-tree-1 · fog-tree — nova categoria de shaders e mostra os shaders usados na casa e repos da visantlabs etc~~
+- ~~card-stack-1 · card-stack — precisa de um grau nivel visantr~~
+- ~~spine-card-3 · spine-card — slop~~
+- ~~folding-bill-1 · folding-bill — precisa de um grau forte~~
+- ~~swipe-actions-1 · swipe-actions — deixa só um, mais intutivo e claro noq tem q fazer~~
+- ~~black-hole-1 · black-hole — animacao ta mt amadora kkk deixa mais sutil~~
+- ~~wallet-stack-1 · wallet-stack — mt label, foco no visual limpo~~
 
 </details>

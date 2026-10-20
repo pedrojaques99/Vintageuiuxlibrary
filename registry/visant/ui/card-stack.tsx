@@ -54,6 +54,12 @@ const VISIVEIS = 4;
 /** Quanto cada card de trás aparece abaixo do da frente, e quanto encolhe. */
 const DEGRAU = 12;
 const ENCOLHE = 0.05;
+/**
+ * O leque: cada card de trás sai levemente torto, alternando o lado. Pilha
+ * perfeitamente alinhada lê como fatias de interface empilhadas; uns poucos graus
+ * pra cada lado é o que faz ler como cartas de verdade numa mesa.
+ */
+const GIRO = [0, -5, 3.5, -2, 0];
 /** Px por segundo a partir do qual a soltura é arremesso. */
 const FLICK = 500;
 
@@ -120,7 +126,12 @@ function Carta({ depth, total, topo, reduce, envio, onSend, label, children }: C
       className="pointer-events-none absolute inset-x-0 top-0 h-[var(--card-stack-h)] origin-bottom"
       style={{ zIndex: voando ? total + 1 : total - depth }}
       initial={false}
-      animate={{ y: d * DEGRAU, scale: 1 - d * ENCOLHE, opacity: fora ? 0 : 1 }}
+      animate={{
+        y: d * DEGRAU,
+        scale: 1 - d * ENCOLHE,
+        rotate: reduce ? 0 : GIRO[d] ?? 0,
+        opacity: fora ? 0 : 1,
+      }}
       transition={reduce ? parado : molaPilha}
       aria-hidden={topo ? undefined : true}
       // `inert` como atributo cru: o React 18 não conhece a prop e só repassa string.
@@ -157,6 +168,18 @@ function Carta({ depth, total, topo, reduce, envio, onSend, label, children }: C
         )}
       >
         {children}
+        {/*
+         * A sombra de profundidade: quanto mais fundo, mais o card afunda no
+         * fundo do tema. É um véu da cor do `--background`, não um cinza, então
+         * funciona igual no claro e no escuro, e some no card de cima.
+         */}
+        <motion.span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-background"
+          initial={false}
+          animate={{ opacity: Math.min(d, 3) * 0.18 }}
+          transition={reduce ? parado : molaPilha}
+        />
       </motion.div>
     </motion.div>
   );

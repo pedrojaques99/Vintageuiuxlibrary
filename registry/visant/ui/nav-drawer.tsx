@@ -116,7 +116,25 @@ export interface NavDrawerContentProps
   brand?: React.ReactNode;
   /** Rodapé do painel: idioma, telefone, redes. Fica colado embaixo. */
   footer?: React.ReactNode;
+  /**
+   * O desenho do painel.
+   *
+   * · `panel` (padrão): a gaveta de 26rem que entra pela borda, com cantos do tema.
+   * · `full`: página inteira e brutalista. Sem raio, régua de 1px entre os
+   *   links, tipo enorme em caixa alta, e o hover inverte a linha inteira. Com
+   *   `media`, a tela divide: imagem à esquerda, menu à direita.
+   */
+  variant?: "panel" | "full";
+  /**
+   * A imagem da metade esquerda no `variant="full"`. Slot pelo mesmo motivo do
+   * `brand`: cada projeto tem o seu componente de imagem otimizada. Some abaixo
+   * de `md`, onde não há largura pra dividir a tela. Ignorado no `panel`.
+   */
+  media?: React.ReactNode;
 }
+
+/** O desenho do painel chega aos itens por contexto: o item não pede prop. */
+const VarianteCtx = React.createContext<"panel" | "full">("panel");
 
 export const NavDrawer = Dialog.Root;
 export const NavDrawerTrigger = Dialog.Trigger;
@@ -126,7 +144,12 @@ export const NavDrawerPortal = Dialog.Portal;
 export const NavDrawerContent = React.forwardRef<
   React.ElementRef<typeof Dialog.Content>,
   NavDrawerContentProps
->(({ side = "right", title, showTitle = false, brand, footer, className, children, ...props }, ref) => (
+>(({ side = "right", title, showTitle = false, brand, footer, variant = "panel", media, className, children, ...props }, ref) =>
+  variant === "full" ? (
+    <PaginaInteira ref={ref} side={side} title={title} brand={brand} footer={footer} media={media} className={className} {...props}>
+      {children}
+    </PaginaInteira>
+  ) : (
   <Dialog.Portal>
     {/*
      * O véu não é só escurecer: o `backdrop-blur` é o que separa o painel de uma
@@ -204,8 +227,77 @@ export const NavDrawerContent = React.forwardRef<
       )}
     </Dialog.Content>
   </Dialog.Portal>
-));
+  ),
+);
 NavDrawerContent.displayName = "NavDrawerContent";
+
+/**
+ * A variante `full`: o menu vira a página.
+ *
+ * Brutalista no sentido de mostrar a estrutura em vez de escondê-la: régua de
+ * 1px na cor do texto entre todos os links, nenhum canto arredondado, nenhuma
+ * sombra, tipo grande o bastante pra o menu ser o assunto da tela. O hover não
+ * desliza um rótulo: inverte a linha inteira, que é o gesto mais seco possível
+ * e por isso o que combina.
+ *
+ * A acessibilidade é a mesma do painel, porque o `Dialog` é o mesmo: foco preso,
+ * Escape, retorno do foco e trava de rolagem. Só a superfície muda.
+ */
+const PaginaInteira = React.forwardRef<
+  React.ElementRef<typeof Dialog.Content>,
+  Omit<NavDrawerContentProps, "variant" | "showTitle">
+>(({ side = "right", title, brand, footer, media, className, children, ...props }, ref) => (
+  <Dialog.Portal>
+    <Dialog.Overlay className="nav-drawer-overlay fixed inset-0 z-50 bg-background" />
+    <Dialog.Content
+      ref={ref}
+      data-side={side}
+      data-variant="full"
+      className={cn(
+        "nav-drawer-panel fixed inset-0 z-50 grid h-dvh w-screen bg-background text-foreground outline-none",
+        media ? "md:grid-cols-2" : "grid-cols-1",
+        className,
+      )}
+      {...props}
+    >
+      {media && (
+        <div className="relative hidden min-h-0 overflow-hidden border-r border-foreground md:block [&>*]:h-full [&>*]:w-full">
+          {media}
+        </div>
+      )}
+      <div className="flex min-h-0 flex-col">
+        <div className="flex h-16 shrink-0 items-stretch justify-between border-b border-foreground">
+          <div className="flex min-w-0 items-center px-6">
+            {brand}
+            <Dialog.Title className="sr-only">{title}</Dialog.Title>
+          </div>
+          <Dialog.Close
+            aria-label="Fechar menu"
+            className={cn(
+              "grid w-16 shrink-0 place-items-center border-l border-foreground",
+              "transition-colors [transition-duration:var(--dur-fast,140ms)]",
+              "hover:bg-foreground hover:text-background",
+              "outline-none focus-visible:[box-shadow:var(--focus)]",
+            )}
+          >
+            <svg viewBox="0 0 16 16" className="size-5" aria-hidden="true" fill="none">
+              <path d="M2.5 2.5l11 11M13.5 2.5l-11 11" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
+          </Dialog.Close>
+        </div>
+        <VarianteCtx.Provider value="full">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">{children}</div>
+        </VarianteCtx.Provider>
+        {footer && (
+          <div className="shrink-0 border-t border-foreground px-6 py-4 font-mono text-[length:var(--text-rotulo,0.6875rem)] uppercase tracking-[0.12em]">
+            {footer}
+          </div>
+        )}
+      </div>
+    </Dialog.Content>
+  </Dialog.Portal>
+));
+PaginaInteira.displayName = "NavDrawerFullPage";
 
 /**
  * Embrulha cada filho num `<li>` e escreve os DOIS índices da cascata.
@@ -264,6 +356,7 @@ export const NavDrawerItem = React.forwardRef<HTMLAnchorElement, NavDrawerItemPr
   { active = false, meta, asChild = false, className, children, ...props },
   ref,
 ) {
+  const cheia = React.useContext(VarianteCtx) === "full";
   /*
    * `asChild` aqui não pode ser o `Slot` puro: o Slot funde props no filho mas
    * mantém os filhos DELE, e a peça precisa reparentar — o texto do link tem que
@@ -289,7 +382,7 @@ export const NavDrawerItem = React.forwardRef<HTMLAnchorElement, NavDrawerItemPr
         />
       </span>
       {meta && (
-        <span className="text-[length:var(--text-rotulo,0.6875rem)] tabular-nums tracking-[0.1em] text-muted-foreground">
+        <span className="nav-drawer-meta font-mono text-[length:var(--text-rotulo,0.6875rem)] tabular-nums tracking-[0.1em] text-muted-foreground">
           {meta}
         </span>
       )}
@@ -305,11 +398,23 @@ export const NavDrawerItem = React.forwardRef<HTMLAnchorElement, NavDrawerItemPr
     // porque são dois públicos, e nenhum dos dois substitui o outro.
     "aria-current": active ? ("page" as const) : undefined,
     className: cn(
-      "nav-drawer-item group/nav relative flex items-baseline justify-between gap-4 py-3",
-      "text-[length:var(--text-titulo,1.375rem)] font-medium tracking-[-0.02em]",
-      "text-muted-foreground transition-colors [transition-duration:var(--dur-fast,140ms)]",
-      "hover:text-foreground data-[active]:text-foreground",
-      "outline-none focus-visible:[box-shadow:var(--focus)] focus-visible:rounded-[var(--r-control,0.5rem)]",
+      "nav-drawer-item group/nav relative flex items-baseline justify-between gap-4",
+      cheia
+        ? [
+            // Página inteira: a linha é a régua, o hover inverte a linha toda.
+            "border-b border-foreground px-6 py-5 text-foreground",
+            "text-[clamp(2rem,5.5vw,4.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.045em]",
+            "transition-colors [transition-duration:var(--dur-fast,140ms)]",
+            "hover:bg-foreground hover:text-background data-[active]:bg-foreground data-[active]:text-background",
+            "[&_.nav-drawer-rule]:hidden [&_.nav-drawer-meta]:text-current",
+            "outline-none focus-visible:[box-shadow:var(--focus)]",
+          ]
+        : [
+            "py-3 text-[length:var(--text-titulo,1.375rem)] font-medium tracking-[-0.02em]",
+            "text-muted-foreground transition-colors [transition-duration:var(--dur-fast,140ms)]",
+            "hover:text-foreground data-[active]:text-foreground",
+            "outline-none focus-visible:[box-shadow:var(--focus)] focus-visible:rounded-[var(--r-control,0.5rem)]",
+          ],
       className,
     ),
     ...props,

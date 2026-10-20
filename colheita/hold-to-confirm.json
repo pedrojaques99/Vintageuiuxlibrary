@@ -28,7 +28,8 @@
       "lucide-react"
     ],
     "registryDependencies": [
-      "utils"
+      "utils",
+      "@visant/sfx-bus"
     ],
     "files": [
       {

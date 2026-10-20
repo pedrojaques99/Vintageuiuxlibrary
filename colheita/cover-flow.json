@@ -16,8 +16,8 @@
     "demoImport": "./demos/cover-flow-demo",
     "knobs": "CoverFlow",
     "preview": {
-      "w": 560,
-      "h": 361
+      "w": 640,
+      "h": 420
     }
   },
   "registry": {

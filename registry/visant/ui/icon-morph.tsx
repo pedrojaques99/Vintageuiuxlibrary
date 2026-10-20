@@ -48,12 +48,14 @@ export interface IconMorphProps
   strokeWidth?: number;
 }
 
-// As molas da casa, em `visualDuration` pra caber no teto de 300 ms de resposta a gesto.
-const MOLA: Transition = { type: "spring", visualDuration: 0.3, bounce: 0.2 };
-const MOLA_FIRME: Transition = { type: "spring", visualDuration: 0.2, bounce: 0.1 };
-const MOLA_LISA: Transition = { type: "spring", visualDuration: 0.28, bounce: 0 };
+// As molas da casa, em `visualDuration`. Ícone troca dezenas de vezes por
+// sessão: a mola fica bem abaixo do teto de 300 ms, rápida o bastante pra
+// nunca parecer que o clique esperou a animação.
+const MOLA: Transition = { type: "spring", visualDuration: 0.18, bounce: 0.15 };
+const MOLA_FIRME: Transition = { type: "spring", visualDuration: 0.14, bounce: 0.05 };
+const MOLA_LISA: Transition = { type: "spring", visualDuration: 0.16, bounce: 0 };
 const JA: Transition = { duration: 0 };
-const SUMIR = { duration: 0.16 };
+const SUMIR = { duration: 0.1 };
 
 function Moldura({
   size = 24,
@@ -151,7 +153,7 @@ export function IconMorph({ name, state = false, ...props }: IconMorphProps) {
             d="M5 12.5 L9.5 17 L19 7.5"
             initial={false}
             animate={state ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-            transition={reduzido ? JA : { ...MOLA_LISA, delay: state ? 0.06 : 0, opacity: { duration: 0.08, delay: state ? 0.06 : 0 } }}
+            transition={reduzido ? JA : { ...MOLA_LISA, delay: state ? 0.04 : 0, opacity: { duration: 0.06, delay: state ? 0.04 : 0 } }}
           />
         </Moldura>
       );

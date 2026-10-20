@@ -205,7 +205,7 @@ export function FoldingBill({
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       className={cn(
-        "relative w-[260px] cursor-grab touch-none select-none rounded-[var(--r-surface)] outline-none active:cursor-grabbing",
+        "relative w-[280px] cursor-grab touch-none select-none rounded-[var(--r-surface)] outline-none active:cursor-grabbing",
         "focus-visible:[box-shadow:var(--focus)] [perspective:900px]",
         className,
       )}
@@ -217,13 +217,17 @@ export function FoldingBill({
         className="relative [transform-style:preserve-3d]"
         style={{ height: panelHeight }}
       >
-        <div className={cn(face, "flex flex-col justify-center gap-1 rounded-t-[var(--r-surface)] border border-border px-4 [box-shadow:var(--e-raised)]")}>
-          <span className="truncate text-[length:var(--text-destaque,0.9375rem)] font-semibold tracking-tight text-foreground">
-            {title}
+        <div className={cn(face, "flex flex-col justify-center gap-1.5 rounded-t-[var(--r-surface)] border border-border px-5 [box-shadow:var(--e-raised)]")}>
+          <span className="flex items-baseline justify-between gap-3">
+            <span className="truncate text-[length:var(--text-titulo,1.25rem)] font-semibold leading-none tracking-[-0.03em] text-foreground">
+              {title}
+            </span>
+            <span className="shrink-0 font-mono text-[length:var(--text-destaque,0.9375rem)] font-medium tabular-nums leading-none text-foreground">
+              {total.value}
+            </span>
           </span>
-          <span className="flex items-baseline justify-between gap-3 text-[length:var(--text-apoio,0.75rem)] text-muted-foreground">
-            <span className="truncate">{meta}</span>
-            <span className="tabular-nums text-foreground">{total.value}</span>
+          <span className="truncate font-mono text-[length:var(--text-micro,0.6875rem)] uppercase tracking-[0.14em] text-muted-foreground">
+            {meta}
           </span>
         </div>
 
@@ -234,16 +238,24 @@ export function FoldingBill({
           style={{ height: panelHeight, transform: giro2 }}
         >
           <motion.div
-            className={cn(face, "flex flex-col justify-center gap-1.5 border-x border-border px-4")}
+            className={cn(face, "flex flex-col justify-center gap-2 border-x border-border px-5 font-mono")}
             style={{ borderBottomLeftRadius: canto, borderBottomRightRadius: canto }}
           >
+            {/* O vinco: uma sombra fina colada na dobra, onde o papel já foi
+                dobrado uma vez. É o que faz o painel ler como papel, não caixa. */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-3 bg-gradient-to-b from-foreground/[0.07] to-transparent"
+            />
             {items.slice(0, 3).map((it) => (
               <span
                 key={it.label}
-                className="flex items-baseline justify-between gap-3 text-[length:var(--text-corpo,0.8125rem)]"
+                className="flex items-baseline gap-2 text-[length:var(--text-apoio,0.75rem)]"
               >
                 <span className="truncate text-muted-foreground">{it.label}</span>
-                <span className="tabular-nums text-foreground">{it.value}</span>
+                {/* A linha pontilhada de cupom liga o nome ao preço. */}
+                <span aria-hidden="true" className="min-w-4 flex-1 border-b border-dotted border-border" />
+                <span className="shrink-0 tabular-nums text-foreground">{it.value}</span>
               </span>
             ))}
             <Sombra p={s2} max={0.12} />
@@ -256,7 +268,7 @@ export function FoldingBill({
             style={{ height: panelHeight, transform: giro3 }}
           >
             <motion.div
-              className={cn(face, "flex flex-col justify-center gap-1 border-x border-border px-4")}
+              className={cn(face, "flex flex-col justify-center gap-2.5 border-x border-border px-5 pb-2")}
               style={{
                 borderTopLeftRadius: canto,
                 borderTopRightRadius: canto,
@@ -267,15 +279,28 @@ export function FoldingBill({
                   "radial-gradient(circle at 6px 100%, transparent 5px, currentColor 5.5px) bottom / 12px 100% repeat-x",
               }}
             >
-              <span className="border-t border-dashed border-border" />
-              <span className="flex items-baseline justify-between gap-3 pt-2">
-                <span className="text-[length:var(--text-corpo,0.8125rem)] font-medium text-foreground">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 top-0 h-3 bg-gradient-to-b from-foreground/[0.07] to-transparent"
+              />
+              <span className="flex items-baseline justify-between gap-3">
+                <span className="font-mono text-[length:var(--text-micro,0.6875rem)] uppercase tracking-[0.14em] text-muted-foreground">
                   {total.label}
                 </span>
-                <span className="text-[length:var(--text-destaque,0.9375rem)] font-semibold tabular-nums text-foreground">
+                <span className="text-[length:var(--text-titulo,1.25rem)] font-semibold leading-none tracking-[-0.02em] tabular-nums text-foreground">
                   {total.value}
                 </span>
               </span>
+              {/* O código de barras do cupom: listras de `currentColor` em
+                  larguras desencontradas, sem imagem e sem cor fora do tema. */}
+              <span
+                aria-hidden="true"
+                className="block h-4 w-full text-foreground/70"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 4px, currentColor 4px 5px, transparent 5px 8px, currentColor 8px 11px, transparent 11px 12px, currentColor 12px 13px, transparent 13px 17px)",
+                }}
+              />
               <Sombra p={s3} max={0.2} />
             </motion.div>
             <motion.div className={verso} style={{ borderTopLeftRadius: canto, borderTopRightRadius: canto }} />

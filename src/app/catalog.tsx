@@ -14,7 +14,6 @@
  */
 
 import * as React from "react";
-import { SlidersHorizontal } from "lucide-react";
 
 import { useStageActive } from "./stage";
 import { Media, type Papel } from "./media";
@@ -22,14 +21,11 @@ import { depKeysOf } from "./deps";
 import { PAD_VOICES, PEOPLE } from "./demo-fixtures";
 
 import { Chip } from "../../registry/visant/ui/chip";
-import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import { StatusTicker } from "../../registry/visant/ui/status-ticker";
 import { GlitchChars } from "../../registry/visant/ui/glitch-chars";
 import { WorkingGlyph } from "../../registry/visant/ui/working-glyph";
 import { PaperShuttle } from "../../registry/visant/ui/paper-shuttle";
 import { OctahedronLoader } from "../../registry/visant/ui/octahedron-loader";
-import { ScrubInput } from "../../registry/visant/ui/scrub-input";
-import { InlineEdit } from "../../registry/visant/ui/inline-edit";
 import { SectionIntro } from "../../registry/visant/ui/section-intro";
 import { CtaSurface, CtaAction } from "../../registry/visant/ui/cta-surface";
 import { EraseField } from "../../registry/visant/ui/erase-field";
@@ -38,15 +34,6 @@ import { SfxToggle } from "../../registry/visant/ui/sfx-toggle";
 import { MeasureBar } from "../../registry/visant/ui/measure-bar";
 import { EmptyState } from "../../registry/visant/ui/empty-state";
 import { MagneticCta } from "../../registry/visant/ui/magnetic-cta";
-import {
-  NavDrawer,
-  NavDrawerTrigger,
-  NavDrawerContent,
-  NavDrawerList,
-  NavDrawerItem,
-  NavDrawerClose,
-  NavDrawerBurger,
-} from "../../registry/visant/ui/nav-drawer";
 import { SimSlider } from "../../registry/visant/ui/sim-slider";
 import { TestimonialWall } from "../../registry/visant/blocks/testimonial-wall";
 
@@ -124,6 +111,10 @@ const StoreStatusDemo = React.lazy(() => import("./demos/store-status-demo"));
 const TimelineDemo = React.lazy(() => import("./demos/timeline-demo"));
 const TurbulenceFieldDemo = React.lazy(() => import("./demos/turbulence-field-demo"));
 const VintageTvFrameDemo = React.lazy(() => import("./demos/vintage-tv-frame-demo"));
+const InlineEditFileDemo = React.lazy(() => import("./demos/inline-edit-demo"));
+const SegmentedControlDemo = React.lazy(() => import("./demos/segmented-control-demo"));
+const ScrubInputDemo = React.lazy(() => import("./demos/scrub-input-demo"));
+const NavDrawerDemo = React.lazy(() => import("./demos/nav-drawer-demo"));
 const SfxBusDemo = React.lazy(() => import("./demos/sfx-bus-demo"));
 const VintageKnobDemo = React.lazy(() => import("./demos/vintage-knob-demo"));
 const VintageLedDemo = React.lazy(() => import("./demos/vintage-led-demo"));
@@ -147,6 +138,7 @@ export type Family =
   | "texto"
   | "efeitos"
   | "3d"
+  | "shaders"
   | "vintage"
   | "anatomia"
   | "base";
@@ -239,6 +231,7 @@ export const FAMILIES: { key: Family; label: string }[] = [
   { key: "texto", label: "Texto" },
   { key: "efeitos", label: "Efeitos" },
   { key: "3d", label: "3D" },
+  { key: "shaders", label: "Shaders" },
   { key: "vintage", label: "Vintage" },
   { key: "anatomia", label: "Anatomia" },
   { key: "base", label: "Base" },
@@ -325,100 +318,8 @@ function useTick(ms = 120, fn?: (n: number) => void) {
 
 // --- demos com estado --------------------------------------------------------
 
-function SegmentedDemo() {
-  const [v, setV] = React.useState<"grade" | "lista" | "kanban">("grade");
-  return (
-    <Frame>
-      <SegmentedControl
-        value={v}
-        onChange={setV}
-        aria-label="Visão"
-        className="w-full max-w-[260px]"
-        options={[
-          { value: "grade", label: "Grade" },
-          { value: "lista", label: "Lista" },
-          { value: "kanban", label: "Kanban" },
-        ]}
-      />
-    </Frame>
-  );
-}
 
-function ScrubDemo() {
-  // Um campo sozinho não mostra o que a peça é: ela existe para a COLUNA de
-  // parâmetros de um painel de edição, e é ali que `layout="row"` paga — dois
-  // por linha, quatro na altura que antes cabia um.
-  const [p, setP] = React.useState(64);
-  const [ang, setAng] = React.useState(45);
-  const [raio, setRaio] = React.useState(12);
-  const [esc, setEsc] = React.useState(1.5);
-  return (
-    <Frame>
-      <div className="grid w-full max-w-[420px] grid-cols-1 gap-1.5 sm:grid-cols-2">
-        <ScrubInput
-          label="Intensidade"
-          kind="percent"
-          layout="row"
-          value={p}
-          min={0}
-          max={100}
-          hint="arraste na horizontal"
-          icon={<SlidersHorizontal className="h-3.5 w-3.5" />}
-          onChange={setP}
-        />
-        <ScrubInput
-          label="Ângulo"
-          kind="angle"
-          layout="row"
-          value={ang}
-          min={0}
-          max={360}
-          onChange={setAng}
-        />
-        <ScrubInput label="Raio" kind="px" layout="row" value={raio} min={0} max={64} onChange={setRaio} />
-        <ScrubInput
-          label="Escala"
-          kind="multiple"
-          layout="row"
-          value={esc}
-          min={0.5}
-          max={4}
-          onChange={setEsc}
-        />
-      </div>
-    </Frame>
-  );
-}
 
-function InlineEditDemo() {
-  const [editing, setEditing] = React.useState(false);
-  const [value, setValue] = React.useState("Campanha Verão 26");
-  const [draft, setDraft] = React.useState(value);
-  return (
-    <Frame>
-      <InlineEdit
-        isEditing={editing}
-        value={<span className="text-destaque font-medium">{value}</span>}
-        onStartEdit={() => {
-          setDraft(value);
-          setEditing(true);
-        }}
-        onSave={async () => {
-          setValue(draft);
-          setEditing(false);
-        }}
-        onCancel={() => setEditing(false)}
-      >
-        <input
-          autoFocus
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          className="w-full rounded-[var(--r-control,0.5rem)] border border-border bg-background px-2 py-1 text-destaque outline-none"
-        />
-      </InlineEdit>
-    </Frame>
-  );
-}
 
 const KanbanBoard = React.lazy(() => import("./demos/kanban-demo"));
 
@@ -482,65 +383,6 @@ function PaperShuttleDemo() {
   );
 }
 
-/**
- * O drawer abre em tela cheia mesmo dentro do card, e é assim que tem que ser:
- * ele é um `Dialog` do Radix, portalizado no `body`. Simular a peça dentro da
- * moldura do catálogo pediria `container` no portal e `absolute` no painel — e
- * aí a vitrine mostraria uma coisa que não é a que o `shadcn add` entrega.
- * Vitrine que mente é pior que vitrine nenhuma.
- */
-function NavDrawerDemo() {
-  const links = [
-    ["Início", "01"],
-    ["Serviços", "02"],
-    ["Portfólio", "03"],
-    ["Contato", "04"],
-  ] as const;
-  return (
-    <Frame>
-      <NavDrawer>
-        <div className="flex items-center gap-3">
-          <NavDrawerTrigger asChild>
-            <NavDrawerBurger />
-          </NavDrawerTrigger>
-          <span className="text-[length:var(--text-apoio,0.8125rem)] text-muted-foreground">
-            abrir menu
-          </span>
-        </div>
-        <NavDrawerContent
-          title="Navegação"
-          // O slot da marca existe porque o painel cobre o header inteiro: sem
-          // ele, o único momento da navegação em que a marca some da tela é
-          // justamente aquele em que a pessoa está escolhendo pra onde ir.
-          brand={
-            <span className="text-[length:var(--text-destaque,0.9375rem)] font-semibold tracking-[-0.02em] text-foreground">
-              Marca
-            </span>
-          }
-          footer={
-            <div className="flex items-center justify-between">
-              <span>pt-BR</span>
-              <span>contato@marca.com</span>
-            </div>
-          }
-        >
-          <NavDrawerList>
-            {links.map(([label, n], i) => (
-              // `NavDrawerClose asChild` em volta do item: em app com router o
-              // clique no link não desmonta nada, e o drawer ficaria aberto por
-              // cima da rota nova.
-              <NavDrawerClose asChild key={label}>
-                <NavDrawerItem href="#" meta={n} active={i === 0}>
-                  {label}
-                </NavDrawerItem>
-              </NavDrawerClose>
-            ))}
-          </NavDrawerList>
-        </NavDrawerContent>
-      </NavDrawer>
-    </Frame>
-  );
-}
 
 const MarqueeVariantes = React.lazy(() => import("./demos/marquee-demo"));
 
@@ -585,6 +427,12 @@ const StreamgraphColheitaDemo = React.lazy(() => import("./demos/streamgraph-dem
 const TimeDialColheitaDemo = React.lazy(() => import("./demos/time-dial-demo"));
 const VoiceNoteColheitaDemo = React.lazy(() => import("./demos/voice-note-demo"));
 const WalletStackColheitaDemo = React.lazy(() => import("./demos/wallet-stack-demo"));
+const ShaderAsciiColheitaDemo = React.lazy(() => import("./demos/shader-ascii-demo"));
+const ShaderHalftoneColheitaDemo = React.lazy(() => import("./demos/shader-halftone-demo"));
+const ShaderNeonColheitaDemo = React.lazy(() => import("./demos/shader-neon-demo"));
+const ShaderRisoColheitaDemo = React.lazy(() => import("./demos/shader-riso-demo"));
+const ShaderTunnelColheitaDemo = React.lazy(() => import("./demos/shader-tunnel-demo"));
+const ShaderVoronoiColheitaDemo = React.lazy(() => import("./demos/shader-voronoi-demo"));
 
 /** Mesmo trato do marquee: GSAP só chega quando o card chega. */
 function PinnedSceneDemoCard() {
@@ -652,7 +500,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["marca", "tema", "cmdk", "vault"],
     demo: BrandSelectorDemo,
     knobs: "BrandSelector",
-    preview: { w: 620, h: 220 },
+    preview: { w: 360, h: 140 },
   },
   {
     name: "brand-theme",
@@ -716,7 +564,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Editar onde se lê. Enter salva, Esc cancela, o valor só troca depois que a promessa resolve.",
     tags: ["edição", "formulário"],
-    demo: InlineEditDemo,
+    demo: InlineEditFileDemo,
+    preview: { w: 420, h: 220 },
   },
   {
     name: "auth-button",
@@ -731,7 +580,7 @@ export const CATALOG: CatalogItem[] = [
     // 620: o defeito que a peça mata (o pulo do cabeçalho quando a sessão
     // chega) só é visível com a barra em volta. Botão sozinho num quadro não
     // tem o que empurrar.
-    preview: { w: 620, h: 300 },
+    preview: { w: 360, h: 300 },
   },
   {
     name: "profile-form",
@@ -752,7 +601,8 @@ export const CATALOG: CatalogItem[] = [
     family: "controles",
     description: "Alternador de poucas opções. Substitui um select quando as opções cabem na tela.",
     tags: ["controle", "apple"],
-    demo: SegmentedDemo,
+    demo: SegmentedControlDemo,
+    preview: { w: 400, h: 200 },
   },
   {
     name: "scrub-input",
@@ -762,7 +612,8 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Número que se arrasta na horizontal, como nos editores gráficos. Teclado continua funcionando.",
     tags: ["número", "gesto"],
-    demo: ScrubDemo,
+    demo: ScrubInputDemo,
+    preview: { w: 360, h: 240 },
   },
   {
     name: "assignee-stack",
@@ -785,7 +636,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["filtro", "scroll"],
     demo: StickyFilterbarDemo,
     knobs: "StickyFilterbar",
-    preview: { w: 760, h: 440 },
+    preview: { w: 760, h: 520 },
   },
   {
     name: "measure-picker",
@@ -821,7 +672,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["sidebar", "navegação", "app", "colapsar", "atalho", "teclado"],
     demo: SideNavDemo,
     knobs: "SideNav",
-    preview: { w: 1360, h: 500 },
+    preview: { w: 720, h: 500 },
   },
 
   // ---- aquisição
@@ -854,11 +705,11 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "navegacao",
     description:
-      "Trilho horizontal com snap, setas que somem nas pontas e scroll por teclado.",
+      "Trilho horizontal com snap: anda por arrasto, Shift + roda, setas e teclado; as setas somem nas pontas.",
     tags: ["carrossel", "snap"],
     demo: RailDemo,
     knobs: "Rail",
-    preview: { w: 920, h: 360 },
+    preview: { w: 920, h: 400 },
   },
   {
     name: "plate",
@@ -877,10 +728,11 @@ export const CATALOG: CatalogItem[] = [
     title: "Chip",
     type: "ui",
     family: "controles",
-    description: "Pastilha de filtro com contagem que nunca renderiza zero.",
+    description:
+      "Pastilha de filtro com contagem; a faceta sem resultado apaga em vez de mostrar zero.",
     tags: ["filtro", "loja"],
     demo: ChipDemo,
-    preview: { w: 660, h: 350 },
+    preview: { w: 460, h: 160 },
   },
   {
     name: "store-status",
@@ -1695,7 +1547,7 @@ export const CATALOG: CatalogItem[] = [
     name: "fog-hero",
     title: "Fog Hero",
     type: "block",
-    family: "3d",
+    family: "shaders",
     description: "Hero de tela cheia que abre uma clareira na névoa, troca uma playlist de vídeo P&B pela própria fumaça e sai em desfoque no scroll, com papel e tinta vindos dos tokens.",
     tags: ["hero", "névoa", "webgl", "shader", "vídeo", "abertura", "grão"],
     demo: FogHeroDemo,
@@ -1841,10 +1693,10 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "navegacao",
     description:
-      "O menu mobile feito uma vez direito: foco preso, Escape, retorno do foco e trava de rolagem vindos do Radix Dialog; entrada em cascata com teto, e ícone que lê o estado em vez de guardar o seu.",
+      "O menu mobile feito uma vez direito, em dois desenhos: gaveta lateral ou página inteira brutalista com imagem. Foco preso, Escape, retorno do foco e trava de rolagem vindos do Radix Dialog.",
     tags: ["menu", "mobile", "drawer", "navegação", "acessibilidade"],
     demo: NavDrawerDemo,
-    preview: { w: 420, h: 200 },
+    preview: { w: 420, h: 220 },
   },
   {
     name: "pinned-scene",
@@ -1892,7 +1744,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["pilha","arrastar","gesto","depoimentos","cards"],
     demo: CardStackColheitaDemo,
     knobs: "CardStack",
-    preview: { w: 420, h: 380 },
+    preview: { w: 420, h: 420 },
   },
   {
     name: "confirm-morph",
@@ -1990,7 +1842,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["select","listbox","formulário","morph","teclado"],
     demo: MorphSelectColheitaDemo,
     knobs: "MorphSelect",
-    preview: { w: 330, h: 310 },
+    preview: { w: 320, h: 330 },
   },
   {
     name: "slot-text",
@@ -2014,7 +1866,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["lista","gesto","arrastar","triagem"],
     demo: SwipeActionsColheitaDemo,
     knobs: "SwipeActions",
-    preview: { w: 440, h: 320 },
+    preview: { w: 420, h: 160 },
   },
   {
     name: "text-morph",
@@ -2086,7 +1938,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["switch","toggle","formulário","mola"],
     demo: LiquidToggleColheitaDemo,
     knobs: "LiquidToggle",
-    preview: { w: 320, h: 200 },
+    preview: { w: 300, h: 150 },
   },
   {
     name: "magnetic-select",
@@ -2184,7 +2036,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["galeria","carrossel","3d","portfólio","arrastar","capas"],
     demo: CoverFlowColheitaDemo,
     knobs: "CoverFlow",
-    preview: { w: 560, h: 361 },
+    preview: { w: 640, h: 420 },
   },
   {
     name: "date-reel",
@@ -2232,7 +2084,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["revista","catálogo","página","dobra","arrastar","editorial"],
     demo: PageCurlColheitaDemo,
     knobs: "PageCurl",
-    preview: { w: 240, h: 364 },
+    preview: { w: 400, h: 470 },
   },
   {
     name: "pull-to-refresh",
@@ -2280,7 +2132,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["confirmação","arrasto","pagamento","gesto"],
     demo: SlideToConfirmColheitaDemo,
     knobs: "SlideToConfirm",
-    preview: { w: 360, h: 170 },
+    preview: { w: 420, h: 200 },
   },
   {
     name: "sticker-peel",
@@ -2316,7 +2168,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["hora","relógio","fuso","seletor","agenda"],
     demo: TimeDialColheitaDemo,
     knobs: "TimeDial",
-    preview: { w: 516, h: 300 },
+    preview: { w: 300, h: 300 },
   },
   {
     name: "voice-note",
@@ -2342,6 +2194,78 @@ export const CATALOG: CatalogItem[] = [
     demo: WalletStackColheitaDemo,
     knobs: "WalletStack",
     preview: { w: 352, h: 516 },
+  },
+  {
+    name: "shader-ascii",
+    title: "Shader ASCII",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem redesenhada em caracteres, com seis jogos de glifo e as células mais cheias na cor da marca.",
+    tags: ["shader","webgl","imagem","ascii","caracteres"],
+    demo: ShaderAsciiColheitaDemo,
+    knobs: "ShaderAscii",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-halftone",
+    title: "Shader Halftone",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Retícula de uma tinta só sobre uma imagem, em pontos, quadrados ou linhas, com uma lupa que amplia debaixo do cursor.",
+    tags: ["shader","webgl","imagem","retícula","impressão"],
+    demo: ShaderHalftoneColheitaDemo,
+    knobs: "ShaderHalftone",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-neon",
+    title: "Shader Neon",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Fios de luz que ondulam num campo liso na cor da marca e engrossam quando o ponteiro passa rápido.",
+    tags: ["shader","webgl","fundo","neon","onda"],
+    demo: ShaderNeonColheitaDemo,
+    knobs: "ShaderNeon",
+    preview: { w: 600, h: 390 },
+  },
+  {
+    name: "shader-riso",
+    title: "Shader Riso",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem impressa em duas tintas de risografia, com grão, ângulo próprio por tinta e registro fora do lugar.",
+    tags: ["shader","webgl","imagem","riso","impressão"],
+    demo: ShaderRisoColheitaDemo,
+    knobs: "ShaderRiso",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-tunnel",
+    title: "Shader Tunnel",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Túnel de anéis em espiral que corre pro centro na cor da marca e acelera com o ponteiro.",
+    tags: ["shader","webgl","fundo","tunel","espiral"],
+    demo: ShaderTunnelColheitaDemo,
+    knobs: "ShaderTunnel",
+    preview: { w: 600, h: 390 },
+  },
+  {
+    name: "shader-voronoi",
+    title: "Shader Voronoi",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Mosaico de células que derivam devagar com um núcleo aceso na cor da marca, empurradas pelo ponteiro.",
+    tags: ["shader","webgl","fundo","voronoi","textura"],
+    demo: ShaderVoronoiColheitaDemo,
+    knobs: "ShaderVoronoi",
+    preview: { w: 600, h: 390 },
   },
 ];
 
