@@ -35,7 +35,7 @@ export default function SwipeActionsDemo({ props }: DemoProps) {
 
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <div className="w-[400px] text-foreground">
+      <div className="w-full max-w-[400px] text-foreground">
         {itens.length === 0 ? (
           <button
             type="button"

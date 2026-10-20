@@ -4691,5 +4691,1245 @@
         }
       ]
     }
+  },
+  "activity-heatmap": {
+    "componentes": {
+      "ActivityHeatmap": [
+        {
+          "prop": "weekStartsOn",
+          "tipo": "escolha",
+          "valores": [
+            "0",
+            "1"
+          ],
+          "padrao": "0",
+          "resumo": "0 = semana começa no domingo; 1 = na segunda."
+        },
+        {
+          "prop": "cellSize",
+          "tipo": "numero",
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "padrao": 12,
+          "resumo": "Lado do quadrado, em px."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Nome acessível da grade, como \"Entregas em 2026\".",
+          "inicial": "Entregas nos últimos seis meses"
+        },
+        {
+          "prop": "locale",
+          "tipo": "texto",
+          "padrao": "pt-BR",
+          "resumo": null
+        },
+        {
+          "prop": "period",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Fecha o resumo: \"1.284 entregas em {period}\".",
+          "inicial": "seis meses"
+        },
+        {
+          "prop": "selectedDate",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Dia marcado com o anel de seleção."
+        }
+      ]
+    }
+  },
+  "billing-toggle": {
+    "componentes": {
+      "BillingToggle": [
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Período de cobrança",
+          "resumo": "Nome acessível do grupo."
+        },
+        {
+          "prop": "value",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Período escolhido. Controlado: guarde no estado do pai."
+        }
+      ],
+      "BillingPrice": [
+        {
+          "prop": "amount",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "O preço a mostrar. Mudou, rola."
+        },
+        {
+          "prop": "was",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Preço antigo, riscado só quando é maior que `amount`."
+        },
+        {
+          "prop": "currency",
+          "tipo": "texto",
+          "padrao": "R$",
+          "resumo": "Prefixo da moeda."
+        },
+        {
+          "prop": "locale",
+          "tipo": "texto",
+          "padrao": "pt-BR",
+          "resumo": "Locale da formatação: agrupamento de milhar é decisão de mercado."
+        },
+        {
+          "prop": "period",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Texto depois do preço, como \"/mês\"."
+        }
+      ]
+    }
+  },
+  "card-stack": {
+    "componentes": {
+      "CardStack": [
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Pilha de cards",
+          "resumo": "Nome acessível da pilha.",
+          "inicial": "Depoimentos"
+        }
+      ]
+    }
+  },
+  "confirm-morph": {
+    "componentes": {
+      "ConfirmMorph": [
+        {
+          "prop": "tone",
+          "tipo": "escolha",
+          "valores": [
+            "danger",
+            "brand"
+          ],
+          "padrao": "danger",
+          "resumo": "`danger` pinta o Apagar de destrutivo; `brand` usa a cor da marca, pra ação importante mas reversível."
+        },
+        {
+          "prop": "disabled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "confirmTimeout",
+          "tipo": "numero",
+          "min": 0,
+          "max": 12000,
+          "step": 10,
+          "padrao": 6000,
+          "resumo": "Ms até a pergunta sem resposta voltar ao repouso. 0 desliga."
+        },
+        {
+          "prop": "resultTimeout",
+          "tipo": "numero",
+          "min": 0,
+          "max": 10000,
+          "step": 10,
+          "padrao": 5000,
+          "resumo": "Ms que o resultado fica antes de voltar ao repouso. 0 desliga."
+        },
+        {
+          "prop": "cancelLabel",
+          "tipo": "texto",
+          "padrao": "Cancelar",
+          "resumo": null
+        },
+        {
+          "prop": "confirmLabel",
+          "tipo": "texto",
+          "padrao": "Apagar",
+          "resumo": null
+        },
+        {
+          "prop": "doneLabel",
+          "tipo": "texto",
+          "padrao": "Apagado",
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "errorLabel",
+          "tipo": "texto",
+          "padrao": "Não deu certo",
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "pendingLabel",
+          "tipo": "texto",
+          "padrao": "Apagando",
+          "resumo": "Ao lado do giro, enquanto `onConfirm` resolve.",
+          "secundario": true
+        },
+        {
+          "prop": "retryLabel",
+          "tipo": "texto",
+          "padrao": "Tentar de novo",
+          "resumo": null,
+          "secundario": true
+        },
+        {
+          "prop": "undoingLabel",
+          "tipo": "texto",
+          "padrao": "Restaurando",
+          "resumo": "Ao lado do giro, enquanto `onUndo` resolve.",
+          "secundario": true
+        },
+        {
+          "prop": "undoLabel",
+          "tipo": "texto",
+          "padrao": "Desfazer",
+          "resumo": null,
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "elastic-slider": {
+    "componentes": {
+      "ElasticSlider": [
+        {
+          "prop": "disabled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "showValue",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Mostra o valor ao lado do rótulo."
+        },
+        {
+          "prop": "defaultValue",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Valor inicial quando não controlado."
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 250,
+          "step": 1,
+          "padrao": 100,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "step",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 1,
+          "resumo": null
+        },
+        {
+          "prop": "stretch",
+          "tipo": "numero",
+          "min": 0,
+          "max": 70,
+          "step": 1,
+          "padrao": 26,
+          "resumo": "Quanto o trilho pode esticar além da ponta, em px.",
+          "secundario": true
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Valor controlado. Sem ele, o slider guarda o próprio estado.",
+          "secundario": true
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Rótulo visível; também dá nome ao polegar pra leitor de tela.",
+          "inicial": "Volume",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "expandable-card": {
+    "componentes": {
+      "ExpandableCard": [
+        {
+          "prop": "defaultExpanded",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Começa aberto."
+        },
+        {
+          "prop": "expandedWidth",
+          "tipo": "numero",
+          "min": 0,
+          "max": 660,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Teto da largura aberto, em px, para crescer para os lados. Padrão: `width`.",
+          "inicial": 440
+        },
+        {
+          "prop": "width",
+          "tipo": "numero",
+          "min": 0,
+          "max": 510,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Teto da largura fechado, em px. Sem ele o card ocupa o container.",
+          "inicial": 340
+        },
+        {
+          "prop": "description",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Linha de resumo. Quando muda, só as palavras novas rolam."
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Título do card, dentro do botão que abre.",
+          "inicial": "Pedido 2048"
+        }
+      ]
+    }
+  },
+  "expanding-search": {
+    "componentes": {
+      "ExpandingSearch": [
+        {
+          "prop": "anchor",
+          "tipo": "escolha",
+          "valores": [
+            "start",
+            "end"
+          ],
+          "padrao": "end",
+          "resumo": "A borda onde o botão mora; o campo cresce pra longe dela."
+        },
+        {
+          "prop": "expandedWidth",
+          "tipo": "numero",
+          "min": 10,
+          "max": 700,
+          "step": 10,
+          "padrao": 320,
+          "resumo": "Largura máxima do campo aberto, em px. Nunca passa do container.",
+          "inicial": 280
+        },
+        {
+          "prop": "maxResults",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 6,
+          "resumo": "Quantos resultados no máximo."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Dá nome ao botão, ao campo e à lista, como \"Buscar projetos\".",
+          "inicial": "Buscar projetos e documentos"
+        },
+        {
+          "prop": "placeholder",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "suggestionsLabel",
+          "tipo": "texto",
+          "padrao": "Recentes",
+          "resumo": "Título dos sugeridos."
+        }
+      ]
+    }
+  },
+  "gauge": {
+    "componentes": {
+      "Gauge": [
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 250,
+          "step": 1,
+          "padrao": 100,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 10,
+          "max": 400,
+          "step": 10,
+          "padrao": 176,
+          "resumo": "Largura máxima do anel, em px."
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Valor atual, entre `min` e `max`."
+        },
+        {
+          "prop": "detail",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Qualificador: a régua em palavras (\"360 de 500 GB\")."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "O que está sendo medido. Vira o nome acessível.",
+          "inicial": "Espaço do plano"
+        }
+      ]
+    }
+  },
+  "hold-to-confirm": {
+    "componentes": {
+      "HoldToConfirm": [
+        {
+          "prop": "tone",
+          "tipo": "escolha",
+          "valores": [
+            "danger",
+            "brand",
+            "neutral"
+          ],
+          "padrao": "danger",
+          "resumo": "Cor do preenchimento: `danger` pra destruir, `brand` pra ação da marca, `neutral` pro resto."
+        },
+        {
+          "prop": "confirmed",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Controla o estado confirmado. Volte pra `false` pra rearmar (depois de um desfazer, por exemplo)."
+        },
+        {
+          "prop": "duration",
+          "tipo": "numero",
+          "min": 10,
+          "max": 2400,
+          "step": 10,
+          "padrao": 1200,
+          "resumo": "Quanto tempo segurar, em ms."
+        },
+        {
+          "prop": "confirmedLabel",
+          "tipo": "texto",
+          "padrao": "Feito",
+          "resumo": "Rótulo depois de confirmado.",
+          "inicial": "Apagado"
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Instrução e ação na mesma frase, como \"Segure pra apagar\".",
+          "inicial": "Segure pra apagar"
+        }
+      ]
+    }
+  },
+  "icon-morph": {
+    "componentes": {
+      "IconMorph": [
+        {
+          "prop": "name",
+          "tipo": "escolha",
+          "valores": [
+            "menu",
+            "play",
+            "plus",
+            "copy",
+            "theme",
+            "chevron"
+          ],
+          "padrao": null,
+          "resumo": "Qual par de estados desenhar."
+        },
+        {
+          "prop": "state",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "O segundo estado: fechar, pausar, check, lua, seta virada."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Tamanho em px.",
+          "inicial": 22
+        },
+        {
+          "prop": "strokeWidth",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Espessura do traço na grade de 24."
+        }
+      ]
+    }
+  },
+  "morph-select": {
+    "componentes": {
+      "MorphSelect": [
+        {
+          "prop": "align",
+          "tipo": "escolha",
+          "valores": [
+            "start",
+            "end"
+          ],
+          "padrao": "start",
+          "resumo": "A borda que fica parada enquanto a superfície cresce. Use `end` perto da margem direita."
+        },
+        {
+          "prop": "disabled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "hideLabel",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Guarda o rótulo só pra leitor de tela."
+        },
+        {
+          "prop": "maxListHeight",
+          "tipo": "numero",
+          "min": 10,
+          "max": 600,
+          "step": 10,
+          "padrao": 280,
+          "resumo": "Altura da lista antes de rolar, em px."
+        },
+        {
+          "prop": "panelWidth",
+          "tipo": "numero",
+          "min": 10,
+          "max": 600,
+          "step": 10,
+          "padrao": 260,
+          "resumo": "Largura da superfície aberta, em px. Nunca menor que o gatilho."
+        },
+        {
+          "prop": "defaultValue",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Rótulo visível; também dá nome ao gatilho e à lista.",
+          "inicial": "Status",
+          "secundario": true
+        },
+        {
+          "prop": "placeholder",
+          "tipo": "texto",
+          "padrao": "Escolha",
+          "resumo": "Texto do gatilho quando nada foi escolhido.",
+          "secundario": true
+        },
+        {
+          "prop": "value",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Valor controlado. Sem ele, o select guarda o próprio estado.",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "slot-text": {
+    "componentes": {
+      "SlotText": [
+        {
+          "prop": "align",
+          "tipo": "escolha",
+          "valores": [
+            "start",
+            "end"
+          ],
+          "padrao": null,
+          "resumo": "De que ponta os rolos casam quando o tamanho muda. Número: fim; texto: começo."
+        },
+        {
+          "prop": "announce",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Anuncia o valor novo ao leitor de tela, com educação."
+        },
+        {
+          "prop": "duration",
+          "tipo": "numero",
+          "min": 0.05,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.9,
+          "resumo": "Segundos que o primeiro rolo gira."
+        },
+        {
+          "prop": "spins",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 1,
+          "resumo": "Voltas inteiras antes de pousar. 0 rola direto pro dígito novo."
+        },
+        {
+          "prop": "stagger",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.07,
+          "resumo": "Segundos entre um rolo parar e o próximo."
+        }
+      ]
+    }
+  },
+  "swipe-actions": {
+    "componentes": {
+      "SwipeActions": [
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Nome acessível da lista.",
+          "inicial": "Caixa de entrada"
+        }
+      ],
+      "SwipeActionsRow": [
+        {
+          "prop": "fullSwipe",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Deixa o arrasto longo executar a ação da ponta sem toque."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Nomeia o botão de menu da linha, ex.: o assunto da mensagem.",
+          "inicial": "Caixa de entrada"
+        }
+      ]
+    }
+  },
+  "text-morph": {
+    "componentes": {
+      "TextMorph": [
+        {
+          "prop": "as",
+          "tipo": "escolha",
+          "valores": [
+            "span",
+            "div",
+            "p",
+            "strong",
+            "h1",
+            "h2",
+            "h3"
+          ],
+          "padrao": "span",
+          "resumo": "Elemento renderizado."
+        }
+      ]
+    }
+  },
+  "theme-switch": {
+    "componentes": {
+      "ThemeSwitch": [
+        {
+          "prop": "defaultTheme",
+          "tipo": "escolha",
+          "valores": [
+            "light",
+            "dark"
+          ],
+          "padrao": "light",
+          "resumo": "Tema inicial quando não controlada."
+        },
+        {
+          "prop": "theme",
+          "tipo": "escolha",
+          "valores": [
+            "light",
+            "dark"
+          ],
+          "padrao": null,
+          "resumo": "Tema atual. Passe para controlar; omita para a chave guardar o próprio estado."
+        },
+        {
+          "prop": "iconOnly",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Só o eclipse, num quadrado. Sem o texto ao lado."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Nome acessível. Por padrão diz para qual tema vai."
+        }
+      ]
+    }
+  },
+  "toast-stack": {
+    "componentes": {
+      "ToastStackProvider": [
+        {
+          "prop": "duration",
+          "tipo": "numero",
+          "min": 10,
+          "max": 10000,
+          "step": 10,
+          "padrao": 5000,
+          "resumo": "Vida base de um toast, em ms. Aviso e erro ficam 1,6 vez mais."
+        },
+        {
+          "prop": "limit",
+          "tipo": "numero",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "padrao": 12,
+          "resumo": "Acima disso, os mais antigos saem da fila."
+        }
+      ],
+      "ToastStack": [
+        {
+          "prop": "position",
+          "tipo": "escolha",
+          "valores": [
+            "bottom-right",
+            "bottom-center",
+            "bottom-left"
+          ],
+          "padrao": "bottom-right",
+          "resumo": null
+        },
+        {
+          "prop": "contained",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Prende a pilha no ancestral posicionado em vez da janela.",
+          "inicial": true
+        },
+        {
+          "prop": "defaultExpanded",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Abre o leque sem precisar de ponteiro. Útil para vitrine e documentação."
+        },
+        {
+          "prop": "visibleToasts",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 3,
+          "resumo": "Quantos aparecem de uma vez. Os demais esperam atrás."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Avisos",
+          "resumo": "Nome acessível da região."
+        }
+      ]
+    }
+  },
+  "dynamic-island": {
+    "componentes": {
+      "DynamicIsland": [
+        {
+          "prop": "defaultExpanded",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "expanded",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Aberta ou recolhida, controlado."
+        },
+        {
+          "prop": "bounce",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.3,
+          "resumo": "Vida da mola, de 0 (seca) a 0,6 (saltitante)."
+        },
+        {
+          "prop": "activityKey",
+          "tipo": "texto",
+          "padrao": "atividade",
+          "resumo": "Chave da atividade. Trocar a chave morfa a ilha para a nova forma."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Nome da atividade, lido pelo leitor de tela (“Timer, 4:56”)."
+        }
+      ]
+    }
+  },
+  "folding-bill": {
+    "componentes": {
+      "FoldingBill": [
+        {
+          "prop": "defaultFolded",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": null,
+          "inicial": false
+        },
+        {
+          "prop": "folded",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Controlado: `true` = dobrada."
+        },
+        {
+          "prop": "panelHeight",
+          "tipo": "numero",
+          "min": 1,
+          "max": 230,
+          "step": 1,
+          "padrao": 92,
+          "resumo": "Altura de cada uma das três dobras, em px."
+        },
+        {
+          "prop": "settle",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "0–100. Balanço antes de assentar."
+        },
+        {
+          "prop": "stiffness",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "0–100. Rigidez da mola ao soltar."
+        },
+        {
+          "prop": "meta",
+          "tipo": "texto",
+          "padrao": "Hoje, 19h42",
+          "resumo": "Linha de apoio do cabeçalho (data, número do pedido)."
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": "Mesa 12",
+          "resumo": "Nome no cabeçalho (loja, mesa, pedido).",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "heat-word": {
+    "componentes": {
+      "HeatWord": [
+        {
+          "prop": "shape",
+          "tipo": "escolha",
+          "valores": [
+            "dots",
+            "word"
+          ],
+          "padrao": "dots",
+          "resumo": "A forma em repouso: grade de gotas ou uma palavra."
+        },
+        {
+          "prop": "area",
+          "tipo": "numero",
+          "min": 0,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "0–100. O raio do pincel de calor."
+        },
+        {
+          "prop": "heat",
+          "tipo": "numero",
+          "min": 0,
+          "max": 150,
+          "step": 1,
+          "padrao": 60,
+          "resumo": "0–100. Quanto calor o ponteiro deposita por quadro."
+        },
+        {
+          "prop": "softness",
+          "tipo": "numero",
+          "min": 0,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "0–100. O quanto a forma é borrada antes do limiar: funde as gotas."
+        },
+        {
+          "prop": "word",
+          "tipo": "texto",
+          "padrao": "Calor",
+          "resumo": "O texto quando `shape=\"word\"`. Curto: cabe numa linha e é desenhado grande."
+        }
+      ]
+    }
+  },
+  "liquid-toggle": {
+    "componentes": {
+      "LiquidToggle": [
+        {
+          "prop": "checked",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Controlado."
+        },
+        {
+          "prop": "defaultChecked",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Estado inicial quando não controlado."
+        },
+        {
+          "prop": "stroke",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Contorno na trilha, para fundos onde o `bg-muted` some."
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 1,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "0–100. Rapidez da mola da frente."
+        },
+        {
+          "prop": "stretch",
+          "tipo": "numero",
+          "min": 0,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "0–100. O quanto a gota se alonga no caminho."
+        }
+      ]
+    }
+  },
+  "magnetic-select": {
+    "componentes": {
+      "MagneticSelect": [
+        {
+          "prop": "size",
+          "tipo": "escolha",
+          "valores": [
+            "sm",
+            "lg"
+          ],
+          "padrao": "lg",
+          "resumo": "Diâmetro das opções em repouso."
+        },
+        {
+          "prop": "stroke",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Contorno nas opções em repouso, para fundos onde `bg-card` some."
+        },
+        {
+          "prop": "bounce",
+          "tipo": "numero",
+          "min": 0,
+          "max": 140,
+          "step": 1,
+          "padrao": 55,
+          "resumo": "0–100. Balanço da mola ao assentar."
+        },
+        {
+          "prop": "pull",
+          "tipo": "numero",
+          "min": 0,
+          "max": 140,
+          "step": 1,
+          "padrao": 55,
+          "resumo": "0–100. Quanto a opção sob o cursor é puxada até ele."
+        },
+        {
+          "prop": "swell",
+          "tipo": "numero",
+          "min": 0,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "0–100. O quanto a escolhida incha (e empurra as outras)."
+        },
+        {
+          "prop": "defaultValue",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Escolha uma opção",
+          "resumo": "Nome do grupo para leitor de tela.",
+          "inicial": "Como está o seu dia?",
+          "secundario": true
+        },
+        {
+          "prop": "value",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null,
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "magnify-dock": {
+    "componentes": {
+      "MagnifyDock": [
+        {
+          "prop": "lift",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 8,
+          "resumo": "Quanto o ícone mais perto sobe, em px."
+        },
+        {
+          "prop": "magnify",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 1.5,
+          "resumo": "Escala do ícone mais perto do cursor. 1 desliga a onda."
+        },
+        {
+          "prop": "reach",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 2,
+          "resumo": "Alcance da onda, em ícones de distância."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "Lado do ícone em repouso, em px."
+        },
+        {
+          "prop": "active",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Item marcado como atual (ganha o ponto embaixo)."
+        }
+      ]
+    }
+  },
+  "slosh-slider": {
+    "componentes": {
+      "SloshSlider": [
+        {
+          "prop": "defaultValue",
+          "tipo": "numero",
+          "min": 0,
+          "max": 130,
+          "step": 1,
+          "padrao": 50,
+          "resumo": null
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 250,
+          "step": 1,
+          "padrao": 100,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null
+        },
+        {
+          "prop": "step",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 1,
+          "resumo": null
+        },
+        {
+          "prop": "tilt",
+          "tipo": "numero",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "padrao": 14,
+          "resumo": "Inclinação máxima da borda da tinta, em px. 0 deixa a borda reta."
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Valor controlado. Sem ele, o slider guarda o próprio estado."
+        },
+        {
+          "prop": "viscosity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 9,
+          "resumo": "Amortecimento da tinta: baixo balança mais, alto assenta logo.",
+          "secundario": true
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Rótulo visível; também nomeia o polegar pra leitor de tela.",
+          "inicial": "Volume",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "tilt-card": {
+    "componentes": {
+      "TiltCard": [
+        {
+          "prop": "sink",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Afunda o canto sob o ponteiro em vez de levantá-lo."
+        },
+        {
+          "prop": "glare",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.5,
+          "resumo": "Força do brilho, de 0 (sem brilho) a 1."
+        },
+        {
+          "prop": "maxTilt",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 10,
+          "resumo": "Inclinação máxima, em graus, em cada eixo."
+        },
+        {
+          "prop": "perspective",
+          "tipo": "numero",
+          "min": 10,
+          "max": 1800,
+          "step": 10,
+          "padrao": 900,
+          "resumo": "Distância da câmera, em px. Menor = perspectiva mais forte."
+        }
+      ]
+    }
   }
 }

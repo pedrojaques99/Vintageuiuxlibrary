@@ -158,5 +158,67 @@
     "stepHeight": "520px",
     "top": "24px",
     "rail": false
+  },
+  "activity-heatmap": {
+    "label": "Entregas nos últimos seis meses",
+    "period": "seis meses"
+  },
+  "card-stack": {
+    "label": "Depoimentos"
+  },
+  "confirm-morph": {
+    "label": "Apagar",
+    "prompt": "Apagar 3 arquivos?"
+  },
+  "elastic-slider": {
+    "label": "Volume"
+  },
+  "expandable-card": {
+    "title": "Pedido 2048",
+    "width": 340,
+    "expandedWidth": 440
+  },
+  "expanding-search": {
+    "label": "Buscar projetos e documentos",
+    "expandedWidth": 280
+  },
+  "gauge": {
+    "className": "w-44",
+    "label": "Espaço do plano"
+  },
+  "hold-to-confirm": {
+    "label": "Segure pra apagar",
+    "confirmedLabel": "Apagado"
+  },
+  "icon-morph": {
+    "size": 22
+  },
+  "morph-select": {
+    "label": "Status"
+  },
+  "slot-text": {
+    "className": "text-[3.25rem] font-semibold tracking-tight"
+  },
+  "swipe-actions": {
+    "label": "Caixa de entrada"
+  },
+  "toast-stack": {
+    "contained": true
+  },
+  "folding-bill": {
+    "defaultFolded": false
+  },
+  "heat-word": {
+    "className": "w-[480px] max-w-full"
+  },
+  "magnetic-select": {
+    "label": "Como está o seu dia?"
+  },
+  "slosh-slider": {
+    "label": "Volume",
+    "className": "max-w-[360px]"
+  },
+  "tilt-card": {
+    "className": "w-64"
   }
 }

@@ -17,7 +17,7 @@ export default function HoldToConfirmDemo({ props }: DemoProps) {
 
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <div className="flex w-[360px] flex-col gap-4 rounded-[var(--r-surface)] border border-border bg-card p-5 text-foreground">
+      <div className="flex w-[360px] max-w-full flex-col gap-4 rounded-[var(--r-surface)] border border-border bg-card p-5 text-foreground">
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">Projeto Ribalta</p>
           <p className="text-sm text-muted-foreground">

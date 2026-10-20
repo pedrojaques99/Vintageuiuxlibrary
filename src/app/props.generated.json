@@ -8883,5 +8883,1690 @@
       "descricao": "Fábrica de marco para as clareiras (um objeto, um produto, uma escultura).\n\nRecebe o índice da clareira e devolve o objeto em unidades da cena (uma\nárvore de fundo tem ~25 de altura; a câmera anda a 13 do chão). A cena\nposiciona, gira `userData.spin` rad/s se houver, e DESCARTA geometria e\nmaterial do que for devolvido no fim — não reaproveite fora daqui.",
       "props": []
     }
+  ],
+  "activity-heatmap": [
+    {
+      "nome": "ActivityHeatmap",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "days",
+          "tipo": "ActivityDay[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Um item por dia, do mais antigo ao mais novo. Dia faltando conta zero."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Nome acessível da grade, como \"Entregas em 2026\"."
+        },
+        {
+          "nome": "period",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Fecha o resumo: \"1.284 entregas em {period}\"."
+        },
+        {
+          "nome": "actions",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Controles ao lado do resumo, como um seletor de período."
+        },
+        {
+          "nome": "cellSize",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "12",
+          "descricao": "Lado do quadrado, em px."
+        },
+        {
+          "nome": "locale",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "pt-BR",
+          "descricao": null
+        },
+        {
+          "nome": "onSelectDate",
+          "tipo": "(date: string) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Clique, Enter ou Espaço num dia."
+        },
+        {
+          "nome": "selectedDate",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "null",
+          "descricao": "Dia marcado com o anel de seleção."
+        },
+        {
+          "nome": "thresholds",
+          "tipo": "[number, number, number]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Teto dos níveis 1 a 3; acima do último é nível 4. Default: quartos do dia mais cheio."
+        },
+        {
+          "nome": "unit",
+          "tipo": "{ one: string; other: string; }",
+          "obrigatoria": false,
+          "padrao": "{ one: \"registro\", other: \"registros\" }",
+          "descricao": "Substantivo da contagem, no singular e no plural."
+        },
+        {
+          "nome": "weekStartsOn",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "0 = semana começa no domingo; 1 = na segunda.",
+          "valores": [
+            "0",
+            "1"
+          ]
+        }
+      ]
+    }
+  ],
+  "billing-toggle": [
+    {
+      "nome": "BillingToggle",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "onValueChange",
+          "tipo": "(value: string) => void",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "value",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Período escolhido. Controlado: guarde no estado do pai."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Período de cobrança",
+          "descricao": "Nome acessível do grupo."
+        },
+        {
+          "nome": "options",
+          "tipo": "BillingToggleOption[]",
+          "obrigatoria": false,
+          "padrao": "[\r\n  { value: \"mensal\", label: \"Mensal\" },\r\n  { value: \"anual\", label: \"Anual\", badge: \"-20%\", activeBadge: \"2 meses grátis\" },\r\n]",
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "BillingPrice",
+      "descricao": "O preço que rola pro valor novo: sobe quando aumenta, desce quando diminui.",
+      "props": [
+        {
+          "nome": "amount",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O preço a mostrar. Mudou, rola."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "currency",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "R$",
+          "descricao": "Prefixo da moeda."
+        },
+        {
+          "nome": "locale",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "pt-BR",
+          "descricao": "Locale da formatação: agrupamento de milhar é decisão de mercado."
+        },
+        {
+          "nome": "period",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Texto depois do preço, como \"/mês\"."
+        },
+        {
+          "nome": "was",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Preço antigo, riscado só quando é maior que `amount`."
+        }
+      ]
+    }
+  ],
+  "card-stack": [
+    {
+      "nome": "CardStack",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "getKey",
+          "tipo": "(item: T) => string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Chave estável por item."
+        },
+        {
+          "nome": "getLabel",
+          "tipo": "(item: T) => string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Nome curto do card, para o rótulo acessível e o aviso de troca."
+        },
+        {
+          "nome": "items",
+          "tipo": "T[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Os cards, na ordem em que a pilha começa."
+        },
+        {
+          "nome": "renderCard",
+          "tipo": "(item: T) => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O conteúdo de cada card."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Pilha de cards",
+          "descricao": "Nome acessível da pilha."
+        },
+        {
+          "nome": "onCycle",
+          "tipo": "(top: T) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado quando um card vai para o fundo, com o item que subiu para o topo."
+        }
+      ]
+    }
+  ],
+  "confirm-morph": [
+    {
+      "nome": "ConfirmMorph",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rótulo em repouso, como \"Apagar projeto\"."
+        },
+        {
+          "nome": "cancelLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Cancelar",
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "confirmLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Apagar",
+          "descricao": null
+        },
+        {
+          "nome": "confirmTimeout",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "6000",
+          "descricao": "Ms até a pergunta sem resposta voltar ao repouso. 0 desliga."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "doneLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Apagado",
+          "descricao": null
+        },
+        {
+          "nome": "errorLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Não deu certo",
+          "descricao": null
+        },
+        {
+          "nome": "icon",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Ícone antes do rótulo em repouso."
+        },
+        {
+          "nome": "onCancel",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onConfirm",
+          "tipo": "() => void | Promise<unknown>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Roda ao confirmar. Devolva promessa pra mostrar o \"apagando\"; rejeição mostra o erro."
+        },
+        {
+          "nome": "onUndo",
+          "tipo": "() => void | Promise<unknown>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Se existir, o resultado ganha Desfazer."
+        },
+        {
+          "nome": "pendingLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Apagando",
+          "descricao": "Ao lado do giro, enquanto `onConfirm` resolve."
+        },
+        {
+          "nome": "prompt",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A pergunta, como \"Apagar 3 arquivos?\". Sem ela, vira o rótulo com interrogação."
+        },
+        {
+          "nome": "resultTimeout",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5000",
+          "descricao": "Ms que o resultado fica antes de voltar ao repouso. 0 desliga."
+        },
+        {
+          "nome": "retryLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Tentar de novo",
+          "descricao": null
+        },
+        {
+          "nome": "tone",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "danger",
+          "descricao": "`danger` pinta o Apagar de destrutivo; `brand` usa a cor da marca, pra ação importante mas reversível.",
+          "valores": [
+            "danger",
+            "brand"
+          ]
+        },
+        {
+          "nome": "undoingLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Restaurando",
+          "descricao": "Ao lado do giro, enquanto `onUndo` resolve."
+        },
+        {
+          "nome": "undoLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Desfazer",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "elastic-slider": [
+    {
+      "nome": "ElasticSlider",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rótulo visível; também dá nome ao polegar pra leitor de tela."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "defaultValue",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Valor inicial quando não controlado."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "endIcon",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Ícone da ponta direita."
+        },
+        {
+          "nome": "format",
+          "tipo": "(value: number) => string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Formata o número mostrado e falado."
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "100",
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "onValueChange",
+          "tipo": "(value: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Dispara a cada mudança, inclusive durante o arrasto."
+        },
+        {
+          "nome": "onValueCommit",
+          "tipo": "(value: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Dispara uma vez: ao soltar o arrasto ou a cada tecla."
+        },
+        {
+          "nome": "showValue",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Mostra o valor ao lado do rótulo."
+        },
+        {
+          "nome": "startIcon",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Ícone da ponta esquerda; é empurrado junto quando o trilho estica pra lá."
+        },
+        {
+          "nome": "step",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": null
+        },
+        {
+          "nome": "stretch",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "26",
+          "descricao": "Quanto o trilho pode esticar além da ponta, em px."
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Valor controlado. Sem ele, o slider guarda o próprio estado."
+        }
+      ]
+    }
+  ],
+  "expandable-card": [
+    {
+      "nome": "ExpandableCard",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O detalhe revelado ao abrir."
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Título do card, dentro do botão que abre."
+        },
+        {
+          "nome": "defaultExpanded",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Começa aberto."
+        },
+        {
+          "nome": "description",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Linha de resumo. Quando muda, só as palavras novas rolam."
+        },
+        {
+          "nome": "expandedWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Teto da largura aberto, em px, para crescer para os lados. Padrão: `width`."
+        },
+        {
+          "nome": "width",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Teto da largura fechado, em px. Sem ele o card ocupa o container."
+        }
+      ]
+    }
+  ],
+  "expanding-search": [
+    {
+      "nome": "ExpandingSearch",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "ExpandingSearchItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Dá nome ao botão, ao campo e à lista, como \"Buscar projetos\"."
+        },
+        {
+          "nome": "anchor",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "end",
+          "descricao": "A borda onde o botão mora; o campo cresce pra longe dela.",
+          "valores": [
+            "start",
+            "end"
+          ]
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "expandedWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "320",
+          "descricao": "Largura máxima do campo aberto, em px. Nunca passa do container."
+        },
+        {
+          "nome": "maxResults",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "6",
+          "descricao": "Quantos resultados no máximo."
+        },
+        {
+          "nome": "onExpandedChange",
+          "tipo": "(expanded: boolean) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onSelect",
+          "tipo": "(item: ExpandingSearchItem) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "placeholder",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "suggestions",
+          "tipo": "ExpandingSearchItem[]",
+          "obrigatoria": false,
+          "padrao": "[]",
+          "descricao": "Mostrados antes de digitar, como buscas recentes."
+        },
+        {
+          "nome": "suggestionsLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Recentes",
+          "descricao": "Título dos sugeridos."
+        }
+      ]
+    }
+  ],
+  "gauge": [
+    {
+      "nome": "Gauge",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O que está sendo medido. Vira o nome acessível."
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Valor atual, entre `min` e `max`."
+        },
+        {
+          "nome": "bands",
+          "tipo": "GaugeBand[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Faixas por valor inicial. A maior faixa alcançada dá o nome e a cor."
+        },
+        {
+          "nome": "detail",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Qualificador: a régua em palavras (\"360 de 500 GB\")."
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "100",
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "176",
+          "descricao": "Largura máxima do anel, em px."
+        }
+      ]
+    }
+  ],
+  "hold-to-confirm": [
+    {
+      "nome": "HoldToConfirm",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Instrução e ação na mesma frase, como \"Segure pra apagar\"."
+        },
+        {
+          "nome": "confirmed",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Controla o estado confirmado. Volte pra `false` pra rearmar (depois de um desfazer, por exemplo)."
+        },
+        {
+          "nome": "confirmedLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Feito",
+          "descricao": "Rótulo depois de confirmado."
+        },
+        {
+          "nome": "duration",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1200",
+          "descricao": "Quanto tempo segurar, em ms."
+        },
+        {
+          "nome": "icon",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": "<Trash2 strokeWidth={1.75} />",
+          "descricao": "Ícone à esquerda; vira um check quando confirma."
+        },
+        {
+          "nome": "onConfirm",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Roda uma vez quando o preenchimento completa."
+        },
+        {
+          "nome": "onHoldChange",
+          "tipo": "(holding: boolean) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Avisa quando começa e termina de segurar, pra uma dica tipo \"continue segurando\"."
+        },
+        {
+          "nome": "tone",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "danger",
+          "descricao": "Cor do preenchimento: `danger` pra destruir, `brand` pra ação da marca, `neutral` pro resto.",
+          "valores": [
+            "danger",
+            "brand",
+            "neutral"
+          ]
+        }
+      ]
+    }
+  ],
+  "icon-morph": [
+    {
+      "nome": "IconMorph",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "name",
+          "tipo": "enum",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Qual par de estados desenhar.",
+          "valores": [
+            "menu",
+            "play",
+            "plus",
+            "copy",
+            "theme",
+            "chevron"
+          ]
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Tamanho em px."
+        },
+        {
+          "nome": "state",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "O segundo estado: fechar, pausar, check, lua, seta virada."
+        },
+        {
+          "nome": "strokeWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Espessura do traço na grade de 24."
+        }
+      ]
+    }
+  ],
+  "morph-select": [
+    {
+      "nome": "MorphSelect",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "MorphSelectItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rótulo visível; também dá nome ao gatilho e à lista."
+        },
+        {
+          "nome": "align",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "start",
+          "descricao": "A borda que fica parada enquanto a superfície cresce. Use `end` perto da margem direita.",
+          "valores": [
+            "start",
+            "end"
+          ]
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "defaultValue",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "null",
+          "descricao": null
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "hideLabel",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Guarda o rótulo só pra leitor de tela."
+        },
+        {
+          "nome": "maxListHeight",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "280",
+          "descricao": "Altura da lista antes de rolar, em px."
+        },
+        {
+          "nome": "onValueChange",
+          "tipo": "(value: string, item: MorphSelectItem) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "panelWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "260",
+          "descricao": "Largura da superfície aberta, em px. Nunca menor que o gatilho."
+        },
+        {
+          "nome": "placeholder",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Escolha",
+          "descricao": "Texto do gatilho quando nada foi escolhido."
+        },
+        {
+          "nome": "value",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Valor controlado. Sem ele, o select guarda o próprio estado."
+        }
+      ]
+    }
+  ],
+  "slot-text": [
+    {
+      "nome": "SlotText",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "value",
+          "tipo": "string | number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O valor. Número passa por `format`; texto entra como está."
+        },
+        {
+          "nome": "align",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "De que ponta os rolos casam quando o tamanho muda. Número: fim; texto: começo.",
+          "valores": [
+            "start",
+            "end"
+          ]
+        },
+        {
+          "nome": "announce",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Anuncia o valor novo ao leitor de tela, com educação."
+        },
+        {
+          "nome": "duration",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.9",
+          "descricao": "Segundos que o primeiro rolo gira."
+        },
+        {
+          "nome": "format",
+          "tipo": "(value: number) => string",
+          "obrigatoria": false,
+          "padrao": "(n: number) => n.toLocaleString(\"pt-BR\")",
+          "descricao": "Formata número. Default: agrupamento pt-BR (12.480)."
+        },
+        {
+          "nome": "spins",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": "Voltas inteiras antes de pousar. 0 rola direto pro dígito novo."
+        },
+        {
+          "nome": "stagger",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.07",
+          "descricao": "Segundos entre um rolo parar e o próximo."
+        }
+      ]
+    }
+  ],
+  "swipe-actions": [
+    {
+      "nome": "SwipeActions",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Nome acessível da lista."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "SwipeActionsRow",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Nomeia o botão de menu da linha, ex.: o assunto da mensagem."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "fullSwipe",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Deixa o arrasto longo executar a ação da ponta sem toque."
+        },
+        {
+          "nome": "leading",
+          "tipo": "SwipeAction[]",
+          "obrigatoria": false,
+          "padrao": "[]",
+          "descricao": "Ações sob a borda esquerda (arrasta pra direita). A primeira executa no arrasto longo."
+        },
+        {
+          "nome": "trailing",
+          "tipo": "SwipeAction[]",
+          "obrigatoria": false,
+          "padrao": "[]",
+          "descricao": "Ações sob a borda direita (arrasta pra esquerda). A última executa no arrasto longo."
+        }
+      ]
+    }
+  ],
+  "text-morph": [
+    {
+      "nome": "TextMorph",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O rótulo atual. Trocar a string dispara o morph."
+        },
+        {
+          "nome": "as",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "span",
+          "descricao": "Elemento renderizado.",
+          "valores": [
+            "span",
+            "div",
+            "p",
+            "strong",
+            "h1",
+            "h2",
+            "h3"
+          ]
+        }
+      ]
+    }
+  ],
+  "theme-switch": [
+    {
+      "nome": "ThemeSwitch",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "defaultTheme",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "light",
+          "descricao": "Tema inicial quando não controlada.",
+          "valores": [
+            "light",
+            "dark"
+          ]
+        },
+        {
+          "nome": "iconOnly",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Só o eclipse, num quadrado. Sem o texto ao lado."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Nome acessível. Por padrão diz para qual tema vai."
+        },
+        {
+          "nome": "onThemeChange",
+          "tipo": "(next: Theme, trigger: HTMLButtonElement) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado no clique com o próximo tema e o botão que disparou. Quem aplica o tema é você."
+        },
+        {
+          "nome": "theme",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Tema atual. Passe para controlar; omita para a chave guardar o próprio estado.",
+          "valores": [
+            "light",
+            "dark"
+          ]
+        }
+      ]
+    }
+  ],
+  "toast-stack": [
+    {
+      "nome": "ToastStackProvider",
+      "descricao": "Escopo de uma fila. Duas pilhas na mesma página nunca dividem toasts.",
+      "props": [
+        {
+          "nome": "duration",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5000",
+          "descricao": "Vida base de um toast, em ms. Aviso e erro ficam 1,6 vez mais."
+        },
+        {
+          "nome": "limit",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "12",
+          "descricao": "Acima disso, os mais antigos saem da fila."
+        }
+      ]
+    },
+    {
+      "nome": "useToastStack",
+      "descricao": "Dispara, atualiza e dispensa toasts de qualquer lugar abaixo do provider.",
+      "props": []
+    },
+    {
+      "nome": "ToastStack",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "contained",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Prende a pilha no ancestral posicionado em vez da janela."
+        },
+        {
+          "nome": "defaultExpanded",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Abre o leque sem precisar de ponteiro. Útil para vitrine e documentação."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Avisos",
+          "descricao": "Nome acessível da região."
+        },
+        {
+          "nome": "position",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "bottom-right",
+          "descricao": null,
+          "valores": [
+            "bottom-right",
+            "bottom-center",
+            "bottom-left"
+          ]
+        },
+        {
+          "nome": "visibleToasts",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "3",
+          "descricao": "Quantos aparecem de uma vez. Os demais esperam atrás."
+        }
+      ]
+    }
+  ],
+  "dynamic-island": [
+    {
+      "nome": "DynamicIsland",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O miolo aberto, com os controles da atividade."
+        },
+        {
+          "nome": "compact",
+          "tipo": "any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O miolo recolhido: ícone e um dado curto."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Nome da atividade, lido pelo leitor de tela (“Timer, 4:56”)."
+        },
+        {
+          "nome": "activityKey",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "atividade",
+          "descricao": "Chave da atividade. Trocar a chave morfa a ilha para a nova forma."
+        },
+        {
+          "nome": "bounce",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.3",
+          "descricao": "Vida da mola, de 0 (seca) a 0,6 (saltitante)."
+        },
+        {
+          "nome": "defaultExpanded",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "expanded",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Aberta ou recolhida, controlado."
+        },
+        {
+          "nome": "onExpandedChange",
+          "tipo": "(expanded: boolean) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "folding-bill": [
+    {
+      "nome": "FoldingBill",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "defaultFolded",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": null
+        },
+        {
+          "nome": "folded",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Controlado: `true` = dobrada."
+        },
+        {
+          "nome": "items",
+          "tipo": "BillItem[]",
+          "obrigatoria": false,
+          "padrao": "[\n  { label: \"Café coado\", value: \"R$ 9,00\" },\n  { label: \"Pão de queijo\", value: \"R$ 7,50\" },\n  { label: \"Suco de caju\", value: \"R$ 11,00\" },\n]",
+          "descricao": null
+        },
+        {
+          "nome": "meta",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Hoje, 19h42",
+          "descricao": "Linha de apoio do cabeçalho (data, número do pedido)."
+        },
+        {
+          "nome": "onFoldedChange",
+          "tipo": "(folded: boolean) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "panelHeight",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "92",
+          "descricao": "Altura de cada uma das três dobras, em px."
+        },
+        {
+          "nome": "settle",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "0–100. Balanço antes de assentar."
+        },
+        {
+          "nome": "stiffness",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "40",
+          "descricao": "0–100. Rigidez da mola ao soltar."
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Mesa 12",
+          "descricao": "Nome no cabeçalho (loja, mesa, pedido)."
+        },
+        {
+          "nome": "total",
+          "tipo": "BillItem",
+          "obrigatoria": false,
+          "padrao": "{ label: \"Total\", value: \"R$ 27,50\" }",
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "heat-word": [
+    {
+      "nome": "HeatWord",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "area",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "0–100. O raio do pincel de calor."
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas da rampa, do frio ao quente. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "heat",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "60",
+          "descricao": "0–100. Quanto calor o ponteiro deposita por quadro."
+        },
+        {
+          "nome": "shape",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "dots",
+          "descricao": "A forma em repouso: grade de gotas ou uma palavra.",
+          "valores": [
+            "dots",
+            "word"
+          ]
+        },
+        {
+          "nome": "softness",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "0–100. O quanto a forma é borrada antes do limiar: funde as gotas."
+        },
+        {
+          "nome": "word",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Calor",
+          "descricao": "O texto quando `shape=\"word\"`. Curto: cabe numa linha e é desenhado grande."
+        }
+      ]
+    }
+  ],
+  "liquid-toggle": [
+    {
+      "nome": "LiquidToggle",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "checked",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Controlado."
+        },
+        {
+          "nome": "defaultChecked",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Estado inicial quando não controlado."
+        },
+        {
+          "nome": "onCheckedChange",
+          "tipo": "(checked: boolean) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "speed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "0–100. Rapidez da mola da frente."
+        },
+        {
+          "nome": "stretch",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "0–100. O quanto a gota se alonga no caminho."
+        },
+        {
+          "nome": "stroke",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Contorno na trilha, para fundos onde o `bg-muted` some."
+        }
+      ]
+    }
+  ],
+  "magnetic-select": [
+    {
+      "nome": "MagneticSelect",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "options",
+          "tipo": "MagneticOption[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "bounce",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "55",
+          "descricao": "0–100. Balanço da mola ao assentar."
+        },
+        {
+          "nome": "defaultValue",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Escolha uma opção",
+          "descricao": "Nome do grupo para leitor de tela."
+        },
+        {
+          "nome": "onValueChange",
+          "tipo": "(value: string) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "pull",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "55",
+          "descricao": "0–100. Quanto a opção sob o cursor é puxada até ele."
+        },
+        {
+          "nome": "size",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "lg",
+          "descricao": "Diâmetro das opções em repouso.",
+          "valores": [
+            "sm",
+            "lg"
+          ]
+        },
+        {
+          "nome": "stroke",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Contorno nas opções em repouso, para fundos onde `bg-card` some."
+        },
+        {
+          "nome": "swell",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "0–100. O quanto a escolhida incha (e empurra as outras)."
+        },
+        {
+          "nome": "value",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "magnify-dock": [
+    {
+      "nome": "MagnifyDock",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "MagnifyDockItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "active",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Item marcado como atual (ganha o ponto embaixo)."
+        },
+        {
+          "nome": "lift",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "8",
+          "descricao": "Quanto o ícone mais perto sobe, em px."
+        },
+        {
+          "nome": "magnify",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1.5",
+          "descricao": "Escala do ícone mais perto do cursor. 1 desliga a onda."
+        },
+        {
+          "nome": "onSelect",
+          "tipo": "(id: string) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "reach",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2",
+          "descricao": "Alcance da onda, em ícones de distância."
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "40",
+          "descricao": "Lado do ícone em repouso, em px."
+        }
+      ]
+    }
+  ],
+  "slosh-slider": [
+    {
+      "nome": "SloshSlider",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Rótulo visível; também nomeia o polegar pra leitor de tela."
+        },
+        {
+          "nome": "defaultValue",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": null
+        },
+        {
+          "nome": "format",
+          "tipo": "(value: number) => string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Formata o número exibido ao lado do rótulo."
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "100",
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "onValueChange",
+          "tipo": "(value: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "step",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": null
+        },
+        {
+          "nome": "tilt",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "14",
+          "descricao": "Inclinação máxima da borda da tinta, em px. 0 deixa a borda reta."
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Valor controlado. Sem ele, o slider guarda o próprio estado."
+        },
+        {
+          "nome": "viscosity",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "9",
+          "descricao": "Amortecimento da tinta: baixo balança mais, alto assenta logo."
+        }
+      ]
+    }
+  ],
+  "tilt-card": [
+    {
+      "nome": "TiltCard",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "glare",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.5",
+          "descricao": "Força do brilho, de 0 (sem brilho) a 1."
+        },
+        {
+          "nome": "maxTilt",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "10",
+          "descricao": "Inclinação máxima, em graus, em cada eixo."
+        },
+        {
+          "nome": "perspective",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "900",
+          "descricao": "Distância da câmera, em px. Menor = perspectiva mais forte."
+        },
+        {
+          "nome": "sink",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Afunda o canto sob o ponteiro em vez de levantá-lo."
+        }
+      ]
+    }
   ]
 }

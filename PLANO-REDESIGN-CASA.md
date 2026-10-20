@@ -251,3 +251,20 @@ reintroduzir rótulo gritado sem uma exceção escrita.
 - **Marca:** o estúdio mistura espécime, tokens e instalação; precisa decidir o que é.
 - **Demos com selo mono/caixa-alta interno** (`kits/sala.tsx`, captions das demos): são
   palco, mas carregam o vocabulário antigo.
+
+## 10. Colheita Arc + Bencho (2026-10-19)
+
+24 peças novas, em 6 agentes paralelos com posse exclusiva de arquivo:
+
+- **16 MIT (Arc):** icon-morph, confirm-morph, hold-to-confirm, swipe-actions, elastic-slider,
+  morph-select, expanding-search, billing-toggle, activity-heatmap, gauge, text-morph, slot-text,
+  toast-stack, card-stack, expandable-card, theme-switch. Aviso de copyright no topo de cada
+  arquivo e o texto integral da MIT no `ATTRIBUTIONS.md`.
+- **8 em sala limpa (Bencho e Arc Pro):** heat-word, liquid-toggle, folding-bill,
+  magnetic-select, dynamic-island, magnify-dock, slosh-slider, tilt-card. Especificação a partir
+  só da interação pública; nenhum código de origem lido.
+
+Fluxo para a próxima colheita: briefing comum → agentes escrevem só peça, demo e
+`colheita/<nome>.json` → `node scripts/colheita-merge.mjs` → `node scripts/folha-de-contato.mjs
+<png> --colheita` (revisão de olho) → `npm run check:palco` → commit → `npm run build:novidades`
+→ `npm run build && npm run build:shots`.
