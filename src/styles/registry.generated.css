@@ -6,7 +6,7 @@
  * delas — e foi assim que o fold-motion virou bug reportado como "muito
  * simples" quando na verdade não animava nada.
  *
- * 23 itens: book-shelf, fold-motion, gleam, line-reveal, magnetic-cta, marquee, measure-bar, measure-picker, mist-dialog, nav-drawer, photo-compare, photo-flip, photo-frame, sfx-toggle, sim-slider, spine-card, testimonial-wall, theme-grao-editora, theme-norte-verde, theme-vega-noturno, theme-visant, vintage-base, working-glyph
+ * 22 itens: book-shelf, fold-motion, gleam, line-reveal, magnetic-cta, marquee, measure-bar, measure-picker, mist-dialog, nav-drawer, photo-compare, photo-flip, photo-frame, sfx-toggle, sim-slider, spine-card, testimonial-wall, theme-grao-editora, theme-norte-verde, theme-vega-noturno, theme-visant, vintage-base
  */
 
 @layer components {
@@ -553,9 +553,6 @@
   .spine-card {
     transition: none;
   }
-  .working-glyph-swing, .working-glyph-shine::before {
-    animation: none;
-  }
 }
 .magnet-body {
   transition: transform var(--dur-base, 240ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)), scale var(--dur-fast, 140ms) var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)), background-color var(--dur-fast, 140ms) linear;
@@ -775,43 +772,4 @@
   --gap-zone: 0.75rem;
 }
 @import "https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Red+Hat+Mono:wght@400;500;600;700&display=swap" {
-}
-.working-glyph-swing {
-  animation: visant-glyph-swing .9s ease-in-out infinite;
-  transform-origin: 60% 80%;
-}
-@keyframes visant-glyph-swing {
-  0% {
-    transform: rotate(-8deg) translateY(0);
-  }
-  40% {
-    transform: rotate(6deg) translateY(1px);
-  }
-  60% {
-    transform: rotate(3deg) translateY(2px);
-  }
-  100% {
-    transform: rotate(-8deg) translateY(0);
-  }
-}
-.working-glyph-shine {
-  position: relative;
-  overflow: hidden;
-}
-.working-glyph-shine::before {
-  content: '';
-  position: absolute;
-  inset: -50%;
-  background-image: linear-gradient(115deg, transparent 40%, color-mix(in oklch, currentColor 45%, transparent) 50%, transparent 60%);
-  background-size: 250% 250%;
-  animation: visant-glyph-shine 2.4s linear infinite;
-  pointer-events: none;
-}
-@keyframes visant-glyph-shine {
-  0% {
-    background-position: -200% -200%;
-  }
-  100% {
-    background-position: 200% 200%;
-  }
 }
