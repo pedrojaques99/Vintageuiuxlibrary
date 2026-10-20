@@ -58,7 +58,8 @@
           "destructive-foreground": "#ffffff",
           "border": "#333333",
           "input": "#2a2a2a",
-          "ring": "#ffd700"
+          "ring": "#ffd700",
+          "vintage-light": "var(--brand, #ffd700)"
         },
         "dark": {
           "vintage-surface-1": "#0f0f0f",
@@ -103,7 +104,8 @@
           "destructive-foreground": "#ffffff",
           "border": "#333333",
           "input": "#2a2a2a",
-          "ring": "#ffd700"
+          "ring": "#ffd700",
+          "vintage-light": "var(--brand, #ffd700)"
         }
       },
       "categories": [
@@ -4840,13 +4842,14 @@
     {
       "name": "eye-tracker",
       "type": "registry:ui",
-      "title": "Eye Tracker",
-      "description": "Um mascote que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique. Quatro rostos (card, orbe, vidro, marca) e quatro olhares.",
+      "title": "Agent Bot",
+      "description": "Avatar de bot ou agente de IA: a cabeça é um shader vivo na cor da marca, com visor e antena, e os olhos seguem o cursor e o foco, piscam e cumprimentam no clique. Três peles (neon, voronoi, túnel) e quatro formas.",
       "dependencies": [
         "motion"
       ],
       "registryDependencies": [
-        "utils"
+        "utils",
+        "@visant/css-color"
       ],
       "files": [
         {
@@ -4857,15 +4860,22 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "categories": [
         "efeitos",
+        "bot",
+        "agent",
+        "agente",
+        "ia",
+        "assistente",
+        "avatar",
         "mascote",
-        "estado-vazio",
+        "chat",
+        "shader",
         "cursor",
-        "personalidade"
+        "estado-vazio"
       ],
       "meta": {
         "uso": {
-          "quando": "Mascote que segue o cursor e dá personalidade a estado vazio, login ou página 404",
-          "evite": "Interface séria ou densa; estado vazio padrão, empty-state com arte parada"
+          "quando": "Avatar de agente ou assistente de IA: cabeçalho e estado vazio de chat, onboarding guiado por bot, tela de espera enquanto o agente pensa",
+          "evite": "Interface séria ou densa, foto de perfil de pessoa (use avatar) e mais de um bot vivo na mesma tela"
         }
       }
     },
