@@ -309,11 +309,11 @@ function Shell() {
           </button>
 
           {/*
-            Sem menu de seções: Kits e Marca saíram dele até ganharem um
-            redesenho próprio (as rotas continuam no ar, por endereço). Com uma
-            seção só, um menu seria uma palavra apontando pra onde a pessoa já
-            está.
+            As três portas, em texto: Catálogo primeiro (é a home), Kits (as
+            telas montadas) e Marca (a prova do multi-marca). Kits e Marca
+            saíram do menu e voltaram depois do audit de 2026-10-20.
           */}
+          <Secoes view={route.view} onView={setView} className="hidden sm:flex" />
 
           <div className="ml-auto flex items-center gap-1.5">
             <BotaoDeBusca onClick={abrirBusca} />
@@ -334,6 +334,10 @@ function Shell() {
             <BrandSelector className={GATILHO_DE_MARCA} />
             <MinhasMarcas />
           </div>
+        </div>
+        {/* No celular as seções descem para uma segunda linha em vez de sumirem. */}
+        <div className="shell pb-2 sm:hidden">
+          <Secoes view={route.view} onView={setView} />
         </div>
       </header>
 
@@ -407,6 +411,39 @@ const GATILHO_DE_MARCA = [
   "[&>span:nth-child(2)>span:last-child]:hidden [&>span:nth-child(2)>span:first-child]:!text-casa-base [&>span:nth-child(2)>span:first-child]:!font-normal",
   "[&>span:nth-child(3)]:!hidden [&>kbd]:!hidden",
 ].join(" ");
+
+/**
+ * As portas da casa, em texto: a ativa em tom cheio, as outras no tom de
+ * apoio. Sem fundo, sem borda, sem pílula.
+ */
+function Secoes({
+  view,
+  onView,
+  className,
+}: {
+  view: View;
+  onView: (v: View) => void;
+  className?: string;
+}) {
+  return (
+    <nav aria-label="Seção" className={cn("flex items-center gap-5", className)}>
+      {VIEWS.map((v) => (
+        <button
+          key={v.value}
+          type="button"
+          onClick={() => onView(v.value)}
+          aria-current={view === v.value ? "page" : undefined}
+          className={cn(
+            "rounded-control text-casa-base transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] focus-visible:[box-shadow:var(--focus)]",
+            view === v.value ? "text-casa-fg" : "text-casa-fg-2 hover:text-casa-fg",
+          )}
+        >
+          {v.label}
+        </button>
+      ))}
+    </nav>
+  );
+}
 
 /**
  * `?solo=1` corta a casca inteira: cabeçalho, abas, grade, tudo.
