@@ -38,7 +38,8 @@
     "build:kits": "node scripts/kits-pecas.mjs",
     "bugs": "node scripts/bugs.mjs",
     "curadoria": "node scripts/curadoria.mjs",
-    "build:registry-css": "node scripts/registry-css.mjs"
+    "build:registry-css": "node scripts/registry-css.mjs",
+    "anatomia": "node scripts/anatomia-build.mjs && vite build -c anatomia/vite.web.config.mjs"
   },
   "dependencies": {
     "@dgreenheck/ez-tree": "1.1.0",
@@ -124,6 +125,7 @@
     "lenis": "^1.3.25",
     "prism-react-renderer": "2.4.1",
     "react-docgen-typescript": "2.4.0",
+    "simple-icons": "^15.22.0",
     "tailwindcss": "4.1.12",
     "typescript": "5.9.3",
     "vite": "6.3.5"

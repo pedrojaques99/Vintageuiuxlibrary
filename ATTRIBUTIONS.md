@@ -78,3 +78,5 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 <!-- colheita-arc-bencho -->
+
+As figuras de `anatomia` usam o kit isométrico da skill [anatomy](https://github.com/wheresryan22/anatomy), sob [licença MIT](anatomia/kit/LICENSE) (Copyright (c) 2026 Ryan). Os logos das figuras vêm do [Simple Icons](https://simpleicons.org/), sob [CC0](https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md).

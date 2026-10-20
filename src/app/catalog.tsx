@@ -123,6 +123,13 @@ const StickyFilterbarDemo = React.lazy(() => import("./demos/sticky-filterbar-de
 const StoreStatusDemo = React.lazy(() => import("./demos/store-status-demo"));
 const TimelineDemo = React.lazy(() => import("./demos/timeline-demo"));
 const TurbulenceFieldDemo = React.lazy(() => import("./demos/turbulence-field-demo"));
+const AnatomiaComoSobeDemo = React.lazy(() => import("./demos/anatomia-como-sobe-demo"));
+const AnatomiaMemoriaDemo = React.lazy(() => import("./demos/anatomia-memoria-demo"));
+const AnatomiaTokensDemo = React.lazy(() => import("./demos/anatomia-tokens-demo"));
+const AnatomiaScriptDemo = React.lazy(() => import("./demos/anatomia-script-demo"));
+const AnatomiaPermissaoDemo = React.lazy(() => import("./demos/anatomia-permissao-demo"));
+const AnatomiaFicharioDemo = React.lazy(() => import("./demos/anatomia-fichario-demo"));
+const AnatomiaTomadasDemo = React.lazy(() => import("./demos/anatomia-tomadas-demo"));
 const SfxBusDemo = React.lazy(() => import("./demos/sfx-bus-demo"));
 const VintageKnobDemo = React.lazy(() => import("./demos/vintage-knob-demo"));
 const VintageLedDemo = React.lazy(() => import("./demos/vintage-led-demo"));
@@ -2363,6 +2370,93 @@ export const CATALOG: CatalogItem[] = [
     demo: WalletStackColheitaDemo,
     knobs: "WalletStack",
     preview: { w: 352, h: 516 },
+  },
+  // ---- anatomia: as figuras didáticas (branch anatomia, 2026-10-20)
+  {
+    name: "anatomia",
+    title: "Anatomia",
+    type: "ui",
+    family: "anatomia",
+    description:
+      "O núcleo das figuras didáticas: o web component <visant-anatomia> (pinos, painel de peças, passo a passo, pausa, tela cheia, teclado) e o wrapper React. A figura em si vem de um item anatomia-<nome>.",
+    tags: ["didática", "aula", "isométrico", "explicação", "web component", "passo a passo"],
+  },
+  {
+    name: "anatomia-como-sobe",
+    title: "Anatomia: como a ferramenta sobe",
+    type: "lib",
+    family: "anatomia",
+    description:
+      "Fig 1.4 do curso IA para Designers: o que sobe pro GitHub, o que o .gitignore segura no computador e quando a Vercel põe no ar.",
+    tags: ["didática", "aula", "git", "github", "gitignore", "vercel"],
+    demo: AnatomiaComoSobeDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-fichario",
+    title: "Anatomia: o fichário de receitas",
+    type: "lib",
+    family: "anatomia",
+    description:
+      "Fig 2.6 do curso IA para Designers: o agente lê só as etiquetas das skills e abre a receita que casa com o pedido; a pasta references/ só sobe quando a receita pede.",
+    tags: ["didática", "aula", "skill", "receita", "claude"],
+    demo: AnatomiaFicharioDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-tomadas",
+    title: "Anatomia: conector e chave de API",
+    type: "lib",
+    family: "anatomia",
+    description:
+      "Fig 2.2 do curso IA para Designers: os programas entram pelo conector do claude.ai, com a tua conta; o serviço pago entra pela chave de API, que mora no .env e conta cada chamada.",
+    tags: ["didática", "aula", "conector", "chave de api", "mcp", "claude"],
+    demo: AnatomiaTomadasDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-memoria",
+    title: "Anatomia: a memória do agente",
+    type: "lib",
+    family: "anatomia",
+    description:
+      "Fig 2.7 do curso IA para Designers: o agente esquece a conversa quando a janela fecha e lembra o que está no CLAUDE.md, com regra parafusada e fato com data.",
+    tags: ["didática", "aula", "memória", "CLAUDE.md"],
+    demo: AnatomiaMemoriaDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-tokens",
+    title: "Anatomia: o tanque da conversa",
+    type: "lib",
+    family: "anatomia",
+    description:
+      "Fig B.7 do curso IA para Designers: cada mensagem fica na conversa e o agente relê tudo a cada volta; um print resolve em uma volta o que o parágrafo leva três.",
+    tags: ["didática", "aula", "tokens", "contexto"],
+    demo: AnatomiaTokensDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-script",
+    title: "Anatomia: do briefing ao script",
+    type: "lib",
+    family: "anatomia",
+    description:
+      "Fig B.8 do curso IA para Designers: o agente resolve o pedido novo e gasta uso; o que se repete vira script, que roda sem IA e para quando não entende.",
+    tags: ["didática", "aula", "script", "automação"],
+    demo: AnatomiaScriptDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-permissao",
+    title: "Anatomia: a caixa de permissão",
+    type: "lib",
+    family: "anatomia",
+    description:
+      "Fig 2.3b do curso IA para Designers: nada do agente entra na tua pasta sem Yes, Yes and don't ask again ou No, e só o don't ask again fica escrito.",
+    tags: ["didática", "aula", "terminal", "permissão"],
+    demo: AnatomiaPermissaoDemo,
+    preview: { w: 1080, h: 680 },
   },
 ];
 

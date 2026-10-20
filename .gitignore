@@ -9,3 +9,5 @@ dist
 
 # Referências visuais de trabalho: entram pra estudar, não pro repo.
 .refs/
+public/anatomia/
+anatomia/web/
