@@ -65,7 +65,11 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!r/|og/|assets/|llms.txt).*)",
+      "source": "/mcp",
+      "destination": "/api/mcp"
+    },
+    {
+      "source": "/((?!r/|og/|assets/|api/|mcp|llms.txt).*)",
       "destination": "/index.html"
     }
   ],

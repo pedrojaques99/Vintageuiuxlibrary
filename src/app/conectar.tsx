@@ -7,8 +7,9 @@
  * já busca, lê e instala de qualquer registry. O pedágio que sobrava era saber
  * disso, achar a config certa pra cada editor e lembrar de declarar o `@visant`.
  * Aqui cada agente ganha UMA ação: deeplink de um clique quando o editor aceita
- * (Cursor, VS Code), comando pra colar quando não (Claude Code, Codex), e um
- * texto pronto pra qualquer outro agente, que lê o `llms.txt` sem MCP nenhum.
+ * (Cursor, VS Code), comando pra colar quando não (Claude Code, Codex), a URL
+ * do nosso MCP remoto pros apps web que só aceitam conector por URL (`api/mcp.ts`),
+ * e um texto pronto pra qualquer outro agente, que lê o `llms.txt` sem MCP nenhum.
  *
  * Abre pelo cabeçalho e por link: `?conectar` ou `?conectar=cursor`.
  */
@@ -43,7 +44,7 @@ const PROMPT = [
 const cursorLink = `cursor://anysphere.cursor-deeplink/mcp/install?name=shadcn&config=${btoa(JSON.stringify(MCP))}`;
 const vscodeLink = `vscode:mcp/install?${encodeURIComponent(JSON.stringify({ name: "shadcn", ...MCP }))}`;
 
-type Agente = "claude" | "cursor" | "vscode" | "codex" | "outro";
+type Agente = "claude" | "cursor" | "vscode" | "codex" | "web" | "outro";
 
 const AGENTES: {
   id: Agente;
@@ -82,6 +83,13 @@ const AGENTES: {
     acao: { copiar: `[mcp_servers.shadcn]\ncommand = "npx"\nargs = ["shadcn@latest", "mcp"]` },
     depois: "Cole em ~/.codex/config.toml e reinicie o Codex.",
     registry: true,
+  },
+  {
+    id: "web",
+    nome: "Claude.ai e ChatGPT",
+    acao: { copiar: `${SITE}/mcp` },
+    depois: "Em Configurações, Conectores, adicione um conector personalizado com esta URL. O agente passa a recomendar peças pro seu projeto.",
+    registry: false,
   },
   {
     id: "outro",
