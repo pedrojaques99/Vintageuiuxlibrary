@@ -65,6 +65,7 @@ import { DepResumo } from "./dep-badges";
 import { CodigoDoItem, TabelaDeProps } from "./ItemDocs";
 import { Codigo } from "./codigo";
 import { BugButton } from "./bug-report";
+import { Avaliacao } from "./avaliacao";
 
 /** Larguras de teste. `0` = o que couber na tela. */
 const VIEWPORTS = [
@@ -469,6 +470,8 @@ export function ComponentFocus({
         ) : null}
 
         <div className="mt-auto space-y-3">
+          {/* Curadoria do dono (só em dev): nota, comentário, arquivar ou excluir. */}
+          <Avaliacao item={item.name} />
           <DepResumo name={item.name} />
           <CopiarPraIA item={item} controles={controles?.controles ?? []} props={knobs.props} />
           <Instalar name={item.name} />

@@ -133,6 +133,15 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /*
+   * Mãozinha em tudo que se clica na casca. O preflight do Tailwind v4 deixou
+   * `button` com `cursor: default`, e um botão da vitrine sem o ponteiro não
+   * parece clicável — o rodapé do ladrilho, o copiar, as abas.
+   */
+  .casa :is(button, [role="button"], a[href], summary):not(:disabled) {
+    cursor: pointer;
+  }
+
   .casa code,
   .casa kbd,
   .casa pre,

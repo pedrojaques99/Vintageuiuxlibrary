@@ -37,6 +37,7 @@
     "check:interacao": "node scripts/interacao-check.mjs --todas",
     "build:kits": "node scripts/kits-pecas.mjs",
     "bugs": "node scripts/bugs.mjs",
+    "curadoria": "node scripts/curadoria.mjs",
     "build:registry-css": "node scripts/registry-css.mjs"
   },
   "dependencies": {

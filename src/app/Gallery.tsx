@@ -26,7 +26,7 @@
  */
 
 import * as React from "react";
-import { LayoutGrid, List, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight, LayoutGrid, List, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   CATALOG,
@@ -49,6 +49,7 @@ import { WireframeToggle } from "./media";
 import { Aba } from "./casa-ui";
 import { Miniatura } from "./miniatura";
 import { BugButton } from "./bug-report";
+import { CURADORIA_ATIVA, arquivada, useNotas } from "./curadoria";
 
 type Mode = "vitrine" | "lista";
 type TipoFilter = CatalogItem["type"] | null;
@@ -144,12 +145,15 @@ const Ladrilho = React.memo(function Ladrilho({
   onOpen,
   index,
   foto = false,
+  nota,
 }: {
   item: CatalogItem;
   onOpen: () => void;
   index: number;
   /** Acervo inteiro: a peça monta e desmonta com a distância da tela. */
   foto?: boolean;
+  /** Nota da curadoria (só em dev): aparece ao lado do nome. */
+  nota?: number;
 }) {
   const Demo = item.demo;
   const { w, h } = previewOf(item);
@@ -226,19 +230,49 @@ const Ladrilho = React.memo(function Ladrilho({
         <BugButton item={item.name} />
       </div>
 
-      <div className="casa no-hover pointer-events-none absolute bottom-3 left-3 max-w-[calc(100%-24px)]">
+      {/*
+        O rodapé do ladrilho: abrir a ficha e copiar o comando.
+
+        O nome era uma etiqueta parada e não dizia que levava a algum lugar. Agora
+        é um botão: no hover (e no foco de teclado) ele acende e uma seta abre
+        espaço e desliza pra dentro — o "ver mais" sem escrever "ver mais". Ao
+        lado, a cópia rápida do `add`, pra quem já sabe que quer a peça e não
+        precisa abrir a ficha. Os dois aparecem com o cursor no ladrilho e ficam
+        fixos no toque (`no-hover`).
+      */}
+      <div className="casa no-hover pointer-events-none absolute inset-x-3 bottom-3 flex items-end justify-between gap-2">
         <button
           type="button"
           data-card-index={index}
           onClick={onOpen}
-          className="pointer-events-auto flex max-w-full items-center gap-1.5 rounded-[8px] bg-casa-bg px-2 py-1 text-casa-sm text-casa-fg outline-none"
+          aria-label={`Ver ${item.title}`}
+          className={cn(
+            "group/abrir pointer-events-auto flex min-w-0 cursor-pointer items-center gap-1.5 rounded-[8px] bg-casa-bg py-1 pl-2 pr-2 text-casa-sm text-casa-fg outline-none",
+            "transition-[background-color,padding] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+            "hover:bg-casa-tile-2 hover:pr-1.5 focus-visible:pr-1.5 focus-visible:[box-shadow:var(--focus)]",
+          )}
         >
           <span className="truncate">{item.title}</span>
+          {nota ? <span className="shrink-0 tabular-nums text-casa-fg-3">{nota}/5</span> : null}
           {/* O que entrou por último ganha um ponto, não um selo gritado. */}
           {ehNovo(item.name) ? (
             <span className="h-1.5 w-1.5 shrink-0 rounded-[2px] bg-casa-fg-2" aria-label="novo" />
           ) : null}
+          <span
+            aria-hidden
+            className={cn(
+              "grid w-0 shrink-0 -translate-x-1 place-items-center overflow-hidden opacity-0",
+              "transition-[width,opacity,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+              "group-hover/abrir:w-3.5 group-hover/abrir:translate-x-0 group-hover/abrir:opacity-100",
+              "group-focus-visible/abrir:w-3.5 group-focus-visible/abrir:translate-x-0 group-focus-visible/abrir:opacity-100",
+            )}
+          >
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </span>
         </button>
+        <span className="pointer-events-auto shrink-0 rounded-[8px] bg-casa-bg">
+          <CopyCommand variant="chip" text={installCommand(item.name)} className="size-7" />
+        </span>
       </div>
     </article>
   );
@@ -301,9 +335,23 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
   const listRef = React.useRef<HTMLDivElement | null>(null);
   const heroRef = React.useRef<HTMLElement>(null);
 
+  /*
+   * A curadoria entra antes de tudo: peça arquivada (nota ≤ 2 ou marcada pra
+   * excluir) sai da vitrine. Em dev, o filtro "Arquivadas" inverte — mostra só
+   * elas, que é a pilha de trabalho de quem está curando o acervo.
+   */
+  const notas = useNotas();
+  const [verArquivadas, setVerArquivadas] = React.useState(false);
+  const naVitrine = React.useCallback(
+    (i: CatalogItem) => (verArquivadas ? arquivada(notas[i.name]) : !arquivada(notas[i.name])),
+    [notas, verArquivadas],
+  );
+  const qtdArquivadas = CATALOG.filter((i) => arquivada(notas[i.name])).length;
+
   const pool = React.useMemo(
-    () => porNovidade(familia ? CATALOG.filter((i) => i.family === familia) : CATALOG),
-    [familia],
+    () =>
+      porNovidade((familia ? CATALOG.filter((i) => i.family === familia) : CATALOG).filter(naVitrine)),
+    [familia, naVitrine],
   );
 
   const results = React.useMemo(
@@ -442,7 +490,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
           <p className="mt-3 max-w-xl text-casa-lg text-casa-fg-2">
             {/* Conta componente, não tema: o mesmo número que a descrição de SEO
                 (`prerender.mjs`) tira do registry. */}
-            {CATALOG.filter((i) => i.type !== "theme").length} componentes pra React. Cada um
+            {CATALOG.filter((i) => i.type !== "theme" && !arquivada(notas[i.name])).length} componentes pra React. Cada um
             veste a marca que você escolher.
           </p>
         )}
@@ -456,7 +504,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
           <div className="flex min-w-0 flex-1 items-center gap-5 overflow-x-auto [mask-image:linear-gradient(to_right,black_85%,transparent)] [scrollbar-width:none] sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
             {/* A categoria NAVEGA: cada palavra é uma rota (`/catalogo/motion`),
                 então o link de uma fatia pode ser mandado no chat. */}
-            <Aba ativa={!familia} onClick={() => onFamilia?.(null)} count={CATALOG.length}>
+            <Aba ativa={!familia} onClick={() => onFamilia?.(null)} count={CATALOG.filter(naVitrine).length}>
               Tudo
             </Aba>
             {FAMILIES.map((f) => (
@@ -464,7 +512,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
                 key={f.key}
                 ativa={familia === f.key}
                 onClick={() => onFamilia?.(f.key)}
-                count={CATALOG.filter((i) => i.family === f.key).length}
+                count={CATALOG.filter((i) => i.family === f.key && naVitrine(i)).length}
               >
                 {CURTO[f.key]}
               </Aba>
@@ -554,6 +602,16 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
               <span className="w-16 shrink-0 text-casa-sm text-casa-fg-3">Mídia</span>
               <WireframeToggle className="-ml-2" />
             </div>
+
+            {/* Só pra quem cura o acervo (dev): a pilha das arquivadas. */}
+            {CURADORIA_ATIVA ? (
+              <div className="flex items-center gap-4">
+                <span className="w-16 shrink-0 text-casa-sm text-casa-fg-3">Curadoria</span>
+                <Aba ativa={verArquivadas} onClick={() => setVerArquivadas((v) => !v)} count={qtdArquivadas}>
+                  Arquivadas
+                </Aba>
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>
@@ -584,6 +642,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
                       item={item}
                       index={i}
                       foto={!familia}
+                      nota={CURADORIA_ATIVA ? notas[item.name]?.nota : undefined}
                       onOpen={() => onFocus(item.name)}
                     />
                   ))}
