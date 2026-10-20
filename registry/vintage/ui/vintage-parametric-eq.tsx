@@ -28,9 +28,16 @@ import { cn } from "@/lib/utils";
  *
  * - **Eixo x logarítmico**, 20 Hz a 20 kHz. Grave ocupa metade da tela como
  *   ocupa metade da audição; linear espremeria tudo que importa em 5% da régua.
- * - **Cada banda é um sino** (filtro peaking), e a curva grossa é a **soma em
- *   dB** dos sinos. Somar dB é o que uma cascata de peaking realmente faz, então
- *   a curva desenhada é a resposta, não uma ilustração dela.
+ * - **Cada banda é um sino** (filtro peaking RBJ, o biquad de verdade), e a
+ *   curva grossa é a **soma em dB** dos sinos. Somar dB é o que uma cascata de
+ *   peaking realmente faz, então a curva desenhada é a resposta, não uma
+ *   ilustração dela.
+ * - **Pouca tinta no gráfico.** Grade só no plano de 0 dB e três marcas de
+ *   frequência no rodapé; o sino de uma banda só aparece quando ela está na
+ *   mão (hover, foco ou arrasto). Linha que não responde a nada é ruído.
+ * - **A curva veste a marca.** Traço, área e punhos usam `--brand` (borda e
+ *   fundo, nunca texto); o painel continua sendo o do kit vintage. A leitura
+ *   em texto fica na tinta do painel, que é onde o contraste está garantido.
  * - **O punho anda nos dois eixos**: vertical é ganho, horizontal é a
  *   frequência central, presa entre as vizinhas. Roda do mouse aperta ou abre o
  *   Q, e é aí que o sino fica agulha ou fica montanha.
@@ -68,6 +75,7 @@ interface VintageEQProps {
   title?: string;
   /** Teto do eixo em dB. A régua vai de −range a +range. */
   range?: number;
+  /** Cor da curva e dos punhos. Padrão: a marca selecionada. Só traço e fundo. */
   accent?: string;
   onChange?: (bands: EqBand[]) => void;
   /** Largura natural do painel da curva. */
@@ -91,7 +99,7 @@ export function VintageParametricEQ({
   bands: bandasIniciais,
   title = "PARAMETRIC EQ",
   range = 12,
-  accent = "var(--vintage-value)",
+  accent = "var(--brand)",
   onChange,
   width = 520,
   height = 220,
@@ -125,32 +133,23 @@ export function VintageParametricEQ({
     [meio, range, padY]
   );
 
-  /**
-   * O sino de um peaking, em dB.
-   *
-   * Gaussiana na régua de oitavas: `sigma` sai do Q pela largura de banda, e é
-   * a mesma forma que um biquad peaking desenha na faixa que interessa. A
-   * fórmula exata do biquad daria as mesmas curvas com dez vezes mais conta por
-   * quadro — e este desenho é redesenhado a cada pixel de arrasto.
+  /*
+   * A soma é desenhada a cada 2 px de largura e o sino da banda em foco a cada
+   * 4: o arrasto redesenha tudo a cada movimento, e 5 biquads por ponto é
+   * conta de nada.
    */
-  const sino = (f: number, b: EqBand) => {
-    const sigma = 0.65 / Math.max(0.25, b.q);
-    const d = Math.log2(f / b.freq);
-    return b.gain * Math.exp(-(d * d) / (2 * sigma * sigma));
-  };
-
   const somaDb = React.useCallback(
     (f: number) => {
       if (bypass) return 0;
       let s = 0;
-      for (const b of bandas) s += sino(f, b);
+      for (const b of bandas) s += sinoDb(f, b);
       return Math.max(-range, Math.min(range, s));
     },
     [bandas, bypass, range]
   );
 
   const caminho = React.useMemo(() => {
-    const passos = 160;
+    const passos = Math.round(width / 2);
     let d = "";
     for (let i = 0; i <= passos; i++) {
       const x = (i / passos) * width;
@@ -184,8 +183,12 @@ export function VintageParametricEQ({
     const id = arrastando.current;
     const r = svgRef.current?.getBoundingClientRect();
     if (!id || !r) return;
-    const x = Math.max(0, Math.min(width, e.clientX - r.left));
-    const y = Math.max(0, Math.min(height, e.clientY - r.top));
+    // A vitrine escala o palco com transform: o retângulo da tela vem escalado
+    // e o desenho não. Divide pela escala antes de virar Hz e dB.
+    const kx = r.width ? width / r.width : 1;
+    const ky = r.height ? height / r.height : 1;
+    const x = Math.max(0, Math.min(width, (e.clientX - r.left) * kx));
+    const y = Math.max(0, Math.min(height, (e.clientY - r.top) * ky));
 
     const i = bandas.findIndex((b) => b.id === id);
     // A banda não passa por cima da vizinha: curvas cruzadas viram um desenho
@@ -232,7 +235,7 @@ export function VintageParametricEQ({
         <span
           className="flex-1 truncate text-right text-[11px] tabular-nums"
           style={{
-            color: focada ? accent : "var(--vintage-text-muted)",
+            color: focada ? "var(--vintage-label)" : "var(--vintage-text-muted)",
             fontFamily: "var(--font-vintage-mono, monospace)",
           }}
         >
@@ -302,44 +305,43 @@ export function VintageParametricEQ({
           arrastando.current = null;
         }}
       >
-        {/* Régua de dB */}
-        {[-range, -range / 2, 0, range / 2, range].map((db) => (
-          <g key={db}>
-            <line
-              x1={0}
-              x2={width}
-              y1={dbParaY(db)}
-              y2={dbParaY(db)}
-              stroke="var(--vintage-border)"
-              strokeWidth={db === 0 ? 1 : 0.5}
-              opacity={db === 0 ? 0.9 : 0.45}
-            />
-            <text
-              x={4}
-              y={dbParaY(db) - 3}
-              fontSize={9}
-              fill="var(--vintage-text-muted)"
-              fontFamily="var(--font-vintage-mono, monospace)"
-            >
-              {db > 0 ? `+${db}` : db}
-            </text>
-          </g>
+        {/* Grade mínima: só o plano de 0 dB, que é a referência de tudo, e os
+            extremos da régua escritos no canto, sem linha. */}
+        <line
+          x1={0}
+          x2={width}
+          y1={dbParaY(0)}
+          y2={dbParaY(0)}
+          stroke="var(--vintage-border)"
+          strokeWidth={1}
+          opacity={0.8}
+        />
+        {[range, -range].map((db) => (
+          <text
+            key={db}
+            x={4}
+            y={db > 0 ? dbParaY(db) + 9 : dbParaY(db) - 2}
+            fontSize={9}
+            fill="var(--vintage-text-muted)"
+            fontFamily="var(--font-vintage-mono, monospace)"
+          >
+            {db > 0 ? `+${db}` : db}
+          </text>
         ))}
 
-        {/* Régua de frequência */}
+        {/* Frequência: marca curta no rodapé, não linha cruzando a curva. */}
         {MARCAS.map((m) => (
           <g key={m.f}>
             <line
               x1={fParaX(m.f)}
               x2={fParaX(m.f)}
-              y1={0}
+              y1={height - 4}
               y2={height}
               stroke="var(--vintage-border)"
-              strokeWidth={0.5}
-              opacity={0.45}
+              strokeWidth={1}
             />
             <text
-              x={fParaX(m.f) + 4}
+              x={fParaX(m.f) + 3}
               y={height - 5}
               fontSize={9}
               fill="var(--vintage-text-muted)"
@@ -350,34 +352,25 @@ export function VintageParametricEQ({
           </g>
         ))}
 
-        {/* Sinos individuais, apagados: é o que mostra de quem é cada corcova
-            da curva grossa. Sem eles a soma vira uma cobra sem autor. */}
-        {!bypass &&
-          bandas.map((b) => {
-            let d = "";
-            for (let i = 0; i <= 60; i++) {
-              const x = (i / 60) * width;
-              const y = dbParaY(sino(xParaF(x), b));
-              d += `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
-            }
-            return (
-              <path
-                key={b.id}
-                d={d}
-                fill="none"
-                stroke={accent}
-                strokeWidth={1}
-                opacity={ativa === b.id ? 0.5 : 0.16}
-              />
-            );
-          })}
+        {/* O sino só da banda na mão: mostra de quem é aquela corcova da soma
+            sem encher o gráfico de cinco linhas paradas. */}
+        {!bypass && focada && (
+          <path
+            d={caminhoDoSino(focada, width, dbParaY, xParaF)}
+            fill="none"
+            stroke={accent}
+            strokeWidth={1}
+            strokeDasharray="3 3"
+            opacity={0.55}
+          />
+        )}
 
         {/* A curva. Área preenchida até o plano, porque o que se lê num EQ é o
             desvio em relação ao zero, não a linha solta no ar. */}
         <path
           d={`${caminho}L${width},${dbParaY(0)}L0,${dbParaY(0)}Z`}
           fill={bypass ? "var(--vintage-text-dim)" : accent}
-          opacity={bypass ? 0.06 : 0.14}
+          opacity={bypass ? 0.05 : 0.12}
         />
         <path
           d={caminho}
@@ -385,10 +378,8 @@ export function VintageParametricEQ({
           stroke={bypass ? "var(--vintage-text-muted)" : accent}
           strokeWidth={2}
           strokeLinejoin="round"
-          style={{
-            filter: bypass ? undefined : `drop-shadow(0 0 6px ${accent})`,
-            transition: "stroke 160ms var(--ease-out, ease)",
-          }}
+          strokeLinecap="round"
+          style={{ transition: "stroke var(--dur-fast,160ms) var(--ease-out, ease)" }}
         />
 
         {/* Punhos */}
@@ -459,15 +450,17 @@ export function VintageParametricEQ({
               {/* Alvo generoso invisível: o círculo desenhado tem 7px de raio,
                   o dedo recebe 22. */}
               <circle cx={x} cy={y} r={22} fill="transparent" />
-              <line
-                x1={x}
-                x2={x}
-                y1={y}
-                y2={dbParaY(0)}
-                stroke={accent}
-                strokeWidth={1}
-                opacity={emFoco ? 0.6 : 0.25}
-              />
+              {emFoco && !bypass && (
+                <line
+                  x1={x}
+                  x2={x}
+                  y1={y}
+                  y2={dbParaY(0)}
+                  stroke={accent}
+                  strokeWidth={1}
+                  opacity={0.5}
+                />
+              )}
               <circle
                 cx={x}
                 cy={y}
@@ -494,6 +487,52 @@ export function VintageParametricEQ({
       </svg>
     </div>
   );
+}
+
+/** Taxa de amostragem de referência pra desenhar a resposta dos biquads. */
+const FS = 48000;
+
+/**
+ * Ganho em dB de um peaking RBJ (Audio EQ Cookbook) na frequência `f`.
+ *
+ * É a fórmula exata do biquad, não uma gaussiana parecida: a largura sai do Q
+ * do jeito que a mesa de som calcula, e a soma das bandas bate com o que um
+ * `BiquadFilterNode` do tipo `peaking` toca.
+ */
+function sinoDb(f: number, b: EqBand) {
+  if (b.gain === 0) return 0;
+  const A = Math.pow(10, b.gain / 40);
+  const w0 = (2 * Math.PI * Math.min(b.freq, FS / 2 - 1)) / FS;
+  const alpha = Math.sin(w0) / (2 * Math.max(0.1, b.q));
+  const c = Math.cos(w0);
+  const b0 = 1 + alpha * A;
+  const b1 = -2 * c;
+  const b2 = 1 - alpha * A;
+  const a0 = 1 + alpha / A;
+  const a1 = -2 * c;
+  const a2 = 1 - alpha / A;
+  // |H(e^jw)|² pelos cossenos de w e 2w.
+  const w = (2 * Math.PI * f) / FS;
+  const cw = Math.cos(w);
+  const c2w = Math.cos(2 * w);
+  const num = b0 * b0 + b1 * b1 + b2 * b2 + 2 * (b0 * b1 + b1 * b2) * cw + 2 * b0 * b2 * c2w;
+  const den = a0 * a0 + a1 * a1 + a2 * a2 + 2 * (a0 * a1 + a1 * a2) * cw + 2 * a0 * a2 * c2w;
+  return 10 * Math.log10(num / den);
+}
+
+function caminhoDoSino(
+  b: EqBand,
+  width: number,
+  dbParaY: (db: number) => number,
+  xParaF: (x: number) => number
+) {
+  const passos = Math.round(width / 4);
+  let d = "";
+  for (let i = 0; i <= passos; i++) {
+    const x = (i / passos) * width;
+    d += `${i === 0 ? "M" : "L"}${x.toFixed(1)},${dbParaY(sinoDb(xParaF(x), b)).toFixed(1)}`;
+  }
+  return d;
 }
 
 function formatarHz(f: number) {

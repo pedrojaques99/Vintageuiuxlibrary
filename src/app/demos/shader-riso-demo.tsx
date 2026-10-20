@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * A peça sozinha e grande sobre uma foto do acervo. Os knobs trocam o modo da
+ * A peça sozinha e grande sobre uma foto do acervo. O cursor puxa a folha; os knobs trocam o modo da
  * tinta, a célula e o quanto o registro escorrega.
  */
 

@@ -83,11 +83,26 @@ const CORES_PADRAO = [
 ];
 
 export interface ShaderTunnelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
-  /** 0–100. Velocidade de cruzeiro do túnel. */
+  /**
+   * Velocidade de cruzeiro do túnel.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   speed?: number;
-  /** 0–100. Quanto os anéis torcem em espiral. */
+  /**
+   * Quanto os anéis torcem em espiral.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   twist?: number;
-  /** 0–100. Densidade dos anéis. */
+  /**
+   * Densidade dos anéis.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   density?: number;
   /** Paradas da rampa: fundo, meio e núcleo. Qualquer cor CSS ou token. */
   colors?: string[];

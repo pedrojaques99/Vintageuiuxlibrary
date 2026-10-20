@@ -42,8 +42,9 @@ import * as React from "react";
  * | `toggle` | interruptor de alavanca        | 0 ms · banda · 2100 · 5 · 0.035 · 6 ms (sai do dente)    |
  * |          |                                | 22 ms · banda · 1300 · 3 · 0.07 · 18 ms (bate, corpo)    |
  * |          |                                | 22 ms · alta · 4500 · 0.7 · 0.012 · 5 ms (brilho)        |
- * | `drop`   | agulha pousando no disco       | 0 ms · baixa · 380 · 1 · 0.16 · 70 ms (baque surdo)      |
- * |          |                                | 30 a 110 ms · alta · 3000 · 0.7 · 0.01 · 3 ms (2 chiados)|
+ * | `drop`   | fole de câmera fechando        | 0 ms · baixa · 240 · 0.7 · 0.07 · 45 ms (toque de couro) |
+ * |          | (o ar sai num "pff" curto)     | 4 ms · banda · 2400→700 · 0.9 · 0.04 · 140 ms (sopro)    |
+ * |          |                                | 30 a 80 ms · alta · 4200 · 0.7 · 0.012 · 4 ms (poeira)   |
  * | `focus`  | anel de foco de lente girando  | 0 ms · banda · 3400 · 8 · 0.03 · 4 ms (dente da catraca) |
  * |          | (slider arrastando, por passo) | 0 ms · banda · 900 · 1.5 · 0.012 · 18 ms (atrito, graxa) |
  * |`complete`| obturador armando e soltando   | 0 ms · banda · 1600 · 4 · 0.04 · 12 ms (alavanca engata) |
@@ -65,9 +66,13 @@ import * as React from "react";
  * - **`toggle` tem corpo** (passa-banda largo em 1300 Hz): alavanca é peça
  *   maior que dente de knob e bate num batente. A primeira batida, fraca, é a
  *   alavanca saindo do lugar; é ela que diz "alavanca" e não "botão".
- * - **`drop` é o único com grave**, e por isso é o único reservado pra ação
- *   forte (confirmar, publicar, soltar). O baque é ruído em passa-baixa: tem
- *   peso e não tem nota. Os dois chiados de vinil caem em instantes sorteados.
+ * - **`drop` é o único com grave e o único que sopra**, e por isso é o único
+ *   reservado pra ação forte (confirmar, publicar, soltar). O toque embaixo é
+ *   ruído em passa-baixa (peso sem nota); o sopro é ruído num passa-banda
+ *   largo que escorrega de 2400 pra 700 Hz (`ate`), que é o que o ouvido lê
+ *   como ar saindo e não como chiado parado. Ataque de 14 ms no sopro: mais
+ *   curto vira estalo, mais longo vira vento. Um grão de poeira sorteado no
+ *   meio tira a cara de efeito pronto.
  * - **Ataque entre 0,4 e 3 ms.** Abaixo disso o primeiro quadro é um degrau, e
  *   degrau soa como estalo digital. Acima, a batida amolece e vira sopro.
  *
@@ -79,7 +84,7 @@ import * as React from "react";
  * |-----------|-----------|---------|
  * | `chimbau` | -44 dBFS  | 82 ms   |
  * | `click`   | -48 dBFS  | 28 ms   |
- * | `drop`    | -47 dBFS  | 130 ms  |
+ * | `drop`    | -49 dBFS  | 74 ms   |
  * | `toggle`  | -52 dBFS  | 50 ms   |
  * | `detent`  | -54 dBFS  | 5 ms    |
  * | `complete`| -53 dBFS  | 60 ms   |
@@ -172,6 +177,8 @@ interface Camada {
   dur: number;
   /** Passa-alta extra em série, pra camada que precisa de corte duro embaixo. */
   corte?: number;
+  /** Frequência pra onde o filtro escorrega até o fim da camada (o sopro do `drop`). */
+  ate?: number;
 }
 
 const TIMBRES: Record<SfxTimbre, Camada[]> = {
@@ -187,11 +194,13 @@ const TIMBRES: Record<SfxTimbre, Camada[]> = {
     { em: 0.022, tipo: "bandpass", hz: 1300, q: 3, pico: 0.07, atk: 0.0008, dur: 0.018 },
     { em: 0.022, tipo: "highpass", hz: 4500, q: 0.7, pico: 0.012, atk: 0.0004, dur: 0.005 },
   ],
-  // Sopro, não baque: ruído largo com ataque lento (ar saindo), um corpo
-  // morno embaixo bem mais baixo que antes, e o volume total no mesmo piso.
+  // Fole de câmera fechando: o ar sai num "pff" que escorrega do agudo pro
+  // médio (filtro descendo de 2400 pra 700 Hz), um toque macio de couro
+  // embaixo e um grão de poeira sorteado no meio. Sem nota, sem cauda.
   drop: [
-    { em: 0, tipo: "bandpass", hz: 1400, q: 0.6, pico: 0.045, atk: 0.025, dur: 0.17, corte: 450 },
-    { em: 0.01, tipo: "lowpass", hz: 520, q: 0.7, pico: 0.035, atk: 0.018, dur: 0.12 },
+    { em: 0, tipo: "lowpass", hz: 240, q: 0.7, pico: 0.07, atk: 0.003, dur: 0.045 },
+    { em: 0.004, tipo: "bandpass", hz: 2400, ate: 700, q: 0.9, pico: 0.04, atk: 0.014, dur: 0.14, corte: 320 },
+    { em: 0.03, sorteio: 0.05, tipo: "highpass", hz: 4200, q: 0.7, pico: 0.012, atk: 0.0005, dur: 0.004 },
   ],
   // Os dois da primeira versão: chimbau fechado, dois passa-altas em série.
   hover: [
@@ -263,7 +272,9 @@ function agendar(
 
     const f = ctx.createBiquadFilter();
     f.type = c.tipo;
-    f.frequency.value = variar(c.hz, 0.12);
+    const hz = variar(c.hz, 0.12);
+    f.frequency.setValueAtTime(hz, t);
+    if (c.ate) f.frequency.exponentialRampToValueAtTime(c.ate * (hz / c.hz), t + c.dur);
     f.Q.value = c.q;
     let fim: AudioNode = f;
     src.connect(f);

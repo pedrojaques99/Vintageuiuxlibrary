@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * A peça sozinha e grande sobre uma foto do acervo. Os knobs trocam o jogo de
+ * A peça sozinha e grande sobre uma foto do acervo. O cursor é uma lupa; os knobs trocam o jogo de
  * caracteres, a célula e o contraste.
  */
 

@@ -2,7 +2,7 @@
 
 <!-- Gerado por scripts/vite-bug-report.mjs. Não edite à mão: use `npm run bugs -- --resolve <id>`. -->
 
-**35 aberto(s)** · 165 resolvido(s)
+**31 aberto(s)** · 169 resolvido(s)
 
 ## testimonial-wall (2)
 
@@ -95,16 +95,6 @@
 - **black-hole-2** — somente label, só mostrar label quando tiver selecionado algo no botao de remover
   <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:25</sub>
 
-## shader-ascii (1)
-
-- **shader-ascii-1** — deixar interativo, add controls
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:25</sub>
-
-## shader-riso (1)
-
-- **shader-riso-1** — interativo, add controls
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:26</sub>
-
 ## mist-text (1)
 
 - **mist-text-1** — add opcoes de transicoes conforme oq ja tem na casa
@@ -146,11 +136,6 @@ mais respiro visual, cards mais óbvcios
 - **rail-4** — cursor pointer
   <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:30</sub>
 
-## vintage-parametric-eq (1)
-
-- **vintage-parametric-eq-2** — mt linha no grafico, deixe mais limpo, ta quase ubgado. linha demais errada. - e pq nao respeita os tokens da marca sleecionada?
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:32</sub>
-
 ## section-intro (1)
 
 - **section-intro-1** — mais opcoes de layout
@@ -164,11 +149,6 @@ mais respiro visual, cards mais óbvcios
 ## step-cards (1)
 
 - **step-cards-2** — slop
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:33</sub>
-
-## sfx-bus (1)
-
-- **sfx-bus-2** — sfx do drop ainda ta ruim
   <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:33</sub>
 
 ---
@@ -338,7 +318,11 @@ mais respiro visual, cards mais óbvcios
 - ~~black-hole-1 · black-hole — animacao ta mt amadora kkk deixa mais sutil~~
 - ~~wallet-stack-1 · wallet-stack — mt label, foco no visual limpo~~
 - ~~cover-art-4 · cover-art — MT SLOP, PODE ESCONDFER~~
+- ~~shader-ascii-1 · shader-ascii — deixar interativo, add controls~~
+- ~~shader-riso-1 · shader-riso — interativo, add controls~~
 - ~~motion-e-estado-2 · motion-e-estado — re-pense na pagina, tá mt coisa espremida e acontecendo ao mesmo tempo~~
 - ~~plate-4 · plate — inutil quase kk~~
+- ~~vintage-parametric-eq-2 · vintage-parametric-eq — mt linha no grafico, deixe mais limpo, ta quase ubgado. linha demais errada. - e pq nao respeita os tokens da marca sleecionada?~~
+- ~~sfx-bus-2 · sfx-bus — sfx do drop ainda ta ruim~~
 
 </details>

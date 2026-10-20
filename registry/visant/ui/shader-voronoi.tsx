@@ -81,11 +81,26 @@ const CORES_PADRAO = [
 ];
 
 export interface ShaderVoronoiProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
-  /** 0–100. Tamanho das células: maior é menos célula na tela. */
+  /**
+   * Tamanho das células: maior é menos célula na tela.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   size?: number;
-  /** 0–100. Velocidade da deriva. */
+  /**
+   * Velocidade da deriva.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   speed?: number;
-  /** 0–100. Tamanho do núcleo aceso de cada célula. */
+  /**
+   * Tamanho do núcleo aceso de cada célula.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   core?: number;
   /** Paradas: fundo, célula e núcleo. Qualquer cor CSS ou token. */
   colors?: string[];

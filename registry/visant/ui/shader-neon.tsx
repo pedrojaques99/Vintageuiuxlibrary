@@ -77,13 +77,33 @@ const CORES_PADRAO = [
 ];
 
 export interface ShaderNeonProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
-  /** 1–8. Quantos fios de luz. */
+  /**
+   * Quantos fios de luz.
+   * @min 1
+   * @max 8
+   * @step 1
+   */
   lines?: number;
-  /** 0–100. Velocidade da onda. */
+  /**
+   * Velocidade da onda.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   speed?: number;
-  /** 0–100. Altura da onda. */
+  /**
+   * Altura da onda.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   amplitude?: number;
-  /** 0–100. Brilho de cada fio. */
+  /**
+   * Brilho de cada fio.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   glow?: number;
   /** Paradas da rampa: fundo, linha e núcleo. Qualquer cor CSS ou token. */
   colors?: string[];

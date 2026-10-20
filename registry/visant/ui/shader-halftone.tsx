@@ -102,13 +102,28 @@ export interface ShaderHalftoneProps extends Omit<React.HTMLAttributes<HTMLDivEl
   src: string;
   /** Texto alternativo da imagem. */
   alt?: string;
-  /** 4–32. Tamanho da célula da retícula, em px. */
+  /**
+   * Tamanho da célula da retícula, em px.
+   * @min 4
+   * @max 32
+   * @step 1
+   */
   cell?: number;
-  /** 0–90. Ângulo da retícula, em graus. */
+  /**
+   * Ângulo da retícula, em graus.
+   * @min 0
+   * @max 90
+   * @step 1
+   */
   angle?: number;
   /** Forma do ponto da retícula. */
   shape?: "dots" | "squares" | "lines";
-  /** 0–100. Contraste antes de reticular. */
+  /**
+   * Contraste antes de reticular.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   contrast?: number;
   /** Lupa que amplia a imagem debaixo do cursor. */
   lens?: boolean;

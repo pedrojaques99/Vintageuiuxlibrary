@@ -28,8 +28,12 @@ import { onThemeChange, resolveCssColor } from "@/lib/css-color";
  *    tinta de texto. É o contorno do objeto que acende.
  * 4. **Corrigido do original:** o `+` tinha a barra horizontal num ramo que
  *    nunca era alcançado e saía como `|`.
- * 5. **Desenha sob demanda.** Imagem parada não pede quadro: desenha na carga,
- *    no tema, no tamanho e no knob. Não há laço para pausar fora da tela.
+ * 5. **Lupa na amostra, não na grade.** Debaixo do cursor a imagem se
+ *    aproxima e o contraste sobe: as células dali leem um pedaço menor da
+ *    imagem e o desenho ganha detalhe, mas a grade de glifos não pula.
+ * 6. **Desenha sob demanda.** Imagem parada não pede quadro: desenha na carga,
+ *    no tema, no tamanho e no knob. O laço só existe enquanto a lupa entra ou
+ *    sai, e com movimento reduzido ela aparece sem transição.
  */
 
 const VERT = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0.0,1.0);}`;
@@ -42,18 +46,20 @@ uniform sampler2D uTex;
 uniform float uCell;
 uniform float uSet;
 uniform float uContrast;
+uniform vec3 uLente;
+uniform float uLenteR;
 uniform vec3 uFundo;
 uniform vec3 uTinta;
 uniform vec3 uDestaque;
 
-float cobertura(vec2 px){
+float cobertura(vec2 px,float ganho){
   float s=min(uRes.x/uImg.x,uRes.y/uImg.y);
   vec2 tam=uImg*s;
   vec2 uv=(px-(uRes-tam)*.5)/tam;
   if(uv.x<0.||uv.y<0.||uv.x>1.||uv.y>1.)return 0.;
   vec4 c=texture2D(uTex,uv);
   float lum=dot(c.rgb,vec3(.299,.587,.114));
-  return clamp(((1.-lum)*c.a-.5)*uContrast+.5,0.,1.);
+  return clamp(((1.-lum)*c.a-.5)*uContrast*ganho+.5,0.,1.);
 }
 
 float blocos(float b,float x,float y){
@@ -155,7 +161,10 @@ void main(){
   vec2 cel=floor(px/uCell);
   float x=floor(mod(px.x,uCell)/uCell*8.);
   float y=floor(mod(px.y,uCell)/uCell*8.);
-  float b=cobertura((cel+.5)*uCell);
+  vec2 centro=(cel+.5)*uCell;
+  float queda=(1.-smoothstep(uLenteR*.55,uLenteR,distance(centro,uLente.xy)))*uLente.z;
+  vec2 amostra=uLente.xy+(centro-uLente.xy)*mix(1.,.5,queda);
+  float b=cobertura(amostra,1.+queda*.6);
   float on;
   if(uSet<.5)on=blocos(b,x,y);
   else if(uSet<1.5)on=pontos(b,x,y);
@@ -180,10 +189,22 @@ export interface ShaderAsciiProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   alt?: string;
   /** Jogo de caracteres. */
   charset?: "blocks" | "dots" | "lines" | "classic" | "binary" | "braille";
-  /** 6–24. Tamanho da célula de cada caractere, em px. */
+  /**
+   * Tamanho da célula de cada caractere, em px.
+   * @min 6
+   * @max 24
+   * @step 1
+   */
   cell?: number;
-  /** 0–100. Contraste antes de escolher o glifo. */
+  /**
+   * Contraste antes de escolher o glifo.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   contrast?: number;
+  /** Lupa que aproxima a imagem debaixo do cursor. */
+  lens?: boolean;
   /** Paradas: fundo, tinta e destaque. Qualquer cor CSS ou token. */
   colors?: string[];
 }
@@ -214,13 +235,14 @@ export function ShaderAscii({
   charset = "classic",
   cell = 12,
   contrast = 55,
+  lens = true,
   colors,
   className,
   ...props
 }: ShaderAsciiProps) {
   const wrapRef = React.useRef<HTMLDivElement>(null);
-  const params = React.useRef({ charset, cell, contrast });
-  params.current = { charset, cell, contrast };
+  const params = React.useRef({ charset, cell, contrast, lens });
+  params.current = { charset, cell, contrast, lens };
   const redesenhar = React.useRef<() => void>(() => {});
   const coresChave = (colors ?? CORES_PADRAO).join("|");
 
@@ -253,6 +275,8 @@ export function ShaderAscii({
       cell: u("uCell"),
       set: u("uSet"),
       contrast: u("uContrast"),
+      lente: u("uLente"),
+      lenteR: u("uLenteR"),
       fundo: u("uFundo"),
       tinta: u("uTinta"),
       destaque: u("uDestaque"),
@@ -269,7 +293,10 @@ export function ShaderAscii({
     gl.uniform1i(U.tex, 0);
     gl.uniform2f(U.img, 1, 1);
 
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     let dpr = 1;
+    let raf = 0;
+    const lente = { x: 0, y: 0, forca: 0, alvo: 0 };
 
     const cores = () => {
       const [a, b, c] = coresChave.split("|").map((cor) => resolveCssColor(cor, wrap));
@@ -293,10 +320,44 @@ export function ShaderAscii({
       gl.uniform1f(U.cell, Math.round(Math.max(6, Math.min(24, p.cell)) * dpr));
       gl.uniform1f(U.set, JOGOS[p.charset] ?? 3);
       gl.uniform1f(U.contrast, 0.5 + (p.contrast / 100) * 2);
+      gl.uniform3f(U.lente, lente.x, lente.y, p.lens ? lente.forca : 0);
+      gl.uniform1f(U.lenteR, Math.min(canvas.width, canvas.height) * 0.3);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
-    redesenhar.current = desenhar;
+    // O laço só vive enquanto a lupa está entrando ou saindo.
+    const quadro = () => {
+      lente.forca += (lente.alvo - lente.forca) * 0.18;
+      if (Math.abs(lente.alvo - lente.forca) < 0.005) lente.forca = lente.alvo;
+      desenhar();
+      raf = lente.forca !== lente.alvo ? requestAnimationFrame(quadro) : 0;
+    };
+    const pedirQuadro = () => {
+      if (mq.matches) {
+        lente.forca = lente.alvo;
+        desenhar();
+      } else if (!raf) raf = requestAnimationFrame(quadro);
+    };
+
+    redesenhar.current = () => {
+      if (!raf) desenhar();
+    };
+
+    const mover = (e: PointerEvent) => {
+      // Ponteiro em px locais: a vitrine escala o palco com transform.
+      const r = wrap.getBoundingClientRect();
+      const k = r.width ? wrap.offsetWidth / r.width : 1;
+      lente.x = (e.clientX - r.left) * k * dpr;
+      lente.y = (e.clientY - r.top) * k * dpr;
+      lente.alvo = 1;
+      if (raf) return;
+      if (lente.forca === lente.alvo) desenhar();
+      else pedirQuadro();
+    };
+    const sair = () => {
+      lente.alvo = 0;
+      pedirQuadro();
+    };
 
     let vivo = true;
     const img = new Image();
@@ -324,12 +385,17 @@ export function ShaderAscii({
       cores();
       desenhar();
     });
+    wrap.addEventListener("pointermove", mover);
+    wrap.addEventListener("pointerleave", sair);
 
     return () => {
       vivo = false;
       img.onload = null;
       ro.disconnect();
       offTema();
+      cancelAnimationFrame(raf);
+      wrap.removeEventListener("pointermove", mover);
+      wrap.removeEventListener("pointerleave", sair);
       redesenhar.current = () => {};
       gl.deleteTexture(tex);
       gl.deleteBuffer(buf);
@@ -341,7 +407,7 @@ export function ShaderAscii({
 
   React.useEffect(() => {
     redesenhar.current();
-  }, [charset, cell, contrast]);
+  }, [charset, cell, contrast, lens]);
 
   return (
     <div

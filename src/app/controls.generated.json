@@ -391,8 +391,8 @@
         {
           "prop": "accent",
           "tipo": "texto",
-          "padrao": "var(--vintage-value)",
-          "resumo": null
+          "padrao": "var(--brand)",
+          "resumo": "Cor da curva e dos punhos. Padrão: a marca selecionada. Só traço e fundo."
         },
         {
           "prop": "title",
@@ -1804,10 +1804,38 @@
     "componentes": {
       "GlitchChars": [
         {
+          "prop": "preset",
+          "tipo": "escolha",
+          "valores": [
+            "simbolos",
+            "blocos",
+            "braille",
+            "binario",
+            "hex"
+          ],
+          "padrao": "simbolos",
+          "resumo": "Sotaque pronto do ruído."
+        },
+        {
+          "prop": "loop",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "No modo decodificar, recomeça depois do respiro."
+        },
+        {
+          "prop": "holdMs",
+          "tipo": "numero",
+          "min": 400,
+          "max": 5000,
+          "step": 100,
+          "padrao": 1600,
+          "resumo": "No modo decodificar, quanto a palavra fica parada antes de embaralhar."
+        },
+        {
           "prop": "intervalMs",
           "tipo": "numero",
-          "min": 10,
-          "max": 300,
+          "min": 60,
+          "max": 400,
           "step": 10,
           "padrao": 150,
           "resumo": "Milissegundos entre quadros."
@@ -1816,16 +1844,23 @@
           "prop": "length",
           "tipo": "numero",
           "min": 1,
-          "max": 20,
+          "max": 12,
           "step": 1,
           "padrao": 2,
-          "resumo": "Quantos caracteres por quadro. Fonte mono ⇒ largura estável."
+          "resumo": "Quantos caracteres por quadro. Fonte mono garante largura estável."
         },
         {
           "prop": "chars",
           "tipo": "texto",
-          "padrao": "*•□./-®",
-          "resumo": "Pool de caracteres sorteados. Troque para mudar o \"sotaque\" do ruído."
+          "padrao": null,
+          "resumo": "Pool de caracteres sorteados. Passando isto, `preset` é ignorado."
+        },
+        {
+          "prop": "text",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Liga o modo decodificar: o ruído assenta até virar este texto.",
+          "secundario": true
         }
       ]
     }
@@ -2354,7 +2389,7 @@
             "start"
           ],
           "padrao": "center",
-          "resumo": null
+          "resumo": "Atalho antigo para `layout=\"center\"` ou `layout=\"start\"`."
         },
         {
           "prop": "as",
@@ -2366,6 +2401,19 @@
           ],
           "padrao": "h2",
           "resumo": null
+        },
+        {
+          "prop": "layout",
+          "tipo": "escolha",
+          "valores": [
+            "center",
+            "start",
+            "split",
+            "index",
+            "editorial"
+          ],
+          "padrao": null,
+          "resumo": "A composição da abertura:"
         },
         {
           "prop": "leadWidth",
@@ -2532,6 +2580,16 @@
           ],
           "padrao": "4",
           "resumo": "Teto de colunas. A largura do container é quem decide quantas cabem."
+        },
+        {
+          "prop": "layout",
+          "tipo": "escolha",
+          "valores": [
+            "masonry",
+            "bento"
+          ],
+          "padrao": "masonry",
+          "resumo": "`masonry` (padrão): colunas de CSS, altura de cada card pelo conteúdo."
         }
       ]
     }
@@ -2570,13 +2628,15 @@
           "max": 40,
           "step": 1,
           "padrao": 13,
-          "resumo": "Largura do retrato, em rem. É ela que decide quando a peça empilha."
+          "resumo": "Largura do retrato, em rem. É ela que decide quando a peça empilha.",
+          "inicial": 7.5
         },
         {
           "prop": "ratio",
           "tipo": "texto",
           "padrao": "4/5",
-          "resumo": "Proporção do retrato, formato CSS."
+          "resumo": "Proporção do retrato, formato CSS.",
+          "inicial": "1/1"
         },
         {
           "prop": "source",
@@ -2747,7 +2807,8 @@
             "aside"
           ],
           "padrao": "section",
-          "resumo": null
+          "resumo": null,
+          "inicial": "div"
         },
         {
           "prop": "variant",
@@ -3008,7 +3069,7 @@
           "step": 1,
           "padrao": 5,
           "resumo": "Quantos cards fantasma. Default 5.",
-          "inicial": 1
+          "inicial": 3
         },
         {
           "prop": "gap",
@@ -3018,7 +3079,7 @@
           "step": 4,
           "padrao": 20,
           "resumo": null,
-          "inicial": 0
+          "inicial": 16
         },
         {
           "prop": "itemWidth",
@@ -3028,7 +3089,7 @@
           "step": 10,
           "padrao": 240,
           "resumo": "Os mesmos valores do `@visant/rail` que este esqueleto representa.",
-          "inicial": 100
+          "inicial": 140
         },
         {
           "prop": "ratio",
@@ -3100,7 +3161,7 @@
           "step": 4,
           "padrao": 8,
           "resumo": "Respiro entre linhas em px. O resto da entrelinha, na prática.",
-          "inicial": 0
+          "inicial": 16
         },
         {
           "prop": "lineHeight",
@@ -3359,6 +3420,12 @@
           "tipo": "chave",
           "padrao": false,
           "resumo": "Desliga o giro e mantém luz e borda. Para card dentro de grade densa."
+        },
+        {
+          "prop": "rest",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Pose de repouso: sem ponteiro em cima, o card fica inclinado e aceso, com a"
         },
         {
           "prop": "glow",
@@ -3815,8 +3882,7 @@
           "max": 20,
           "step": 1,
           "padrao": 6,
-          "resumo": "Respiro entre as dobras, em rem.",
-          "inicial": 3
+          "resumo": "Respiro entre as dobras, em rem."
         }
       ]
     }
@@ -4121,6 +4187,23 @@
     "componentes": {
       "InkWordmark": [
         {
+          "prop": "textCase",
+          "tipo": "escolha",
+          "valores": [
+            "upper",
+            "lower",
+            "as-is"
+          ],
+          "padrao": "as-is",
+          "resumo": "Caixa do `text`."
+        },
+        {
+          "prop": "underline",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Traço de pincel embaixo do `text`."
+        },
+        {
           "prop": "smoke",
           "tipo": "numero",
           "min": 0,
@@ -4130,16 +4213,49 @@
           "resumo": "Deslocamento máximo, em unidades do `viewBox`, quando a marca ainda é fumaça."
         },
         {
+          "prop": "tracking",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": -0.03,
+          "resumo": "Espaço entre letras do `text`, em em. Negativo aperta."
+        },
+        {
+          "prop": "weight",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1200,
+          "step": 10,
+          "padrao": 600,
+          "resumo": "Peso do `text`, 100 a 900."
+        },
+        {
+          "prop": "mark",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Sinal pequeno no alto, depois do texto: \"®\", \"™\"."
+        },
+        {
           "prop": "path",
           "tipo": "texto",
           "padrao": null,
-          "resumo": "`d` de um path único (a marca convertida em contorno). Use com `viewBox`."
+          "resumo": "`d` de um path único (a marca convertida em contorno). Use com `viewBox`.",
+          "secundario": true
+        },
+        {
+          "prop": "text",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A marca escrita, em texto vivo. Ignorado quando há `path` ou `children`.",
+          "secundario": true
         },
         {
           "prop": "viewBox",
           "tipo": "texto",
-          "padrao": "0 0 1000 300",
-          "resumo": "`viewBox` do SVG. Obrigatório com `path`; com `children` também é o que dá a proporção."
+          "padrao": null,
+          "resumo": "`viewBox` do SVG. Obrigatório com `path`; com `children` também é o que dá a proporção.",
+          "secundario": true
         }
       ]
     }
@@ -4248,6 +4364,19 @@
           "resumo": "`view` entra uma vez; `scroll` acompanha a rolagem, ida e volta."
         },
         {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "mist",
+            "rise",
+            "mask",
+            "drift",
+            "settle"
+          ],
+          "padrao": "mist",
+          "resumo": "Como cada fatia entra no modo `view`: `mist` (padrão), `rise`, `mask`, `drift`, `settle`."
+        },
+        {
           "prop": "delay",
           "tipo": "numero",
           "min": 0,
@@ -4325,6 +4454,18 @@
   "mist-dialog": {
     "componentes": {
       "MistDialog": [
+        {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "mist",
+            "rise",
+            "zoom",
+            "wipe"
+          ],
+          "padrao": "mist",
+          "resumo": "Como entra e sai: `mist` (padrão, a névoa), `rise`, `zoom`, `wipe`."
+        },
         {
           "prop": "closeOnBackdrop",
           "tipo": "chave",
@@ -6173,10 +6314,25 @@
           "valores": [
             "slant",
             "dots",
-            "bars"
+            "bars",
+            "pupil"
           ],
           "padrao": "slant",
-          "resumo": "Forma dos olhos."
+          "resumo": "Forma dos olhos.",
+          "inicial": "dots"
+        },
+        {
+          "prop": "face",
+          "tipo": "escolha",
+          "valores": [
+            "card",
+            "orb",
+            "glass",
+            "brand"
+          ],
+          "padrao": "card",
+          "resumo": "Corpo do rosto. `glass` foi feito pra ficar por cima de um fundo vivo.",
+          "inicial": "orb"
         },
         {
           "prop": "blink",
@@ -6200,13 +6356,15 @@
           "max": 300,
           "step": 10,
           "padrao": 112,
-          "resumo": "Lado do rosto, em px."
+          "resumo": "Lado do rosto, em px.",
+          "inicial": 68
         },
         {
           "prop": "greeting",
           "tipo": "texto",
           "padrao": "Oi, tudo bem?",
-          "resumo": "O que o balão escreve no clique. Vazio desliga o cumprimento."
+          "resumo": "O que o balão escreve no clique. Vazio desliga o cumprimento.",
+          "inicial": "Opa"
         }
       ]
     }
@@ -6464,6 +6622,13 @@
     "componentes": {
       "StickerPeel": [
         {
+          "prop": "peelOff",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Clique, Enter ou Espaço descolam o adesivo inteiro da página.",
+          "inicial": true
+        },
+        {
           "prop": "peel",
           "tipo": "numero",
           "min": 0,
@@ -6688,22 +6853,28 @@
           "resumo": "Jogo de caracteres."
         },
         {
+          "prop": "lens",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Lupa que aproxima a imagem debaixo do cursor."
+        },
+        {
           "prop": "cell",
           "tipo": "numero",
-          "min": 0,
-          "max": 30,
+          "min": 6,
+          "max": 24,
           "step": 1,
           "padrao": 12,
-          "resumo": "6–24. Tamanho da célula de cada caractere, em px."
+          "resumo": "Tamanho da célula de cada caractere, em px."
         },
         {
           "prop": "contrast",
           "tipo": "numero",
           "min": 0,
-          "max": 140,
+          "max": 100,
           "step": 1,
           "padrao": 55,
-          "resumo": "0–100. Contraste antes de escolher o glifo."
+          "resumo": "Contraste antes de escolher o glifo."
         },
         {
           "prop": "alt",
@@ -6746,28 +6917,28 @@
           "prop": "angle",
           "tipo": "numero",
           "min": 0,
-          "max": 120,
+          "max": 90,
           "step": 1,
           "padrao": 45,
-          "resumo": "0–90. Ângulo da retícula, em graus."
+          "resumo": "Ângulo da retícula, em graus."
         },
         {
           "prop": "cell",
           "tipo": "numero",
-          "min": 0,
-          "max": 20,
+          "min": 4,
+          "max": 32,
           "step": 1,
           "padrao": 9,
-          "resumo": "4–32. Tamanho da célula da retícula, em px."
+          "resumo": "Tamanho da célula da retícula, em px."
         },
         {
           "prop": "contrast",
           "tipo": "numero",
           "min": 0,
-          "max": 140,
+          "max": 100,
           "step": 1,
           "padrao": 55,
-          "resumo": "0–100. Contraste antes de reticular."
+          "resumo": "Contraste antes de reticular."
         },
         {
           "prop": "alt",
@@ -6794,37 +6965,37 @@
           "prop": "amplitude",
           "tipo": "numero",
           "min": 0,
-          "max": 130,
+          "max": 100,
           "step": 1,
           "padrao": 50,
-          "resumo": "0–100. Altura da onda."
+          "resumo": "Altura da onda."
         },
         {
           "prop": "glow",
           "tipo": "numero",
           "min": 0,
-          "max": 130,
+          "max": 100,
           "step": 1,
           "padrao": 50,
-          "resumo": "0–100. Brilho de cada fio."
+          "resumo": "Brilho de cada fio."
         },
         {
           "prop": "lines",
           "tipo": "numero",
-          "min": 0,
-          "max": 20,
+          "min": 1,
+          "max": 8,
           "step": 1,
           "padrao": 5,
-          "resumo": "1–8. Quantos fios de luz."
+          "resumo": "Quantos fios de luz."
         },
         {
           "prop": "speed",
           "tipo": "numero",
-          "min": 1,
+          "min": 0,
           "max": 100,
           "step": 1,
           "padrao": 40,
-          "resumo": "0–100. Velocidade da onda."
+          "resumo": "Velocidade da onda."
         }
       ]
     }
@@ -6844,31 +7015,37 @@
           "resumo": "Como a tinta assenta: grão de riso, ponto de retícula ou Bayer."
         },
         {
+          "prop": "interactive",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "O cursor puxa a folha: perto dele as tintas escorregam do registro."
+        },
+        {
           "prop": "cell",
           "tipo": "numero",
-          "min": 0,
-          "max": 20,
+          "min": 2,
+          "max": 16,
           "step": 1,
           "padrao": 4,
-          "resumo": "2–16. Tamanho da célula de tinta, em px."
+          "resumo": "Tamanho da célula de tinta, em px."
         },
         {
           "prop": "misregistration",
           "tipo": "numero",
           "min": 0,
-          "max": 90,
+          "max": 100,
           "step": 1,
           "padrao": 35,
-          "resumo": "0–100. Quanto as duas tintas saem do registro."
+          "resumo": "Quanto as duas tintas saem do registro."
         },
         {
           "prop": "paper",
           "tipo": "numero",
-          "min": 1,
+          "min": 0,
           "max": 100,
           "step": 1,
           "padrao": 40,
-          "resumo": "0–100. Textura do papel."
+          "resumo": "Textura do papel."
         },
         {
           "prop": "alt",
@@ -6882,7 +7059,8 @@
           "tipo": "texto",
           "padrao": null,
           "resumo": "A imagem a imprimir. Fundo branco ou transparente vira papel.",
-          "inicial": "/media/cena-radio.webp"
+          "inicial": "/media/cena-radio.webp",
+          "secundario": true
         }
       ]
     }
@@ -6897,25 +7075,25 @@
           "max": 100,
           "step": 1,
           "padrao": 40,
-          "resumo": "0–100. Densidade dos anéis."
+          "resumo": "Densidade dos anéis."
         },
         {
           "prop": "speed",
           "tipo": "numero",
-          "min": 1,
+          "min": 0,
           "max": 100,
           "step": 1,
           "padrao": 40,
-          "resumo": "0–100. Velocidade de cruzeiro do túnel."
+          "resumo": "Velocidade de cruzeiro do túnel."
         },
         {
           "prop": "twist",
           "tipo": "numero",
           "min": 0,
-          "max": 130,
+          "max": 100,
           "step": 1,
           "padrao": 50,
-          "resumo": "0–100. Quanto os anéis torcem em espiral."
+          "resumo": "Quanto os anéis torcem em espiral."
         }
       ]
     }
@@ -6930,25 +7108,135 @@
           "max": 100,
           "step": 1,
           "padrao": 40,
-          "resumo": "0–100. Tamanho do núcleo aceso de cada célula."
+          "resumo": "Tamanho do núcleo aceso de cada célula."
         },
         {
           "prop": "size",
           "tipo": "numero",
-          "min": 1,
-          "max": 130,
+          "min": 0,
+          "max": 100,
           "step": 1,
           "padrao": 50,
-          "resumo": "0–100. Tamanho das células: maior é menos célula na tela."
+          "resumo": "Tamanho das células: maior é menos célula na tela."
         },
         {
           "prop": "speed",
           "tipo": "numero",
-          "min": 1,
-          "max": 90,
+          "min": 0,
+          "max": 100,
           "step": 1,
           "padrao": 35,
-          "resumo": "0–100. Velocidade da deriva."
+          "resumo": "Velocidade da deriva."
+        }
+      ]
+    }
+  },
+  "anatomia": {
+    "componentes": {
+      "cameraOf": [
+        {
+          "prop": "azimuth",
+          "tipo": "numero",
+          "min": 0,
+          "max": 120,
+          "step": 1,
+          "padrao": 45,
+          "resumo": null
+        },
+        {
+          "prop": "elevation",
+          "tipo": "numero",
+          "min": 0,
+          "max": 80,
+          "step": 1,
+          "padrao": 30,
+          "resumo": null
+        },
+        {
+          "prop": "scale",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        }
+      ],
+      "towardViewer": [
+        {
+          "prop": "azimuth",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "elevation",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "scale",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        }
+      ],
+      "figureSvg": [
+        {
+          "prop": "height",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "width",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": null
+        }
+      ],
+      "Anatomia": [
+        {
+          "prop": "modo",
+          "tipo": "escolha",
+          "valores": [
+            "explorar",
+            "passos"
+          ],
+          "padrao": null,
+          "resumo": "Começa explorando (padrão) ou já no passo a passo."
+        },
+        {
+          "prop": "tema",
+          "tipo": "escolha",
+          "valores": [
+            "claro",
+            "escuro"
+          ],
+          "padrao": null,
+          "resumo": "Só pra site sem tokens: força o esquema das cores do sistema."
         }
       ]
     }

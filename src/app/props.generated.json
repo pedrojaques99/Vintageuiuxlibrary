@@ -504,8 +504,8 @@
           "nome": "accent",
           "tipo": "string",
           "obrigatoria": false,
-          "padrao": "var(--vintage-value)",
-          "descricao": null
+          "padrao": "var(--brand)",
+          "descricao": "Cor da curva e dos punhos. Padrão: a marca selecionada. Só traço e fundo."
         },
         {
           "nome": "bands",
@@ -2677,14 +2677,14 @@
   "glitch-chars": [
     {
       "nome": "GlitchChars",
-      "descricao": "Dois caracteres que trocam sozinhos — o \"sinal de vida\" mais barato que existe.\n\nNasceu como o ruído ao lado de um texto de status (\"** Processando\"), e é a\nprimitiva por trás de `status-ticker` e `working-glyph`. Um spinner diz\n\"esperando\"; isso diz \"a máquina está mexendo\", que é outra sensação.\n\n150ms é deliberado: acima de ~200ms lê como piscada quebrada, abaixo de ~100ms\nvira ruído que cansa. Não é decorativo — é o batimento do sistema.\n\n`prefers-reduced-motion`: congela num par fixo (o texto continua legível, e o\nlayout não pula, porque a largura é sempre a mesma em fonte mono).",
+      "descricao": null,
       "props": [
         {
           "nome": "chars",
           "tipo": "string",
           "obrigatoria": false,
-          "padrao": "*•□./-®",
-          "descricao": "Pool de caracteres sorteados. Troque para mudar o \"sotaque\" do ruído."
+          "padrao": null,
+          "descricao": "Pool de caracteres sorteados. Passando isto, `preset` é ignorado."
         },
         {
           "nome": "className",
@@ -2694,18 +2694,61 @@
           "descricao": null
         },
         {
+          "nome": "holdMs",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1600",
+          "descricao": "No modo decodificar, quanto a palavra fica parada antes de embaralhar.",
+          "faixa": {
+            "min": 400,
+            "max": 5000,
+            "step": 100
+          }
+        },
+        {
           "nome": "intervalMs",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "150",
-          "descricao": "Milissegundos entre quadros."
+          "descricao": "Milissegundos entre quadros.",
+          "faixa": {
+            "min": 60,
+            "max": 400,
+            "step": 10
+          }
         },
         {
           "nome": "length",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "2",
-          "descricao": "Quantos caracteres por quadro. Fonte mono ⇒ largura estável."
+          "descricao": "Quantos caracteres por quadro. Fonte mono garante largura estável.",
+          "faixa": {
+            "min": 1,
+            "max": 12,
+            "step": 1
+          }
+        },
+        {
+          "nome": "loop",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "No modo decodificar, recomeça depois do respiro."
+        },
+        {
+          "nome": "preset",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "simbolos",
+          "descricao": "Sotaque pronto do ruído.",
+          "valores": [
+            "simbolos",
+            "blocos",
+            "braille",
+            "binario",
+            "hex"
+          ]
         },
         {
           "nome": "style",
@@ -2713,6 +2756,13 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": null
+        },
+        {
+          "nome": "text",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Liga o modo decodificar: o ruído assenta até virar este texto."
         }
       ]
     }
@@ -3346,7 +3396,7 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "center",
-          "descricao": null,
+          "descricao": "Atalho antigo para `layout=\"center\"` ou `layout=\"start\"`.",
           "valores": [
             "center",
             "start"
@@ -3369,7 +3419,28 @@
           "tipo": "any",
           "obrigatoria": false,
           "padrao": null,
-          "descricao": "O texto da pílula. Some quando ausente."
+          "descricao": "O texto do rótulo. Some quando ausente."
+        },
+        {
+          "nome": "index",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O número da seção (\"01\"), usado em `index` e `editorial`."
+        },
+        {
+          "nome": "layout",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A composição da abertura:\n· `center`: tudo no eixo, rótulo em pílula. O padrão.\n· `start`: a mesma pilha, alinhada à esquerda.\n· `split`: título à esquerda, contexto e ações à direita. Empilha sozinho\n  quando o container aperta.\n· `index`: o número da seção em corpo grande ao lado do título.\n· `editorial`: fio de ponta a ponta com o rótulo em cima, título largo e o\n  contexto recuado à direita, como abertura de capítulo.\nAusente, vale o `align`.",
+          "valores": [
+            "center",
+            "start",
+            "split",
+            "index",
+            "editorial"
+          ]
         },
         {
           "nome": "lead",
@@ -3638,7 +3709,7 @@
     },
     {
       "nome": "Step",
-      "descricao": "StepCards — \"como funciona\" em passos numerados, com o visual por slot.\n\nDuas referências viraram este bloco: os três cards de gradiente\n(assinar/pedir/receber) e os quatro passos com mini-telas do produto dentro.\nO que elas têm em comum e o que separa uma da outra:\n\n- **Comum:** número, título, uma frase, e uma área grande de visual em cima.\n- **Diferente:** a arte. Numa é gradiente de marca, na outra é screenshot do\n  app. Por isso `visual` é slot e o componente não desenha nada lá dentro —\n  um bloco que embute a arte de um cliente só serve para aquele cliente.\n\nDecisões:\n\n1. **É `<ol>`, não uma grade de `<div>`.** A ordem é a informação. Quem navega\n   por leitor de tela ouve \"lista de 4 itens\" e sabe que existe uma sequência.\n2. **O número é `aria-hidden`.** O `<ol>` já numera; o \"01\" na tela é o eco\n   visual disso, e anunciar os dois faz \"um, um, envie seu pedido\".\n3. **`columns` aceita o passo órfão.** Quatro passos em três colunas deixam um\n   sozinho na segunda linha — a referência resolve deitando o último\n   (`wideLast`), e é isso que a prop faz.\n\n── 4. O passo em foco, e por que ele não é enfeite ────────────────────────\n\nTrês cards idênticos numa fileira dizem \"existem três passos\" e param aí. O\nque a peça precisa dizer é **onde você está** — numa página de \"como\nfunciona\" que acompanha a rolagem, num onboarding que marca o passo atual,\nnum carrossel que passa sozinho. Por isso existe `active`.\n\nO destaque é por **recuo dos outros**, não por brilho no escolhido: o ativo\nfica como o card sempre foi (opaco, borda de marca, elevado) e os demais\nperdem opacidade e um fio de escala. É a diferença entre a fileira ter um\nfoco e a fileira ter um card piscando.\n\nDuas guardas:\n· **Sem `active`, nada muda.** Quem já usava o bloco recebe o mesmo pixel —\n  inclusive o passo do meio, que não vira \"o ativo\" por acaso.\n· **O ponteiro também promove.** Passar o mouse num passo recuado traz ele\n  de volta, senão o recuo vira um card apagado que ninguém consegue ler.\n  E `motion-reduce` corta a transição, não o estado: quem pediu menos\n  movimento continua enxergando qual é o passo atual.",
+      "descricao": "StepCards — \"como funciona\" em passos numerados, com o visual por slot.\n\nDuas referências viraram este bloco: os três cards de gradiente\n(assinar/pedir/receber) e os quatro passos com mini-telas do produto dentro.\nO que elas têm em comum e o que separa uma da outra:\n\n- **Comum:** número, título, uma frase, e uma área grande de visual em cima.\n- **Diferente:** a arte. Numa é gradiente de marca, na outra é screenshot do\n  app. Por isso `visual` é slot e o componente não desenha nada lá dentro —\n  um bloco que embute a arte de um cliente só serve para aquele cliente.\n\nDecisões:\n\n1. **É `<ol>`, não uma grade de `<div>`.** A ordem é a informação. Quem navega\n   por leitor de tela ouve \"lista de 4 itens\" e sabe que existe uma sequência.\n2. **O número é `aria-hidden`.** O `<ol>` já numera; o \"01\" na tela é o eco\n   visual disso, e anunciar os dois faz \"um, um, envie seu pedido\".\n3. **`columns` aceita o passo órfão.** Quatro passos em três colunas deixam um\n   sozinho na segunda linha — a referência resolve deitando o último\n   (`wideLast`), e é isso que a prop faz.\n\n── 4. O passo em foco, e por que ele não é enfeite ────────────────────────\n\nTrês cards idênticos numa fileira dizem \"existem três passos\" e param aí. O\nque a peça precisa dizer é **onde você está** — numa página de \"como\nfunciona\" que acompanha a rolagem, num onboarding que marca o passo atual,\nnum carrossel que passa sozinho. Por isso existe `active`.\n\nO destaque é por **recuo dos outros**, não por brilho no escolhido: o ativo\nfica inteiro e acende o fio de cima na cor da marca, e os demais perdem\nopacidade. É a diferença entre a fileira ter um foco e a fileira ter um card\npiscando.\n\n── 5. Sem caixa em volta ──────────────────────────────────────────────────\n\nA versão anterior era card com borda, fundo, sombra, selo em pílula no\nnúmero e borda de marca no ativo: quatro molduras pra dizer \"passo\". Lia\ncomo template. Agora o passo é a arte (com cantos e altura fixa, sem faixa\ncinza sobrando embaixo), um fio de percurso e o texto. O fio é a única\nmoldura, e ele faz trabalho: liga os passos numa linha só e marca onde você\nestá.\n\nDuas guardas:\n· **Sem `active`, nada muda.** Quem já usava o bloco recebe o mesmo pixel —\n  inclusive o passo do meio, que não vira \"o ativo\" por acaso.\n· **O ponteiro também promove.** Passar o mouse num passo recuado traz ele\n  de volta, senão o recuo vira um card apagado que ninguém consegue ler.\n  E `motion-reduce` corta a transição, não o estado: quem pediu menos\n  movimento continua enxergando qual é o passo atual.",
       "props": []
     }
   ],
@@ -3672,6 +3743,24 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": "O que aparece quando ainda não há depoimento nenhum."
+        },
+        {
+          "nome": "footer",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Faixa que fecha a parede embaixo: nota média, logos, link."
+        },
+        {
+          "nome": "layout",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "masonry",
+          "descricao": "`masonry` (padrão): colunas de CSS, altura de cada card pelo conteúdo.\n`bento`: grade que divide a altura do container; o retrato ocupa duas\nlinhas e os cards esticam até a borda. Use com altura definida.",
+          "valores": [
+            "masonry",
+            "bento"
+          ]
         }
       ]
     },
@@ -3704,6 +3793,24 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": "O que aparece quando ainda não há depoimento nenhum."
+        },
+        {
+          "nome": "footer",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Faixa que fecha a parede embaixo: nota média, logos, link."
+        },
+        {
+          "nome": "layout",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "masonry",
+          "descricao": "`masonry` (padrão): colunas de CSS, altura de cada card pelo conteúdo.\n`bento`: grade que divide a altura do container; o retrato ocupa duas\nlinhas e os cards esticam até a borda. Use com altura definida.",
+          "valores": [
+            "masonry",
+            "bento"
+          ]
         }
       ]
     }
@@ -3985,13 +4092,6 @@
           "descricao": null
         }
       ]
-    }
-  ],
-  "use-pointer-parallax": [
-    {
-      "nome": "usePointerParallax",
-      "descricao": "Paralaxe de ponteiro — em vinte e cinco linhas de trabalho útil.\n\n── Por que isto existe, tendo prontas ─────────────────────────────────────\n\nAntes de escrever o original, as prontas foram olhadas: **Atropos** faz tilt\n3D de hover num card só; **Rellax** e **SimpleParallax** fazem parallax de\nFUNDO no scroll. Nenhuma faz composição com profundidade POR OBJETO. Instalar\nqualquer uma seria pagar peso pra ainda escrever este arquivo.\n\n── A divisão de trabalho é a que o navegador prefere ──────────────────────\n\nO hook escreve DUAS custom properties no elemento — `--px` e `--py`, de -1 a\n1 — e **o CSS decide** o que cada objeto faz com elas, tipicamente através de\num `--d` de profundidade próprio:\n\n```css\n.objeto { transform: translate3d(calc(var(--px) * var(--d) * 1px),\n                                 calc(var(--py) * var(--d) * 1px), 0); }\n```\n\nAssim o layout e a estética ficam inteiros na folha de estilo, e trocar a\ncomposição não encosta em JavaScript. É também o que permite dar profundidade\ndiferente a cada peça sem uma linha a mais aqui.\n\n── As quatro guardas ──────────────────────────────────────────────────────\n\n· **Uma escrita por quadro.** `pointermove` dispara dezenas de vezes por\n  segundo, e escrever custom property a cada evento força recálculo de estilo\n  fora do quadro. rAF é o teto útil.\n· **Só onde há ponteiro fino.** No toque não existe hover, e a paralaxe\n  ficaria presa no último ponto tocado — pior que não existir.\n· **Nada a fazer com o alvo fora da tela.** Sai antes de medir.\n· **Ponteiro saiu da janela: volta ao repouso**, em vez de congelar torto.\n\nSe o hook não rodar, `--px` e `--py` ficam em 0 e a composição é uma imagem\nparada. É o estado de repouso correto, não um estado quebrado — e é por isso\nque os defaults do CSS têm que ser `var(--px, 0)`.\n\nA deriva de SCROLL não pertence aqui: ela é `animation-timeline: view()`\nnativo, que roda fora da main thread. Ouvir scroll em JS pra isso seria\nreinventar, e pior.",
-      "props": []
     }
   ],
   "fold-motion": [
@@ -4704,6 +4804,13 @@
           "descricao": "Força da luz, 0→1."
         },
         {
+          "nome": "rest",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Pose de repouso: sem ponteiro em cima, o card fica inclinado e aceso, com a\nluz no canto de cima à esquerda. `false` deixa plano e apagado."
+        },
+        {
           "nome": "tilt",
           "tipo": "number",
           "obrigatoria": false,
@@ -5014,6 +5121,13 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": "Marca no topo. Slot, porque cada projeto tem o componente de logo dele."
+        },
+        {
+          "nome": "brandIcon",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A marca reduzida a símbolo, pro modo compacto. Num trilho de 3,75rem o nome\nescrito não cabe e vira um corte no meio da palavra; o símbolo cabe. Sem\nele, a barra compacta mostra a `brand` como antes."
         },
         {
           "nome": "collapsed",
@@ -5942,6 +6056,20 @@
           "descricao": "Contêiner que rola, se não for a janela. Layout com rolagem num `div`\n(painel, modal, vitrine) precisa disto, senão o progresso nunca anda."
         },
         {
+          "nome": "font",
+          "tipo": "\"display\" | \"sans\" | \"mono\" | \"manrope\" | (string & {})",
+          "obrigatoria": false,
+          "padrao": "display",
+          "descricao": "Família do `text`: token da casa ou qualquer valor de `font-family`."
+        },
+        {
+          "nome": "mark",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Sinal pequeno no alto, depois do texto: \"®\", \"™\"."
+        },
+        {
           "nome": "path",
           "tipo": "string",
           "obrigatoria": false,
@@ -5963,11 +6091,51 @@
           "descricao": "Deslocamento máximo, em unidades do `viewBox`, quando a marca ainda é fumaça."
         },
         {
+          "nome": "text",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A marca escrita, em texto vivo. Ignorado quando há `path` ou `children`."
+        },
+        {
+          "nome": "textCase",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "as-is",
+          "descricao": "Caixa do `text`.",
+          "valores": [
+            "upper",
+            "lower",
+            "as-is"
+          ]
+        },
+        {
+          "nome": "tracking",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "-0.03",
+          "descricao": "Espaço entre letras do `text`, em em. Negativo aperta."
+        },
+        {
+          "nome": "underline",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Traço de pincel embaixo do `text`."
+        },
+        {
           "nome": "viewBox",
           "tipo": "string",
           "obrigatoria": false,
-          "padrao": "0 0 1000 300",
+          "padrao": null,
           "descricao": "`viewBox` do SVG. Obrigatório com `path`; com `children` também é o que dá a proporção."
+        },
+        {
+          "nome": "weight",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "600",
+          "descricao": "Peso do `text`, 100 a 900."
         }
       ]
     }
@@ -6505,6 +6673,20 @@
             "view",
             "scroll"
           ]
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "mist",
+          "descricao": "Como cada fatia entra no modo `view`: `mist` (padrão), `rise`, `mask`, `drift`, `settle`.",
+          "valores": [
+            "mist",
+            "rise",
+            "mask",
+            "drift",
+            "settle"
+          ]
         }
       ]
     }
@@ -6641,6 +6823,19 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": "Depois de abrir. Lugar de pausar o scroll suave da página."
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "mist",
+          "descricao": "Como entra e sai: `mist` (padrão, a névoa), `rise`, `zoom`, `wipe`.",
+          "valores": [
+            "mist",
+            "rise",
+            "zoom",
+            "wipe"
+          ]
         }
       ]
     }
@@ -10942,7 +11137,21 @@
           "valores": [
             "slant",
             "dots",
-            "bars"
+            "bars",
+            "pupil"
+          ]
+        },
+        {
+          "nome": "face",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "card",
+          "descricao": "Corpo do rosto. `glass` foi feito pra ficar por cima de um fundo vivo.",
+          "valores": [
+            "card",
+            "orb",
+            "glass",
+            "brand"
           ]
         },
         {
@@ -11397,6 +11606,13 @@
           "descricao": "Posição inicial em px, relativa ao pai posicionado."
         },
         {
+          "nome": "onPeelOff",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado quando o adesivo termina de sair (só com `peelOff`)."
+        },
+        {
           "nome": "onPositionChange",
           "tipo": "(pos: { x: number; y: number; }) => void",
           "obrigatoria": false,
@@ -11409,6 +11625,13 @@
           "obrigatoria": false,
           "padrao": "14",
           "descricao": "Dobra em repouso com o ponteiro em cima, em px."
+        },
+        {
+          "nome": "peelOff",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Clique, Enter ou Espaço descolam o adesivo inteiro da página."
         },
         {
           "nome": "radius",
@@ -11763,7 +11986,12 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "12",
-          "descricao": "6–24. Tamanho da célula de cada caractere, em px."
+          "descricao": "Tamanho da célula de cada caractere, em px.",
+          "faixa": {
+            "min": 6,
+            "max": 24,
+            "step": 1
+          }
         },
         {
           "nome": "charset",
@@ -11792,7 +12020,19 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "55",
-          "descricao": "0–100. Contraste antes de escolher o glifo."
+          "descricao": "Contraste antes de escolher o glifo.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "lens",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Lupa que aproxima a imagem debaixo do cursor."
         }
       ]
     }
@@ -11821,14 +12061,24 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "45",
-          "descricao": "0–90. Ângulo da retícula, em graus."
+          "descricao": "Ângulo da retícula, em graus.",
+          "faixa": {
+            "min": 0,
+            "max": 90,
+            "step": 1
+          }
         },
         {
           "nome": "cell",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "9",
-          "descricao": "4–32. Tamanho da célula da retícula, em px."
+          "descricao": "Tamanho da célula da retícula, em px.",
+          "faixa": {
+            "min": 4,
+            "max": 32,
+            "step": 1
+          }
         },
         {
           "nome": "colors",
@@ -11842,7 +12092,12 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "55",
-          "descricao": "0–100. Contraste antes de reticular."
+          "descricao": "Contraste antes de reticular.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         },
         {
           "nome": "lens",
@@ -11876,7 +12131,12 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "50",
-          "descricao": "0–100. Altura da onda."
+          "descricao": "Altura da onda.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         },
         {
           "nome": "colors",
@@ -11890,21 +12150,36 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "50",
-          "descricao": "0–100. Brilho de cada fio."
+          "descricao": "Brilho de cada fio.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         },
         {
           "nome": "lines",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "5",
-          "descricao": "1–8. Quantos fios de luz."
+          "descricao": "Quantos fios de luz.",
+          "faixa": {
+            "min": 1,
+            "max": 8,
+            "step": 1
+          }
         },
         {
           "nome": "speed",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "40",
-          "descricao": "0–100. Velocidade da onda."
+          "descricao": "Velocidade da onda.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         }
       ]
     }
@@ -11933,7 +12208,12 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "4",
-          "descricao": "2–16. Tamanho da célula de tinta, em px."
+          "descricao": "Tamanho da célula de tinta, em px.",
+          "faixa": {
+            "min": 2,
+            "max": 16,
+            "step": 1
+          }
         },
         {
           "nome": "colors",
@@ -11943,11 +12223,23 @@
           "descricao": "Paradas: papel, primeira tinta e segunda tinta. Qualquer cor CSS ou token."
         },
         {
+          "nome": "interactive",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "O cursor puxa a folha: perto dele as tintas escorregam do registro."
+        },
+        {
           "nome": "misregistration",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "35",
-          "descricao": "0–100. Quanto as duas tintas saem do registro."
+          "descricao": "Quanto as duas tintas saem do registro.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         },
         {
           "nome": "mode",
@@ -11966,7 +12258,12 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "40",
-          "descricao": "0–100. Textura do papel."
+          "descricao": "Textura do papel.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         }
       ]
     }
@@ -11988,21 +12285,36 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "40",
-          "descricao": "0–100. Densidade dos anéis."
+          "descricao": "Densidade dos anéis.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         },
         {
           "nome": "speed",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "40",
-          "descricao": "0–100. Velocidade de cruzeiro do túnel."
+          "descricao": "Velocidade de cruzeiro do túnel.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         },
         {
           "nome": "twist",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "50",
-          "descricao": "0–100. Quanto os anéis torcem em espiral."
+          "descricao": "Quanto os anéis torcem em espiral.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         }
       ]
     }
@@ -12024,21 +12336,219 @@
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "40",
-          "descricao": "0–100. Tamanho do núcleo aceso de cada célula."
+          "descricao": "Tamanho do núcleo aceso de cada célula.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         },
         {
           "nome": "size",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "50",
-          "descricao": "0–100. Tamanho das células: maior é menos célula na tela."
+          "descricao": "Tamanho das células: maior é menos célula na tela.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
         },
         {
           "nome": "speed",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "35",
-          "descricao": "0–100. Velocidade da deriva."
+          "descricao": "Velocidade da deriva.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "anatomia": [
+    {
+      "nome": "cameraOf",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "origin",
+          "tipo": "Flat",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "scale",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "azimuth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "45",
+          "descricao": null
+        },
+        {
+          "nome": "elevation",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "30",
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "towardViewer",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "origin",
+          "tipo": "Flat",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "scale",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "azimuth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "elevation",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "figureSvg",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "body",
+          "tipo": "string | string[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "height",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "width",
+          "tipo": "number",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "standalone",
+          "tipo": "false | Theme",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "ESTILO_DO_KIT",
+      "descricao": "Regras do kit com os tons vindos dos tokens do site (--foreground, --card, --brand).",
+      "props": []
+    },
+    {
+      "nome": "registrarFigura",
+      "descricao": "Deixa a figura disponível pelo atributo `figura=\"<id>\"`.",
+      "props": [
+        {
+          "nome": "controlador",
+          "tipo": "Controlador",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "dados",
+          "tipo": "DadosDaFigura",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    },
+    {
+      "nome": "definirAnatomia",
+      "descricao": "Registra o `<visant-anatomia>` (uma vez só, mesmo chamado várias vezes).",
+      "props": []
+    },
+    {
+      "nome": "Anatomia",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "figura",
+          "tipo": "FiguraDef",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "modo",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Começa explorando (padrão) ou já no passo a passo.",
+          "valores": [
+            "explorar",
+            "passos"
+          ]
+        },
+        {
+          "nome": "tema",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Só pra site sem tokens: força o esquema das cores do sistema.",
+          "valores": [
+            "claro",
+            "escuro"
+          ]
         }
       ]
     }

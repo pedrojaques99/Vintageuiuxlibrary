@@ -27,8 +27,13 @@ import { onThemeChange, resolveCssColor } from "@/lib/css-color";
  * 3. **As três retículas do original ficam.** Grão estocástico (o riso), ponto
  *    de retícula e Bayer, escolhidos por `mode`, com o hash e a queda de tinta
  *    (`dropout`) de lá. É o que dá falha de máquina e não de filtro.
- * 4. **Desenha sob demanda.** Imagem parada não pede quadro: desenha na carga,
- *    no tema, no tamanho e no knob. Não há laço para pausar fora da tela.
+ * 4. **O cursor puxa a folha.** Perto do ponteiro as duas tintas escorregam
+ *    para lados opostos, como papel que andou na máquina: o registro abre ali
+ *    e fecha de novo quando o cursor sai. Só mexe no deslocamento, nunca na
+ *    retícula, então o grão não treme.
+ * 5. **Desenha sob demanda.** Imagem parada não pede quadro: desenha na carga,
+ *    no tema, no tamanho e no knob. O laço só existe enquanto o puxão entra ou
+ *    sai, e com movimento reduzido ele aparece sem transição.
  */
 
 const VERT = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0.0,1.0);}`;
@@ -46,6 +51,8 @@ uniform float uCell;
 uniform float uMis;
 uniform float uModo;
 uniform float uRuido;
+uniform vec3 uPonteiro;
+uniform float uRaio;
 uniform vec3 uPapel;
 uniform vec3 uTinta0;
 uniform vec3 uTinta1;
@@ -112,8 +119,11 @@ void main(){
   vec3 c=uPapel+(grao-.5)*uRuido*.08;
   float absorve=1.-.06*(hash(px*.15+31.)-.5);
 
-  vec2 o0=vec2(.6,-.4)*uMis;
-  vec2 o1=vec2(-.5,.35)*uMis;
+  vec2 d=px-uPonteiro.xy;
+  float perto=(1.-smoothstep(0.,uRaio,length(d)))*uPonteiro.z;
+  vec2 puxa=d*perto*.35;
+  vec2 o0=vec2(.6,-.4)*uMis+puxa;
+  vec2 o1=vec2(-.5,.35)*uMis-puxa;
   float v0=pow(cobertura(px+o0),.9);
   float v1=smoothstep(.55,1.,cobertura(px+o1));
 
@@ -139,12 +149,29 @@ export interface ShaderRisoProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   alt?: string;
   /** Como a tinta assenta: grão de riso, ponto de retícula ou Bayer. */
   mode?: "grain" | "halftone" | "bayer";
-  /** 2–16. Tamanho da célula de tinta, em px. */
+  /**
+   * Tamanho da célula de tinta, em px.
+   * @min 2
+   * @max 16
+   * @step 1
+   */
   cell?: number;
-  /** 0–100. Quanto as duas tintas saem do registro. */
+  /**
+   * Quanto as duas tintas saem do registro.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   misregistration?: number;
-  /** 0–100. Textura do papel. */
+  /**
+   * Textura do papel.
+   * @min 0
+   * @max 100
+   * @step 1
+   */
   paper?: number;
+  /** O cursor puxa a folha: perto dele as tintas escorregam do registro. */
+  interactive?: boolean;
   /** Paradas: papel, primeira tinta e segunda tinta. Qualquer cor CSS ou token. */
   colors?: string[];
 }
@@ -176,13 +203,14 @@ export function ShaderRiso({
   cell = 4,
   misregistration = 35,
   paper = 40,
+  interactive = true,
   colors,
   className,
   ...props
 }: ShaderRisoProps) {
   const wrapRef = React.useRef<HTMLDivElement>(null);
-  const params = React.useRef({ mode, cell, misregistration, paper });
-  params.current = { mode, cell, misregistration, paper };
+  const params = React.useRef({ mode, cell, misregistration, paper, interactive });
+  params.current = { mode, cell, misregistration, paper, interactive };
   const redesenhar = React.useRef<() => void>(() => {});
   const coresChave = (colors ?? CORES_PADRAO).join("|");
 
@@ -216,6 +244,8 @@ export function ShaderRiso({
       mis: u("uMis"),
       modo: u("uModo"),
       ruido: u("uRuido"),
+      ponteiro: u("uPonteiro"),
+      raio: u("uRaio"),
       papel: u("uPapel"),
       tinta0: u("uTinta0"),
       tinta1: u("uTinta1"),
@@ -232,7 +262,10 @@ export function ShaderRiso({
     gl.uniform1i(U.tex, 0);
     gl.uniform2f(U.img, 1, 1);
 
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     let dpr = 1;
+    let raf = 0;
+    const ponta = { x: 0, y: 0, forca: 0, alvo: 0 };
 
     const cores = () => {
       const [a, b, c] = coresChave.split("|").map((cor) => resolveCssColor(cor, wrap));
@@ -256,10 +289,44 @@ export function ShaderRiso({
       gl.uniform1f(U.mis, (p.misregistration / 100) * 8 * dpr);
       gl.uniform1f(U.modo, MODOS[p.mode] ?? 0);
       gl.uniform1f(U.ruido, p.paper / 100);
+      gl.uniform3f(U.ponteiro, ponta.x, ponta.y, p.interactive ? ponta.forca : 0);
+      gl.uniform1f(U.raio, Math.min(canvas.width, canvas.height) * 0.3);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 
-    redesenhar.current = desenhar;
+    // O laço só vive enquanto o puxão está entrando ou saindo.
+    const quadro = () => {
+      ponta.forca += (ponta.alvo - ponta.forca) * 0.18;
+      if (Math.abs(ponta.alvo - ponta.forca) < 0.005) ponta.forca = ponta.alvo;
+      desenhar();
+      raf = ponta.forca !== ponta.alvo ? requestAnimationFrame(quadro) : 0;
+    };
+    const pedirQuadro = () => {
+      if (mq.matches) {
+        ponta.forca = ponta.alvo;
+        desenhar();
+      } else if (!raf) raf = requestAnimationFrame(quadro);
+    };
+
+    redesenhar.current = () => {
+      if (!raf) desenhar();
+    };
+
+    const mover = (e: PointerEvent) => {
+      // Ponteiro em px locais: a vitrine escala o palco com transform.
+      const r = wrap.getBoundingClientRect();
+      const k = r.width ? wrap.offsetWidth / r.width : 1;
+      ponta.x = (e.clientX - r.left) * k * dpr;
+      ponta.y = (e.clientY - r.top) * k * dpr;
+      ponta.alvo = 1;
+      if (raf) return;
+      if (ponta.forca === ponta.alvo) desenhar();
+      else pedirQuadro();
+    };
+    const sair = () => {
+      ponta.alvo = 0;
+      pedirQuadro();
+    };
 
     let vivo = true;
     const img = new Image();
@@ -287,12 +354,17 @@ export function ShaderRiso({
       cores();
       desenhar();
     });
+    wrap.addEventListener("pointermove", mover);
+    wrap.addEventListener("pointerleave", sair);
 
     return () => {
       vivo = false;
       img.onload = null;
       ro.disconnect();
       offTema();
+      cancelAnimationFrame(raf);
+      wrap.removeEventListener("pointermove", mover);
+      wrap.removeEventListener("pointerleave", sair);
       redesenhar.current = () => {};
       gl.deleteTexture(tex);
       gl.deleteBuffer(buf);
@@ -304,7 +376,7 @@ export function ShaderRiso({
 
   React.useEffect(() => {
     redesenhar.current();
-  }, [mode, cell, misregistration, paper]);
+  }, [mode, cell, misregistration, paper, interactive]);
 
   return (
     <div
