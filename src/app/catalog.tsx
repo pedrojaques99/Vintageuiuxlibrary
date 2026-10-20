@@ -14,7 +14,7 @@
  */
 
 import * as React from "react";
-import { Filter, Layers, Ruler, SlidersHorizontal } from "lucide-react";
+import { BookOpen, Filter, Layers, Ruler, SlidersHorizontal } from "lucide-react";
 
 import { useStageActive } from "./stage";
 import { Media, type Papel } from "./media";
@@ -69,6 +69,7 @@ import { VintageXYPad } from "../../registry/vintage/ui/vintage-xy-pad";
  * (`PhotoFrameDemo`, `PhotoFlipDemo`), então um chunk a mais só somaria
  * requisição sem tirar byte do caminho crítico.
  */
+import AnatomiaComoSobeDemo from "./demos/anatomia-como-sobe-demo";
 import AssigneeStackDemo from "./demos/assignee-stack-demo";
 import BrandSelectorDemo from "./demos/brand-selector-demo";
 import ChipDemo from "./demos/chip-demo";
@@ -112,7 +113,7 @@ import VintageLedDemo from "./demos/vintage-led-demo";
 import VintageMeterDemo from "./demos/vintage-meter-demo";
 import VintageSliderDemo from "./demos/vintage-slider-demo";
 
-export type Family = "trabalho" | "aquisicao" | "motion" | "marca" | "vintage" | "fundacao";
+export type Family = "trabalho" | "aquisicao" | "motion" | "marca" | "didatica" | "vintage" | "fundacao";
 
 export interface CatalogItem {
   /** Nome no registry — é o que vai no `shadcn add @visant/<name>`. */
@@ -174,6 +175,7 @@ export const FAMILIES: { key: Family; label: string }[] = [
   { key: "aquisicao", label: "Aquisição" },
   { key: "motion", label: "Motion e estado" },
   { key: "marca", label: "Marca" },
+  { key: "didatica", label: "Didática" },
   { key: "vintage", label: "Kit vintage" },
   { key: "fundacao", label: "Fundação" },
 ];
@@ -691,6 +693,28 @@ export const CATALOG: CatalogItem[] = [
   },
 
   // ---- aquisição
+  {
+    name: "anatomia",
+    title: "Anatomia",
+    type: "ui",
+    family: "didatica",
+    description:
+      "O núcleo das figuras didáticas: o web component <visant-anatomia> (pinos, painel de peças, passo a passo, pausa, tela cheia, teclado) e o wrapper React. A figura em si vem de um item anatomia-<nome>.",
+    tags: ["didática", "aula", "isométrico", "explicação", "web component", "passo a passo"],
+    demo: AnatomiaComoSobeDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-como-sobe",
+    title: "Anatomia: como a ferramenta sobe",
+    type: "lib",
+    family: "didatica",
+    description:
+      "Fig 1.4 do curso IA para Designers: o que sobe pro GitHub, o que o .gitignore segura no computador e quando a Vercel põe no ar.",
+    tags: ["didática", "aula", "git", "github", "gitignore", "vercel"],
+    demo: AnatomiaComoSobeDemo,
+    preview: { w: 1080, h: 680 },
+  },
   {
     name: "marquee",
     title: "Marquee",
@@ -1637,6 +1661,7 @@ export const ICON_BY_FAMILY: Record<Family, React.ComponentType<{ className?: st
   aquisicao: Filter,
   motion: SlidersHorizontal,
   marca: Ruler,
+  didatica: BookOpen,
   vintage: SlidersHorizontal,
   fundacao: Layers,
 };

@@ -2390,6 +2390,59 @@
           }
         }
       }
+    },
+    {
+      "name": "anatomia",
+      "type": "registry:ui",
+      "title": "Anatomia",
+      "description": "O núcleo das figuras didáticas: o web component <visant-anatomia> (pinos, painel de peças, passo a passo, pausa, tela cheia, teclado) e o wrapper React. A figura em si vem de um item anatomia-<nome>.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-kit.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-estilo.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/ui/anatomia.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "anatomia-como-sobe",
+      "type": "registry:lib",
+      "title": "Anatomia: como a ferramenta sobe",
+      "description": "Fig 1.4 do curso IA para Designers: o que sobe pro GitHub, o que o .gitignore segura no computador e quando a Vercel põe no ar.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "registryDependencies": [
+        "@visant/anatomia"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/lib/anatomia-tipos.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-como-sobe.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/visant/lib/anatomia-como-sobe-controlador.ts",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }
