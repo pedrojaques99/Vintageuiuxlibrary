@@ -87,6 +87,12 @@ export interface SideNavProps extends React.HTMLAttributes<HTMLElement> {
   label?: string;
   /** Marca no topo. Slot, porque cada projeto tem o componente de logo dele. */
   brand?: React.ReactNode;
+  /**
+   * A marca reduzida a símbolo, pro modo compacto. Num trilho de 3,75rem o nome
+   * escrito não cabe e vira um corte no meio da palavra; o símbolo cabe. Sem
+   * ele, a barra compacta mostra a `brand` como antes.
+   */
+  brandIcon?: React.ReactNode;
   /** Rodapé colado embaixo: conta, tema, versão. */
   footer?: React.ReactNode;
   /**
@@ -113,6 +119,7 @@ export function SideNav({
   shortcut = "b",
   label = "Navegação principal",
   brand,
+  brandIcon,
   footer,
   toggle = true,
   width = 15,
@@ -222,9 +229,17 @@ export function SideNav({
             )}
           >
             {brand ? (
-              <div className="min-w-0 flex-1 truncate group-data-[collapsed]/sidenav:flex-none">
+              <div
+                className={cn(
+                  "min-w-0 flex-1 truncate group-data-[collapsed]/sidenav:flex-none",
+                  brandIcon && "group-data-[collapsed]/sidenav:hidden",
+                )}
+              >
                 {brand}
               </div>
+            ) : null}
+            {brandIcon ? (
+              <div className="hidden shrink-0 group-data-[collapsed]/sidenav:flex">{brandIcon}</div>
             ) : null}
             {toggle ? <SideNavToggle className="ml-auto group-data-[collapsed]/sidenav:ml-0" /> : null}
           </div>

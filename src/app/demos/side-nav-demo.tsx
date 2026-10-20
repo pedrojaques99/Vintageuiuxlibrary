@@ -48,6 +48,16 @@ const PESSOAS = <Users aria-hidden="true" />;
 const GRAFICO = <BarChart3 aria-hidden="true" />;
 const ENGRENAGEM = <Settings aria-hidden="true" />;
 
+/** O símbolo da marca de mentira: um monograma, que cabe no trilho compacto. */
+const MARCA = (
+  <span
+    aria-hidden="true"
+    className="grid size-7 shrink-0 place-items-center rounded-[var(--r-control,0.5rem)] bg-foreground font-mono text-[13px] font-bold leading-none text-background"
+  >
+    V
+  </span>
+);
+
 export default function SideNavDemo({ props }: DemoProps) {
   const [rota, setRota] = React.useState("visao");
   const ativo = useStageActive();
@@ -112,11 +122,16 @@ export default function SideNavDemo({ props }: DemoProps) {
             setAutomatico(false);
             setFechada(v);
           }}
+          // Aberta, símbolo e nome; compacta, só o símbolo (`brandIcon`).
           brand={
-            <span className="font-mono text-rotulo uppercase tracking-[0.16em] text-foreground">
-              Visant
+            <span className="flex items-center gap-2">
+              {MARCA}
+              <span className="font-mono text-rotulo uppercase tracking-[0.16em] text-foreground">
+                Visant
+              </span>
             </span>
           }
+          brandIcon={MARCA}
           footer={
             <div className="flex items-center gap-2 px-1 py-1">
               <span className="size-6 shrink-0 rounded-[var(--r-pill,9999px)] bg-[var(--brand)]" />

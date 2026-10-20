@@ -58,6 +58,15 @@ import { cn } from "@/lib/utils";
  *    hover é opacidade — informação de "estou aqui" — e fica. O que sai é o
  *    movimento no espaço, que é o que embrulha o estômago.
  *
+ * 8. **Parado, o card já é objeto.** O report pediu "nascer em perspectiva e
+ *    brilhando": sem ponteiro em cima, um card plano e apagado é só um
+ *    retângulo, e no toque (onde não existe hover) ele nunca acendia. Com
+ *    `rest` (ligado por padrão) a peça repousa numa pose: a luz no canto de
+ *    cima à esquerda e a inclinação que essa luz daria. O ponteiro assume
+ *    quando entra e, ao sair, o card volta a essa pose em vez de apagar.
+ *    `rest={false}` devolve o comportamento antigo (plano e apagado).
+ *    Sob `prefers-reduced-motion` e em `flat`, a pose fica só com a luz.
+ *
  * Sem cor própria: o brilho é `color-mix` sobre `--brand`, então o card acende
  * na cor da marca instalada e em nenhuma outra.
  */
@@ -85,13 +94,28 @@ export interface GleamProps extends React.HTMLAttributes<HTMLDivElement> {
   flat?: boolean;
   /** Elemento raiz. `a` quando o card inteiro leva a algum lugar. */
   as?: "div" | "a" | "article" | "li";
+  /**
+   * Pose de repouso: sem ponteiro em cima, o card fica inclinado e aceso, com a
+   * luz no canto de cima à esquerda. `false` deixa plano e apagado.
+   */
+  rest?: boolean;
 }
+
+/** Onde a luz repousa (0→1 na caixa). Canto de cima à esquerda, de onde a luz costuma vir. */
+const REPOUSO = { x: 0.24, y: 0.18 } as const;
+
+/** A inclinação que a luz em (x, y) daria. Uma conta só pro ponteiro e pro repouso. */
+const giro = (x: number, y: number, tilt: number) => ({
+  ry: (x - 0.5) * 2 * tilt,
+  rx: (0.5 - y) * 2 * tilt,
+});
 
 export function Gleam({
   tilt = 5,
   glow = 1,
   tint,
   flat = false,
+  rest = true,
   as: Tag = "div",
   className,
   children,
@@ -103,9 +127,29 @@ export function Gleam({
   React.useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // A pose de repouso é escrita aqui, e não no `style` do JSX: o mesmo nó
+    // recebe as escritas do ponteiro, e o React reescreveria a pose por cima
+    // delas no próximo render.
+    const repousar = () => {
+      if (!rest) {
+        el.style.setProperty("--rx", "0");
+        el.style.setProperty("--ry", "0");
+        el.dataset.lit = "";
+        return;
+      }
+      const { rx, ry } = giro(REPOUSO.x, REPOUSO.y, tilt);
+      el.style.setProperty("--gx", String(REPOUSO.x));
+      el.style.setProperty("--gy", String(REPOUSO.y));
+      el.style.setProperty("--rx", !reduced && !flat ? rx.toFixed(3) : "0");
+      el.style.setProperty("--ry", !reduced && !flat ? ry.toFixed(3) : "0");
+      el.dataset.lit = "1";
+    };
+    repousar();
+
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
     let frame = 0;
     let pending: { x: number; y: number } | null = null;
 
@@ -119,8 +163,9 @@ export function Gleam({
       el.style.setProperty("--gx", x.toFixed(4));
       el.style.setProperty("--gy", y.toFixed(4));
       if (!reduced && !flat) {
-        el.style.setProperty("--ry", ((x - 0.5) * 2 * tilt).toFixed(3));
-        el.style.setProperty("--rx", ((0.5 - y) * 2 * tilt).toFixed(3));
+        const { rx, ry } = giro(x, y, tilt);
+        el.style.setProperty("--ry", ry.toFixed(3));
+        el.style.setProperty("--rx", rx.toFixed(3));
       }
     };
 
@@ -134,11 +179,11 @@ export function Gleam({
       if (frame) cancelAnimationFrame(frame);
       frame = 0;
       pending = null;
-      el.style.setProperty("--rx", "0");
-      el.style.setProperty("--ry", "0");
-      // A luz não volta ao centro: ela apaga onde estava. Voltar ao centro
-      // desenha um risco atravessando o card no caminho de saída.
-      el.dataset.lit = "";
+      // Sem `rest`, a luz não volta ao centro: ela apaga onde estava. Voltar ao
+      // centro desenharia um risco atravessando o card no caminho de saída. Com
+      // `rest`, ela volta ao canto de repouso, e a transição de 320ms da saída
+      // leva o giro junto.
+      repousar();
     };
 
     const onEnter = () => {
@@ -154,7 +199,7 @@ export function Gleam({
       el.removeEventListener("pointermove", onMove);
       el.removeEventListener("pointerleave", onLeave);
     };
-  }, [tilt, flat]);
+  }, [tilt, flat, rest]);
 
   // `React.ElementType` em vez de genérico completo: a peça aceita quatro tags
   // conhecidas e o ganho de tipar cada uma delas separadamente não paga a

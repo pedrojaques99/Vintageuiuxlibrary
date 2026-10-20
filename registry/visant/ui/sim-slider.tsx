@@ -178,7 +178,7 @@ export function SimSlider({
       )}
       {...props}
     >
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <span className="text-[13px] text-[var(--muted-foreground)]">{label}</span>
           <span

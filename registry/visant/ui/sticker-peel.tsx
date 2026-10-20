@@ -20,6 +20,9 @@ import { cn } from "@/lib/utils";
  * - Arrastando: a dobra vai a ~25% do lado menor e a sombra sobe de
  *   `--e-raised` para uma sombra longa. Soltou, a dobra fecha em mola.
  * - Teclado: setas movem 8px (Shift, 32px). É o mesmo `onPositionChange`.
+ * - Com `peelOff`: um clique (apertar e soltar sem arrastar), Enter ou Espaço
+ *   descola o adesivo inteiro. A dobra atravessa a peça até o verso ficar todo
+ *   à mostra, ele sai da página e `onPeelOff` avisa. Arrastar continua movendo.
  *
  * ── Decisões que não são óbvias ────────────────────────────────────────────
  *
@@ -84,6 +87,10 @@ export interface StickerPeelProps
   peel?: number;
   /** Chamado ao soltar e a cada passo de teclado. */
   onPositionChange?: (pos: { x: number; y: number }) => void;
+  /** Clique, Enter ou Espaço descolam o adesivo inteiro da página. */
+  peelOff?: boolean;
+  /** Chamado quando o adesivo termina de sair (só com `peelOff`). */
+  onPeelOff?: () => void;
 }
 
 export function StickerPeel({
@@ -93,6 +100,8 @@ export function StickerPeel({
   radius = "var(--r-surface)",
   peel = 14,
   onPositionChange,
+  peelOff = false,
+  onPeelOff,
   className,
   style,
   children,
@@ -105,6 +114,9 @@ export function StickerPeel({
   const pos = React.useRef({ ...defaultPosition });
   const [z, setZ] = React.useState(0);
   const [pego, setPego] = React.useState(false);
+  const [saiu, setSaiu] = React.useState(false);
+  const [indo, setIndo] = React.useState(false);
+  const saindo = React.useRef(false);
 
   // Dobra = distância (px) que o canto percorre; ângulo = para onde ele vai.
   const dobra = useMotionValue(0);
@@ -159,8 +171,34 @@ export function StickerPeel({
   }, [dobra, angulo, desenhar]);
 
   const levar = (alvo: number) => {
+    if (saindo.current) return;
     if (reduzir) dobra.set(alvo);
     else animate(dobra, alvo, MOLA);
+  };
+
+  /**
+   * Descola de vez: o canto viaja pela diagonal até passar da quina oposta (a
+   * frente some, o verso inteiro aparece virado) e o adesivo sai da página.
+   */
+  const descolar = () => {
+    const el = raiz.current;
+    if (!el || saindo.current) return;
+    saindo.current = true;
+    setIndo(true);
+    setZ(++topo);
+    const w = el.offsetWidth;
+    const h = el.offsetHeight;
+    angulo.set(Math.atan2(-h, -w));
+    const fim = () => {
+      setSaiu(true);
+      onPeelOff?.();
+    };
+    if (reduzir) {
+      fim();
+      return;
+    }
+    animate(dobra, Math.hypot(w, h) * 2.2, { duration: 0.3, ease: [0.22, 1, 0.36, 1] });
+    animate(el, { opacity: 0, y: -12 }, { duration: 0.18, delay: 0.22, ease: "easeIn" }).then(fim);
   };
 
   /** Ponteiro em px locais do adesivo: sem escala do palco e sem a rotação. */
@@ -194,9 +232,14 @@ export function StickerPeel({
     return base * (1 + perto);
   };
 
-  const arrasto = React.useRef<{ x: number; y: number; px: number; py: number; escala: number } | null>(
-    null,
-  );
+  const arrasto = React.useRef<{
+    x: number;
+    y: number;
+    px: number;
+    py: number;
+    escala: number;
+    moveu: boolean;
+  } | null>(null);
 
   const mover = (x: number, y: number) => {
     pos.current = { x, y };
@@ -224,6 +267,7 @@ export function StickerPeel({
         rotate: `${rotate}deg`,
         borderRadius: radius,
         zIndex: z,
+        display: saiu ? "none" : undefined,
         ...style,
       }}
       onPointerEnter={(e) => {
@@ -233,6 +277,8 @@ export function StickerPeel({
         const l = local(e);
         const g = arrasto.current;
         if (g) {
+          if (!g.moveu && Math.hypot(e.clientX - g.px, e.clientY - g.py) < 4) return;
+          g.moveu = true;
           mover(g.x + (e.clientX - g.px) / g.escala, g.y + (e.clientY - g.py) / g.escala);
           mirar(l, 0);
           return;
@@ -246,21 +292,32 @@ export function StickerPeel({
       // o ponteiro no meio do gesto.
       onDragStart={(e) => e.preventDefault()}
       onPointerDown={(e) => {
-        if (e.button !== 0) return;
+        if (e.button !== 0 || saindo.current) return;
         const l = local(e);
         (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-        arrasto.current = { ...pos.current, px: e.clientX, py: e.clientY, escala: l.escala };
+        arrasto.current = {
+          ...pos.current,
+          px: e.clientX,
+          py: e.clientY,
+          escala: l.escala,
+          moveu: false,
+        };
         setZ(++topo);
         setPego(true);
         mirar(l, 0);
         levar(Math.min(l.w, l.h) * 0.25);
       }}
       onPointerUp={(e) => {
-        if (!arrasto.current) return;
+        const g = arrasto.current;
+        if (!g) return;
         arrasto.current = null;
         setPego(false);
+        if (!g.moveu && peelOff) {
+          descolar();
+          return;
+        }
         levar(e.pointerType === "mouse" ? peel : 0);
-        onPositionChange?.(pos.current);
+        if (g.moveu) onPositionChange?.(pos.current);
       }}
       onPointerCancel={() => {
         arrasto.current = null;
@@ -268,6 +325,11 @@ export function StickerPeel({
         levar(0);
       }}
       onKeyDown={(e) => {
+        if (peelOff && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          descolar();
+          return;
+        }
         const passo = e.shiftKey ? 32 : 8;
         const d = {
           ArrowLeft: [-passo, 0],
@@ -283,12 +345,15 @@ export function StickerPeel({
       }}
       {...props}
     >
+      {/* Aura de toque: o canto começa a levantar um pouco antes da borda. */}
+      <div aria-hidden className="absolute -inset-3" style={{ borderRadius: radius }} />
       {/* Sombra separada da frente: o recorte da dobra não pode cortá-la. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 [box-shadow:var(--e-raised)] transition-[box-shadow] duration-[var(--dur-base)] ease-[var(--ease-out)]"
+        className="pointer-events-none absolute inset-0 [box-shadow:var(--e-raised)] transition-[box-shadow,opacity] duration-[var(--dur-base)] ease-[var(--ease-out)]"
         style={{
           borderRadius: radius,
+          opacity: indo ? 0 : undefined,
           boxShadow: pego
             ? "0 18px 32px -10px color-mix(in oklab, var(--foreground) 35%, transparent)"
             : undefined,

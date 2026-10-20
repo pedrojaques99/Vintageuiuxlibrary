@@ -4,7 +4,7 @@
     "title": "Sticker Peel",
     "type": "ui",
     "family": "efeitos",
-    "description": "Um adesivo que levanta o canto quando o mouse chega perto, descola ao arrastar mostrando o verso e cola onde você soltar.",
+    "description": "Um adesivo que levanta o canto quando o mouse chega perto, arrasta pra mudar de lugar e, com um clique, descola inteiro da página.",
     "tags": [
       "adesivo",
       "arrastar",

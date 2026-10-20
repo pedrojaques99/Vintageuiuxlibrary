@@ -77,11 +77,9 @@ export default function StepCardsDemo({ props }: DemoProps) {
         steps={PASSOS.map((p) => ({
           title: p.title,
           description: p.description,
-          // Proporção declarada, e não `size-full`: o slot do visual tem
-          // `min-height`, não `height`, então uma altura em porcentagem cai em
-          // `auto` e cada passo fecharia numa altura diferente — três cards
-          // desalinhados pela proporção do arquivo, não pelo componente.
-          visual: <Media papel={p.papel} indice={p.indice} ratio="16/10" className="w-full" />,
+          // `size-full`: o slot do visual agora tem altura fixa e a arte
+          // preenche, então os três passos fecham na mesma linha.
+          visual: <Media papel={p.papel} indice={p.indice} className="size-full" />,
         }))}
         {...props}
       />

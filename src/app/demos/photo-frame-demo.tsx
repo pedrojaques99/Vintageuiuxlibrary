@@ -1,46 +1,47 @@
 "use client";
 
 /**
- * A moldura revela UMA vez — e é por isso que a demo precisa de um relógio.
+ * Uma moldura por vez, e as setas trocam de onde ela abre.
  *
- * ── O que o report acusou ──────────────────────────────────────────────────
+ * ── O que os reports acusaram ──────────────────────────────────────────────
  *
- * "sempre em loop — com timer". A revelação acontecia na montagem, durava 1,4s
- * e acabava; daí em diante o card era três fotos paradas com um botão "revelar
- * de novo" que ninguém clica. Quem passa o olho na vitrine depois desse segundo
- * e meio nunca vê a peça funcionando.
+ * Primeiro "sempre em loop, com timer": a revelação durava 1,4s e depois o
+ * card era foto parada. Depois "UM POR VEZ": três molduras pequenas lado a
+ * lado, cada uma com legenda técnica, dividiam o olho e nenhuma era grande o
+ * bastante pra se ver o corte abrindo.
+ *
+ * Agora é uma moldura só, grande, e a variação é `from` (o lado de onde ela
+ * abre). Trocar remonta a peça e a revelação acontece na hora; clicar no nome
+ * repete. Com o palco em tela, a mesma variação volta a abrir sozinha a cada
+ * ciclo, e o anel ao lado do seletor mostra onde o ciclo está.
  *
  * ── Por que o loop mora aqui e não no componente ───────────────────────────
  *
  * Revelar em loop seria ERRADO no `@visant/photo-frame`: numa página de verdade
- * a foto se revela quando a pessoa chega nela, e uma moldura que reabre a cada
- * quatro segundos é um piscar no meio do texto. O contrato "uma vez, na
- * rolagem" é o produto da peça, não um limite dela.
- *
- * O que a VITRINE precisa é outra coisa: rever o gesto. Rever, em React, é
- * remontar — a `key` muda, o componente nasce de novo, o `ScrollTrigger` é
- * recriado e arma imediatamente porque o palco já está em tela. É o mesmo
- * recurso que o botão usava; só trocamos o dedo por um relógio.
- *
- * ── O temporizador ─────────────────────────────────────────────────────────
- *
- * O anel não é enfeite: sem ele, uma revelação que reaparece sozinha a cada
- * quatro segundos parece defeito de renderização. O anel diz que existe um
- * ciclo e onde ele está — e é `transition` em `stroke-dashoffset`, não
- * `setInterval` desenhando quadro a quadro, porque o relógio do navegador é
- * mais preciso que o nosso e não custa render nenhum do React.
+ * a foto se revela quando a pessoa chega nela, uma vez. O que a VITRINE precisa
+ * é rever o gesto, e rever, em React, é remontar pela `key`.
  *
  * As duas paradas da casa valem: fora da tela o relógio não roda
- * (`useStageActive`), e sob `prefers-reduced-motion` não há loop nem anel — as
- * fotos estão lá, inteiras, e repetir uma revelação que não acontece seria só
- * remontar três componentes a cada quatro segundos.
+ * (`useStageActive`), e sob `prefers-reduced-motion` não há loop nem anel.
  */
 
 import * as React from "react";
 
 import { Media } from "../media";
-import { PhotoFrame } from "../../../registry/visant/ui/photo-frame";
+import { PhotoFrame, type PhotoFrameProps } from "../../../registry/visant/ui/photo-frame";
 import { useStageActive } from "../stage";
+import type { DemoProps } from "../catalog";
+import { Trocador, useUmPorVez } from "./um-por-vez";
+
+type Lado = NonNullable<PhotoFrameProps["from"]>;
+const LADOS: readonly Lado[] = ["bottom", "left", "top", "right"];
+/** Uma foto por lado: trocar a variação também troca a imagem, e a troca se vê. */
+const FOTO: Record<Lado, { papel: "cena" | "retrato"; indice: number }> = {
+  bottom: { papel: "cena", indice: 1 },
+  left: { papel: "retrato", indice: 2 },
+  top: { papel: "cena", indice: 3 },
+  right: { papel: "cena", indice: 0 },
+};
 
 /** Duração do ciclo. A revelação leva 1,4s; o resto é tempo de olhar. */
 const CICLO = 4200;
@@ -56,14 +57,14 @@ const VOLTA = 2 * Math.PI * R;
 function Temporizador({ ms }: { ms: number }) {
   const [correndo, setCorrendo] = React.useState(false);
   // Um quadro parado antes de soltar: `transition` só existe entre dois valores
-  // já pintados. Trocar no mesmo quadro da montagem não anima nada.
+  // já pintados.
   React.useEffect(() => {
     const id = requestAnimationFrame(() => setCorrendo(true));
     return () => cancelAnimationFrame(id);
   }, []);
 
   return (
-    <svg viewBox="0 0 20 20" className="h-4 w-4 -rotate-90" aria-hidden fill="none">
+    <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 -rotate-90" aria-hidden fill="none">
       <circle cx="10" cy="10" r={R} stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
       <circle
         cx="10"
@@ -82,40 +83,35 @@ function Temporizador({ ms }: { ms: number }) {
   );
 }
 
-export default function PhotoFrameDemo() {
+export default function PhotoFrameDemo({ props }: DemoProps) {
   const ativo = useStageActive();
-  const [rodada, setRodada] = React.useState(0);
   const [anima] = React.useState(usaMovimento);
+  const { from: _f, ...resto } = (props ?? {}) as { from?: Lado } & Record<string, unknown>;
+  const { atual, rodada, passo, repetir } = useUmPorVez(LADOS, _f);
+  const foto = FOTO[atual];
 
   React.useEffect(() => {
     if (!ativo || !anima) return;
-    const id = window.setInterval(() => setRodada((n) => n + 1), CICLO);
-    return () => window.clearInterval(id);
-  }, [ativo, anima]);
+    const id = window.setTimeout(repetir, CICLO);
+    return () => window.clearTimeout(id);
+  }, [ativo, anima, rodada, repetir]);
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-      {/* `flex-wrap` + largura em porcentagem: três molduras de largura fixa
-          somavam mais que a tela de 360 e a PÁGINA rolava de lado, que é o
-          defeito que a suíte de responsivo trava. Assim elas dobram de linha
-          em vez de empurrar. */}
-      <div className="flex max-w-full flex-wrap items-start justify-center gap-4" key={rodada}>
-        <PhotoFrame ratio="4/5" className="w-[min(190px,30vw)]" caption="sem paralaxe">
-          <Media papel="cena" indice={1} className="size-full" />
-        </PhotoFrame>
-        <PhotoFrame ratio="4/5" className="w-[min(190px,30vw)]" parallax={10} caption="paralaxe 10%">
-          <Media papel="cena" indice={3} className="size-full" />
-        </PhotoFrame>
-        <PhotoFrame ratio="4/5" className="w-[min(190px,30vw)]" from="left" caption="abre da esquerda">
-          <Media papel="retrato" indice={2} className="size-full" />
-        </PhotoFrame>
-      </div>
+    <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-3">
+      <PhotoFrame
+        key={`${atual}-${rodada}`}
+        ratio="4/5"
+        className="w-[min(200px,60vw)] max-w-full"
+        {...resto}
+        from={atual}
+      >
+        <Media papel={foto.papel} indice={foto.indice} className="size-full" />
+      </PhotoFrame>
 
-      {anima ? (
-        <span className="text-muted-foreground">
-          <Temporizador key={rodada} ms={CICLO} />
-        </span>
-      ) : null}
+      <div className="flex items-center gap-1 text-muted-foreground">
+        <Trocador nome={atual} onPasso={passo} onRepetir={repetir} />
+        {anima ? <Temporizador key={rodada} ms={CICLO} /> : null}
+      </div>
     </div>
   );
 }

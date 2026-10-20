@@ -88,7 +88,10 @@ export default function StickyFilterbarDemo({ props }: DemoProps) {
           ))}
           {/* A contagem do resultado mora na linha principal de propósito: é o
               que a pessoa precisa continuar vendo depois que a barra condensa. */}
-          <span className="ml-auto shrink-0 text-apoio tabular-nums text-muted-foreground">
+          <span
+            key={lista.length}
+            className="ml-auto shrink-0 text-apoio tabular-nums text-muted-foreground animate-in fade-in-0 slide-in-from-bottom-1 [animation-duration:var(--dur-fast)]"
+          >
             {lista.length} de {ACERVO.length}
           </span>
         </FilterRow>
@@ -105,11 +108,14 @@ export default function StickyFilterbarDemo({ props }: DemoProps) {
         </FilterRow>
       </StickyFilterbar>
 
-      <div className="grid grid-cols-2 gap-4 p-6">
+      {/* Filtrar remonta a grade (a chave é o filtro), e cada card entra com
+          um fade de 4px em cascata curta: a pessoa vê que a lista respondeu. */}
+      <div key={`${estado}-${familia}`} className="grid grid-cols-2 gap-4 p-6">
         {lista.map((p, i) => (
           <article
             key={p.nome}
-            className="overflow-hidden rounded-[var(--r-control,0.5rem)] border border-border bg-card"
+            className="overflow-hidden rounded-[var(--r-control,0.5rem)] border border-border bg-card animate-in fade-in-0 slide-in-from-bottom-1 fill-mode-backwards [animation-duration:var(--dur-base)] [animation-timing-function:var(--ease-out)]"
+            style={{ animationDelay: `${Math.min(i, 6) * 30}ms` }}
           >
             <Media papel="cena" indice={i} ratio="16/10" className="w-full" />
             <div className="flex items-baseline justify-between gap-2 px-4 py-3">

@@ -7,20 +7,31 @@
  * roda Lenis); o `onClose` conta os fechamentos, pra mostrar que ele dispara
  * também no Esc e no clique fora — que é a garantia que importa para quem vai
  * pendurar `lenis.stop()` / `lenis.start()` neles.
+ *
+ * O report pediu opções de transição: viraram a prop `variant` da peça
+ * (`mist`, `rise`, `zoom`, `wipe`). O seletor miúdo embaixo do card troca qual
+ * delas o próximo clique abre. Trocar não abre o modal sozinho: modal que
+ * aparece sem a pessoa pedir rouba o foco da página inteira.
  */
 
 import * as React from "react";
+import { ArrowRight } from "lucide-react";
 
-import { MistDialog } from "../../../registry/visant/ui/mist-dialog";
+import { MistDialog, type MistDialogVariant } from "../../../registry/visant/ui/mist-dialog";
 import { Media } from "../media";
 import type { DemoProps } from "../catalog";
+import { Trocador, useUmPorVez } from "./um-por-vez";
 
-export default function MistDialogDemo(_: DemoProps) {
+const VARIANTES: readonly MistDialogVariant[] = ["mist", "rise", "zoom", "wipe"];
+
+export default function MistDialogDemo({ props }: DemoProps) {
   const [open, setOpen] = React.useState(false);
   const titulo = React.useId();
+  const { variant: _v } = (props ?? {}) as { variant?: MistDialogVariant };
+  const { atual, passo } = useUmPorVez(VARIANTES, _v);
 
   return (
-    <div className="grid h-full w-full place-items-center">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-3">
       {/* O gatilho é a peça de onde o modal nasce de verdade: o card de produto.
           Um botão solto no palco não mostrava o caso de uso. */}
       <button
@@ -33,13 +44,17 @@ export default function MistDialogDemo(_: DemoProps) {
         </span>
         <span className="flex flex-col gap-2">
           <span className="text-[1.15rem] font-medium leading-tight tracking-[-0.02em]">Sai da névoa, volta pra ela.</span>
-          <span className="font-mono text-apoio uppercase tracking-[0.08em] text-muted-foreground transition-colors group-hover:text-foreground">
-            ver produto →
+          <span className="inline-flex items-center gap-1.5 font-mono text-apoio uppercase tracking-[0.08em] text-muted-foreground transition-colors group-hover:text-foreground">
+            ver produto
+            <ArrowRight className="size-3.5" aria-hidden />
           </span>
         </span>
       </button>
 
+      <Trocador nome={atual} onPasso={passo} onRepetir={() => setOpen(true)} />
+
       <MistDialog
+        variant={atual}
         open={open}
         onOpenChange={setOpen}
         labelledBy={titulo}

@@ -45,6 +45,8 @@ import * as React from "react";
  * nativo, que roda fora da main thread. Ouvir scroll em JS pra isso seria
  * reinventar, e pior.
  */
+const limitar = (v: number) => Math.max(-1, Math.min(1, v));
+
 export function usePointerParallax<T extends HTMLElement>(
   ref: React.RefObject<T | null>,
   {
@@ -85,8 +87,11 @@ export function usePointerParallax<T extends HTMLElement>(
       if (e.pointerType && e.pointerType !== "mouse") return;
       const r = el.getBoundingClientRect();
       if (r.bottom < 0 || r.top > window.innerHeight) return;
-      px = ((e.clientX - r.left) / r.width) * 2 - 1;
-      py = ((e.clientY - r.top) / r.height) * 2 - 1;
+      // Preso em -1..1. O ouvinte é do documento, então o ponteiro do outro
+      // lado da página dava 4 ou 5 e a cena voava várias vezes a profundidade
+      // pedida: era o "se mexe demais" do report.
+      px = limitar(((e.clientX - r.left) / r.width) * 2 - 1);
+      py = limitar(((e.clientY - r.top) / r.height) * 2 - 1);
       agendar();
     };
     const repousar = () => {

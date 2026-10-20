@@ -47,6 +47,24 @@ import { cn } from "@/lib/utils";
  *    opacidade (informação de "isto acabou de chegar"); saem a subida e o
  *    desfoque.
  *
+ * ── As transições (`variant`, só no modo `view`) ───────────────────────────
+ *
+ * O report pediu opções de transição "conforme o que já tem na casa". As cinco
+ * são as mesmas famílias que o `fold-motion` e o `line-reveal` já usam, aqui
+ * aplicadas por fatia:
+ *
+ * | variant  | o que cada fatia faz                                 |
+ * |----------|------------------------------------------------------|
+ * | `mist`   | sai da névoa: desfoque + opacidade + subida mínima (padrão) |
+ * | `rise`   | sobe 0.6em e aparece, nítida, sem desfoque           |
+ * | `mask`   | sobe de dentro de um corte (`clip-path`), como o `mask` do line-reveal |
+ * | `drift`  | entra da esquerda com um desfoque curto              |
+ * | `settle` | assenta de `scale(1.25)` até o tamanho, com desfoque leve |
+ *
+ * O modo `scroll` não muda com o `variant`: ali o gesto é a névoa ida e volta,
+ * e uma fatia deslizando amarrada à rolagem leria como texto tremendo. Sob
+ * `prefers-reduced-motion` todas viram só opacidade.
+ *
  * Sem cor própria: as fatias herdam `currentColor` do elemento.
  */
 
@@ -63,6 +81,22 @@ const SCROLL_FLOOR = 0.12;
 
 type MistTag = "h1" | "h2" | "h3" | "h4" | "p" | "span";
 
+export type MistTextVariant = "mist" | "rise" | "mask" | "drift" | "settle";
+
+// O corte do `mask` folga 0.25em pra cima e pra baixo: sem a folga, acento e
+// descendente ficariam aparados no estado final.
+const CORTE_ABERTO = "inset(-0.25em -0.1em -0.25em -0.1em)";
+const CORTE_FECHADO = "inset(100% -0.1em -0.25em -0.1em)";
+
+/** O estado escondido de cada transição. O mostrado é sempre o natural. */
+const ESCONDIDO: Record<MistTextVariant, Record<string, string | number>> = {
+  mist: { opacity: 0, y: "0.35em", filter: "blur(10px)" },
+  rise: { opacity: 0, y: "0.6em", filter: "blur(0px)" },
+  mask: { opacity: 1, y: "0.7em", filter: "blur(0px)", clipPath: CORTE_FECHADO },
+  drift: { opacity: 0, x: "-0.5em", filter: "blur(4px)" },
+  settle: { opacity: 0, scale: 1.25, filter: "blur(3px)" },
+};
+
 export interface MistTextProps {
   /** A frase. Fatiada por espaço (palavra) ou por caractere (letra). */
   text: string;
@@ -74,6 +108,8 @@ export interface MistTextProps {
   mode?: "view" | "scroll";
   /** Atraso antes da primeira fatia, em segundos. Só no modo `view`. */
   delay?: number;
+  /** Como cada fatia entra no modo `view`: `mist` (padrão), `rise`, `mask`, `drift`, `settle`. */
+  variant?: MistTextVariant;
   className?: string;
 }
 
@@ -97,12 +133,22 @@ export function MistText({
   by = "word",
   mode = "view",
   delay = 0,
+  variant = "mist",
   className,
 }: MistTextProps) {
   const { grupos, total } = React.useMemo(() => fatiar(text, by), [text, by]);
   const Corpo = mode === "scroll" ? CorpoScroll : CorpoView;
   return (
-    <Corpo as={as} by={by} delay={delay} className={className} text={text} grupos={grupos} total={total} />
+    <Corpo
+      as={as}
+      by={by}
+      delay={delay}
+      variant={variant}
+      className={className}
+      text={text}
+      grupos={grupos}
+      total={total}
+    />
   );
 }
 
@@ -112,6 +158,7 @@ interface CorpoProps {
   as: MistTag;
   by: "word" | "letter";
   delay: number;
+  variant: MistTextVariant;
   className?: string;
   text: string;
   grupos: Grupos;
@@ -144,17 +191,20 @@ function Fatias({
   );
 }
 
-function CorpoView({ as, by, delay, className, text, grupos }: CorpoProps) {
+function CorpoView({ as, by, delay, variant, className, text, grupos }: CorpoProps) {
   const reduce = useReducedMotion();
   const Tag = motion[as] as React.ElementType;
   const passo = by === "word" ? STAGGER.word : STAGGER.letter;
 
   const variants = (i: number) => ({
-    hidden: reduce ? { opacity: 0 } : { opacity: 0, y: "0.35em", filter: "blur(10px)" },
+    hidden: reduce ? { opacity: 0 } : ESCONDIDO[variant],
     show: {
       opacity: 1,
+      x: 0,
       y: 0,
+      scale: 1,
       filter: "blur(0px)",
+      ...(variant === "mask" && !reduce ? { clipPath: CORTE_ABERTO } : null),
       transition: { duration: DUR_REVEAL, ease: EASE_OUT, delay: delay + Math.min(i * passo, STAGGER.cap) },
     },
   });

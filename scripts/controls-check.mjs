@@ -193,7 +193,12 @@ for (const m of catalogo.matchAll(/name: "([a-z0-9-]+)",/g)) {
     fonte = corpo ?? bloco;
   }
 
-  if (!fonte.includes("{...props}")) {
+  // Também vale o resto desestruturado de `props`: a demo "um por vez" tira o
+  // `variant` (quem manda nele é o seletor) e espalha o resto — `const {
+  // variant, ...resto } = props ?? {}` e depois `{...resto}`. Isso pilota.
+  const resto = /const \{[^}]*\.\.\.(\w+)\s*\}\s*=\s*\(?\s*props\b/.exec(fonte)?.[1];
+  const espalha = fonte.includes("{...props}") || (resto && fonte.includes(`{...${resto}}`));
+  if (!espalha) {
     erros.push(
       `${item}: declara knobs mas a demo não espalha props — o painel monta e não pilota nada`,
     );

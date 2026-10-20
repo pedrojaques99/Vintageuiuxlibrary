@@ -8,6 +8,11 @@
  * da citação, e peso não sobrevive a duas colunas de metade da largura. Um
  * depoimento, no corpo em que ele é entregue.
  *
+ * O retrato é o recorte do rosto no retrato-01 do acervo, em tamanho pequeno:
+ * os outros retratos do banco são cenas de grupo ou de mesa, sem uma pessoa
+ * que pudesse ser quem fala, e ampliar qualquer um deles borra. Aqui o recorte
+ * é grande na fonte e pequeno na tela, então continua nítido.
+ *
  * O logo do "cliente" é desenhado aqui, não é arquivo: o acervo da vitrine não
  * tem marca de terceiro, e um retângulo cinza no lugar do logo esconderia
  * justamente a parte que a peça normaliza.
@@ -37,12 +42,20 @@ export default function QuoteBlockDemo({ props }: DemoProps) {
       <QuoteBlock
         tone="muted"
         quote="Chegaram com a marca já resolvida no primeiro dia. A gente parou de discutir cor e voltou a discutir produto."
-        author="Marina Sales"
+        author="Rafael Moura"
         role="Head de Produto"
         company="Aloro"
         logo={<LogoCliente />}
         source="https://exemplo.com/cases/aloro"
-        portrait={<Media papel="retrato" indice={2} className="size-full" />}
+        portraitWidth={7.5}
+        ratio="1/1"
+        portrait={
+          <Media
+            papel="retrato"
+            indice={0}
+            className="size-full [&_img]:origin-[49%_45%] [&_img]:scale-[2.45]"
+          />
+        }
         {...props}
       />
     </div>

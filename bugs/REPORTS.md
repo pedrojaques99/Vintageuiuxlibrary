@@ -2,154 +2,9 @@
 
 <!-- Gerado por scripts/vite-bug-report.mjs. Não edite à mão: use `npm run bugs -- --resolve <id>`. -->
 
-**31 aberto(s)** · 169 resolvido(s)
+**0 aberto(s)** · 200 resolvido(s)
 
-## testimonial-wall (2)
-
-- **testimonial-wall-4** — AUTO-LAYOUT- FULL HEIGHT
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:20</sub>
-- **testimonial-wall-5** — mais layoutado, falta um componente em baixo parece
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:33</sub>
-
-## use-pointer-parallax (2)
-
-- **use-pointer-parallax-4** — RENAME
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:20</sub>
-- **use-pointer-parallax-5** — se mexe demais
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:33</sub>
-
-## gleam (2)
-
-- **gleam-3** — CONTROLES ESCONDIDOS POR DEFAULT
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
-- **gleam-4** — NASCCER EM PERSPECTIVA E BRILHANDO POR DEFAULT
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
-
-## fold-motion (1)
-
-- **fold-motion-4** — MT CONFUSA A APRESENTACAO, UM POR VEZ, INTERATIVO, MENOS LABEL, MAIS VISUAL
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:20</sub>
-
-## line-reveal (1)
-
-- **line-reveal-2** — UM POR VEZ
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:20</sub>
-
-## photo-frame (1)
-
-- **photo-frame-2** — UM POR VEZ
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
-
-## photo-split (1)
-
-- **photo-split-1** — UM POR VEZ
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
-
-## sim-slider (1)
-
-- **sim-slider-3** — MT LABEL
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
-
-## measure-bar (1)
-
-- **measure-bar-2** — MT SIMPLES
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
-
-## skeleton-rail (1)
-
-- **skeleton-rail-5** — UM POR VEZ
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:22</sub>
-
-## ink-wordmark (1)
-
-- **ink-wordmark-1** — MAIS OPCOES, MANROPE BOLD MAISCULA COM VISANT®
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:23</sub>
-
-## glitch-chars (1)
-
-- **glitch-chars-2** — opcoes e variacoes
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:23</sub>
-
-## text-morph (1)
-
-- **text-morph-1** — sfx de completo
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:23</sub>
-
-## sticker-peel (1)
-
-- **sticker-peel-1** — a ideia é clickar e tirar o sticker, tá bugado
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:23</sub>
-
-## eye-tracker (1)
-
-- **eye-tracker-1** — variações, shaders, deixe nível visant
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:24</sub>
-
-## folding-bill (1)
-
-- **folding-bill-2** — quadrado estranho no box no modo fechdo
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:24</sub>
-
-## black-hole (1)
-
-- **black-hole-2** — somente label, só mostrar label quando tiver selecionado algo no botao de remover
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:25</sub>
-
-## mist-text (1)
-
-- **mist-text-1** — add opcoes de transicoes conforme oq ja tem na casa
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:28</sub>
-
-## mist-dialog (1)
-
-- **mist-dialog-1** — opcoes de transicoes e fx
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:28</sub>
-
-## kanban (1)
-
-- **kanban-4** — mal apresentado ainda
-mais respiro visual, cards mais óbvcios
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:29</sub>
-
-## auth-button (1)
-
-- **auth-button-3** — tá cortando o select menu quando abre
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:29</sub>
-
-## sticky-filterbar (1)
-
-- **sticky-filterbar-6** — micro transicao
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:30</sub>
-
-## side-nav (1)
-
-- **side-nav-3** — "VISANT" deve ficar só icon no modo compacta
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:30</sub>
-
-## logo-wall (1)
-
-- **logo-wall-1** — toggle com label nao da, redesenhe
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:30</sub>
-
-## rail (1)
-
-- **rail-4** — cursor pointer
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:30</sub>
-
-## section-intro (1)
-
-- **section-intro-1** — mais opcoes de layout
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:32</sub>
-
-## quote-block (1)
-
-- **quote-block-1** — logo alorh mt grande, mostrar foto de algume
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:33</sub>
-
-## step-cards (1)
-
-- **step-cards-2** — slop
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 13:33</sub>
+_Nada aberto._
 
 ---
 
@@ -317,12 +172,44 @@ mais respiro visual, cards mais óbvcios
 - ~~swipe-actions-1 · swipe-actions — deixa só um, mais intutivo e claro noq tem q fazer~~
 - ~~black-hole-1 · black-hole — animacao ta mt amadora kkk deixa mais sutil~~
 - ~~wallet-stack-1 · wallet-stack — mt label, foco no visual limpo~~
+- ~~testimonial-wall-4 · testimonial-wall — AUTO-LAYOUT- FULL HEIGHT~~
+- ~~use-pointer-parallax-4 · use-pointer-parallax — RENAME~~
+- ~~fold-motion-4 · fold-motion — MT CONFUSA A APRESENTACAO, UM POR VEZ, INTERATIVO, MENOS LABEL, MAIS VISUAL~~
+- ~~line-reveal-2 · line-reveal — UM POR VEZ~~
+- ~~photo-frame-2 · photo-frame — UM POR VEZ~~
+- ~~gleam-3 · gleam — CONTROLES ESCONDIDOS POR DEFAULT~~
+- ~~gleam-4 · gleam — NASCCER EM PERSPECTIVA E BRILHANDO POR DEFAULT~~
+- ~~photo-split-1 · photo-split — UM POR VEZ~~
+- ~~sim-slider-3 · sim-slider — MT LABEL~~
+- ~~measure-bar-2 · measure-bar — MT SIMPLES~~
 - ~~cover-art-4 · cover-art — MT SLOP, PODE ESCONDFER~~
+- ~~skeleton-rail-5 · skeleton-rail — UM POR VEZ~~
+- ~~ink-wordmark-1 · ink-wordmark — MAIS OPCOES, MANROPE BOLD MAISCULA COM VISANT®~~
+- ~~glitch-chars-2 · glitch-chars — opcoes e variacoes~~
+- ~~text-morph-1 · text-morph — sfx de completo~~
+- ~~sticker-peel-1 · sticker-peel — a ideia é clickar e tirar o sticker, tá bugado~~
+- ~~eye-tracker-1 · eye-tracker — variações, shaders, deixe nível visant~~
+- ~~folding-bill-2 · folding-bill — quadrado estranho no box no modo fechdo~~
+- ~~black-hole-2 · black-hole — somente label, só mostrar label quando tiver selecionado algo no botao de remover~~
 - ~~shader-ascii-1 · shader-ascii — deixar interativo, add controls~~
 - ~~shader-riso-1 · shader-riso — interativo, add controls~~
 - ~~motion-e-estado-2 · motion-e-estado — re-pense na pagina, tá mt coisa espremida e acontecendo ao mesmo tempo~~
+- ~~mist-text-1 · mist-text — add opcoes de transicoes conforme oq ja tem na casa~~
+- ~~mist-dialog-1 · mist-dialog — opcoes de transicoes e fx~~
+- ~~kanban-4 · kanban — mal apresentado ainda
+mais respiro visual, cards mais óbvcios~~
+- ~~auth-button-3 · auth-button — tá cortando o select menu quando abre~~
+- ~~sticky-filterbar-6 · sticky-filterbar — micro transicao~~
+- ~~side-nav-3 · side-nav — "VISANT" deve ficar só icon no modo compacta~~
+- ~~logo-wall-1 · logo-wall — toggle com label nao da, redesenhe~~
+- ~~rail-4 · rail — cursor pointer~~
 - ~~plate-4 · plate — inutil quase kk~~
 - ~~vintage-parametric-eq-2 · vintage-parametric-eq — mt linha no grafico, deixe mais limpo, ta quase ubgado. linha demais errada. - e pq nao respeita os tokens da marca sleecionada?~~
+- ~~section-intro-1 · section-intro — mais opcoes de layout~~
+- ~~quote-block-1 · quote-block — logo alorh mt grande, mostrar foto de algume~~
+- ~~step-cards-2 · step-cards — slop~~
+- ~~testimonial-wall-5 · testimonial-wall — mais layoutado, falta um componente em baixo parece~~
 - ~~sfx-bus-2 · sfx-bus — sfx do drop ainda ta ruim~~
+- ~~use-pointer-parallax-5 · use-pointer-parallax — se mexe demais~~
 
 </details>

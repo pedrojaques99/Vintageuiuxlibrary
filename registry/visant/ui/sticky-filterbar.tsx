@@ -48,10 +48,12 @@ import { cn } from "@/lib/utils";
  * `--header-h`. `transform` não entra em layout, então não realimenta o
  * observador.
  *
- * O colapso das linhas `collapsible` continua seco, sem transição. `display`
- * não transiciona, e animar altura para disfarçar é exatamente o tipo de coisa
- * que reabre o loop acima. Colapso instantâneo durante o scroll ninguém lê como
- * corte; ninguém lê porque está rolando.
+ * O colapso das linhas `collapsible` não anima altura: animar altura para
+ * disfarçar é exatamente o tipo de coisa que reabre o loop acima. A micro
+ * transição é só de opacidade e de um deslize de 4px (`translate`, fora do
+ * layout): a linha apaga, e só no fim o `display: none` entra
+ * (`transition-behavior: allow-discrete`). Na volta ela nasce apagada
+ * (`@starting-style`) e acende. A altura troca uma vez, seca, como antes.
  */
 
 export interface StickyFilterbarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -192,7 +194,7 @@ export function StickyFilterbar({
           : "[box-shadow:0_0_0_0_transparent]",
         // Grudada o respiro fecha: cada pixel da barra é um pixel a menos de
         // produto na tela.
-        "[&[data-condensed]_[data-collapsible]]:hidden",
+        "[&[data-condensed]_[data-collapsible]]:hidden [&[data-condensed]_[data-collapsible]]:-translate-y-1 [&[data-condensed]_[data-collapsible]]:opacity-0",
         "[&[data-condensed]_[data-filter-row]]:py-2",
         className,
       )}
@@ -243,7 +245,13 @@ export function FilterRow({
       // aqui isso significaria recalcular a altura da barra a cada quadro de
       // rolagem — o vizinho exato do defeito que já inchou esta página. Troca
       // seca, e durante o scroll ninguém lê a troca como corte.
-      className={cn("flex items-center gap-4 py-3", className)}
+      className={cn(
+        "flex items-center gap-4 py-3",
+        // Só a linha que some ganha transição, e só de opacidade e deslize.
+        collapsible &&
+          "transition-[opacity,translate,display] transition-discrete [transition-duration:var(--dur-fast,160ms)] [transition-timing-function:var(--ease-out,ease)] starting:-translate-y-1 starting:opacity-0",
+        className,
+      )}
       {...props}
     >
       {label ? (

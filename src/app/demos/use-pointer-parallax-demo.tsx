@@ -11,10 +11,13 @@
  *
  * O que sobrou de método:
  * - `--d` cresce do fundo pra frente. O globo, maior e mais escuro, quase não
- *   anda; o troféu, pequeno e na frente, anda seis vezes mais. Tamanho e
+ *   anda; o troféu, pequeno e na frente, anda quatro vezes mais. Tamanho e
  *   deslocamento contam a mesma história de distância.
  * - O fundo é um pontilhado só, bem apagado, e é a camada que sangra
  *   (`-inset-4`): deslocada, ela nunca mostra borda vazia.
+ * - Amplitude baixa (report "se mexe demais"): o objeto da frente anda no
+ *   máximo 22px, o fundo 3px. Paralaxe de ponteiro é sugestão de profundidade,
+ *   não brinquedo; acima disso a cena parece solta do papel.
  * - Sem legenda "mova o ponteiro". Quem passa o mouse descobre na hora; quem
  *   não passa vê uma composição parada, que é o repouso correto da peça.
  */
@@ -68,14 +71,14 @@ export default function PointerParallaxDemo() {
     // `min-h`: todos os planos são absolutos, então a caixa não tem altura
     // própria. Na página solo a cena colapsava numa linha de 1px.
     <div ref={ref} className="relative h-full min-h-[300px] w-full overflow-hidden bg-card">
-      <div aria-hidden className="absolute -inset-4" style={{ ...PONTOS, ...desloca(6) }} />
+      <div aria-hidden className="absolute -inset-4" style={{ ...PONTOS, ...desloca(3) }} />
 
       {/* fundo: o globo, grande e quase parado */}
-      <Objeto indice={5} d={10} sombra={10} className="left-[12%] top-[8%] h-[84%] w-auto opacity-90" />
+      <Objeto indice={5} d={5} sombra={10} className="left-[12%] top-[8%] h-[84%] w-auto opacity-90" />
       {/* meio: o rádio */}
-      <Objeto indice={2} d={26} sombra={16} className="right-[10%] top-[16%] h-[58%] w-auto" />
+      <Objeto indice={2} d={11} sombra={16} className="right-[10%] top-[16%] h-[58%] w-auto" />
       {/* frente: o troféu, pequeno e o que mais anda */}
-      <Objeto indice={3} d={60} sombra={22} className="bottom-[6%] left-[44%] h-[46%] w-auto" />
+      <Objeto indice={3} d={22} sombra={22} className="bottom-[6%] left-[44%] h-[46%] w-auto" />
     </div>
   );
 }

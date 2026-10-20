@@ -7,8 +7,10 @@
  * card de vitrine não há o que rolar, então a demo usa a prop `progress` e
  * dirige o mesmo caminho por tempo.
  *
- * O conteúdo é `<text>` vivo e um traço, não um path de logo: o filtro desloca
- * qualquer coisa que pinte, e a vitrine não tem marca de cliente para mostrar.
+ * A marca é escrita pela prop `text`: VISANT® em Manrope Bold maiúscula, que é
+ * a assinatura da casa. A cada volta à fumaça ela assenta numa voz diferente
+ * (display com traço de pincel, mono espaçado), e é assim que a demo mostra as
+ * opções sem um rótulo explicando: a troca acontece dentro da fumaça.
  * Passe o mouse rápido sobre a marca assentada para agitar a tinta.
  */
 
@@ -18,9 +20,21 @@ import { animate, useMotionValue, useReducedMotion } from "framer-motion";
 import { InkWordmark } from "../../../registry/visant/ui/ink-wordmark";
 import type { DemoProps } from "../catalog";
 
+type Voz = Pick<
+  React.ComponentProps<typeof InkWordmark>,
+  "text" | "mark" | "font" | "weight" | "textCase" | "tracking" | "underline"
+>;
+
+const VOZES: Voz[] = [
+  { text: "Visant", mark: "®", font: "manrope", weight: 700, textCase: "upper", tracking: -0.02 },
+  { text: "Visant", font: "display", weight: 600, textCase: "as-is", tracking: -0.04, underline: true },
+  { text: "Visant", mark: "™", font: "mono", weight: 500, textCase: "lower", tracking: 0.04 },
+];
+
 export default function InkWordmarkDemo({ props }: DemoProps) {
   const progresso = useMotionValue(0);
   const reduce = useReducedMotion();
+  const [voz, setVoz] = React.useState(0);
 
   React.useEffect(() => {
     if (reduce) {
@@ -37,6 +51,9 @@ export default function InkWordmarkDemo({ props }: DemoProps) {
         if (!vivo) break;
         atual = animate(progresso, 0, { duration: 1.6, ease: [0.77, 0, 0.175, 1] });
         await atual;
+        if (!vivo) break;
+        // A troca de voz mora aqui, com a marca ainda em fumaça.
+        setVoz((v) => (v + 1) % VOZES.length);
         await new Promise((r) => setTimeout(r, 500));
       }
     };
@@ -48,33 +65,14 @@ export default function InkWordmarkDemo({ props }: DemoProps) {
   }, [progresso, reduce]);
 
   return (
-    <div className="grid h-full w-full place-items-center overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card px-6">
+    <div className="grid h-full w-full place-items-center overflow-hidden px-8">
       <InkWordmark
         progress={progresso}
-        viewBox="0 0 1000 300"
         aria-label="Visant"
-        className="w-full text-foreground"
+        className="w-full max-w-[34rem] text-foreground"
+        {...VOZES[voz]}
         {...props}
-      >
-        <text
-          x="500"
-          y="190"
-          textAnchor="middle"
-          fontSize="210"
-          fontWeight={600}
-          letterSpacing="-8"
-          style={{ fontFamily: "var(--font-display, inherit)" }}
-        >
-          Visant
-        </text>
-        <path
-          d="M150 250 C 330 214, 520 290, 850 236"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="14"
-          strokeLinecap="round"
-        />
-      </InkWordmark>
+      />
     </div>
   );
 }

@@ -7,11 +7,17 @@
  * "Publicado") e o botão encolhe e cresce junto com a palavra, sem salto. O
  * `aria-live` fica aqui na demo, do lado de fora da peça, porque é o
  * consumidor quem sabe que essa troca merece ser anunciada.
+ *
+ * O som de completo (`playSfx("complete")`, do `sfx-bus`) mora aqui pelo mesmo
+ * motivo: a peça só troca palavra, não sabe qual troca é sucesso. Quem sabe é
+ * o botão, então ele toca quando o rótulo chega em "Publicado". O bus já
+ * respeita o liga e desliga de som da página e segura repetição.
  */
 
 import * as React from "react";
 import { Check, Send } from "lucide-react";
 
+import { playSfx } from "@/lib/sfx-bus";
 import { TextMorph } from "../../../registry/visant/ui/text-morph";
 import type { DemoProps } from "../catalog";
 
@@ -25,6 +31,10 @@ const ROTULO: Record<Estado, string> = {
 
 export default function TextMorphDemo({ props }: DemoProps) {
   const [estado, setEstado] = React.useState<Estado>("pronto");
+
+  React.useEffect(() => {
+    if (estado === "feito") playSfx("complete");
+  }, [estado]);
 
   React.useEffect(() => {
     if (estado === "pronto") return;

@@ -26,6 +26,16 @@ import { cn } from "@/lib/utils";
  *
  * A cor é `currentColor`. Quem decide é a classe de texto de quem usa.
  *
+ * ── Marca escrita por prop ──────────────────────────────────────────────────
+ *
+ * Quem não tem o logo em contorno escreve a marca com `text` e escolhe a voz:
+ * `font` (display, sans, mono, manrope ou qualquer família CSS), `weight`,
+ * `textCase`, `tracking`, `mark` (o ® ou ™ pequeno no alto) e `underline` (o
+ * traço de pincel embaixo). O `viewBox` se ajusta à caixa real do texto depois
+ * que a fonte carrega, então a marca encosta nas bordas em qualquer família,
+ * sem número mágico de largura. `path` e `children` continuam valendo e têm
+ * precedência sobre `text`.
+ *
  * `prefers-reduced-motion`: a marca nasce assentada (opacidade 1, deslocamento
  * 1.2, sem desfoque) e o laço de quadros nem começa.
  */
@@ -41,6 +51,20 @@ export interface InkWordmarkProps
    * desloca qualquer coisa que pinte, inclusive texto vivo.
    */
   children?: React.ReactNode;
+  /** A marca escrita, em texto vivo. Ignorado quando há `path` ou `children`. */
+  text?: string;
+  /** Sinal pequeno no alto, depois do texto: "®", "™". */
+  mark?: string;
+  /** Família do `text`: token da casa ou qualquer valor de `font-family`. */
+  font?: "display" | "sans" | "mono" | "manrope" | (string & {});
+  /** Peso do `text`, 100 a 900. */
+  weight?: number;
+  /** Caixa do `text`. */
+  textCase?: "upper" | "lower" | "as-is";
+  /** Espaço entre letras do `text`, em em. Negativo aperta. */
+  tracking?: number;
+  /** Traço de pincel embaixo do `text`. */
+  underline?: boolean;
   /** Nome acessível da marca. Sem ele o SVG é só desenho para o leitor de tela. */
   "aria-label": string;
   /** Deslocamento máximo, em unidades do `viewBox`, quando a marca ainda é fumaça. */
@@ -57,10 +81,24 @@ export interface InkWordmarkProps
   progress?: MotionValue<number> | number;
 }
 
+const FONTES: Record<string, string> = {
+  display: "var(--font-display, inherit)",
+  sans: "var(--font-sans, inherit)",
+  mono: "var(--font-mono, ui-monospace, monospace)",
+  manrope: "'Manrope Variable', 'Manrope', var(--font-sans, sans-serif)",
+};
+
 export function InkWordmark({
   path,
-  viewBox = "0 0 1000 300",
+  viewBox: viewBoxProp,
   children,
+  text,
+  mark,
+  font = "display",
+  weight = 600,
+  textCase = "as-is",
+  tracking = -0.03,
+  underline = false,
   "aria-label": ariaLabel,
   smoke = 34,
   container,
@@ -80,6 +118,54 @@ export function InkWordmark({
   const ultimo = React.useRef<{ x: number; y: number } | null>(null);
   const reduce = useReducedMotion() ?? false;
   const [visivel, setVisivel] = React.useState(false);
+
+  // Modo texto: o viewBox nasce largo e depois encosta na caixa real do texto.
+  const modoTexto = !path && !children && !!text;
+  const escrito = React.useRef<SVGTextElement>(null);
+  const [caixa, setCaixa] = React.useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const conteudo =
+    textCase === "upper" ? text?.toUpperCase() : textCase === "lower" ? text?.toLowerCase() : text;
+
+  React.useEffect(() => {
+    if (!modoTexto) return;
+    let vivo = true;
+    const medir = () => {
+      const t = escrito.current;
+      if (!vivo || !t) return;
+      const b = t.getBBox();
+      if (b.width) setCaixa({ x: b.x, y: b.y, w: b.width, h: b.height });
+    };
+    medir();
+    // A fonte pode chegar depois do primeiro quadro, e aí a caixa muda.
+    document.fonts?.ready.then(medir).catch(() => undefined);
+    return () => {
+      vivo = false;
+    };
+  }, [modoTexto, conteudo, mark, font, weight, tracking]);
+
+  // O traço nasce da caixa do texto: 8% pra dentro de cada ponta, logo abaixo da base.
+  const traco =
+    modoTexto && underline && caixa
+      ? (() => {
+          const x0 = caixa.x + caixa.w * 0.08;
+          const x1 = caixa.x + caixa.w * 0.92;
+          const y = caixa.y + caixa.h + 34;
+          const w = x1 - x0;
+          return `M${x0.toFixed(0)} ${y.toFixed(0)} C ${(x0 + w * 0.3).toFixed(0)} ${(y - 30).toFixed(0)}, ${(x0 + w * 0.55).toFixed(0)} ${(y + 34).toFixed(0)}, ${x1.toFixed(0)} ${(y - 12).toFixed(0)}`;
+        })()
+      : null;
+
+  const viewBox =
+    viewBoxProp ??
+    (modoTexto && caixa
+      ? (() => {
+          // Folga em volta: o deslocamento da fumaça empurra a tinta pra fora.
+          const fx = caixa.w * 0.05;
+          const fy = caixa.h * 0.14;
+          const baixo = underline ? 70 : 0;
+          return `${(caixa.x - fx).toFixed(1)} ${(caixa.y - fy).toFixed(1)} ${(caixa.w + fx * 2).toFixed(1)} ${(caixa.h + fy * 2 + baixo).toFixed(1)}`;
+        })()
+      : "0 0 1000 300");
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -190,7 +276,33 @@ export function InkWordmark({
           </filter>
         </defs>
         <g fill="currentColor" filter={`url(#${filterId})`}>
-          {children ?? (path ? <path d={path} fillRule="evenodd" clipRule="evenodd" /> : null)}
+          {children ??
+            (path ? (
+              <path d={path} fillRule="evenodd" clipRule="evenodd" />
+            ) : modoTexto ? (
+              <>
+                <text
+                  ref={escrito}
+                  x="500"
+                  y="190"
+                  textAnchor="middle"
+                  fontSize="200"
+                  fontWeight={weight}
+                  letterSpacing={`${tracking}em`}
+                  style={{ fontFamily: FONTES[font] ?? font }}
+                >
+                  {conteudo}
+                  {mark ? (
+                    <tspan fontSize="0.32em" dx="0.1em" dy="-1.5em" fontWeight={Math.min(weight, 600)}>
+                      {mark}
+                    </tspan>
+                  ) : null}
+                </text>
+                {traco ? (
+                  <path d={traco} fill="none" stroke="currentColor" strokeWidth="14" strokeLinecap="round" />
+                ) : null}
+              </>
+            ) : null)}
         </g>
       </motion.svg>
     </div>

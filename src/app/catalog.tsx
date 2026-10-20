@@ -21,18 +21,13 @@ import { depKeysOf } from "./deps";
 import { PAD_VOICES, PEOPLE } from "./demo-fixtures";
 
 import { Chip } from "../../registry/visant/ui/chip";
-import { GlitchChars } from "../../registry/visant/ui/glitch-chars";
 import { PaperShuttle } from "../../registry/visant/ui/paper-shuttle";
-import { SectionIntro } from "../../registry/visant/ui/section-intro";
 import { CtaSurface, CtaAction } from "../../registry/visant/ui/cta-surface";
 import { EraseField } from "../../registry/visant/ui/erase-field";
 import { SpringDots } from "../../registry/visant/ui/spring-dots";
 import { SfxToggle } from "../../registry/visant/ui/sfx-toggle";
-import { MeasureBar } from "../../registry/visant/ui/measure-bar";
 import { EmptyState } from "../../registry/visant/ui/empty-state";
 import { MagneticCta } from "../../registry/visant/ui/magnetic-cta";
-import { SimSlider } from "../../registry/visant/ui/sim-slider";
-import { TestimonialWall } from "../../registry/visant/blocks/testimonial-wall";
 
 import { VintageLargeKnob } from "../../registry/vintage/ui/vintage-large-knob";
 import { VintageButton } from "../../registry/vintage/ui/vintage-button";
@@ -120,6 +115,11 @@ const AnatomiaScriptDemo = React.lazy(() => import("./demos/anatomia-script-demo
 const AnatomiaPermissaoDemo = React.lazy(() => import("./demos/anatomia-permissao-demo"));
 const AnatomiaFicharioDemo = React.lazy(() => import("./demos/anatomia-fichario-demo"));
 const AnatomiaTomadasDemo = React.lazy(() => import("./demos/anatomia-tomadas-demo"));
+const GlitchCharsDemo = React.lazy(() => import("./demos/glitch-chars-demo"));
+const TestimonialWallDemo = React.lazy(() => import("./demos/testimonial-wall-demo"));
+const SectionIntroDemo = React.lazy(() => import("./demos/section-intro-demo"));
+const MeasureBarDemo = React.lazy(() => import("./demos/measure-bar-demo"));
+const SimSliderFileDemo = React.lazy(() => import("./demos/sim-slider-demo"));
 const SfxBusDemo = React.lazy(() => import("./demos/sfx-bus-demo"));
 const VintageKnobDemo = React.lazy(() => import("./demos/vintage-knob-demo"));
 const VintageLedDemo = React.lazy(() => import("./demos/vintage-led-demo"));
@@ -463,36 +463,6 @@ function MarqueeDemo() {
 
 // --- catálogo ----------------------------------------------------------------
 
-/** Faixa de investimento → receita projetada, com a premissa escrita embaixo. */
-function SimSliderDemo() {
-  const brl = (v: number) =>
-    v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
-  return (
-    <SimSlider
-      className="w-full"
-      label="Investimento mensal"
-      min={2000}
-      max={20000}
-      step={500}
-      defaultValue={6000}
-      format={brl}
-      outputs={[
-        { label: "Receita projetada", value: (v) => brl(v * 3.2), primary: true },
-        { label: "Retorno", value: () => "3,2×" },
-      ]}
-      ceilingLabel="teto da faixa"
-      // A curva é a projeção distribuída em 12 meses, com a rampa de maturação
-      // da campanha — série derivada do valor, não pontos bonitos inventados.
-      // A escala é a FAIXA inteira (por isso `/ 20000`): arrastar o controle
-      // tem que mostrar ganho, não redesenhar a mesma curva cheia.
-      curve={(v) =>
-        Array.from({ length: 12 }, (_, i) => (v / 20000) * (1 - Math.exp(-(i + 1) / 3.5)))
-      }
-      assumption="Projeção a partir de ticket médio de R$180 e 2,4% de conversão medidos nos últimos 90 dias. Não é garantia de resultado."
-    />
-  );
-}
-
 export const CATALOG: CatalogItem[] = [
   // ---- marca
   {
@@ -559,7 +529,7 @@ export const CATALOG: CatalogItem[] = [
     // Largura pra caber as colunas sem barra de rolagem horizontal — que dentro
     // de um card de vitrine é sempre defeito; 220 de altura porque o que sobrava
     // era buraco, não respiro.
-    preview: { w: 1020, h: 130 },
+    preview: { w: 1020, h: 290 },
   },
   {
     name: "inline-edit",
@@ -702,7 +672,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["logos", "clientes", "prova social", "faixa", "marquee", "gsap"],
     demo: LogoWallDemo,
     knobs: "LogoWall",
-    preview: { w: 760, h: 260 },
+    preview: { w: 760, h: 200 },
   },
   {
     name: "rail",
@@ -811,15 +781,11 @@ export const CATALOG: CatalogItem[] = [
     title: "Glitch Chars",
     type: "ui",
     family: "texto",
-    description: "Caracteres que trocam sozinhos. Textura de máquina trabalhando, em duas letras.",
+    description: "Caracteres que trocam sozinhos, em cinco sotaques (símbolos, blocos, braille, binário, hex), ou decodificando até virar uma palavra.",
     tags: ["textura", "mono"],
-    demo: () => (
-      <Frame>
-        <span className="font-mono text-2xl">
-          <GlitchChars length={4} />
-        </span>
-      </Frame>
-    ),
+    demo: GlitchCharsDemo,
+    knobs: "GlitchChars",
+    preview: { w: 380, h: 240 },
   },
   {
     name: "turbulence-field",
@@ -1115,14 +1081,9 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Abertura de dobra: rótulo, título grande e linha de contexto, com duas medidas de linha em vez de uma.",
     tags: ["dobra", "título", "landing"],
-    demo: () => (
-      <SectionIntro
-        eyebrow="Serviços"
-        title="Um time só. Todo serviço que a marca precisa."
-        lead="Da estratégia de marca ao desenvolvimento, sem repassar o trabalho para fora no meio do caminho."
-      />
-    ),
-    preview: { w: 620, h: 320 },
+    demo: SectionIntroDemo,
+    knobs: "SectionIntro",
+    preview: { w: 960, h: 340 },
   },
   {
     name: "cta-surface",
@@ -1173,7 +1134,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["passos", "como funciona", "onboarding"],
     demo: StepCardsDemo,
     knobs: "StepCards",
-    preview: { w: 1180, h: 370 },
+    preview: { w: 1180, h: 340 },
   },
   {
     name: "quote-block",
@@ -1193,47 +1154,10 @@ export const CATALOG: CatalogItem[] = [
     type: "block",
     family: "secoes",
     description:
-      "Parede de prova social com tipos misturados: citação, número, retrato e depoimento em vídeo na mesma malha.",
+      "Parede de prova social com tipos misturados: citação, número, retrato e depoimento em vídeo na mesma malha, em colunas ou em grade que ocupa a altura, com faixa de fechamento.",
     tags: ["depoimento", "prova social", "masonry"],
-    demo: () => (
-      <TestimonialWall
-        columns={3}
-        items={[
-          {
-            id: "a",
-            kind: "quote",
-            headline: "Rápido e fácil de trabalhar junto",
-            quote:
-              "Entenderam o que a gente precisava e entregaram no padrão em projetos bem diferentes entre si.",
-            author: PEOPLE[1].name,
-            role: "Marketing @ Estúdio Ribalta",
-            rating: 5,
-          },
-          { id: "b", kind: "stat", tone: "brand", value: "1.291+", label: "Projetos entregues em 6 anos" },
-          {
-            id: "c",
-            kind: "portrait",
-            media: <DemoSurface papel="video" indice={2} />,
-            name: PEOPLE[3].name,
-            role: "Produto @ Casa Vinte",
-            onPlay: () => {},
-          },
-          {
-            id: "d",
-            kind: "quote",
-            tone: "muted",
-            quote: "O time é atento e responde rápido quando entram revisão e projeto novo no mesmo dia.",
-            author: PEOPLE[2].name,
-            role: "Oficina Bandeira",
-          },
-          { id: "e", kind: "stat", tone: "muted", value: "4,9/5", label: "Nota média de quem já contratou" },
-        ]}
-      />
-    ),
-    // 700 e não 360: a parede agora escolhe a contagem de colunas pela largura
-    // do container, e num palco de 760px cabem duas — o que dobra a altura. O
-    // número declarado é medido, não chutado (696px a 760 de largura).
-    preview: { w: 760, h: 700 },
+    demo: TestimonialWallDemo,
+    preview: { w: 900, h: 560 },
   },
 
   /* ══════════════════════════════════════════════════════════════════════
@@ -1310,7 +1234,7 @@ export const CATALOG: CatalogItem[] = [
   },
   {
     name: "use-pointer-parallax",
-    title: "usePointerParallax",
+    title: "Pointer Parallax",
     type: "hook",
     family: "base",
     description:
@@ -1345,7 +1269,7 @@ export const CATALOG: CatalogItem[] = [
     // 1280 de largura porque a peça revela POR LINHA: num palco estreito a
     // frase quebra em duas e a cascata some. A demo agora traz frase longa e
     // as variantes lado a lado — é essa medida que faz o corte aparecer.
-    preview: { w: 1280, h: 230 },
+    preview: { w: 690, h: 300 },
   },
   {
     name: "gleam",
@@ -1353,7 +1277,7 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "efeitos",
     description:
-      "A superfície que sabe onde o cursor está: luz sob o ponteiro, borda acesa do lado da luz e inclinação de 5 graus. Quatro números por quadro no JS, o desenho inteiro no CSS.",
+      "A superfície que sabe onde o cursor está: luz sob o ponteiro, borda acesa do lado da luz e inclinação de 5 graus. Quatro números por quadro no JS, o desenho inteiro no CSS; nasce inclinado e aceso (rest).",
     tags: ["hover", "card", "ponteiro", "tilt", "luz", "spotlight", "magnético"],
     demo: GleamDemo,
     knobs: "Gleam",
@@ -1380,7 +1304,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["dobra", "seção", "foto", "texto", "alternado", "scroll", "gsap"],
     demo: PhotoSplitDemo,
     knobs: "PhotoSplitStack",
-    preview: { w: 900, h: 700 },
+    preview: { w: 900, h: 460 },
   },
   {
     name: "photo-flip",
@@ -1426,13 +1350,7 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Nenhum número sem régua: valor, qualificador, evidência e rótulo nessa ordem. Sem denominador a barra não desenha, e o estado desconhecido fica tracejado em vez de zerado.",
     tags: ["número", "régua", "evidência", "prova", "métrica"],
-    demo: () => (
-      <div className="flex h-full items-center justify-center gap-10">
-        <MeasureBar value="R$450k" qualifier="de uma meta de 600k" ratio={0.75} label="Faturado" />
-        <MeasureBar value="200+" qualifier="piso, não proporção" label="Comunidade" />
-        <MeasureBar value="—" qualifier="a API não respondeu" state="unknown" label="Vendidos" />
-      </div>
-    ),
+    demo: MeasureBarDemo,
     preview: { w: 620, h: 220 },
   },
   {
@@ -1443,7 +1361,7 @@ export const CATALOG: CatalogItem[] = [
     description:
       "A dobra que deixa o visitante fazer a conta: controle acessível, projeção derivada do próprio valor, curva sem transição (pra não discordar do número) e premissa obrigatória por escrito.",
     tags: ["simulador", "calculadora", "slider", "projeção", "roi", "curva", "premissa"],
-    demo: () => <SimSliderDemo />,
+    demo: SimSliderFileDemo,
     preview: { w: 640, h: 420 },
   },
   {
@@ -1475,7 +1393,7 @@ export const CATALOG: CatalogItem[] = [
   },
   {
     name: "mist-text", title: "Mist Text", type: "ui", family: "texto",
-    description: "Texto que sai da névoa por palavra ou letra (desfoque, opacidade e subida mínima): entra uma vez ao chegar na tela, ou acompanha a rolagem ida e volta com mola que não erra a faixa dentro de sticky.",
+    description: "Texto que sai da névoa por palavra ou letra (desfoque, opacidade e subida mínima): entra uma vez ao chegar na tela, ou acompanha a rolagem ida e volta com mola que não erra a faixa dentro de sticky; cinco entradas por variant: mist, rise, mask, drift e settle.",
     tags: ["texto", "blur", "névoa", "reveal", "scroll", "palavra", "letra", "tipografia"],
     demo: MistTextDemo,
     preview: { w: 560, h: 300 },
@@ -1496,7 +1414,7 @@ export const CATALOG: CatalogItem[] = [
   },
   {
     name: "mist-dialog", title: "Mist Dialog", type: "ui", family: "feedback",
-    description: "Modal em <dialog> nativo que entra e sai em névoa só com CSS (@starting-style + allow-discrete), controlado, fecha no Esc e no clique fora, com ganchos onOpen/onClose para pausar o scroll suave.",
+    description: "Modal em <dialog> nativo que entra e sai em névoa só com CSS (@starting-style + allow-discrete), controlado, fecha no Esc e no clique fora, com ganchos onOpen/onClose para pausar o scroll suave; quatro entradas por variant: mist, rise, zoom e wipe.",
     tags: ["modal", "dialog", "névoa", "blur", "vitrine", "starting-style", "overlay"],
     demo: MistDialogDemo,
     preview: { w: 690, h: 240 },
@@ -1506,9 +1424,10 @@ export const CATALOG: CatalogItem[] = [
     title: "Ink Wordmark",
     type: "ui",
     family: "texto",
-    description: "Assinatura de ponta a ponta que condensa da fumaça conforme entra na tela, respira como tinta e se agita com a velocidade do ponteiro, só com filtro SVG.",
+    description: "Assinatura de ponta a ponta que condensa da fumaça conforme entra na tela, respira como tinta e se agita com a velocidade do ponteiro, só com filtro SVG, ou escrita por prop, com fonte, peso, caixa e ®.",
     tags: ["assinatura", "logo", "rodapé", "fumaça", "tinta", "svg", "scroll"],
     demo: InkWordmarkDemo,
+    knobs: "InkWordmark",
     preview: { w: 640, h: 400 },
   },
   {
@@ -2025,11 +1944,11 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "efeitos",
     description:
-      "Um rosto de dois olhos que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique.",
+      "Um mascote que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique. Quatro rostos (card, orbe, vidro, marca) e quatro olhares.",
     tags: ["mascote","estado vazio","cursor","personalidade"],
     demo: EyeTrackerColheitaDemo,
     knobs: "EyeTracker",
-    preview: { w: 320, h: 240 },
+    preview: { w: 400, h: 280 },
   },
   {
     name: "orbit-menu",
@@ -2109,7 +2028,7 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "efeitos",
     description:
-      "Um adesivo que levanta o canto quando o mouse chega perto, descola ao arrastar mostrando o verso e cola onde você soltar.",
+      "Um adesivo que levanta o canto quando o mouse chega perto, arrasta pra mudar de lugar e, com um clique, descola inteiro da página.",
     tags: ["adesivo","arrastar","dobra","papel","sticker"],
     demo: StickerPeelColheitaDemo,
     knobs: "StickerPeel",

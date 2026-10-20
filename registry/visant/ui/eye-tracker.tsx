@@ -35,8 +35,13 @@ import { cn } from "@/lib/utils";
  * 4. **Piscada em intervalo sorteado** (2,5 a 5,5 s). Intervalo fixo é o que
  *    denuncia o robô. Com `prefers-reduced-motion` não pisca e o olhar salta
  *    pro alvo sem viagem.
- * 5. **Clique ou Enter cumprimenta.** Os olhos voltam pra frente e um balão
- *    escreve o `greeting`; um `role="status"` lê a mesma frase.
+ * 5. **Clique ou Enter cumprimenta.** Os olhos voltam pra frente, apertam
+ *    num sorriso e um balão escreve o `greeting`; um `role="status"` lê a
+ *    mesma frase.
+ * 6. **Rosto e olho são props separadas.** `face` troca o corpo (cartão, orbe,
+ *    vidro sobre um fundo vivo, cor da marca) e `eyes` troca o olhar. Com
+ *    `pupil` a pupila corre um pouco a mais que o globo, o que dá profundidade
+ *    sem precisar de 3D de verdade.
  */
 
 export interface EyeTrackerProps
@@ -44,7 +49,9 @@ export interface EyeTrackerProps
   /** Lado do rosto, em px. */
   size?: number;
   /** Forma dos olhos. */
-  eyes?: "slant" | "dots" | "bars";
+  eyes?: "slant" | "dots" | "bars" | "pupil";
+  /** Corpo do rosto. `glass` foi feito pra ficar por cima de um fundo vivo. */
+  face?: "card" | "orb" | "glass" | "brand";
   /** Quanto os olhos andam, de 0 a 1 (fração do meio rosto). */
   follow?: number;
   /** Pisca sozinho de vez em quando. */
@@ -57,14 +64,24 @@ const MOLA = { stiffness: 260, damping: 22, mass: 0.6 };
 const ALCANCE = 260;
 
 const OLHO = {
-  slant: "h-[14%] w-[7%] rounded-[var(--r-pill)]",
+  slant: "h-[14%] w-[7%] rounded-[var(--r-pill)] -rotate-[18deg]",
   dots: "size-[10%] rounded-[var(--r-pill)]",
   bars: "h-[16%] w-[6%] rounded-[2px]",
+  pupil: "grid size-[22%] place-items-center rounded-full",
+} as const;
+
+const ROSTO = {
+  card: "rounded-[var(--r-surface)] border border-border bg-card [box-shadow:var(--e-raised)]",
+  orb: "rounded-full border border-border bg-card [background-image:radial-gradient(circle_at_32%_28%,color-mix(in_oklab,var(--foreground)_12%,transparent),transparent_60%)] [box-shadow:var(--e-raised),inset_0_-10px_24px_-12px_color-mix(in_oklab,var(--foreground)_30%,transparent)]",
+  glass:
+    "rounded-[var(--r-surface)] border border-[color-mix(in_oklab,var(--foreground)_18%,transparent)] bg-[color-mix(in_oklab,var(--card)_45%,transparent)] backdrop-blur-md [box-shadow:var(--e-raised),inset_0_1px_0_color-mix(in_oklab,var(--foreground)_14%,transparent)]",
+  brand: "rounded-[var(--r-surface)] bg-[var(--brand)] [box-shadow:var(--e-raised)]",
 } as const;
 
 export function EyeTracker({
   size = 112,
   eyes = "slant",
+  face = "card",
   follow = 0.6,
   blink = true,
   greeting = "Oi, tudo bem?",
@@ -83,6 +100,9 @@ export function EyeTracker({
   const olhoY = reduzido ? alvoY : molaY;
   const giroY = useTransform(olhoX, (v) => v * 0.5);
   const giroX = useTransform(olhoY, (v) => -v * 0.5);
+  // A pupila anda mais um tanto dentro do globo.
+  const pupilaX = useTransform(olhoX, (v) => v * 0.35);
+  const pupilaY = useTransform(olhoY, (v) => v * 0.35);
   const palpebra = useMotionValue(1);
   const [falando, setFalando] = React.useState(false);
   const [escrito, setEscrito] = React.useState("");
@@ -173,6 +193,31 @@ export function EyeTracker({
     setFalando(true);
   }
 
+  // Falando, os olhos apertam: o sorriso que um rosto sem boca consegue dar.
+  React.useEffect(() => {
+    if (!falando) return;
+    if (reduzido) return;
+    animate(palpebra, 0.45, { duration: 0.18, ease: "easeOut" });
+    return () => {
+      animate(palpebra, 1, { duration: 0.18, ease: "easeOut" });
+    };
+  }, [falando, reduzido, palpebra]);
+
+  const corOlho = face === "brand" ? "bg-[var(--brand-foreground)]" : "bg-foreground";
+  const olho = (
+    <span className={cn("block", corOlho, OLHO[eyes])}>
+      {eyes === "pupil" && (
+        <motion.span
+          className={cn(
+            "block size-[46%] rounded-full",
+            face === "brand" ? "bg-[var(--brand)]" : "bg-background",
+          )}
+          style={{ x: pupilaX, y: pupilaY }}
+        />
+      )}
+    </span>
+  );
+
   return (
     <span className="relative inline-flex [perspective:600px]">
       <motion.button
@@ -186,7 +231,8 @@ export function EyeTracker({
         }}
         style={{ ...style, width: size, height: size, rotateX: giroX, rotateY: giroY }}
         className={cn(
-          "relative grid place-items-center rounded-[var(--r-surface)] border border-border bg-card outline-none [box-shadow:var(--e-raised)] [font:inherit] focus-visible:[box-shadow:var(--focus)]",
+          "relative grid cursor-pointer place-items-center outline-none [font:inherit] focus-visible:[box-shadow:var(--focus)]",
+          ROSTO[face],
           className,
         )}
       >
@@ -195,8 +241,8 @@ export function EyeTracker({
           className="absolute inset-0 flex items-center justify-center gap-[16%]"
           style={{ x: olhoX, y: olhoY, scaleY: palpebra }}
         >
-          <span className={cn("block bg-foreground", OLHO[eyes], eyes === "slant" && "-rotate-[18deg]")} />
-          <span className={cn("block bg-foreground", OLHO[eyes], eyes === "slant" && "-rotate-[18deg]")} />
+          {olho}
+          {olho}
         </motion.span>
       </motion.button>
 

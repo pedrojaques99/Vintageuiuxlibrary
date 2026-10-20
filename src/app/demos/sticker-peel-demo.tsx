@@ -1,7 +1,8 @@
 "use client";
 
 /**
- * Uma prancheta com quatro adesivos espalhados, como tampa de notebook. Os
+ * Uma prancheta com quatro adesivos espalhados, como tampa de notebook. Clique
+ * descola, arrastar muda de lugar. Os
  * knobs pilotam o primeiro (o redondo da marca); os outros mostram que a dobra
  * vale para pílula e quadrado. "Recomeçar" remonta a prancheta.
  */
@@ -25,6 +26,8 @@ export default function StickerPeelDemo({ props }: DemoProps) {
             defaultPosition={{ x: 56, y: 44 }}
             rotate={-6}
             radius="9999px"
+            peelOff
+            onPeelOff={marcar}
             onPositionChange={marcar}
             {...props}
           >
@@ -37,6 +40,8 @@ export default function StickerPeelDemo({ props }: DemoProps) {
             defaultPosition={{ x: 200, y: 52 }}
             rotate={5}
             radius="var(--r-pill)"
+            peelOff
+            onPeelOff={marcar}
             onPositionChange={marcar}
           >
             <span className="block rounded-[inherit] border-4 border-background bg-card px-4 py-2 text-sm font-medium text-foreground">
@@ -48,6 +53,8 @@ export default function StickerPeelDemo({ props }: DemoProps) {
             defaultPosition={{ x: 84, y: 168 }}
             rotate={-3}
             radius="var(--r-pill)"
+            peelOff
+            onPeelOff={marcar}
             onPositionChange={marcar}
           >
             <span className="block rounded-[inherit] border-4 border-background bg-foreground px-4 py-2 text-sm font-medium text-background">
@@ -59,6 +66,8 @@ export default function StickerPeelDemo({ props }: DemoProps) {
             defaultPosition={{ x: 236, y: 140 }}
             rotate={8}
             radius="var(--r-surface)"
+            peelOff
+            onPeelOff={marcar}
             onPositionChange={marcar}
           >
             <span className="flex size-16 items-center justify-center rounded-[inherit] border-4 border-background bg-card text-foreground">

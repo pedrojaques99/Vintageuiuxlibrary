@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { Check, ChevronDown, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -46,6 +47,10 @@ import { cn } from "@/lib/utils";
  * O menu é próprio (nada de dependência nova): um ponto de tabulação, setas
  * andando pelos itens, `Esc` fecha e devolve o foco ao gatilho, clique fora
  * fecha.
+ *
+ * O painel vai num portal pro `body`, com posição fixa medida do gatilho. Dentro
+ * do gatilho ele herdava o `overflow: hidden` de qualquer card, header ou palco
+ * em volta e saía cortado ao meio. Se não couber do lado pedido, abre do outro.
  */
 
 export type AuthStatus = "loading" | "signed-out" | "signed-in";
@@ -143,6 +148,45 @@ function Painel({
   children: React.ReactNode;
 }) {
   const caixa = React.useRef<HTMLDivElement>(null);
+  const [pos, setPos] = React.useState<React.CSSProperties | null>(null);
+  const [lado, setLado] = React.useState(side);
+
+  // Posição fixa a partir do retângulo de tela do gatilho. Rola ou redimensiona,
+  // mede de novo. Sem espaço do lado pedido e com mais do outro, vira.
+  React.useLayoutEffect(() => {
+    if (!open) {
+      setPos(null);
+      return;
+    }
+    const medir = () => {
+      const g = gatilho.current;
+      if (!g) return;
+      const r = g.getBoundingClientRect();
+      const alto = caixa.current?.offsetHeight ?? 0;
+      const vao = 6;
+      const cabeEmbaixo = window.innerHeight - r.bottom - vao >= alto;
+      const cabeEmCima = r.top - vao >= alto;
+      const l = side === "bottom" ? (cabeEmbaixo || !cabeEmCima ? "bottom" : "top") : cabeEmCima || !cabeEmbaixo ? "top" : "bottom";
+      setLado(l);
+      setPos({
+        position: "fixed",
+        ...(l === "bottom" ? { top: r.bottom + vao } : { bottom: window.innerHeight - r.top + vao }),
+        ...(align === "end"
+          ? { right: Math.max(12, window.innerWidth - r.right) }
+          : { left: Math.max(12, r.left) }),
+      });
+    };
+    medir();
+    // Segunda medida: na primeira o painel ainda não tinha altura pra decidir o lado.
+    const raf = requestAnimationFrame(medir);
+    window.addEventListener("resize", medir);
+    window.addEventListener("scroll", medir, true);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", medir);
+      window.removeEventListener("scroll", medir, true);
+    };
+  }, [open, side, align, gatilho]);
 
   const itens = React.useCallback(
     () => Array.from(caixa.current?.querySelectorAll<HTMLElement>("[data-item]") ?? []),
@@ -179,7 +223,9 @@ function Painel({
     lista[proximo]?.focus();
   };
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <div
       ref={caixa}
       role="menu"
@@ -214,21 +260,27 @@ function Painel({
         }
       }}
       className={cn(
-        "absolute z-50 w-[16.5rem] max-w-[calc(100vw-1.5rem)] overflow-hidden",
+        "z-[1000] w-[16.5rem] max-w-[calc(100vw-1.5rem)] overflow-hidden",
         "rounded-[var(--r-surface,0.875rem)] border border-border bg-popover text-popover-foreground",
         "[box-shadow:var(--e-raised,0_8px_24px_-12px_rgb(0_0_0/0.35))]",
         "animate-in fade-in-0 zoom-in-95 [animation-duration:var(--dur-fast,160ms)]",
         // A origem da escala acompanha o lado: painel que abre pra cima e cresce
         // a partir do topo parece que veio de outro lugar da tela.
-        side === "top"
-          ? "bottom-[calc(100%+0.375rem)] origin-bottom"
-          : "top-[calc(100%+0.375rem)] origin-top",
-        align === "end" ? "right-0" : "left-0",
+        lado === "top"
+          ? align === "end"
+            ? "origin-bottom-right"
+            : "origin-bottom-left"
+          : align === "end"
+            ? "origin-top-right"
+            : "origin-top-left",
         className,
       )}
+      // Antes da primeira medida o painel fica invisível no canto, só pra ter altura.
+      style={pos ?? { position: "fixed", top: 0, left: 0, visibility: "hidden" }}
     >
       {children}
-    </div>
+    </div>,
+    document.body,
   );
 }
 

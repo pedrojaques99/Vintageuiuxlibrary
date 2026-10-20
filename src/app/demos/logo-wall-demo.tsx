@@ -1,16 +1,15 @@
 "use client";
 
 /**
- * A demo é uma comparação, porque a peça É uma comparação.
+ * A demo da faixa de logos.
  *
- * Uma faixa de logos bonita não prova nada sozinha — logo de cliente sempre
- * PARECE ok quando quem montou já ajustou tudo à mão. O que a peça vende é
- * exatamente o passo que ninguém vê: as mesmas seis marcas, entregues como
- * chegam (altura de arquivo, cada uma com a sua), viram uma fileira com ritmo.
+ * A peça se apresenta sozinha: a faixa, e mais nada.
  *
- * Por isso o controle troca entre "cru" e a peça, e por isso os dois estados
- * usam os MESMOS seis SVGs — se a comparação trocasse os desenhos, ela deixaria
- * de ser sobre normalização.
+ * Já houve aqui um controle "cru / normalizado" com rótulo, pra provar a
+ * normalização por comparação. O dono reprovou, e com razão: um botão que
+ * explica a peça é texto de vitrine competindo com ela. A prova continua no
+ * próprio desenho (seis anatomias diferentes, wordmark de 9:1 ao lado de
+ * emblema alto, todas no mesmo peso), e os modos de acabamento ficam nos knobs.
  *
  * Os logos são desenhados aqui e não vêm do acervo: a vitrine não tem marca de
  * terceiro no banco de mídia, e caixa cinza no lugar do logo esconderia justo a
@@ -24,22 +23,18 @@
 import * as React from "react";
 
 import { LogoWall, type LogoWallItem } from "../../../registry/visant/ui/logo-wall";
-import { SegmentedControl } from "../../../registry/visant/ui/segmented-control";
 import type { DemoProps } from "../catalog";
 
 /**
  * Seis marcas com anatomias de propósito diferentes: wordmark comprido,
- * monograma quadrado, emblema alto. `bruto` é a altura em que cada arquivo
- * chegaria — é ela que produz a fileira torta do modo "cru". `scale` é a
- * correção óptica, o número que se acha olhando.
+ * monograma quadrado, emblema alto. `scale` é a correção óptica, o número que
+ * se acha olhando.
  */
 interface Marca {
   id: string;
   name: string;
   /** Correção óptica: o número que a peça aplica sobre a altura base. */
   scale: number;
-  /** A altura em que o arquivo chegaria. Só o modo "cru" usa. */
-  bruto: string;
   svg: React.ReactNode;
 }
 
@@ -48,7 +43,6 @@ const MARCAS: Marca[] = [
     id: "axion",
     name: "Axion",
     scale: 1,
-    bruto: "h-5",
     svg: (
       <svg viewBox="0 0 120 22" fill="currentColor" aria-hidden="true" className="h-full w-auto">
         <path d="M0 22 8 0h4.4l8 22h-4.6l-1.6-4.8H6.2L4.6 22H0Zm7.4-8.4h5L9.9 6.3l-2.5 7.3Z" />
@@ -66,7 +60,6 @@ const MARCAS: Marca[] = [
     // Monograma quadrado ocupa a caixa inteira e sai maior que o wordmark do
     // lado; 0,82 é a correção que os põe no mesmo peso.
     scale: 0.82,
-    bruto: "h-12",
     svg: (
       <svg viewBox="0 0 32 32" fill="none" aria-hidden="true" className="h-full w-auto">
         <circle cx="16" cy="16" r="14" stroke="currentColor" strokeWidth="2.4" />
@@ -79,7 +72,6 @@ const MARCAS: Marca[] = [
     name: "Northbound Studio",
     // Wordmark de 9:1 — sem teto de largura ele comeria três vagas da faixa.
     scale: 1.05,
-    bruto: "h-3",
     svg: (
       <svg viewBox="0 0 176 18" fill="currentColor" aria-hidden="true" className="h-full w-auto">
         <path d="M0 18V0h3.6l8.2 11.6V0h4v18h-3.6L4 6.4V18H0Z" />
@@ -99,7 +91,6 @@ const MARCAS: Marca[] = [
     name: "Verso",
     // Emblema alto: a caixa cheia deixa ele monumental ao lado dos wordmarks.
     scale: 0.9,
-    bruto: "h-14",
     svg: (
       <svg viewBox="0 0 36 44" fill="none" aria-hidden="true" className="h-full w-auto">
         <path d="M18 1.5 34 8v14c0 9-6.6 16.5-16 20.5C8.6 38.5 2 31 2 22V8l16-6.5Z" stroke="currentColor" strokeWidth="2.4" />
@@ -111,7 +102,6 @@ const MARCAS: Marca[] = [
     id: "pauta",
     name: "Pauta",
     scale: 1.15,
-    bruto: "h-6",
     svg: (
       <svg viewBox="0 0 56 20" fill="currentColor" aria-hidden="true" className="h-full w-auto">
         <rect y="2" width="10" height="4" rx="2" />
@@ -127,7 +117,6 @@ const MARCAS: Marca[] = [
     id: "kobo",
     name: "Kobo",
     scale: 0.88,
-    bruto: "h-9",
     svg: (
       <svg viewBox="0 0 30 30" fill="currentColor" aria-hidden="true" className="h-full w-auto">
         <path d="M0 30V0h6v12L16 0h7.4L12.6 13 24 30h-7.2L9 18l-3 3.6V30H0Z" />
@@ -137,45 +126,15 @@ const MARCAS: Marca[] = [
   },
 ];
 
-type Modo = "cru" | "peca";
-
-const OPCOES = [
-  { value: "cru" as const, label: "cru" },
-  { value: "peca" as const, label: "normalizado" },
-];
-
 export default function LogoWallDemo({ props }: DemoProps) {
-  const [modo, setModo] = React.useState<Modo>("peca");
-
   const itens = React.useMemo<LogoWallItem[]>(
     () => MARCAS.map((m) => ({ id: m.id, name: m.name, scale: m.scale, logo: m.svg })),
     [],
   );
 
   return (
-    <div className="flex h-full w-full flex-col justify-center gap-6 overflow-hidden px-3">
-      <div className="flex justify-center">
-        <SegmentedControl<Modo>
-          value={modo}
-          onChange={setModo}
-          options={OPCOES}
-          aria-label="Como os logos entram na faixa"
-        />
-      </div>
-
-      {modo === "cru" ? (
-        /* Os mesmos seis SVGs, cada um na altura em que o arquivo chegou. É
-           literalmente o que sai de colar seis logos numa `<div>` com `flex`. */
-        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-foreground">
-          {MARCAS.map((m) => (
-            <span key={m.id} className={m.bruto}>
-              {m.svg}
-            </span>
-          ))}
-        </div>
-      ) : (
-        <LogoWall items={itens} heading="Confiam na gente" bleed={12} speed={64} {...props} />
-      )}
+    <div className="flex h-full w-full flex-col justify-center overflow-hidden px-3">
+      <LogoWall items={itens} heading="Confiam na gente" bleed={12} speed={64} {...props} />
     </div>
   );
 }

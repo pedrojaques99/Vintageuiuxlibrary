@@ -47,6 +47,10 @@
     "cols": 4,
     "gap": 16
   },
+  "glitch-chars": {
+    "text": "RENDERIZADO",
+    "className": "text-[length:var(--text-titulo,1.5rem)] font-semibold tracking-[0.08em] text-foreground"
+  },
   "grid-dots": {
     "opacity": 0.11,
     "spacing": 18,
@@ -80,6 +84,13 @@
     "labelY": "GLOW",
     "color": "var(--vintage-accent)"
   },
+  "section-intro": {
+    "className": "w-full transition-opacity [transition-duration:var(--dur-fast,200ms)] [transition-timing-function:var(--ease-out)] motion-reduce:transition-none",
+    "eyebrow": "Serviços",
+    "index": "02",
+    "title": "Um time só. Todo serviço que a marca precisa.",
+    "lead": "Da estratégia de marca ao desenvolvimento, sem repassar o trabalho para fora no meio do caminho."
+  },
   "showcase-card": {
     "className": "mx-auto w-full max-w-[320px]",
     "href": "#/c/showcase-card",
@@ -93,24 +104,27 @@
   "quote-block": {
     "tone": "muted",
     "quote": "Chegaram com a marca já resolvida no primeiro dia. A gente parou de discutir cor e voltou a discutir produto.",
-    "author": "Marina Sales",
+    "author": "Rafael Moura",
     "role": "Head de Produto",
     "company": "Aloro",
-    "source": "https://exemplo.com/cases/aloro"
+    "source": "https://exemplo.com/cases/aloro",
+    "portraitWidth": 7.5,
+    "ratio": "1/1"
   },
   "count-up": {
     "className": "text-[2rem] font-semibold leading-none tracking-tight"
   },
+  "fold-motion": {
+    "as": "div",
+    "className": "flex w-full max-w-[34rem] flex-1 flex-col justify-center rounded-[var(--r-surface,0.875rem)] px-8 py-6"
+  },
   "line-reveal": {
     "as": "h3",
     "immediate": true,
-    "className": "text-[1.35rem] font-medium leading-[1.2]"
+    "className": "text-[clamp(1.6rem,1.2rem+1.6vw,2.25rem)] font-medium leading-[1.12] tracking-[-0.02em]"
   },
   "gleam": {
     "className": "w-full max-w-[300px] shrink-0 overflow-hidden bg-[color-mix(in_oklch,var(--foreground)_5%,var(--card))] p-3"
-  },
-  "photo-split": {
-    "space": 3
   },
   "photo-flip": {
     "ratio": "4/5",
@@ -133,6 +147,9 @@
     "cta": "Ver projeto",
     "className": "h-[420px] min-h-0"
   },
+  "ink-wordmark": {
+    "className": "w-full max-w-[34rem] text-foreground"
+  },
   "fog-tree": {
     "className": "h-full min-h-[480px] rounded-[var(--r-surface,0.875rem)] border border-border",
     "progress": 0.35,
@@ -151,12 +168,11 @@
     "className": "size-[72px] rounded-full border border-border"
   },
   "skeleton-rail": {
-    "cards": 1,
+    "cards": 3,
     "heading": false,
-    "itemWidth": 100,
-    "gap": 0,
-    "ratio": "4 / 5",
-    "label": false
+    "itemWidth": 140,
+    "gap": 16,
+    "ratio": "4 / 5"
   },
   "pinned-scene": {
     "stepHeight": "520px",
@@ -247,6 +263,12 @@
     "label": "Projetos",
     "className": "w-[620px] max-w-full"
   },
+  "eye-tracker": {
+    "size": 68,
+    "face": "orb",
+    "eyes": "dots",
+    "greeting": "Opa"
+  },
   "orbit-menu": {
     "label": "Ações da nota"
   },
@@ -273,7 +295,8 @@
   "sticker-peel": {
     "label": "Selo da marca",
     "rotate": -6,
-    "radius": "9999px"
+    "radius": "9999px",
+    "peelOff": true
   },
   "streamgraph": {
     "label": "Pedidos de suporte por assunto",

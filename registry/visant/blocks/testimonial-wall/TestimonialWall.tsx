@@ -39,6 +39,19 @@ import { cn } from "@/lib/utils";
  * 500px pedia 667px de altura, o que deixava as outras duas com 300px de vazio
  * embaixo. O retrato agora tem teto de altura e a foto corta por `object-cover`:
  * um retrato é reconhecível cortado, e uma parede com buraco não é parede.
+ *
+ * ── `layout="bento"` e `footer`: a parede que ocupa a altura toda ──────────
+ *
+ * Colunas de CSS não sabem esticar: cada coluna termina onde o último card
+ * termina, e numa caixa de altura dada sobra buraco embaixo. Quando a parede
+ * tem altura (uma dobra de tela cheia, um painel), `layout="bento"` troca a
+ * malha por grade: linhas que dividem a altura disponível, o retrato ocupando
+ * duas, e cada card esticando até a borda da célula. Sem altura dada, a grade
+ * se comporta como pilha comum, com piso de linha.
+ *
+ * `footer` fecha a composição embaixo, numa faixa separada por um fio: a nota
+ * média, os logos, o link pra todos os depoimentos. É o que faltava pra parede
+ * terminar em vez de só parar.
  */
 
 type Tone = "card" | "muted" | "brand";
@@ -93,6 +106,14 @@ export interface TestimonialWallProps extends React.HTMLAttributes<HTMLDivElemen
   columns?: 2 | 3 | 4;
   /** O que aparece quando ainda não há depoimento nenhum. */
   empty?: React.ReactNode;
+  /**
+   * `masonry` (padrão): colunas de CSS, altura de cada card pelo conteúdo.
+   * `bento`: grade que divide a altura do container; o retrato ocupa duas
+   * linhas e os cards esticam até a borda. Use com altura definida.
+   */
+  layout?: "masonry" | "bento";
+  /** Faixa que fecha a parede embaixo: nota média, logos, link. */
+  footer?: React.ReactNode;
 }
 
 /** Piso de largura de coluna: abaixo disso o depoimento vira poesia concreta. */
@@ -112,6 +133,8 @@ export function TestimonialWall({
   items,
   columns = 4,
   empty,
+  layout = "masonry",
+  footer,
   className,
   ...props
 }: TestimonialWallProps) {
@@ -130,22 +153,66 @@ export function TestimonialWall({
     );
   }
 
-  return (
+  const bento = layout === "bento";
+
+  const parede = bento ? (
     <div
-      className={cn("gap-4", className)}
-      {...props}
+      className="grid min-h-0 flex-1 grid-flow-row-dense gap-4 [grid-auto-rows:minmax(9rem,1fr)]"
+      // O teto de colunas na grade: cada trilha pede o maior entre o piso de
+      // largura e a fatia que `columns` daria. Com isso `auto-fit` nunca abre
+      // mais colunas que o teto, e abre menos quando o container aperta.
+      style={{
+        gridTemplateColumns: `repeat(auto-fit, minmax(max(min(${COL_MIN}, 100%), calc((100% - ${columns - 1}rem) / ${columns})), 1fr))`,
+      }}
+    >
+      {items.map((item) => (
+        <div key={item.id} className={cn("flex min-h-0", item.kind === "portrait" && "row-span-2")}>
+          <Card item={item} fill />
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div
+      className="gap-4"
       // `columns: <largura> <teto>` — o navegador cabe quantas colunas de pelo
       // menos `COL_MIN` couberem, até o teto. É o mesmo resultado que a media
       // query dava numa página cheia, e o resultado CERTO dentro de container.
-      // Depois do spread, e espalhando o `style` de quem usa: a contagem de
-      // colunas é do componente, o resto continua sendo de quem chamou.
-      style={{ columns: `${COL_MIN} ${columns}`, ...props.style }}
+      style={{ columns: `${COL_MIN} ${columns}` }}
     >
       {items.map((item) => (
         <div key={item.id} className="mb-4 break-inside-avoid">
           <Card item={item} />
         </div>
       ))}
+    </div>
+  );
+
+  // Sem as opções novas, o mesmo DOM de antes: a raiz É a malha de colunas, e
+  // o `style` de quem chamou continua chegando nela.
+  if (!bento && !footer) {
+    return (
+      <div
+        className={cn("gap-4", className)}
+        {...props}
+        style={{ columns: `${COL_MIN} ${columns}`, ...props.style }}
+      >
+        {items.map((item) => (
+          <div key={item.id} className="mb-4 break-inside-avoid">
+            <Card item={item} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn("flex flex-col gap-4", className)} {...props}>
+      {parede}
+      {footer ? (
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-[var(--border)] pt-4">
+          {footer}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -169,7 +236,7 @@ export function TestimonialWall({
  * hover e no foco de teclado, e é **sempre** visível em ponteiro grosso, onde
  * hover não existe.
  */
-function Portrait({ item, shell }: { item: PortraitItem; shell: string }) {
+function Portrait({ item, shell, fill }: { item: PortraitItem; shell: string; fill?: boolean }) {
   const caixa = React.useRef<HTMLDivElement>(null);
   const [video, setVideo] = React.useState<HTMLVideoElement | null>(null);
   const [tocando, setTocando] = React.useState(false);
@@ -218,13 +285,19 @@ function Portrait({ item, shell }: { item: PortraitItem; shell: string }) {
       // manter a proporção — e o retrato saía 100px mais estreito que a coluna,
       // com uma canaleta vazia do lado. Largura fixada, quem cede é a altura, e
       // o corte fica por conta do `object-cover`.
-      className={cn(shell, "relative isolate w-full", temControle && "group")}
-      style={{
-        aspectRatio: item.ratio ?? "3 / 4",
-        // Ver a nota do cabeçalho: sem teto, o retrato define a altura das
-        // colunas todas e abre buraco nas vizinhas.
-        maxHeight: RETRATO_MAX,
-      }}
+      className={cn(shell, "relative isolate w-full", fill && "h-full", temControle && "group")}
+      style={
+        fill
+          ? // Na grade quem manda é a célula: o retrato ocupa as duas linhas
+            // inteiras e a foto corta por `object-cover`.
+            undefined
+          : {
+              aspectRatio: item.ratio ?? "3 / 4",
+              // Ver a nota do cabeçalho: sem teto, o retrato define a altura das
+              // colunas todas e abre buraco nas vizinhas.
+              maxHeight: RETRATO_MAX,
+            }
+      }
     >
       <div
         ref={caixa}
@@ -291,15 +364,18 @@ function Portrait({ item, shell }: { item: PortraitItem; shell: string }) {
   );
 }
 
-function Card({ item }: { item: TestimonialItem }) {
+function Card({ item, fill = false }: { item: TestimonialItem; fill?: boolean }) {
   const shell = cn(
     "overflow-hidden rounded-[var(--r-surface,1rem)]",
+    fill && "w-full",
     TONE[item.tone ?? "card"],
   );
 
   if (item.kind === "stat") {
     return (
-      <div className={cn(shell, "flex flex-col gap-3 p-[var(--pad-card,1.5rem)]")}>
+      // Esticado na grade, o número sobe e o rótulo assenta no pé do card: a
+      // altura extra vira respiro entre os dois, não buraco embaixo.
+      <div className={cn(shell, "flex flex-col gap-3 p-[var(--pad-card,1.5rem)]", fill && "justify-between")}>
         <strong className="[font-family:var(--font-display,inherit)] text-[clamp(2.25rem,1.8rem+2vw,3.25rem)] font-medium leading-none tracking-[-0.03em]">
           {item.value}
         </strong>
@@ -312,7 +388,7 @@ function Card({ item }: { item: TestimonialItem }) {
   }
 
   if (item.kind === "portrait") {
-    return <Portrait item={item} shell={shell} />;
+    return <Portrait item={item} shell={shell} fill={fill} />;
   }
 
   return (

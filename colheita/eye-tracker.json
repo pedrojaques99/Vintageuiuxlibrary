@@ -4,7 +4,7 @@
     "title": "Eye Tracker",
     "type": "ui",
     "family": "efeitos",
-    "description": "Um rosto de dois olhos que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique.",
+    "description": "Um mascote que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique. Quatro rostos (card, orbe, vidro, marca) e quatro olhares.",
     "tags": [
       "mascote",
       "estado vazio",
@@ -14,8 +14,8 @@
     "demoImport": "./demos/eye-tracker-demo",
     "knobs": "EyeTracker",
     "preview": {
-      "w": 320,
-      "h": 240
+      "w": 400,
+      "h": 280
     }
   },
   "registry": {

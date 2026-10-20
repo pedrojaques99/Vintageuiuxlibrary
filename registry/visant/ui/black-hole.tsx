@@ -225,20 +225,37 @@ export function BlackHole<T extends { id: string }>({
   };
 
   const nMarcadas = marcadas.size;
+  // Enquanto o rótulo fecha, ele segue mostrando o último número, não "0".
+  const contagem = React.useRef(nMarcadas);
+  if (nMarcadas > 0) contagem.current = nMarcadas;
+  const ultimaContagem = contagem.current;
 
   return (
     <div className={cn("flex w-full flex-col items-center gap-3", className)} {...props}>
       <div className="w-full overflow-hidden rounded-[var(--r-surface)] bg-card text-foreground [box-shadow:var(--e-raised)]">
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
           <span className="text-sm font-medium">{title}</span>
+          {/* Sem nada marcado o botão é só a lixeira, apagada. Marcou, o rótulo
+              abre de lado com a contagem: o texto só aparece quando diz algo. */}
           <button
             type="button"
             onClick={apagar}
             disabled={nMarcadas === 0 || sumindo}
-            className="inline-flex h-8 items-center gap-1.5 rounded-[var(--r-control)] bg-muted px-3 text-sm text-foreground outline-none transition-opacity duration-[var(--dur-fast)] ease-[var(--ease-out)] focus-visible:[box-shadow:var(--focus)] disabled:opacity-50"
+            aria-label={nMarcadas > 0 ? `Apagar ${nMarcadas}` : "Apagar"}
+            className="inline-flex h-8 cursor-pointer items-center rounded-[var(--r-control)] bg-muted px-2 text-sm text-foreground outline-none transition-opacity duration-[var(--dur-fast)] ease-[var(--ease-out)] focus-visible:[box-shadow:var(--focus)] disabled:cursor-default disabled:opacity-50"
           >
             <Trash2 className="size-4" aria-hidden />
-            Apagar{nMarcadas > 0 ? ` ${nMarcadas}` : ""}
+            <span
+              aria-hidden
+              className={cn(
+                "grid transition-[grid-template-columns,opacity] duration-[var(--dur-fast)] ease-[var(--ease-out)]",
+                nMarcadas > 0 ? "grid-cols-[1fr] opacity-100" : "grid-cols-[0fr] opacity-0",
+              )}
+            >
+              <span className="overflow-hidden whitespace-nowrap">
+                <span className="pl-1.5 pr-1 tabular-nums">Apagar {ultimaContagem}</span>
+              </span>
+            </span>
           </button>
         </div>
 

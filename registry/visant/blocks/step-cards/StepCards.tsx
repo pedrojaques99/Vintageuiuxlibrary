@@ -31,9 +31,18 @@ import { cn } from "@/lib/utils";
  * num carrossel que passa sozinho. Por isso existe `active`.
  *
  * O destaque é por **recuo dos outros**, não por brilho no escolhido: o ativo
- * fica como o card sempre foi (opaco, borda de marca, elevado) e os demais
- * perdem opacidade e um fio de escala. É a diferença entre a fileira ter um
- * foco e a fileira ter um card piscando.
+ * fica inteiro e acende o fio de cima na cor da marca, e os demais perdem
+ * opacidade. É a diferença entre a fileira ter um foco e a fileira ter um card
+ * piscando.
+ *
+ * ── 5. Sem caixa em volta ──────────────────────────────────────────────────
+ *
+ * A versão anterior era card com borda, fundo, sombra, selo em pílula no
+ * número e borda de marca no ativo: quatro molduras pra dizer "passo". Lia
+ * como template. Agora o passo é a arte (com cantos e altura fixa, sem faixa
+ * cinza sobrando embaixo), um fio de percurso e o texto. O fio é a única
+ * moldura, e ele faz trabalho: liga os passos numa linha só e marca onde você
+ * está.
  *
  * Duas guardas:
  * · **Sem `active`, nada muda.** Quem já usava o bloco recebe o mesmo pixel —
@@ -88,73 +97,73 @@ export function StepCards({
   const marcado = typeof active === "number";
 
   return (
-    <ol className={cn("grid grid-cols-1 gap-5", COLS[columns], className)} {...props}>
+    <ol className={cn("grid grid-cols-1 gap-x-6 gap-y-10", COLS[columns], className)} {...props}>
       {steps.map((step, i) => {
         const last = i === steps.length - 1;
         const ativo = marcado && i === active;
+        const deitado = orphan && last;
 
         return (
           <li
             key={i}
             data-active={ativo ? "" : undefined}
             className={cn(
-              "group/passo flex flex-col overflow-hidden rounded-[var(--r-surface,1rem)] border border-[var(--border)] bg-[var(--card,var(--background))]",
-              "[box-shadow:var(--e-flat)]",
-              orphan && last && "sm:col-span-full lg:flex-row lg:items-center",
+              "flex flex-col gap-5",
+              deitado && "sm:col-span-full lg:flex-row lg:items-center lg:gap-8",
               // Sem `active` a fileira é a de sempre: nem transição, nem recuo.
               marcado && [
-                "transition-[opacity,transform,border-color,box-shadow]",
-                "[transition-duration:var(--dur-slow,300ms)]",
+                "transition-opacity [transition-duration:var(--dur-base,240ms)]",
                 "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
                 "motion-reduce:transition-none",
-                ativo
-                  ? "border-[var(--brand)] [box-shadow:var(--e-raised)]"
-                  : // O ponteiro devolve o passo recuado: recuo é hierarquia, não
-                    // porta trancada.
-                    "opacity-60 [transform:scale(0.975)] hover:opacity-100 hover:[transform:scale(1)]",
+                // O ponteiro devolve o passo recuado: recuo é hierarquia, não
+                // porta trancada.
+                !ativo && "opacity-50 hover:opacity-100",
               ],
             )}
           >
             {step.visual ? (
               <div
                 className={cn(
-                  "relative isolate overflow-hidden bg-[var(--muted)]",
-                  orphan && last && "order-last lg:w-1/2 lg:self-stretch",
+                  "relative isolate shrink-0 overflow-hidden rounded-[var(--r-surface,1rem)] bg-[var(--muted)]",
+                  // Altura FIXA e a arte preenchendo: com `min-height` a foto de
+                  // proporção menor deixava uma faixa cinza embaixo do visual.
+                  "[&>*]:size-full [&_img]:size-full [&_img]:object-cover [&_video]:size-full [&_video]:object-cover",
+                  deitado && "order-last lg:w-1/2",
                 )}
-                style={{ minHeight: visualHeight }}
+                style={{ height: visualHeight }}
               >
                 {step.visual}
               </div>
             ) : null}
 
-            <div
-              className={cn(
-                "flex flex-col gap-2 p-[var(--pad-card,1.5rem)]",
-                orphan && last && "lg:w-1/2",
-              )}
-            >
-              <div className="flex items-baseline gap-2.5">
-                {/* O <ol> já numera para quem ouve; este é só o eco visual.
-                    No passo em foco ele vira selo: a marca entra no número e
-                    não numa faixa nova, que é onde a fileira ficaria barulhenta. */}
+            <div className={cn("flex flex-col gap-3", deitado && "lg:w-1/2")}>
+              {/* O fio de percurso: liga os passos e acende no atual. */}
+              <span aria-hidden="true" className="relative block h-px w-full bg-[var(--border)]">
+                <span
+                  className={cn(
+                    "absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 origin-left bg-[var(--brand,var(--foreground))]",
+                    "transition-transform [transition-duration:var(--dur-slow,300ms)] [transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+                    "motion-reduce:transition-none",
+                    ativo ? "scale-x-100" : "scale-x-0",
+                  )}
+                />
+              </span>
+
+              <div className="flex items-baseline gap-3 pt-1">
+                {/* O <ol> já numera para quem ouve; este é só o eco visual. */}
                 <span
                   aria-hidden="true"
-                  className={cn(
-                    "inline-flex shrink-0 items-center justify-center text-[13px] font-semibold tabular-nums",
-                    ativo
-                      ? "min-w-6 rounded-[var(--r-pill,9999px)] px-1.5 py-0.5 bg-[var(--brand)] text-[var(--brand-foreground)]"
-                      : "text-[var(--accent-ink,var(--foreground))]",
-                  )}
+                  className="shrink-0 text-[13px] font-medium tabular-nums text-[var(--muted-foreground)]"
                 >
                   {step.label ?? String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="text-balance [font-family:var(--font-display,inherit)] text-[1.125rem] font-medium leading-[1.25] tracking-[-0.01em]">
+                <h3 className="text-balance [font-family:var(--font-display,inherit)] text-[1.1875rem] font-medium leading-[1.25] tracking-[-0.01em] text-[var(--foreground)]">
                   {step.title}
                 </h3>
               </div>
 
               {step.description ? (
-                <p className="max-w-[52ch] text-pretty text-[14px] leading-[1.6] text-[var(--muted-foreground)]">
+                <p className="max-w-[44ch] text-pretty text-[14px] leading-[1.6] text-[var(--muted-foreground)]">
                   {step.description}
                 </p>
               ) : null}

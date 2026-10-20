@@ -109,6 +109,9 @@ export function FoldingBill({
   // arredondado dele. Da metade em diante (quando a dobra já virou), as bordas
   // que caem sobre o topo do cabeçalho ganham o mesmo raio.
   const canto = useTransform(p, (v) => (v > 0.5 ? "var(--r-surface)" : "0px"));
+  // Dobrada de todo, a conta é um cartão inteiro: o cabeçalho arredonda embaixo
+  // também. Antes disso o miolo está pendurado nessa borda e ela fica reta.
+  const cantoFechada = useTransform(p, (v) => (v > 0.97 ? "var(--r-surface)" : "0px"));
 
   const mola = React.useMemo(() => {
     const k = 120 + (stiffness / 100) * 480;
@@ -217,7 +220,10 @@ export function FoldingBill({
         className="relative [transform-style:preserve-3d]"
         style={{ height: panelHeight }}
       >
-        <div className={cn(face, "flex flex-col justify-center gap-1.5 rounded-t-[var(--r-surface)] border border-border px-5 [box-shadow:var(--e-raised)]")}>
+        <motion.div
+          className={cn(face, "flex flex-col justify-center gap-1.5 rounded-t-[var(--r-surface)] border border-border px-5 [box-shadow:var(--e-raised)]")}
+          style={{ borderBottomLeftRadius: cantoFechada, borderBottomRightRadius: cantoFechada }}
+        >
           <span className="flex items-baseline justify-between gap-3">
             <span className="truncate text-[length:var(--text-titulo,1.25rem)] font-semibold leading-none tracking-[-0.03em] text-foreground">
               {title}
@@ -229,7 +235,7 @@ export function FoldingBill({
           <span className="truncate font-mono text-[length:var(--text-micro,0.6875rem)] uppercase tracking-[0.14em] text-muted-foreground">
             {meta}
           </span>
-        </div>
+        </motion.div>
 
         {/* Painel 2: os itens. Dobra para trás do cabeçalho. */}
         <motion.div
@@ -260,7 +266,10 @@ export function FoldingBill({
             ))}
             <Sombra p={s2} max={0.12} />
           </motion.div>
-          <motion.div className={verso} style={{ borderBottomLeftRadius: canto, borderBottomRightRadius: canto }} />
+          {/* O verso do miolo é o que fica de frente com a conta dobrada, atrás do
+              cabeçalho: arredonda nos quatro cantos, senão as quinas retas dele
+              apareciam como um quadrado em volta do cartão. */}
+          <motion.div className={verso} style={{ borderRadius: canto }} />
 
           {/* Painel 3: o total, com a borda serrilhada do papel destacado. */}
           <motion.div
@@ -272,6 +281,8 @@ export function FoldingBill({
               style={{
                 borderTopLeftRadius: canto,
                 borderTopRightRadius: canto,
+                borderBottomLeftRadius: canto,
+                borderBottomRightRadius: canto,
                 // Serrilha por máscara: a borda de baixo é papel rasgado sem desenhar nada.
                 WebkitMask:
                   "radial-gradient(circle at 6px 100%, transparent 5px, currentColor 5.5px) bottom / 12px 100% repeat-x",

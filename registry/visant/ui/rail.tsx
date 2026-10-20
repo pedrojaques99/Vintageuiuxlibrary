@@ -374,7 +374,9 @@ export function Rail({
       a.andou = true;
       el.setPointerCapture(e.pointerId);
       el.style.scrollSnapType = "none";
-      el.style.cursor = "grabbing";
+      // Marcador e não só `style.cursor`: o card por baixo é link e teria
+      // `cursor: pointer` próprio, que ganharia do trilho no meio do arrasto.
+      el.dataset.arrastando = "";
       el.style.userSelect = "none";
     }
     el.scrollLeft = a.inicio - dx;
@@ -385,7 +387,7 @@ export function Rail({
     arrasto.current = null;
     if (!a?.andou || !el) return;
     if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
-    el.style.cursor = "";
+    delete el.dataset.arrastando;
     el.style.userSelect = "";
     // Devolver o snap com rolagem suave: sem isto o trilho pula seco pro card.
     const antes = el.scrollLeft;
@@ -503,6 +505,10 @@ export function Rail({
               ? null
               : [
                   "grid-flow-col overflow-x-auto overscroll-x-contain",
+                  // Mão aberta só quando há o que arrastar; fechada durante o
+                  // arrasto, por cima até do `pointer` dos cards.
+                  !(edge.start && edge.end) && "cursor-grab",
+                  "data-[arrastando]:cursor-grabbing [&[data-arrastando]_*]:!cursor-grabbing",
                   "[scroll-snap-type:x_proximity]",
                   "[&>*]:[scroll-snap-align:start]",
                   // Com a régua ligada a barra nativa é a mesma informação duas
@@ -580,7 +586,7 @@ export function Rail({
             onClick={() => nudge(1)}
             className={cn(
               "absolute right-0 top-1/2 z-10 -translate-y-1/2",
-              "inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--background)]",
+              "inline-flex cursor-pointer items-center rounded-full border border-[var(--border)] bg-[var(--background)]",
               "px-2.5 py-1 font-mono text-[11px] tabular-nums text-[var(--muted-foreground)]",
               "transition-[color,border-color,transform] [transition-duration:var(--dur-press,120ms)]",
               "hover:border-[var(--foreground)] hover:text-[var(--foreground)]",
@@ -636,7 +642,7 @@ function RailButton({
       tabIndex={-1}
       aria-label={dir === "prev" ? "Scroll left" : "Scroll right"}
       className={cn(
-        "inline-flex size-10 items-center justify-center border border-[var(--border)]",
+        "inline-flex size-10 cursor-pointer items-center justify-center border border-[var(--border)]",
         "transition-[background-color,border-color,color,transform]",
         "[transition-duration:var(--dur-press,120ms)]",
         "hover:border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)]",

@@ -883,7 +883,7 @@
       "name": "glitch-chars",
       "type": "registry:ui",
       "title": "Glitch Chars",
-      "description": "Caracteres que trocam sozinhos. Textura de máquina trabalhando, em duas letras.",
+      "description": "Caracteres que trocam sozinhos, em cinco sotaques (símbolos, blocos, braille, binário, hex), ou decodificando até virar uma palavra.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -1145,7 +1145,7 @@
       "name": "testimonial-wall",
       "type": "registry:block",
       "title": "Testimonial Wall",
-      "description": "Parede de prova social com tipos misturados: citação, número, retrato e depoimento em vídeo na mesma malha.",
+      "description": "Parede de prova social com tipos misturados: citação, número, retrato e depoimento em vídeo na mesma malha, em colunas ou em grade que ocupa a altura, com faixa de fechamento.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -1631,7 +1631,7 @@
       "name": "gleam",
       "type": "registry:ui",
       "title": "Gleam",
-      "description": "A superfície que sabe onde o cursor está: luz sob o ponteiro, borda acesa do lado da luz e inclinação de 5 graus. Quatro números por quadro no JS, o desenho inteiro no CSS.",
+      "description": "A superfície que sabe onde o cursor está: luz sob o ponteiro, borda acesa do lado da luz e inclinação de 5 graus. Quatro números por quadro no JS, o desenho inteiro no CSS; nasce inclinado e aceso (rest).",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -2459,7 +2459,7 @@
       "name": "ink-wordmark",
       "type": "registry:ui",
       "title": "Ink Wordmark",
-      "description": "Assinatura de ponta a ponta que condensa da fumaça conforme entra na tela, respira como tinta e se agita com a velocidade do ponteiro, só com filtro SVG.",
+      "description": "Assinatura de ponta a ponta que condensa da fumaça conforme entra na tela, respira como tinta e se agita com a velocidade do ponteiro, só com filtro SVG, ou escrita por prop, com fonte, peso, caixa e ®.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "dependencies": [
         "framer-motion"
@@ -2541,7 +2541,7 @@
       "name": "mist-text",
       "type": "registry:ui",
       "title": "Mist Text",
-      "description": "Texto que sai da névoa por palavra ou letra (desfoque, opacidade e subida mínima): entra uma vez ao chegar na tela, ou acompanha a rolagem ida e volta com mola que não erra a faixa dentro de sticky.",
+      "description": "Texto que sai da névoa por palavra ou letra (desfoque, opacidade e subida mínima): entra uma vez ao chegar na tela, ou acompanha a rolagem ida e volta com mola que não erra a faixa dentro de sticky; cinco entradas por variant: mist, rise, mask, drift e settle.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "dependencies": [
         "framer-motion"
@@ -2598,7 +2598,7 @@
       "name": "mist-dialog",
       "type": "registry:ui",
       "title": "Mist Dialog",
-      "description": "Modal em <dialog> nativo que entra e sai em névoa só com CSS (@starting-style + allow-discrete), controlado, fecha no Esc e no clique fora, com ganchos onOpen/onClose para pausar o scroll suave.",
+      "description": "Modal em <dialog> nativo que entra e sai em névoa só com CSS (@starting-style + allow-discrete), controlado, fecha no Esc e no clique fora, com ganchos onOpen/onClose para pausar o scroll suave; quatro entradas por variant: mist, rise, zoom e wipe.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils"
@@ -3269,7 +3269,7 @@
       "name": "eye-tracker",
       "type": "registry:ui",
       "title": "Eye Tracker",
-      "description": "Um rosto de dois olhos que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique.",
+      "description": "Um mascote que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique. Quatro rostos (card, orbe, vidro, marca) e quatro olhares.",
       "dependencies": [
         "motion"
       ],
@@ -3410,7 +3410,7 @@
       "name": "sticker-peel",
       "type": "registry:ui",
       "title": "Sticker Peel",
-      "description": "Um adesivo que levanta o canto quando o mouse chega perto, descola ao arrastar mostrando o verso e cola onde você soltar.",
+      "description": "Um adesivo que levanta o canto quando o mouse chega perto, arrasta pra mudar de lugar e, com um clique, descola inteiro da página.",
       "dependencies": [
         "motion"
       ],

@@ -12,11 +12,16 @@ import { cn } from "@/lib/utils";
  * evidência não tem contra o quê ser lido.** "R$450k" não diz nada; "R$450k, em
  * 14 meses, de uma meta de 600k" diz.
  *
- * Os quatro papéis, sempre nesta ordem visual, porque a ordem é o argumento:
+ * Os quatro papéis, nesta ordem visual: o rótulo nomeia, o valor manda, o
+ * qualificador transforma o valor em fato e a régua prova.
  *
  * ```
- * valor  →  qualificador  →  evidência (a régua)  →  rótulo
+ * rótulo  →  valor  →  qualificador  →  evidência (a régua)
  * ```
+ *
+ * A régua ocupa a largura da coluna e tem escala desenhada embaixo (de 10 em
+ * 10%, com a metade marcada). Uma barrinha de 88px sem escala era lida como
+ * enfeite, e a peça parecia simples demais pra prova que carrega.
  *
  * ── A decisão que o componente força, e é o valor dele ─────────────────────
  *
@@ -77,35 +82,48 @@ export function MeasureBar({
       )}
       {...props}
     >
-      <div className="text-[length:var(--text-titulo,1.75rem)] font-semibold tracking-tight tabular-nums text-foreground">
+      {label && (
+        <div className="text-[length:var(--text-apoio,0.8125rem)] font-medium text-muted-foreground">
+          {label}
+        </div>
+      )}
+
+      <div className="mt-1 [font-family:var(--font-display,inherit)] text-[clamp(1.75rem,1.4rem+1.4vw,2.5rem)] font-semibold leading-none tracking-[-0.03em] tabular-nums text-foreground">
         {value}
       </div>
 
       {qualifier && (
-        <div className="mt-1.5 font-[family-name:var(--font-sans)] text-[0.68rem] tracking-[0.04em] text-muted-foreground">
+        <div className="mt-2 text-pretty text-[length:var(--text-apoio,0.8125rem)] leading-[1.45] text-muted-foreground">
           {qualifier}
         </div>
       )}
 
       {temRegua && (
-        <div
-          className="measure-bar-track mt-3 h-[3px] w-full max-w-[88px] overflow-hidden rounded-[1px] bg-border"
-          data-state={state}
-          role={state === "ok" ? "img" : undefined}
-          aria-label={state === "ok" ? `${Math.round(v * 100)}%` : undefined}
-        >
-          {state === "ok" && (
-            <i
-              className="measure-bar-fill block h-[3px] origin-left rounded-[1px] bg-muted-foreground"
-              style={{ ["--v" as string]: v }}
-            />
-          )}
-        </div>
-      )}
-
-      {label && (
-        <div className="mt-2 text-[length:var(--text-rotulo,0.72rem)] uppercase tracking-[0.06em] text-muted-foreground">
-          {label}
+        // A régua de verdade: trilha, preenchimento e escala embaixo. Os traços
+        // de 10 em 10 é que fazem a barra ser lida como medida e não como
+        // enfeite; o maior marca a metade, onde o olho ancora a leitura.
+        <div className="mt-4 w-full">
+          <div
+            className="measure-bar-track h-1.5 w-full overflow-hidden rounded-[var(--r-pill,9999px)] bg-[var(--muted)]"
+            data-state={state}
+            role={state === "ok" ? "img" : undefined}
+            aria-label={state === "ok" ? `${Math.round(v * 100)}%` : undefined}
+          >
+            {state === "ok" && (
+              <i
+                className="measure-bar-fill block h-full origin-left rounded-[var(--r-pill,9999px)] bg-[var(--brand,var(--foreground))]"
+                style={{ ["--v" as string]: v }}
+              />
+            )}
+          </div>
+          <div aria-hidden="true" className="mt-1.5 flex w-full items-start justify-between">
+            {Array.from({ length: 11 }, (_, i) => (
+              <span
+                key={i}
+                className={cn("w-px bg-[var(--border)]", i % 5 === 0 ? "h-2" : "h-1")}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

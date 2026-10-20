@@ -179,14 +179,18 @@ export function QuoteBlock({
           </span>
 
           {logo ? (
-            // `ml-auto` empurra o logo pra ponta oposta do nome; `max-h` normaliza
-            // a altura, porque logo de cliente chega em qualquer tamanho — é o
+            // `ml-auto` empurra o logo pra ponta oposta do nome; a altura fixa
+            // normaliza, porque logo de cliente chega em qualquer tamanho — é o
             // mesmo problema que o `@visant/logo-wall` resolve na faixa inteira.
+            // Altura de uma linha de texto e teto de largura: o logo assina junto
+            // com o nome, não compete com a citação. Com 28px ele virava a
+            // segunda manchete do bloco.
             <span
               aria-hidden="true"
               className={cn(
-                "ml-auto shrink-0 opacity-60",
-                "[&_img]:h-[1.75rem] [&_img]:w-auto [&_svg]:h-[1.75rem] [&_svg]:w-auto",
+                "ml-auto shrink-0 opacity-55",
+                "[&_img]:h-[1.0625rem] [&_img]:w-auto [&_img]:max-w-[6.5rem] [&_img]:object-contain",
+                "[&_svg]:h-[1.0625rem] [&_svg]:w-auto [&_svg]:max-w-[6.5rem]",
               )}
             >
               {logo}

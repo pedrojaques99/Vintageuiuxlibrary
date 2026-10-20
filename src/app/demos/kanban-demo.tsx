@@ -15,6 +15,8 @@
  */
 
 import * as React from "react";
+import { CalendarDays } from "lucide-react";
+
 import { Kanban } from "../../../registry/visant/blocks/kanban";
 import type { KanbanItem } from "../../../registry/visant/blocks/kanban/types";
 
@@ -28,6 +30,15 @@ import type { KanbanItem } from "../../../registry/visant/blocks/kanban/types";
  * É a tela, e ali entram as quatro. Mesma peça, mesmo arquivo, densidade
  * diferente.
  */
+interface Tarefa {
+  t: string;
+  /** Pra quem é o trabalho. */
+  cliente: string;
+  /** Iniciais de quem está com a tarefa. */
+  quem: string;
+  prazo: string;
+}
+
 const ENXUTO = {
   columns: [
     { id: "fila", data: { label: "Fila" } },
@@ -35,11 +46,11 @@ const ENXUTO = {
     { id: "pronto", data: { label: "Pronto" } },
   ],
   items: [
-    { id: "a", columnId: "fila", data: { t: "Colher marquee" } },
-    { id: "b", columnId: "fila", data: { t: "Tema escuro" } },
-    { id: "c", columnId: "fazendo", data: { t: "Brand selector" } },
-    { id: "d", columnId: "fazendo", data: { t: "Landing Casa Vinte" } },
-    { id: "e", columnId: "pronto", data: { t: "Rebrand Ribalta" } },
+    { id: "a", columnId: "fila", data: { t: "Naming da linha nova", cliente: "Casa Vinte", quem: "AR", prazo: "24 out" } },
+    { id: "b", columnId: "fila", data: { t: "Tema escuro do app", cliente: "Oficina Bandeira", quem: "CD", prazo: "28 out" } },
+    { id: "c", columnId: "fazendo", data: { t: "Landing de lançamento", cliente: "Casa Vinte", quem: "MA", prazo: "22 out" } },
+    { id: "d", columnId: "fazendo", data: { t: "Embalagem da linha café", cliente: "Padaria Miolo", quem: "PJ", prazo: "30 out" } },
+    { id: "e", columnId: "pronto", data: { t: "Rebrand completo", cliente: "Estúdio Ribalta", quem: "AR", prazo: "15 out" } },
   ],
 };
 
@@ -51,30 +62,30 @@ const DENSO = {
     { id: "pronto", data: { label: "Pronto" } },
   ],
   items: [
-    { id: "a", columnId: "fila", data: { t: "Colher marquee" } },
-    { id: "b", columnId: "fila", data: { t: "Tema escuro" } },
-    { id: "c", columnId: "fila", data: { t: "Naming da linha nova" } },
-    { id: "d", columnId: "fazendo", data: { t: "Brand selector" } },
-    { id: "e", columnId: "fazendo", data: { t: "Landing Casa Vinte" } },
-    { id: "f", columnId: "revisao", data: { t: "Embalagem Bandeira" } },
-    { id: "g", columnId: "revisao", data: { t: "Manual de marca v2" } },
-    { id: "h", columnId: "pronto", data: { t: "Rebrand Ribalta" } },
+    ...ENXUTO.items.filter((it) => it.columnId !== "pronto"),
+    { id: "f", columnId: "fila", data: { t: "Fotos do catálogo", cliente: "Ateliê Norte", quem: "MA", prazo: "02 nov" } },
+    { id: "g", columnId: "revisao", data: { t: "Manual de marca v2", cliente: "Oficina Bandeira", quem: "CD", prazo: "21 out" } },
+    { id: "h", columnId: "revisao", data: { t: "Cardápio impresso", cliente: "Padaria Miolo", quem: "PJ", prazo: "23 out" } },
+    { id: "e", columnId: "pronto", data: { t: "Rebrand completo", cliente: "Estúdio Ribalta", quem: "AR", prazo: "15 out" } },
   ],
 };
 
 export default function KanbanDemo({ denso = false }: { denso?: boolean }) {
   const base = denso ? DENSO : ENXUTO;
   const columns = React.useMemo(() => base.columns, [base]);
-  const [items, setItems] = React.useState<KanbanItem<{ t: string }>[]>(
-    base.items as KanbanItem<{ t: string }>[],
-  );
+  const [items, setItems] = React.useState<KanbanItem<Tarefa>[]>(base.items as KanbanItem<Tarefa>[]);
+  const contagem = React.useMemo(() => {
+    const m = new Map<string, number>();
+    for (const it of items) m.set(it.columnId, (m.get(it.columnId) ?? 0) + 1);
+    return m;
+  }, [items]);
 
   // `overflow-hidden`, e não `auto`: a barra de rolagem que aparecia aqui dentro
   // era o palco declarando largura menor que o board. Quem conserta isso é o
   // `preview.w` do catálogo, não uma barra que esconde coluna.
   return (
     <div
-      className={`h-full w-full p-2 text-rotulo ${
+      className={`h-full w-full p-3 ${
         // No board denso a rolagem horizontal é o comportamento CERTO: board de
         // verdade tem mais coluna do que tela, e cortar a quarta a faca some com
         // ela. No card do catálogo continua `hidden` — lá a barra seria o palco
@@ -83,6 +94,10 @@ export default function KanbanDemo({ denso = false }: { denso?: boolean }) {
       }`}
     >
       <Kanban
+        // Piso de coluna um pouco abaixo do padrão (320): com a faixa de fundo
+        // e o respiro do palco, três colunas de 320 passavam da caixa e a
+        // terceira saía cortada. `!` porque o kanban.css entra fora de camada.
+        className="[--kanban-col-min:296px]!"
         columns={columns}
         items={items}
         /*
@@ -114,10 +129,16 @@ export default function KanbanDemo({ denso = false }: { denso?: boolean }) {
             return movido.map((it) => (it.columnId === toColumnId ? daColuna[k++]! : it));
           })
         }
+        // A coluna é uma faixa de fundo levemente mais escura que o palco: é o
+        // que separa "lugar onde o card mora" de "card", sem borda nenhuma.
+        columnClassName="rounded-[var(--r-surface,1rem)] bg-[color-mix(in_oklab,var(--muted)_55%,transparent)] p-3"
         renderColumnHeader={(c) => (
-          <span className="font-mono text-micro uppercase tracking-wider text-muted-foreground">
-            {(c.data as { label: string }).label}
-          </span>
+          <div className="mb-3 flex items-baseline justify-between px-1">
+            <span className="text-[13px] font-medium text-foreground">
+              {(c.data as { label: string }).label}
+            </span>
+            <span className="text-[12px] tabular-nums text-muted-foreground">{contagem.get(c.id) ?? 0}</span>
+          </div>
         )}
         // O `dragging` não pinta mais nada aqui. O `opacity-40` que ficava neste
         // cartão se multiplicava com o `opacity-40` que o KanbanCard já aplicava
@@ -125,9 +146,26 @@ export default function KanbanDemo({ denso = false }: { denso?: boolean }) {
         // buraco de destino ficava invisível e arrastar virava chute. Quem
         // desenha o alvo agora é o componente (o slot tracejado); o cartão do
         // consumidor só precisa ser um cartão.
+        // O card é óbvio porque é OBJETO: fundo de cartão, sombra baixa e
+        // conteúdo em três níveis (o que, pra quem, quem e quando).
         renderCard={({ item }) => (
-          <div className="rounded-[var(--r-control,0.5rem)] border border-border bg-card px-2.5 py-2">
-            {item.data.t}
+          <div className="flex flex-col gap-3 rounded-[var(--r-control,0.625rem)] border border-border bg-card px-3.5 py-3 [box-shadow:var(--e-flat)]">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[14px] font-medium leading-snug text-foreground">{item.data.t}</span>
+              <span className="text-[12px] leading-snug text-muted-foreground">{item.data.cliente}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span
+                aria-label={`Com ${item.data.quem}`}
+                className="grid size-6 place-items-center rounded-full bg-muted text-[10px] font-semibold text-foreground"
+              >
+                {item.data.quem}
+              </span>
+              <span className="inline-flex items-center gap-1 text-[12px] tabular-nums text-muted-foreground">
+                <CalendarDays className="size-3.5" aria-hidden="true" />
+                {item.data.prazo}
+              </span>
+            </div>
           </div>
         )}
       />
