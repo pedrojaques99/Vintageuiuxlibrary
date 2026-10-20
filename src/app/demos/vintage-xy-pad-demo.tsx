@@ -37,7 +37,7 @@ export default function VintageXYPadDemo() {
         width={280}
         height={160}
         active={ativo}
-        color="var(--vintage-meter-green)"
+        color="var(--vintage-light)"
         params={{
           freq: 1 + xy.x * 9,
           glow: xy.y * 26,

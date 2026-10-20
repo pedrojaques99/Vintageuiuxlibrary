@@ -27,7 +27,7 @@ import {
 import { VintageButton } from "../../../registry/vintage/ui/vintage-button";
 
 const MODOS: VintageScopeMode[] = ["scope", "wave", "rings", "grid"];
-const FOSFORO = "var(--vintage-value)";
+const FOSFORO = "var(--vintage-light)";
 
 /** 16 passos a 112 BPM: semicolcheia. */
 const PASSO = 60 / 112 / 4;
@@ -194,8 +194,8 @@ export default function VintageOscilloscopeDemo({ props }: DemoProps) {
                     aria-hidden
                     className="h-1.5 w-1.5 rounded-full"
                     style={{
-                      background: sel ? "var(--vintage-value)" : "var(--vintage-surface-1)",
-                      boxShadow: sel ? "0 0 6px var(--vintage-value)" : "inset 0 1px 1px rgba(0,0,0,0.8)",
+                      background: sel ? "var(--vintage-light)" : "var(--vintage-surface-1)",
+                      boxShadow: sel ? "0 0 6px var(--vintage-light)" : "inset 0 1px 1px rgba(0,0,0,0.8)",
                     }}
                   />
                   {m}

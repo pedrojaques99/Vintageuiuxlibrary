@@ -149,7 +149,7 @@ function KnobPointer({ rotation }: { rotation: number }) {
     >
       <svg viewBox="0 0 46 50" className="w-full h-full" fill="none">
         <rect
-          fill="var(--vintage-value, #ffd700)"
+          fill="var(--vintage-light, #ffd700)"
           height="6"
           width="1.2"
           x="21.7"
@@ -158,7 +158,7 @@ function KnobPointer({ rotation }: { rotation: number }) {
         />
         <path
           d="M21.66 8.54H22.87L23.28 7.45H22.07L21.66 8.54Z"
-          fill="var(--vintage-value, #ffd700)"
+          fill="var(--vintage-light, #ffd700)"
         />
       </svg>
     </div>
@@ -209,7 +209,7 @@ export function VintageKnob({
   max = 10,
   value = 5,
   log = false,
-  accent = "var(--vintage-value)",
+  accent = "var(--vintage-light)",
   size = 81,
   fmt,
   onChange,
@@ -288,7 +288,7 @@ arraste ↕ · shift = fino · roda · duplo clique = centro`}
         className="font-vintage-mono tabular-nums leading-none"
         style={{
           fontSize: Math.max(10, Math.round(size * 0.14)),
-          color: accent,
+          color: "var(--vintage-value)",
         }}
       >
         {leitura}

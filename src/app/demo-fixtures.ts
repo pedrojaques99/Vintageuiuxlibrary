@@ -27,7 +27,7 @@ export const PAD_VOICES = [
 ] as const;
 
 /** Verde de fósforo do tubo — o traço do osciloscópio e a legenda usam o mesmo. */
-export const SCOPE_PHOSPHOR = "#33ff66";
+export const SCOPE_PHOSPHOR = "var(--vintage-light)";
 
 /** Quantas amostras o buffer do scope carrega. */
 export const SCOPE_SAMPLES = 256;

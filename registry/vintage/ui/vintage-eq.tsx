@@ -104,7 +104,7 @@ export function VintageEQ({
   const handleDoubleClick = (index: number) => definir(index, 5);
 
   const gravado = "0 -1px 0 rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06)";
-  const cor = accent || "var(--vintage-value)";
+  const cor = accent || "var(--vintage-light)";
 
   return (
     <div
@@ -139,7 +139,7 @@ export function VintageEQ({
               <span
                 className="font-vintage-mono text-[10px] tabular-nums leading-none"
                 style={{
-                  color: isActive ? cor : "var(--vintage-text-muted)",
+                  color: isActive ? "var(--vintage-value)" : "var(--vintage-text-muted)",
                   transition: "color var(--dur-fast,160ms) var(--ease-out,ease)",
                 }}
               >

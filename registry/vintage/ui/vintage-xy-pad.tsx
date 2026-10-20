@@ -43,7 +43,7 @@ export function VintageXYPad({
   onChange,
   labelX = "X",
   labelY = "Y",
-  color = "var(--vintage-value)",
+  color = "var(--vintage-light)",
   className,
 }: VintageXYPadProps) {
   const ref = React.useRef<HTMLDivElement>(null);

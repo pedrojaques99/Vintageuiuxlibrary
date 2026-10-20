@@ -529,7 +529,7 @@ export default function VintageRig() {
                   labelY="CAUDA"
                   value={xy}
                   onChange={(x, y) => setXy({ x, y })}
-                  color="var(--vintage-accent)"
+                  color="var(--vintage-light)"
                 />
               </div>
             </Pecas>

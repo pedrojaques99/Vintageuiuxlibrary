@@ -610,7 +610,7 @@ export function VintageOscilloscope({
   analyser,
   mode = "wave",
   params,
-  color = "var(--vintage-meter-green)",
+  color = "var(--vintage-light)",
   width = 320,
   height = 120,
   fill = false,

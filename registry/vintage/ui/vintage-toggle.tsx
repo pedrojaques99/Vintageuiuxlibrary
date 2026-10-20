@@ -56,7 +56,7 @@ export function VintageToggle({
     ir(next);
   };
 
-  const activeColor = accent || "var(--vintage-value)";
+  const activeColor = accent || "var(--vintage-light)";
   /** Paradas da alavanca no curso do trilho, em % da altura. */
   const PARADAS = [12, 50, 88];
 
@@ -145,7 +145,7 @@ clique ou setas`}
               className="absolute left-0 -translate-y-1/2 font-vintage-mono text-[10px] font-semibold uppercase tracking-[0.12em] whitespace-nowrap"
               style={{
                 top: `${PARADAS[i]}%`,
-                color: i === indice ? activeColor : "var(--vintage-text-muted)",
+                color: i === indice ? "var(--vintage-value)" : "var(--vintage-text-muted)",
                 textShadow:
                   i === indice
                     ? `0 0 6px color-mix(in srgb, ${activeColor} 45%, transparent)`

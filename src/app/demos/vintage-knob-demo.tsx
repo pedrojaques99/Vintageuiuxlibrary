@@ -76,11 +76,11 @@ export default function VintageKnobDemo() {
             ))}
             <path
               d={caminho}
-              stroke="var(--vintage-value)"
+              stroke="var(--vintage-light)"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              filter="drop-shadow(0 0 3px var(--vintage-value))"
+              filter="drop-shadow(0 0 3px var(--vintage-light))"
             />
           </svg>
         </div>

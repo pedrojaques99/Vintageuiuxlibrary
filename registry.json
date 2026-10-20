@@ -58,7 +58,8 @@
           "destructive-foreground": "#ffffff",
           "border": "#333333",
           "input": "#2a2a2a",
-          "ring": "#ffd700"
+          "ring": "#ffd700",
+          "vintage-light": "var(--brand, #ffd700)"
         },
         "dark": {
           "vintage-surface-1": "#0f0f0f",
@@ -103,7 +104,8 @@
           "destructive-foreground": "#ffffff",
           "border": "#333333",
           "input": "#2a2a2a",
-          "ring": "#ffd700"
+          "ring": "#ffd700",
+          "vintage-light": "var(--brand, #ffd700)"
         }
       },
       "categories": [

@@ -30,7 +30,7 @@ export function VintageButton({
 }: VintageButtonProps) {
   const [pressed, setPressed] = useState(false);
 
-  const lamp = accent || "var(--vintage-value)";
+  const lamp = accent || "var(--vintage-light)";
   // Curso da capa em px: solta, travada, apertada.
   const curso = pressed ? 3 : active ? 1.5 : 0;
 

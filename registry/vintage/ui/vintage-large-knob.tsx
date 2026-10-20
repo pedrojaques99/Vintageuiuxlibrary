@@ -137,7 +137,7 @@ function LargeKnobBody({ rotation }: { rotation: number }) {
 
           {/* Marcador gravado e pintado: sulco escuro com a tinta dentro. */}
           <rect x="154" y="26" width="10" height="44" rx="5" fill="rgba(0,0,0,0.55)" />
-          <rect x="156" y="28" width="6" height="40" rx="3" fill="var(--vintage-value)" />
+          <rect x="156" y="28" width="6" height="40" rx="3" fill="var(--vintage-light)" />
         </svg>
       </div>
 
@@ -167,7 +167,7 @@ export function VintageLargeKnob({
   max = 10,
   value = 5,
   log = false,
-  accent = "var(--vintage-value)",
+  accent = "var(--vintage-light)",
   size = 260,
   fmt,
   onChange,
@@ -249,7 +249,7 @@ arraste ↕ · shift = fino · roda · duplo clique = centro`}
           style={{
             fontSize: Math.max(12, Math.round(size * 0.075)),
             marginTop: size * 0.025,
-            color: accent,
+            color: "var(--vintage-value)",
           }}
         >
           {leitura}

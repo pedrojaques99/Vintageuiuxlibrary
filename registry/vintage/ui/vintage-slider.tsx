@@ -197,7 +197,7 @@ export function VintageSlider({
   };
 
   const percentage = ((currentValue - min) / (max - min)) * 100;
-  const cor = accent || "var(--vintage-value)";
+  const cor = accent || "var(--vintage-light)";
   const leitura = fmt ? fmt(currentValue) : currentValue.toFixed(1);
   const gravado = "0 -1px 0 rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06)";
 
@@ -242,7 +242,7 @@ arraste · shift = fino · roda · duplo clique = centro`}
         >
           {label}
         </span>
-        <span className="text-[11px] tabular-nums" style={{ color: cor }}>
+        <span className="text-[11px] tabular-nums" style={{ color: "var(--vintage-value)" }}>
           {leitura}
         </span>
       </div>

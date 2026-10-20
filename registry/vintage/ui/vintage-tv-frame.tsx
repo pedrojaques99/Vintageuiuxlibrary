@@ -386,7 +386,7 @@ export function VintageTvFrame({
                     active={programActive}
                     // O fósforo do kit: o mesmo âmbar do osciloscópio e dos
                     // ponteiros, pra TV sair do mesmo fabricante.
-                    color="var(--vintage-value)"
+                    color="var(--vintage-light)"
                   />
                 )}
 

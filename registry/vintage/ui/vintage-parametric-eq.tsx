@@ -272,9 +272,9 @@ export function VintageParametricEQ({
             aria-hidden
             className="h-1.5 w-1.5 rounded-full"
             style={{
-              background: bypass ? "var(--vintage-value)" : "var(--vintage-surface-1)",
+              background: bypass ? "var(--vintage-light)" : "var(--vintage-surface-1)",
               boxShadow: bypass
-                ? "0 0 6px var(--vintage-value)"
+                ? "0 0 6px var(--vintage-light)"
                 : "inset 0 1px 1px rgba(0,0,0,0.8)",
             }}
           />
