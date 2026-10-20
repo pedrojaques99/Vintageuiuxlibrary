@@ -161,5 +161,82 @@
     "@dgreenheck/ez-tree@^1.1.0",
     "framer-motion",
     "three@^0.170.0"
+  ],
+  "activity-heatmap": [
+    "motion"
+  ],
+  "billing-toggle": [
+    "motion"
+  ],
+  "card-stack": [
+    "motion"
+  ],
+  "confirm-morph": [
+    "lucide-react",
+    "motion"
+  ],
+  "elastic-slider": [
+    "motion"
+  ],
+  "expandable-card": [
+    "lucide-react",
+    "motion"
+  ],
+  "expanding-search": [
+    "lucide-react",
+    "motion"
+  ],
+  "gauge": [
+    "motion"
+  ],
+  "hold-to-confirm": [
+    "lucide-react",
+    "motion"
+  ],
+  "icon-morph": [
+    "motion"
+  ],
+  "morph-select": [
+    "lucide-react",
+    "motion"
+  ],
+  "slot-text": [
+    "motion"
+  ],
+  "swipe-actions": [
+    "@radix-ui/react-dropdown-menu",
+    "lucide-react",
+    "motion"
+  ],
+  "text-morph": [
+    "motion"
+  ],
+  "theme-switch": [
+    "motion"
+  ],
+  "toast-stack": [
+    "lucide-react",
+    "motion"
+  ],
+  "dynamic-island": [
+    "motion"
+  ],
+  "folding-bill": [
+    "motion"
+  ],
+  "liquid-toggle": [
+    "motion"
+  ],
+  "magnetic-select": [
+    "motion"
+  ],
+  "magnify-dock": [
+    "motion"
+  ],
+  "slosh-slider": [
+    "motion"
+  ],
+  "tilt-card": [
+    "motion"
   ]
 }
