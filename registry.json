@@ -156,6 +156,9 @@
           "type": "registry:hook",
           "target": "@hooks/use-knob-drag.ts"
         }
+      ],
+      "registryDependencies": [
+        "@visant/sfx-bus"
       ]
     },
     {
@@ -200,7 +203,8 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -270,7 +274,8 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -287,7 +292,8 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -357,7 +363,8 @@
         "@visant/vintage-theme",
         "utils",
         "https://visant-ui.vercel.app/r/vintage-oscilloscope.json",
-        "@visant/vintage-oscilloscope"
+        "@visant/vintage-oscilloscope",
+        "@visant/sfx-bus"
       ],
       "files": [
         {
@@ -393,7 +400,8 @@
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "@visant/vintage-theme",
-        "utils"
+        "utils",
+        "@visant/sfx-bus"
       ],
       "files": [
         {

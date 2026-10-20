@@ -123,6 +123,7 @@ const StickyFilterbarDemo = React.lazy(() => import("./demos/sticky-filterbar-de
 const StoreStatusDemo = React.lazy(() => import("./demos/store-status-demo"));
 const TimelineDemo = React.lazy(() => import("./demos/timeline-demo"));
 const TurbulenceFieldDemo = React.lazy(() => import("./demos/turbulence-field-demo"));
+const VintageTvFrameDemo = React.lazy(() => import("./demos/vintage-tv-frame-demo"));
 const SfxBusDemo = React.lazy(() => import("./demos/sfx-bus-demo"));
 const VintageKnobDemo = React.lazy(() => import("./demos/vintage-knob-demo"));
 const VintageLedDemo = React.lazy(() => import("./demos/vintage-led-demo"));
@@ -1125,7 +1126,7 @@ export const CATALOG: CatalogItem[] = [
         <VintageToggle />
       </Frame>
     ),
-    preview: { w: 440, h: 330 },
+    preview: { w: 300, h: 260 },
   },
   {
     name: "vintage-led",
@@ -1135,7 +1136,7 @@ export const CATALOG: CatalogItem[] = [
     description: "LED de painel com halo. Quatro cores, estado on/off.",
     tags: ["áudio", "estado"],
     demo: VintageLedDemo,
-    preview: { w: 620, h: 540 },
+    preview: { w: 440, h: 200 },
   },
   {
     name: "vintage-eq",
@@ -1149,7 +1150,7 @@ export const CATALOG: CatalogItem[] = [
         <VintageEQ />
       </Frame>
     ),
-    preview: { w: 560, h: 540 },
+    preview: { w: 420, h: 320 },
   },
   {
     name: "vintage-parametric-eq",
@@ -1174,12 +1175,10 @@ export const CATALOG: CatalogItem[] = [
     family: "vintage",
     description: "Traço de osciloscópio alimentado por um buffer de amostras.",
     tags: ["áudio", "canvas"],
-    // Quatro tubos comendo o MESMO buffer: é o que prova que os modos são
-    // leituras diferentes de um sinal, e não quatro animações decorativas
-    // rodando lado a lado. Um de cada vez esconderia justamente isso.
+    // Um tubo, um modo por vez, e o PLAY liga um som de verdade que o tubo desenha.
     demo: VintageOscilloscopeDemo,
     knobs: "VintageOscilloscope",
-    preview: { w: 690, h: 420 },
+    preview: { w: 480, h: 330 },
   },
   {
     name: "vintage-soundboard-pad",
@@ -1205,7 +1204,6 @@ export const CATALOG: CatalogItem[] = [
           size={150}
           labelX="FILTER"
           labelY="REVERB"
-          color="var(--vintage-accent)"
           {...props}
         />
       </Frame>
@@ -1220,28 +1218,9 @@ export const CATALOG: CatalogItem[] = [
     family: "vintage",
     description: "Moldura de tubo com curvatura e brilho de varredura.",
     tags: ["moldura", "crt"],
-    demo: ({ props }) => (
-      <Frame>
-        {/* 240px em vez de 190: abaixo disso o rótulo da marca corta, e a demo
-            existe pra mostrar o console inteiro. Que a peça AGUENTE 190 é outra
-            coisa — isso o teste de 390px prova. */}
-        <div className="w-[240px]">
-          <VintageTvFrame
-            title="VISANT TV"
-            width={240}
-            showTimecode="00:12:34"
-            signalActive
-            {...props}
-          >
-            <div className="grid h-full place-items-center font-mono text-micro text-white/70">
-              NO SIGNAL
-            </div>
-          </VintageTvFrame>
-        </div>
-      </Frame>
-    ),
-    knobs: "VintageTvFrame",
-    preview: { w: 440, h: 300 },
+    // O tubo toca um programa e o seletor troca de canal; o botão de força é o da peça.
+    demo: VintageTvFrameDemo,
+    preview: { w: 440, h: 360 },
   },
   {
     name: "vintage-command-palette",

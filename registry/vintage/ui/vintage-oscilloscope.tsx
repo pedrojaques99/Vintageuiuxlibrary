@@ -447,7 +447,7 @@ function desenharRings(
       raio: 5,
       raioMax: maxR * 0.95,
       alfa: 0.9,
-      matiz: (matiz + st.t * 20) % 360,
+      matiz: (matiz + 360 + 8 * Math.sin(st.t * 0.4)) % 360,
       largura: 3 + b.bass * 4,
       passo: 3 + b.bass * 4,
     });
@@ -457,7 +457,9 @@ function desenharRings(
       raio: 8,
       raioMax: maxR * 0.6,
       alfa: 0.6,
-      matiz: (matiz + 40 + st.t * 30) % 360,
+      // Um fósforo, uma matiz: a deriva é de poucos graus, não o arco-íris
+      // inteiro, que fazia o tubo mudar de fabricante no meio da música.
+      matiz: (matiz + 360 + 10 * Math.sin(st.t * 0.5)) % 360,
       largura: 1.5 + b.mid * 2,
       passo: 3,
     });
@@ -468,7 +470,7 @@ function desenharRings(
         raio: 3,
         raioMax: maxR * (0.2 + Math.random() * 0.2),
         alfa: 0.4,
-        matiz: (matiz - 30 + i * 20) % 360,
+        matiz: (matiz + 360 + (i - 1) * 6) % 360,
         largura: 0.5,
         passo: 4 + Math.random() * 3,
       });
@@ -515,7 +517,7 @@ function desenharRings(
     const r = maxR * 0.62 + v * maxR * 0.32;
     ctx.beginPath();
     ctx.arc(cx, cy, r, ang, ang + 0.3 + v * 0.4);
-    ctx.strokeStyle = `hsla(${(matiz + i * 12) % 360}, 60%, 58%, ${0.12 + v * 0.35})`;
+    ctx.strokeStyle = `hsla(${(matiz + i * 3) % 360}, 60%, 58%, ${0.12 + v * 0.35})`;
     ctx.lineWidth = 1 + v * 2;
     ctx.stroke();
   }
@@ -577,7 +579,7 @@ function desenharGrid(
       const escala = 0.3 + Math.min(1, v) * 0.7;
       const dh = ch * escala;
       const dy = y + (ch - dh) / 2;
-      const mt = (matiz + idx * 8 + st.t * 6) % 360;
+      const mt = (matiz + 360 + 8 * Math.sin(idx * 0.3 + st.t * 0.2)) % 360;
       ctx.fillStyle = `hsla(${mt}, ${50 + v * 30}%, ${32 + v * 40}%, ${0.35 + v * 0.65})`;
       ctx.fillRect(x, dy, cw, dh);
     }
@@ -728,15 +730,16 @@ export function VintageOscilloscope({
   return (
     <div
       ref={boxRef}
-      className={cn("relative overflow-hidden", chrome && "rounded-lg", fill ? "block h-full w-full" : "inline-block", className)}
+      className={cn("relative overflow-hidden", chrome && "rounded-[6px]", fill ? "block h-full w-full" : "inline-block", className)}
       // `color` no contêiner e não no canvas: é daqui que a matiz do fósforo é
       // resolvida, e é o que mantém a cor sendo token em vez de hex no JS.
       style={{
         color,
         background: "#080a07",
-        border: chrome ? "1px solid var(--vintage-border)" : undefined,
+        // Janela rebaixada na chapa, a mesma do EQ e do XY: sombra por dentro
+        // em cima, lábio de luz embaixo. Luz de cima, sempre.
         boxShadow: chrome
-          ? "inset 0 0 20px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.3)"
+          ? "inset 0 2px 6px rgba(0,0,0,0.75), inset 0 0 0 1px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06)"
           : undefined,
         width: fill ? undefined : width,
         height: fill ? undefined : height,
@@ -754,8 +757,13 @@ export function VintageOscilloscope({
             }}
           />
           <div
-            className="pointer-events-none absolute inset-0 rounded-lg"
-            style={{ boxShadow: "inset 0 0 30px rgba(0,0,0,0.4)" }}
+            className="pointer-events-none absolute inset-0 rounded-[6px]"
+            style={{
+              // Vinheta do tubo e o reflexo do vidro, vindo de cima.
+              boxShadow: "inset 0 0 30px rgba(0,0,0,0.45)",
+              background:
+                "linear-gradient(170deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 35%, transparent 36%)",
+            }}
           />
           <div
             className="pointer-events-none absolute right-2 top-1.5 text-[9px] font-bold uppercase tracking-wider"

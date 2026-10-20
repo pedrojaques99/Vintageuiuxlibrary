@@ -165,7 +165,7 @@ function KnobPointer({ rotation }: { rotation: number }) {
   );
 }
 
-function KnobMarks({ size }: { size: number }) {
+function KnobMarks() {
   const cx = 40.5,
     cy = 37.5,
     r = 32;
@@ -177,9 +177,12 @@ function KnobMarks({ size }: { size: number }) {
       viewBox="0 0 81 75"
     >
       {angles.map((deg, i) => {
+        // O traço do meio é o detente: mais comprido, como a marca serigrafada
+        // do "0 dB" num canal de mesa.
+        const centro = i === 5;
         const rad = ((deg - 90) * Math.PI) / 180;
-        const x1 = cx + Math.cos(rad) * (r - 4);
-        const y1 = cy + Math.sin(rad) * (r - 4);
+        const x1 = cx + Math.cos(rad) * (r - (centro ? 6 : 4));
+        const y1 = cy + Math.sin(rad) * (r - (centro ? 6 : 4));
         const x2 = cx + Math.cos(rad) * r;
         const y2 = cy + Math.sin(rad) * r;
         return (
@@ -189,10 +192,10 @@ function KnobMarks({ size }: { size: number }) {
             y1={y1}
             x2={x2}
             y2={y2}
-            stroke="white"
-            strokeWidth={1.8}
+            stroke="var(--vintage-text-muted)"
+            strokeWidth={centro ? 2 : 1.5}
             strokeLinecap="round"
-            opacity={0.5}
+            opacity={centro ? 0.95 : 0.6}
           />
         );
       })}
@@ -225,11 +228,13 @@ export function VintageKnob({
 
   const scale = size / 81;
   const scaledH = Math.round(75 * scale);
+  const leitura = fmt ? fmt(currentValue) : currentValue.toFixed(1);
 
   return (
     <div
       className={cn(
-        "flex flex-col items-center gap-1 select-none rounded-[var(--r-control,0.5rem)] outline-none focus-visible:[box-shadow:0_0_0_2px_var(--vintage-accent)]",
+        "flex flex-col items-center gap-1 select-none rounded-[var(--r-control,10px)] outline-none",
+        "focus-visible:[box-shadow:var(--focus,0_0_0_2px_var(--vintage-value))]",
         className
       )}
       // Alcançável por teclado: setas, Page, Home/End (ver `useKnobDrag`).
@@ -239,31 +244,20 @@ export function VintageKnob({
       aria-valuemin={min}
       aria-valuemax={max}
       aria-valuenow={Number(currentValue.toFixed(2))}
-      aria-valuetext={fmt ? fmt(currentValue) : currentValue.toFixed(1)}
+      aria-valuetext={leitura}
       onKeyDown={handleKeyDown}
       onMouseDown={handleMouseDown}
       onDoubleClick={handleDoubleClick}
       onWheel={handleWheel}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      title={`${label}: ${fmt ? fmt(currentValue) : currentValue.toFixed(2)}\ndrag ↕ · shift=fine · scroll · dbl-click=reset`}
-      style={{
-        cursor: isDragging ? "grabbing" : "grab",
-        opacity: hover || isDragging ? 1 : 0.85,
-        transition: "opacity 0.15s",
-      }}
+      title={`${label}: ${leitura}
+arraste ↕ · shift = fino · roda · duplo clique = centro`}
+      style={{ cursor: isDragging ? "grabbing" : "grab" }}
     >
-      <div
-        style={{
-          width: size,
-          height: scaledH,
-          position: "relative",
-          filter: hover
-            ? `drop-shadow(0 0 6px color-mix(in srgb, ${accent} 30%, transparent))`
-            : "none",
-          transition: "filter 0.15s",
-        }}
-      >
+      {/* Sem brilho no hover: luz é da sala, não do knob. Quem responde à mão
+          é o rótulo gravado, que acende. */}
+      <div style={{ width: size, height: scaledH, position: "relative" }}>
         <div
           style={{
             transform: `scale(${scale})`,
@@ -273,34 +267,31 @@ export function VintageKnob({
             position: "relative",
           }}
         >
-          <KnobMarks size={81} />
+          <KnobMarks />
           <KnobBody />
           <KnobPointer rotation={rotation} />
         </div>
       </div>
 
       <span
-        className="font-vintage-mono font-bold uppercase tracking-[0.18em]"
+        className="font-vintage-mono font-semibold uppercase tracking-[0.18em] leading-none"
         style={{
-          fontSize: Math.max(9, size * 0.12),
-          color: hover
-            ? "var(--vintage-label)"
-            : "var(--vintage-text-muted)",
-          transition: "color 0.15s",
+          fontSize: Math.max(9, Math.round(size * 0.12)),
+          color: hover || isDragging ? "var(--vintage-label)" : "var(--vintage-text-muted)",
+          transition: "color var(--dur-fast,160ms) var(--ease-out,ease)",
         }}
       >
         {label}
       </span>
 
       <span
-        className="font-vintage-mono"
+        className="font-vintage-mono tabular-nums leading-none"
         style={{
-          fontSize: Math.max(10, size * 0.14),
+          fontSize: Math.max(10, Math.round(size * 0.14)),
           color: accent,
-          marginTop: -2,
         }}
       >
-        {fmt ? fmt(currentValue) : currentValue.toFixed(1)}
+        {leitura}
       </span>
     </div>
   );

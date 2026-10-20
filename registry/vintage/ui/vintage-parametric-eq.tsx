@@ -172,6 +172,8 @@ export function VintageParametricEQ({
   const bandasRef = React.useRef(bandas);
   bandasRef.current = bandas;
   const atualizar = (id: string, muda: Partial<EqBand>) => {
+    // Sem som aqui, de propósito: o arrasto anda nos dois eixos ao mesmo
+    // tempo, e um estalo por passo virava matraca contínua sob a mão.
     const prox = bandasRef.current.map((b) => (b.id === id ? { ...b, ...muda } : b));
     bandasRef.current = prox;
     setBandas(prox);
@@ -202,19 +204,26 @@ export function VintageParametricEQ({
   return (
     <div
       className={cn(
-        "inline-block rounded-2xl border border-[var(--vintage-border)] p-4",
-        "bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)]",
+        "inline-block rounded-[var(--r-control,10px)] p-4",
         className
       )}
-      style={{ width: width + 32 }}
+      style={{
+        width: width + 32,
+        // O painel do kit: chapa escura, luz de cima, sombra que fecha embaixo.
+        background: "linear-gradient(180deg, var(--vintage-surface-3), var(--vintage-surface-2))",
+        border: "1px solid var(--vintage-surface-1)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 1px rgba(0,0,0,0.5), 0 10px 24px -8px rgba(0,0,0,0.6)",
+      }}
     >
       {/* Cabeçalho: nome, leitura da banda em foco e o A/B. */}
       <div className="mb-3 flex items-center justify-between gap-3">
         <span
-          className="text-[11px] font-bold uppercase tracking-[0.18em]"
+          className="text-[10px] font-semibold uppercase tracking-[0.18em]"
           style={{
-            color: "var(--vintage-label)",
+            color: "var(--vintage-text-muted)",
             fontFamily: "var(--font-vintage-mono, monospace)",
+            textShadow: "0 -1px 0 rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06)",
           }}
         >
           {title}
@@ -223,7 +232,7 @@ export function VintageParametricEQ({
         <span
           className="flex-1 truncate text-right text-[11px] tabular-nums"
           style={{
-            color: "var(--vintage-text-muted)",
+            color: focada ? accent : "var(--vintage-text-muted)",
             fontFamily: "var(--font-vintage-mono, monospace)",
           }}
         >
@@ -236,15 +245,37 @@ export function VintageParametricEQ({
           type="button"
           onClick={() => setBypass((v) => !v)}
           aria-pressed={bypass}
-          className="shrink-0 rounded px-2 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors"
+          className="group relative flex shrink-0 items-center gap-1.5 rounded-[4px] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] outline-none"
           style={{
             fontFamily: "var(--font-vintage-mono, monospace)",
-            color: bypass ? "var(--vintage-surface-1)" : "var(--vintage-text-muted)",
-            background: bypass ? "var(--vintage-meter-yellow)" : "var(--vintage-surface-3)",
-            border: "1px solid var(--vintage-border)",
+            color: bypass ? "var(--vintage-label)" : "var(--vintage-text-muted)",
+            // Tecla de painel: afunda quando travada, em vez de virar um
+            // bloco amarelo, que é chip de web e não botão de rack.
+            background: bypass
+              ? "linear-gradient(180deg, var(--vintage-surface-2), var(--vintage-surface-3))"
+              : "linear-gradient(180deg, var(--vintage-surface-4), var(--vintage-surface-3))",
+            boxShadow: bypass
+              ? "inset 0 1px 3px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,0,0,0.6)"
+              : "inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 1px rgba(0,0,0,0.6), 0 2px 3px rgba(0,0,0,0.5)",
+            transition:
+              "color var(--dur-fast,160ms) var(--ease-out,ease), box-shadow var(--dur-press,120ms) var(--ease-out,ease)",
           }}
         >
-          {bypass ? "BYPASS" : "ACTIVE"}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -inset-px rounded-[inherit] group-focus-visible:[box-shadow:var(--focus,0_0_0_2px_var(--vintage-value))]"
+          />
+          <span
+            aria-hidden
+            className="h-1.5 w-1.5 rounded-full"
+            style={{
+              background: bypass ? "var(--vintage-value)" : "var(--vintage-surface-1)",
+              boxShadow: bypass
+                ? "0 0 6px var(--vintage-value)"
+                : "inset 0 1px 1px rgba(0,0,0,0.8)",
+            }}
+          />
+          BYPASS
         </button>
       </div>
 
@@ -252,12 +283,13 @@ export function VintageParametricEQ({
         ref={svgRef}
         width={width}
         height={height}
-        className="block touch-none select-none rounded-lg"
+        className="block touch-none select-none rounded-[6px]"
         style={{
+          // Janela rebaixada na chapa: a mesma do osciloscópio e do XY.
           background:
             "radial-gradient(ellipse at 50% 40%, var(--vintage-surface-2), var(--vintage-surface-1))",
-          border: "1px solid var(--vintage-border)",
-          boxShadow: "inset 0 0 24px rgba(0,0,0,0.6)",
+          boxShadow:
+            "inset 0 2px 6px rgba(0,0,0,0.75), inset 0 0 0 1px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06)",
           cursor: arrastando.current ? "grabbing" : "default",
         }}
         onPointerMove={(e) => {

@@ -9,7 +9,8 @@
  * chassi mostrando que a tela é uma tela.
  *
  * O botão de força continua sendo o da peça: desligar apaga o tubo com a
- * animação de CRT e o canal para junto.
+ * animação de CRT; ligar acende com o estalo e o chiado de um tubo de verdade
+ * (se o som da casa estiver ligado).
  */
 
 import * as React from "react";
@@ -41,26 +42,46 @@ export default function VintageTvFrameDemo() {
         />
       </div>
 
-      <div className="flex gap-1.5">
-        {CANAIS.map((c, i) => (
-          <button
-            key={c.n}
-            type="button"
-            onClick={() => setCanal(i)}
-            aria-pressed={i === canal}
-            className="rounded px-2.5 py-1 text-[10px] font-bold tabular-nums tracking-wider transition-colors"
-            style={{
-              fontFamily: "var(--font-vintage-mono, monospace)",
-              border: "1px solid var(--vintage-border)",
-              background:
-                i === canal ? "var(--vintage-meter-green)" : "var(--vintage-surface-2)",
-              color:
-                i === canal ? "var(--vintage-surface-1)" : "var(--vintage-text-muted)",
-            }}
-          >
-            CH {c.n}
-          </button>
-        ))}
+      <div role="radiogroup" aria-label="Canal" className="flex gap-1.5">
+        {CANAIS.map((c, i) => {
+          const sel = i === canal;
+          return (
+            <button
+              key={c.n}
+              type="button"
+              role="radio"
+              aria-checked={sel}
+              onClick={() => setCanal(i)}
+              className="group relative flex items-center gap-1.5 rounded-[4px] px-2 py-1.5 font-vintage-mono text-[10px] font-semibold tabular-nums tracking-[0.14em] outline-none"
+              style={{
+                color: sel ? "var(--vintage-label)" : "var(--vintage-text-muted)",
+                // Tecla de rack: a do canal no ar fica travada, mais funda.
+                background: sel
+                  ? "linear-gradient(180deg, var(--vintage-surface-2), var(--vintage-surface-3))"
+                  : "linear-gradient(180deg, var(--vintage-surface-4), var(--vintage-surface-3))",
+                boxShadow: sel
+                  ? "inset 0 1px 3px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,0,0,0.6)"
+                  : "inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 1px rgba(0,0,0,0.6), 0 2px 3px rgba(0,0,0,0.5)",
+                transition:
+                  "color var(--dur-fast,160ms) var(--ease-out,ease), box-shadow var(--dur-press,120ms) var(--ease-out,ease)",
+              }}
+            >
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -inset-px rounded-[inherit] group-focus-visible:[box-shadow:var(--focus,0_0_0_2px_var(--vintage-value))]"
+              />
+              <span
+                aria-hidden
+                className="h-1.5 w-1.5 rounded-full"
+                style={{
+                  background: sel ? "var(--vintage-value)" : "var(--vintage-surface-1)",
+                  boxShadow: sel ? "0 0 6px var(--vintage-value)" : "inset 0 1px 1px rgba(0,0,0,0.8)",
+                }}
+              />
+              CH {c.n}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

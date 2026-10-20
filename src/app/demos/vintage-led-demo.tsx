@@ -1,96 +1,80 @@
 "use client";
 
 /**
- * O LED no papel dele: bancada, não card próprio.
+ * O LED no papel dele: a resposta de um controle, não um controle.
  *
- * Sozinho o item é uma bolinha que acende — e foi assim que ele chegou ao
- * relatório, "componente separado morto". Um LED não é um controle, é a
- * resposta de outro controle; ele só existe quando alguém liga a chave e o
- * sinal sobe. Então a cena é a bancada inteira: a chave POWER manda na
- * alimentação, o equalizador manda no nível de cada banda, e a fileira de LEDs
- * embaixo dos faders diz o que está passando.
+ * Sozinho o item é uma bolinha que acende. Aqui ele está onde vive num rack:
+ * uma régua de nível de dez segmentos seguindo um programa que corre sozinho,
+ * e duas lâmpadas de estado. O botão POWER manda na alimentação, então a
+ * primeira coisa que a mão descobre é que todos eles obedecem a ele.
  *
- * O item continua publicado sozinho no registry — quem instalou não quebra.
- * Isto aqui é a vitrine mostrando o LED em uso, que é como ele se vende.
+ * Antes a cena montava uma chave e um EQ paramétrico inteiros só pra acender
+ * quatro LEDs: três peças disputando o palco de uma. Agora a peça é o assunto.
+ *
+ * O relógio obedece ao `useStageActive`: card fora da tela, programa parado.
  */
 
 import * as React from "react";
 
+import { useStageActive } from "../stage";
 import { VintageLed } from "../../../registry/vintage/ui/vintage-led";
-import {
-  VintageParametricEQ,
-  type EqBand,
-} from "../../../registry/vintage/ui/vintage-parametric-eq";
-import { VintageToggle } from "../../../registry/vintage/ui/vintage-toggle";
+import { VintageButton } from "../../../registry/vintage/ui/vintage-button";
 
-const BANDAS: EqBand[] = [
-  { id: "b63", label: "63", freq: 63, gain: 0, q: 0.9 },
-  { id: "b250", label: "250", freq: 250, gain: 0, q: 1.1 },
-  { id: "b1k", label: "1k", freq: 1000, gain: 0, q: 1.2 },
-  { id: "b4k", label: "4k", freq: 4000, gain: 0, q: 1 },
-];
+const SEGMENTOS = 10;
+
+/** Cor de cada segmento: sete verdes, dois amarelos, um vermelho. */
+const corDe = (i: number) => (i >= 9 ? "red" : i >= 7 ? "yellow" : "green");
 
 export default function VintageLedDemo() {
-  const [posicao, setPosicao] = React.useState<"up" | "middle" | "down">("up");
-  const [valores, setValores] = React.useState(BANDAS.map(() => 5));
+  const ativo = useStageActive();
+  const [ligado, setLigado] = React.useState(true);
+  const [nivel, setNivel] = React.useState(0.5);
+  const t = React.useRef(0);
 
-  const ligado = posicao === "up";
-  const standby = posicao === "middle";
-  const clip = ligado && valores.some((v) => v > 9);
+  React.useEffect(() => {
+    if (!ativo || !ligado) return;
+    const id = setInterval(() => {
+      t.current += 1;
+      // Frase musical, não ruído: duas senoides e um estalo esparso.
+      const base = 0.5 + 0.25 * Math.sin(t.current * 0.21) + 0.12 * Math.sin(t.current * 0.53);
+      const estalo = Math.random() < 0.07 ? 0.3 : 0;
+      setNivel(Math.max(0, Math.min(1, base + estalo)));
+    }, 110);
+    return () => clearInterval(id);
+  }, [ativo, ligado]);
+
+  const acesos = ligado ? Math.round(nivel * SEGMENTOS) : 0;
 
   return (
-    <div className="flex h-full w-full items-center justify-center gap-8 p-4">
-      <div className="flex flex-col items-center gap-6">
-        <VintageToggle
-          title="POWER"
-          labels={["ON", "STB", "OFF"]}
-          position={posicao}
-          onChange={setPosicao}
-        />
-        <div className="flex gap-4">
-          <VintageLed
-            color="green"
-            size="lg"
-            label="PWR"
-            active={ligado || standby}
-            intensity={ligado ? 1 : 0.35}
-          />
-          <VintageLed
-            color="red"
-            size="lg"
-            label="CLIP"
-            active={clip}
-            pulse
-          />
-        </div>
-      </div>
+    <div className="flex h-full w-full items-center justify-center p-4">
+      <div
+        className="flex items-center gap-5 rounded-[var(--r-control,10px)] px-4 py-3"
+        style={{
+          background: "linear-gradient(180deg, var(--vintage-surface-3), var(--vintage-surface-2))",
+          border: "1px solid var(--vintage-surface-1)",
+          boxShadow:
+            "inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 1px rgba(0,0,0,0.5), 0 10px 24px -8px rgba(0,0,0,0.6)",
+        }}
+      >
+        <VintageButton label="POWER" active={ligado} onClick={() => setLigado((v) => !v)} />
 
-      <div className="flex flex-col items-center">
-        <VintageParametricEQ
-          width={420}
-          height={190}
-          bands={BANDAS}
-          // O EQ deixou de ser banco de faders e virou curva: `onChange` entrega
-          // ganho em dB (−12…+12). Aqui vira a régua 0…10 que os LEDs já liam.
-          onChange={(bs) => setValores(bs.map((b) => 5 + (b.gain / 12) * 5))}
-        />
-        {/*
-          Um LED por banda, distribuídos na mesma largura do painel da curva.
-          Antes a fileira repetia as medidas internas dos faders; sem faders, o
-          que resta é a régua de frequência, e ela é contínua — então a fileira
-          é só igualmente espaçada, sem fingir alinhamento que não existe mais.
-        */}
-        <div className="mt-2 flex w-[420px] justify-around">
-          {valores.map((v, i) => (
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-1.5">
+            {Array.from({ length: SEGMENTOS }, (_, i) => (
+              <VintageLed key={i} color={corDe(i)} size="md" active={i < acesos} />
+            ))}
+          </div>
+          <div className="flex justify-between">
+            <VintageLed color="green" size="lg" label="PWR" active={ligado} />
             <VintageLed
-              key={BANDAS[i].id}
-              color={v > 8.5 ? "orange" : "green"}
+              color="yellow"
               size="lg"
-              active={ligado && v > 5.2}
-              pulse={ligado && v > 8.5}
-              intensity={Math.max(0, Math.min(1, (v - 5) / 5))}
+              label="SIG"
+              active={ligado && nivel > 0.15}
+              intensity={nivel}
             />
-          ))}
+            <VintageLed color="red" size="lg" label="CLIP" active={acesos >= SEGMENTOS} />
+          </div>
         </div>
       </div>
     </div>

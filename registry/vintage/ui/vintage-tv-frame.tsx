@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { playSfx, sfx } from "@/lib/sfx-bus";
 import {
   VintageOscilloscope,
   type VintageScopeMode,
@@ -99,6 +100,54 @@ const RETRO = {
   radiusScreen: 14,
 } as const;
 
+/*
+ * O som de ligar um tubo: o estalo do relé, um chiado de estática que abre e
+ * fecha, e o "tum" grave da bobina de desmagnetização. 400 ms, volume baixo,
+ * e só se a preferência de som da casa estiver ligada.
+ */
+let ctxTv: AudioContext | null = null;
+function somDeLigar() {
+  if (typeof window === "undefined" || !sfx.isEnabled()) return;
+  const AC =
+    window.AudioContext ??
+    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AC) return;
+  ctxTv = ctxTv ?? new AC();
+  const ctx = ctxTv;
+  void ctx.resume();
+  const t = ctx.currentTime + 0.01;
+
+  const len = Math.floor(ctx.sampleRate * 0.45);
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const est = ctx.createBufferSource();
+  est.buffer = buf;
+  const bp = ctx.createBiquadFilter();
+  bp.type = "bandpass";
+  bp.frequency.setValueAtTime(5200, t);
+  bp.frequency.exponentialRampToValueAtTime(1800, t + 0.4);
+  bp.Q.value = 0.8;
+  const ge = ctx.createGain();
+  ge.gain.setValueAtTime(0.0001, t);
+  ge.gain.exponentialRampToValueAtTime(0.05, t + 0.03);
+  ge.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+  est.connect(bp).connect(ge).connect(ctx.destination);
+  est.start(t);
+
+  const o = ctx.createOscillator();
+  o.type = "sine";
+  o.frequency.setValueAtTime(90, t);
+  o.frequency.exponentialRampToValueAtTime(40, t + 0.25);
+  const go = ctx.createGain();
+  go.gain.setValueAtTime(0.0001, t);
+  go.gain.exponentialRampToValueAtTime(0.12, t + 0.01);
+  go.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+  o.connect(go).connect(ctx.destination);
+  o.start(t);
+  o.stop(t + 0.35);
+}
+
 const STYLE_ID = "vintage-tv-frame-keyframes";
 
 function injectKeyframes() {
@@ -178,6 +227,7 @@ export function VintageTvFrame({
   }, []);
 
   const togglePower = () => {
+    playSfx("toggle");
     if (isOn) {
       setCrtAnim("off");
       timerRef.current = setTimeout(() => {
@@ -187,6 +237,7 @@ export function VintageTvFrame({
       }, 500);
     } else {
       if (controlledOn === undefined) setInternalOn(true);
+      somDeLigar();
       onPowerToggle?.(true);
       setCrtAnim("on");
       timerRef.current = setTimeout(() => {
@@ -333,7 +384,9 @@ export function VintageTvFrame({
                     mode={program}
                     analyser={programAnalyser}
                     active={programActive}
-                    color="var(--vintage-meter-green)"
+                    // O fósforo do kit: o mesmo âmbar do osciloscópio e dos
+                    // ponteiros, pra TV sair do mesmo fabricante.
+                    color="var(--vintage-value)"
                   />
                 )}
 
@@ -443,6 +496,9 @@ export function VintageTvFrame({
           <button
             type="button"
             onClick={togglePower}
+            // O estalo é o da chave (`toggle`, em `togglePower`): sem isto o
+            // provedor da casa tocaria o clique genérico por cima.
+            data-sfx-silent=""
             aria-pressed={isOn}
             aria-label={isOn ? "Desligar a TV" : "Ligar a TV"}
             // `alvo-toque` estende só a região clicável: o botão desenhado tem

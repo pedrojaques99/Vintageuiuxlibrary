@@ -69,7 +69,7 @@ export default function VintageSoundboardPadDemo() {
             fontFamily: "var(--font-vintage-mono, monospace)",
           }}
         >
-          {ultimo ?? "—"}
+          {ultimo ?? "·"}
         </span>
       </div>
     </div>

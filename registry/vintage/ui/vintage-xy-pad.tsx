@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { playSfx } from "@/lib/sfx-bus";
 
 /**
  * VintageXYPad — dois parâmetros num gesto só.
@@ -42,13 +43,14 @@ export function VintageXYPad({
   onChange,
   labelX = "X",
   labelY = "Y",
-  color = "var(--vintage-accent)",
+  color = "var(--vintage-value)",
   className,
 }: VintageXYPadProps) {
   const ref = React.useRef<HTMLDivElement>(null);
   const [pos, setPos] = React.useState(value ?? { x: 0.5, y: 0.5 });
   const [rastro, setRastro] = React.useState<{ x: number; y: number }[]>([]);
   const arrastando = React.useRef(false);
+  const celulaRef = React.useRef<number | null>(null);
 
   const atual = value ?? pos;
 
@@ -56,6 +58,10 @@ export function VintageXYPad({
     (x: number, y: number) => {
       const cx = Math.max(0, Math.min(1, x));
       const cy = Math.max(0, Math.min(1, y));
+      // Estalo por célula de uma grade 8×8: a mão sente onde está sem olhar.
+      const celula = Math.min(7, Math.floor(cx * 8)) * 8 + Math.min(7, Math.floor(cy * 8));
+      if (celulaRef.current !== null && celula !== celulaRef.current) playSfx("detent");
+      celulaRef.current = celula;
       if (!value) setPos({ x: cx, y: cy });
       setRastro((p) => [...p, { x: cx, y: cy }].slice(-PASSOS_RASTRO));
       onChange?.(cx, cy);
@@ -71,6 +77,11 @@ export function VintageXYPad({
     },
     [aplicar]
   );
+
+  const soltar = () => {
+    arrastando.current = false;
+    setRastro([]);
+  };
 
   const porTecla = (e: React.KeyboardEvent) => {
     const passo = e.shiftKey ? 0.1 : 0.02;
@@ -95,40 +106,57 @@ export function VintageXYPad({
   const leitura = `${labelX} ${(atual.x * 100).toFixed(0)}%, ${labelY} ${(atual.y * 100).toFixed(0)}%`;
 
   return (
-    <div className={cn("inline-flex flex-col gap-1", className)}>
+    <div
+      className={cn("inline-flex flex-col gap-2 rounded-[var(--r-control,10px)] p-2.5", className)}
+      style={{
+        // O painel do kit: chapa escura, luz de cima, sombra que fecha embaixo.
+        background: "linear-gradient(180deg, var(--vintage-surface-3), var(--vintage-surface-2))",
+        border: "1px solid var(--vintage-surface-1)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 1px rgba(0,0,0,0.5), 0 10px 24px -8px rgba(0,0,0,0.6)",
+      }}
+    >
       <div
         ref={ref}
         tabIndex={0}
         role="group"
         aria-label={`Campo de dois eixos: ${labelX} e ${labelY}. Setas movem, Shift acelera, Home centraliza.`}
         className={cn(
-          "relative rounded-lg cursor-crosshair touch-none",
-          // `outline`: o fundo e a borda do campo vêm inline e engoliam o ring.
-          "outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:[outline-color:var(--vintage-accent)]"
+          "group relative rounded-[6px] cursor-crosshair touch-none outline-none overflow-hidden"
         )}
         style={{
           width: size,
           height: size,
-          background: "var(--vintage-surface-1)",
-          border: "1px solid var(--vintage-border)",
-          boxShadow: "inset 0 0 20px rgba(0,0,0,0.5)",
-          ["--tw-ring-color" as string]: color,
+          // Janela rebaixada, a mesma do osciloscópio e do EQ.
+          background:
+            "radial-gradient(ellipse at 50% 40%, var(--vintage-surface-2), var(--vintage-surface-1))",
+          boxShadow:
+            "inset 0 2px 6px rgba(0,0,0,0.75), inset 0 0 0 1px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06)",
         }}
         onPointerDown={(e) => {
+          if (e.pointerType === "mouse" && e.button !== 0) return;
+          /*
+           * Três defeitos do arrasto, todos daqui:
+           * - sem `preventDefault` o navegador começava uma seleção de texto
+           *   junto, e o gesto pintava de azul o que o cursor cruzava;
+           * - `focus()` sem `preventScroll` rolava a página pra mostrar o
+           *   campo inteiro, e o pad fugia de baixo do dedo no meio do gesto;
+           * - o rastro ficava na tela depois de soltar, como gesto travado.
+           */
+          e.preventDefault();
           arrastando.current = true;
+          celulaRef.current = null;
+          setRastro([]);
           e.currentTarget.setPointerCapture?.(e.pointerId);
-          e.currentTarget.focus();
+          e.currentTarget.focus({ preventScroll: true });
           doPonteiro(e);
         }}
         onPointerMove={(e) => {
           if (arrastando.current) doPonteiro(e);
         }}
-        onPointerUp={() => {
-          arrastando.current = false;
-        }}
-        onPointerCancel={() => {
-          arrastando.current = false;
-        }}
+        onPointerUp={soltar}
+        onPointerCancel={soltar}
+        onLostPointerCapture={soltar}
         onKeyDown={porTecla}
       >
         <svg
@@ -142,18 +170,18 @@ export function VintageXYPad({
                 y1={0}
                 x2={t * size}
                 y2={size}
-                stroke="var(--vintage-border)"
+                stroke="var(--vintage-text-muted)"
                 strokeWidth={0.5}
-                opacity={t === 0.5 ? 0.6 : 0.3}
+                opacity={t === 0.5 ? 0.4 : 0.15}
               />
               <line
                 x1={0}
                 y1={t * size}
                 x2={size}
                 y2={t * size}
-                stroke="var(--vintage-border)"
+                stroke="var(--vintage-text-muted)"
                 strokeWidth={0.5}
-                opacity={t === 0.5 ? 0.6 : 0.3}
+                opacity={t === 0.5 ? 0.4 : 0.15}
               />
             </g>
           ))}
@@ -201,20 +229,26 @@ export function VintageXYPad({
           style={{
             left: `${atual.x * 100}%`,
             top: `${(1 - atual.y) * 100}%`,
-            width: 12,
-            height: 12,
-            background: color,
-            boxShadow: `0 0 10px ${color}, 0 0 20px color-mix(in srgb, ${color} 40%, transparent)`,
+            width: 10,
+            height: 10,
+            background: `radial-gradient(circle at 50% 35%, color-mix(in srgb, ${color} 40%, white) 0%, ${color} 55%)`,
+            boxShadow: `0 0 8px ${color}, 0 0 18px color-mix(in srgb, ${color} 40%, transparent)`,
           }}
         />
         <div
-          className="absolute rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 border-2 border-white/30"
+          className="absolute rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2"
           style={{
             left: `${atual.x * 100}%`,
             top: `${(1 - atual.y) * 100}%`,
             width: 20,
             height: 20,
+            border: `1px solid color-mix(in srgb, ${color} 45%, transparent)`,
           }}
+        />
+        {/* Foco num filho: a janela tem `overflow-hidden` e sombra inline. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-[6px] group-focus-visible:[box-shadow:inset_0_0_0_2px_var(--vintage-value)]"
         />
       </div>
 
@@ -232,10 +266,11 @@ export function VintageXYPad({
           <span
             key={String(rotulo)}
             aria-hidden
-            className="text-[9px] font-bold uppercase tracking-wider tabular-nums"
+            className="whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.08em] tabular-nums"
             style={{
               color: "var(--vintage-text-muted)",
               fontFamily: "var(--font-vintage-mono, monospace)",
+              textShadow: "0 -1px 0 rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06)",
             }}
           >
             {rotulo}: {((v as number) * 100).toFixed(0)}%

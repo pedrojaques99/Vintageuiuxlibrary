@@ -78,34 +78,47 @@ export function VintageLed({
     ? `color-mix(in srgb, ${onColor} ${Math.round(35 + i * 65)}%, ${offColor})`
     : offColor;
 
+  // Aro cromado em volta da lente: é ele que diz "peça montada no painel" e
+  // não "bolinha de cor". Um terço do diâmetro da lente, de cada lado.
+  const aro = Math.max(2, Math.round(s.w * 0.28));
+
   return (
     <div
-      className={cn("inline-flex flex-col items-center gap-1", className)}
+      className={cn("inline-flex flex-col items-center gap-1.5", className)}
     >
       <div
-        className={cn(
-          "rounded-full border border-[var(--vintage-border)]",
-          active && pulse && "vled-pulse"
-        )}
+        className="rounded-full"
         style={{
-          width: s.w,
-          height: s.h,
-          background: brilho,
-          boxShadow: active
-            ? `0 0 ${s.w * i}px ${onColor}, 0 0 ${s.w * 2 * i}px ${onColor}`
-            : "none",
-          transition: "background 0.2s, box-shadow 0.2s",
+          padding: aro,
+          background:
+            "linear-gradient(180deg, var(--vintage-metal-mid), var(--vintage-metal-dark))",
+          boxShadow: "0 1px 1px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.35)",
         }}
-      />
+      >
+        <div
+          className={cn("relative rounded-full", active && pulse && "vled-pulse")}
+          style={{
+            width: s.w,
+            height: s.h,
+            // Lente: o reflexo da lâmpada da sala fica em cima, sempre, aceso
+            // ou não. O que muda com o estado é a cor por trás do vidro.
+            background: `radial-gradient(circle at 50% 30%, rgba(255,255,255,${active ? 0.55 : 0.18}) 0%, transparent 38%), ${brilho}`,
+            boxShadow: active
+              ? `inset 0 -1px 2px rgba(0,0,0,0.35), 0 0 ${s.w * i}px ${onColor}, 0 0 ${s.w * 2 * i}px color-mix(in srgb, ${onColor} 55%, transparent)`
+              : "inset 0 1px 2px rgba(0,0,0,0.7)",
+            transition:
+              "background var(--dur-fast,160ms) var(--ease-out,ease), box-shadow var(--dur-fast,160ms) var(--ease-out,ease)",
+          }}
+        />
+      </div>
       {label && (
         <span
-          className="font-vintage-mono tracking-wider uppercase"
+          className="font-vintage-mono font-semibold tracking-[0.16em] uppercase"
           style={{
-            fontSize: Math.max(7, s.w * 0.65),
-            color: active
-              ? "var(--vintage-text-muted)"
-              : "var(--vintage-text-dim)",
-            transition: "color 0.2s",
+            fontSize: Math.max(9, s.w * 0.65),
+            color: active ? "var(--vintage-label)" : "var(--vintage-text-muted)",
+            textShadow: "0 -1px 0 rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06)",
+            transition: "color var(--dur-fast,160ms) var(--ease-out,ease)",
           }}
         >
           {label}

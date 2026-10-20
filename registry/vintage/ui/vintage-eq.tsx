@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { playSfx } from "@/lib/sfx-bus";
 
 interface VintageEQProps {
   labels?: string[];
@@ -41,6 +42,10 @@ export function VintageEQ({
   const definir = useCallback((index: number, v: number) => {
     const next = [...valuesRef.current];
     next[index] = Math.max(0, Math.min(10, v));
+    // Estalo a cada 1/20 do curso da banda. `definir` só é chamado pela mão.
+    if (Math.round(next[index] * 2) !== Math.round(valuesRef.current[index] * 2)) {
+      playSfx("detent");
+    }
     valuesRef.current = next;
     setValues(next);
     onChangeRef.current?.(next);
@@ -98,30 +103,52 @@ export function VintageEQ({
 
   const handleDoubleClick = (index: number) => definir(index, 5);
 
+  const gravado = "0 -1px 0 rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06)";
+  const cor = accent || "var(--vintage-value)";
+
   return (
     <div
       className={cn(
-        "inline-block bg-gradient-to-b from-[var(--vintage-surface-2)] to-[var(--vintage-surface-1)] rounded-2xl p-8 border border-[var(--vintage-border)]",
+        "inline-flex flex-col items-center gap-3 rounded-[var(--r-control,10px)] px-5 pt-3 pb-4",
         className
       )}
+      style={{
+        // O painel do kit: chapa escura, luz de cima, sombra que fecha embaixo.
+        background: "linear-gradient(180deg, var(--vintage-surface-3), var(--vintage-surface-2))",
+        border: "1px solid var(--vintage-surface-1)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 1px rgba(0,0,0,0.5), 0 10px 24px -8px rgba(0,0,0,0.6)",
+      }}
     >
-      <h3 className="text-center text-[var(--vintage-text-dim)] text-2xl font-vintage-body font-bold mb-6">
+      <h3
+        className="font-vintage-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
+        style={{ color: "var(--vintage-text-muted)", textShadow: gravado }}
+      >
         {title}
       </h3>
-      <div className="flex gap-6 items-end">
+      <div className="flex items-end gap-3">
         {labels.map((label, index) => {
-          const isActive =
-            draggingIndex === index || hoverIndex === index;
+          const isActive = draggingIndex === index || hoverIndex === index;
           return (
             <div
               key={index}
-              className="flex flex-col items-center gap-4"
+              className="flex flex-col items-center gap-2"
               onMouseEnter={() => setHoverIndex(index)}
               onMouseLeave={() => setHoverIndex(null)}
             >
+              <span
+                className="font-vintage-mono text-[10px] tabular-nums leading-none"
+                style={{
+                  color: isActive ? cor : "var(--vintage-text-muted)",
+                  transition: "color var(--dur-fast,160ms) var(--ease-out,ease)",
+                }}
+              >
+                {values[index].toFixed(1)}
+              </span>
+
               <div
                 id={`vintage-eq-slider-${index}`}
-                className="relative h-[300px] w-12 select-none rounded-lg outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:[outline-color:var(--vintage-accent)]"
+                className="relative h-[168px] w-8 select-none rounded-[4px] outline-none focus-visible:[box-shadow:var(--focus,0_0_0_2px_var(--vintage-value))]"
                 style={{ cursor: draggingIndex === index ? "grabbing" : "grab" }}
                 tabIndex={0}
                 role="slider"
@@ -138,60 +165,62 @@ export function VintageEQ({
                 }}
                 onWheel={(e) => handleWheel(index, e)}
                 onDoubleClick={() => handleDoubleClick(index)}
-                title={`${label}: ${values[index].toFixed(1)}\ndrag · shift=fine · scroll · dbl-click=reset`}
+                title={`${label}: ${values[index].toFixed(1)}\narraste · shift = fino · roda · duplo clique = centro`}
               >
-                {/* Track */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[var(--vintage-surface-3)] to-[var(--vintage-surface-2)] rounded-lg border border-[var(--vintage-surface-4)] shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
-                  <div className="absolute inset-x-0 top-0 h-full flex flex-col justify-between p-2">
-                    {Array.from({ length: 16 }, (_, i) => (
-                      <div
-                        key={i}
-                        className="w-full h-px bg-[var(--vintage-grid)] opacity-30"
-                      />
-                    ))}
-                  </div>
-
-                  {/* Center line (0 dB) */}
-                  <div className="absolute left-1 right-1 top-1/2 h-[2px] -translate-y-px bg-[var(--vintage-text-dim)] opacity-40" />
+                {/* Régua serigrafada dos dois lados do rasgo; o 0 dB é maior. */}
+                <div className="pointer-events-none absolute inset-y-[7px] inset-x-0 flex flex-col justify-between">
+                  {Array.from({ length: 11 }, (_, i) => (
+                    <div key={i} className="flex justify-between">
+                      {[0, 1].map((lado) => (
+                        <span
+                          key={lado}
+                          className="block h-px"
+                          style={{
+                            width: i === 5 ? 8 : i % 5 === 0 ? 6 : 4,
+                            background: "var(--vintage-text-muted)",
+                            opacity: i === 5 ? 0.8 : 0.4,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  ))}
                 </div>
 
-                {/* Handle */}
+                {/* O rasgo na chapa. */}
                 <div
-                  className="absolute left-1/2 -translate-x-1/2 w-10 h-14 rounded pointer-events-none"
+                  className="absolute inset-y-0 left-1/2 w-[6px] -translate-x-1/2 rounded-full"
                   style={{
-                    bottom: `calc(${(values[index] / 10) * 100}% - 28px)`,
+                    background: "var(--vintage-surface-1)",
+                    boxShadow: "inset 0 1px 2px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.06)",
+                  }}
+                />
+
+                {/* Capa do fader: metal escovado, frisos, sombra pra baixo. */}
+                <div
+                  className="absolute left-1/2 h-[14px] w-[26px] -translate-x-1/2 rounded-[3px] pointer-events-none"
+                  style={{
+                    bottom: `calc(${(values[index] / 10) * 100}% - 7px)`,
                     background:
-                      "linear-gradient(to bottom, var(--vintage-metal-channel-light), white, var(--vintage-metal-channel-dark))",
-                    border: "2px solid var(--vintage-text-muted)",
+                      "linear-gradient(180deg, var(--vintage-metal-channel-light) 0%, var(--vintage-metal-mid) 48%, var(--vintage-metal-light) 52%, var(--vintage-metal-channel-dark) 100%)",
                     boxShadow: isActive
-                      ? `0 0 8px ${accent || "rgba(255,215,0,0.3)"}, 0 4px 8px rgba(0,0,0,0.4)`
-                      : "0 4px 8px rgba(0,0,0,0.4)",
-                    transition:
-                      draggingIndex === index
-                        ? "box-shadow 0.1s"
-                        : "all 0.1s",
+                      ? `inset 0 1px 0 rgba(255,255,255,0.6), 0 0 0 1px rgba(0,0,0,0.6), 0 3px 4px rgba(0,0,0,0.55), 0 0 8px color-mix(in srgb, ${cor} 35%, transparent)`
+                      : "inset 0 1px 0 rgba(255,255,255,0.6), 0 0 0 1px rgba(0,0,0,0.6), 0 3px 4px rgba(0,0,0,0.55)",
+                    transition: "box-shadow var(--dur-fast,160ms) var(--ease-out,ease)",
                   }}
                 >
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-full bg-[var(--vintage-text-dim)] rounded-sm shadow-inner" />
+                  <div
+                    className="absolute inset-x-[4px] top-1/2 h-[2px] -translate-y-1/2"
+                    style={{ background: "rgba(0,0,0,0.6)" }}
+                  />
                 </div>
               </div>
 
-              <div className="text-center">
-                <div
-                  className="text-xs font-vintage-mono mb-1"
-                  style={{
-                    color: isActive
-                      ? accent || "var(--vintage-label)"
-                      : "var(--vintage-text-muted)",
-                    transition: "color 0.15s",
-                  }}
-                >
-                  {values[index].toFixed(1)}
-                </div>
-                <div className="text-[var(--vintage-text-dim)] text-[10px] font-vintage-body">
-                  {label}
-                </div>
-              </div>
+              <span
+                className="font-vintage-mono text-[9px] font-semibold tracking-[0.08em] leading-none"
+                style={{ color: "var(--vintage-text-muted)", textShadow: gravado }}
+              >
+                {label}
+              </span>
             </div>
           );
         })}
