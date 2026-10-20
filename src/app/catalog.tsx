@@ -522,7 +522,6 @@ const MorphSelectColheitaDemo = React.lazy(() => import("./demos/morph-select-de
 const SlotTextColheitaDemo = React.lazy(() => import("./demos/slot-text-demo"));
 const SwipeActionsColheitaDemo = React.lazy(() => import("./demos/swipe-actions-demo"));
 const TextMorphColheitaDemo = React.lazy(() => import("./demos/text-morph-demo"));
-const ThemeSwitchColheitaDemo = React.lazy(() => import("./demos/theme-switch-demo"));
 const ToastStackColheitaDemo = React.lazy(() => import("./demos/toast-stack-demo"));
 const DynamicIslandColheitaDemo = React.lazy(() => import("./demos/dynamic-island-demo"));
 const FoldingBillColheitaDemo = React.lazy(() => import("./demos/folding-bill-demo"));
@@ -532,6 +531,7 @@ const MagneticSelectColheitaDemo = React.lazy(() => import("./demos/magnetic-sel
 const MagnifyDockColheitaDemo = React.lazy(() => import("./demos/magnify-dock-demo"));
 const SloshSliderColheitaDemo = React.lazy(() => import("./demos/slosh-slider-demo"));
 const TiltCardColheitaDemo = React.lazy(() => import("./demos/tilt-card-demo"));
+const EclipseSwitchColheitaDemo = React.lazy(() => import("./demos/eclipse-switch-demo"));
 
 /** Mesmo trato do marquee: GSAP só chega quando o card chega. */
 function PinnedSceneDemoCard() {
@@ -1995,18 +1995,6 @@ export const CATALOG: CatalogItem[] = [
     preview: { w: 300, h: 150 },
   },
   {
-    name: "theme-switch",
-    title: "Theme Switch",
-    type: "ui",
-    family: "fundacao",
-    description:
-      "Chave de tema claro e escuro em que a lua cobre o sol num eclipse, sem mexer na página por conta própria.",
-    tags: ["tema","modo escuro","chave","eclipse","toggle"],
-    demo: ThemeSwitchColheitaDemo,
-    knobs: "ThemeSwitch",
-    preview: { w: 460, h: 220 },
-  },
-  {
     name: "toast-stack",
     title: "Toast Stack",
     type: "ui",
@@ -2113,6 +2101,18 @@ export const CATALOG: CatalogItem[] = [
     demo: TiltCardColheitaDemo,
     knobs: "TiltCard",
     preview: { w: 320, h: 420 },
+  },
+  {
+    name: "eclipse-switch",
+    title: "Eclipse Switch",
+    type: "ui",
+    family: "fundacao",
+    description:
+      "Chave de tema claro e escuro em que a lua cobre o sol num eclipse, sem mexer na página por conta própria.",
+    tags: ["tema","modo escuro","chave","eclipse","toggle"],
+    demo: EclipseSwitchColheitaDemo,
+    knobs: "EclipseSwitch",
+    preview: { w: 460, h: 220 },
   },
 ];
 

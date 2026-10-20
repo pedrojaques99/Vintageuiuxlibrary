@@ -107,6 +107,35 @@ export function useKnobDrag({
     };
   }, [isDragging, sensitivity, toNorm, fromNorm, clamp]);
 
+  /*
+   * Teclado: o knob era só do mouse — sem foco, sem seta, invisível pra quem
+   * navega por teclado ou leitor de tela. Os passos andam na escala NORMALIZADA
+   * (a mesma do arrasto), então um knob logarítmico anda igual em toda a volta.
+   * Seta = 1% (Shift = 0,2%, o "fino" do arrasto), Page = 10%, Home/End = limites.
+   */
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const passo = e.shiftKey ? 0.002 : 0.01;
+      const atual = toNorm(valRef.current);
+      let norm: number | null = null;
+      if (e.key === "ArrowUp" || e.key === "ArrowRight") norm = atual + passo;
+      else if (e.key === "ArrowDown" || e.key === "ArrowLeft") norm = atual - passo;
+      else if (e.key === "PageUp") norm = atual + 0.1;
+      else if (e.key === "PageDown") norm = atual - 0.1;
+      else if (e.key === "Home") norm = 0;
+      else if (e.key === "End") norm = 1;
+      if (norm === null) return;
+      e.preventDefault();
+      // A seta é do knob: a página (atalhos da vitrine, scroll) não deve recebê-la junto.
+      e.stopPropagation();
+      const next = clamp(fromNorm(Math.max(0, Math.min(1, norm))));
+      valRef.current = next;
+      setCurrentValue(next);
+      onChangeRef.current?.(next);
+    },
+    [toNorm, fromNorm, clamp]
+  );
+
   return {
     currentValue,
     rotation,
@@ -114,5 +143,6 @@ export function useKnobDrag({
     handleMouseDown,
     handleDoubleClick,
     handleWheel,
+    handleKeyDown,
   };
 }

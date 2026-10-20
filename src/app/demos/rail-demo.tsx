@@ -60,7 +60,7 @@ export default function RailDemo({ props }: DemoProps) {
             key={p.nome}
             href="#"
             onClick={(e) => e.preventDefault()}
-            className="group block min-w-0 rounded-[var(--r-control,0.5rem)] outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:[outline-color:var(--brand)]"
+            className="group block min-w-0 rounded-[var(--r-control,0.5rem)] outline-none focus-visible:[box-shadow:var(--focus)]"
           >
             <Media
               papel={p.papel}

@@ -103,7 +103,8 @@ export function VintageXYPad({
         aria-label={`Campo de dois eixos: ${labelX} e ${labelY}. Setas movem, Shift acelera, Home centraliza.`}
         className={cn(
           "relative rounded-lg cursor-crosshair touch-none",
-          "outline-none focus-visible:ring-2"
+          // `outline`: o fundo e a borda do campo vêm inline e engoliam o ring.
+          "outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:[outline-color:var(--vintage-accent)]"
         )}
         style={{
           width: size,

@@ -5405,44 +5405,6 @@
       ]
     }
   },
-  "theme-switch": {
-    "componentes": {
-      "ThemeSwitch": [
-        {
-          "prop": "defaultTheme",
-          "tipo": "escolha",
-          "valores": [
-            "light",
-            "dark"
-          ],
-          "padrao": "light",
-          "resumo": "Tema inicial quando não controlada."
-        },
-        {
-          "prop": "theme",
-          "tipo": "escolha",
-          "valores": [
-            "light",
-            "dark"
-          ],
-          "padrao": null,
-          "resumo": "Tema atual. Passe para controlar; omita para a chave guardar o próprio estado."
-        },
-        {
-          "prop": "iconOnly",
-          "tipo": "chave",
-          "padrao": false,
-          "resumo": "Só o eclipse, num quadrado. Sem o texto ao lado."
-        },
-        {
-          "prop": "label",
-          "tipo": "texto",
-          "padrao": null,
-          "resumo": "Nome acessível. Por padrão diz para qual tema vai."
-        }
-      ]
-    }
-  },
   "toast-stack": {
     "componentes": {
       "ToastStackProvider": [
@@ -5928,6 +5890,44 @@
           "step": 10,
           "padrao": 900,
           "resumo": "Distância da câmera, em px. Menor = perspectiva mais forte."
+        }
+      ]
+    }
+  },
+  "eclipse-switch": {
+    "componentes": {
+      "EclipseSwitch": [
+        {
+          "prop": "defaultTheme",
+          "tipo": "escolha",
+          "valores": [
+            "light",
+            "dark"
+          ],
+          "padrao": "light",
+          "resumo": "Tema inicial quando não controlada."
+        },
+        {
+          "prop": "theme",
+          "tipo": "escolha",
+          "valores": [
+            "light",
+            "dark"
+          ],
+          "padrao": null,
+          "resumo": "Tema atual. Passe para controlar; omita para a chave guardar o próprio estado."
+        },
+        {
+          "prop": "iconOnly",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Só o eclipse, num quadrado. Sem o texto ao lado."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Nome acessível. Por padrão diz para qual tema vai."
         }
       ]
     }

@@ -159,6 +159,7 @@ export function VintageLargeKnob({
     handleMouseDown,
     handleDoubleClick,
     handleWheel,
+    handleKeyDown,
   } = useKnobDrag({ min, max, value, sensitivity: 0.015, log, onChange });
 
   return (
@@ -171,7 +172,7 @@ export function VintageLargeKnob({
       title={`${label}: ${fmt ? fmt(currentValue) : currentValue.toFixed(2)}\ndrag ↕ · shift=fine · scroll · dbl-click=reset`}
     >
       <div
-        className="relative"
+        className="relative rounded-full outline-none focus-visible:[box-shadow:0_0_0_2px_var(--vintage-accent)]"
         style={{
           width: size,
           height: size,
@@ -182,7 +183,16 @@ export function VintageLargeKnob({
             ? `drop-shadow(0 0 12px color-mix(in srgb, ${accent} 20%, transparent))`
             : "none",
         }}
-        onMouseDown={handleMouseDown}
+        // Alcançável por teclado: setas, Page, Home/End (ver `useKnobDrag`).
+      tabIndex={0}
+      role="slider"
+      aria-label={label}
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={Number(currentValue.toFixed(2))}
+      aria-valuetext={fmt ? fmt(currentValue) : currentValue.toFixed(1)}
+      onKeyDown={handleKeyDown}
+      onMouseDown={handleMouseDown}
         onDoubleClick={handleDoubleClick}
         onWheel={handleWheel}
       >

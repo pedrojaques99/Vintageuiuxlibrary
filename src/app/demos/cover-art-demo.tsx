@@ -30,6 +30,7 @@
  * opções há nem se elas dão a volta.
  */
 
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 
 import { CoverArt } from "../../../registry/visant/ui/cover-art";
@@ -56,20 +57,9 @@ function Seta({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
       type="button"
       onClick={onClick}
       aria-label={dir === "prev" ? "Capa anterior" : "Próxima capa"}
-      className="alvo-toque inline-flex size-8 shrink-0 items-center justify-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground outline-none transition-[color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:text-foreground active:scale-[0.94] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
+      className="alvo-toque inline-flex size-8 shrink-0 items-center justify-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground outline-none transition-[color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:text-foreground focus-visible:[box-shadow:var(--focus)] active:scale-[0.94] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
     >
-      <svg
-        viewBox="0 0 24 24"
-        width="15"
-        height="15"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        aria-hidden="true"
-      >
-        <path d={dir === "prev" ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} />
-      </svg>
+      {dir === "prev" ? <ChevronLeft className="size-4" aria-hidden /> : <ChevronRight className="size-4" aria-hidden />}
     </button>
   );
 }

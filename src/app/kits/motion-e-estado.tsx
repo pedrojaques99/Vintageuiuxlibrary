@@ -75,7 +75,7 @@ function BotaoChrome({
     <button
       type="button"
       onClick={onClick}
-      className="alvo-toque inline-flex items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2.5 py-1.5 text-apoio text-muted-foreground outline-none transition-[color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] active:scale-[0.97] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
+      className="alvo-toque inline-flex items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2.5 py-1.5 text-apoio text-muted-foreground outline-none transition-[color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:[box-shadow:var(--focus)] active:scale-[0.97] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
     >
       {children}
     </button>

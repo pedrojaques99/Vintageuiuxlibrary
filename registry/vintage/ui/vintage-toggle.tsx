@@ -25,12 +25,33 @@ export function VintageToggle({
   const [internalPos, setInternalPos] = useState<TogglePosition>("middle");
   const position = controlledPos ?? internalPos;
 
-  const handleClick = () => {
-    const positions: TogglePosition[] = ["up", "middle", "down"];
-    const next =
-      positions[(positions.indexOf(position) + 1) % positions.length];
+  const positions: TogglePosition[] = ["up", "middle", "down"];
+  const indice = positions.indexOf(position);
+
+  const ir = (next: TogglePosition) => {
+    if (next === position) return;
     if (controlledPos === undefined) setInternalPos(next);
     onChange?.(next);
+  };
+
+  const handleClick = () => ir(positions[(indice + 1) % positions.length]);
+
+  /*
+   * Teclado: a chave era só do mouse. Seta pra cima e pra baixo movem a
+   * alavanca um degrau (como o dedo faria), Home/End vão aos extremos, e Enter
+   * ou Espaço ciclam igual ao clique.
+   */
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    let next: TogglePosition | null = null;
+    if (e.key === "ArrowUp" || e.key === "ArrowLeft") next = positions[Math.max(0, indice - 1)];
+    else if (e.key === "ArrowDown" || e.key === "ArrowRight") next = positions[Math.min(2, indice + 1)];
+    else if (e.key === "Home") next = "up";
+    else if (e.key === "End") next = "down";
+    else if (e.key === "Enter" || e.key === " ") next = positions[(indice + 1) % positions.length];
+    if (!next) return;
+    e.preventDefault();
+    e.stopPropagation();
+    ir(next);
   };
 
   const toggleY = position === "up" ? 25 : position === "down" ? 75 : 50;
@@ -41,7 +62,16 @@ export function VintageToggle({
     <div className={cn("relative inline-block select-none", className)}>
       <div
         onClick={handleClick}
-        className="cursor-pointer relative w-[100px] h-[250px]"
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="slider"
+        aria-label={title}
+        aria-valuemin={0}
+        aria-valuemax={2}
+        aria-valuenow={indice}
+        aria-valuetext={labels[indice]}
+        aria-orientation="vertical"
+        className="cursor-pointer relative w-[100px] h-[250px] rounded-lg outline-none focus-visible:[box-shadow:0_0_0_2px_var(--vintage-accent)]"
         style={{ transition: "filter 0.15s" }}
         title={`${title}: ${position.toUpperCase()}\nclick to cycle`}
       >

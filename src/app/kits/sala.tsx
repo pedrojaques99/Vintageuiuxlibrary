@@ -57,7 +57,7 @@ export function PecaTag({ name, className }: { name: string; className?: string 
         "inline-flex shrink-0 items-center gap-1 rounded-[var(--r-pill,9999px)] border border-transparent px-1.5 py-0.5",
         "font-mono text-micro text-muted-foreground/70 outline-none",
         "transition-[color,border-color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-        "hover:border-border hover:text-foreground focus-visible:border-[var(--brand)]",
+        "hover:border-border hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:[box-shadow:var(--focus)]",
         done && "border-[var(--brand)] text-[var(--brand)]",
         className,
       )}

@@ -150,7 +150,6 @@ export function DynamicIsland({
       <AnimatePresence initial={false} mode="popLayout">
         <motion.div
           key={chave}
-          ref={miolo}
           aria-hidden={!aberta}
           className={cn(
             "pointer-events-none relative z-10 w-max",
@@ -162,7 +161,14 @@ export function DynamicIsland({
           exit={reduzir ? { opacity: 0 } : { opacity: 0, scale: 0.96, filter: "blur(4px)" }}
           transition={reduzir ? { duration: 0 } : { duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
         >
-          {aberta ? children : compact}
+          {/*
+            A medida mora num `div` de dentro, não no `motion.div`: em
+            `popLayout` o AnimatePresence lê `children.props.ref`, e no React 18
+            isso dispara "`ref` is not a prop" a cada troca de atividade.
+          */}
+          <div ref={miolo} className="w-max">
+            {aberta ? children : compact}
+          </div>
         </motion.div>
       </AnimatePresence>
     </motion.div>

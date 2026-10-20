@@ -33,8 +33,8 @@
         "transition-duration": "320ms"
       },
       ".gleam:focus-visible": {
-        "outline": "var(--focus, 2px solid var(--ring))",
-        "outline-offset": "2px"
+        "outline": "none",
+        "box-shadow": "var(--focus, 0 0 0 2px var(--ring))"
       },
       ".gleam-light": {
         "position": "absolute",

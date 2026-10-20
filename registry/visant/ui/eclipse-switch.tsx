@@ -8,7 +8,7 @@ import { motion, useReducedMotion, type Transition } from "motion/react";
 import { cn } from "@/lib/utils";
 
 /**
- * Theme Switch: a chave de claro e escuro que conta a troca como um eclipse.
+ * Eclipse Switch: a chave de claro e escuro que conta a troca como um eclipse.
  *
  * O ícone de sol que vira lua é a chave mais vista da web, e por isso some na
  * página. Aqui a troca é um gesto só: a lua desliza por cima do sol, cobre o
@@ -37,7 +37,7 @@ import { cn } from "@/lib/utils";
 
 export type Theme = "light" | "dark";
 
-export interface ThemeSwitchProps
+export interface EclipseSwitchProps
   extends Omit<React.ComponentPropsWithoutRef<"button">, "onClick" | "children"> {
   /** Tema atual. Passe para controlar; omita para a chave guardar o próprio estado. */
   theme?: Theme;
@@ -56,7 +56,7 @@ const mola: Transition = { type: "spring", visualDuration: 0.3, bounce: 0.12 };
 const parado: Transition = { duration: 0 };
 const RAIOS = [0, 45, 90, 135, 180, 225, 270, 315];
 
-export function ThemeSwitch({
+export function EclipseSwitch({
   theme,
   defaultTheme = "light",
   onThemeChange,
@@ -64,7 +64,7 @@ export function ThemeSwitch({
   iconOnly = false,
   className,
   ...rest
-}: ThemeSwitchProps) {
+}: EclipseSwitchProps) {
   const [interno, setInterno] = React.useState<Theme>(defaultTheme);
   const atual = theme ?? interno;
   const escuro = atual === "dark";
@@ -137,4 +137,4 @@ export function ThemeSwitch({
   );
 }
 
-export default ThemeSwitch;
+export default EclipseSwitch;

@@ -121,7 +121,7 @@ function Seta({
       type="button"
       onClick={onClick}
       aria-label={dir === "prev" ? "Modo anterior" : "Próximo modo"}
-      className="alvo-toque inline-flex size-8 shrink-0 items-center justify-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground outline-none transition-[color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:text-foreground active:scale-[0.94] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
+      className="alvo-toque inline-flex size-8 shrink-0 items-center justify-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground outline-none transition-[color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:[box-shadow:var(--focus)] focus-visible:text-foreground active:scale-[0.94] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
     >
       <svg
         viewBox="0 0 24 24"

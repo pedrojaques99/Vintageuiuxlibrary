@@ -80,7 +80,9 @@ export function VintageSoundboardPad({
       className={cn(
         "relative flex flex-col items-center justify-center gap-1 rounded-xl cursor-pointer select-none touch-none",
         "transition-transform active:scale-95",
-        "outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+        // `outline` e não `ring`: o relevo do pad vem por `box-shadow` inline, que
+        // venceria a classe de ring e apagava o foco.
+        "outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:[outline-color:var(--vintage-accent)]",
         className
       )}
       style={{

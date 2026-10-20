@@ -152,6 +152,28 @@ export function VintageSlider({
     onChange?.(next);
   };
 
+  /*
+   * Teclado: o slider era só do ponteiro. Seta = 1% (Shift = 0,2%, o mesmo
+   * fino da roda), Page = 10%, Home/End = limites.
+   */
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const faixa = max - min;
+    const passo = e.shiftKey ? faixa * 0.002 : faixa * 0.01;
+    let next: number | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowUp") next = currentValue + passo;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowDown") next = currentValue - passo;
+    else if (e.key === "PageUp") next = currentValue + faixa * 0.1;
+    else if (e.key === "PageDown") next = currentValue - faixa * 0.1;
+    else if (e.key === "Home") next = min;
+    else if (e.key === "End") next = max;
+    if (next === null) return;
+    e.preventDefault();
+    e.stopPropagation();
+    next = Math.max(min, Math.min(max, next));
+    setCurrentValue(next);
+    onChange?.(next);
+  };
+
   const handleDoubleClick = () => {
     const mid = (min + max) / 2;
     setCurrentValue(mid);
@@ -194,9 +216,17 @@ export function VintageSlider({
         className={cn(
           // `touch-none` impede o navegador de interpretar o arraste como
           // rolagem da página no toque — sem isso o slider não anda no celular.
-          "relative cursor-ew-resize touch-none",
+          "relative cursor-ew-resize touch-none rounded outline-none focus-visible:[box-shadow:0_0_0_2px_var(--vintage-accent)]",
           dense ? "h-5 mb-1.5" : "h-8 mb-3"
         )}
+        tabIndex={0}
+        role="slider"
+        aria-label={label}
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={Number(currentValue.toFixed(2))}
+        aria-valuetext={fmt ? fmt(currentValue) : currentValue.toFixed(1)}
+        onKeyDown={handleKeyDown}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}

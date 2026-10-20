@@ -125,6 +125,16 @@
 }
 
 /*
+ * O foco de teclado. O `outline` do card é do slot (tracejado do encaixe), então
+ * o anel de foco mora no `box-shadow` — os dois nunca disputam a mesma
+ * propriedade. Sem isto o card focado pelo Tab (o dnd-kit põe `tabindex=0` pra
+ * mover pelo teclado) não mostrava onde o foco estava.
+ */
+.kanban-card:focus-visible {
+  box-shadow: var(--focus, 0 0 0 2px var(--background), 0 0 0 4px var(--brand));
+}
+
+/*
  * O SLOT: o buraco onde o card vai cair, no lugar exato.
  *
  * Enquanto arrasta, o card de origem já vive na posição de destino (o

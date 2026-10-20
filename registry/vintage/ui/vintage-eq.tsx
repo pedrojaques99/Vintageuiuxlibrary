@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface VintageEQProps {
@@ -26,6 +26,26 @@ export function VintageEQ({
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
+  /*
+   * Um caminho só pra mudar uma banda — ponteiro, roda e teclado passam aqui.
+   *
+   * O próximo estado sai do ref, FORA de um updater de `setValues`: o
+   * `onChange` do pai morava dentro do updater, que o React chama durante o
+   * render (e duas vezes em modo estrito), e o pai ganhava `setState` no meio
+   * do render do EQ.
+   */
+  const valuesRef = useRef(values);
+  valuesRef.current = values;
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+  const definir = useCallback((index: number, v: number) => {
+    const next = [...valuesRef.current];
+    next[index] = Math.max(0, Math.min(10, v));
+    valuesRef.current = next;
+    setValues(next);
+    onChangeRef.current?.(next);
+  }, []);
+
   const updateValue = useCallback(
     (index: number, clientY: number, fine: boolean) => {
       const slider = document.getElementById(`vintage-eq-slider-${index}`);
@@ -33,16 +53,28 @@ export function VintageEQ({
       const rect = slider.getBoundingClientRect();
       const pct = 1 - Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
       const raw = pct * 10;
-      const v = fine ? Math.round(raw * 100) / 100 : Math.round(raw * 10) / 10;
-      setValues((prev) => {
-        const next = [...prev];
-        next[index] = v;
-        onChange?.(next);
-        return next;
-      });
+      definir(index, fine ? Math.round(raw * 100) / 100 : Math.round(raw * 10) / 10);
     },
-    [onChange]
+    [definir]
   );
+
+  /* Teclado: o fader era só do mouse. Seta = 0,1 (Shift = 0,02, o fino da
+     roda), Page = 1, Home/End = limites. */
+  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
+    const passo = e.shiftKey ? 0.02 : 0.1;
+    const atual = valuesRef.current[index];
+    let v: number | null = null;
+    if (e.key === "ArrowUp" || e.key === "ArrowRight") v = atual + passo;
+    else if (e.key === "ArrowDown" || e.key === "ArrowLeft") v = atual - passo;
+    else if (e.key === "PageUp") v = atual + 1;
+    else if (e.key === "PageDown") v = atual - 1;
+    else if (e.key === "Home") v = 0;
+    else if (e.key === "End") v = 10;
+    if (v === null) return;
+    e.preventDefault();
+    e.stopPropagation();
+    definir(index, Math.round(v * 100) / 100);
+  };
 
   useEffect(() => {
     if (draggingIndex === null) return;
@@ -61,22 +93,10 @@ export function VintageEQ({
     e.stopPropagation();
     const step = e.shiftKey ? 0.02 : 0.1;
     const dir = e.deltaY < 0 ? 1 : -1;
-    setValues((prev) => {
-      const next = [...prev];
-      next[index] = Math.max(0, Math.min(10, next[index] + dir * step));
-      onChange?.(next);
-      return next;
-    });
+    definir(index, valuesRef.current[index] + dir * step);
   };
 
-  const handleDoubleClick = (index: number) => {
-    setValues((prev) => {
-      const next = [...prev];
-      next[index] = 5;
-      onChange?.(next);
-      return next;
-    });
-  };
+  const handleDoubleClick = (index: number) => definir(index, 5);
 
   return (
     <div
@@ -101,8 +121,17 @@ export function VintageEQ({
             >
               <div
                 id={`vintage-eq-slider-${index}`}
-                className="relative h-[300px] w-12 select-none"
+                className="relative h-[300px] w-12 select-none rounded-lg outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:[outline-color:var(--vintage-accent)]"
                 style={{ cursor: draggingIndex === index ? "grabbing" : "grab" }}
+                tabIndex={0}
+                role="slider"
+                aria-label={label}
+                aria-orientation="vertical"
+                aria-valuemin={0}
+                aria-valuemax={10}
+                aria-valuenow={Number(values[index].toFixed(2))}
+                aria-valuetext={values[index].toFixed(1)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
                 onMouseDown={(e) => {
                   setDraggingIndex(index);
                   updateValue(index, e.clientY, e.shiftKey);

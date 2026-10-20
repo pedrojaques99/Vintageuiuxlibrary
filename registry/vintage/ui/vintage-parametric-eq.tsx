@@ -160,12 +160,22 @@ export function VintageParametricEQ({
     return d;
   }, [width, dbParaY, somaDb, xParaF]);
 
+  /*
+   * O próximo estado sai do ref, FORA do updater do `setBandas`.
+   *
+   * O `onChange` do pai morava dentro do updater, e updater é chamado pelo
+   * React durante o render (e duas vezes em modo estrito): o pai ganhava um
+   * `setState` no meio do render do EQ — o aviso "Cannot update a component
+   * while rendering a different component" na vitrine, e um `onChange` em dobro
+   * em desenvolvimento.
+   */
+  const bandasRef = React.useRef(bandas);
+  bandasRef.current = bandas;
   const atualizar = (id: string, muda: Partial<EqBand>) => {
-    setBandas((p) => {
-      const prox = p.map((b) => (b.id === id ? { ...b, ...muda } : b));
-      onChange?.(prox);
-      return prox;
-    });
+    const prox = bandasRef.current.map((b) => (b.id === id ? { ...b, ...muda } : b));
+    bandasRef.current = prox;
+    setBandas(prox);
+    onChange?.(prox);
   };
 
   const doPonteiro = (e: React.PointerEvent) => {

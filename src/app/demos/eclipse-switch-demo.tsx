@@ -13,10 +13,10 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { ThemeSwitch, type Theme } from "../../../registry/visant/ui/theme-switch";
+import { EclipseSwitch, type Theme } from "../../../registry/visant/ui/eclipse-switch";
 import type { DemoProps } from "../catalog";
 
-export default function ThemeSwitchDemo({ props }: DemoProps) {
+export default function EclipseSwitchDemo({ props }: DemoProps) {
   const [tema, setTema] = React.useState<Theme>("light");
 
   return (
@@ -24,7 +24,7 @@ export default function ThemeSwitchDemo({ props }: DemoProps) {
       {/* Uma chave só: a versão `iconOnly` é a mesma ação num quadrado, e as duas
           lado a lado eram o mesmo controle desenhado duas vezes. Os knobs entram
           primeiro: o tema é da demo, senão a chave travaria no valor do painel. */}
-      <ThemeSwitch {...props} theme={tema} onThemeChange={setTema} />
+      <EclipseSwitch {...props} theme={tema} onThemeChange={setTema} />
 
       <div
         className={cn(

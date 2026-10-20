@@ -40,7 +40,7 @@ export default function SpineCardDemo({ props }: DemoProps) {
         type="button"
         onClick={() => setTombo((v) => !v)}
         aria-pressed={tombo}
-        className={`alvo-toque inline-flex w-fit items-center gap-2 rounded-[var(--r-control,0.5rem)] border px-3 py-1.5 outline-none transition-[color,border-color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] ${
+        className={`alvo-toque inline-flex w-fit items-center gap-2 rounded-[var(--r-control,0.5rem)] border px-3 py-1.5 outline-none focus-visible:[box-shadow:var(--focus)] transition-[color,border-color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] ${
           tombo
             ? "border-[var(--brand)] text-foreground"
             : "border-border text-muted-foreground hover:border-[var(--brand)] hover:text-foreground"

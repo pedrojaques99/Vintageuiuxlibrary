@@ -317,6 +317,10 @@ export function ProfileForm({
             type="file"
             accept="image/*"
             className="sr-only"
+            // Fora do Tab: quem abre o seletor é o botão da câmera, que tem anel.
+            // Focável, o input escondido era uma parada de teclado invisível.
+            tabIndex={-1}
+            aria-hidden="true"
             onChange={(e) => {
               const f = e.target.files?.[0] ?? null;
               if (f) {

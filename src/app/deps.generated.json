@@ -211,9 +211,6 @@
   "text-morph": [
     "motion"
   ],
-  "theme-switch": [
-    "motion"
-  ],
   "toast-stack": [
     "lucide-react",
     "motion"
@@ -237,6 +234,9 @@
     "motion"
   ],
   "tilt-card": [
+    "motion"
+  ],
+  "eclipse-switch": [
     "motion"
   ]
 }

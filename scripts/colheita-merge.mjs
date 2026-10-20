@@ -51,6 +51,10 @@ for (const f of fragmentos) {
     erros.push(`${f.arquivo}: falta a demo ${c?.demoImport}`);
   if (!f.atribuicao && !f.inspiracao) erros.push(`${f.arquivo}: sem atribuição nem inspiração`);
   if (/—/.test(c?.description ?? "")) erros.push(`${f.arquivo}: travessão na descrição`);
+  // `theme-<slug>` é reservado aos temas de marca: o portão de privacidade lê
+  // todo `public/r/theme-*.json` como marca de cliente. Uma peça chamada
+  // `theme-switch` reprovou o ship como se fosse a marca "switch".
+  if (/^theme-/.test(c?.name ?? "")) erros.push(`${f.arquivo}: o prefixo "theme-" é reservado aos temas de marca`);
 }
 if (erros.length) {
   console.error(erros.join("\n"));

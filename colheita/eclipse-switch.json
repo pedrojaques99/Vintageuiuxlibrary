@@ -1,7 +1,7 @@
 {
   "catalogo": {
-    "name": "theme-switch",
-    "title": "Theme Switch",
+    "name": "eclipse-switch",
+    "title": "Eclipse Switch",
     "type": "ui",
     "family": "fundacao",
     "description": "Chave de tema claro e escuro em que a lua cobre o sol num eclipse, sem mexer na página por conta própria.",
@@ -12,17 +12,17 @@
       "eclipse",
       "toggle"
     ],
-    "demoImport": "./demos/theme-switch-demo",
-    "knobs": "ThemeSwitch",
+    "demoImport": "./demos/eclipse-switch-demo",
+    "knobs": "EclipseSwitch",
     "preview": {
       "w": 460,
       "h": 220
     }
   },
   "registry": {
-    "name": "theme-switch",
+    "name": "eclipse-switch",
     "type": "registry:ui",
-    "title": "Theme Switch",
+    "title": "Eclipse Switch",
     "description": "Chave de tema claro e escuro em que a lua cobre o sol num eclipse, sem mexer na página por conta própria.",
     "dependencies": [
       "motion"
@@ -32,7 +32,7 @@
     ],
     "files": [
       {
-        "path": "registry/visant/ui/theme-switch.tsx",
+        "path": "registry/visant/ui/eclipse-switch.tsx",
         "type": "registry:ui"
       }
     ]

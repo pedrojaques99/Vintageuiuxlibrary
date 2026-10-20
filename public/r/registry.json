@@ -1737,8 +1737,8 @@
             "transition-duration": "320ms"
           },
           ".gleam:focus-visible": {
-            "outline": "var(--focus, 2px solid var(--ring))",
-            "outline-offset": "2px"
+            "outline": "none",
+            "box-shadow": "var(--focus, 0 0 0 2px var(--ring))"
           },
           ".gleam-light": {
             "position": "absolute",
@@ -2211,8 +2211,8 @@
             "border-radius": "var(--r-surface, 16px)"
           },
           ".photo-flip-tile:focus-visible": {
-            "outline": "var(--focus, 2px solid var(--ring))",
-            "outline-offset": "3px"
+            "outline": "none",
+            "box-shadow": "var(--focus, 0 0 0 2px var(--ring))"
           },
           ".photo-flip-slot": {
             "position": "relative",
@@ -2256,8 +2256,8 @@
             "cursor": "pointer"
           },
           ".photo-flip-close:focus-visible": {
-            "outline": "var(--focus, 2px solid var(--ring))",
-            "outline-offset": "2px"
+            "outline": "none",
+            "box-shadow": "var(--focus, 0 0 0 2px var(--ring))"
           },
           ".photo-flip-overlay[data-open=\"1\"]": {
             "animation": "photo-flip-veu var(--dur-base, 200ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both"
@@ -2392,8 +2392,8 @@
             "background": "transparent"
           },
           ".photo-compare-input:focus-visible ~ .photo-compare-seam .photo-compare-grip": {
-            "outline": "var(--focus, 2px solid var(--ring))",
-            "outline-offset": "3px"
+            "outline": "none",
+            "box-shadow": "var(--focus, 0 0 0 2px var(--ring))"
           },
           ".photo-compare-layer > :not(.photo-compare-label)": {
             "width": "100%",
@@ -3069,25 +3069,6 @@
       "author": "Visant Labs <visantsupply@gmail.com>"
     },
     {
-      "name": "theme-switch",
-      "type": "registry:ui",
-      "title": "Theme Switch",
-      "description": "Chave de tema claro e escuro em que a lua cobre o sol num eclipse, sem mexer na página por conta própria.",
-      "dependencies": [
-        "motion"
-      ],
-      "registryDependencies": [
-        "utils"
-      ],
-      "files": [
-        {
-          "path": "registry/visant/ui/theme-switch.tsx",
-          "type": "registry:ui"
-        }
-      ],
-      "author": "Visant Labs <visantsupply@gmail.com>"
-    },
-    {
       "name": "toast-stack",
       "type": "registry:ui",
       "title": "Toast Stack",
@@ -3253,6 +3234,25 @@
       "files": [
         {
           "path": "registry/visant/ui/tilt-card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "eclipse-switch",
+      "type": "registry:ui",
+      "title": "Eclipse Switch",
+      "description": "Chave de tema claro e escuro em que a lua cobre o sol num eclipse, sem mexer na página por conta própria.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/eclipse-switch.tsx",
           "type": "registry:ui"
         }
       ],

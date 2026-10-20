@@ -220,6 +220,7 @@ export function VintageKnob({
     handleMouseDown,
     handleDoubleClick,
     handleWheel,
+    handleKeyDown,
   } = useKnobDrag({ min, max, value, log, onChange });
 
   const scale = size / 81;
@@ -228,9 +229,18 @@ export function VintageKnob({
   return (
     <div
       className={cn(
-        "flex flex-col items-center gap-1 select-none",
+        "flex flex-col items-center gap-1 select-none rounded-[var(--r-control,0.5rem)] outline-none focus-visible:[box-shadow:0_0_0_2px_var(--vintage-accent)]",
         className
       )}
+      // Alcançável por teclado: setas, Page, Home/End (ver `useKnobDrag`).
+      tabIndex={0}
+      role="slider"
+      aria-label={label}
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={Number(currentValue.toFixed(2))}
+      aria-valuetext={fmt ? fmt(currentValue) : currentValue.toFixed(1)}
+      onKeyDown={handleKeyDown}
       onMouseDown={handleMouseDown}
       onDoubleClick={handleDoubleClick}
       onWheel={handleWheel}

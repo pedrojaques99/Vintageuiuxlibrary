@@ -37,8 +37,8 @@
         "border-radius": "var(--r-surface, 16px)"
       },
       ".photo-flip-tile:focus-visible": {
-        "outline": "var(--focus, 2px solid var(--ring))",
-        "outline-offset": "3px"
+        "outline": "none",
+        "box-shadow": "var(--focus, 0 0 0 2px var(--ring))"
       },
       ".photo-flip-slot": {
         "position": "relative",
@@ -82,8 +82,8 @@
         "cursor": "pointer"
       },
       ".photo-flip-close:focus-visible": {
-        "outline": "var(--focus, 2px solid var(--ring))",
-        "outline-offset": "2px"
+        "outline": "none",
+        "box-shadow": "var(--focus, 0 0 0 2px var(--ring))"
       },
       ".photo-flip-overlay[data-open=\"1\"]": {
         "animation": "photo-flip-veu var(--dur-base, 200ms) var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both"

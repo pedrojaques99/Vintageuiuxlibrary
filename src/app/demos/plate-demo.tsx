@@ -95,7 +95,7 @@ export default function PlateDemo({ props }: DemoProps) {
             key={p.nome}
             href="#"
             onClick={(e) => e.preventDefault()}
-            className="group block rounded-[var(--r-control,0.5rem)] outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:[outline-color:var(--brand)]"
+            className="group block rounded-[var(--r-control,0.5rem)] outline-none focus-visible:[box-shadow:var(--focus)]"
           >
             <Plate
               ratio="4/5"
@@ -141,7 +141,7 @@ function Interruptor({
       onClick={onClick}
       aria-pressed={ligado}
       className={[
-        "alvo-toque rounded-[var(--r-pill,9999px)] border px-2.5 py-1 font-mono text-micro uppercase tracking-[0.12em] outline-none",
+        "alvo-toque rounded-[var(--r-pill,9999px)] border px-2.5 py-1 font-mono text-micro uppercase tracking-[0.12em] outline-none focus-visible:[box-shadow:var(--focus)]",
         "transition-[color,border-color,background-color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
         ligado
           ? "border-[var(--brand)] bg-[var(--brand)] text-[var(--brand-foreground)]"

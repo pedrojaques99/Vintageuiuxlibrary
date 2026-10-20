@@ -9939,57 +9939,6 @@
       ]
     }
   ],
-  "theme-switch": [
-    {
-      "nome": "ThemeSwitch",
-      "descricao": null,
-      "props": [
-        {
-          "nome": "defaultTheme",
-          "tipo": "enum",
-          "obrigatoria": false,
-          "padrao": "light",
-          "descricao": "Tema inicial quando não controlada.",
-          "valores": [
-            "light",
-            "dark"
-          ]
-        },
-        {
-          "nome": "iconOnly",
-          "tipo": "boolean",
-          "obrigatoria": false,
-          "padrao": "false",
-          "descricao": "Só o eclipse, num quadrado. Sem o texto ao lado."
-        },
-        {
-          "nome": "label",
-          "tipo": "string",
-          "obrigatoria": false,
-          "padrao": null,
-          "descricao": "Nome acessível. Por padrão diz para qual tema vai."
-        },
-        {
-          "nome": "onThemeChange",
-          "tipo": "(next: Theme, trigger: HTMLButtonElement) => void",
-          "obrigatoria": false,
-          "padrao": null,
-          "descricao": "Chamado no clique com o próximo tema e o botão que disparou. Quem aplica o tema é você."
-        },
-        {
-          "nome": "theme",
-          "tipo": "enum",
-          "obrigatoria": false,
-          "padrao": null,
-          "descricao": "Tema atual. Passe para controlar; omita para a chave guardar o próprio estado.",
-          "valores": [
-            "light",
-            "dark"
-          ]
-        }
-      ]
-    }
-  ],
   "toast-stack": [
     {
       "nome": "ToastStackProvider",
@@ -10565,6 +10514,57 @@
           "obrigatoria": false,
           "padrao": "false",
           "descricao": "Afunda o canto sob o ponteiro em vez de levantá-lo."
+        }
+      ]
+    }
+  ],
+  "eclipse-switch": [
+    {
+      "nome": "EclipseSwitch",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "defaultTheme",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "light",
+          "descricao": "Tema inicial quando não controlada.",
+          "valores": [
+            "light",
+            "dark"
+          ]
+        },
+        {
+          "nome": "iconOnly",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Só o eclipse, num quadrado. Sem o texto ao lado."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Nome acessível. Por padrão diz para qual tema vai."
+        },
+        {
+          "nome": "onThemeChange",
+          "tipo": "(next: Theme, trigger: HTMLButtonElement) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado no clique com o próximo tema e o botão que disparou. Quem aplica o tema é você."
+        },
+        {
+          "nome": "theme",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Tema atual. Passe para controlar; omita para a chave guardar o próprio estado.",
+          "valores": [
+            "light",
+            "dark"
+          ]
         }
       ]
     }
