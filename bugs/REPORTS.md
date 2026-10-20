@@ -2,7 +2,7 @@
 
 <!-- Gerado por scripts/vite-bug-report.mjs. Não edite à mão: use `npm run bugs -- --resolve <id>`. -->
 
-**66 aberto(s)** · 96 resolvido(s)
+**63 aberto(s)** · 99 resolvido(s)
 
 ## auth-button (2)
 
@@ -22,21 +22,6 @@
 
 - **vintage-command-palette-2** — ficou meio vazio, redundante, acho q apaga
   <sub>Quebrado · 1920×911 · claro · marca: Grão Editora · 2026-08-14 21:06</sub>
-
-## motion-e-estado (1)
-
-- **motion-e-estado-1** — ler buf da pagina q vende
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 12:15</sub>
-
-## rig-vintage (1)
-
-- **rig-vintage-1** — ler bug da pagina q vende e resolver da mesma forma
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 12:15</sub>
-
-## marca-viva (1)
-
-- **marca-viva-1** — troque por "brand system" e redesenhe a pagina pra ficar mais pica e coerente
-  <sub>Quebrado · 1920×911 · escuro · marca: Norte Verde · 2026-10-20 12:16</sub>
 
 ## nav-drawer (1)
 
@@ -428,5 +413,8 @@
 - ~~skeleton-rail-3 · skeleton-rail — paia, tinha q ter varios tipos de skeleton entção~~
 - ~~mesa-de-trabalho-1 · mesa-de-trabalho — mt mal apresentada, faz uma pagina app mesmo montada com mocks data - tipo um linear-visant-board da vida, com mais data em cada demanda, pro user ver e entender de cara, e não um monte de componente solto sem sentido empilhado, tipo do kanban vai rpo slider "quanto cabe na semana" confuso pra caralho~~
 - ~~pagina-que-vende-1 · pagina-que-vende — tem mt label e botão e o cara não consegue entender que é uma pagina montada de exemplo pra ele ver os componnentes em ação e no hover aparecer os dados pra ele ver mais ou copiar direto - redesenhe a ui ux dos modelos da /kit inteira pra ficar mais intuitivo e visual a parada, sem label tecnica falando de cada dobra pqp, finge q é um site normal,, mockup, interativo,  q no hover aparece qausi compnoentes foram usados~~
+- ~~motion-e-estado-1 · motion-e-estado — ler buf da pagina q vende~~
+- ~~rig-vintage-1 · rig-vintage — ler bug da pagina q vende e resolver da mesma forma~~
+- ~~marca-viva-1 · marca-viva — troque por "brand system" e redesenhe a pagina pra ficar mais pica e coerente~~
 
 </details>

@@ -34,7 +34,7 @@ const KITS = [
   { slug: "pagina-que-vende", titulo: "Página que vende" },
   { slug: "motion-e-estado", titulo: "Motion e estado" },
   { slug: "rig-vintage", titulo: "Rig vintage" },
-  { slug: "marca-viva", titulo: "Marca viva" },
+  { slug: "brand-system", titulo: "Brand system" },
 ];
 
 /** A composição é lazy e algumas peças montam em rAF; sem isto mede-se o esqueleto. */
@@ -130,6 +130,12 @@ test.describe("salas de kit", () => {
       document.documentElement.classList.contains("dark"),
     );
     expect(noDocumento, "a sala escura vazou o tema para o documento").toBe(false);
+  });
+
+  test("o link antigo /kit/marca-viva abre o Brand system", async ({ page }) => {
+    await page.goto("/kit/marca-viva");
+    await esperarSala(page, "Brand system");
+    await expect(page).toHaveURL(/\/kit\/brand-system$/);
   });
 
   test("o link antigo /rig continua abrindo a bancada", async ({ page }) => {

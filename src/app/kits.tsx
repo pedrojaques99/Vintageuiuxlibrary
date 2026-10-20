@@ -29,6 +29,8 @@ import PECAS from "./kits.generated.json";
 export interface Kit {
   /** Vai na URL e no `shadcn add @visant/<slug>`. */
   slug: string;
+  /** Slugs antigos que ainda abrem esta sala. */
+  apelidos?: string[];
   /** Nome curto, para a barra de navegação entre salas. */
   label: string;
   title: string;
@@ -73,18 +75,20 @@ export const KITS: Kit[] = [
     slug: "rig-vintage",
     label: "Rig vintage",
     title: "Rig vintage",
-    tese: "A bancada skeuomórfica completa: knob, fader, VU, osciloscópio e pads, no painel escuro em que foram desenhados.",
+    tese: "Um rack de estúdio de exemplo, com monitor, canal, tom e sampler ligados de verdade: o que a mão mexe, o ponteiro mostra. Passe o mouse pra ver qual peça é.",
     escura: true,
     fundo:
       "radial-gradient(120% 100% at 50% 0%, var(--vintage-surface-2), var(--vintage-surface-1))",
     Composicao: React.lazy(() => import("./VintageRig")),
   },
   {
-    slug: "marca-viva",
-    label: "Marca viva",
-    title: "Marca viva",
-    tese: "A tela de marca de um app de exemplo: troque a marca e tudo repinta sem recarregar. Passe o mouse pra ver qual peça é.",
-    Composicao: React.lazy(() => import("./kits/marca-viva")),
+    slug: "brand-system",
+    /* O kit se chamava "Marca viva": o link antigo continua abrindo aqui. */
+    apelidos: ["marca-viva"],
+    label: "Brand system",
+    title: "Brand system",
+    tese: "O portal de marca de um time de exemplo: cor, tipo, forma e componentes lidos da marca ativa. Troque a marca e tudo repinta. Passe o mouse pra ver qual peça é.",
+    Composicao: React.lazy(() => import("./kits/brand-system")),
   },
 ];
 
@@ -95,4 +99,4 @@ export const pecasDoKit = (kit: Kit): CatalogItem[] => {
 };
 
 export const kitPorSlug = (slug: string | null) =>
-  KITS.find((k) => k.slug === slug) ?? null;
+  KITS.find((k) => k.slug === slug || (slug != null && k.apelidos?.includes(slug))) ?? null;

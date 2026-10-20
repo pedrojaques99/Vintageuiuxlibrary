@@ -61,12 +61,15 @@
     "vintage-tv-frame",
     "vintage-xy-pad"
   ],
-  "marca-viva": [
+  "brand-system": [
     "brand-selector",
+    "brand-theme",
     "chip",
     "cover-art",
+    "css-color",
     "cta-surface",
     "empty-state",
+    "segmented-control",
     "sfx-toggle",
     "side-nav",
     "use-local-search",

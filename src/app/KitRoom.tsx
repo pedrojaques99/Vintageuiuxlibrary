@@ -118,9 +118,17 @@ export function KitRoom({
 }) {
   const indice = Math.max(
     0,
-    KITS.findIndex((k) => k.slug === slug),
+    KITS.findIndex((k) => k.slug === slug || k.apelidos?.includes(slug)),
   );
   const kit = KITS[indice];
+
+  /* Link antigo (apelido) abre a sala e troca o endereço pelo nome de agora,
+     sem entrada nova no histórico. */
+  React.useEffect(() => {
+    if (slug !== kit.slug && kit.apelidos?.includes(slug)) {
+      window.history.replaceState(null, "", `/kit/${kit.slug}`);
+    }
+  }, [slug, kit]);
   const pecas = React.useMemo(() => pecasDoKit(kit), [kit]);
   const deps = React.useMemo(() => allDeps(pecas.map((p) => p.name)), [pecas]);
   /* "Mostrar peças": o equivalente do hover para teclado e toque. */

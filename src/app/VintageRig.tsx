@@ -1,36 +1,18 @@
 "use client";
 
 /**
- * Rig vintage — a bancada, e não a vitrine das peças da bancada.
+ * Rig vintage: o kit montado como um rack de estúdio de exemplo.
  *
- * O que estava errado, e é o mesmo defeito duas vezes:
+ * O dono leu a versão anterior do mesmo jeito que a página que vende: cinco
+ * trechos com legenda ("01 fonte", "02 ganho"...) e notas explicando o que
+ * olhar. Aqui é um rack: quatro unidades parafusadas uma em cima da outra, como
+ * num estúdio, com o monitor no alto e o canal, o tom e o sampler embaixo. A
+ * única escrita é serigrafia de painel. Quem quer o nome da peça passa o mouse
+ * (camada de inspeção, `kits/sala.tsx`), peça por peça.
  *
- * 1. **Nove caixas iguais numa grade 2x2.** Cada módulo era uma `section` com
- *    gradiente, borda e `shadow-2xl`, título em Orbitron e o mesmo respiro em
- *    todo lugar. Cinco das nove peças (EQ, VU, osciloscópio, XY pad, TV) já
- *    desenham a própria moldura, então metade da tela era moldura em volta de
- *    moldura. Formulário com pele de metal.
- * 2. **Nenhuma ordem de sinal.** Bancada de verdade tem caminho, e o olho entra
- *    por ele. Aqui os módulos estavam em ordem de commit: knobs, VU, botões,
- *    fader, knob grande, toggle, EQ, TV, scope, pads, XY. O VU sorteava um
- *    número a cada 100ms e o osciloscópio desenhava senos fixos, então girar o
- *    DRIVE não movia nada e o CLIP acendia sozinho.
- *
- * A bancada agora corre na ordem do sinal, em cinco blocos:
- *
- *     01 fonte → 02 ganho → 03 tratamento → 04 medição → 05 saída
- *
- * e os cinco estão **ligados** (`kits/rig-sinal.ts`): o fader e o DRIVE fazem o
+ * A cadeia continua LIGADA (`kits/rig-sinal.ts`): o fader e o DRIVE fazem o
  * nível, o nível move o ponteiro do VU e acende o CLIP, e o EQ, os knobs de tom
- * e o XY pad moldam o traço do osciloscópio. Mexer em qualquer coisa aqui em
- * cima muda alguma coisa lá embaixo, que é a única promessa que um kit de
- * controle precisa cumprir.
- *
- * Moldura: `Painel` (da gramática da sala, com a pele da bancada) aparece duas
- * vezes, e só onde o grupo é de controles nus que num rack estariam parafusados
- * num faceplate: fonte e ganho. Peça que já traz bezel apoia direto no gradiente
- * da sala. Título de módulo é o rótulo do `Bloco`, em mono discreto, porque
- * Orbitron em nove cabeçalhos competia com os próprios instrumentos.
+ * e o XY pad moldam o traço do osciloscópio. Mexer embaixo muda em cima.
  */
 
 import * as React from "react";
@@ -50,7 +32,7 @@ import { VintageSoundboardPad } from "../../registry/vintage/ui/vintage-soundboa
 import { VintageXYPad } from "../../registry/vintage/ui/vintage-xy-pad";
 import { VintageOscilloscope } from "../../registry/vintage/ui/vintage-oscilloscope";
 
-import { Atos, Bloco, Fecho, Painel } from "./kits/sala";
+import { Pecas } from "./kits/sala";
 import { usePageVisible, useElementWidth, useInView } from "./stage";
 import { PAD_VOICES, SCOPE_PHOSPHOR, SCOPE_SAMPLES } from "./demo-fixtures";
 import {
@@ -93,34 +75,65 @@ function Etiqueta({ children }: { children: React.ReactNode }) {
   );
 }
 
+/** Parafuso de orelha de rack. Só desenho, nenhum texto. */
+function Parafuso() {
+  return (
+    <span
+      aria-hidden="true"
+      className="block size-3 rounded-full border border-[var(--vintage-border)] bg-[radial-gradient(circle_at_35%_35%,var(--vintage-metal-light),var(--vintage-metal-dark))]"
+    />
+  );
+}
+
 /**
- * O `Painel` da sala vestido de rack.
- *
- * Não é um painel novo: é o mesmo primitivo, com a pele desta sala trocada por
- * `className` (o `cn` deixa a última classe de fundo e de cor de borda vencer).
- * Assim a bancada continua obedecendo à regra de "uma moldura por nível" da
- * gramática das salas, e ainda parece metal.
+ * Uma unidade de rack: orelhas com parafuso, faceplate de metal e a placa de
+ * modelo serigrafada no canto. É a moldura que um aparelho de verdade tem, e a
+ * única desta sala.
  */
-function Faceplate({
-  barra,
+function Rack({
+  modelo,
+  nome,
+  id,
   className,
   children,
 }: {
-  barra?: React.ReactNode;
+  modelo: string;
+  nome: string;
+  id?: string;
   className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <Painel
-      barra={barra}
+    <section
+      id={id}
+      aria-label={nome}
       className={cn(
-        "border-[var(--vintage-border)]",
+        "flex overflow-hidden rounded-[6px] border border-[var(--vintage-border)]",
         "bg-[linear-gradient(180deg,var(--vintage-surface-2),var(--vintage-surface-1))]",
+        "[box-shadow:0_1px_0_color-mix(in_oklab,var(--vintage-metal-light)_25%,transparent)_inset,0_18px_40px_-24px_color-mix(in_oklab,var(--vintage-surface-1)_90%,transparent)]",
         className,
       )}
     >
-      {children}
-    </Painel>
+      <div className="hidden w-7 shrink-0 flex-col items-center justify-between border-r border-[var(--vintage-border)] bg-[var(--vintage-surface-3)] py-3 sm:flex">
+        <Parafuso />
+        <Parafuso />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-3 px-5 pt-3 sm:px-7">
+          <span className="font-vintage-display text-apoio tracking-[0.12em] text-[var(--vintage-label)]">
+            {modelo}
+          </span>
+          <span className="font-vintage-mono text-micro uppercase tracking-[0.2em] text-[var(--vintage-text-dim)]">
+            {nome}
+          </span>
+        </div>
+        {children}
+      </div>
+      <div className="hidden w-7 shrink-0 flex-col items-center justify-between border-l border-[var(--vintage-border)] bg-[var(--vintage-surface-3)] py-3 sm:flex">
+        <Parafuso />
+        <Parafuso />
+      </div>
+    </section>
   );
 }
 
@@ -276,9 +289,9 @@ function Medicao({
   const estourou = nivel > CORTE;
 
   return (
-    <div className="flex flex-wrap items-center gap-x-10 gap-y-7">
-      <div className="min-w-[9rem]">
-        <Etiqueta>nível de saída</Etiqueta>
+    <div className="flex flex-wrap items-center gap-x-8 gap-y-6">
+      <div className="min-w-[8.5rem]">
+        <Etiqueta>saída</Etiqueta>
         <p
           className="mt-1.5 font-vintage-display text-[2.75rem] leading-none tabular-nums text-[var(--vintage-value)]"
           aria-live="off"
@@ -288,19 +301,23 @@ function Medicao({
         <p className="mt-1.5 font-vintage-mono text-apoio text-[var(--vintage-text-dim)]">
           de 10, corta em {NUM.format(CORTE)}
         </p>
-
-        {/* A régua de lâmpadas: o estado da cadeia em quatro pontos. */}
-        <div className="mt-5 flex gap-3.5">
-          <VintageLed color="green" active={ligado} label="PWR" />
-          <VintageLed color="yellow" active={bypass} label="BYP" />
-          <VintageLed color="orange" active={mute} label="MUTE" />
-          <VintageLed color="red" active={estourou} label="CLIP" />
-        </div>
+        <Pecas nomes={["vintage-led"]} canto="base-inicio" className="mt-5 w-fit">
+          <div className="flex gap-3.5">
+            <VintageLed color="green" active={ligado} label="PWR" />
+            <VintageLed color="yellow" active={bypass} label="BYP" />
+            <VintageLed color="orange" active={mute} label="MUTE" />
+            <VintageLed color="red" active={estourou} label="CLIP" />
+          </div>
+        </Pecas>
       </div>
 
-      <VintageMeter label="SIGNAL" value={nivel} />
+      <Pecas nomes={["vintage-meter"]}>
+        <VintageMeter label="SIGNAL" value={nivel} />
+      </Pecas>
 
-      <Traco ativo={ativo} amplitude={nivel / 10} tom={bypass ? TOM_NEUTRO : tom} />
+      <Pecas nomes={["vintage-oscilloscope"]} className="min-w-[16.25rem] max-w-full flex-1">
+        <Traco ativo={ativo} amplitude={nivel / 10} tom={bypass ? TOM_NEUTRO : tom} />
+      </Pecas>
     </div>
   );
 }
@@ -369,216 +386,55 @@ export default function VintageRig() {
   }, []);
 
   return (
-    <div ref={alvo}>
-      <Atos>
-        {/* A abertura saiu. Ela narrava o que a bancada faz quando se mexe nela,
-            e a bancada faz isso na frente da pessoa, com ponteiro, traço e LED.
-            A ordem do sinal continua dita, mas pelos rótulos numerados dos
-            blocos (01 fonte a 05 saída), que é onde ela orienta de fato; e o
-            corte em {NUM.format(CORTE)} continua ao lado do número de nível,
-            que é onde ele decide alguma coisa. */}
-
-        {/* ---------------------------------------------------------------- */}
-        <Bloco
-          titulo="01 fonte"
-          nota="de onde o sinal entra, o que dispara e o que corta."
-          pecas={["vintage-toggle", "vintage-soundboard-pad", "vintage-button"]}
-        >
-          <Faceplate
-            barra={
-              <>
-                <Etiqueta>entrada</Etiqueta>
-                <span className="ml-auto font-vintage-mono text-apoio text-[var(--vintage-text-dim)]">
-                  fonte {ROTULO_DE_FONTE[fonte]}
-                </span>
-              </>
-            }
+    <div ref={alvo} className="mx-auto flex max-w-6xl flex-col gap-2.5">
+      {/* A tampa do rack: a etiqueta do estúdio e a tecla que abre a paleta. */}
+      <div className="flex items-center gap-3 px-1 pb-1">
+        <span className="font-vintage-mono text-micro uppercase tracking-[0.24em] text-[var(--vintage-text-dim)]">
+          estúdio b · rack 2
+        </span>
+        <Pecas nomes={["vintage-command-palette"]} canto="base-fim" className="ml-auto">
+          <button
+            type="button"
+            onClick={() => setPaleta(true)}
+            aria-label="Abrir a paleta de módulos"
+            className="alvo-toque inline-flex items-center gap-2 rounded-[var(--r-control,0.5rem)] border border-[var(--vintage-border)] bg-[var(--vintage-surface-3)] px-3 py-1.5 font-vintage-mono text-micro uppercase tracking-[0.14em] text-[var(--vintage-text-muted)] outline-none transition-[color,border-color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--vintage-label)] hover:text-[var(--vintage-label)] focus-visible:[box-shadow:var(--focus)]"
           >
-            <div className="flex flex-wrap items-start gap-x-10 gap-y-8 p-5 sm:p-7">
-              {/*
-                O `vintage-toggle` desenha o próprio título e serigrafa os três
-                rótulos em `left:-50px`, fora da carcaça. Com "LINE/MIC/INST" no
-                lugar do "U/M/D" de fábrica, a serigrafia sai do painel pela
-                esquerda e some por baixo do vizinho. O espaço é reservado aqui,
-                no consumidor, que é onde sobrescrita de default de primitivo
-                deve morar: a peça continua igual para quem a instala.
-              */}
-              <div id="fonte" className="pl-14 pt-10">
-                <VintageToggle
-                  title="FONTE"
-                  labels={["LINE", "MIC", "INST"]}
-                  position={fonte}
-                  onChange={setFonte}
-                />
-              </div>
+            <kbd className="font-vintage-mono">⌘K</kbd>
+            módulos
+          </button>
+        </Pecas>
+      </div>
 
-              <div id="pads" className="min-w-0 flex flex-col gap-3 pt-10">
-                <Etiqueta>disparo</Etiqueta>
-                <div className="grid grid-cols-4 gap-2.5">
-                  {PAD_VOICES.map((pad, i) => (
-                    <VintageSoundboardPad
-                      key={pad.label}
-                      label={pad.label}
-                      icon={pad.icon}
-                      color={pad.color}
-                      size={68}
-                      active={padsAtivos.has(i)}
-                      onTrigger={() => {
-                        setPadsAtivos((s) => new Set(s).add(i));
-                        // O disparo vira transiente na ponte de medidores.
-                        setDisparos((n) => n + 1);
-                      }}
-                      onRelease={() =>
-                        setPadsAtivos((s) => {
-                          const proximo = new Set(s);
-                          proximo.delete(i);
-                          return proximo;
-                        })
-                      }
-                    />
-                  ))}
+      {/* monitor: o que sai, no alto, onde o olho está */}
+      <Rack id="medicao" modelo="VM-2" nome="monitor">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-6 p-5 sm:p-7">
+          <Pecas nomes={["vintage-tv-frame"]} className="w-full max-w-[20rem] shrink-0">
+            <VintageTvFrame
+                title="MONITOR"
+                width={320}
+                showTimecode="00:12:34"
+                signalActive={ligado && !mute}
+              >
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+                  <span
+                    className="font-vintage-mono text-corpo font-bold uppercase tracking-[0.15em]"
+                    style={{
+                      color: SCOPE_PHOSPHOR,
+                      textShadow: `0 0 8px color-mix(in oklab, ${SCOPE_PHOSPHOR} 60%, transparent)`,
+                    }}
+                  >
+                    {ligado && !mute ? "NO AR" : "SEM SINAL"}
+                  </span>
+                  <span
+                    className="font-vintage-mono text-micro tracking-[0.1em]"
+                    style={{ color: `color-mix(in oklab, ${SCOPE_PHOSPHOR} 35%, transparent)` }}
+                  >
+                    CH 01 {ROTULO_DE_FONTE[fonte]}
+                  </span>
                 </div>
-              </div>
-
-              {/* Empurrado para a direita a partir do tablet: fonte à esquerda,
-                  disparo no meio, corte na ponta. É a ordem em que a mão anda
-                  num console, e sem isto o terço direito do faceplate ficava
-                  vazio parecendo layout inacabado. */}
-              <div id="corte" className="flex flex-col gap-3 pt-10 sm:ml-auto">
-                <Etiqueta>corte</Etiqueta>
-                <div className="flex flex-wrap items-center gap-6">
-                  <VintageButton
-                    label="POWER"
-                    active={ligado}
-                    onClick={() => setLigado((v) => !v)}
-                  />
-                  <VintageButton
-                    label="BYPASS"
-                    active={bypass}
-                    onClick={() => setBypass((v) => !v)}
-                  />
-                  <VintageButton label="MUTE" active={mute} onClick={() => setMute((v) => !v)} />
-                </div>
-              </div>
-            </div>
-          </Faceplate>
-        </Bloco>
-
-        {/* ---------------------------------------------------------------- */}
-        {/*
-          O herói da bancada.
-
-          É o módulo mais alto e o único com o faceplate largo, porque é onde a
-          mão entra: o knob de 318px é o maior objeto da sala e o fader ocupa a
-          linha inteira ao lado dele. Tudo o que vem depois é consequência do que
-          se faz aqui, e a hierarquia precisa dizer isso antes de qualquer texto.
-        */}
-        <Bloco
-          titulo="02 ganho"
-          nota="o quanto entra. É o módulo que manda no resto da bancada."
-          pecas={["vintage-large-knob", "vintage-slider"]}
-        >
-          <Faceplate
-            barra={
-              <>
-                <Etiqueta>estágio de ganho</Etiqueta>
-                {/* EXCEÇÃO ao `ruido-scan/ensina-a-usar`, com motivo: o `shift`
-                    para ajuste fino é invisível por natureza — não existe pixel
-                    que anuncie um modificador de teclado, e quem não souber vai
-                    embora achando que o knob é grosseiro. A primeira metade da
-                    frase acompanha porque separá-las deixaria "shift para fino"
-                    sozinho, sem dizer fino no quê. */}
-                <span className="ml-auto font-vintage-mono text-apoio text-[var(--vintage-text-dim)]">
-                  arrasta pra cima e pra baixo, shift para fino
-                </span>
-              </>
-            }
-          >
-            <div
-              id="ganho"
-              className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8 p-5 sm:p-9"
-            >
-              <Trilho>
-                <VintageLargeKnob label="DRIVE" value={drive} onChange={setDrive} />
-              </Trilho>
-
-              <div className="flex w-full min-w-0 max-w-[22rem] flex-col gap-4">
-                <VintageSlider label="GAIN" value={ganho} onChange={setGanho} className="w-full" />
-                <p className="text-corpo leading-relaxed text-[var(--vintage-text-muted)]">
-                  DRIVE satura, GAIN empurra. Os dois somam no mesmo número, e é esse número
-                  que a ponte lá embaixo marca.
-                </p>
-              </div>
-            </div>
-          </Faceplate>
-        </Bloco>
-
-        {/* ---------------------------------------------------------------- */}
-        {/*
-          Sem faceplate: EQ e XY pad já trazem bezel próprio, e envolvê-los
-          reproduziria exatamente a caixa dentro de caixa que a sala veio matar.
-          Os dois knobs de tom ficam nus sobre o gradiente, com serigrafia mono.
-        */}
-        <Bloco
-          titulo="03 tratamento"
-          nota="o que muda a forma do sinal antes de ele ser medido."
-          pecas={["vintage-eq", "vintage-knob", "vintage-xy-pad"]}
-        >
-          <div
-            id="tratamento"
-            className={cn(
-              "flex flex-wrap items-start gap-x-10 gap-y-8",
-              // Com BYPASS ligado o tratamento sai do caminho, e o painel diz
-              // isso apagando: estado que muda o sinal e não muda a tela é o
-              // jeito mais rápido de a demo mentir.
-              bypass && "opacity-45",
-            )}
-          >
-            <Trilho>
-              {/* A bancada usa o EQ PARAMÉTRICO: `onChange` entrega bandas com
-                  ganho em dB (−12…+12), e não posições de fader 0…10. A
-                  conversão mantém a régua que o resto do rig já usa.
-
-                  O `vintage-eq` de faders continua publicado e intacto — são
-                  duas peças, não uma que substituiu a outra. Aqui vale a curva
-                  porque a bancada já tem fader demais. */}
-              <VintageParametricEQ
-                title="PARAMETRIC EQ"
-                onChange={(bs) => setBandas(bs.map((b) => 5 + (b.gain / 12) * 5))}
-              />
-            </Trilho>
-
-            <div className="flex flex-wrap items-start gap-x-10 gap-y-8">
-              <div className="flex flex-col gap-4">
-                <Etiqueta>tom</Etiqueta>
-                <div className="flex items-center gap-8">
-                  <VintageKnob label="BASS" value={grave} onChange={setGrave} />
-                  <VintageKnob label="TREBLE" value={agudo} onChange={setAgudo} />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <Etiqueta>filtro e cauda</Etiqueta>
-                <VintageXYPad
-                  size={192}
-                  labelX="FILTRO"
-                  labelY="CAUDA"
-                  value={xy}
-                  onChange={(x, y) => setXy({ x, y })}
-                  color="var(--vintage-accent)"
-                />
-              </div>
-            </div>
-          </div>
-        </Bloco>
-
-        {/* ---------------------------------------------------------------- */}
-        <Bloco
-          titulo="04 medição"
-          nota="onde se confere o que as mãos fizeram lá em cima."
-          pecas={["vintage-meter", "vintage-oscilloscope", "vintage-led"]}
-        >
-          <div id="medicao">
+            </VintageTvFrame>
+          </Pecas>
+          <div className="min-w-0 flex-1">
             <Medicao
               ativo={ativo}
               ligado={ligado}
@@ -591,88 +447,144 @@ export default function VintageRig() {
               tom={tom}
             />
           </div>
-        </Bloco>
+        </div>
+      </Rack>
 
-        {/* ---------------------------------------------------------------- */}
-        <Bloco
-          titulo="05 saída"
-          nota="o que vai ao ar, e o ⌘K que atravessa a bancada inteira."
-          pecas={["vintage-tv-frame", "vintage-command-palette"]}
-        >
-          <div id="saida" className="flex flex-wrap items-start gap-x-10 gap-y-8">
-            <Trilho>
-              <VintageTvFrame
-                title="VISANT TV"
-                width={400}
-                showTimecode="00:12:34"
-                signalActive={ligado && !mute}
-              >
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
-                  <span
-                    className="font-vintage-mono text-corpo font-bold uppercase tracking-[0.15em]"
-                    style={{
-                      color: SCOPE_PHOSPHOR,
-                      textShadow: `0 0 8px color-mix(in oklab, ${SCOPE_PHOSPHOR} 60%, transparent)`,
-                    }}
-                  >
-                    {ligado && !mute ? "SIGNAL ACTIVE" : "NO SIGNAL"}
-                  </span>
-                  <span
-                    className="font-vintage-mono text-micro tracking-[0.1em]"
-                    style={{ color: `color-mix(in oklab, ${SCOPE_PHOSPHOR} 35%, transparent)` }}
-                  >
-                    CH 01 {ROTULO_DE_FONTE[fonte]} 720p
-                  </span>
-                </div>
-              </VintageTvFrame>
-            </Trilho>
-
-            <div className="flex min-w-0 max-w-sm flex-col gap-4">
-              <Etiqueta>atalho</Etiqueta>
-              <button
-                type="button"
-                onClick={() => setPaleta(true)}
-                className="alvo-toque inline-flex w-fit items-center gap-2 rounded-[var(--r-control,0.5rem)] border border-[var(--vintage-border)] bg-[var(--vintage-surface-3)] px-5 py-2.5 font-vintage-mono text-apoio uppercase tracking-[0.14em] text-[var(--vintage-text-muted)] outline-none transition-[color,border-color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--vintage-label)] hover:text-[var(--vintage-label)] focus-visible:border-[var(--vintage-label)] active:scale-[0.97] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
-              >
-                ⌘K abrir a paleta
-              </button>
-              <p className="text-corpo leading-relaxed text-[var(--vintage-text-muted)]">
-                A paleta pula para qualquer módulo da bancada sem tirar a mão do teclado. É o
-                mesmo atalho que o rig entrega instalado.
-              </p>
+      {/* canal: de onde entra e o quanto entra */}
+      <Rack id="ganho" modelo="CS-1" nome="canal">
+        <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-8 p-5 sm:p-7">
+          <Pecas nomes={["vintage-toggle"]} className="pl-14 pt-8">
+            <div id="fonte">
+              <VintageToggle
+                title="FONTE"
+                labels={["LINE", "MIC", "INST"]}
+                position={fonte}
+                onChange={setFonte}
+              />
             </div>
-          </div>
-        </Bloco>
+          </Pecas>
 
-        {/* O fecho listava os quatro gestos que as peças já trazem prontos, e
-            a pessoa acabou de sair de uma bancada onde girou, arrastou e viu o
-            ponteiro subir. Inventariar o que ela acabou de fazer é o fecho
-            mais fraco possível. Fica o que ela NÃO pode ter descoberto
-            mexendo: que o valor é dela, não da demo. */}
-        <Fecho>
-          Você liga o value de cada peça no seu áudio e a bancada passa a medir o seu sinal.
-        </Fecho>
-      </Atos>
+          <Pecas nomes={["vintage-large-knob"]} className="max-w-full">
+            <div title="Arraste pra cima e pra baixo; com shift, o ajuste fica fino.">
+              <Trilho>
+                <VintageLargeKnob label="DRIVE" value={drive} onChange={setDrive} />
+              </Trilho>
+            </div>
+          </Pecas>
+
+          <div className="flex w-full min-w-0 max-w-[20rem] flex-col gap-8">
+            <Pecas nomes={["vintage-slider"]} className="w-full">
+              <VintageSlider label="GAIN" value={ganho} onChange={setGanho} className="w-full" />
+            </Pecas>
+
+            <Pecas nomes={["vintage-button"]} className="w-fit">
+              <div id="corte" className="flex flex-col gap-3">
+                <Etiqueta>corte</Etiqueta>
+                <div className="flex flex-wrap items-center gap-5">
+                  <VintageButton label="POWER" active={ligado} onClick={() => setLigado((v) => !v)} />
+                  <VintageButton label="BYPASS" active={bypass} onClick={() => setBypass((v) => !v)} />
+                  <VintageButton label="MUTE" active={mute} onClick={() => setMute((v) => !v)} />
+                </div>
+              </div>
+            </Pecas>
+          </div>
+        </div>
+      </Rack>
+
+      {/* tom: o que molda o traço lá em cima */}
+      <Rack id="tratamento" modelo="EQ-6" nome="tom">
+        <div
+          className={cn(
+            "flex flex-wrap items-start gap-x-10 gap-y-8 p-5 sm:p-7",
+            // Com BYPASS o tom sai do caminho, e o painel apaga junto.
+            bypass && "opacity-45",
+          )}
+        >
+          <Pecas nomes={["vintage-parametric-eq"]} className="max-w-full">
+            <Trilho>
+              <VintageParametricEQ
+                title="PARAMETRIC EQ"
+                onChange={(bs) => setBandas(bs.map((b) => 5 + (b.gain / 12) * 5))}
+              />
+            </Trilho>
+          </Pecas>
+
+          <div className="flex flex-wrap items-start gap-x-10 gap-y-8">
+            <Pecas nomes={["vintage-knob"]}>
+              <div className="flex flex-col gap-4">
+                <Etiqueta>tom</Etiqueta>
+                <div className="flex items-center gap-8">
+                  <VintageKnob label="BASS" value={grave} onChange={setGrave} />
+                  <VintageKnob label="TREBLE" value={agudo} onChange={setAgudo} />
+                </div>
+              </div>
+            </Pecas>
+
+            <Pecas nomes={["vintage-xy-pad"]}>
+              <div className="flex flex-col gap-4">
+                <Etiqueta>filtro · cauda</Etiqueta>
+                <VintageXYPad
+                  size={176}
+                  labelX="FILTRO"
+                  labelY="CAUDA"
+                  value={xy}
+                  onChange={(x, y) => setXy({ x, y })}
+                  color="var(--vintage-accent)"
+                />
+              </div>
+            </Pecas>
+          </div>
+        </div>
+      </Rack>
+
+      {/* sampler: o golpe que o monitor mede */}
+      <Rack id="pads" modelo="SP-8" nome="sampler">
+        <div className="p-5 sm:p-7">
+          <Pecas nomes={["vintage-soundboard-pad"]} className="w-fit max-w-full">
+            <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-8">
+              {PAD_VOICES.map((pad, i) => (
+                <VintageSoundboardPad
+                  key={pad.label}
+                  label={pad.label}
+                  color={pad.color}
+                  size={68}
+                  active={padsAtivos.has(i)}
+                  onTrigger={() => {
+                    setPadsAtivos((s) => new Set(s).add(i));
+                    setDisparos((n) => n + 1);
+                  }}
+                  onRelease={() =>
+                    setPadsAtivos((s) => {
+                      const proximo = new Set(s);
+                      proximo.delete(i);
+                      return proximo;
+                    })
+                  }
+                />
+              ))}
+            </div>
+          </Pecas>
+        </div>
+      </Rack>
 
       {paleta && (
         <VintageCommandPalette
           items={[
-            { id: "fonte", label: "Seletor de fonte", icon: "🎛", group: "Sinal", active: true },
-            { id: "pads", label: "Pads de disparo", icon: "🥁", group: "Sinal" },
-            { id: "corte", label: "Power, bypass e mute", icon: "🔘", group: "Sinal" },
-            { id: "ganho", label: "Estágio de ganho", icon: "🎚", group: "Cadeia", active: true },
-            { id: "tratamento", label: "EQ, tom e XY", icon: "📈", group: "Cadeia" },
-            { id: "medicao", label: "Ponte de medidores", icon: "📊", group: "Cadeia" },
-            { id: "saida", label: "Monitor de saída", icon: "📺", group: "Saída" },
+            { id: "fonte", label: "Seletor de fonte", group: "Sinal", active: true },
+            { id: "pads", label: "Sampler", group: "Sinal" },
+            { id: "corte", label: "Power, bypass e mute", group: "Sinal" },
+            { id: "ganho", label: "Estágio de ganho", group: "Cadeia", active: true },
+            { id: "tratamento", label: "Tom: EQ, knobs e XY", group: "Cadeia" },
+            { id: "medicao", label: "Monitor e medidores", group: "Saída" },
           ]}
           groups={[
             { label: "Sinal", ids: ["fonte", "pads", "corte"] },
-            { label: "Cadeia", ids: ["ganho", "tratamento", "medicao"] },
-            { label: "Saída", ids: ["saida"] },
+            { label: "Cadeia", ids: ["ganho", "tratamento"] },
+            { label: "Saída", ids: ["medicao"] },
           ]}
           onSelect={irPara}
           onClose={() => setPaleta(false)}
-          placeholder="Buscar módulo da bancada..."
+          placeholder="Ir para um módulo do rack"
         />
       )}
     </div>

@@ -324,7 +324,7 @@ export function Pecas({
       <div
         data-peca-etiqueta
         className={cn(
-          "casa absolute z-30 w-max max-w-[min(20rem,calc(100vw-2rem))] rounded-control bg-casa-tile p-1 [box-shadow:var(--casa-shadow)]",
+          "casa absolute z-[29] w-max max-w-[min(20rem,calc(100vw-2rem))] rounded-control bg-casa-tile p-1 [box-shadow:var(--casa-shadow)]",
           CANTO[canto],
           "pointer-events-none opacity-0",
           "transition-opacity [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
