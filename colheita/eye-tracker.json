@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "eye-tracker",
+    "title": "Eye Tracker",
+    "type": "ui",
+    "family": "motion",
+    "description": "Um rosto de dois olhos que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique.",
+    "tags": [
+      "mascote",
+      "estado vazio",
+      "cursor",
+      "personalidade"
+    ],
+    "demoImport": "./demos/eye-tracker-demo",
+    "knobs": "EyeTracker",
+    "preview": {
+      "w": 320,
+      "h": 240
+    }
+  },
+  "registry": {
+    "name": "eye-tracker",
+    "type": "registry:ui",
+    "title": "Eye Tracker",
+    "description": "Um rosto de dois olhos que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/eye-tracker.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/eye-tracker"
+}

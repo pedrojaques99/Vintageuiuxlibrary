@@ -1,0 +1,44 @@
+{
+  "catalogo": {
+    "name": "reactions",
+    "title": "Reactions",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Barra de reações em que a contagem rola pro lado que andou e o ícone dá um pulinho quando você reage.",
+    "tags": [
+      "reacao",
+      "comentario",
+      "contador",
+      "emoji",
+      "feedback"
+    ],
+    "demoImport": "./demos/reactions-demo",
+    "knobs": "Reactions",
+    "preview": {
+      "w": 340,
+      "h": 170
+    }
+  },
+  "registry": {
+    "name": "reactions",
+    "type": "registry:ui",
+    "title": "Reactions",
+    "description": "Barra de reações em que a contagem rola pro lado que andou e o ícone dá um pulinho quando você reage.",
+    "dependencies": [
+      "motion",
+      "lucide-react",
+      "@radix-ui/react-popover"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/reactions.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Reactions (https://uiarc.dev/components/reactions), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

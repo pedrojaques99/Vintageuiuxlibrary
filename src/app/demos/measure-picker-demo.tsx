@@ -22,7 +22,7 @@ import { MeasurePicker, type MeasureBand } from "../../../registry/visant/ui/mea
 import { Media, type Papel } from "../media";
 import type { DemoProps } from "../catalog";
 
-interface Taco {
+interface Modelo {
   tier: string;
   codigo: string;
   preco: string;
@@ -31,22 +31,22 @@ interface Taco {
   indice: number;
 }
 
-const FAIXAS: MeasureBand<Taco>[] = [
+const FAIXAS: MeasureBand<Modelo>[] = [
   {
     max: 150,
-    value: { tier: "Youth", codigo: "46 in", preco: "R$ 279", flex: "flex 40", papel: "cena", indice: 6 },
+    value: { tier: "P", codigo: "46 cm", preco: "R$ 279", flex: "até 150 cm", papel: "cena", indice: 6 },
   },
   {
     max: 168,
-    value: { tier: "Junior", codigo: "52 in", preco: "R$ 349", flex: "flex 55", papel: "cena", indice: 0 },
+    value: { tier: "M", codigo: "52 cm", preco: "R$ 349", flex: "até 168 cm", papel: "cena", indice: 0 },
   },
   {
     max: 185,
-    value: { tier: "Senior", codigo: "60 in", preco: "R$ 429", flex: "flex 75", papel: "cena", indice: 3 },
+    value: { tier: "G", codigo: "60 cm", preco: "R$ 429", flex: "até 185 cm", papel: "cena", indice: 3 },
   },
   {
     max: 200,
-    value: { tier: "Pro", codigo: "62 in", preco: "R$ 589", flex: "flex 85", papel: "cena", indice: 2 },
+    value: { tier: "GG", codigo: "62 cm", preco: "R$ 589", flex: "até 200 cm", papel: "cena", indice: 2 },
   },
 ];
 
@@ -62,7 +62,7 @@ export default function MeasurePickerDemo({ props }: DemoProps) {
         max={200}
         value={altura}
         onValueChange={setAltura}
-        label="Altura do jogador"
+        label="Sua altura"
         edgeLabels={["130 cm", "200 cm"]}
         formatValue={(x) => `${x} cm`}
         bands={FAIXAS}
@@ -80,7 +80,7 @@ export default function MeasurePickerDemo({ props }: DemoProps) {
               />
               <div className="flex min-w-0 flex-col gap-1">
                 <span className="text-destaque font-semibold tracking-tight">
-                  Taco {t.tier} {t.codigo}
+                  Modelo {t.tier} {t.codigo}
                 </span>
                 <span className="font-mono text-micro uppercase tracking-[0.14em] text-muted-foreground">
                   {t.flex} · corte na medida

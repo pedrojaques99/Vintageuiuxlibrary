@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "date-reel",
+    "title": "Date Reel",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Seletor de data em rolos de dia, mês e ano que encaixam sozinhos, como no telefone.",
+    "tags": [
+      "data",
+      "calendário",
+      "rolo",
+      "seletor",
+      "agendar"
+    ],
+    "demoImport": "./demos/date-reel-demo",
+    "knobs": "DateReel",
+    "preview": {
+      "w": 412,
+      "h": 379
+    }
+  },
+  "registry": {
+    "name": "date-reel",
+    "type": "registry:ui",
+    "title": "Date Reel",
+    "description": "Seletor de data em rolos de dia, mês e ano que encaixam sozinhos, como no telefone.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/date-reel.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/date-reel"
+}

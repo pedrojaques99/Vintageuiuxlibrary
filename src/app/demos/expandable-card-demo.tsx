@@ -3,9 +3,12 @@
 /**
  * Um pedido em andamento, o caso em que o card se paga.
  *
- * O resumo atualiza sozinho a cada poucos segundos ("3 itens" vira "4 itens")
- * para mostrar a segunda metade da peça: só a palavra que mudou rola, o resto
- * fica parado. Aberto, o card cresce para os lados além de para baixo.
+ * O resumo atualiza sozinho a cada poucos segundos, como o status de um pedido
+ * de verdade ("em separação", "sai amanhã cedo", "saiu para entrega"), para
+ * mostrar a segunda metade da peça: só o trecho que mudou rola, a contagem de
+ * itens fica parada. A contagem bate com a lista aberta: quatro.
+ *
+ * Aberto, o card cresce para os lados além de para baixo.
  */
 
 import * as React from "react";
@@ -14,7 +17,7 @@ import { ExpandableCard } from "../../../registry/visant/ui/expandable-card";
 import type { DemoProps } from "../catalog";
 
 const RESUMOS = [
-  "3 itens, sai amanhã cedo",
+  "4 itens, em separação",
   "4 itens, sai amanhã cedo",
   "4 itens, saiu para entrega",
 ];

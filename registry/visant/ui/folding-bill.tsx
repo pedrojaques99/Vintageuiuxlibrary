@@ -104,6 +104,11 @@ export function FoldingBill({
   const giro2 = useTransform(p, (v) => `translateZ(${-2 * v}px) rotateX(${-180 * Math.max(0, v * 2 - 1)}deg)`);
   const giro3 = useTransform(p, (v) => `translateZ(${-1 * v}px) rotateX(${-180 * Math.min(1, v * 2)}deg)`);
   const altura = useTransform(p, (v) => panelHeight * (3 - 2 * v));
+  // Dobradas, as costas das dobras ficam exatamente atrás do cabeçalho, e o
+  // canto reto delas aparecia como um triângulo cinza por trás do canto
+  // arredondado dele. Da metade em diante (quando a dobra já virou), as bordas
+  // que caem sobre o topo do cabeçalho ganham o mesmo raio.
+  const canto = useTransform(p, (v) => (v > 0.5 ? "var(--r-surface)" : "0px"));
 
   const mola = React.useMemo(() => {
     const k = 120 + (stiffness / 100) * 480;
@@ -228,7 +233,10 @@ export function FoldingBill({
           className="absolute inset-x-0 top-full origin-top [transform-style:preserve-3d]"
           style={{ height: panelHeight, transform: giro2 }}
         >
-          <div className={cn(face, "flex flex-col justify-center gap-1.5 border-x border-border px-4")}>
+          <motion.div
+            className={cn(face, "flex flex-col justify-center gap-1.5 border-x border-border px-4")}
+            style={{ borderBottomLeftRadius: canto, borderBottomRightRadius: canto }}
+          >
             {items.slice(0, 3).map((it) => (
               <span
                 key={it.label}
@@ -239,17 +247,19 @@ export function FoldingBill({
               </span>
             ))}
             <Sombra p={s2} max={0.12} />
-          </div>
-          <div className={verso} />
+          </motion.div>
+          <motion.div className={verso} style={{ borderBottomLeftRadius: canto, borderBottomRightRadius: canto }} />
 
           {/* Painel 3: o total, com a borda serrilhada do papel destacado. */}
           <motion.div
             className="absolute inset-x-0 top-full origin-top [transform-style:preserve-3d]"
             style={{ height: panelHeight, transform: giro3 }}
           >
-            <div
+            <motion.div
               className={cn(face, "flex flex-col justify-center gap-1 border-x border-border px-4")}
               style={{
+                borderTopLeftRadius: canto,
+                borderTopRightRadius: canto,
                 // Serrilha por máscara: a borda de baixo é papel rasgado sem desenhar nada.
                 WebkitMask:
                   "radial-gradient(circle at 6px 100%, transparent 5px, currentColor 5.5px) bottom / 12px 100% repeat-x",
@@ -267,8 +277,8 @@ export function FoldingBill({
                 </span>
               </span>
               <Sombra p={s3} max={0.2} />
-            </div>
-            <div className={verso} />
+            </motion.div>
+            <motion.div className={verso} style={{ borderTopLeftRadius: canto, borderTopRightRadius: canto }} />
           </motion.div>
         </motion.div>
       </div>

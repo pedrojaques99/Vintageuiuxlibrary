@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "orbit-menu",
+    "title": "Orbit Menu",
+    "type": "ui",
+    "family": "motion",
+    "description": "Botão que abre as ações em arco ao redor dele, com mola, pra escolher arrastando o dedo ou clicando.",
+    "tags": [
+      "menu",
+      "ações",
+      "gesto",
+      "arco",
+      "mola"
+    ],
+    "demoImport": "./demos/orbit-menu-demo",
+    "knobs": "OrbitMenu",
+    "preview": {
+      "w": 332,
+      "h": 246
+    }
+  },
+  "registry": {
+    "name": "orbit-menu",
+    "type": "registry:ui",
+    "title": "Orbit Menu",
+    "description": "Botão que abre as ações em arco ao redor dele, com mola, pra escolher arrastando o dedo ou clicando.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/orbit-menu.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/orbit-menu"
+}

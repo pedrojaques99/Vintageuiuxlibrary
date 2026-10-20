@@ -39,7 +39,11 @@ export default function ExpandingSearchDemo({ props }: DemoProps) {
             {...props}
           />
         </div>
-        <p className="px-1 text-sm text-muted-foreground">{escolhido ? `Abrindo ${escolhido}` : "Nada aberto ainda"}</p>
+        {/* Linha reservada: o retorno da escolha aparece sem empurrar nada, e em
+            repouso não há legenda de enchimento disputando com a barra. */}
+        <p aria-live="polite" className="min-h-5 px-1 text-sm text-muted-foreground">
+          {escolhido && `Abrindo ${escolhido}`}
+        </p>
       </div>
     </div>
   );

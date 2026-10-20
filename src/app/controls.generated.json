@@ -1411,7 +1411,7 @@
           "tipo": "texto",
           "padrao": null,
           "resumo": null,
-          "inicial": "Altura do jogador"
+          "inicial": "Sua altura"
         }
       ]
     }
@@ -4666,7 +4666,7 @@
           "tipo": "texto",
           "padrao": "120vh",
           "resumo": "Comprimento de scroll de cada parada. A seção mede `n × heightPerStop`.",
-          "inicial": "560px"
+          "inicial": "420px"
         },
         {
           "prop": "ink",
@@ -5747,7 +5747,7 @@
           "min": 0,
           "max": 20,
           "step": 1,
-          "padrao": 1.5,
+          "padrao": 1.4,
           "resumo": "Escala do ícone mais perto do cursor. 1 desliga a onda."
         },
         {
@@ -5811,10 +5811,11 @@
           "prop": "step",
           "tipo": "numero",
           "min": 0,
-          "max": 1,
+          "max": 10,
           "step": 0.05,
           "padrao": 1,
-          "resumo": null
+          "resumo": null,
+          "inicial": 5
         },
         {
           "prop": "tilt",
@@ -5849,7 +5850,7 @@
           "tipo": "texto",
           "padrao": null,
           "resumo": "Rótulo visível; também nomeia o polegar pra leitor de tela.",
-          "inicial": "Volume",
+          "inicial": "Água hoje",
           "secundario": true
         }
       ]
@@ -5928,6 +5929,612 @@
           "tipo": "texto",
           "padrao": null,
           "resumo": "Nome acessível. Por padrão diz para qual tema vai."
+        }
+      ]
+    }
+  },
+  "black-hole": {
+    "componentes": {
+      "BlackHole": [
+        {
+          "prop": "undoMs",
+          "tipo": "numero",
+          "min": 0,
+          "max": 10000,
+          "step": 10,
+          "padrao": 5000,
+          "resumo": "ms até o desfazer sumir."
+        },
+        {
+          "prop": "title",
+          "tipo": "texto",
+          "padrao": "Caixa de entrada",
+          "resumo": "Título no cabeçalho da lista."
+        }
+      ]
+    }
+  },
+  "countdown": {
+    "componentes": {
+      "Countdown": [
+        {
+          "prop": "variant",
+          "tipo": "escolha",
+          "valores": [
+            "large",
+            "compact"
+          ],
+          "padrao": "large",
+          "resumo": "Dígitos grandes com rótulo, ou uma linha compacta pra faixa e tabela."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Tempo restante",
+          "resumo": "Nome falado, como \"A live começa em\".",
+          "inicial": "A coleção nova abre em"
+        },
+        {
+          "prop": "timeZone",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Fuso IANA pra string sem offset, como \"America/Sao_Paulo\"."
+        }
+      ]
+    }
+  },
+  "cover-flow": {
+    "componentes": {
+      "CoverFlow": [
+        {
+          "prop": "cardWidth",
+          "tipo": "numero",
+          "min": 10,
+          "max": 400,
+          "step": 10,
+          "padrao": 180,
+          "resumo": "Largura da capa em px. A altura segue 4:5."
+        },
+        {
+          "prop": "defaultIndex",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": null,
+          "inicial": 2
+        },
+        {
+          "prop": "tilt",
+          "tipo": "numero",
+          "min": 0,
+          "max": 120,
+          "step": 1,
+          "padrao": 48,
+          "resumo": "Graus de giro das capas laterais."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Coleção",
+          "resumo": "Rótulo da prateleira para leitor de tela.",
+          "inicial": "Projetos"
+        }
+      ]
+    }
+  },
+  "date-reel": {
+    "componentes": {
+      "DateReel": [
+        {
+          "prop": "maxYear",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "minYear",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Primeiro e último ano do rolo de ano."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Data",
+          "resumo": "Nome acessível do grupo."
+        },
+        {
+          "prop": "locale",
+          "tipo": "texto",
+          "padrao": "pt-BR",
+          "resumo": "Idioma dos nomes de mês."
+        }
+      ]
+    }
+  },
+  "eye-tracker": {
+    "componentes": {
+      "EyeTracker": [
+        {
+          "prop": "eyes",
+          "tipo": "escolha",
+          "valores": [
+            "slant",
+            "dots",
+            "bars"
+          ],
+          "padrao": "slant",
+          "resumo": "Forma dos olhos."
+        },
+        {
+          "prop": "blink",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Pisca sozinho de vez em quando."
+        },
+        {
+          "prop": "follow",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.6,
+          "resumo": "Quanto os olhos andam, de 0 a 1 (fração do meio rosto)."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 10,
+          "max": 300,
+          "step": 10,
+          "padrao": 112,
+          "resumo": "Lado do rosto, em px."
+        },
+        {
+          "prop": "greeting",
+          "tipo": "texto",
+          "padrao": "Oi, tudo bem?",
+          "resumo": "O que o balão escreve no clique. Vazio desliga o cumprimento."
+        }
+      ]
+    }
+  },
+  "orbit-menu": {
+    "componentes": {
+      "OrbitMenu": [
+        {
+          "prop": "radius",
+          "tipo": "numero",
+          "min": 0,
+          "max": 250,
+          "step": 1,
+          "padrao": 100,
+          "resumo": "Distância do centro do botão até o centro de cada ação, em px."
+        },
+        {
+          "prop": "spread",
+          "tipo": "numero",
+          "min": 0,
+          "max": 400,
+          "step": 10,
+          "padrao": 160,
+          "resumo": "Abertura do arco em graus, centrado em cima do botão."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Ações",
+          "resumo": "Nome do menu: rótulo do botão e texto central com o arco aberto.",
+          "inicial": "Ações da nota"
+        }
+      ]
+    }
+  },
+  "page-curl": {
+    "componentes": {
+      "PageCurl": [
+        {
+          "prop": "defaultIndex",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Página inicial (base 0)."
+        },
+        {
+          "prop": "peek",
+          "tipo": "numero",
+          "min": 0,
+          "max": 60,
+          "step": 1,
+          "padrao": 22,
+          "resumo": "Quanto o canto levanta com o ponteiro perto, em px."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Revista",
+          "resumo": "Rótulo da revista para leitor de tela.",
+          "inicial": "Revista Objetos sem pressa"
+        }
+      ]
+    }
+  },
+  "pull-to-refresh": {
+    "componentes": {
+      "PullToRefresh": [
+        {
+          "prop": "disabled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "dots",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 8,
+          "resumo": "Pontos no anel."
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 300,
+          "step": 10,
+          "padrao": 120,
+          "resumo": "Teto do esticão, em px."
+        },
+        {
+          "prop": "threshold",
+          "tipo": "numero",
+          "min": 0,
+          "max": 160,
+          "step": 1,
+          "padrao": 64,
+          "resumo": "Quanto puxar (px de painel esticado) até valer."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Painel",
+          "resumo": "Nome do painel pra leitor de tela.",
+          "inicial": "Caixa de hoje"
+        }
+      ]
+    }
+  },
+  "reactions": {
+    "componentes": {
+      "Reactions": [
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Reações",
+          "resumo": "Nome da barra pro leitor de tela.",
+          "inicial": "Reações à versão 2.4"
+        }
+      ]
+    }
+  },
+  "signature-pad": {
+    "componentes": {
+      "strokePath": [
+        {
+          "prop": "width",
+          "tipo": "escolha",
+          "valores": [
+            "fine",
+            "medium",
+            "bold"
+          ],
+          "padrao": null,
+          "resumo": null
+        }
+      ],
+      "SignaturePad": [
+        {
+          "prop": "defaultWidth",
+          "tipo": "escolha",
+          "valores": [
+            "fine",
+            "medium",
+            "bold"
+          ],
+          "padrao": "medium",
+          "resumo": null
+        },
+        {
+          "prop": "hint",
+          "tipo": "texto",
+          "padrao": "Assine aqui",
+          "resumo": "Dica sobre a linha antes do primeiro traço."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Campo de assinatura",
+          "resumo": "Nome do campo pro leitor de tela."
+        },
+        {
+          "prop": "signer",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Impresso embaixo da linha, como o nome de quem assina.",
+          "inicial": "Marina Duarte, Estúdio Orla"
+        }
+      ]
+    }
+  },
+  "slide-to-confirm": {
+    "componentes": {
+      "SlideToConfirm": [
+        {
+          "prop": "tone",
+          "tipo": "escolha",
+          "valores": [
+            "brand",
+            "neutral",
+            "danger"
+          ],
+          "padrao": "neutral",
+          "resumo": "Cor do polegar e do rastro: `brand`, `neutral` ou `danger` pra destruir."
+        },
+        {
+          "prop": "confirmed",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Controla o estado confirmado. Volte pra `false` pra rearmar o trilho."
+        },
+        {
+          "prop": "disabled",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": null
+        },
+        {
+          "prop": "threshold",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1,
+          "step": 0.05,
+          "padrao": 0.85,
+          "resumo": "Fração do curso (0 a 1) a partir da qual soltar completa sozinho."
+        },
+        {
+          "prop": "confirmedLabel",
+          "tipo": "texto",
+          "padrao": "Confirmado",
+          "resumo": "Rótulo depois de confirmado.",
+          "inicial": "Pago"
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Deslize pra confirmar",
+          "resumo": "Instrução no trilho, como \"Deslize pra pagar\".",
+          "inicial": "Deslize pra pagar"
+        }
+      ]
+    }
+  },
+  "sticker-peel": {
+    "componentes": {
+      "StickerPeel": [
+        {
+          "prop": "peel",
+          "tipo": "numero",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "padrao": 14,
+          "resumo": "Dobra em repouso com o ponteiro em cima, em px."
+        },
+        {
+          "prop": "rotate",
+          "tipo": "numero",
+          "min": -3,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Inclinação em graus. Adesivo colado à mão nunca fica reto.",
+          "inicial": -6
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Nome falado do adesivo, para leitor de tela.",
+          "inicial": "Selo da marca"
+        },
+        {
+          "prop": "radius",
+          "tipo": "texto",
+          "padrao": "var(--r-surface)",
+          "resumo": "Raio CSS da forma, compartilhado pela frente e pelo verso.",
+          "inicial": "9999px"
+        }
+      ]
+    }
+  },
+  "streamgraph": {
+    "componentes": {
+      "Streamgraph": [
+        {
+          "prop": "offset",
+          "tipo": "escolha",
+          "valores": [
+            "wiggle",
+            "silhouette",
+            "zero"
+          ],
+          "padrao": "wiggle",
+          "resumo": "\"wiggle\" flui, \"silhouette\" centra a pilha, \"zero\" empilha de uma base reta."
+        },
+        {
+          "prop": "directLabels",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Escreve o nome de cada camada no trecho mais grosso dela, quando cabe."
+        },
+        {
+          "prop": "legend",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Mostra a legenda que liga e desliga camadas."
+        },
+        {
+          "prop": "height",
+          "tipo": "numero",
+          "min": 10,
+          "max": 600,
+          "step": 10,
+          "padrao": 260,
+          "resumo": "Altura do gráfico em px. A largura segue o contêiner.",
+          "inicial": 200
+        },
+        {
+          "prop": "categoryLabel",
+          "tipo": "texto",
+          "padrao": "Data",
+          "resumo": "Cabeçalho da primeira coluna da tabela do leitor de tela.",
+          "inicial": "Semana"
+        },
+        {
+          "prop": "emptyLabel",
+          "tipo": "texto",
+          "padrao": "Sem dados neste período",
+          "resumo": null
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "O que se mede, como \"Tíquetes por assunto\". Nomeia o gráfico.",
+          "inicial": "Pedidos de suporte por assunto",
+          "secundario": true
+        },
+        {
+          "prop": "unit",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "Unidade depois de cada valor, como \"tíquetes\".",
+          "inicial": "pedidos",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "time-dial": {
+    "componentes": {
+      "TimeDial": [
+        {
+          "prop": "defaultValue",
+          "tipo": "numero",
+          "min": 0,
+          "max": 1100,
+          "step": 10,
+          "padrao": 540,
+          "resumo": "Valor inicial quando não controlado."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 10,
+          "max": 500,
+          "step": 10,
+          "padrao": 240,
+          "resumo": "Diâmetro em px."
+        },
+        {
+          "prop": "step",
+          "tipo": "numero",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "padrao": 15,
+          "resumo": "Passo em minutos, no gesto e nas setas."
+        },
+        {
+          "prop": "value",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Minutos desde 00:00 (0 a 1439). Controlado."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Hora",
+          "resumo": "Nome acessível do ponteiro.",
+          "inicial": "Hora em São Paulo"
+        }
+      ]
+    }
+  },
+  "voice-note": {
+    "componentes": {
+      "VoiceNote": [
+        {
+          "prop": "tone",
+          "tipo": "escolha",
+          "valores": [
+            "neutral",
+            "brand"
+          ],
+          "padrao": "neutral",
+          "resumo": "Cor do botão e da onda tocada."
+        },
+        {
+          "prop": "duration",
+          "tipo": "numero",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "padrao": 7,
+          "resumo": "Duração em segundos.",
+          "inicial": 9
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Nota de voz",
+          "resumo": "Nome da nota pra leitor de tela."
+        }
+      ]
+    }
+  },
+  "wallet-stack": {
+    "componentes": {
+      "WalletStack": [
+        {
+          "prop": "defaultIndex",
+          "tipo": "numero",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Cartão da frente ao montar."
+        },
+        {
+          "prop": "label",
+          "tipo": "texto",
+          "padrao": "Carteira",
+          "resumo": "Título da carteira, no cabeçalho e no rótulo acessível.",
+          "inicial": "Cartões da Marina"
         }
       ]
     }

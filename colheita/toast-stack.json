@@ -15,8 +15,8 @@
     "demoImport": "./demos/toast-stack-demo",
     "knobs": "ToastStack",
     "preview": {
-      "w": 560,
-      "h": 380
+      "w": 480,
+      "h": 340
     }
   },
   "registry": {

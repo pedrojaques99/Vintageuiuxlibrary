@@ -103,12 +103,19 @@ export function TiltCard({
 
   const sombraX = useTransform(sx, (v) => v * maxTilt * -0.8 * lado);
   const sombraY = useTransform(sy, (v) => 14 + v * maxTilt * -0.8 * lado);
-  const sombra = useMotionTemplate`${sombraX}px ${sombraY}px 40px -12px color-mix(in oklab, var(--foreground) 28%, transparent)`;
+  const sombra = useMotionTemplate`${sombraX}px ${sombraY}px 40px -12px var(--sombra-inclinada)`;
 
   return (
     <div
       {...props}
-      className={cn("relative", className)}
+      className={cn(
+        // Sombra é ausência de luz nos dois temas: no claro, tinta do texto;
+        // no escuro, o fundo da página, que é o tom mais fundo que existe.
+        // Com `--foreground` no escuro ela virava um halo claro em volta do card.
+        "relative [--sombra-inclinada:color-mix(in_oklab,var(--foreground)_28%,transparent)]",
+        "dark:[--sombra-inclinada:color-mix(in_oklab,var(--background)_85%,transparent)]",
+        className,
+      )}
       style={{ perspective, ...style }}
       onPointerMove={(e) => {
         onPointerMove?.(e);

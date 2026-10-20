@@ -13,7 +13,7 @@
   "measure-picker": {
     "min": 130,
     "max": 200,
-    "label": "Altura do jogador"
+    "label": "Sua altura"
   },
   "side-nav": {
     "storageKey": false
@@ -140,7 +140,7 @@
     "draggable": true
   },
   "fog-garden": {
-    "heightPerStop": "560px"
+    "heightPerStop": "420px"
   },
   "spine-card": {
     "href": "#",
@@ -197,7 +197,7 @@
     "label": "Status"
   },
   "slot-text": {
-    "className": "text-[3.25rem] font-semibold tracking-tight"
+    "className": "text-[3.25rem] font-semibold leading-none tracking-tight"
   },
   "swipe-actions": {
     "label": "Caixa de entrada"
@@ -215,10 +215,62 @@
     "label": "Como está o seu dia?"
   },
   "slosh-slider": {
-    "label": "Volume",
+    "label": "Água hoje",
+    "step": 5,
     "className": "max-w-[360px]"
   },
   "tilt-card": {
     "className": "w-64"
+  },
+  "countdown": {
+    "className": "w-full",
+    "label": "A coleção nova abre em"
+  },
+  "cover-flow": {
+    "defaultIndex": 2,
+    "label": "Projetos",
+    "className": "w-[560px] max-w-full"
+  },
+  "orbit-menu": {
+    "label": "Ações da nota"
+  },
+  "page-curl": {
+    "label": "Revista Objetos sem pressa"
+  },
+  "pull-to-refresh": {
+    "label": "Caixa de hoje",
+    "className": "w-[320px] max-w-full"
+  },
+  "reactions": {
+    "label": "Reações à versão 2.4"
+  },
+  "signature-pad": {
+    "signer": "Marina Duarte, Estúdio Orla"
+  },
+  "slide-to-confirm": {
+    "label": "Deslize pra pagar",
+    "confirmedLabel": "Pago",
+    "className": "w-full"
+  },
+  "sticker-peel": {
+    "label": "Selo da marca",
+    "rotate": -6,
+    "radius": "9999px"
+  },
+  "streamgraph": {
+    "label": "Pedidos de suporte por assunto",
+    "unit": "pedidos",
+    "categoryLabel": "Semana",
+    "height": 200
+  },
+  "time-dial": {
+    "caption": "São Paulo",
+    "label": "Hora em São Paulo"
+  },
+  "voice-note": {
+    "duration": 9
+  },
+  "wallet-stack": {
+    "label": "Cartões da Marina"
   }
 }

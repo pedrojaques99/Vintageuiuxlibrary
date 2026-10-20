@@ -23,9 +23,10 @@ import { cn } from "@/lib/utils";
  *    é medido (posição e largura do botão escolhido), porque as opções têm
  *    larguras diferentes: a do selo é maior, e colunas iguais desperdiçariam a
  *    mensal.
- * 2. **A largura do selo é travada pela frase mais longa.** As duas frases
- *    ocupam a mesma célula de grade, uma invisível; trocar de texto não empurra
- *    o grupo nem o polegar.
+ * 2. **O selo cresce na mola até a frase nova.** Travar a caixa na frase mais
+ *    longa deixava o "-20%" boiando numa barra vazia, que lia como progresso.
+ *    Agora o selo tem o tamanho do que diz, a largura viaja com a mesma mola
+ *    do polegar, e o polegar, que mede o botão, acompanha.
  * 3. **O selo é fundo da marca, nunca texto da marca.** `var(--brand)` como cor
  *    de letra no branco dá 1,29:1. Escolhido, o selo vira chapa da marca com
  *    `--brand-foreground` por cima; fora disso, fica neutro.
@@ -87,19 +88,40 @@ const rola: Variants = {
   depois: (d: number) => ({ opacity: 0, y: `${d * -60}%` }),
 };
 
-/** Texto que troca no lugar, com a caixa sempre do tamanho da frase mais longa. */
-function TrocaFixa({ texto, candidatos, reduzido }: { texto: string; candidatos: string[]; reduzido: boolean }) {
+/**
+ * Texto que troca no lugar, com a caixa indo na mola até a largura da frase nova.
+ * Um medidor invisível dá a largura; a frase de saída fica presa na caixa e é
+ * cortada por ela, então nada empurra o vizinho de supetão.
+ */
+function TrocaFixa({ texto, reduzido }: { texto: string; reduzido: boolean }) {
+  const medidor = React.useRef<HTMLSpanElement>(null);
+  const [largura, setLargura] = React.useState<number | null>(null);
+
+  React.useLayoutEffect(() => {
+    const el = medidor.current;
+    if (!el) return;
+    const medir = () => setLargura(el.offsetWidth);
+    medir();
+    if (typeof ResizeObserver === "undefined") return;
+    const obs = new ResizeObserver(medir);
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [texto]);
+
   return (
-    <span className="grid overflow-hidden [&>*]:[grid-area:1/1]">
-      {[...new Set(candidatos)].map((c) => (
-        <span key={c} className="invisible whitespace-nowrap" aria-hidden="true">
-          {c}
-        </span>
-      ))}
+    <motion.span
+      className="relative inline-grid overflow-hidden [&>*]:[grid-area:1/1]"
+      initial={false}
+      animate={largura === null ? undefined : { width: largura }}
+      transition={reduzido ? { duration: 0 } : DESLIZE}
+    >
+      <span ref={medidor} aria-hidden="true" className="invisible absolute left-0 top-0 whitespace-nowrap">
+        {texto}
+      </span>
       <AnimatePresence initial={false}>
         <motion.span
           key={texto}
-          className="whitespace-nowrap text-center"
+          className="justify-self-center whitespace-nowrap"
           variants={reduzido ? quieto : troca}
           initial="antes"
           animate="agora"
@@ -108,7 +130,7 @@ function TrocaFixa({ texto, candidatos, reduzido }: { texto: string; candidatos:
           {texto}
         </motion.span>
       </AnimatePresence>
-    </span>
+    </motion.span>
   );
 }
 
@@ -173,7 +195,6 @@ export function BillingToggle({
       {options.map((o, i) => {
         const ativo = i === escolhido;
         const selo = ativo ? (o.activeBadge ?? o.badge) : o.badge;
-        const candidatos = [o.badge, o.activeBadge].filter((t): t is string => !!t);
         return (
           <button
             key={o.value}
@@ -210,7 +231,7 @@ export function BillingToggle({
                     : "border border-border bg-background text-muted-foreground",
                 )}
               >
-                <TrocaFixa texto={selo} candidatos={candidatos} reduzido={reduzido} />
+                <TrocaFixa texto={selo} reduzido={reduzido} />
               </motion.span>
             )}
           </button>

@@ -16,7 +16,7 @@ import { onThemeChange, resolveCssColor, type RGB } from "@/lib/css-color";
  * ── As decisões que não se veem ────────────────────────────────────────────
  *
  * 1. **Canvas 2D numa grade grossa, não WebGL.** A simulação roda em células de
- *    3px e o quadro sobe para o tamanho real pelo próprio `drawImage`, com
+ *    2px e o quadro sobe para o tamanho real pelo próprio `drawImage`, com
  *    suavização bilinear. A interpolação é que derrete a borda; um shader daria
  *    o mesmo desenho custando um contexto WebGL por peça, e a vitrine tem dezenas.
  * 2. **A forma é um campo, não um contorno.** A máscara é desenhada borrada e
@@ -34,7 +34,7 @@ import { onThemeChange, resolveCssColor, type RGB } from "@/lib/css-color";
  */
 
 /** Tamanho da célula da simulação, em px CSS. */
-const CELULA = 3;
+const CELULA = 2;
 
 /** Rampa padrão: repouso → marca → núcleo. Tudo token. */
 const RAMPA_PADRAO = [
@@ -111,15 +111,17 @@ function montarMascara(
     x.textBaseline = "middle";
     x.fillText(word, gw / 2, gh / 2 + tam * 0.04);
   } else {
-    const cols = 8;
-    const rows = 3;
-    const passo = Math.min((gw * 0.8) / cols, (gh * 0.72) / rows);
+    // Grade larga e gotas quase iguais: em repouso cada ponto fica SOLTO (lê
+    // como textura, não como mancha), e só o calor faz os vizinhos se tocarem.
+    const cols = 12;
+    const rows = 5;
+    const passo = Math.min((gw * 0.86) / cols, (gh * 0.8) / rows);
     const x0 = gw / 2 - (passo * (cols - 1)) / 2;
     const y0 = gh / 2 - (passo * (rows - 1)) / 2;
     for (let r = 0; r < rows; r++) {
       for (let k = 0; k < cols; k++) {
         const i = r * cols + k;
-        const raio = passo * (0.3 + ruido(i) * 0.22);
+        const raio = passo * (0.26 + ruido(i) * 0.06);
         x.beginPath();
         x.arc(x0 + k * passo, y0 + r * passo, raio, 0, Math.PI * 2);
         x.fill();
@@ -260,9 +262,11 @@ export function HeatWord({
       // Letra borrada e cortada no meio afina o traço; a palavra corta mais baixo
       // para manter o peso de display mesmo quando a fonte da marca é leve.
       const base = shape === "word" ? 0.4 : 0.5;
+      // As gotas soltas precisam inchar mais que a letra para chegar a se tocar.
+      const inchar = shape === "word" ? 0.28 : 0.4;
       for (let i = 0; i < mascara.length; i++) {
         const h = calor[i];
-        const limiar = base - h * 0.28; // quente = forma incha e as gotas se fundem
+        const limiar = base - h * inchar; // quente = forma incha e as gotas se fundem
         const a = smooth(limiar - borda, limiar + borda, mascara[i]);
         const c = Math.min(255, Math.round(h * 255)) * 3;
         const o = i * 4;

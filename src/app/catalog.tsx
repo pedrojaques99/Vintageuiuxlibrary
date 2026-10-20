@@ -532,6 +532,22 @@ const MagnifyDockColheitaDemo = React.lazy(() => import("./demos/magnify-dock-de
 const SloshSliderColheitaDemo = React.lazy(() => import("./demos/slosh-slider-demo"));
 const TiltCardColheitaDemo = React.lazy(() => import("./demos/tilt-card-demo"));
 const EclipseSwitchColheitaDemo = React.lazy(() => import("./demos/eclipse-switch-demo"));
+const BlackHoleColheitaDemo = React.lazy(() => import("./demos/black-hole-demo"));
+const CountdownColheitaDemo = React.lazy(() => import("./demos/countdown-demo"));
+const CoverFlowColheitaDemo = React.lazy(() => import("./demos/cover-flow-demo"));
+const DateReelColheitaDemo = React.lazy(() => import("./demos/date-reel-demo"));
+const EyeTrackerColheitaDemo = React.lazy(() => import("./demos/eye-tracker-demo"));
+const OrbitMenuColheitaDemo = React.lazy(() => import("./demos/orbit-menu-demo"));
+const PageCurlColheitaDemo = React.lazy(() => import("./demos/page-curl-demo"));
+const PullToRefreshColheitaDemo = React.lazy(() => import("./demos/pull-to-refresh-demo"));
+const ReactionsColheitaDemo = React.lazy(() => import("./demos/reactions-demo"));
+const SignaturePadColheitaDemo = React.lazy(() => import("./demos/signature-pad-demo"));
+const SlideToConfirmColheitaDemo = React.lazy(() => import("./demos/slide-to-confirm-demo"));
+const StickerPeelColheitaDemo = React.lazy(() => import("./demos/sticker-peel-demo"));
+const StreamgraphColheitaDemo = React.lazy(() => import("./demos/streamgraph-demo"));
+const TimeDialColheitaDemo = React.lazy(() => import("./demos/time-dial-demo"));
+const VoiceNoteColheitaDemo = React.lazy(() => import("./demos/voice-note-demo"));
+const WalletStackColheitaDemo = React.lazy(() => import("./demos/wallet-stack-demo"));
 
 /** Mesmo trato do marquee: GSAP só chega quando o card chega. */
 function PinnedSceneDemoCard() {
@@ -1476,6 +1492,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["scroll", "entrada", "reveal", "dobra", "hierarquia"],
     demo: FoldMotionDemo,
     knobs: "Fold",
+    // palco-check: a folga de 12px é a baseline do canvas e cresce junto com a caixa
     preview: { w: 690, h: 300 },
   },
   {
@@ -1700,7 +1717,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["3d", "webgl", "scroll", "sticky", "névoa", "storytelling", "jardim"],
     demo: FogGardenDemo,
     knobs: "FogGarden",
-    preview: { w: 1360, h: 620 },
+    preview: { w: 760, h: 440 },
   },
   {
     name: "book-shelf",
@@ -1870,7 +1887,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["botão","confirmação","destrutivo","desfazer"],
     demo: ConfirmMorphColheitaDemo,
     knobs: "ConfirmMorph",
-    preview: { w: 460, h: 120 },
+    preview: { w: 500, h: 120 },
   },
   {
     name: "elastic-slider",
@@ -2004,7 +2021,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["avisos","toast","notificacao","pilha","feedback"],
     demo: ToastStackColheitaDemo,
     knobs: "ToastStack",
-    preview: { w: 560, h: 380 },
+    preview: { w: 480, h: 340 },
   },
   {
     name: "dynamic-island",
@@ -2113,6 +2130,198 @@ export const CATALOG: CatalogItem[] = [
     demo: EclipseSwitchColheitaDemo,
     knobs: "EclipseSwitch",
     preview: { w: 460, h: 220 },
+  },
+  {
+    name: "black-hole",
+    title: "Black Hole",
+    type: "ui",
+    family: "motion",
+    description:
+      "Apagar em lote com as linhas sugadas para um ponto só, a lista se inclinando em volta e o desfazer devolvendo tudo do mesmo lugar.",
+    tags: ["lista","apagar","desfazer","inbox","canvas","transição"],
+    demo: BlackHoleColheitaDemo,
+    knobs: "BlackHole",
+    preview: { w: 380, h: 377 },
+  },
+  {
+    name: "countdown",
+    title: "Countdown",
+    type: "ui",
+    family: "aquisicao",
+    description:
+      "Contagem regressiva em que cada dígito gira pelo caminho curto e vira o aviso de ao vivo quando chega a zero.",
+    tags: ["contagem","lancamento","prazo","timer","evento"],
+    demo: CountdownColheitaDemo,
+    knobs: "Countdown",
+    preview: { w: 400, h: 180 },
+  },
+  {
+    name: "cover-flow",
+    title: "Cover Flow",
+    type: "ui",
+    family: "aquisicao",
+    description:
+      "Uma prateleira de capas em perspectiva: a da vez fica de frente, as vizinhas giram de lado e você arrasta ou joga pra trocar.",
+    tags: ["galeria","carrossel","3d","portfólio","arrastar","capas"],
+    demo: CoverFlowColheitaDemo,
+    knobs: "CoverFlow",
+    preview: { w: 560, h: 361 },
+  },
+  {
+    name: "date-reel",
+    title: "Date Reel",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Seletor de data em rolos de dia, mês e ano que encaixam sozinhos, como no telefone.",
+    tags: ["data","calendário","rolo","seletor","agendar"],
+    demo: DateReelColheitaDemo,
+    knobs: "DateReel",
+    preview: { w: 412, h: 379 },
+  },
+  {
+    name: "eye-tracker",
+    title: "Eye Tracker",
+    type: "ui",
+    family: "motion",
+    description:
+      "Um rosto de dois olhos que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique.",
+    tags: ["mascote","estado vazio","cursor","personalidade"],
+    demo: EyeTrackerColheitaDemo,
+    knobs: "EyeTracker",
+    preview: { w: 320, h: 240 },
+  },
+  {
+    name: "orbit-menu",
+    title: "Orbit Menu",
+    type: "ui",
+    family: "motion",
+    description:
+      "Botão que abre as ações em arco ao redor dele, com mola, pra escolher arrastando o dedo ou clicando.",
+    tags: ["menu","ações","gesto","arco","mola"],
+    demo: OrbitMenuColheitaDemo,
+    knobs: "OrbitMenu",
+    preview: { w: 332, h: 246 },
+  },
+  {
+    name: "page-curl",
+    title: "Page Curl",
+    type: "ui",
+    family: "motion",
+    description:
+      "Uma revistinha que você folheia puxando o canto da página, com a dobra, o verso do papel e a próxima página aparecendo por baixo.",
+    tags: ["revista","catálogo","página","dobra","arrastar","editorial"],
+    demo: PageCurlColheitaDemo,
+    knobs: "PageCurl",
+    preview: { w: 240, h: 364 },
+  },
+  {
+    name: "pull-to-refresh",
+    title: "Pull to Refresh",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Painel que estica quando você puxa pra baixo, conta os pontos até a marca e gira enquanto atualiza.",
+    tags: ["atualizar","arrasto","widget","carregando"],
+    demo: PullToRefreshColheitaDemo,
+    knobs: "PullToRefresh",
+    preview: { w: 340, h: 300 },
+  },
+  {
+    name: "reactions",
+    title: "Reactions",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Barra de reações em que a contagem rola pro lado que andou e o ícone dá um pulinho quando você reage.",
+    tags: ["reacao","comentario","contador","emoji","feedback"],
+    demo: ReactionsColheitaDemo,
+    knobs: "Reactions",
+    preview: { w: 340, h: 170 },
+  },
+  {
+    name: "signature-pad",
+    title: "Signature Pad",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Campo de assinatura com tinta que engrossa e afina como caneta de verdade, com desfazer e limpar.",
+    tags: ["assinatura","formulario","contrato","aceite","desenho"],
+    demo: SignaturePadColheitaDemo,
+    knobs: "SignaturePad",
+    preview: { w: 440, h: 320 },
+  },
+  {
+    name: "slide-to-confirm",
+    title: "Slide to Confirm",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Trilho que só confirma quando você arrasta o polegar até o fim, e volta com mola se soltar antes.",
+    tags: ["confirmação","arrasto","pagamento","gesto"],
+    demo: SlideToConfirmColheitaDemo,
+    knobs: "SlideToConfirm",
+    preview: { w: 360, h: 170 },
+  },
+  {
+    name: "sticker-peel",
+    title: "Sticker Peel",
+    type: "ui",
+    family: "motion",
+    description:
+      "Um adesivo que levanta o canto quando o mouse chega perto, descola ao arrastar mostrando o verso e cola onde você soltar.",
+    tags: ["adesivo","arrastar","dobra","papel","sticker"],
+    demo: StickerPeelColheitaDemo,
+    knobs: "StickerPeel",
+    preview: { w: 380, h: 280 },
+  },
+  {
+    name: "streamgraph",
+    title: "Streamgraph",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Gráfico de fluxo empilhado que mostra como a mistura de várias partes muda no tempo, com camadas que ligam e desligam.",
+    tags: ["grafico","dados","serie temporal","camadas","dashboard"],
+    demo: StreamgraphColheitaDemo,
+    knobs: "Streamgraph",
+    preview: { w: 580, h: 330 },
+  },
+  {
+    name: "time-dial",
+    title: "Time Dial",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Mostrador de 24 horas que você gira com o dedo ou com as setas, com a faixa do expediente desenhada no aro.",
+    tags: ["hora","relógio","fuso","seletor","agenda"],
+    demo: TimeDialColheitaDemo,
+    knobs: "TimeDial",
+    preview: { w: 516, h: 272 },
+  },
+  {
+    name: "voice-note",
+    title: "Voice Note",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Nota de voz de chat com forma de onda, play e pausa, e busca clicando ou arrastando na onda.",
+    tags: ["áudio","chat","player","forma de onda"],
+    demo: VoiceNoteColheitaDemo,
+    knobs: "VoiceNote",
+    preview: { w: 340, h: 130 },
+  },
+  {
+    name: "wallet-stack",
+    title: "Wallet Stack",
+    type: "ui",
+    family: "trabalho",
+    description:
+      "Carteira de cartões empilhados em que um sobe pra mostrar saldo e movimento e os outros se recolhem no pé.",
+    tags: ["carteira","cartões","fintech","pilha","saldo"],
+    demo: WalletStackColheitaDemo,
+    knobs: "WalletStack",
+    preview: { w: 352, h: 516 },
   },
 ];
 

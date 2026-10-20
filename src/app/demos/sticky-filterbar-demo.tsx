@@ -35,7 +35,7 @@ const ROTULO: Record<Estado, string> = {
 };
 
 const ACERVO: { nome: string; estado: Estado; familia: Familia }[] = [
-  { nome: "Kastrup", estado: "producao", familia: "quente" },
+  { nome: "Âmbar", estado: "producao", familia: "quente" },
   { nome: "Casa Vinte", estado: "producao", familia: "neutra" },
   { nome: "Ribalta", estado: "rascunho", familia: "quente" },
   { nome: "Bandeira", estado: "producao", familia: "fria" },

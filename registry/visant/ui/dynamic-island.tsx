@@ -25,7 +25,9 @@ import { cn } from "@/lib/utils";
  * 2. **O conteúdo troca em cruz, a casca não pisca.** Mudar de atividade
  *    (`activityKey`) ou de tamanho troca o miolo com esmaecer curto, enquanto a
  *    mesma casca morfa de uma forma para outra. Quem olha vê UMA coisa mudando
- *    de forma, não duas trocando de lugar.
+ *    de forma, não duas trocando de lugar. O miolo é CENTRADO na casca (que
+ *    cresce para os dois lados) e entra com um respiro de 90 ms: assim a casca
+ *    abre caminho antes e nada aparece cortado só na borda direita.
  * 3. **O toque de recolher é um botão de verdade por trás do miolo.** O miolo
  *    aberto tem os próprios botões (pausar, desligar), e botão dentro de botão
  *    não existe em HTML. Então a área inteira é um `<button>` em camada de
@@ -126,7 +128,7 @@ export function DynamicIsland({
     <motion.div
       {...(props as React.ComponentProps<typeof motion.div>)}
       className={cn(
-        "relative isolate overflow-hidden rounded-[var(--r-pill)] bg-foreground text-background [box-shadow:var(--e-raised)]",
+        "relative isolate flex items-center justify-center overflow-hidden rounded-[var(--r-pill)] bg-foreground text-background [box-shadow:var(--e-raised)]",
         className,
       )}
       style={{ ...(props.style as object), width: largura, height: altura }}
@@ -158,8 +160,12 @@ export function DynamicIsland({
           )}
           initial={reduzir ? { opacity: 0 } : { opacity: 0, scale: 0.94, filter: "blur(4px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          exit={reduzir ? { opacity: 0 } : { opacity: 0, scale: 0.96, filter: "blur(4px)" }}
-          transition={reduzir ? { duration: 0 } : { duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+          exit={
+            reduzir
+              ? { opacity: 0, transition: { duration: 0 } }
+              : { opacity: 0, scale: 0.96, filter: "blur(4px)", transition: { duration: 0.1, ease: [0.4, 0, 1, 1] } }
+          }
+          transition={reduzir ? { duration: 0 } : { duration: 0.16, delay: 0.09, ease: [0.22, 1, 0.36, 1] }}
         >
           {/*
             A medida mora num `div` de dentro, não no `motion.div`: em

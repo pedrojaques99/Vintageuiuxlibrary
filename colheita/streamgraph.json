@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "streamgraph",
+    "title": "Streamgraph",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Gráfico de fluxo empilhado que mostra como a mistura de várias partes muda no tempo, com camadas que ligam e desligam.",
+    "tags": [
+      "grafico",
+      "dados",
+      "serie temporal",
+      "camadas",
+      "dashboard"
+    ],
+    "demoImport": "./demos/streamgraph-demo",
+    "knobs": "Streamgraph",
+    "preview": {
+      "w": 580,
+      "h": 330
+    }
+  },
+  "registry": {
+    "name": "streamgraph",
+    "type": "registry:ui",
+    "title": "Streamgraph",
+    "description": "Gráfico de fluxo empilhado que mostra como a mistura de várias partes muda no tempo, com camadas que ligam e desligam.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/streamgraph.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Streamgraph (https://uiarc.dev/components/streamgraph), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

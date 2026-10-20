@@ -10377,7 +10377,7 @@
           "nome": "magnify",
           "tipo": "number",
           "obrigatoria": false,
-          "padrao": "1.5",
+          "padrao": "1.4",
           "descricao": "Escala do ícone mais perto do cursor. 1 desliga a onda."
         },
         {
@@ -10565,6 +10565,1050 @@
             "light",
             "dark"
           ]
+        }
+      ]
+    }
+  ],
+  "black-hole": [
+    {
+      "nome": "BlackHole",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "T[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "renderItem",
+          "tipo": "(item: T) => any",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O miolo da linha. A caixa de seleção e o foco são da peça."
+        },
+        {
+          "nome": "defaultSelected",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Ids que já chegam marcados."
+        },
+        {
+          "nome": "deletedText",
+          "tipo": "(n: number) => string",
+          "obrigatoria": false,
+          "padrao": "(n) => (n === 1 ? \"1 apagada\" : `${n} apagadas`)",
+          "descricao": "Texto do aviso depois de apagar."
+        },
+        {
+          "nome": "itemLabel",
+          "tipo": "(item: T) => string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Rótulo de uma linha para leitor de tela."
+        },
+        {
+          "nome": "onDelete",
+          "tipo": "(ids: string[]) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "onRestore",
+          "tipo": "(ids: string[]) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "title",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Caixa de entrada",
+          "descricao": "Título no cabeçalho da lista."
+        },
+        {
+          "nome": "undoMs",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5000",
+          "descricao": "ms até o desfazer sumir."
+        }
+      ]
+    }
+  ],
+  "countdown": [
+    {
+      "nome": "toEpoch",
+      "descricao": "Resolve o alvo em epoch ms sem nunca ler o fuso do aparelho.",
+      "props": []
+    },
+    {
+      "nome": "Countdown",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "target",
+          "tipo": "string | number | Date",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O instante alvo. Ver a nota 1 sobre string sem offset."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "clock",
+          "tipo": "() => number",
+          "obrigatoria": false,
+          "padrao": "() => Date.now()",
+          "descricao": "Relógio em epoch ms. Passe um sincronizado com o servidor quando o do aparelho não for confiável."
+        },
+        {
+          "nome": "completeLabel",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": "Ao vivo",
+          "descricao": "O que aparece quando o alvo passa. Os dígitos viram ele."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Tempo restante",
+          "descricao": "Nome falado, como \"A live começa em\"."
+        },
+        {
+          "nome": "onComplete",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Dispara uma vez, no instante em que chega a zero com a peça montada."
+        },
+        {
+          "nome": "timeZone",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Fuso IANA pra string sem offset, como \"America/Sao_Paulo\"."
+        },
+        {
+          "nome": "units",
+          "tipo": "CountdownUnit[]",
+          "obrigatoria": false,
+          "padrao": "[\"days\", \"hours\", \"minutes\", \"seconds\"]",
+          "descricao": "Unidades na tela, da maior pra menor. A maior absorve o resto."
+        },
+        {
+          "nome": "variant",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "large",
+          "descricao": "Dígitos grandes com rótulo, ou uma linha compacta pra faixa e tabela.",
+          "valores": [
+            "large",
+            "compact"
+          ]
+        }
+      ]
+    }
+  ],
+  "cover-flow": [
+    {
+      "nome": "CoverFlow",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "items",
+          "tipo": "CoverFlowItem[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "cardWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "180",
+          "descricao": "Largura da capa em px. A altura segue 4:5."
+        },
+        {
+          "nome": "defaultIndex",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Coleção",
+          "descricao": "Rótulo da prateleira para leitor de tela."
+        },
+        {
+          "nome": "onIndexChange",
+          "tipo": "(index: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "tilt",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "48",
+          "descricao": "Graus de giro das capas laterais."
+        }
+      ]
+    }
+  ],
+  "date-reel": [
+    {
+      "nome": "DateReel",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "defaultValue",
+          "tipo": "Date",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Data inicial quando não controlado. Padrão: hoje."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Data",
+          "descricao": "Nome acessível do grupo."
+        },
+        {
+          "nome": "locale",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "pt-BR",
+          "descricao": "Idioma dos nomes de mês."
+        },
+        {
+          "nome": "maxYear",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "minYear",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Primeiro e último ano do rolo de ano."
+        },
+        {
+          "nome": "onValueChange",
+          "tipo": "(date: Date) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado quando um rolo assenta numa data nova."
+        },
+        {
+          "nome": "value",
+          "tipo": "Date",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Data escolhida (só dia, mês e ano importam). Controlado."
+        }
+      ]
+    }
+  ],
+  "eye-tracker": [
+    {
+      "nome": "EyeTracker",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "blink",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Pisca sozinho de vez em quando."
+        },
+        {
+          "nome": "eyes",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "slant",
+          "descricao": "Forma dos olhos.",
+          "valores": [
+            "slant",
+            "dots",
+            "bars"
+          ]
+        },
+        {
+          "nome": "follow",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.6",
+          "descricao": "Quanto os olhos andam, de 0 a 1 (fração do meio rosto)."
+        },
+        {
+          "nome": "greeting",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Oi, tudo bem?",
+          "descricao": "O que o balão escreve no clique. Vazio desliga o cumprimento."
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "112",
+          "descricao": "Lado do rosto, em px."
+        }
+      ]
+    }
+  ],
+  "orbit-menu": [
+    {
+      "nome": "OrbitMenu",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "actions",
+          "tipo": "OrbitAction[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "icon",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Ícone do botão fechado."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Ações",
+          "descricao": "Nome do menu: rótulo do botão e texto central com o arco aberto."
+        },
+        {
+          "nome": "onAction",
+          "tipo": "(id: string) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado com o `id` da ação escolhida."
+        },
+        {
+          "nome": "onOpenChange",
+          "tipo": "(open: boolean) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Avisa quando o arco abre ou fecha (pra esmaecer o objeto, por exemplo)."
+        },
+        {
+          "nome": "radius",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "100",
+          "descricao": "Distância do centro do botão até o centro de cada ação, em px."
+        },
+        {
+          "nome": "spread",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "160",
+          "descricao": "Abertura do arco em graus, centrado em cima do botão."
+        }
+      ]
+    }
+  ],
+  "page-curl": [
+    {
+      "nome": "PageCurl",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "pages",
+          "tipo": "any[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "As páginas, na ordem. Cada uma preenche a folha inteira."
+        },
+        {
+          "nome": "defaultIndex",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Página inicial (base 0)."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Revista",
+          "descricao": "Rótulo da revista para leitor de tela."
+        },
+        {
+          "nome": "onIndexChange",
+          "tipo": "(index: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "peek",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "22",
+          "descricao": "Quanto o canto levanta com o ponteiro perto, em px."
+        }
+      ]
+    }
+  ],
+  "pull-to-refresh": [
+    {
+      "nome": "PullToRefresh",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "dots",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "8",
+          "descricao": "Pontos no anel."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Painel",
+          "descricao": "Nome do painel pra leitor de tela."
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "120",
+          "descricao": "Teto do esticão, em px."
+        },
+        {
+          "nome": "onRefresh",
+          "tipo": "() => void | Promise<unknown>",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Busca o dado novo. Enquanto a promessa não resolve, o anel gira."
+        },
+        {
+          "nome": "threshold",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "64",
+          "descricao": "Quanto puxar (px de painel esticado) até valer."
+        }
+      ]
+    }
+  ],
+  "reactions": [
+    {
+      "nome": "Reactions",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "options",
+          "tipo": "ReactionOption[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Todas as reações que a bandeja oferece, na ordem da bandeja."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "defaultValue",
+          "tipo": "Reaction[]",
+          "obrigatoria": false,
+          "padrao": "[]",
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Reações",
+          "descricao": "Nome da barra pro leitor de tela."
+        },
+        {
+          "nome": "onValueChange",
+          "tipo": "(next: Reaction[], change: { id: string; reacted: boolean; }) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Recebe a lista nova e a troca que a produziu."
+        },
+        {
+          "nome": "value",
+          "tipo": "Reaction[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Controlado. As pílulas seguem esta ordem; contagem zero sai da barra."
+        }
+      ]
+    }
+  ],
+  "signature-pad": [
+    {
+      "nome": "getStrokeOutline",
+      "descricao": "Transforma os pontos amostrados no contorno de um traço de largura variável. Ver a nota 1.",
+      "props": []
+    },
+    {
+      "nome": "outlineToPath",
+      "descricao": "Desenha o contorno como um caminho fechado e liso, com curvas quadráticas pelos pontos médios.",
+      "props": []
+    },
+    {
+      "nome": "strokePath",
+      "descricao": "O caminho SVG de um traço.",
+      "props": [
+        {
+          "nome": "points",
+          "tipo": "InkPoint[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "width",
+          "tipo": "enum",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null,
+          "valores": [
+            "fine",
+            "medium",
+            "bold"
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "signatureToSvg",
+      "descricao": "Um SVG solto da assinatura, recortado na tinta. `color` é a cor concreta\n(`getComputedStyle(el).color`, por exemplo): arquivo exportado não lê token.",
+      "props": []
+    },
+    {
+      "nome": "SignaturePad",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "defaultWidth",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "medium",
+          "descricao": null,
+          "valores": [
+            "fine",
+            "medium",
+            "bold"
+          ]
+        },
+        {
+          "nome": "hint",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Assine aqui",
+          "descricao": "Dica sobre a linha antes do primeiro traço."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Campo de assinatura",
+          "descricao": "Nome do campo pro leitor de tela."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(strokes: InkStroke[]) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Recebe os traços depois de cada mudança."
+        },
+        {
+          "nome": "signer",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Impresso embaixo da linha, como o nome de quem assina."
+        }
+      ]
+    },
+    {
+      "nome": "PAD_WIDTH",
+      "descricao": "Espaço de coordenadas do campo. Os traços são guardados nele.",
+      "props": []
+    }
+  ],
+  "slide-to-confirm": [
+    {
+      "nome": "SlideToConfirm",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "confirmed",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Controla o estado confirmado. Volte pra `false` pra rearmar o trilho."
+        },
+        {
+          "nome": "confirmedLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Confirmado",
+          "descricao": "Rótulo depois de confirmado."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Deslize pra confirmar",
+          "descricao": "Instrução no trilho, como \"Deslize pra pagar\"."
+        },
+        {
+          "nome": "onConfirm",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Roda uma vez quando o polegar chega ao fim."
+        },
+        {
+          "nome": "threshold",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0.85",
+          "descricao": "Fração do curso (0 a 1) a partir da qual soltar completa sozinho."
+        },
+        {
+          "nome": "tone",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "neutral",
+          "descricao": "Cor do polegar e do rastro: `brand`, `neutral` ou `danger` pra destruir.",
+          "valores": [
+            "brand",
+            "neutral",
+            "danger"
+          ]
+        }
+      ]
+    }
+  ],
+  "sticker-peel": [
+    {
+      "nome": "StickerPeel",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Nome falado do adesivo, para leitor de tela."
+        },
+        {
+          "nome": "defaultPosition",
+          "tipo": "{ x: number; y: number; }",
+          "obrigatoria": false,
+          "padrao": "{ x: 0, y: 0 }",
+          "descricao": "Posição inicial em px, relativa ao pai posicionado."
+        },
+        {
+          "nome": "onPositionChange",
+          "tipo": "(pos: { x: number; y: number; }) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Chamado ao soltar e a cada passo de teclado."
+        },
+        {
+          "nome": "peel",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "14",
+          "descricao": "Dobra em repouso com o ponteiro em cima, em px."
+        },
+        {
+          "nome": "radius",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--r-surface)",
+          "descricao": "Raio CSS da forma, compartilhado pela frente e pelo verso."
+        },
+        {
+          "nome": "rotate",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Inclinação em graus. Adesivo colado à mão nunca fica reto."
+        }
+      ]
+    }
+  ],
+  "streamgraph": [
+    {
+      "nome": "Streamgraph",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "data",
+          "tipo": "StreamgraphDatum[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "O que se mede, como \"Tíquetes por assunto\". Nomeia o gráfico."
+        },
+        {
+          "nome": "series",
+          "tipo": "StreamgraphSeries[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "Camadas do centro pra fora: a primeira corre no meio, as outras alternam acima e abaixo."
+        },
+        {
+          "nome": "categoryLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Data",
+          "descricao": "Cabeçalho da primeira coluna da tabela do leitor de tela."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "defaultHiddenSeries",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "directLabels",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Escreve o nome de cada camada no trecho mais grosso dela, quando cabe."
+        },
+        {
+          "nome": "emptyLabel",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Sem dados neste período",
+          "descricao": null
+        },
+        {
+          "nome": "formatValue",
+          "tipo": "(value: number, series: StreamgraphSeries) => string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "height",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "260",
+          "descricao": "Altura do gráfico em px. A largura segue o contêiner."
+        },
+        {
+          "nome": "hiddenSeries",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Camadas escondidas, controlado."
+        },
+        {
+          "nome": "legend",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Mostra a legenda que liga e desliga camadas."
+        },
+        {
+          "nome": "offset",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "wiggle",
+          "descricao": "\"wiggle\" flui, \"silhouette\" centra a pilha, \"zero\" empilha de uma base reta.",
+          "valores": [
+            "wiggle",
+            "silhouette",
+            "zero"
+          ]
+        },
+        {
+          "nome": "onHiddenSeriesChange",
+          "tipo": "(hidden: string[]) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "unit",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "",
+          "descricao": "Unidade depois de cada valor, como \"tíquetes\"."
+        }
+      ]
+    }
+  ],
+  "time-dial": [
+    {
+      "nome": "TimeDial",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "band",
+          "tipo": "[number, number]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Faixa destacada no aro, em minutos: `[540, 1080]` = 9h às 18h."
+        },
+        {
+          "nome": "caption",
+          "tipo": "any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Linha pequena embaixo da hora: a cidade, o dia."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "defaultValue",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "540",
+          "descricao": "Valor inicial quando não controlado."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Hora",
+          "descricao": "Nome acessível do ponteiro."
+        },
+        {
+          "nome": "onValueChange",
+          "tipo": "(minutes: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "240",
+          "descricao": "Diâmetro em px."
+        },
+        {
+          "nome": "step",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "15",
+          "descricao": "Passo em minutos, no gesto e nas setas."
+        },
+        {
+          "nome": "value",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Minutos desde 00:00 (0 a 1439). Controlado."
+        }
+      ]
+    },
+    {
+      "nome": "formatDialTime",
+      "descricao": "Minutos desde 00:00 em \"17:45\".",
+      "props": []
+    }
+  ],
+  "voice-note": [
+    {
+      "nome": "VoiceNote",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "duration",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "7",
+          "descricao": "Duração em segundos."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Nota de voz",
+          "descricao": "Nome da nota pra leitor de tela."
+        },
+        {
+          "nome": "onDelete",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Mostra o X e chama isto ao apagar."
+        },
+        {
+          "nome": "onPlayingChange",
+          "tipo": "(playing: boolean) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Avisa quando toca e pausa (pra ligar num player de verdade)."
+        },
+        {
+          "nome": "onSeek",
+          "tipo": "(seconds: number) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Avisa a posição buscada, em segundos."
+        },
+        {
+          "nome": "peaks",
+          "tipo": "number[]",
+          "obrigatoria": false,
+          "padrao": "ondaDeDemo()",
+          "descricao": "Picos da onda, de 0 a 1. Cada um vira uma barra."
+        },
+        {
+          "nome": "tone",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "neutral",
+          "descricao": "Cor do botão e da onda tocada.",
+          "valores": [
+            "neutral",
+            "brand"
+          ]
+        }
+      ]
+    }
+  ],
+  "wallet-stack": [
+    {
+      "nome": "WalletStack",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "cards",
+          "tipo": "WalletCard[]",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "defaultIndex",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Cartão da frente ao montar."
+        },
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Carteira",
+          "descricao": "Título da carteira, no cabeçalho e no rótulo acessível."
+        },
+        {
+          "nome": "onActiveChange",
+          "tipo": "(card: WalletCard) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Avisa quando o cartão da frente muda."
+        },
+        {
+          "nome": "onOpenChange",
+          "tipo": "(card: WalletCard) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Avisa quando um cartão abre (com ele) ou fecha (`null`)."
+        },
+        {
+          "nome": "renderDetail",
+          "tipo": "(card: WalletCard) => any",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "O que aparece embaixo do cartão aberto. Sem isto, o cartão não abre."
         }
       ]
     }

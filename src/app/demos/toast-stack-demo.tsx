@@ -59,7 +59,7 @@ function Painel() {
 export default function ToastStackDemo({ props }: DemoProps) {
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <div className="relative h-[340px] w-[520px] max-w-full overflow-hidden rounded-[var(--r-surface)] border border-border bg-background">
+      <div className="relative h-[300px] w-[440px] max-w-full overflow-hidden rounded-[var(--r-surface)] border border-border bg-background">
         <ToastStackProvider duration={6000}>
           <Painel />
           {/* `contained` depois dos knobs: solta na janela, a pilha fugiria do palco. */}

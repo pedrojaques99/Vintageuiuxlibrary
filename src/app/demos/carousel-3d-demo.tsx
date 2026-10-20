@@ -20,12 +20,12 @@ import { midia } from "../media";
 import type { DemoProps } from "../catalog";
 
 const TITULOS = [
-  "Calha Norte",
-  "Lenzo",
-  "Plu",
-  "Feira do Produtor",
-  "Arko",
-  "Mizz",
+  "Trilha Norte",
+  "Leme",
+  "Pomar",
+  "Forno Lento",
+  "Maré",
+  "Sereno",
 ];
 
 export default function Carousel3DDemo({ props }: DemoProps) {

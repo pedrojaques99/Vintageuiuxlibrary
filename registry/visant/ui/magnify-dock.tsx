@@ -37,7 +37,9 @@ import { cn } from "@/lib/utils";
  * 3. **Cresce no lugar, a partir da base.** A largura dos vãos não muda: a
  *    barra não sacode e o ícone sob o cursor não foge dele. A origem do
  *    transform é a base, então o ícone sobe como num dock de verdade, e `lift`
- *    soma um degrau de altura.
+ *    soma um degrau de altura. Cada atalho é uma pastilha com borda: o ícone
+ *    inchado passa da borda da barra como num dock, e é a pastilha que diz
+ *    "isso é um objeto que cresceu", não um glifo solto atravessando a linha.
  * 4. **O teclado faz a mesma onda.** A barra é um `toolbar` com uma parada de
  *    Tab só; as setas andam entre os ícones, e o foco põe a onda no ícone
  *    focado, com o rótulo junto.
@@ -76,7 +78,7 @@ export function MagnifyDock({
   items,
   active,
   onSelect,
-  magnify = 1.5,
+  magnify = 1.4,
   lift = 8,
   reach = 2,
   size = 40,
@@ -234,8 +236,8 @@ const DockIcone = React.forwardRef<HTMLButtonElement, DockIconeProps>(function D
         aria-label={item.label}
         aria-current={ativo ? "page" : undefined}
         className={cn(
-          "grid place-items-center rounded-[var(--r-control)] outline-none focus-visible:[box-shadow:var(--focus)]",
-          "[&_svg]:size-[55%] [&_svg]:shrink-0",
+          "grid place-items-center rounded-[var(--r-control)] border border-border bg-background outline-none focus-visible:[box-shadow:var(--focus)]",
+          "[&_svg]:size-[50%] [&_svg]:shrink-0",
           ativo || mostrarRotulo ? "text-foreground" : "text-muted-foreground",
         )}
         style={{ width: size, height: size, scale: escala, y, originY: 1 }}

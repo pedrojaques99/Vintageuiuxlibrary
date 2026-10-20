@@ -1,0 +1,44 @@
+{
+  "catalogo": {
+    "name": "black-hole",
+    "title": "Black Hole",
+    "type": "ui",
+    "family": "motion",
+    "description": "Apagar em lote com as linhas sugadas para um ponto só, a lista se inclinando em volta e o desfazer devolvendo tudo do mesmo lugar.",
+    "tags": [
+      "lista",
+      "apagar",
+      "desfazer",
+      "inbox",
+      "canvas",
+      "transição"
+    ],
+    "demoImport": "./demos/black-hole-demo",
+    "knobs": "BlackHole",
+    "preview": {
+      "w": 380,
+      "h": 377
+    }
+  },
+  "registry": {
+    "name": "black-hole",
+    "type": "registry:ui",
+    "title": "Black Hole",
+    "description": "Apagar em lote com as linhas sugadas para um ponto só, a lista se inclinando em volta e o desfazer devolvendo tudo do mesmo lugar.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/black-hole.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/black-hole"
+}

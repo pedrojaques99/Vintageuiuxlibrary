@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "slide-to-confirm",
+    "title": "Slide to Confirm",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Trilho que só confirma quando você arrasta o polegar até o fim, e volta com mola se soltar antes.",
+    "tags": [
+      "confirmação",
+      "arrasto",
+      "pagamento",
+      "gesto"
+    ],
+    "demoImport": "./demos/slide-to-confirm-demo",
+    "knobs": "SlideToConfirm",
+    "preview": {
+      "w": 360,
+      "h": 170
+    }
+  },
+  "registry": {
+    "name": "slide-to-confirm",
+    "type": "registry:ui",
+    "title": "Slide to Confirm",
+    "description": "Trilho que só confirma quando você arrasta o polegar até o fim, e volta com mola se soltar antes.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/slide-to-confirm.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/slide-confirm"
+}

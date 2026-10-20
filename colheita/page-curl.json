@@ -1,0 +1,44 @@
+{
+  "catalogo": {
+    "name": "page-curl",
+    "title": "Page Curl",
+    "type": "ui",
+    "family": "motion",
+    "description": "Uma revistinha que você folheia puxando o canto da página, com a dobra, o verso do papel e a próxima página aparecendo por baixo.",
+    "tags": [
+      "revista",
+      "catálogo",
+      "página",
+      "dobra",
+      "arrastar",
+      "editorial"
+    ],
+    "demoImport": "./demos/page-curl-demo",
+    "knobs": "PageCurl",
+    "preview": {
+      "w": 240,
+      "h": 364
+    }
+  },
+  "registry": {
+    "name": "page-curl",
+    "type": "registry:ui",
+    "title": "Page Curl",
+    "description": "Uma revistinha que você folheia puxando o canto da página, com a dobra, o verso do papel e a próxima página aparecendo por baixo.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/page-curl.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/page-curl"
+}

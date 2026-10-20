@@ -3257,6 +3257,319 @@
         }
       ],
       "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "black-hole",
+      "type": "registry:ui",
+      "title": "Black Hole",
+      "description": "Apagar em lote com as linhas sugadas para um ponto só, a lista se inclinando em volta e o desfazer devolvendo tudo do mesmo lugar.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/black-hole.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "countdown",
+      "type": "registry:ui",
+      "title": "Countdown",
+      "description": "Contagem regressiva em que cada dígito gira pelo caminho curto e vira o aviso de ao vivo quando chega a zero.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/countdown.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "cover-flow",
+      "type": "registry:ui",
+      "title": "Cover Flow",
+      "description": "Uma prateleira de capas em perspectiva: a da vez fica de frente, as vizinhas giram de lado e você arrasta ou joga pra trocar.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/cover-flow.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "date-reel",
+      "type": "registry:ui",
+      "title": "Date Reel",
+      "description": "Seletor de data em rolos de dia, mês e ano que encaixam sozinhos, como no telefone.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/date-reel.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "eye-tracker",
+      "type": "registry:ui",
+      "title": "Eye Tracker",
+      "description": "Um rosto de dois olhos que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/eye-tracker.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "orbit-menu",
+      "type": "registry:ui",
+      "title": "Orbit Menu",
+      "description": "Botão que abre as ações em arco ao redor dele, com mola, pra escolher arrastando o dedo ou clicando.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/orbit-menu.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "page-curl",
+      "type": "registry:ui",
+      "title": "Page Curl",
+      "description": "Uma revistinha que você folheia puxando o canto da página, com a dobra, o verso do papel e a próxima página aparecendo por baixo.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/page-curl.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "pull-to-refresh",
+      "type": "registry:ui",
+      "title": "Pull to Refresh",
+      "description": "Painel que estica quando você puxa pra baixo, conta os pontos até a marca e gira enquanto atualiza.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/pull-to-refresh.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "reactions",
+      "type": "registry:ui",
+      "title": "Reactions",
+      "description": "Barra de reações em que a contagem rola pro lado que andou e o ícone dá um pulinho quando você reage.",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "@radix-ui/react-popover"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/reactions.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "signature-pad",
+      "type": "registry:ui",
+      "title": "Signature Pad",
+      "description": "Campo de assinatura com tinta que engrossa e afina como caneta de verdade, com desfazer e limpar.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/signature-pad.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "slide-to-confirm",
+      "type": "registry:ui",
+      "title": "Slide to Confirm",
+      "description": "Trilho que só confirma quando você arrasta o polegar até o fim, e volta com mola se soltar antes.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/slide-to-confirm.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "sticker-peel",
+      "type": "registry:ui",
+      "title": "Sticker Peel",
+      "description": "Um adesivo que levanta o canto quando o mouse chega perto, descola ao arrastar mostrando o verso e cola onde você soltar.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/sticker-peel.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "streamgraph",
+      "type": "registry:ui",
+      "title": "Streamgraph",
+      "description": "Gráfico de fluxo empilhado que mostra como a mistura de várias partes muda no tempo, com camadas que ligam e desligam.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/streamgraph.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "time-dial",
+      "type": "registry:ui",
+      "title": "Time Dial",
+      "description": "Mostrador de 24 horas que você gira com o dedo ou com as setas, com a faixa do expediente desenhada no aro.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/time-dial.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "voice-note",
+      "type": "registry:ui",
+      "title": "Voice Note",
+      "description": "Nota de voz de chat com forma de onda, play e pausa, e busca clicando ou arrastando na onda.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/voice-note.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
+    },
+    {
+      "name": "wallet-stack",
+      "type": "registry:ui",
+      "title": "Wallet Stack",
+      "description": "Carteira de cartões empilhados em que um sobe pra mostrar saldo e movimento e os outros se recolhem no pé.",
+      "dependencies": [
+        "motion",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/wallet-stack.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>"
     }
   ]
 }

@@ -61,55 +61,24 @@ const Eyebrow = ({ children }: { children: React.ReactNode }) => (
 
 const STOPS: FogGardenStop[] = [
   {
-    id: "entrada",
+    id: "abre",
     content: (
       <>
-        <Eyebrow>Caminhada</Eyebrow>
-        <h3 className="max-w-[16ch] text-6xl font-normal leading-[0.95] tracking-tight">
-          Entre devagar no jardim
+        <Eyebrow>01</Eyebrow>
+        <h3 className="max-w-[14ch] text-4xl font-normal leading-[0.98] tracking-tight">
+          Um título curto pra abrir
         </h3>
       </>
     ),
   },
   {
-    id: "um",
-    align: "start",
+    id: "fecha",
     content: (
       <>
-        <Eyebrow>01 · Clareira</Eyebrow>
-        <h3 className="max-w-[18ch] text-4xl font-normal leading-[1.02] tracking-tight">
-          Cada parada sai da névoa e volta para ela
+        <Eyebrow>02</Eyebrow>
+        <h3 className="max-w-[14ch] text-4xl font-normal leading-[0.98] tracking-tight">
+          E outro pra fechar
         </h3>
-      </>
-    ),
-  },
-  {
-    id: "dois",
-    align: "end",
-    content: (
-      <>
-        <Eyebrow>02 · Clareira</Eyebrow>
-        <h3 className="max-w-[18ch] text-4xl font-normal leading-[1.02] tracking-tight">
-          O texto em negativo lê sobre a copa e sobre o céu
-        </h3>
-      </>
-    ),
-  },
-  {
-    id: "fim",
-    content: (
-      <>
-        <Eyebrow>Fim da trilha</Eyebrow>
-        <h3 className="max-w-[16ch] text-5xl font-normal leading-[0.98] tracking-tight">
-          A última parada fica
-        </h3>
-        <a
-          href="#"
-          onClick={(e) => e.preventDefault()}
-          className="mt-8 inline-flex rounded-full border border-current px-5 py-2.5 text-xs uppercase tracking-[0.08em]"
-        >
-          Voltar ao início
-        </a>
       </>
     ),
   },
@@ -121,11 +90,11 @@ export default function FogGardenDemo({ props }: DemoProps) {
   // max-h: na rota solo o palco não tem altura, e sem teto o contêiner de rolagem
   // crescia até o conteúdo (canvas de 2240px, capa em branco).
   return (
-    <div className="relative h-[min(620px,100%)] min-h-[520px] w-full overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border">
-      <div ref={scrollerRef} className="absolute inset-0 overflow-y-auto overscroll-contain">
+    <div className="relative h-[min(440px,100%)] min-h-[360px] w-full overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border">
+      <div ref={scrollerRef} className="absolute inset-0 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <FogGarden
           container={scrollerRef}
-          heightPerStop="560px"
+          heightPerStop="420px"
           stops={STOPS}
           landmark={vasoNoToco}
           {...props}

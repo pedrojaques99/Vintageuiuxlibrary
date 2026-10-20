@@ -2,15 +2,19 @@
 
 <!-- Gerado por scripts/vite-curadoria.mjs a partir de notas.json. Não edite à mão. -->
 
-**0 na vitrine** · 0 arquivada(s) (nota ≤ 2) · 0 pra excluir
+**1 na vitrine** · 1 arquivada(s) (nota ≤ 2) · 0 pra excluir
 
 ## Na vitrine
 
-_nenhuma_
+| peça | nota | comentário |
+|---|---|---|
+| `fog-garden` | ★★★☆☆ | tem que ser mais compacta e com texto genérico, 2 posicoes, bem mais reduzido, mantém a estética, tirar o scroll bar (ta aprecendo texto do meu cliente, tem q ser agnostico, todos os da library) |
 
 ## Arquivadas (fora da vitrine até a nota subir)
 
-_nenhuma_
+| peça | nota | comentário |
+|---|---|---|
+| `vintage-command-palette` | ★★☆☆☆ | mal apresentado, meio inutil |
 
 ## Pra excluir de vez (`npm run curadoria -- --excluir`)
 

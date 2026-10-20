@@ -1,56 +1,65 @@
 "use client";
 
 /**
- * A cena em que o rolo se paga: o preço trocando de plano.
+ * A cena em que o rolo se paga: o placar de vendas do dia, que anda sozinho.
  *
- * Os dois números são da mesma conta (cobrança mensal ou anual), então o giro
- * conta uma coisa verdadeira: o preço desceu, e os dígitos rodam pra baixo.
- * O total do ano embaixo mostra o outro truque, o de 1.548 pra 1.188 em que só
- * os dígitos giram e o ponto de milhar fica parado.
+ * Cada venda nova soma no total e os rolos giram até o valor novo, da esquerda
+ * pra direita, com o ponto de milhar parado no lugar (12.480 vira 12.660 sem o
+ * separador piscar). O contador de pedidos embaixo mostra o rolo pequeno, com
+ * `spins={0}`, que é o que a peça recomenda pra número que muda sempre.
+ *
+ * O preço mensal/anual, que também é caso da peça, já mora no Billing Toggle;
+ * aqui a cena é outra pra os dois ladrilhos não contarem a mesma história.
+ * O botão existe pra quem não quer esperar a próxima venda.
  */
 
 import * as React from "react";
+import { Plus } from "lucide-react";
 
 import { SlotText } from "../../../registry/visant/ui/slot-text";
 import type { DemoProps } from "../catalog";
 
-type Ciclo = "mensal" | "anual";
-
-const PRECO: Record<Ciclo, number> = { mensal: 129, anual: 99 };
-
-const opcao =
-  "h-8 rounded-[var(--r-pill)] px-4 text-apoio font-medium [transition:background-color_var(--dur-fast)_var(--ease-out),color_var(--dur-fast)_var(--ease-out)] focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]";
+/** Vendas que vão chegando, em reais. Fixas: servidor e cliente desenham igual. */
+const VENDAS = [180, 95, 240, 60, 315, 120, 45, 210];
 
 export default function SlotTextDemo({ props }: DemoProps) {
-  const [ciclo, setCiclo] = React.useState<Ciclo>("mensal");
-  const preco = PRECO[ciclo];
+  const [placar, setPlacar] = React.useState({ total: 12480, pedidos: 38 });
+  const proxima = React.useRef(0);
+
+  const vender = React.useCallback(() => {
+    const valor = VENDAS[proxima.current % VENDAS.length]!;
+    proxima.current += 1;
+    setPlacar((p) => ({ total: p.total + valor, pedidos: p.pedidos + 1 }));
+  }, []);
+
+  React.useEffect(() => {
+    const t = window.setInterval(vender, 3200);
+    return () => window.clearInterval(t);
+  }, [vender]);
 
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <div className="flex flex-col items-center gap-5">
-        <div role="group" aria-label="Ciclo de cobrança" className="inline-flex gap-1 rounded-[var(--r-pill)] border border-border bg-muted p-1">
-          {(["mensal", "anual"] as const).map((c) => (
-            <button
-              key={c}
-              type="button"
-              aria-pressed={ciclo === c}
-              onClick={() => setCiclo(c)}
-              className={`${opcao} ${ciclo === c ? "bg-card text-foreground [box-shadow:var(--e-raised)]" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              {c === "mensal" ? "Mensal" : "Anual"}
-            </button>
-          ))}
-        </div>
+      <div className="flex flex-col items-center gap-4">
+        <p className="text-apoio text-muted-foreground">Vendas hoje</p>
 
         <div className="flex items-baseline gap-1.5 text-foreground">
           <span className="text-titulo font-medium text-muted-foreground">R$</span>
-          <SlotText className="text-[3.25rem] font-semibold tracking-tight" value={preco} {...props} />
-          <span className="text-corpo text-muted-foreground">por mês</span>
+          <SlotText className="text-[3.25rem] font-semibold leading-none tracking-tight" value={placar.total} {...props} />
         </div>
 
-        <p className="text-apoio text-muted-foreground">
-          <SlotText value={preco * 12} {...props} /> reais no ano
-        </p>
+        <div className="flex items-center gap-3">
+          <p className="text-apoio text-muted-foreground">
+            <SlotText value={placar.pedidos} spins={0} /> pedidos
+          </p>
+          <button
+            type="button"
+            onClick={vender}
+            className="inline-flex h-8 items-center gap-1.5 rounded-[var(--r-control)] border border-border bg-card px-3 text-apoio font-medium text-foreground [transition:background-color_var(--dur-fast)_var(--ease-out)] hover:bg-muted focus-visible:outline-none focus-visible:[box-shadow:var(--focus)] [&_svg]:size-3.5"
+          >
+            <Plus aria-hidden="true" />
+            Nova venda
+          </button>
+        </div>
       </div>
     </div>
   );

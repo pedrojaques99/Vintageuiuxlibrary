@@ -22,10 +22,10 @@ import {
 import type { DemoProps } from "../catalog";
 
 const CASOS: { id: string; label: string; profile: LatheProfile; sticks?: LatheSticks }[] = [
-  { id: "difusor", label: "Difusor de varetas, arraste para girar", profile: DIFFUSER_PROFILE, sticks: { count: 7, length: 3.2 } },
+  { id: "frasco", label: "Frasco com varetas, arraste para girar", profile: DIFFUSER_PROFILE, sticks: { count: 7, length: 3.2 } },
   {
-    id: "vela",
-    label: "Vela em copo, arraste para girar",
+    id: "copo",
+    label: "Copo de vidro, arraste para girar",
     profile: [[0, 0], [0.9, 0], [1, 0.08], [1, 1.72], [0.97, 1.78], [0.9, 1.78], [0.9, 1.6], [0, 1.6]],
   },
   {

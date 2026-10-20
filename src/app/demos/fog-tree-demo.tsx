@@ -26,11 +26,11 @@ export default function FogTreeDemo({ props }: DemoProps) {
     >
       <div className="flex h-full flex-col justify-between p-6 text-foreground">
         <p className="text-[length:var(--text-micro,0.68rem)] uppercase tracking-[0.12em] opacity-60">
-          Tema central
+          Em destaque
         </p>
         <div className="flex items-end justify-between gap-6">
           <h3 className="max-w-[14ch] text-4xl font-normal leading-[0.95] tracking-tight">
-            Um jardim que aparece aos poucos
+            Uma cena que aparece aos poucos
           </h3>
           <span className="shrink-0 text-[length:var(--text-micro,0.68rem)] uppercase tracking-[0.12em] opacity-60">
             arraste

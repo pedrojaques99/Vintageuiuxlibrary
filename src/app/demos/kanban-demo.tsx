@@ -36,7 +36,7 @@ const ENXUTO = {
   ],
   items: [
     { id: "a", columnId: "fila", data: { t: "Colher marquee" } },
-    { id: "b", columnId: "fila", data: { t: "Tema Kastrup" } },
+    { id: "b", columnId: "fila", data: { t: "Tema escuro" } },
     { id: "c", columnId: "fazendo", data: { t: "Brand selector" } },
     { id: "d", columnId: "fazendo", data: { t: "Landing Casa Vinte" } },
     { id: "e", columnId: "pronto", data: { t: "Rebrand Ribalta" } },
@@ -52,7 +52,7 @@ const DENSO = {
   ],
   items: [
     { id: "a", columnId: "fila", data: { t: "Colher marquee" } },
-    { id: "b", columnId: "fila", data: { t: "Tema Kastrup" } },
+    { id: "b", columnId: "fila", data: { t: "Tema escuro" } },
     { id: "c", columnId: "fila", data: { t: "Naming da linha nova" } },
     { id: "d", columnId: "fazendo", data: { t: "Brand selector" } },
     { id: "e", columnId: "fazendo", data: { t: "Landing Casa Vinte" } },

@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "signature-pad",
+    "title": "Signature Pad",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Campo de assinatura com tinta que engrossa e afina como caneta de verdade, com desfazer e limpar.",
+    "tags": [
+      "assinatura",
+      "formulario",
+      "contrato",
+      "aceite",
+      "desenho"
+    ],
+    "demoImport": "./demos/signature-pad-demo",
+    "knobs": "SignaturePad",
+    "preview": {
+      "w": 440,
+      "h": 320
+    }
+  },
+  "registry": {
+    "name": "signature-pad",
+    "type": "registry:ui",
+    "title": "Signature Pad",
+    "description": "Campo de assinatura com tinta que engrossa e afina como caneta de verdade, com desfazer e limpar.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/signature-pad.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Signature Pad (https://uiarc.dev/components/signature-pad), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

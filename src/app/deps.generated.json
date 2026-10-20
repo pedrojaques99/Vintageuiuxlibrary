@@ -238,5 +238,62 @@
   ],
   "eclipse-switch": [
     "motion"
+  ],
+  "black-hole": [
+    "lucide-react",
+    "motion"
+  ],
+  "countdown": [
+    "motion"
+  ],
+  "cover-flow": [
+    "motion"
+  ],
+  "date-reel": [
+    "motion"
+  ],
+  "eye-tracker": [
+    "motion"
+  ],
+  "orbit-menu": [
+    "lucide-react",
+    "motion"
+  ],
+  "page-curl": [
+    "lucide-react",
+    "motion"
+  ],
+  "pull-to-refresh": [
+    "motion"
+  ],
+  "reactions": [
+    "@radix-ui/react-popover",
+    "lucide-react",
+    "motion"
+  ],
+  "signature-pad": [
+    "lucide-react",
+    "motion"
+  ],
+  "slide-to-confirm": [
+    "lucide-react",
+    "motion"
+  ],
+  "sticker-peel": [
+    "motion"
+  ],
+  "streamgraph": [
+    "motion"
+  ],
+  "time-dial": [
+    "motion"
+  ],
+  "voice-note": [
+    "lucide-react",
+    "motion"
+  ],
+  "wallet-stack": [
+    "lucide-react",
+    "motion"
   ]
 }

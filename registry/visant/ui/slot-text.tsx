@@ -189,8 +189,13 @@ function Rolo({ char, ordem, entrando, subindo, duration, stagger, spins, reduzi
       <span ref={medidor} className="invisible inline-block whitespace-pre">
         {visivel(char)}
       </span>
-      {/* A janela passa um pouco da linha pra o caractere esmaecer na borda em vez de ser cortado. */}
-      <span className="absolute -inset-x-[0.08em] -inset-y-[0.22em] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_0.24em,black_calc(100%-0.24em),transparent)]">
+      {/*
+        A janela passa só um fio da linha, pra o caractere esmaecer na borda em
+        vez de ser cortado seco. Mais que isso (era 0,22em) e, no meio do giro,
+        o vizinho de cima e o de baixo apareciam inteiros acima e abaixo do
+        número, e o valor grande virava uma pilha de dígitos.
+      */}
+      <span className="absolute -inset-x-[0.08em] -inset-y-[0.1em] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_0.16em,black_calc(100%-0.16em),transparent)]">
         <motion.span
           className="absolute inset-x-[0.08em] top-[-0.005em] flex flex-col items-center will-change-transform"
           style={{ transform: y, filter: blur }}

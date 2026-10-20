@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "time-dial",
+    "title": "Time Dial",
+    "type": "ui",
+    "family": "trabalho",
+    "description": "Mostrador de 24 horas que você gira com o dedo ou com as setas, com a faixa do expediente desenhada no aro.",
+    "tags": [
+      "hora",
+      "relógio",
+      "fuso",
+      "seletor",
+      "agenda"
+    ],
+    "demoImport": "./demos/time-dial-demo",
+    "knobs": "TimeDial",
+    "preview": {
+      "w": 516,
+      "h": 272
+    }
+  },
+  "registry": {
+    "name": "time-dial",
+    "type": "registry:ui",
+    "title": "Time Dial",
+    "description": "Mostrador de 24 horas que você gira com o dedo ou com as setas, com a faixa do expediente desenhada no aro.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/time-dial.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/time-dial"
+}

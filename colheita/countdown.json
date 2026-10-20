@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "countdown",
+    "title": "Countdown",
+    "type": "ui",
+    "family": "aquisicao",
+    "description": "Contagem regressiva em que cada dígito gira pelo caminho curto e vira o aviso de ao vivo quando chega a zero.",
+    "tags": [
+      "contagem",
+      "lancamento",
+      "prazo",
+      "timer",
+      "evento"
+    ],
+    "demoImport": "./demos/countdown-demo",
+    "knobs": "Countdown",
+    "preview": {
+      "w": 400,
+      "h": 180
+    }
+  },
+  "registry": {
+    "name": "countdown",
+    "type": "registry:ui",
+    "title": "Countdown",
+    "description": "Contagem regressiva em que cada dígito gira pelo caminho curto e vira o aviso de ao vivo quando chega a zero.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/countdown.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Countdown (https://uiarc.dev/components/countdown), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

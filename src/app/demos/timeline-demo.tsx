@@ -103,7 +103,7 @@ export default function TimelineDemo() {
     <div className="h-full w-full overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card px-6 py-5">
       <Timeline
         data={data}
-        title="Kastrup · identidade"
+        title="Marca nova · identidade"
         description="Da guideline compilada ao tema publicado."
       />
     </div>

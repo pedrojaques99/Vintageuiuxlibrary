@@ -19,8 +19,8 @@ export default function ConfirmMorphDemo({ props }: DemoProps) {
 
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <div className="flex w-[420px] max-w-full items-center justify-between gap-4 rounded-[var(--r-surface)] border border-border bg-card py-3 pl-5 pr-3 text-foreground">
-        <p className="text-sm text-muted-foreground">
+      <div className="flex w-[460px] max-w-full items-center justify-between gap-4 rounded-[var(--r-surface)] border border-border bg-card py-3 pl-5 pr-3 text-foreground">
+        <p className="min-w-0 truncate text-sm text-muted-foreground">
           {apagados ? "Nenhum arquivo selecionado" : "3 arquivos selecionados"}
         </p>
         <ConfirmMorph

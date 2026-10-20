@@ -202,7 +202,8 @@ export function SloshSlider({
           aria-valuetext={texto}
           aria-orientation="horizontal"
           onKeyDown={teclas}
-          className="absolute inset-y-0 grid w-6 -translate-x-1/2 place-items-center rounded-[var(--r-control)] outline-none focus-visible:[box-shadow:var(--focus)]"
+          // inset-y-1: o anel de foco (4px) cabe dentro do trilho, que recorta tudo o que passa da pílula.
+          className="absolute inset-y-1 grid w-6 -translate-x-1/2 place-items-center rounded-[var(--r-control)] outline-none focus-visible:[box-shadow:var(--focus)]"
           style={{ left: esquerda }}
         >
           <span className="h-5 w-1 rounded-[var(--r-pill)] bg-foreground" />

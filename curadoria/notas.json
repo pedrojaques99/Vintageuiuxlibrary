@@ -1,1 +1,14 @@
-{}
+{
+  "fog-garden": {
+    "nota": 3,
+    "comentario": "tem que ser mais compacta e com texto genérico, 2 posicoes, bem mais reduzido, mantém a estética, tirar o scroll bar (ta aprecendo texto do meu cliente, tem q ser agnostico, todos os da library)",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
+  "vintage-command-palette": {
+    "nota": 2,
+    "comentario": "mal apresentado, meio inutil",
+    "excluir": false,
+    "data": "2026-10-20"
+  }
+}
