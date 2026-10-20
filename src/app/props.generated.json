@@ -243,7 +243,7 @@
           "nome": "accent",
           "tipo": "string",
           "obrigatoria": false,
-          "padrao": "var(--vintage-value)",
+          "padrao": "var(--vintage-light)",
           "descricao": null
         },
         {
@@ -321,7 +321,7 @@
           "nome": "accent",
           "tipo": "string",
           "obrigatoria": false,
-          "padrao": "var(--vintage-value)",
+          "padrao": "var(--vintage-light)",
           "descricao": null
         },
         {
@@ -883,7 +883,7 @@
           "nome": "color",
           "tipo": "string",
           "obrigatoria": false,
-          "padrao": "var(--vintage-value)",
+          "padrao": "var(--vintage-light)",
           "descricao": null
         },
         {
@@ -961,7 +961,7 @@
           "nome": "color",
           "tipo": "string",
           "obrigatoria": false,
-          "padrao": "var(--vintage-meter-green)",
+          "padrao": "var(--vintage-light)",
           "descricao": null
         },
         {
@@ -11129,6 +11129,17 @@
           "descricao": "Pisca sozinho de vez em quando."
         },
         {
+          "nome": "body",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "shader",
+          "descricao": "Pele do corpo: shader vivo com visor e antena, ou o rosto liso de antes.",
+          "valores": [
+            "shader",
+            "solid"
+          ]
+        },
+        {
           "nome": "eyes",
           "tipo": "enum",
           "obrigatoria": false,
@@ -11146,7 +11157,7 @@
           "tipo": "enum",
           "obrigatoria": false,
           "padrao": "card",
-          "descricao": "Corpo do rosto. `glass` foi feito pra ficar por cima de um fundo vivo.",
+          "descricao": "Forma do corpo. Com `body=\"solid\"`, `glass` foi feito pra ficar por cima de um fundo vivo.",
           "valores": [
             "card",
             "orb",
@@ -11169,11 +11180,23 @@
           "descricao": "O que o balão escreve no clique. Vazio desliga o cumprimento."
         },
         {
+          "nome": "shader",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "neon",
+          "descricao": "Qual shader preenche o corpo quando `body=\"shader\"`.",
+          "valores": [
+            "neon",
+            "voronoi",
+            "tunnel"
+          ]
+        },
+        {
           "nome": "size",
           "tipo": "number",
           "obrigatoria": false,
           "padrao": "112",
-          "descricao": "Lado do rosto, em px."
+          "descricao": "Lado da cabeça, em px."
         }
       ]
     }

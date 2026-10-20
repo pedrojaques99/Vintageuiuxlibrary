@@ -235,7 +235,7 @@
         {
           "prop": "accent",
           "tipo": "texto",
-          "padrao": "var(--vintage-value)",
+          "padrao": "var(--vintage-light)",
           "resumo": null
         },
         {
@@ -296,7 +296,7 @@
         {
           "prop": "accent",
           "tipo": "texto",
-          "padrao": "var(--vintage-value)",
+          "padrao": "var(--vintage-light)",
           "resumo": null
         },
         {
@@ -679,7 +679,7 @@
         {
           "prop": "color",
           "tipo": "texto",
-          "padrao": "var(--vintage-value)",
+          "padrao": "var(--vintage-light)",
           "resumo": null,
           "inicial": "var(--vintage-accent)"
         },
@@ -757,7 +757,7 @@
         {
           "prop": "color",
           "tipo": "texto",
-          "padrao": "var(--vintage-meter-green)",
+          "padrao": "var(--vintage-light)",
           "resumo": null,
           "secundario": true
         }
@@ -4158,7 +4158,8 @@
           "prop": "columns",
           "tipo": "texto",
           "padrao": "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
-          "resumo": "Classes de grade. O default é uma estante confortável em três larguras."
+          "resumo": "Classes de grade. O default é uma estante confortável em três larguras.",
+          "inicial": "grid-cols-2 sm:grid-cols-4"
         }
       ]
     }
@@ -6310,6 +6311,16 @@
     "componentes": {
       "EyeTracker": [
         {
+          "prop": "body",
+          "tipo": "escolha",
+          "valores": [
+            "shader",
+            "solid"
+          ],
+          "padrao": "shader",
+          "resumo": "Pele do corpo: shader vivo com visor e antena, ou o rosto liso de antes."
+        },
+        {
           "prop": "eyes",
           "tipo": "escolha",
           "valores": [
@@ -6320,7 +6331,7 @@
           ],
           "padrao": "slant",
           "resumo": "Forma dos olhos.",
-          "inicial": "dots"
+          "inicial": "pupil"
         },
         {
           "prop": "face",
@@ -6332,8 +6343,18 @@
             "brand"
           ],
           "padrao": "card",
-          "resumo": "Corpo do rosto. `glass` foi feito pra ficar por cima de um fundo vivo.",
-          "inicial": "orb"
+          "resumo": "Forma do corpo. Com `body=\"solid\"`, `glass` foi feito pra ficar por cima de um fundo vivo."
+        },
+        {
+          "prop": "shader",
+          "tipo": "escolha",
+          "valores": [
+            "neon",
+            "voronoi",
+            "tunnel"
+          ],
+          "padrao": "neon",
+          "resumo": "Qual shader preenche o corpo quando `body=\"shader\"`."
         },
         {
           "prop": "blink",
@@ -6357,15 +6378,16 @@
           "max": 300,
           "step": 10,
           "padrao": 112,
-          "resumo": "Lado do rosto, em px.",
-          "inicial": 68
+          "resumo": "Lado da cabeça, em px.",
+          "inicial": 150,
+          "secundario": true
         },
         {
           "prop": "greeting",
           "tipo": "texto",
           "padrao": "Oi, tudo bem?",
           "resumo": "O que o balão escreve no clique. Vazio desliga o cumprimento.",
-          "inicial": "Opa"
+          "secundario": true
         }
       ]
     }

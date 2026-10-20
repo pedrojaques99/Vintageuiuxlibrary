@@ -158,6 +158,10 @@
   "fog-garden": {
     "heightPerStop": "420px"
   },
+  "book-shelf": {
+    "columns": "grid-cols-2 sm:grid-cols-4",
+    "className": "w-full"
+  },
   "spine-card": {
     "tilt": true,
     "href": "#",
@@ -264,10 +268,8 @@
     "className": "w-[620px] max-w-full"
   },
   "eye-tracker": {
-    "size": 68,
-    "face": "orb",
-    "eyes": "dots",
-    "greeting": "Opa"
+    "size": 150,
+    "eyes": "pupil"
   },
   "orbit-menu": {
     "label": "Ações da nota"

@@ -1,31 +1,36 @@
 "use client";
 
 /**
- * Três mascotes da mesma família num fundo vivo: o do meio é o que os knobs
- * pilotam (vidro sobre os fios de luz), os dos lados mostram o orbe e o da cor
- * da marca. Todos olham pro cursor e, com Tab, pro rosto que ganhou foco.
+ * Um bot por vez, grande, no fundo neutro do palco. O shader mora no corpo
+ * dele, não atrás; as setas trocam a pele (e a forma que combina com ela).
+ * Ele olha pro cursor e, com Tab, pro que ganhou foco; clique cumprimenta.
  */
 
-import { EyeTracker } from "../../../registry/visant/ui/eye-tracker";
-import { ShaderNeon } from "../../../registry/visant/ui/shader-neon";
+import { EyeTracker, type EyeTrackerProps } from "../../../registry/visant/ui/eye-tracker";
 import type { DemoProps } from "../catalog";
+import { Trocador, useUmPorVez } from "./um-por-vez";
+
+type Pele = NonNullable<EyeTrackerProps["shader"]>;
+
+const PELES: readonly Pele[] = ["neon", "voronoi", "tunnel"];
+
+/** A forma que cada pele veste melhor. */
+const FORMA: Record<Pele, NonNullable<EyeTrackerProps["face"]>> = {
+  neon: "card",
+  voronoi: "orb",
+  tunnel: "glass",
+};
 
 export default function EyeTrackerDemo({ props }: DemoProps) {
+  const { shader: _s, face: _f, ...resto } = (props ?? {}) as EyeTrackerProps & Record<string, unknown>;
+  const { atual, rodada, passo, repetir } = useUmPorVez(PELES, _s);
+  // A forma dos knobs vale quando alguém mexe nela; senão, a que combina com a pele.
+  const face = _f && _f !== "card" ? _f : FORMA[atual];
+
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="relative flex h-[280px] w-[400px] max-w-full items-center justify-center gap-6 overflow-hidden rounded-[var(--r-surface)]">
-        <ShaderNeon
-          aria-hidden
-          lines={4}
-          speed={22}
-          amplitude={35}
-          glow={38}
-          className="!absolute inset-0 !aspect-auto h-full"
-        />
-        <EyeTracker size={68} face="orb" eyes="dots" greeting="Opa" />
-        <EyeTracker size={124} face="glass" eyes="pupil" greeting="Oi, tudo bem?" {...props} />
-        <EyeTracker size={68} face="brand" eyes="slant" greeting="Bora" />
-      </div>
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+      <EyeTracker key={`${atual}-${rodada}`} size={150} eyes="pupil" {...resto} shader={atual} face={face} />
+      <Trocador nome={atual} onPasso={passo} onRepetir={repetir} rotulo="pele" />
     </div>
   );
 }

@@ -1942,15 +1942,15 @@ export const CATALOG: CatalogItem[] = [
   },
   {
     name: "eye-tracker",
-    title: "Eye Tracker",
+    title: "Agent Bot",
     type: "ui",
     family: "efeitos",
     description:
-      "Um mascote que segue o cursor e o foco do teclado, pisca sozinho e dá oi no clique. Quatro rostos (card, orbe, vidro, marca) e quatro olhares.",
-    tags: ["mascote","estado vazio","cursor","personalidade"],
+      "Avatar de bot ou agente de IA: a cabeça é um shader vivo na cor da marca, com visor e antena, e os olhos seguem o cursor e o foco, piscam e cumprimentam no clique. Três peles (neon, voronoi, túnel) e quatro formas.",
+    tags: ["bot","agent","agente","ia","assistente","avatar","mascote","chat","shader","cursor","estado vazio"],
     demo: EyeTrackerColheitaDemo,
     knobs: "EyeTracker",
-    preview: { w: 400, h: 280 },
+    preview: { w: 400, h: 300 },
   },
   {
     name: "orbit-menu",

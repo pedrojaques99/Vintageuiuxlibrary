@@ -480,8 +480,8 @@
     "evite": "Escolher hora: time-dial; intervalo de datas ou mês inteiro, use o date picker do tema"
   },
   "eye-tracker": {
-    "quando": "Mascote que segue o cursor e dá personalidade a estado vazio, login ou página 404",
-    "evite": "Interface séria ou densa; estado vazio padrão, empty-state com arte parada"
+    "quando": "Avatar de agente ou assistente de IA: cabeçalho e estado vazio de chat, onboarding guiado por bot, tela de espera enquanto o agente pensa",
+    "evite": "Interface séria ou densa, foto de perfil de pessoa (use avatar) e mais de um bot vivo na mesma tela"
   },
   "orbit-menu": {
     "quando": "Botão flutuante que abre poucas ações em arco, escolhidas arrastando o dedo, em app mobile",
