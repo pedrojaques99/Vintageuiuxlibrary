@@ -12,7 +12,7 @@
  */
 import * as React from "react";
 
-import { definirAnatomia, type FiguraDef, type VisantAnatomia } from "@/lib/anatomia";
+import { definirAnatomia, type FiguraDef, type VisantAnatomia } from "@/lib/anatomia-nucleo";
 
 export interface AnatomiaProps extends React.HTMLAttributes<HTMLElement> {
   figura: FiguraDef;

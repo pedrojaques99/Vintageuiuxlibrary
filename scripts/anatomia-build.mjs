@@ -53,7 +53,9 @@ function gerarKit() {
   const fonte = readFileSync(join(KIT, "iso-kit.ts"), "utf8");
   const corte = fonte.indexOf("export type KeyMark");
   if (corte < 0) throw new Error("iso-kit.ts mudou: não achei o ponto de corte (export type KeyMark)");
-  const kit = fonte.slice(0, corte).trimEnd() + "\n";
+  // figureSvg({ standalone }) embutia o ISO_CSS (com hex); no runtime a figura nunca é standalone.
+  const kit = fonte.slice(0, corte).trimEnd().replace("standalone ? `<style>${ISO_CSS}</style>` : \"\"", '""') + "\n";
+  if (kit.includes("ISO_CSS")) throw new Error("o runtime do kit ainda cita ISO_CSS");
   if (/#[0-9a-fA-F]{3,8}\b/.test(kit.replace(/&#\d+;/g, ""))) throw new Error("o runtime do kit ficou com hex");
   writeFileSync(
     join(LIB, "anatomia-kit.ts"),

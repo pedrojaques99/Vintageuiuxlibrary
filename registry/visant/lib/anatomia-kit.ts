@@ -669,7 +669,7 @@ export interface FigureOptions {
 }
 
 export function figureSvg({ width, height, label, body, standalone = false, className }: FigureOptions) {
-  const style = standalone ? `<style>${ISO_CSS}</style>` : "";
+  const style = "";
   return `<svg${attrs({
     xmlns: "http://www.w3.org/2000/svg",
     class: `iso-svg${standalone ? " iso" : ""}${className ? ` ${className}` : ""}`,

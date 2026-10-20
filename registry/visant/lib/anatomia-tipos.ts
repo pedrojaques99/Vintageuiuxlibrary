@@ -20,6 +20,8 @@ export interface Peca {
   ancora: Ponto3;
   /** Rótulo do botão de ação, quando a peça faz alguma coisa. */
   acao?: string;
+  /** Peças que trabalham com esta: ficam meio acesas quando ela está em foco. */
+  junto?: number[];
 }
 
 export interface Passo {
@@ -54,17 +56,25 @@ export interface AnatomiaApi {
   P: Projecao;
   /** Escreve no canto de leitura (e no anúncio pra leitor de tela). */
   dizer(texto: string): void;
-  /** Leva o pino da peça `n` pra um ponto do mundo (peça que se move). */
-  moverPino(n: number, ponto: Ponto3): void;
+  /** Leva o pino da peça `n` pra um ponto do mundo (peça que se move). `null` esconde o pino (a peça saiu de cena). */
+  moverPino(n: number, ponto: Ponto3 | null): void;
   /** Movimento reduzido: mostre a pose final, parada. */
   reduzido(): boolean;
   /** Laço de quadros. Só roda com a figura visível e sem pausa. `tick` devolve true pra continuar. */
   loop(tick: (dt: number) => boolean): { iniciar(): void; parar(): void };
+  /** Mostra ou esconde o pino (e a peça some do ímã do foco). */
+  mostrarPino(n: number, visivel: boolean): void;
+  /** Troca o texto da peça no painel (quando ele depende do estado da cena). */
+  textoDaPeca(n: number, texto: string): void;
+  /** Relê rótulos e estado das ações (chame depois de mudar o que a ação faria). */
+  atualizar(): void;
 }
 
 export interface AcaoDaPeca {
   rotulo(): string;
   rodar(): void;
+  /** Falso = o botão aparece desabilitado, com o rótulo explicando por quê. */
+  ativa?(): boolean;
 }
 
 export interface Controle {

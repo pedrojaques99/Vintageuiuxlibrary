@@ -10,12 +10,12 @@ const AQUI = dirname(fileURLToPath(import.meta.url));
 const LIB = resolve(AQUI, "..", "registry", "visant", "lib");
 const ids = readdirSync(LIB)
   .map((f) => /^anatomia-(.+)\.ts$/.exec(f)?.[1])
-  .filter((id) => id && !/-controlador$|^(kit|estilo|tipos)$/.test(id));
+  .filter((id) => id && !/-controlador$|^(kit|estilo|tipos|nucleo)$/.test(id));
 mkdirSync(join(AQUI, "web"), { recursive: true });
 const entradas = {};
 for (const id of ids) {
   const arq = join(AQUI, "web", `${id}.ts`);
-  writeFileSync(arq, `// GERADO por anatomia/vite.web.config.mjs\nimport { definirAnatomia, registrarFigura } from "../../registry/visant/lib/anatomia";\nimport figura from "../../registry/visant/lib/anatomia-${id}";\nregistrarFigura(figura);\ndefinirAnatomia();\n`);
+  writeFileSync(arq, `// GERADO por anatomia/vite.web.config.mjs\nimport { definirAnatomia, registrarFigura } from "../../registry/visant/lib/anatomia-nucleo";\nimport figura from "../../registry/visant/lib/anatomia-${id}";\nregistrarFigura(figura);\ndefinirAnatomia();\n`);
   entradas[id] = arq;
 }
 

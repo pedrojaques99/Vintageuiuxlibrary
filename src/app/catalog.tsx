@@ -70,6 +70,12 @@ import { VintageXYPad } from "../../registry/vintage/ui/vintage-xy-pad";
  * requisição sem tirar byte do caminho crítico.
  */
 import AnatomiaComoSobeDemo from "./demos/anatomia-como-sobe-demo";
+import AnatomiaMemoriaDemo from "./demos/anatomia-memoria-demo";
+import AnatomiaTokensDemo from "./demos/anatomia-tokens-demo";
+import AnatomiaScriptDemo from "./demos/anatomia-script-demo";
+import AnatomiaPermissaoDemo from "./demos/anatomia-permissao-demo";
+import AnatomiaFicharioDemo from "./demos/anatomia-fichario-demo";
+import AnatomiaTomadasDemo from "./demos/anatomia-tomadas-demo";
 import AssigneeStackDemo from "./demos/assignee-stack-demo";
 import BrandSelectorDemo from "./demos/brand-selector-demo";
 import ChipDemo from "./demos/chip-demo";
@@ -713,6 +719,72 @@ export const CATALOG: CatalogItem[] = [
       "Fig 1.4 do curso IA para Designers: o que sobe pro GitHub, o que o .gitignore segura no computador e quando a Vercel põe no ar.",
     tags: ["didática", "aula", "git", "github", "gitignore", "vercel"],
     demo: AnatomiaComoSobeDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-fichario",
+    title: "Anatomia: o fichário de receitas",
+    type: "lib",
+    family: "didatica",
+    description:
+      "Fig 2.6 do curso IA para Designers: o agente lê só as etiquetas das skills e abre a receita que casa com o pedido; a pasta references/ só sobe quando a receita pede.",
+    tags: ["didática", "aula", "skill", "receita", "claude"],
+    demo: AnatomiaFicharioDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-tomadas",
+    title: "Anatomia: conector e chave de API",
+    type: "lib",
+    family: "didatica",
+    description:
+      "Fig 2.2 do curso IA para Designers: os programas entram pelo conector do claude.ai, com a tua conta; o serviço pago entra pela chave de API, que mora no .env e conta cada chamada.",
+    tags: ["didática", "aula", "conector", "chave de api", "mcp", "claude"],
+    demo: AnatomiaTomadasDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-memoria",
+    title: "Anatomia: a memória do agente",
+    type: "lib",
+    family: "didatica",
+    description:
+      "Fig 2.7 do curso IA para Designers: o agente esquece a conversa quando a janela fecha e lembra o que está no CLAUDE.md, com regra parafusada e fato com data.",
+    tags: ["didática", "aula", "memória", "CLAUDE.md"],
+    demo: AnatomiaMemoriaDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-tokens",
+    title: "Anatomia: o tanque da conversa",
+    type: "lib",
+    family: "didatica",
+    description:
+      "Fig B.7 do curso IA para Designers: cada mensagem fica na conversa e o agente relê tudo a cada volta; um print resolve em uma volta o que o parágrafo leva três.",
+    tags: ["didática", "aula", "tokens", "contexto"],
+    demo: AnatomiaTokensDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-script",
+    title: "Anatomia: do briefing ao script",
+    type: "lib",
+    family: "didatica",
+    description:
+      "Fig B.8 do curso IA para Designers: o agente resolve o pedido novo e gasta uso; o que se repete vira script, que roda sem IA e para quando não entende.",
+    tags: ["didática", "aula", "script", "automação"],
+    demo: AnatomiaScriptDemo,
+    preview: { w: 1080, h: 680 },
+  },
+  {
+    name: "anatomia-permissao",
+    title: "Anatomia: a caixa de permissão",
+    type: "lib",
+    family: "didatica",
+    description:
+      "Fig 2.3b do curso IA para Designers: nada do agente entra na tua pasta sem Yes, Yes and don't ask again ou No, e só o don't ask again fica escrito.",
+    tags: ["didática", "aula", "terminal", "permissão"],
+    demo: AnatomiaPermissaoDemo,
     preview: { w: 1080, h: 680 },
   },
   {
