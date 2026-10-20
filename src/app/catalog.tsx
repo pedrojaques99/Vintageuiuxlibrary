@@ -585,7 +585,7 @@ export const CATALOG: CatalogItem[] = [
     // 620: o defeito que a peça mata (o pulo do cabeçalho quando a sessão
     // chega) só é visível com a barra em volta. Botão sozinho num quadro não
     // tem o que empurrar.
-    preview: { w: 360, h: 300 },
+    preview: { w: 360, h: 200 },
   },
   {
     name: "profile-form",
@@ -1862,6 +1862,7 @@ export const CATALOG: CatalogItem[] = [
   },
   {
     name: "dynamic-island",
+    // palco-check: o seletor de modo mora no pé do palco, embaixo da ilha
     title: "Dynamic Island",
     type: "ui",
     family: "feedback",
@@ -2265,7 +2266,7 @@ export const CATALOG: CatalogItem[] = [
       "Fig 2.6 do curso IA para Designers: o agente lê só as etiquetas das skills e abre a receita que casa com o pedido; a pasta references/ só sobe quando a receita pede.",
     tags: ["didática", "aula", "skill", "receita", "claude"],
     demo: AnatomiaFicharioDemo,
-    preview: { w: 1080, h: 680 },
+    preview: { w: 1080, h: 710 },
   },
   {
     name: "anatomia-tomadas",
@@ -2298,7 +2299,7 @@ export const CATALOG: CatalogItem[] = [
       "Fig B.7 do curso IA para Designers: cada mensagem fica na conversa e o agente relê tudo a cada volta; um print resolve em uma volta o que o parágrafo leva três.",
     tags: ["didática", "aula", "tokens", "contexto"],
     demo: AnatomiaTokensDemo,
-    preview: { w: 1080, h: 680 },
+    preview: { w: 1080, h: 710 },
   },
   {
     name: "anatomia-script",

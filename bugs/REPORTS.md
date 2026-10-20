@@ -2,9 +2,69 @@
 
 <!-- Gerado por scripts/vite-bug-report.mjs. Não edite à mão: use `npm run bugs -- --resolve <id>`. -->
 
-**0 aberto(s)** · 162 resolvido(s)
+**13 aberto(s)** · 162 resolvido(s)
 
-_Nada aberto._
+## gleam (2)
+
+- **gleam-3** — CONTROLES ESCONDIDOS POR DEFAULT
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
+- **gleam-4** — NASCCER EM PERSPECTIVA E BRILHANDO POR DEFAULT
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
+
+## testimonial-wall (1)
+
+- **testimonial-wall-4** — AUTO-LAYOUT- FULL HEIGHT
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:20</sub>
+
+## use-pointer-parallax (1)
+
+- **use-pointer-parallax-4** — RENAME
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:20</sub>
+
+## fold-motion (1)
+
+- **fold-motion-4** — MT CONFUSA A APRESENTACAO, UM POR VEZ, INTERATIVO, MENOS LABEL, MAIS VISUAL
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:20</sub>
+
+## line-reveal (1)
+
+- **line-reveal-2** — UM POR VEZ
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:20</sub>
+
+## photo-frame (1)
+
+- **photo-frame-2** — UM POR VEZ
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
+
+## photo-split (1)
+
+- **photo-split-1** — UM POR VEZ
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
+
+## sim-slider (1)
+
+- **sim-slider-3** — MT LABEL
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
+
+## measure-bar (1)
+
+- **measure-bar-2** — MT SIMPLES
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:21</sub>
+
+## cover-art (1)
+
+- **cover-art-4** — MT SLOP, PODE ESCONDFER
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:22</sub>
+
+## skeleton-rail (1)
+
+- **skeleton-rail-5** — UM POR VEZ
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:22</sub>
+
+## ink-wordmark (1)
+
+- **ink-wordmark-1** — MAIS OPCOES, MANROPE BOLD MAISCULA COM VISANT®
+  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 13:23</sub>
 
 ---
 

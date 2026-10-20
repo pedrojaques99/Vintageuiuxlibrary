@@ -38,8 +38,8 @@ export default function AuthButtonDemo({ props }: DemoProps) {
   }, [verificar]);
 
   return (
-    <div className="flex h-full w-full items-start justify-center p-6">
-      <div className="flex w-[280px] max-w-full justify-end pt-8">
+    <div className="flex h-full w-full items-center justify-center p-6">
+      <div className="flex max-w-full justify-center">
         <AuthButton
           status={status}
           hint="signed-in"
