@@ -5,6 +5,7 @@ import {
   animate,
   motion,
   useMotionValue,
+  useMotionValueEvent,
   useReducedMotion,
   useTransform,
   type AnimationPlaybackControls,
@@ -13,6 +14,7 @@ import {
 } from "motion/react";
 
 import { cn } from "@/lib/utils";
+import { playSfx } from "@/lib/sfx-bus";
 
 /**
  * Pull to Refresh: puxar o painel pra baixo pra buscar dado novo.
@@ -39,6 +41,12 @@ import { cn } from "@/lib/utils";
  * 5. **Teclado:** com o painel focado, Enter ou Espaço atualizam, com o mesmo
  *    anel e o mesmo aviso no `role="status"`. Tecla vinda de um botão de
  *    dentro não dispara nada.
+ * 6. **O gesto se anuncia sem legenda.** Uma alça no topo diz "isto puxa"
+ *    antes de qualquer toque; durante o puxão a frase ao lado do anel muda de
+ *    "Puxe pra atualizar" pra "Solte pra atualizar" no ponto exato em que
+ *    soltar passa a valer, com um clique baixo (`detent`) no mesmo quadro. Com
+ *    `nudge`, o painel ainda dá uma puxadinha sozinho de tempos em tempos até a
+ *    pessoa mexer nele: é a demonstração do gesto, no próprio componente.
  */
 
 export interface PullToRefreshProps
@@ -54,6 +62,16 @@ export interface PullToRefreshProps
   /** Nome do painel pra leitor de tela. */
   label?: string;
   disabled?: boolean;
+  /** Alça no topo do painel, o sinal de "isto puxa". Default `true`. */
+  handle?: boolean;
+  /** As frases ao lado do anel. `false` some com elas e deixa só o anel. */
+  labels?: { pull?: string; release?: string; refreshing?: string } | false;
+  /**
+   * Puxadinha sozinha a cada `nudge` ms (`true` = 4000) enquanto ninguém mexeu
+   * no painel. Para no primeiro toque, tecla ou foco. Desligada sob movimento
+   * reduzido.
+   */
+  nudge?: boolean | number;
 }
 
 const MOLA_VOLTA: Transition = { type: "spring", visualDuration: 0.3, bounce: 0.2 };
@@ -78,9 +96,13 @@ export function PullToRefresh({
   dots = 8,
   label = "Painel",
   disabled = false,
+  handle = true,
+  labels,
+  nudge = false,
   className,
   children,
   onKeyDown,
+  onFocus,
   ...props
 }: PullToRefreshProps) {
   const reduzido = useReducedMotion() ?? false;
@@ -94,6 +116,38 @@ export function PullToRefresh({
   const anim = React.useRef<AnimationPlaybackControls | null>(null);
   const vivo = React.useRef(true);
   const descanso = Math.min(threshold, 48); // altura que o anel ocupa enquanto gira
+  const [pronto, setPronto] = React.useState(false);
+  const [tocado, setTocado] = React.useState(false);
+  const frases = labels === false ? null : { pull: "Puxe pra atualizar", release: "Solte pra atualizar", refreshing: "Atualizando", ...labels };
+  const opacidadeFrase = useTransform(altura, [8, 28], [0, 1]);
+  // A alça sai de cena assim que o painel estica: o anel e a frase assumem.
+  const opacidadeAlca = useTransform(altura, [0, 10], [1, 0]);
+
+  // A virada de "puxe" pra "solte" é o momento em que soltar passa a valer: a
+  // frase troca e o clique toca no mesmo quadro. Só durante o gesto do dedo,
+  // nunca na volta da mola nem na puxadinha automática.
+  useMotionValueEvent(altura, "change", (v) => {
+    const agora = v >= threshold;
+    if (agora === pronto) return;
+    setPronto(agora);
+    if (agora && gesto.current) playSfx("detent");
+  });
+
+  // A puxadinha: um convite que se repete até alguém aceitar.
+  const intervalo = nudge === true ? 4000 : typeof nudge === "number" ? nudge : 0;
+  React.useEffect(() => {
+    if (!intervalo || tocado || reduzido || disabled) return;
+    const id = window.setInterval(() => {
+      if (gesto.current || carregandoRef.current) return;
+      anim.current?.stop();
+      anim.current = animate(altura, [0, Math.round(threshold * 0.45), 0], {
+        duration: 0.9,
+        times: [0, 0.35, 1],
+        ease: ["easeOut", "easeInOut"],
+      });
+    }, intervalo);
+    return () => window.clearInterval(id);
+  }, [intervalo, tocado, reduzido, disabled, threshold, altura]);
 
   React.useEffect(
     () => () => {
@@ -142,6 +196,10 @@ export function PullToRefresh({
       aria-busy={carregando || undefined}
       aria-keyshortcuts="Enter"
       tabIndex={disabled ? undefined : 0}
+      onFocus={(e) => {
+        onFocus?.(e);
+        setTocado(true);
+      }}
       onKeyDown={(e) => {
         onKeyDown?.(e);
         if (e.target !== e.currentTarget || (e.key !== "Enter" && e.key !== " ")) return;
@@ -151,6 +209,7 @@ export function PullToRefresh({
       onPointerDown={(e) => {
         if (disabled || carregandoRef.current || !e.isPrimary || e.button !== 0) return;
         const el = e.currentTarget;
+        setTocado(true);
         anim.current?.stop();
         gesto.current = {
           id: e.pointerId,
@@ -180,18 +239,35 @@ export function PullToRefresh({
         className,
       )}
     >
-      <motion.div aria-hidden="true" className="relative shrink-0 overflow-hidden" style={{ height: altura }}>
+      {handle ? (
         <motion.span
-          className="absolute left-1/2 top-1/2 size-6 -translate-x-1/2 -translate-y-1/2"
-          style={{ rotate: giroPuxao }}
-        >
-          {/* O giro de espera é CSS na camada de dentro: quando para, não briga com o giro do puxão. */}
-          <span className={cn("absolute inset-0", carregando && "animate-spin motion-reduce:animate-none")}>
-            {Array.from({ length: dots }, (_, i) => (
-              <Ponto key={i} i={i} total={dots} progresso={progresso} />
-            ))}
-          </span>
-        </motion.span>
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-1.5 z-10 h-1 w-8 -translate-x-1/2 rounded-[var(--r-pill)] bg-border"
+          style={{ opacity: opacidadeAlca }}
+        />
+      ) : null}
+      <motion.div aria-hidden="true" className="relative shrink-0 overflow-hidden" style={{ height: altura }}>
+        <div className="absolute inset-0 flex items-center justify-center gap-2.5">
+          <motion.span className="relative size-6 shrink-0" style={{ rotate: giroPuxao }}>
+            {/* O giro de espera é CSS na camada de dentro: quando para, não briga com o giro do puxão. */}
+            <span className={cn("absolute inset-0", carregando && "animate-spin motion-reduce:animate-none")}>
+              {Array.from({ length: dots }, (_, i) => (
+                <Ponto key={i} i={i} total={dots} progresso={progresso} />
+              ))}
+            </span>
+          </motion.span>
+          {frases ? (
+            <motion.span
+              className={cn(
+                "whitespace-nowrap text-xs font-medium",
+                pronto || carregando ? "text-foreground" : "text-muted-foreground",
+              )}
+              style={{ opacity: opacidadeFrase }}
+            >
+              {carregando ? frases.refreshing : pronto ? frases.release : frases.pull}
+            </motion.span>
+          ) : null}
+        </div>
       </motion.div>
       <div className="min-h-0 flex-1">{children}</div>
       <span className="sr-only" role="status">

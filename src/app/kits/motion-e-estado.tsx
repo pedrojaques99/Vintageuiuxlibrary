@@ -16,6 +16,10 @@
  * (`usePageVisible`) ou quando a tela sai de vista (`useInView`). As peças que
  * rodam sozinhas por dentro (o ticker, a névoa) são desmontadas junto: fora de
  * vista os tiles ficam "prontos", que é o estado sem loop.
+ *
+ * O resultado que ainda não chegou é um `SkeletonMedia` com `shimmer` (o
+ * `generating-tile` saiu do acervo em 2026-10-20), e o "tentar de novo" mostra
+ * o `status-ticker` na variante `barra`.
  */
 
 import * as React from "react";
@@ -23,7 +27,7 @@ import { ImagePlus, RotateCcw, Sparkles } from "lucide-react";
 
 import { StatusTicker } from "../../../registry/visant/ui/status-ticker";
 import { WorkingGlyph } from "../../../registry/visant/ui/working-glyph";
-import { GeneratingTile } from "../../../registry/visant/ui/generating-tile";
+import { SkeletonMedia } from "../../../registry/visant/ui/skeleton-rail";
 import { PaperShuttle } from "../../../registry/visant/ui/paper-shuttle";
 import { GlitchChars } from "../../../registry/visant/ui/glitch-chars";
 import { TurbulenceField } from "../../../registry/visant/ui/turbulence-field";
@@ -98,7 +102,7 @@ function Fila({ posicao, ativo }: { posicao: number; ativo: boolean }) {
   );
 }
 
-/** A grade de resultados: o tile ocupa o lugar do resultado até ele existir. */
+/** A grade de resultados: o esqueleto ocupa o lugar do resultado até ele existir. */
 function Resultados({ prontos }: { prontos: boolean[] }) {
   const ref = React.useRef<HTMLDivElement>(null);
   usePointerParallax(ref);
@@ -116,9 +120,11 @@ function Resultados({ prontos }: { prontos: boolean[] }) {
               transform: `translate3d(calc(var(--px, 0) * ${profundidade[i]}px), calc(var(--py, 0) * ${profundidade[i]}px), 0)`,
             }}
           >
-            <GeneratingTile isLoading={!pronto} aspectRatio="1/1" showFrame={false}>
+            {pronto ? (
               <Media papel="cena" indice={i} ratio="1/1" className={`size-full ${CHEGADA}`} />
-            </GeneratingTile>
+            ) : (
+              <SkeletonMedia ratio="1 / 1" radius="0" motion="shimmer" label={false} delay={i * 90} />
+            )}
           </div>
         ))}
       </div>
@@ -142,7 +148,9 @@ function Falha() {
       <p className={ROTULO}>Variação 5, em 4K</p>
       <div className="grid flex-1 place-items-center">
         {estado === "tentando" ? (
-          <GeneratingTile isLoading variant="inline" steps={["Refazendo", "Reenviando"]} />
+          <div className="w-full">
+            <StatusTicker variant="barra" steps={["Refazendo", "Reenviando"]} showTimer={false} />
+          </div>
         ) : estado === "refeito" ? (
           <div className={`flex w-full items-center gap-3 ${CHEGADA}`}>
             <Media papel="cena" indice={2} ratio="1/1" className="size-12 shrink-0 rounded-[var(--r-control,0.5rem)]" />
@@ -262,7 +270,7 @@ export default function MotionEEstado() {
 
             <Fold variant="mask" as="div">
               <FoldPart>
-                <Pecas nomes={["generating-tile", "use-pointer-parallax", "fold-motion"]}>
+                <Pecas nomes={["skeleton-rail", "use-pointer-parallax", "fold-motion"]}>
                   <Resultados prontos={prontos} />
                 </Pecas>
               </FoldPart>
@@ -286,7 +294,7 @@ export default function MotionEEstado() {
                   </div>
                 </div>
               </Pecas>
-              <Pecas nomes={["generating-tile"]}>
+              <Pecas nomes={["status-ticker"]}>
                 <Falha />
               </Pecas>
             </div>

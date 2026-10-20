@@ -69,10 +69,20 @@ export function MasonryGallery<T>({
   items: T[];
   renderItem: (item: T, index: number) => React.ReactNode;
   getKey: (item: T, index: number) => React.Key;
-  /** Colunas fixas. Omita para responsivo. */
+  /**
+   * Colunas fixas. Omita para responsivo.
+   * @min 1
+   * @max 8
+   * @step 1
+   */
   cols?: number;
   breakpoints?: MasonryBreakpoints;
-  /** Espaço entre itens e colunas, em px. */
+  /**
+   * Espaço entre itens e colunas, em px.
+   * @min 0
+   * @max 40
+   * @step 2
+   */
   gap?: number;
   className?: string;
 }) {

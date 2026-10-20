@@ -67,7 +67,13 @@ for (const nome of alvos) {
   const item = registry.items.find((i) => i.name === nome);
   const arquivos = (item?.files ?? []).map((f) => join(ROOT, f.path));
   const demoImport = cat.match(new RegExp(`const (\\w+) = React\\.lazy\\(\\(\\) => import\\("(\\./demos/[^"]+)"\\)\\);[\\s\\S]*?name: "${nome}"`));
-  const demoArq = cat.match(new RegExp(`name: "${nome}",[\\s\\S]*?demo: (\\w+),`));
+  // A demo é procurada SÓ dentro da entrada: peça com demo escrita no próprio
+  // catálogo (`demo: () => (...)`) não tem const, e a busca solta ia achar a
+  // demo da peça SEGUINTE e apagá-la (o octahedron-loader levaria a do
+  // turbulence-field).
+  const iniEntrada = cat.indexOf(`name: "${nome}",`);
+  const entrada = iniEntrada < 0 ? "" : cat.slice(iniEntrada, cat.indexOf("\n  },", iniEntrada));
+  const demoArq = entrada.match(/demo: (\w+),/);
   const linhaDemo = demoArq ? cat.match(new RegExp(`const ${demoArq[1]} = React\\.lazy\\(\\(\\) => import\\("(\\./demos/[^"]+)"\\)\\);`)) : null;
   const demo = linhaDemo ? join(ROOT, "src", "app", `${linhaDemo[1]}.tsx`) : null;
   // Quem ainda importa os arquivos do item (fora a própria demo e o catálogo)?

@@ -3,6 +3,10 @@
 /**
  * Um widget de caixa do dia: puxa pra baixo e entra a venda nova. O atraso
  * simulado é o que deixa o anel girar o bastante pra ser visto.
+ *
+ * Nada de legenda explicando o gesto embaixo do card (ninguém lia): a peça se
+ * explica sozinha com a alça no topo, a frase ao lado do anel e o `nudge`, a
+ * puxadinha que o painel dá por conta própria até alguém mexer nele.
  */
 
 import * as React from "react";
@@ -30,6 +34,7 @@ export default function PullToRefreshDemo({ props }: DemoProps) {
       <PullToRefresh
         label="Caixa de hoje"
         className="w-[320px] max-w-full"
+        nudge
         {...props}
         onRefresh={() =>
           new Promise<void>((ok) =>
@@ -40,7 +45,7 @@ export default function PullToRefreshDemo({ props }: DemoProps) {
           )
         }
       >
-        <div className="flex flex-col gap-4 p-5 pt-4">
+        <div className="flex flex-col gap-4 p-5 pt-6">
           <div className="flex flex-col gap-0.5">
             <p className="text-sm text-muted-foreground">Caixa de hoje</p>
             <p className="text-2xl font-semibold tabular-nums">{real(total)}</p>
@@ -53,7 +58,6 @@ export default function PullToRefreshDemo({ props }: DemoProps) {
               </li>
             ))}
           </ul>
-          <p className="text-xs text-muted-foreground">Puxa pra baixo pra atualizar.</p>
         </div>
       </PullToRefresh>
     </div>

@@ -13,10 +13,12 @@
  * 2. **Nada acontecia.** Placa de catálogo é um alvo — o card é `group`, então
  *    o zoom da foto e o espalhar do chão acontecem juntos, no hover.
  *
- * E o que a peça vende de verdade — o multiply casando o recorte com o fundo —
- * agora é um interruptor, porque é o tipo de coisa que ninguém acredita por
- * descrição: desligue e o retângulo branco do arquivo aparece inteiro sobre a
- * placa colorida; ligue e ele some. A mesma foto, o mesmo pixel de layout.
+ * O multiply e o chão eram dois interruptores em pílula da marca no topo, com
+ * um título "Prateleira" do lado. O report chamou de slop, e com razão: a demo
+ * se explicava por cima da peça. Os dois agora são knobs do painel (`blend`,
+ * `ground`), que é onde controle mora, e o ladrilho fica só com a prateleira.
+ * A etiqueta também saiu da pílula da marca: é texto pequeno num selo neutro,
+ * porque etiqueta de loja de verdade não grita na cor do site.
  *
  * O acervo aqui é recorte com alpha; o `bg-white` no `<img>` é o que reproduz o
  * arquivo como ele chega do fornecedor — matado em branco. É cor de ARQUIVO,
@@ -30,7 +32,7 @@ import { Media, midia, useWireframe, type Papel } from "../media";
 import type { DemoProps } from "../catalog";
 
 const PRATELEIRA = [
-  { nome: "Cubo alumínio", preco: "R$ 249", papel: "cena" as Papel, indice: 0, etiqueta: null },
+  { nome: "Caixa presente", preco: "R$ 249", papel: "cena" as Papel, indice: 4, etiqueta: null },
   { nome: "Troféu 12cm", preco: "R$ 380", papel: "cena" as Papel, indice: 3, etiqueta: "-30%" },
   { nome: "Estojo lápis", preco: "R$ 96", papel: "cena" as Papel, indice: 6, etiqueta: "novo" },
 ];
@@ -61,35 +63,17 @@ function Recorte({ papel, indice }: { papel: Papel; indice: number }) {
 }
 
 export default function PlateDemo({ props }: DemoProps) {
-  const [multiply, setMultiply] = React.useState(true);
-  const [chao, setChao] = React.useState(true);
-
   return (
     <div
-      className="flex h-full w-full flex-col gap-3 p-4"
+      className="flex h-full w-full items-center px-6 py-5"
       style={
         {
-          // A página da loja tem cor — é o caso em que o recorte sobre branco
-          // denuncia a placa. Sobre fundo branco não haveria nada pra ver.
-          background: "color-mix(in oklch, var(--brand) 9%, var(--background))",
-          // A ilha clara da placa herda a mesma marca, um degrau acima do papel.
-          "--plate-photo": "color-mix(in oklch, var(--brand) 7%, oklch(0.98 0 0))",
+          // Uma ilha só, levemente fria, nos dois temas: é a condição do multiply.
+          "--plate-photo": "oklch(0.965 0.003 260)",
         } as React.CSSProperties
       }
     >
-      <div className="flex items-center justify-between gap-3">
-        <span className="text-destaque font-semibold tracking-tight">Prateleira</span>
-        <div className="flex gap-1.5">
-          <Interruptor ligado={multiply} onClick={() => setMultiply((v) => !v)}>
-            multiply
-          </Interruptor>
-          <Interruptor ligado={chao} onClick={() => setChao((v) => !v)}>
-            chão
-          </Interruptor>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-3.5">
+      <div className="grid w-full grid-cols-3 gap-5">
         {PRATELEIRA.map((p) => (
           <a
             key={p.nome}
@@ -99,14 +83,14 @@ export default function PlateDemo({ props }: DemoProps) {
           >
             <Plate
               ratio="4/5"
-              inset={16}
+              inset={18}
               surface="photo"
-              blend={multiply ? "multiply" : "normal"}
-              ground={chao}
+              blend="multiply"
+              ground
               className="rounded-[var(--r-control,0.5rem)]"
               badge={
                 p.etiqueta ? (
-                  <span className="rounded-[var(--r-pill,9999px)] bg-[var(--brand)] px-2 py-0.5 font-mono text-micro uppercase tracking-[0.12em] text-[var(--brand-foreground)]">
+                  <span className="rounded-[var(--r-control,0.375rem)] bg-[var(--background)] px-1.5 py-0.5 font-mono text-micro tabular-nums text-[var(--foreground)]">
                     {p.etiqueta}
                   </span>
                 ) : undefined
@@ -115,40 +99,13 @@ export default function PlateDemo({ props }: DemoProps) {
             >
               <Recorte papel={p.papel} indice={p.indice} />
             </Plate>
-            <div className="mt-2 flex items-baseline justify-between gap-2">
-              <span className="min-w-0 truncate text-apoio">{p.nome}</span>
-              <span className="shrink-0 font-mono text-apoio tabular-nums">{p.preco}</span>
+            <div className="mt-2.5 flex items-baseline justify-between gap-2">
+              <span className="min-w-0 truncate text-apoio text-foreground">{p.nome}</span>
+              <span className="shrink-0 text-apoio tabular-nums text-muted-foreground">{p.preco}</span>
             </div>
           </a>
         ))}
       </div>
     </div>
-  );
-}
-
-function Interruptor({
-  ligado,
-  onClick,
-  children,
-}: {
-  ligado: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={ligado}
-      className={[
-        "alvo-toque rounded-[var(--r-pill,9999px)] border px-2.5 py-1 font-mono text-micro uppercase tracking-[0.12em] outline-none focus-visible:[box-shadow:var(--focus)]",
-        "transition-[color,border-color,background-color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-        ligado
-          ? "border-[var(--brand)] bg-[var(--brand)] text-[var(--brand-foreground)]"
-          : "border-border text-muted-foreground hover:text-foreground",
-      ].join(" ")}
-    >
-      {children}
-    </button>
   );
 }

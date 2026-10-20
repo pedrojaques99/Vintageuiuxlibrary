@@ -2310,42 +2310,6 @@
       ]
     }
   ],
-  "octahedron-loader": [
-    {
-      "nome": "OctahedronLoader",
-      "descricao": null,
-      "props": [
-        {
-          "nome": "className",
-          "tipo": "string",
-          "obrigatoria": false,
-          "padrao": null,
-          "descricao": "O contrato é tela cheia (`min-h-screen`) — ele substitui a rota inteira\nenquanto ela carrega. Dentro de uma caixa menor, passe `min-h-0` aqui: o\n`cn` resolve o conflito a favor de quem chama."
-        },
-        {
-          "nome": "label",
-          "tipo": "string",
-          "obrigatoria": false,
-          "padrao": "Carregando",
-          "descricao": "Texto lido por leitor de tela."
-        },
-        {
-          "nome": "size",
-          "tipo": "number",
-          "obrigatoria": false,
-          "padrao": "96",
-          "descricao": "Lado do símbolo em px."
-        },
-        {
-          "nome": "src",
-          "tipo": "string",
-          "obrigatoria": false,
-          "padrao": null,
-          "descricao": "Caminho do `.lottie` (ou `.json` do Lottie) do símbolo da marca. Sem ele o\nloader cai no wireframe genérico e avisa no console."
-        }
-      ]
-    }
-  ],
   "inline-edit": [
     {
       "nome": "InlineEdit",
@@ -2927,87 +2891,6 @@
           "obrigatoria": false,
           "padrao": null,
           "descricao": "0–100. Omitido ⇒ modo indeterminado, só o rótulo."
-        }
-      ]
-    }
-  ],
-  "generating-tile": [
-    {
-      "nome": "GeneratingTile",
-      "descricao": null,
-      "props": [
-        {
-          "nome": "isLoading",
-          "tipo": "boolean",
-          "obrigatoria": true,
-          "padrao": null,
-          "descricao": null
-        },
-        {
-          "nome": "aspectRatio",
-          "tipo": "enum",
-          "obrigatoria": false,
-          "padrao": null,
-          "descricao": null,
-          "valores": [
-            "1/1",
-            "16/9",
-            "4/3"
-          ]
-        },
-        {
-          "nome": "children",
-          "tipo": "any",
-          "obrigatoria": false,
-          "padrao": null,
-          "descricao": "Renderizado quando `isLoading` é false (o resultado)."
-        },
-        {
-          "nome": "className",
-          "tipo": "string",
-          "obrigatoria": false,
-          "padrao": null,
-          "descricao": null
-        },
-        {
-          "nome": "intensity",
-          "tipo": "number",
-          "obrigatoria": false,
-          "padrao": "0.18",
-          "descricao": "Opacidade da névoa (0–1)."
-        },
-        {
-          "nome": "onCancel",
-          "tipo": "() => void",
-          "obrigatoria": false,
-          "padrao": null,
-          "descricao": "Cancelar discreto — só faz sentido em `overlay`."
-        },
-        {
-          "nome": "showFrame",
-          "tipo": "boolean",
-          "obrigatoria": false,
-          "padrao": "true",
-          "descricao": "false quando o pai já dá a moldura/aspecto."
-        },
-        {
-          "nome": "steps",
-          "tipo": "readonly string[]",
-          "obrigatoria": false,
-          "padrao": null,
-          "descricao": "Verbos rotativos do ticker. A voz da marca entra aqui."
-        },
-        {
-          "nome": "variant",
-          "tipo": "enum",
-          "obrigatoria": false,
-          "padrao": "tile",
-          "descricao": null,
-          "valores": [
-            "tile",
-            "inline",
-            "overlay"
-          ]
         }
       ]
     }

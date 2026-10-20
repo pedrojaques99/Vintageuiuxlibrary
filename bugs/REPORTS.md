@@ -2,112 +2,9 @@
 
 <!-- Gerado por scripts/vite-bug-report.mjs. Não edite à mão: use `npm run bugs -- --resolve <id>`. -->
 
-**21 aberto(s)** · 141 resolvido(s)
+**0 aberto(s)** · 162 resolvido(s)
 
-## vintage-command-palette (1)
-
-- **vintage-command-palette-2** — ficou meio vazio, redundante, acho q apaga
-  <sub>Quebrado · 1920×911 · claro · marca: Grão Editora · 2026-08-14 21:06</sub>
-
-## status-ticker (1)
-
-- **status-ticker-2** — sub-categoria loading state, faça um upgrade sem perder a estética, faça variações de loading states pro user escolher
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:22</sub>
-
-## working-glyph (1)
-
-- **working-glyph-2** — tá um shine meio zoado q cobre o quadrado todo ao inves de só na picareta, faça variações com outros icons e animacoes
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:22</sub>
-
-## paper-shuttle (1)
-
-- **paper-shuttle-2** — remover o glitche  etch vibe, deixar generico
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
-
-## drop-overlay (1)
-
-- **drop-overlay-2** — mal apresentado, foco no componente em si
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
-
-## empty-state (1)
-
-- **empty-state-3** — slop
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:23</sub>
-
-## skeleton-rail (1)
-
-- **skeleton-rail-4** — mt espremido, reduzir a quantidade e deixar mais mininal, apresentar variaçõe sde estilo de skewletons motions
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:24</sub>
-
-## pull-to-refresh (1)
-
-- **pull-to-refresh-1** — precisa ficar mais claro o q faz, ta escondido a funçaão num label q ngm le
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:24</sub>
-
-## toast-stack (1)
-
-- **toast-stack-1** — mal posicionado e focado
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:24</sub>
-
-## dynamic-island (1)
-
-- **dynamic-island-1** — os botões de baixo "ligacao" timer etc, estão mais aparecendo e evidentes doq o componente em si, melhore a hierarquia
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:25</sub>
-
-## use-pointer-parallax (1)
-
-- **use-pointer-parallax-3** — mt poluido e slop
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:32</sub>
-
-## photo-compare (1)
-
-- **photo-compare-3** — seta do meio ta mal posicionada fora do alinhamento com a linha central - e deixe menos azul slop
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:33</sub>
-
-## plate (1)
-
-- **plate-3** — slop
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:33</sub>
-
-## masonry-gallery (1)
-
-- **masonry-gallery-2** — mt coisa espremida, mal apresentado, quick controls no cotalaog
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:33</sub>
-
-## reels-rail (1)
-
-- **reels-rail-2** — deixe mais suave e menos itens, maior, mais visivel no catalogo
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:33</sub>
-
-## cover-art (1)
-
-- **cover-art-3** — mal apresentado no catalogo, fica tudo cortado
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:33</sub>
-
-## cover-flow (1)
-
-- **cover-flow-1** — deixe tudo no mesmo padrão de desenho,  com drop shadow, e mais visivel e focado no centro, hierarquia mais clara, opacidade reduzida nos latareis
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:34</sub>
-
-## page-curl (1)
-
-- **page-curl-1** — ta feio e mal apresentado, tem q deixar nivel visant, com quase 3d mesmo
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:35</sub>
-
-## carousel-3d (1)
-
-- **carousel-3d-1** — mt bugado no catalogo, ta todo tordo
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:35</sub>
-
-## book-3d (1)
-
-- **book-3d-1** — mal posicionado
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:35</sub>
-
-## lathe-object (1)
-
-- **lathe-object-1** — botoes pra trocar estao mt intrusivos
-  <sub>Quebrado · 1920×911 · escuro · marca: Visant® · 2026-10-20 12:36</sub>
+_Nada aberto._
 
 ---
 
@@ -198,6 +95,7 @@
 - ~~vintage-soundboard-pad-1 · vintage-soundboard-pad — faz tocar algo~~
 - ~~vintage-tv-frame-2 · vintage-tv-frame — visualizer~~
 - ~~vintage-xy-pad-1 · vintage-xy-pad — faz alterar algo~~
+- ~~vintage-command-palette-2 · vintage-command-palette — ficou meio vazio, redundante, acho q apaga~~
 - ~~empty-state-2 · empty-state — deixar mais espaço pra imagem, trocar imagem por algum generativo~~
 - ~~nav-drawer-1 · nav-drawer — burger ta com svg bugado, deixa com 3 lines normal, como botão mesmo, ta voando hj~~
 - ~~kanban-3 · kanban — suavizar a animacio in e out~~
@@ -218,8 +116,17 @@
 - ~~rail-3 · rail — bugado o scroll horizontal, e tá mt pqeno, e limpa label desnecessária, tem q funcionar por scroll shift, drag, arrwos, etc~~
 - ~~side-nav-2 · side-nav — mt grande a parte horizontal, mal da pra ver a sidebar, o foco é ela~~
 - ~~sticky-filterbar-5 · sticky-filterbar — mt pequeno os itens, tá mt espremido esse componente~~
+- ~~status-ticker-2 · status-ticker — sub-categoria loading state, faça um upgrade sem perder a estética, faça variações de loading states pro user escolher~~
+- ~~working-glyph-2 · working-glyph — tá um shine meio zoado q cobre o quadrado todo ao inves de só na picareta, faça variações com outros icons e animacoes~~
 - ~~octahedron-loader-3 · octahedron-loader — excluir~~
+- ~~paper-shuttle-2 · paper-shuttle — remover o glitche  etch vibe, deixar generico~~
 - ~~generating-tile-2 · generating-tile — excluir~~
+- ~~drop-overlay-2 · drop-overlay — mal apresentado, foco no componente em si~~
+- ~~empty-state-3 · empty-state — slop~~
+- ~~skeleton-rail-4 · skeleton-rail — mt espremido, reduzir a quantidade e deixar mais mininal, apresentar variaçõe sde estilo de skewletons motions~~
+- ~~pull-to-refresh-1 · pull-to-refresh — precisa ficar mais claro o q faz, ta escondido a funçaão num label q ngm le~~
+- ~~toast-stack-1 · toast-stack — mal posicionado e focado~~
+- ~~dynamic-island-1 · dynamic-island — os botões de baixo "ligacao" timer etc, estão mais aparecendo e evidentes doq o componente em si, melhore a hierarquia~~
 - ~~confirm-morph-1 · confirm-morph — mt label, limpar~~
 - ~~elastic-slider-1 · elastic-slider — sfx ao arrastar, tipo barulho da lete mudando o foco numa camera analogica~~
 - ~~brand-selector-2 · brand-selector — confuso e mt coisa pra apresentar um componente simples~~
@@ -244,9 +151,20 @@
 - ~~vintage-soundboard-pad-2 · vintage-soundboard-pad — sfx pra cada tipo pra ficar coerente~~
 - ~~vintage-oscilloscope-2 · vintage-oscilloscope — deixar interativo, play no som pra acionar o visual, um visual por vez~~
 - ~~vintage-tv-frame-3 · vintage-tv-frame — tocar algo~~
+- ~~use-pointer-parallax-3 · use-pointer-parallax — mt poluido e slop~~
 - ~~css-color-1 · css-color — pode esconder~~
 - ~~sfx-bus-1 · sfx-bus — som de drop tá zoado, deixe mais sopro tlg~~
+- ~~photo-compare-3 · photo-compare — seta do meio ta mal posicionada fora do alinhamento com a linha central - e deixe menos azul slop~~
+- ~~plate-3 · plate — slop~~
+- ~~masonry-gallery-2 · masonry-gallery — mt coisa espremida, mal apresentado, quick controls no cotalaog~~
+- ~~reels-rail-2 · reels-rail — deixe mais suave e menos itens, maior, mais visivel no catalogo~~
+- ~~cover-art-3 · cover-art — mal apresentado no catalogo, fica tudo cortado~~
+- ~~cover-flow-1 · cover-flow — deixe tudo no mesmo padrão de desenho,  com drop shadow, e mais visivel e focado no centro, hierarquia mais clara, opacidade reduzida nos latareis~~
 - ~~voice-note-1 · voice-note — nao entendi o label, foco no componente pfvr~~
+- ~~page-curl-1 · page-curl — ta feio e mal apresentado, tem q deixar nivel visant, com quase 3d mesmo~~
+- ~~carousel-3d-1 · carousel-3d — mt bugado no catalogo, ta todo tordo~~
+- ~~book-3d-1 · book-3d — mal posicionado~~
+- ~~lathe-object-1 · lathe-object — botoes pra trocar estao mt intrusivos~~
 - ~~fog-tree-1 · fog-tree — nova categoria de shaders e mostra os shaders usados na casa e repos da visantlabs etc~~
 - ~~card-stack-1 · card-stack — precisa de um grau nivel visantr~~
 - ~~spine-card-3 · spine-card — slop~~

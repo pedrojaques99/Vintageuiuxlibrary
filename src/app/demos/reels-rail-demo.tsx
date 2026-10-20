@@ -29,13 +29,22 @@ import { useStageActive } from "../stage";
 import { ReelsRail, type ReelItem } from "../../../registry/visant/ui/reels-rail";
 import type { DemoProps } from "../catalog";
 
+/**
+ * Cinco cards, não seis, e o vídeo primeiro.
+ *
+ * O report pediu "menos itens, maior, mais suave". Menos itens porque o laço
+ * já repete a lista pra encher a faixa; mais cards de origem só trocavam vídeo
+ * por retrato parado. Maior porque o card é o produto: 280px dá um 9:16 de
+ * 498px no palco, e na grade ele ainda lê como reel e não como miniatura.
+ * Mais suave porque a deriva caiu pra 14px/s: a 26 a fileira passava como
+ * esteira e o olho não chegava a pousar em nenhum card.
+ */
 const CARDS: { papel: "video" | "retrato"; indice: number; title: string; meta: string }[] = [
-  { papel: "video", indice: 2, title: "Composição em movimento", meta: "Aloro · 0:14" },
-  { papel: "retrato", indice: 1, title: "Bastidor da campanha", meta: "Kobo · 0:22" },
-  { papel: "video", indice: 1, title: "Vinheta de abertura", meta: "Verso · 0:08" },
-  { papel: "retrato", indice: 4, title: "Direção de arte", meta: "Pauta · 0:31" },
-  { papel: "video", indice: 0, title: "Loop do produto", meta: "Axion · 0:11" },
-  { papel: "retrato", indice: 6, title: "Making of", meta: "Meridiano · 0:19" },
+  { papel: "video", indice: 2, title: "Composição em movimento", meta: "0:14" },
+  { papel: "retrato", indice: 1, title: "Bastidor da campanha", meta: "0:22" },
+  { papel: "video", indice: 1, title: "Vinheta de abertura", meta: "0:08" },
+  { papel: "video", indice: 0, title: "Loop do produto", meta: "0:11" },
+  { papel: "retrato", indice: 4, title: "Direção de arte", meta: "0:31" },
 ];
 
 export default function ReelsRailDemo({ props }: DemoProps) {
@@ -57,22 +66,20 @@ export default function ReelsRailDemo({ props }: DemoProps) {
   );
 
   return (
-    /*
-     * Sem respiro lateral e sem sangria: a peça é MURAL, e mural encosta na
-     * borda. O `px-3` de antes desenhava duas faixas de papel do lado de uma
-     * fileira que promete continuar — a promessa e a moldura se contradiziam.
-     */
+    // Mural encosta na borda: sem respiro lateral, a fileira promete continuar.
     <div className="flex h-full w-full items-center">
       <ReelsRail
         items={itens}
-        // 230px de card dá 9:16 em ~409px de altura: é a medida em que o card
-        // ainda é um reel e não uma miniatura, e em que cabem cinco na faixa.
-        itemWidth={230}
-        heading="Reels"
-        hint="mural contínuo"
-        // A deriva também obedece ao palco: card fora da tela não anda, além do
-        // observer que a própria peça tem pra pausar o vídeo.
+        // A barra fina do trilho aparecia dentro do ladrilho; a fileira rola
+        // pelo arrasto e pela deriva, sem precisar dela. Setas idem: no mural,
+        // elas eram cromo num canto disputando com o vídeo.
+        className="w-full [&_[role=group]]:[scrollbar-width:none] [&_[role=group]::-webkit-scrollbar]:hidden"
+        arrows={false}
+        itemWidth={280}
+        gap={20}
+        // A deriva também obedece ao palco: card fora da tela não anda.
         drift={ativo}
+        driftSpeed={14}
         autoPlay={ativo}
         {...props}
       />

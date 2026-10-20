@@ -7,6 +7,11 @@
  *
  * O relógio é de verdade e corre nos dois tamanhos, pra mostrar que abrir e
  * fechar não reinicia nada: a ilha só muda de forma em volta do mesmo estado.
+ *
+ * Hierarquia: a ilha é a peça, o seletor é bastidor. Os chips cheios com borda
+ * e o selecionado na cor da marca gritavam mais que a ilha, então o seletor
+ * virou uma linha de texto miúdo, sem caixa, no pé do palco. E a ilha abre
+ * já expandida: é o estado que mostra o que ela faz.
  */
 
 import * as React from "react";
@@ -22,7 +27,6 @@ import {
   Timer,
 } from "lucide-react";
 
-import { Chip } from "../../../registry/visant/ui/chip";
 import { DynamicIsland } from "../../../registry/visant/ui/dynamic-island";
 import type { DemoProps } from "../catalog";
 
@@ -59,7 +63,7 @@ function Controle({
 
 export default function DynamicIslandDemo({ props }: DemoProps) {
   const [atividade, setAtividade] = React.useState<Atividade>("timer");
-  const [aberta, setAberta] = React.useState(false);
+  const [aberta, setAberta] = React.useState(true);
   const [segundos, setSegundos] = React.useState(296);
   const [ligacao, setLigacao] = React.useState(42);
   const [pausado, setPausado] = React.useState(false);
@@ -140,8 +144,8 @@ export default function DynamicIslandDemo({ props }: DemoProps) {
   );
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-8">
-      <div className="flex h-16 items-start justify-center">
+    <div className="relative flex h-full min-h-[200px] w-full flex-col items-center justify-center pb-6">
+      <div className="flex min-h-16 items-start justify-center">
         <DynamicIsland
           label={NOMES[atividade]}
           activityKey={atividade}
@@ -154,11 +158,24 @@ export default function DynamicIslandDemo({ props }: DemoProps) {
         </DynamicIsland>
       </div>
 
-      <div className="flex gap-2">
+      <div
+        role="group"
+        aria-label="Atividade"
+        className="absolute inset-x-0 bottom-3 flex justify-center gap-4"
+      >
         {(Object.keys(NOMES) as Atividade[]).map((a) => (
-          <Chip key={a} pressed={atividade === a} onClick={() => setAtividade(a)}>
+          <button
+            key={a}
+            type="button"
+            aria-pressed={atividade === a}
+            onClick={() => setAtividade(a)}
+            className={
+              "rounded-[var(--r-control)] px-1.5 py-1 text-xs outline-none transition-[color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] focus-visible:[box-shadow:var(--focus)] " +
+              (atividade === a ? "text-foreground" : "text-muted-foreground/70 hover:text-muted-foreground")
+            }
+          >
             {NOMES[a]}
-          </Chip>
+          </button>
         ))}
       </div>
     </div>

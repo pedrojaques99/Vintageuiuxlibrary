@@ -21,11 +21,8 @@ import { depKeysOf } from "./deps";
 import { PAD_VOICES, PEOPLE } from "./demo-fixtures";
 
 import { Chip } from "../../registry/visant/ui/chip";
-import { StatusTicker } from "../../registry/visant/ui/status-ticker";
 import { GlitchChars } from "../../registry/visant/ui/glitch-chars";
-import { WorkingGlyph } from "../../registry/visant/ui/working-glyph";
 import { PaperShuttle } from "../../registry/visant/ui/paper-shuttle";
-import { OctahedronLoader } from "../../registry/visant/ui/octahedron-loader";
 import { SectionIntro } from "../../registry/visant/ui/section-intro";
 import { CtaSurface, CtaAction } from "../../registry/visant/ui/cta-surface";
 import { EraseField } from "../../registry/visant/ui/erase-field";
@@ -82,7 +79,6 @@ const FoldMotionDemo = React.lazy(() => import("./demos/fold-motion-demo"));
 const GleamDemo = React.lazy(() => import("./demos/gleam-demo"));
 const GridDotsDemo = React.lazy(() => import("./demos/grid-dots-demo"));
 const LineRevealDemo = React.lazy(() => import("./demos/line-reveal-demo"));
-const LoadingGalleryDemo = React.lazy(() => import("./demos/loading-gallery-demo"));
 const LogoWallDemo = React.lazy(() => import("./demos/logo-wall-demo"));
 const MasonryGalleryDemo = React.lazy(() => import("./demos/masonry-gallery-demo"));
 const MeasurePickerDemo = React.lazy(() => import("./demos/measure-picker-demo"));
@@ -115,6 +111,8 @@ const InlineEditFileDemo = React.lazy(() => import("./demos/inline-edit-demo"));
 const SegmentedControlDemo = React.lazy(() => import("./demos/segmented-control-demo"));
 const ScrubInputDemo = React.lazy(() => import("./demos/scrub-input-demo"));
 const NavDrawerDemo = React.lazy(() => import("./demos/nav-drawer-demo"));
+const StatusTickerDemo = React.lazy(() => import("./demos/status-ticker-demo"));
+const WorkingGlyphDemo = React.lazy(() => import("./demos/working-glyph-demo"));
 const SfxBusDemo = React.lazy(() => import("./demos/sfx-bus-demo"));
 const VintageKnobDemo = React.lazy(() => import("./demos/vintage-knob-demo"));
 const VintageLedDemo = React.lazy(() => import("./demos/vintage-led-demo"));
@@ -378,7 +376,7 @@ function PaperShuttleDemo() {
   useTick(90, React.useCallback(() => setP((v) => (v > 98 ? 2 : v + 2)), []));
   return (
     <Frame>
-      <PaperShuttle progress={p} label="exportando" />
+      <PaperShuttle progress={p} label="Exportando" />
     </Frame>
   );
 }
@@ -776,13 +774,10 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "feedback",
     description:
-      "O texto que segura a pessoa durante uma espera longa: passo atual, cronômetro e glitch de máquina.",
+      "O texto que segura a pessoa durante uma espera longa, em quatro desenhos: linha com cronômetro, barra que varre, etapas e pulso.",
     tags: ["espera", "ia", "estado"],
-    demo: () => (
-      <Frame>
-        <StatusTicker />
-      </Frame>
-    ),
+    demo: StatusTickerDemo,
+    preview: { w: 600, h: 300 },
   },
   {
     name: "working-glyph",
@@ -790,23 +785,10 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "feedback",
     description:
-      "Ícone que bate com faísca. O sistema mostra esforço em vez de pedir paciência.",
+      "Ícone que trabalha enquanto o sistema trabalha: picareta, martelo, engrenagem, pincel ou faísca, e o brilho corre só no traço.",
     tags: ["espera", "ícone"],
-    demo: () => (
-      <Frame>
-        <WorkingGlyph size={26} />
-      </Frame>
-    ),
-  },
-  {
-    name: "generating-tile",
-    title: "Generating Tile",
-    type: "ui",
-    family: "feedback",
-    description: "O quadro que ocupa o lugar do resultado enquanto ele não existe.",
-    tags: ["ia", "placeholder"],
-    demo: LoadingGalleryDemo,
-    preview: { w: 980, h: 450 },
+    demo: WorkingGlyphDemo,
+    preview: { w: 540, h: 200 },
   },
   {
     name: "paper-shuttle",
@@ -816,27 +798,6 @@ export const CATALOG: CatalogItem[] = [
     description: "Progresso com narrativa de papel passando pela máquina.",
     tags: ["progresso", "export"],
     demo: PaperShuttleDemo,
-  },
-  {
-    name: "octahedron-loader",
-    title: "Octahedron Loader",
-    type: "ui",
-    family: "feedback",
-    description: "Carregamento com sólido girando. A marca da casa em espera curta.",
-    tags: ["loader", "lottie"],
-    // O loader é de tela cheia por contrato (`min-h-screen` — ele ocupa a rota
-    // inteira enquanto ela carrega). Dentro do card isso viraria um palco de 600px,
-    // então a regra é desfeita aqui, na vitrine, e não no componente publicado.
-    //
-    // Sem `src`: o `.lottie` do símbolo é ativo de marca e não é versionado
-    // neste repo, então a vitrine mostra de propósito o estado de espera
-    // genérico — que é exatamente o que quem instalar sem passar o arquivo vai
-    // ver. O aviso no console faz parte da demonstração.
-    demo: () => (
-      <Frame>
-        <OctahedronLoader size={72} className="min-h-0" />
-      </Frame>
-    ),
   },
   {
     name: "glitch-chars",
@@ -887,7 +848,7 @@ export const CATALOG: CatalogItem[] = [
     // 440 e não 320: a cena tem zona de solta MAIS a fileira de miniaturas que
     // aparece depois de receber. Medida na página, ela fecha em 432 — declarar
     // menos fazia o palco crescer depois de montar e empurrar a grade.
-    preview: { w: 560, h: 440 },
+    preview: { w: 420, h: 300 },
   },
   {
     name: "motion-layer",
@@ -1448,7 +1409,7 @@ export const CATALOG: CatalogItem[] = [
     tags: ["vídeo", "reels", "shorts", "vertical", "carrossel", "trilho"],
     demo: ReelsRailDemo,
     knobs: "ReelsRail",
-    preview: { w: 1360, h: 490 },
+    preview: { w: 1000, h: 540 },
   },
   {
     name: "measure-bar",
@@ -1627,7 +1588,7 @@ export const CATALOG: CatalogItem[] = [
     // Palco em retrato (330×430): a capa é 3/4, e numa caixa larga ela vira
     // faixa. A demo mostra uma família por vez, então o que precisa caber é a
     // altura de uma capa inteira, não três lado a lado.
-    preview: { w: 330, h: 430 },
+    preview: { w: 400, h: 400 },
   },
   {
     name: "empty-state",
@@ -1635,14 +1596,14 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "feedback",
     description:
-      "O estado vazio canônico: arte por slot com véu de contraste garantido, eyebrow, frase que diz o que vai aparecer ali, e no máximo uma ação.",
+      "O estado vazio canônico: arte por slot, frase do que vai aparecer ali e no máximo uma ação; com ou sem caixa.",
     tags: ["vazio", "empty", "onboarding", "primeiro uso"],
     demo: EmptyStateDemo,
     knobs: "EmptyArt",
     // Duas caixas lado a lado, e por isso `duplo` e não ladrilho: "generativo" é
     // uma afirmação sobre variação, e uma caixa sozinha prova que a arte existe,
     // não que ela nasce da semente.
-    preview: { w: 690, h: 360 },
+    preview: { w: 420, h: 340 },
   },
   {
     name: "skeleton-rail",
@@ -1650,11 +1611,11 @@ export const CATALOG: CatalogItem[] = [
     type: "ui",
     family: "feedback",
     description:
-      "O esqueleto do trilho com as mesmas medidas do trilho: mesmos nomes de prop, overflow hidden em vez de auto, e pulse em vez de shimmer.",
+      "Esqueletos com as medidas do que substituem (trilho, card, lista, texto, mídia), em quatro movimentos: pulse, shimmer, wave ou parado.",
     tags: ["skeleton", "carregando", "trilho", "espera"],
     demo: SkeletonRailDemo,
     knobs: "SkeletonRail",
-    preview: { w: 1360, h: 760 },
+    preview: { w: 680, h: 340 },
   },
   {
     name: "use-local-search",

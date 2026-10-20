@@ -11,9 +11,15 @@
  * o que já está na tela.** Sem anexar página, não havia o que provar.
  *
  * Aqui o card é a janela: `overflow-y-auto` próprio, sentinela no fim e uma
- * página de doze a cada chegada. O número no canto de cada peça é o índice de
- * entrada — é o que deixa a promessa VERIFICÁVEL: role, carregue mais, e
- * confira que o 7 continua na mesma coluna e na mesma altura de antes.
+ * página de doze a cada chegada.
+ *
+ * ── "Espremido" ─────────────────────────────────────────────────────────────
+ * Eram cinco colunas a 10px num palco que a grade ainda encolhe pela metade,
+ * cada foto com borda e um número em pílula no canto. Viraram quatro colunas
+ * com respiro de verdade, foto sem moldura e sem rótulo: a malha se lê pela
+ * própria foto. A barra de rolagem some (a roda e o dedo continuam rolando) e
+ * um esmaecido no pé diz que a lista continua, sem desenhar cromo dentro do
+ * ladrilho. Colunas e respiro são knobs do painel (`cols`, `gap`).
  *
  * O acervo real tem 19 arquivos; a partir daí a geração continua com as mesmas
  * fotos em proporções diferentes. É de propósito: o que quebra um masonry é a
@@ -94,24 +100,26 @@ export default function MasonryGalleryDemo({ props }: DemoProps) {
   }, [ativo, fim, pecas.length]);
 
   return (
-    <div ref={scroller} className="h-full w-full overflow-y-auto p-3">
+    <div
+      ref={scroller}
+      className="h-full w-full overflow-y-auto px-5 pt-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      style={{
+        maskImage: "linear-gradient(to bottom, black calc(100% - 64px), transparent)",
+        WebkitMaskImage: "linear-gradient(to bottom, black calc(100% - 64px), transparent)",
+      }}
+    >
       <MasonryGallery
         items={pecas}
-        cols={5}
-        gap={10}
+        cols={4}
+        gap={16}
         getKey={(p) => p.id}
         renderItem={(p) => (
-          <figure className="relative">
-            <Media
-              papel={p.papel}
-              indice={p.indice}
-              ratio={p.ratio}
-              className="rounded-[var(--r-control,0.5rem)] border border-border"
-            />
-            <figcaption className="absolute bottom-1.5 left-1.5 rounded-[var(--r-pill,9999px)] bg-background/85 px-1.5 font-mono text-micro tabular-nums text-muted-foreground">
-              {String(p.id + 1).padStart(2, "0")}
-            </figcaption>
-          </figure>
+          <Media
+            papel={p.papel}
+            indice={p.indice}
+            ratio={p.ratio}
+            className="rounded-[var(--r-control,0.5rem)]"
+          />
         )}
         {...props}
       />

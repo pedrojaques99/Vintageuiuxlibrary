@@ -1,64 +1,48 @@
 /**
- * O estado vazio, duas vezes, com a arte saindo do código.
+ * O estado vazio onde ele mora: dentro de um painel que ainda não tem nada.
  *
- * ── Por que a demo saiu do `catalog.tsx` ───────────────────────────────────
- *
- * Ela era um `EmptyState` inline com uma foto do acervo em 120px de altura: uma
- * tira de imagem que a cortina de contraste comia quase inteira, e nada que
- * dissesse de onde a arte vem. O report pediu duas coisas — mais espaço pra
- * imagem e imagem generativa — e as duas mudam a cena, não a peça.
- *
- * ── Por que são DUAS caixas e não uma ──────────────────────────────────────
- *
- * "Generativo" é uma afirmação sobre variação: uma caixa sozinha prova que a
- * arte existe, não que ela nasce da semente. Lado a lado, `favoritos` e
- * `arquivados` puxam composições diferentes da mesma marca — é a única forma de
- * mostrar num quadro parado o que o `seed` faz, e sem uma linha de texto
- * explicando. As duas usam o MESMO `var(--brand)`, então trocar a marca na
- * barra da vitrine repinta as duas juntas.
- *
- * Nenhuma ação nos dois cards: com botão, a comparação viraria sobre o botão.
- * A ação é opcional na peça e está documentada lá — aqui ela atrapalharia.
+ * Um painel só, com o cabeçalho que ele teria cheio (nome e contagem), e o vazio
+ * pousado direto nele, sem caixa (`framed={false}`): caixa dentro de painel é
+ * o bloco-dentro-de-bloco que denuncia template. A arte é o selo gerado da
+ * semente `favoritos-vazio` (a família dos arcos), pequeno, na cor da marca;
+ * os knobs da ficha mexem nele.
+ * Uma frase do que vai aparecer ali e uma ação, a quieta.
  */
 
+import { Bookmark } from "lucide-react";
+
+import { Chip } from "../../../registry/visant/ui/chip";
 import { EmptyState, EmptyArt } from "../../../registry/visant/ui/empty-state";
 import type { DemoProps } from "../catalog";
 
-const VAZIOS = [
-  {
-    seed: "favoritos",
-    eyebrow: "Favoritos",
-    title: "Nada salvo por aqui ainda.",
-    body: "O que você salvar aparece aqui, com o trecho e o minuto do vídeo.",
-  },
-  {
-    seed: "arquivados",
-    eyebrow: "Arquivo",
-    title: "O arquivo está limpo.",
-    body: "Projetos encerrados vêm parar aqui, com a data em que saíram do quadro.",
-  },
-];
-
 export default function EmptyStateDemo({ props }: DemoProps) {
   return (
-    <div className="grid h-full w-full grid-cols-1 items-start gap-5 px-4 py-2 sm:grid-cols-2">
-      {VAZIOS.map((v) => (
+    <div className="flex h-full w-full items-center justify-center p-6">
+      <section className="flex w-[360px] max-w-full flex-col rounded-[var(--r-surface,0.875rem)] border border-border bg-card">
+        <header className="flex items-center justify-between border-b border-border px-4 py-3">
+          <h3 className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <Bookmark className="size-4 text-muted-foreground" aria-hidden="true" />
+            Favoritos
+          </h3>
+          <span className="text-xs tabular-nums text-muted-foreground">0</span>
+        </header>
+
         <EmptyState
-          key={v.seed}
-          // `min-w-0` na coluna: sem ele a caixa não cede dentro do grid e
-          // empurra a irmã pra fora do palco — o mesmo furo que o portão de
-          // 360px pega.
-          className="min-w-0"
-          eyebrow={v.eyebrow}
-          title={v.title}
-          /* 200px contra os 120px de antes: a arte precisa de altura pra a
-             composição aparecer inteira, e a cortina de contraste da peça só
-             morde os últimos 42%. */
-          art={<EmptyArt seed={v.seed} className="h-[200px] w-full" {...props} />}
+          framed={false}
+          className="px-2 py-6"
+          title="Nada salvo ainda."
+          art={
+            <EmptyArt
+              seed="favoritos-vazio"
+              className="size-[72px] rounded-full border border-border"
+              {...props}
+            />
+          }
+          action={<Chip size="sm">Explorar o acervo</Chip>}
         >
-          {v.body}
+          Marque um vídeo e ele aparece aqui, já no minuto em que você parou.
         </EmptyState>
-      ))}
+      </section>
     </div>
   );
 }

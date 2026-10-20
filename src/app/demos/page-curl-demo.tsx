@@ -1,51 +1,93 @@
 "use client";
 
 /**
- * Um catálogo de cinco páginas: capa com foto, abertura de texto, objetos com
- * legenda e o fecho. É a cena em que a peça vende: material editorial que pede
- * para ser folheado, não rolado.
+ * Um catálogo de cinco páginas: capa, abertura de texto, dois objetos e o fecho.
+ *
+ * A capa antiga era foto com uma caixinha de card por cima ("Edição 07 /
+ * Objetos sem pressa") e as páginas internas, foto com legenda em corpo de
+ * formulário. Lia como componente, não como revista. Aqui a capa é capa: o
+ * objeto sangrado sobre o papel, a manchete grande no topo e o número da
+ * edição no pé, sem caixa nenhuma. As internas seguem uma grade só (margem,
+ * fólio no pé, legenda curta), que é o que faz cinco páginas parecerem a
+ * mesma publicação.
  */
 
-import { Media } from "../media";
+import { Media, midia, useWireframe } from "../media";
 import { PageCurl } from "../../../registry/visant/ui/page-curl";
 import type { DemoProps } from "../catalog";
 
-function Foto({ indice, legenda, numero }: { indice: number; legenda: string; numero: number }) {
+/** Recorte com alpha direto no papel, sem a caixa cinza da `Media`. */
+function Objeto({ indice, className }: { indice: number; className?: string }) {
+  const { wireframe } = useWireframe();
+  const m = midia("cena", indice);
+  if (wireframe || !m) return <Media papel="cena" indice={indice} className={className} />;
   return (
-    <div className="flex size-full flex-col gap-2 p-4">
-      <Media papel="cena" indice={indice} className="w-full flex-1 rounded-[var(--r-control)]" />
-      <p className="text-xs text-muted-foreground">{legenda}</p>
-      <span className="self-end text-[10px] tabular-nums text-muted-foreground">{numero}</span>
+    <img
+      src={m.src}
+      alt=""
+      draggable={false}
+      className={`object-contain ${className ?? ""}`}
+      style={{ filter: "drop-shadow(0 12px 14px color-mix(in oklab, black 30%, transparent))" }}
+    />
+  );
+}
+
+function Folio({ n }: { n: number }) {
+  return <span className="absolute bottom-3 right-4 text-[10px] tabular-nums text-muted-foreground">{n}</span>;
+}
+
+function Capa() {
+  return (
+    <div
+      className="relative flex size-full flex-col p-5"
+      style={{
+        background:
+          "radial-gradient(110% 70% at 50% 70%, color-mix(in oklab, var(--foreground) 9%, var(--card)), var(--card))",
+      }}
+    >
+      <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Objetos</p>
+      <h3 className="mt-1 text-[28px] font-semibold leading-[0.95] tracking-tight text-foreground">
+        Sem
+        <br />
+        pressa
+      </h3>
+      <Objeto indice={2} className="absolute inset-x-4 bottom-8 h-[58%] w-[calc(100%-2rem)]" />
+      <span className="absolute bottom-3 left-5 text-[10px] tabular-nums text-muted-foreground">Nº 07</span>
     </div>
   );
 }
 
 function Texto({ titulo, corpo, numero }: { titulo: string; corpo: string; numero: number }) {
   return (
-    <div className="flex size-full flex-col justify-center gap-2 p-5">
-      <h3 className="text-lg leading-tight font-medium text-foreground">{titulo}</h3>
-      <p className="text-xs leading-relaxed text-muted-foreground">{corpo}</p>
-      <span className="mt-auto self-end text-[10px] tabular-nums text-muted-foreground">{numero}</span>
+    <div className="relative flex size-full flex-col justify-end gap-3 p-6 pb-10">
+      <h3 className="text-[22px] font-semibold leading-[1.05] tracking-tight text-foreground">{titulo}</h3>
+      <p className="text-[12px] leading-relaxed text-muted-foreground">{corpo}</p>
+      <Folio n={numero} />
+    </div>
+  );
+}
+
+function Peca({ indice, nome, legenda, numero }: { indice: number; nome: string; legenda: string; numero: number }) {
+  return (
+    <div className="relative flex size-full flex-col p-6 pb-10">
+      <Objeto indice={indice} className="min-h-0 w-full flex-1" />
+      <p className="mt-3 text-[13px] font-medium text-foreground">{nome}</p>
+      <p className="text-[11px] leading-snug text-muted-foreground">{legenda}</p>
+      <Folio n={numero} />
     </div>
   );
 }
 
 const PAGINAS = [
-  <div key="capa" className="relative size-full">
-    <Media papel="cena" indice={2} className="size-full" />
-    <div className="absolute inset-x-3 bottom-3 rounded-[var(--r-control)] bg-card px-3 py-2">
-      <p className="text-[11px] text-muted-foreground">Edição 07</p>
-      <p className="text-base font-medium text-foreground">Objetos sem pressa</p>
-    </div>
-  </div>,
+  <Capa key="capa" />,
   <Texto
     key="abre"
     numero={2}
     titulo="Feito pra durar"
-    corpo="Peças que a gente desenhou devagar, pra ficar na mesa por anos."
+    corpo="Peças desenhadas devagar, pra ficar na mesa por anos e não na gaveta."
   />,
-  <Foto key="f1" indice={3} numero={3} legenda="O troféu da casa, em latão escovado." />,
-  <Foto key="f2" indice={4} numero={4} legenda="A caixa que vira parte do presente." />,
+  <Peca key="f1" indice={3} numero={3} nome="Troféu" legenda="Latão escovado, base em degrau." />,
+  <Peca key="f2" indice={4} numero={4} nome="Caixa" legenda="A embalagem que vira parte do presente." />,
   <Texto
     key="fim"
     numero={5}
@@ -56,8 +98,8 @@ const PAGINAS = [
 
 export default function PageCurlDemo({ props }: DemoProps) {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <PageCurl pages={PAGINAS} label="Revista Objetos sem pressa" {...props} />
+    <div className="flex h-full w-full items-center justify-center p-6">
+      <PageCurl pages={PAGINAS} width={280} label="Revista Sem pressa" {...props} />
     </div>
   );
 }

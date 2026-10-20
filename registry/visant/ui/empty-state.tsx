@@ -88,6 +88,13 @@ export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   children?: React.ReactNode;
   /** UMA ação. Ver a nota acima. */
   action?: React.ReactNode;
+  /**
+   * Caixa com borda e fundo de card, arte sangrando no topo. `false` tira a
+   * caixa: o vazio pousa direto na superfície que o recebeu (painel, coluna,
+   * lista), com a arte como um selo pequeno em cima do texto. É o modo certo
+   * quando o vazio mora DENTRO de um card, pra não virar caixa dentro de caixa.
+   */
+  framed?: boolean;
 }
 
 export function EmptyState({
@@ -95,6 +102,7 @@ export function EmptyState({
   eyebrow,
   title,
   action,
+  framed = true,
   className,
   children,
   ...props
@@ -104,12 +112,19 @@ export function EmptyState({
       className={cn(
         // `min-w-0`: sem isto a peça não sabe encolher dentro de um flex ou de
         // uma coluna de grid, e empurra o irmão do lado em vez de ceder.
-        "@container min-w-0 overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
+        "@container min-w-0",
+        framed && "overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
         className,
       )}
       {...props}
     >
-      {art && (
+      {art && !framed && (
+        // Sem caixa a arte é selo, não faixa: centrada, do tamanho que veio, e
+        // sem véu, porque nenhum texto pousa em cima dela.
+        <div className="flex justify-center pt-2">{art}</div>
+      )}
+
+      {art && framed && (
         <div className="relative">
           {art}
           {/* Contraste garantido sobre qualquer arte, sem apagá-la. Ver a nota. */}
@@ -139,10 +154,13 @@ export function EmptyState({
         className={cn(
           "relative px-5 pb-8 text-center @[22rem]:px-7 @[22rem]:pb-10",
           art ? "pt-4" : "pt-8 @[22rem]:pt-10",
+          !framed && "pb-2 @[22rem]:pb-2",
         )}
       >
         {eyebrow && (
-          <div className="mb-2 text-[length:var(--text-rotulo,0.6875rem)] uppercase tracking-[0.08em] text-muted-foreground">
+          // Caixa de frase, sem caixa-alta espaçada: o eyebrow é contexto ("em
+          // Favoritos"), não um selo gritando a categoria.
+          <div className="mb-1.5 text-[length:var(--text-apoio,0.75rem)] text-muted-foreground">
             {eyebrow}
           </div>
         )}

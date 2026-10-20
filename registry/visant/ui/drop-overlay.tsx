@@ -1,3 +1,5 @@
+import { ArrowDownToLine, Check } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 /**
@@ -83,13 +85,20 @@ export function DropOverlay({
         className,
       )}
     >
-      <span
-        className={cn(
-          "font-mono text-sm uppercase tracking-widest",
-          solto ? "text-[var(--brand)]" : "text-muted-foreground",
-        )}
-      >
-        {solto ? doneMessage : message}
+      {/* O ícone troca junto com a frase: seta pra baixo é o convite, o visto é
+          o recibo. Texto em `foreground` nos dois estados: a marca pinta borda
+          e fundo, nunca a letra (contraste de 1,3:1 no tema claro). */}
+      <span className="flex flex-col items-center gap-2 text-center text-foreground">
+        <span
+          aria-hidden="true"
+          className={cn(
+            "grid size-9 place-items-center rounded-full border",
+            solto ? "border-[var(--brand)] bg-[var(--brand)] text-[var(--brand-foreground)]" : "border-border bg-card",
+          )}
+        >
+          {solto ? <Check className="size-4" /> : <ArrowDownToLine className="size-4" />}
+        </span>
+        <span className="text-sm font-medium">{solto ? doneMessage : message}</span>
       </span>
     </div>
   );

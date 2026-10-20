@@ -2,6 +2,8 @@
 
 import * as React from "react";
 
+import { Pause, Play, Volume2, VolumeX } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { Rail } from "@/components/ui/rail";
 
@@ -576,9 +578,11 @@ function ReelCard({
         // O vizinho recua: um pouco menor e um pouco mais apagado. É o que faz o
         // card do meio ser lido como "o que está tocando" sem precisar de borda
         // nem de rótulo dizendo isso.
-        "transition-transform [transition-duration:var(--dur-base,220ms)]",
+        // `--dur-slow`: a troca do card ativo acontece sozinha com a deriva, e
+        // a 200ms ela piscava a cada passagem. Mais lenta, ela respira.
+        "transition-transform [transition-duration:var(--dur-slow,300ms)]",
         "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
-        "scale-[0.955] data-[ativo]:scale-100",
+        "scale-[0.965] data-[ativo]:scale-100",
         "motion-reduce:scale-100 motion-reduce:transition-none",
         /*
          * O vizinho recua por VÉU, não por `opacity` no card.
@@ -590,8 +594,8 @@ function ReelCard({
          * no escuro, porque a referência é o preto do véu, não o fundo de quem
          * hospeda.
          */
-        "after:pointer-events-none after:absolute after:inset-0 after:z-10 after:bg-black/35",
-        "after:transition-opacity after:[transition-duration:var(--dur-base,220ms)]",
+        "after:pointer-events-none after:absolute after:inset-0 after:z-10 after:bg-black/30",
+        "after:transition-opacity after:[transition-duration:var(--dur-slow,300ms)]",
         "data-[ativo]:after:opacity-0 motion-reduce:after:transition-none",
       )}
       style={{ aspectRatio: ratio }}
@@ -643,11 +647,7 @@ function ReelCard({
             onClick={onPlay}
             label={tocando ? "Pausar o vídeo" : "Tocar o vídeo"}
           >
-            {tocando ? (
-              <path d="M4.5 3h2.2v10H4.5zM9.3 3h2.2v10H9.3z" />
-            ) : (
-              <path d="M5 3.5 12.5 8 5 12.5z" />
-            )}
+            {tocando ? <Pause className="size-4" fill="currentColor" /> : <Play className="size-4" fill="currentColor" />}
           </ControleReel>
 
           {mostrarSom ? (
@@ -656,11 +656,7 @@ function ReelCard({
               pressionado={comSom}
               label={comSom ? "Desligar o som" : "Ligar o som"}
             >
-              {comSom ? (
-                <path d="M3 6h2.5L9 3v10L5.5 10H3V6Zm8.2-.6a4 4 0 0 1 0 5.2l-1-.9a2.7 2.7 0 0 0 0-3.4l1-.9Z" />
-              ) : (
-                <path d="M3 6h2.5L9 3v10L5.5 10H3V6Zm8.9-.1.9.9-1.4 1.4 1.4 1.4-.9.9L10.5 9l-1.4 1.5-.9-.9L9.6 8.2 8.2 6.8l.9-.9 1.4 1.4 1.4-1.4Z" />
-              )}
+              {comSom ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
             </ControleReel>
           ) : null}
         </div>
@@ -697,9 +693,9 @@ function ControleReel({
         "outline-none focus-visible:[box-shadow:var(--focus)]",
       )}
     >
-      <svg viewBox="0 0 16 16" className="size-4" fill="currentColor" aria-hidden="true">
+      <span aria-hidden="true" className="grid place-items-center">
         {children}
-      </svg>
+      </span>
     </button>
   );
 }

@@ -80,6 +80,32 @@ import { cn } from "@/lib/utils";
  * deixa a linha visivelmente curta e denuncia que aquilo não é o conteúdo.
  */
 
+/* ── o movimento da espera ─────────────────────────────────────────────── */
+
+/**
+ * Quatro jeitos de o bloco dizer "ainda não chegou".
+ *
+ * | `motion` | o que faz | quando |
+ * |---|---|---|
+ * | `pulse` | opacidade respira, quase em uníssono | o default: o mais quieto que ainda se mexe |
+ * | `shimmer` | uma faixa de luz atravessa cada bloco | tela de produto, onde a espera é curta |
+ * | `wave` | a respiração desce em cascata, item a item | lista e trilho: dá direção à chegada |
+ * | `none` | parado | tela densa, ou quem vai animar por fora |
+ *
+ * O movimento entra por contexto: `motion` na moldura vale pra todos os blocos
+ * de dentro, e um `SkeletonCard` dentro do `SkeletonRail` herda o do trilho sem
+ * precisar repetir a prop. `shimmer` e `wave` são Web Animations API, sem bloco
+ * `css` à parte, e as duas param sob `prefers-reduced-motion`. O `pulse` é o
+ * `animate-pulse` do Tailwind, que o guard da casa já para.
+ */
+export type SkeletonMotion = "pulse" | "shimmer" | "wave" | "none";
+
+const MovimentoCtx = React.createContext<SkeletonMotion>("pulse");
+
+function movimentoReduzido() {
+  return typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+}
+
 /* ── as duas peças que os cinco formatos compartilham ─────────────────────── */
 
 /**
@@ -95,12 +121,62 @@ function Bloco({
   style,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & { delay?: number }) {
+  const movimento = React.useContext(MovimentoCtx);
+  const corpo = React.useRef<HTMLDivElement>(null);
+  const faixa = React.useRef<HTMLSpanElement>(null);
+
+  React.useEffect(() => {
+    if (movimentoReduzido()) return;
+    if (movimento === "wave") {
+      const el = corpo.current;
+      if (!el?.animate) return;
+      // Defasagem maior que a do pulse: é ela que faz a respiração descer.
+      const a = el.animate([{ opacity: 1 }, { opacity: 0.35, offset: 0.5 }, { opacity: 1 }], {
+        duration: 1400,
+        delay: delay * 2,
+        iterations: Infinity,
+        easing: "ease-in-out",
+      });
+      return () => a.cancel();
+    }
+    if (movimento === "shimmer") {
+      const el = faixa.current;
+      if (!el?.animate) return;
+      const a = el.animate([{ transform: "translateX(-100%)" }, { transform: "translateX(100%)" }], {
+        duration: 1500,
+        delay,
+        iterations: Infinity,
+        easing: "ease-in-out",
+      });
+      return () => a.cancel();
+    }
+  }, [movimento, delay]);
+
   return (
     <div
-      className={cn("animate-pulse rounded bg-muted", className)}
-      style={{ animationDelay: `${delay}ms`, ...style }}
+      ref={corpo}
+      className={cn(
+        "rounded bg-muted",
+        movimento === "pulse" && "animate-pulse",
+        movimento === "shimmer" && "relative overflow-hidden",
+        className,
+      )}
+      style={{ animationDelay: movimento === "pulse" ? `${delay}ms` : undefined, ...style }}
       {...props}
-    />
+    >
+      {movimento === "shimmer" ? (
+        <span
+          ref={faixa}
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            transform: "translateX(-100%)",
+            background:
+              "linear-gradient(90deg, transparent, color-mix(in oklab, var(--foreground) 12%, transparent), transparent)",
+          }}
+        />
+      ) : null}
+    </div>
   );
 }
 
@@ -111,14 +187,17 @@ function Bloco({
  * anúncio pertence ao container que embrulha todos, e cinco `role="status"`
  * empilhados fariam o leitor de tela recitar cinco vezes que algo está
  * carregando. Um esqueleto solto, que é o caso comum, anuncia sozinho.
+ *
+ * `motion` ausente herda o da moldura de fora; presente, vale daqui pra dentro.
  */
 function Moldura({
   label,
+  motion,
   className,
   children,
   ...props
-}: React.HTMLAttributes<HTMLElement> & { label: string | false }) {
-  return (
+}: React.HTMLAttributes<HTMLElement> & { label: string | false; motion?: SkeletonMotion }) {
+  const corpo = (
     <section
       {...(label ? { role: "status", "aria-busy": true } : { "aria-hidden": true })}
       className={cn("min-w-0", className)}
@@ -128,9 +207,12 @@ function Moldura({
       {children}
     </section>
   );
+  return motion ? <MovimentoCtx.Provider value={motion}>{corpo}</MovimentoCtx.Provider> : corpo;
 }
 
 export interface SkeletonRailProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo. */
+  motion?: SkeletonMotion;
   /** Quantos cards fantasma. Default 5. */
   cards?: number;
   /** Os mesmos valores do `@visant/rail` que este esqueleto representa. */
@@ -163,11 +245,13 @@ export function SkeletonRail({
   ratio = "4 / 3",
   heading = true,
   label = "Carregando a lista",
+  motion,
   className,
   ...props
 }: SkeletonRailProps) {
   return (
     <Moldura
+      motion={motion}
       label={label}
       className={className}
       {...(props as React.HTMLAttributes<HTMLElement>)}
@@ -215,6 +299,8 @@ export function SkeletonRail({
 const PASSO = 90;
 
 export interface SkeletonCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo. */
+  motion?: SkeletonMotion;
   /** Proporção da mídia, ex. `"4 / 3"`. `false` desenha um card sem mídia. */
   ratio?: string | false;
   /** Quantas linhas de texto abaixo da mídia. */
@@ -236,11 +322,17 @@ export function SkeletonCard({
   lines = 2,
   delay = 0,
   label = "Carregando",
+  motion,
   className,
   ...props
 }: SkeletonCardProps) {
   return (
-    <Moldura label={label} className={className} {...(props as React.HTMLAttributes<HTMLElement>)}>
+    <Moldura
+      motion={motion}
+      label={label}
+      className={className}
+      {...(props as React.HTMLAttributes<HTMLElement>)}
+    >
       {ratio ? <Bloco delay={delay} style={{ aspectRatio: ratio }} /> : null}
       {Array.from({ length: lines }).map((_, i) => (
         <Bloco
@@ -260,6 +352,8 @@ export function SkeletonCard({
 }
 
 export interface SkeletonTextProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo. */
+  motion?: SkeletonMotion;
   lines?: number;
   /** Altura da linha em px. Use a MESMA `line-height` do texto que vai entrar. */
   lineHeight?: number;
@@ -283,11 +377,17 @@ export function SkeletonText({
   gap = 8,
   delay = 0,
   label = "Carregando o texto",
+  motion,
   className,
   ...props
 }: SkeletonTextProps) {
   return (
-    <Moldura label={label} className={className} {...(props as React.HTMLAttributes<HTMLElement>)}>
+    <Moldura
+      motion={motion}
+      label={label}
+      className={className}
+      {...(props as React.HTMLAttributes<HTMLElement>)}
+    >
       <div className="flex flex-col" style={{ gap: `${gap}px` }}>
         {Array.from({ length: lines }).map((_, i) => (
           <Bloco
@@ -303,6 +403,8 @@ export function SkeletonText({
 }
 
 export interface SkeletonListProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo. */
+  motion?: SkeletonMotion;
   rows?: number;
   /** O quadrado à esquerda: avatar, capa, ícone. `false` tira. */
   thumb?: boolean;
@@ -329,11 +431,17 @@ export function SkeletonList({
   rowHeight = 56,
   delay = 0,
   label = "Carregando a lista",
+  motion,
   className,
   ...props
 }: SkeletonListProps) {
   return (
-    <Moldura label={label} className={className} {...(props as React.HTMLAttributes<HTMLElement>)}>
+    <Moldura
+      motion={motion}
+      label={label}
+      className={className}
+      {...(props as React.HTMLAttributes<HTMLElement>)}
+    >
       <div className="flex flex-col">
         {Array.from({ length: rows }).map((_, i) => (
           <div
@@ -360,6 +468,8 @@ export function SkeletonList({
 }
 
 export interface SkeletonMediaProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Como o bloco espera: `pulse` (default), `shimmer`, `wave` ou `none`. Ver a tabela no topo. */
+  motion?: SkeletonMotion;
   ratio?: string;
   /** Cantos da mídia real. Passe o mesmo raio, senão a troca "estala". */
   radius?: string;
@@ -380,11 +490,17 @@ export function SkeletonMedia({
   radius = "var(--r-surface, 0.875rem)",
   delay = 0,
   label = "Carregando a mídia",
+  motion,
   className,
   ...props
 }: SkeletonMediaProps) {
   return (
-    <Moldura label={label} className={className} {...(props as React.HTMLAttributes<HTMLElement>)}>
+    <Moldura
+      motion={motion}
+      label={label}
+      className={className}
+      {...(props as React.HTMLAttributes<HTMLElement>)}
+    >
       <Bloco delay={delay} className="w-full rounded-none" style={{ aspectRatio: ratio, borderRadius: radius }} />
     </Moldura>
   );

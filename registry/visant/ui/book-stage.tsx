@@ -471,6 +471,10 @@ export default function BookStage({ art, onReady, ...rest }: BookStageProps) {
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true }}
         camera={{ position: [...CAMERA.position], fov: CAMERA.fov }}
+        // `offsetSize`: dentro de um layout escalado (`transform: scale`) o
+        // canvas mede a caixa de layout. Medindo o retângulo desenhado ele
+        // nascia menor, encolhia de novo pela escala e o livro ia pro canto.
+        resize={{ offsetSize: true }}
         onCreated={({ invalidate }) => {
           nudge.current = invalidate;
         }}

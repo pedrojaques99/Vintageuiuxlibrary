@@ -16,26 +16,33 @@
 import * as React from "react";
 
 import { Carousel3D, type Carousel3DItem } from "../../../registry/visant/ui/carousel-3d";
-import { midia } from "../media";
+import { midia, type Papel } from "../media";
 import type { DemoProps } from "../catalog";
 
-const TITULOS = [
-  "Trilha Norte",
-  "Leme",
-  "Pomar",
-  "Forno Lento",
-  "Maré",
-  "Sereno",
+/**
+ * Só mídia de borda a borda: texturas e o quadro de capa dos vídeos.
+ *
+ * Os recortes 3D (rádio, troféu) que a demo usava têm fundo transparente e
+ * proporção quadrada; num card 16:9 o shader de capa os cortava ao meio e o
+ * objeto flutuava sem card nenhum em volta. Com mídia que enche o quadro, cada
+ * card é um card, e o círculo se lê.
+ */
+const PECAS: { title: string; papel: Papel; indice: number; poster?: boolean }[] = [
+  { title: "Trilha Norte", papel: "textura", indice: 3 },
+  { title: "Leme", papel: "video", indice: 2, poster: true },
+  { title: "Pomar", papel: "textura", indice: 1 },
+  { title: "Forno Lento", papel: "textura", indice: 2 },
+  { title: "Maré", papel: "video", indice: 0, poster: true },
+  { title: "Sereno", papel: "textura", indice: 0 },
 ];
 
 export default function Carousel3DDemo({ props }: DemoProps) {
   const items = React.useMemo<Carousel3DItem[]>(
     () =>
-      TITULOS.map((title, i) => ({
-        id: `peca-${i}`,
-        title,
-        media: midia("cena", i)?.src ?? "",
-      })).filter((i) => i.media),
+      PECAS.map((p, i) => {
+        const m = midia(p.papel, p.indice);
+        return { id: `peca-${i}`, title: p.title, media: (p.poster ? m?.poster : m?.src) ?? "" };
+      }).filter((i) => i.media),
     [],
   );
 
@@ -44,6 +51,7 @@ export default function Carousel3DDemo({ props }: DemoProps) {
       <Carousel3D
         items={items}
         cta="Ver projeto"
+        className="h-[420px] min-h-0"
         onSelect={(id) => console.info("[carousel-3d] selecionou", id)}
         {...props}
       />

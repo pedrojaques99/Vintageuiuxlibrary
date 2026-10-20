@@ -44,6 +44,12 @@ Refeitos em sala limpa (código próprio, a partir só da interação pública; 
 - `orbit-menu`: Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/orbit-menu
 - `page-curl`: Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/page-curl
 - `pull-to-refresh`: Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/pull
+- `shader-ascii`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/ascii.ts (Visant Labs)
+- `shader-halftone`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/halftone.ts (Visant Labs)
+- `shader-neon`: Colhido de 7panel_studio/keyboard-ui/src/lib/visualizers/shaders.ts (SHADER_NEON) (Visant Labs)
+- `shader-riso`: Colhido de visantlabs-os/packages/print-fx/src/riso/shaders.ts (Visant Labs)
+- `shader-tunnel`: Colhido de 7panel_studio/keyboard-ui/src/lib/visualizers/shaders.ts (SHADER_WARP) (Visant Labs)
+- `shader-voronoi`: Colhido de 7panel_studio/keyboard-ui/src/lib/visualizers/shaders.ts (SHADER_VORONOI) (Visant Labs)
 - `slide-to-confirm`: Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/slide-confirm
 - `slosh-slider`: Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/slosh
 - `sticker-peel`: Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/sticker-peel

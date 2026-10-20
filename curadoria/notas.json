@@ -17,18 +17,6 @@
     "excluir": false,
     "data": "2026-10-20"
   },
-  "generating-tile": {
-    "nota": 1,
-    "comentario": "excluir (bug report)",
-    "excluir": true,
-    "data": "2026-10-20"
-  },
-  "octahedron-loader": {
-    "nota": 1,
-    "comentario": "excluir (bug report)",
-    "excluir": true,
-    "data": "2026-10-20"
-  },
   "sfx-toggle": {
     "nota": 2,
     "comentario": "deixar fora do cat�logo (segue no cabe�alho)",
@@ -37,8 +25,8 @@
   },
   "vintage-command-palette": {
     "nota": 1,
-    "comentario": "mal apresentado, meio inutil; ficou vazio, redundante, apaga",
-    "excluir": true,
+    "comentario": "mal apresentado, meio inutil; fica s� como a paleta do Rig vintage, fora da vitrine",
+    "excluir": false,
     "data": "2026-10-20"
   }
 }

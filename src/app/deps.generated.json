@@ -59,10 +59,6 @@
   "segmented-control": [
     "lucide-react"
   ],
-  "octahedron-loader": [
-    "@lottiefiles/dotlottie-react",
-    "framer-motion"
-  ],
   "inline-edit": [
     "lucide-react"
   ],
@@ -87,9 +83,6 @@
   ],
   "paper-shuttle": [
     "framer-motion"
-  ],
-  "generating-tile": [
-    "lucide-react"
   ],
   "drop-overlay": [
     "lucide-react"

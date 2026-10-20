@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Image as DreiImage, Html, OrbitControls } from "@react-three/drei";
+import { Billboard, Image as DreiImage, Html, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { ChevronLeft, ChevronRight, MousePointer2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -38,6 +38,15 @@ import { ContextLossGuard, StudioEnvironment } from "@/lib/webgl-stage";
  *    abre buraco com poucos itens e sobrepõe com muitos.
  * 5. **Nenhuma cor mora aqui.** O hover escurece a própria textura por
  *    multiplicação, o que dispensa um retângulo de overlay por cima do card.
+ * 6. **Cada card encara a câmera (`Billboard`), em vez de apontar pra fora do
+ *    círculo.** Com seis cards radiais, o vizinho fica a 60° e é visto quase
+ *    de quina: na vitrine isso foi reportado como "todo torto", com o card do
+ *    lado virando uma lasca preta. De frente, o anel continua dando a
+ *    profundidade (os de trás menores e mais fundos) e todo card é legível.
+ * 7. **Medida de layout, não de tela.** Geometria pela largura do CONTAINER e
+ *    canvas com `resize.offsetSize`: dentro de um palco com `transform:
+ *    scale` o canvas nascia no tamanho desenhado, encolhia de novo e ia pro
+ *    canto.
  *
  * Requer `three`, `@react-three/fiber`, `@react-three/drei` e `lucide-react`.
  */
@@ -209,7 +218,8 @@ const Card3D = React.memo(function Card3D({
   return (
     <group
       position={[geometry.radius * Math.cos(theta), 0, geometry.radius * Math.sin(theta)]}
-      rotation={[0, -theta + Math.PI / 1.95, 0]}
+      // O giro radial ficou só como base: quem decide a face é o `Billboard`.
+      rotation={[0, Math.PI / 2 - theta, 0]}
       onPointerOver={(e) => {
         e.stopPropagation();
         setMeshHover(true);
@@ -221,6 +231,8 @@ const Card3D = React.memo(function Card3D({
         onHoverChange?.(false);
       }}
     >
+      {/* Ver a decisão 6: o card sempre de frente pra câmera. */}
+      <Billboard lockX lockZ>
       <group ref={contentRef}>
         <Media url={item.media} width={cardWidth} height={cardHeight} hovered={hovered} />
 
@@ -271,6 +283,7 @@ const Card3D = React.memo(function Card3D({
           </div>
         </Html>
       </group>
+      </Billboard>
     </group>
   );
 });
@@ -363,23 +376,34 @@ export function Carousel3D({
     return () => io.disconnect();
   }, []);
 
+  /*
+   * A medida é a do CONTAINER, em `offsetWidth`, e não a da janela.
+   *
+   * Lendo `window.innerWidth`, o carrossel numa coluna de 400px de um monitor
+   * largo escolhia card e câmera de tela cheia, e saía cortado e torto. E
+   * `offsetWidth` porque ele ignora `transform`: dentro de um palco escalado a
+   * caixa medida é a do layout, não a desenhada.
+   */
   React.useEffect(() => {
-    const read = () => setWidth(window.innerWidth);
+    const el = rootRef.current;
+    if (!el) return;
+    const read = () => setWidth(el.offsetWidth || 1200);
     read();
+    if (typeof ResizeObserver === "undefined") return;
     let t: ReturnType<typeof setTimeout>;
-    const onResize = () => {
+    const ro = new ResizeObserver(() => {
       clearTimeout(t);
       t = setTimeout(read, 100);
-    };
-    window.addEventListener("resize", onResize);
+    });
+    ro.observe(el);
     return () => {
-      window.removeEventListener("resize", onResize);
+      ro.disconnect();
       clearTimeout(t);
     };
   }, []);
 
   const geometry = React.useMemo<Geometry>(() => {
-    const factor = width < 480 ? 0.68 : width < 768 ? 0.8 : width < 1024 ? 0.85 : 1;
+    const factor = width < 480 ? 0.68 : width < 640 ? 0.8 : width < 900 ? 0.88 : 1;
     const cardWidth = CARD_WIDTH * factor;
     const gap = GAP * factor;
     // decisão 4 — o raio segue a contagem, com piso pra poucos itens.
@@ -387,8 +411,10 @@ export function Carousel3D({
     return {
       radius,
       cardWidth,
-      fov: width < 480 ? 62 : width < 1024 ? 58 : 50,
-      cameraZ: radius + (width < 480 ? 2.8 : width < 1024 ? 3.6 : 4),
+      // Lente mais fechada e câmera mais longe: menos deformação nas pontas e
+      // o card da frente deixa espaço pros vizinhos aparecerem inteiros.
+      fov: width < 480 ? 48 : width < 900 ? 40 : 36,
+      cameraZ: radius + (width < 480 ? 4.6 : width < 900 ? 6 : 6.8),
     };
   }, [width, items.length]);
 
@@ -409,7 +435,7 @@ export function Carousel3D({
       <div
         ref={rootRef}
         className={cn(
-          "relative h-[50vh] min-h-[350px] w-full cursor-grab rounded-3xl border border-white/5 bg-black/[0.03] backdrop-blur-sm active:cursor-grabbing [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]",
+          "relative h-[50vh] min-h-[350px] w-full cursor-grab active:cursor-grabbing [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]",
           className,
         )}
       >
@@ -417,6 +443,10 @@ export function Carousel3D({
           <Canvas
             shadows
             camera={{ position: [0, 0, geometry.cameraZ], fov: geometry.fov }}
+            // `offsetSize`: sob `transform: scale` o canvas mede a caixa de
+            // layout. Medindo o retângulo desenhado, ele nascia na metade do
+            // tamanho, encolhia de novo pela escala e ia pro canto.
+            resize={{ offsetSize: true }}
             gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             dpr={[1, 2]}
           >
@@ -435,6 +465,8 @@ export function Carousel3D({
                 enableZoom={false}
                 enablePan={false}
                 rotateSpeed={0.05}
+                // No horizonte: câmera acima dele com o card travado em pé
+                // (`lockX`) desenha trapézio, e trapézio é o "torto" de novo.
                 minPolarAngle={Math.PI / 2}
                 maxPolarAngle={Math.PI / 2}
                 autoRotate={autoRotate > 0}
@@ -455,18 +487,18 @@ export function Carousel3D({
           <button
             type="button"
             onClick={() => setActive((p) => (p - 1 + items.length) % items.length)}
-            className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/10 bg-white/5 p-3 text-white/70 backdrop-blur-md transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            className="absolute left-3 top-1/2 z-20 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-[color-mix(in_oklab,var(--background)_70%,transparent)] text-muted-foreground backdrop-blur-md transition-colors [transition-duration:var(--dur-fast)] hover:text-foreground focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]"
             aria-label="Anterior"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft className="size-5" />
           </button>
           <button
             type="button"
             onClick={() => setActive((p) => (p + 1) % items.length)}
-            className="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/10 bg-white/5 p-3 text-white/70 backdrop-blur-md transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            className="absolute right-3 top-1/2 z-20 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-[color-mix(in_oklab,var(--background)_70%,transparent)] text-muted-foreground backdrop-blur-md transition-colors [transition-duration:var(--dur-fast)] hover:text-foreground focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]"
             aria-label="Próximo"
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight className="size-5" />
           </button>
         </>
       )}

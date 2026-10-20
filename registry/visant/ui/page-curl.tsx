@@ -40,6 +40,12 @@ import { cn } from "@/lib/utils";
  *    cliente escalam a peça).
  * 4. **Geometria escrita direto no DOM**, nunca por estado: o conteúdo das
  *    páginas não re-renderiza a cada quadro da mola.
+ * 5. **O volume vem da luz, não de 3D.** A aba tem gradiente próprio (sombra no
+ *    vinco, brilho no meio, ponta apagando) e a página de baixo recebe a sombra
+ *    da aba logo além do vinco. As paradas são medidas em px a partir da linha
+ *    de dobra e recalculadas a cada quadro, então a luz gira com o papel. Some
+ *    a lombada afundada e três folhas de miolo na borda, e a revista ganha
+ *    corpo sem `perspective` nenhuma, que quebraria a conta do ponteiro.
  */
 
 type Ponto = { x: number; y: number };
@@ -64,6 +70,44 @@ function cortar(poli: Ponto[], m: Ponto, n: Ponto, fora: boolean): Ponto[] {
 const poligono = (ps: Ponto[]) =>
   ps.length < 3 ? "polygon(0 0, 0 0, 0 0)" : `polygon(${ps.map((p) => `${p.x}px ${p.y}px`).join(",")})`;
 
+/**
+ * Um `linear-gradient` cujas paradas são medidas em px a partir da linha de
+ * dobra, na direção `dir`. É o que deixa a luz e a sombra grudadas no vinco
+ * enquanto ele gira: o ângulo e as porcentagens saem da geometria do quadro.
+ */
+function gradienteNaDobra(
+  w: number,
+  h: number,
+  m: Ponto,
+  dir: Ponto,
+  paradas: [number, string][],
+): string {
+  const ang = Math.atan2(dir.x, -dir.y);
+  const L = Math.abs(w * Math.sin(ang)) + Math.abs(h * Math.cos(ang)) || 1;
+  const s0 = { x: w / 2 - (dir.x * L) / 2, y: h / 2 - (dir.y * L) / 2 };
+  const t0 = (m.x - s0.x) * dir.x + (m.y - s0.y) * dir.y;
+  const lista = paradas
+    .map(([px, cor]) => `${cor} ${(((t0 + px) / L) * 100).toFixed(2)}%`)
+    .join(",");
+  return `linear-gradient(${((ang * 180) / Math.PI).toFixed(2)}deg,${lista})`;
+}
+
+/** Luz do verso: sombra colada no vinco, brilho no meio da aba, e a ponta apagando. */
+const LUZ_VERSO: [number, string][] = [
+  [0, "color-mix(in oklab, black 26%, transparent)"],
+  [10, "color-mix(in oklab, black 6%, transparent)"],
+  [34, "color-mix(in oklab, white 22%, transparent)"],
+  [90, "color-mix(in oklab, white 6%, transparent)"],
+  [220, "color-mix(in oklab, black 14%, transparent)"],
+];
+
+/** A sombra que a aba levantada joga na página de baixo, logo além do vinco. */
+const SOMBRA_BAIXO: [number, string][] = [
+  [0, "color-mix(in oklab, black 34%, transparent)"],
+  [18, "color-mix(in oklab, black 12%, transparent)"],
+  [56, "transparent"],
+];
+
 const MOLA = { type: "spring" as const, stiffness: 260, damping: 30, mass: 0.7 };
 
 export interface PageCurlProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
@@ -76,6 +120,8 @@ export interface PageCurlProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   peek?: number;
   /** Rótulo da revista para leitor de tela. */
   label?: string;
+  /** Largura da folha em px. A altura segue 3:4. Sem valor, 240px. */
+  width?: number;
 }
 
 export function PageCurl({
@@ -84,6 +130,7 @@ export function PageCurl({
   onIndexChange,
   peek = 22,
   label = "Revista",
+  width,
   className,
   ...props
 }: PageCurlProps) {
@@ -101,6 +148,7 @@ export function PageCurl({
   const folha = React.useRef<HTMLDivElement>(null);
   const frente = React.useRef<HTMLDivElement>(null);
   const verso = React.useRef<HTMLDivElement>(null);
+  const sombra = React.useRef<HTMLDivElement>(null);
   const px = useMotionValue(0);
   const py = useMotionValue(0);
   const dims = React.useRef({ w: 0, h: 0 });
@@ -113,9 +161,11 @@ export function PageCurl({
     const c = { x: w, y: h };
     const p = { x: px.get(), y: py.get() };
     const dist = Math.hypot(c.x - p.x, c.y - p.y);
+    const sb = sombra.current;
     if (dist < 0.5) {
       f.style.clipPath = "";
       v.style.visibility = "hidden";
+      if (sb) sb.style.visibility = "hidden";
       return;
     }
     const m = { x: (c.x + p.x) / 2, y: (c.y + p.y) / 2 };
@@ -133,6 +183,14 @@ export function PageCurl({
       1 - 2 * n.y * n.y
     },${2 * k * n.x},${2 * k * n.y})`;
     v.style.visibility = "visible";
+    // O verso é pintado no espaço de ANTES da reflexão: ali a aba fica do lado
+    // do canto (`+n`), e a matriz leva luz e sombra junto com ela.
+    v.style.backgroundImage = gradienteNaDobra(w, h, m, n, LUZ_VERSO);
+    if (sb) {
+      sb.style.clipPath = v.style.clipPath;
+      sb.style.backgroundImage = gradienteNaDobra(w, h, m, n, SOMBRA_BAIXO);
+      sb.style.visibility = "visible";
+    }
   }, [px, py]);
 
   const medir = React.useCallback(() => {
@@ -246,7 +304,13 @@ export function PageCurl({
         ref={folha}
         tabIndex={0}
         aria-label={`Página ${indice + 1} de ${pages.length}. Use as setas para virar.`}
-        className="relative aspect-[3/4] w-60 touch-none select-none rounded-[var(--r-surface)] bg-card outline-none [box-shadow:var(--e-raised)] focus-visible:[box-shadow:var(--focus)]"
+        className={cn(
+          "relative isolate aspect-[3/4] touch-none select-none rounded-[var(--r-surface)] bg-card outline-none",
+          width === undefined && "w-60",
+          "[box-shadow:0_1px_2px_color-mix(in_oklab,black_18%,transparent),0_22px_40px_-14px_color-mix(in_oklab,black_50%,transparent)]",
+          "focus-visible:[box-shadow:var(--focus)]",
+        )}
+        style={width === undefined ? undefined : { width }}
         onKeyDown={(e) => {
           if (e.key === "ArrowRight") {
             e.preventDefault();
@@ -327,6 +391,21 @@ export function PageCurl({
           void ir(fechado());
         }}
       >
+        {/* O miolo: as folhas de baixo aparecendo na borda, como num caderno
+            de verdade. Atrás da folha (`-z`) e deslocadas pra direita e pra
+            baixo, cada uma um tom mais escura. É o que tira a peça do plano. */}
+        {[3, 2, 1].map((k) => (
+          <div
+            key={k}
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10 rounded-[inherit] bg-card"
+            style={{
+              transform: `translate(${k * 2.5}px, ${k * 1.5}px)`,
+              boxShadow: `inset 0 0 0 1px color-mix(in oklab, var(--foreground) ${6 + k * 3}%, transparent)`,
+              filter: `brightness(${1 - k * 0.05})`,
+            }}
+          />
+        ))}
         <div className="absolute inset-0 overflow-hidden rounded-[inherit]">
           {/* A de baixo: já está ali, só esperando a de cima sair. */}
           {par.baixo < pages.length && (
@@ -334,6 +413,13 @@ export function PageCurl({
               {pages[par.baixo]}
             </div>
           )}
+          {/* A sombra da aba na página de baixo, grudada no vinco. */}
+          <div
+            ref={sombra}
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ visibility: "hidden" }}
+          />
           <div ref={frente} className="absolute inset-0 bg-card">
             {pages[par.cima]}
           </div>
@@ -350,13 +436,19 @@ export function PageCurl({
             <div
               ref={verso}
               className="absolute inset-0 origin-top-left bg-muted"
-              style={{
-                visibility: "hidden",
-                backgroundImage:
-                  "linear-gradient(110deg, color-mix(in oklab, var(--foreground) 10%, transparent), transparent 45%, color-mix(in oklab, var(--background) 60%, transparent))",
-              }}
+              style={{ visibility: "hidden" }}
             />
           </div>
+          {/* A lombada: a página afunda na costura. Fica por cima de tudo,
+              inclusive do verso, porque a costura não vira com a folha. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, color-mix(in oklab, black 26%, transparent), color-mix(in oklab, black 6%, transparent) 3.5%, color-mix(in oklab, white 7%, transparent) 5%, transparent 12%)",
+            }}
+          />
         </div>
       </div>
 

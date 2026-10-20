@@ -38,13 +38,16 @@ import { cn } from "@/lib/utils";
  *    isso o arrasto no meio do caminho já é a animação, e soltar é só levar
  *    `pos` a um inteiro.
  * 2. **O espaçamento encolhe longe do centro.** A primeira vizinha se afasta
- *    62% de uma capa; as seguintes, 30%. Com passo uniforme a prateleira não
+ *    72% de uma capa; as seguintes, 26%. Com passo uniforme a prateleira não
  *    cabe em tela nenhuma depois da terceira capa.
  * 3. **Medida sem escala**: o delta do ponteiro é dividido pela escala do
  *    palco (`rect.width / offsetWidth`), senão sob `scale(0.5)` a prateleira
  *    anda a metade do dedo.
  * 4. **O reflexo é `-webkit-box-reflect`**, sem duplicar a mídia. Onde não
  *    existe (Firefox), simplesmente não há reflexo: é enfeite, não informação.
+ * 5. **Hierarquia em três sinais juntos.** A da vez é a única em escala cheia,
+ *    sem véu e na frente; as laterais recuam 12%, ganham véu da cor do fundo e
+ *    afundam em Z. Um sinal só (giro) deixava cinco capas disputando o olho.
  */
 
 export interface CoverFlowItem {
@@ -84,31 +87,46 @@ function Capa({
   const o = useTransform(pos, (p) => i - p);
   const x = useTransform(o, (v) => {
     const a = Math.abs(v);
-    return Math.sign(v) * (Math.min(a, 1) * largura * 0.62 + Math.max(a - 1, 0) * largura * 0.3);
+    return Math.sign(v) * (Math.min(a, 1) * largura * 0.72 + Math.max(a - 1, 0) * largura * 0.26);
   });
   const rotateY = useTransform(o, (v) => -Math.max(-1, Math.min(1, v)) * tilt);
-  const z = useTransform(o, (v) => -Math.min(Math.abs(v), 4) * 70);
+  const z = useTransform(o, (v) => -Math.min(Math.abs(v), 4) * 90);
+  // A da vez é a única em tamanho cheio: as vizinhas recuam um degrau, e a
+  // hierarquia se lê antes do título.
+  const scale = useTransform(o, (v) => 1 - Math.min(Math.abs(v), 1) * 0.12);
   const zIndex = useTransform(o, (v) => 100 - Math.round(Math.abs(v) * 10));
-  const opacity = useTransform(o, (v) => Math.max(0, Math.min(1, 4.2 - Math.abs(v))));
+  const opacity = useTransform(o, (v) => Math.max(0, Math.min(1, 3.6 - Math.abs(v))));
+  // Véu e não `opacity` pra apagar as laterais: capa translúcida deixaria ver a
+  // de trás através dela, e a pilha viraria um borrão. O véu é da cor do
+  // fundo, então a lateral "some no papel" igual nos dois temas.
+  const veu = useTransform(o, (v) => Math.min(0.62, Math.abs(v) * 0.48));
 
   return (
     <motion.div
       aria-hidden
       data-capa={i}
-      className="absolute top-0 left-1/2 aspect-[4/5] cursor-pointer overflow-hidden rounded-[var(--r-surface)] bg-muted [box-shadow:var(--e-raised)]"
+      className="absolute top-0 left-1/2 aspect-[4/5] cursor-pointer overflow-hidden rounded-[var(--r-surface)] bg-muted"
       style={{
         width: largura,
         marginLeft: -largura / 2,
         x,
         z,
+        scale,
         rotateY,
         zIndex,
         opacity,
+        boxShadow:
+          "0 1px 0 color-mix(in oklab, var(--foreground) 8%, transparent) inset, 0 26px 44px -18px color-mix(in oklab, black 62%, transparent)",
         WebkitBoxReflect:
-          "below 6px linear-gradient(transparent 72%, color-mix(in oklab, var(--foreground) 22%, transparent))",
+          "below 6px linear-gradient(transparent 76%, color-mix(in oklab, var(--foreground) 14%, transparent))",
       }}
     >
       {children}
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[var(--background)]"
+        style={{ opacity: veu }}
+      />
     </motion.div>
   );
 }
@@ -129,7 +147,7 @@ export function CoverFlow({
   const [indice, setIndice] = React.useState(defaultIndex);
   const alvoRef = React.useRef(defaultIndex);
   const palco = React.useRef<HTMLDivElement>(null);
-  const passo = cardWidth * 0.62;
+  const passo = cardWidth * 0.72;
 
   useMotionValueEvent(pos, "change", (p) => {
     const r = Math.max(0, Math.min(ultimo, Math.round(p)));

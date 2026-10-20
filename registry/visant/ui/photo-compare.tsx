@@ -3,6 +3,7 @@
 import * as React from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ChevronsLeftRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -69,29 +70,39 @@ import { cn } from "@/lib/utils";
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * O punho, e por que ele mora aqui e não no bloco `css` do item.
+ * O punho e a costura, e por que eles moram aqui e não no bloco `css` do item.
  *
  * O bloco `css` desenhava `.photo-compare-grip` como um disco de 2,25rem
- * **preenchido** com `var(--brand)`. Duas consequências, e as duas foram
- * reportadas na mesma frase: sobre uma foto de 440px aquilo é uma bolha de
- * 36px, e num tema cuja marca é ciano ela lê como um respingo de cor no meio
- * da imagem — sem nenhuma pista de que ali se arrasta.
+ * preenchido com `var(--brand)`, e a costura como um fio da marca. Dois
+ * reports em sequência: primeiro "bola azul gigante", depois "seta fora do
+ * alinhamento com a linha" e "menos azul". As duas coisas tinham causa.
  *
- * Aqui o punho volta a ser punho: menor, com o corpo na cor da superfície, o
- * anel na marca e as setas em `--foreground`. Cor da marca vira contorno, não
- * mancha — e é o mesmo desenho em claro e em escuro, porque as três cores
- * saem do tema.
+ * - **O desalinhamento era a grade.** A costura é uma coluna de 2px com
+ *   `place-items: center`, e um filho de 28px numa trilha de 2px não centra:
+ *   ele transborda pra um lado só, e o punho saía com a borda esquerda colada
+ *   na linha. Agora o punho é `absolute` no meio exato da costura
+ *   (`left/top 50%` + `translate -50%`), sem depender de alinhamento de grade.
+ * - **A cor era a marca em cima da foto.** Sobre imagem, a marca disputa com
+ *   o conteúdo que a peça existe pra mostrar. Costura e punho agora são da
+ *   superfície (`--background`), com sombra curta pra destacar em qualquer
+ *   foto, clara ou escura. A marca fica só no anel de foco, que é estado.
  *
  * Mora em utilitária, e não numa reescrita do bloco `css`, pelo mesmo motivo
  * do `@visant/spine-card`: utilitária ganha de `@layer components` por camada,
  * então quem instalou pelo `shadcn add` recebe ESTE desenho mesmo com o bloco
- * antigo ainda na folha. A classe `.photo-compare-grip` fica no lugar para o
- * seletor de foco do bloco continuar casando.
+ * antigo ainda na folha. As classes antigas ficam no lugar para o seletor de
+ * foco do bloco continuar casando.
  */
+const COSTURA = [
+  "bg-[var(--background)]",
+  "[box-shadow:0_0_0_0.5px_color-mix(in_oklab,var(--foreground)_18%,transparent),0_0_10px_color-mix(in_oklab,black_30%,transparent)]",
+].join(" ");
+
 const PUNHO = [
   "photo-compare-grip",
-  "grid size-7 place-items-center rounded-[var(--r-pill,9999px)]",
-  "border-2 border-[var(--brand)] bg-[var(--background)] text-[var(--foreground)]",
+  "absolute left-1/2 top-1/2 grid size-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-[var(--r-pill,9999px)]",
+  "bg-[var(--background)] text-[var(--foreground)]",
+  "[box-shadow:0_0_0_1px_color-mix(in_oklab,var(--foreground)_14%,transparent),0_4px_14px_color-mix(in_oklab,black_32%,transparent)]",
 ].join(" ");
 
 export interface PhotoCompareProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
@@ -192,22 +203,11 @@ export function PhotoCompare({
         ) : null}
       </div>
 
-      <span aria-hidden="true" className="photo-compare-seam">
+      <span aria-hidden="true" className={cn("photo-compare-seam", COSTURA)}>
         <span className={PUNHO}>
           {/* Duas setas, e não um disco liso: a alça precisa DIZER que arrasta
-              de lado. Sem o sinal ela vira um ponto colorido no meio da foto —
-              foi assim que a peça foi reportada como "bola azul gigante". */}
-          <svg
-            viewBox="0 0 24 24"
-            className="h-3.5 w-3.5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M10 8.5 6.5 12l3.5 3.5M14 8.5l3.5 3.5-3.5 3.5" />
-          </svg>
+              de lado. Sem o sinal ela vira um ponto no meio da foto. */}
+          <ChevronsLeftRight className="size-4" strokeWidth={2} />
         </span>
       </span>
 

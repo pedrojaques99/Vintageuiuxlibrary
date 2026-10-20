@@ -749,26 +749,6 @@
       ]
     },
     {
-      "name": "octahedron-loader",
-      "type": "registry:ui",
-      "title": "Octahedron Loader",
-      "description": "Carregamento com sólido girando. A marca da casa em espera curta.",
-      "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": [
-        "utils"
-      ],
-      "files": [
-        {
-          "path": "registry/visant/ui/octahedron-loader.tsx",
-          "type": "registry:ui"
-        }
-      ],
-      "dependencies": [
-        "@lottiefiles/dotlottie-react",
-        "framer-motion"
-      ]
-    },
-    {
       "name": "inline-edit",
       "type": "registry:ui",
       "title": "Inline Edit",
@@ -919,7 +899,7 @@
       "name": "status-ticker",
       "type": "registry:ui",
       "title": "Status Ticker",
-      "description": "O texto que segura a pessoa durante uma espera longa: passo atual, cronômetro e glitch de máquina.",
+      "description": "O texto que segura a pessoa durante uma espera longa, em quatro desenhos: linha com cronômetro, barra que varre, etapas e pulso.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "registryDependencies": [
         "utils",
@@ -953,7 +933,7 @@
       "name": "working-glyph",
       "type": "registry:ui",
       "title": "Working Glyph",
-      "description": "Ícone que bate com faísca. O sistema mostra esforço em vez de pedir paciência.",
+      "description": "Ícone que trabalha enquanto o sistema trabalha: picareta, martelo, engrenagem, pincel ou faísca, e o brilho corre só no traço.",
       "author": "Visant Labs <visantsupply@gmail.com>",
       "dependencies": [
         "lucide-react"
@@ -968,53 +948,7 @@
           "path": "registry/visant/ui/working-glyph.tsx",
           "type": "registry:ui"
         }
-      ],
-      "css": {
-        ".working-glyph-swing": {
-          "animation": "visant-glyph-swing .9s ease-in-out infinite",
-          "transform-origin": "60% 80%"
-        },
-        "@keyframes visant-glyph-swing": {
-          "0%": {
-            "transform": "rotate(-8deg) translateY(0)"
-          },
-          "40%": {
-            "transform": "rotate(6deg) translateY(1px)"
-          },
-          "60%": {
-            "transform": "rotate(3deg) translateY(2px)"
-          },
-          "100%": {
-            "transform": "rotate(-8deg) translateY(0)"
-          }
-        },
-        ".working-glyph-shine": {
-          "position": "relative",
-          "overflow": "hidden"
-        },
-        ".working-glyph-shine::before": {
-          "content": "''",
-          "position": "absolute",
-          "inset": "-50%",
-          "background-image": "linear-gradient(115deg, transparent 40%, color-mix(in oklch, currentColor 45%, transparent) 50%, transparent 60%)",
-          "background-size": "250% 250%",
-          "animation": "visant-glyph-shine 2.4s linear infinite",
-          "pointer-events": "none"
-        },
-        "@keyframes visant-glyph-shine": {
-          "0%": {
-            "background-position": "-200% -200%"
-          },
-          "100%": {
-            "background-position": "200% 200%"
-          }
-        },
-        "@media (prefers-reduced-motion: reduce)": {
-          ".working-glyph-swing, .working-glyph-shine::before": {
-            "animation": "none"
-          }
-        }
-      }
+      ]
     },
     {
       "name": "paper-shuttle",
@@ -1026,35 +960,11 @@
         "framer-motion"
       ],
       "registryDependencies": [
-        "utils",
-        "https://visant-ui.vercel.app/r/glitch-chars.json",
-        "@visant/glitch-chars"
+        "utils"
       ],
       "files": [
         {
           "path": "registry/visant/ui/paper-shuttle.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "generating-tile",
-      "type": "registry:ui",
-      "title": "Generating Tile",
-      "description": "O quadro que ocupa o lugar do resultado enquanto ele não existe.",
-      "author": "Visant Labs <visantsupply@gmail.com>",
-      "registryDependencies": [
-        "utils",
-        "https://visant-ui.vercel.app/r/status-ticker.json",
-        "https://visant-ui.vercel.app/r/turbulence-field.json",
-        "https://visant-ui.vercel.app/r/working-glyph.json",
-        "@visant/status-ticker",
-        "@visant/turbulence-field",
-        "@visant/working-glyph"
-      ],
-      "files": [
-        {
-          "path": "registry/visant/ui/generating-tile.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1646,7 +1556,7 @@
       "name": "empty-state",
       "type": "registry:ui",
       "title": "Empty State",
-      "description": "O estado vazio canônico: arte por slot com véu de contraste garantido, eyebrow, frase que diz o que vai aparecer ali, e no máximo uma ação.",
+      "description": "O estado vazio canônico: arte por slot, frase do que vai aparecer ali e no máximo uma ação; com ou sem caixa.",
       "registryDependencies": [
         "utils"
       ],
@@ -1662,7 +1572,7 @@
       "name": "skeleton-rail",
       "type": "registry:ui",
       "title": "Skeleton Rail",
-      "description": "O esqueleto do trilho com as mesmas medidas do trilho: mesmos nomes de prop, overflow hidden em vez de auto, e pulse em vez de shimmer.",
+      "description": "Esqueletos com as medidas do que substituem (trilho, card, lista, texto, mídia), em quatro movimentos: pulse, shimmer, wave ou parado.",
       "registryDependencies": [
         "utils"
       ],

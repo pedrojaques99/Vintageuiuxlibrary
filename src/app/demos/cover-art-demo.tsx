@@ -28,6 +28,14 @@
  *
  * O contador `n/6` existe porque duas setas sem contador não dizem quantas
  * opções há nem se elas dão a volta.
+ *
+ * ── "Fica tudo cortado" ─────────────────────────────────────────────────────
+ *
+ * A capa de 280px mais a régua de controles embaixo davam 420px numa caixa de
+ * 430: na grade, encostava em cima e embaixo, e a escala do ladrilho mordia a
+ * borda. Agora a capa é medida pela ALTURA (300px) e as setas ladeiam a capa
+ * em vez de empilhar embaixo dela. A composição fica larga como o ladrilho, com
+ * folga nas quatro bordas, e embaixo sobra só uma linha de rótulo.
  */
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -57,7 +65,7 @@ function Seta({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
       type="button"
       onClick={onClick}
       aria-label={dir === "prev" ? "Capa anterior" : "Próxima capa"}
-      className="alvo-toque inline-flex size-8 shrink-0 items-center justify-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground outline-none transition-[color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:text-foreground focus-visible:[box-shadow:var(--focus)] active:scale-[0.94] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
+      className="alvo-toque inline-flex size-9 shrink-0 items-center justify-center rounded-[var(--r-pill,9999px)] text-muted-foreground outline-none transition-[color,background-color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:bg-muted hover:text-foreground focus-visible:text-foreground focus-visible:[box-shadow:var(--focus)]"
     >
       {dir === "prev" ? <ChevronLeft className="size-4" aria-hidden /> : <ChevronRight className="size-4" aria-hidden />}
     </button>
@@ -70,24 +78,24 @@ export default function CoverArtDemo({ props }: DemoProps) {
   const anda = (d: 1 | -1) => setI((v) => (v + d + CAPAS.length) % CAPAS.length);
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3.5 px-4">
-      <div className="relative aspect-[3/4] w-[280px] overflow-hidden rounded-[var(--r-control,0.5rem)] border border-border">
-        {/* `key`: a capa é determinística e não anima — trocar a semente é
-            trocar o desenho inteiro, e sem `key` o React reaproveitaria os nós
-            de uma família dentro de outra. */}
-        <CoverArt key={i} title={capa.titulo} seed={capa.titulo} family={capa.familia} {...props} />
+    <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-2 py-5">
+      <div className="flex items-center gap-2">
+        <Seta dir="prev" onClick={() => anda(-1)} />
+        <div
+          className="relative aspect-[3/4] h-[300px] max-h-full overflow-hidden rounded-[var(--r-control,0.5rem)]"
+          style={{ boxShadow: "0 18px 40px -18px color-mix(in oklab, black 55%, transparent)" }}
+        >
+          {/* `key`: a capa é determinística e não anima — trocar a semente é
+              trocar o desenho inteiro, e sem `key` o React reaproveitaria os nós
+              de uma família dentro de outra. */}
+          <CoverArt key={i} title={capa.titulo} seed={capa.titulo} family={capa.familia} {...props} />
+        </div>
+        <Seta dir="next" onClick={() => anda(1)} />
       </div>
 
-      <div className="flex w-[280px] items-center gap-2">
-        <Seta dir="prev" onClick={() => anda(-1)} />
-        <Seta dir="next" onClick={() => anda(1)} />
-        <span className="min-w-0 truncate font-mono text-rotulo uppercase tracking-[0.12em] text-foreground">
-          {capa.familia}
-        </span>
-        <span className="ml-auto shrink-0 font-mono text-micro tabular-nums text-muted-foreground">
-          {i + 1}/{CAPAS.length}
-        </span>
-      </div>
+      <span className="font-mono text-micro tabular-nums text-muted-foreground">
+        {capa.familia} · {i + 1}/{CAPAS.length}
+      </span>
     </div>
   );
 }
