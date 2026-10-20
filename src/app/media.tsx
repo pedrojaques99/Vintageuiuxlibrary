@@ -113,7 +113,12 @@ export function MediaProvider({ children }: { children: React.ReactNode }) {
 
 export const useWireframe = () => React.useContext(WireframeCtx);
 
-/** O botão da barra. Um só, global — cada card com o seu viraria mais chrome. */
+/**
+ * O botão da barra. Um só, global — cada card com o seu viraria mais chrome.
+ *
+ * Ícone da casa, sem rótulo: o `title` diz o que ele faz e o `aria-pressed` diz
+ * o estado, que o tom do botão também mostra.
+ */
 export function WireframeToggle({ className }: { className?: string }) {
   const { wireframe, alternar } = useWireframe();
   const Icone = wireframe ? ImageOff : ImageIcon;
@@ -122,18 +127,11 @@ export function WireframeToggle({ className }: { className?: string }) {
       type="button"
       onClick={alternar}
       aria-pressed={wireframe}
-      title={wireframe ? "Mostrar a mídia real" : "Esconder a mídia e ver o wireframe"}
-      className={cn(
-        "alvo-toque inline-flex shrink-0 items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border px-2.5 py-1.5 text-apoio outline-none",
-        "transition-[color,border-color] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-        wireframe
-          ? "border-[var(--brand)] text-foreground"
-          : "border-border text-muted-foreground hover:border-[var(--brand)] hover:text-foreground",
-        className,
-      )}
+      aria-label={wireframe ? "Mostrar a mídia real" : "Ver só o wireframe"}
+      title={wireframe ? "Mostrar a mídia real" : "Ver só o wireframe"}
+      className={cn("casa-icone alvo-toque", className)}
     >
-      <Icone className="h-3.5 w-3.5" />
-      <span className="hidden sm:inline">{wireframe ? "Wireframe" : "Mídia"}</span>
+      <Icone className="h-4 w-4" />
     </button>
   );
 }

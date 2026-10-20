@@ -39,8 +39,11 @@ export function CopyCommand({
   onClick,
 }: {
   text: string;
-  /** `line` mostra o comando inteiro; `chip` só o gesto, para dentro de um card. */
-  variant?: "line" | "chip";
+  /**
+   * `cta` é o destaque único da tela (o comando de instalar); `line` mostra o
+   * comando num campo neutro; `chip` é só o ícone, para uma linha de lista.
+   */
+  variant?: "cta" | "line" | "chip";
   className?: string;
   onClick?: (e: React.MouseEvent) => void;
 }) {
@@ -51,7 +54,7 @@ export function CopyCommand({
     <button
       type="button"
       title={text}
-      aria-label={`Copiar: ${text}`}
+      aria-label={done ? "Copiado" : `Copiar: ${text}`}
       onClick={(e) => {
         // Dentro de um card clicável, copiar não deve também abrir o item.
         e.stopPropagation();
@@ -59,32 +62,20 @@ export function CopyCommand({
         copy();
       }}
       className={cn(
-        "group flex items-center gap-2 rounded-[var(--r-control,0.5rem)] border border-border text-left",
-        "transition-[color,background-color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-        "active:scale-[0.98] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100",
-        "hover:border-[var(--brand)]",
-        // Confirmar é uma mudança de ESTADO, não um ícone que troca sozinho: a
-        // borda acende junto para o "copiado" ser visto sem olhar para o ícone.
-        done && "border-[var(--brand)]",
-        variant === "line"
-          ? "w-full bg-card px-3 py-2"
-          : "shrink-0 px-2 py-1 font-mono text-micro text-muted-foreground hover:text-foreground",
+        "alvo-toque group flex items-center text-left outline-none",
+        "transition-[color,background-color,opacity] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+        variant === "cta" &&
+          "h-10 w-full gap-3 rounded-control bg-casa-cta px-3.5 text-casa-cta-fg hover:opacity-90",
+        variant === "line" &&
+          "h-10 w-full gap-3 rounded-control bg-casa-tile-2 px-3.5 text-casa-fg-2 hover:text-casa-fg",
+        variant === "chip" && "casa-icone shrink-0",
         className,
       )}
     >
-      {variant === "line" ? (
-        <code className="min-w-0 flex-1 truncate font-mono text-rotulo text-muted-foreground">
-          {text}
-        </code>
-      ) : null}
-      <Icon
-        className={cn(
-          "h-3.5 w-3.5 shrink-0",
-          variant === "chip" && "h-3 w-3",
-          done ? "text-[var(--brand)]" : "text-muted-foreground group-hover:text-foreground",
-        )}
-      />
-      {variant === "chip" ? <span>{done ? "copiado" : "add"}</span> : null}
+      {variant === "chip" ? null : (
+        <code className="min-w-0 flex-1 truncate font-casa-mono text-casa-sm">{text}</code>
+      )}
+      <Icon className="h-4 w-4 shrink-0" />
     </button>
   );
 }

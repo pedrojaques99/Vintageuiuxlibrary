@@ -57,14 +57,14 @@ export interface CodigoProps {
 function Cru({ codigo, numerado, className }: CodigoProps) {
   const linhas = codigo.replace(/\n$/, "").split("\n");
   return (
-    <pre className={cn("overflow-auto text-apoio leading-relaxed", className)}>
-      <code className="font-mono">
+    <pre className={cn("overflow-auto text-casa-sm leading-relaxed", className)}>
+      <code className="font-casa-mono">
         {linhas.map((linha, i) => (
           <div key={i}>
             {numerado ? (
               <span
                 aria-hidden
-                className="mr-4 inline-block w-8 select-none text-right text-muted-foreground/60 tabular-nums"
+                className="mr-4 inline-block w-8 select-none text-right text-casa-fg-3 tabular-nums"
               >
                 {i + 1}
               </span>

@@ -8,9 +8,9 @@
  * `scrub-input` é da família "trabalho" tem de abrir as seis pra achar. Um
  * índice que só se percorre é um índice que se ignora.
  *
- * Então: `⌘K` abre de qualquer seção, digita, entra. (`/` não: essa tecla já é
- * do campo de busca da grade, que procura DENTRO da fatia aberta. Duas coisas
- * na mesma tecla é o jeito mais rápido de a pessoa parar de usar as duas.)
+ * Então: `⌘K` abre de qualquer seção, digita, entra. `/` abre a mesma busca a
+ * partir da grade: é a única da casa desde que a grade perdeu o campo próprio
+ * (eram duas portas pro mesmo dado, uma ao lado da outra).
  *
  * E a busca é a MESMA do catálogo —
  * o `haystack` com radical em português, que faz "arrastar" achar a peça cuja
@@ -91,13 +91,13 @@ export function Busca({
   return (
     <Dialog.Root open={aberto} onOpenChange={onAberto}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[60] bg-background/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0" />
+        <Dialog.Overlay className="fixed inset-0 z-[60] bg-[oklch(0_0_0/0.55)] data-[state=open]:animate-in data-[state=open]:fade-in-0" />
         <Dialog.Content
           aria-describedby={undefined}
           className={cn(
-            "fixed left-1/2 top-[12vh] z-[60] w-[min(640px,calc(100vw-2rem))] -translate-x-1/2 overflow-hidden",
-            "rounded-[var(--r-surface,0.875rem)] border border-border bg-background shadow-2xl outline-none",
-            "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+            "casa fixed left-1/2 top-[12vh] z-[60] w-[min(640px,calc(100vw-2rem))] -translate-x-1/2 overflow-hidden",
+            "rounded-tile bg-casa-tile outline-none [box-shadow:var(--casa-shadow)]",
+            "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-[0.98]",
           )}
         >
           <Dialog.Title className="sr-only">Buscar no catálogo</Dialog.Title>
@@ -106,23 +106,23 @@ export function Busca({
               radical em português. O filtro do cmdk casa substring sem acento
               nem radical, e devolveria menos do que o catálogo promete. */}
           <Command shouldFilter={false} loop>
-            <div className="flex items-center gap-2 border-b border-border px-3">
-              <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <div className="flex items-center gap-3 px-4">
+              <Search className="h-4 w-4 shrink-0 text-casa-fg-3" />
               <Command.Input
                 value={termo}
                 onValueChange={setTermo}
-                placeholder="Buscar componente, tag, dependência…"
-                className="h-11 w-full bg-transparent text-corpo text-foreground outline-none placeholder:text-muted-foreground"
+                placeholder="Buscar componente, tag ou pacote"
+                className="h-14 w-full bg-transparent text-casa-lg text-casa-fg outline-none placeholder:text-casa-fg-3"
               />
-              <span className="shrink-0 font-mono text-micro tabular-nums text-muted-foreground">
+              <span className="shrink-0 text-casa-sm tabular-nums text-casa-fg-3">
                 {resultados.length}
               </span>
             </div>
 
-            <Command.List className="max-h-[min(400px,60vh)] overflow-y-auto overscroll-contain p-1.5">
-              <Command.Empty className="px-3 py-8 text-center text-corpo text-muted-foreground">
-                Nada com esse nome. O acervo tem {CATALOG.length} peças — tente uma tag
-                (&ldquo;foto&rdquo;, &ldquo;board&rdquo;) ou uma dependência (&ldquo;gsap&rdquo;).
+            <Command.List className="max-h-[min(420px,60vh)] overflow-y-auto overscroll-contain border-t border-casa-line p-1.5">
+              <Command.Empty className="px-3 py-10 text-center text-casa-base text-casa-fg-2">
+                Nada com esse nome. Tente uma tag, como &ldquo;foto&rdquo;, ou um pacote, como
+                &ldquo;gsap&rdquo;.
               </Command.Empty>
 
               {porFamilia
@@ -130,7 +130,7 @@ export function Busca({
                     <Command.Group
                       key={g.key}
                       heading={g.label}
-                      className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-micro [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-muted-foreground"
+                      className="[&_[cmdk-group-heading]]:px-2.5 [&_[cmdk-group-heading]]:pb-1 [&_[cmdk-group-heading]]:pt-3 [&_[cmdk-group-heading]]:text-casa-sm [&_[cmdk-group-heading]]:text-casa-fg-3"
                     >
                       {g.itens.map((item) => (
                         <Linha key={item.name} item={item} onEscolher={onEscolher} />
@@ -142,17 +142,8 @@ export function Busca({
                   ))}
             </Command.List>
 
-            <div className="flex items-center gap-3 border-t border-border px-3 py-1.5 font-mono text-micro text-muted-foreground">
-              <span>
-                <Tecla>↑</Tecla> <Tecla>↓</Tecla> navega
-              </span>
-              <span>
-                <Tecla>↵</Tecla> abre
-              </span>
-              <span className="ml-auto">
-                <Tecla>esc</Tecla> fecha
-              </span>
-            </div>
+            {/* Sem rodapé de teclas: setas, Enter e Esc numa lista de busca são
+                o que a pessoa já tenta sem ler. */}
           </Command>
         </Dialog.Content>
       </Dialog.Portal>
@@ -160,31 +151,20 @@ export function Busca({
   );
 }
 
-const Tecla = ({ children }: { children: React.ReactNode }) => (
-  <kbd className="rounded border border-border px-1">{children}</kbd>
-);
-
 function Linha({ item, onEscolher }: { item: CatalogItem; onEscolher: (n: string) => void }) {
   return (
     <Command.Item
       value={item.name}
       onSelect={() => onEscolher(item.name)}
-      className={cn(
-        "flex cursor-pointer items-center gap-2 rounded-[var(--r-control,0.5rem)] px-2 py-2",
-        // Marca como fundo e borda no item ativo, nunca como cor de texto.
-        "data-[selected=true]:bg-muted data-[selected=true]:ring-1 data-[selected=true]:ring-[var(--brand)]",
-      )}
+      // O item ativo é um tom acima, como em qualquer lista da casa.
+      className="flex cursor-pointer items-center gap-3 rounded-control px-2.5 py-2 data-[selected=true]:bg-casa-tile-2"
     >
-      <span className="shrink-0 font-mono text-apoio text-foreground">{item.name}</span>
-      <span className="min-w-0 flex-1 truncate text-rotulo text-muted-foreground">
-        {item.title}
-      </span>
+      <span className="min-w-0 truncate text-casa-base text-casa-fg">{item.title}</span>
       {ehNovo(item.name) ? (
-        <span className="shrink-0 rounded-full border border-[var(--brand)] px-1.5 py-px font-mono text-micro uppercase tracking-wider">
-          novo
-        </span>
+        <span className="h-1.5 w-1.5 shrink-0 rounded-[2px] bg-casa-fg-2" aria-label="novo" />
       ) : null}
-      <span className="shrink-0 rounded-full border border-border px-1.5 py-px font-mono text-micro uppercase tracking-wider text-muted-foreground">
+      <code className="ml-auto shrink-0 text-casa-sm text-casa-fg-3">{item.name}</code>
+      <span className="w-10 shrink-0 text-right text-casa-sm text-casa-fg-3">
         {TYPE_LABEL[item.type]}
       </span>
     </Command.Item>
@@ -192,15 +172,8 @@ function Linha({ item, onEscolher }: { item: CatalogItem; onEscolher: (n: string
 }
 
 /**
- * `⌘K` / `Ctrl+K` abrem a busca. `/`, não.
- *
- * A barra já é do campo de busca da grade (`Gallery`), que foca o input da
- * fatia aberta. Dois ouvintes na mesma tecla dariam duas coisas ao mesmo tempo,
- * e o atalho passaria a significar duas coisas dependendo da seção — que é a
- * forma mais rápida de a pessoa parar de usar os dois.
- *
- * A divisão de trabalho é essa: `/` busca DENTRO da fatia aberta, `⌘K` busca no
- * acervo inteiro de qualquer lugar do site.
+ * `⌘K` / `Ctrl+K` abrem a busca de qualquer lugar do site. (`/` também, mas só
+ * a partir da grade — quem escuta essa tecla é a `Gallery`.)
  */
 export function useAtalhoDeBusca(abrir: () => void) {
   React.useEffect(() => {
@@ -222,21 +195,15 @@ export function BotaoDeBusca({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="alvo-toque flex h-8 items-center gap-2 rounded-[var(--r-control,0.5rem)] border border-border px-2 text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground"
+      aria-label="Buscar"
+      className="alvo-toque flex h-8 items-center gap-2 rounded-control px-2 text-casa-fg-2 transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-casa-fg md:w-56 md:bg-casa-tile md:px-3 md:hover:bg-casa-tile-2"
     >
-      <Search className="h-3.5 w-3.5" />
-      {/*
-        Rótulo e tecla só a partir de `xl`.
-        
-        Em `sm` eles cabiam na conta do botão e não cabiam na do cabeçalho: com
-        o seletor de marca, o tema, a densidade e o "entrar", a fileira da
-        direita passava a largura da janela a 768px e a página inteira ganhava
-        rolagem horizontal. Ícone sozinho é um alvo legítimo — o atalho continua
-        valendo e a dica volta assim que há espaço pra ela.
-      */}
-      <span className="hidden text-rotulo xl:inline">Buscar</span>
-      <kbd className="hidden rounded border border-border px-1 font-mono text-micro xl:inline">
-        {mac ? "⌘" : "ctrl"}K
+      <Search className="h-4 w-4 shrink-0" />
+      {/* O campo largo é a afordância de busca no desktop. No celular fica o
+          ícone, que cabe ao lado da marca sem estourar a linha. */}
+      <span className="hidden text-casa-base md:inline">Buscar</span>
+      <kbd className="ml-auto hidden text-casa-sm text-casa-fg-3 md:inline">
+        {mac ? "⌘" : "Ctrl "}K
       </kbd>
     </button>
   );

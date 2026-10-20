@@ -14,6 +14,24 @@ import "@fontsource-variable/manrope";
 import "@fontsource/oswald/400.css";
 import "@fontsource/oswald/500.css";
 
+/*
+ * O tema antes do primeiro quadro. A casa é escura por padrão; só `?solo=1`
+ * decide pelo próprio parâmetro (o iframe da ficha manda `dark=1`).
+ */
+{
+  const solo = new URLSearchParams(window.location.search);
+  let escuro = true;
+  if (solo.get("solo") === "1") escuro = solo.get("dark") === "1";
+  else {
+    try {
+      escuro = localStorage.getItem("visant:ui:tema") !== "claro";
+    } catch {
+      /* sem storage, fica o padrão */
+    }
+  }
+  document.documentElement.classList.toggle("dark", escuro);
+}
+
 import App from "./app/App.tsx";
 import { MediaProvider } from "./app/media.tsx";
 import "./styles/index.css";

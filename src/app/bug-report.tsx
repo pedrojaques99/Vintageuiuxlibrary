@@ -82,12 +82,9 @@ function useCount(item: string) {
 export function BugButton({
   item,
   className,
-  /** `icone` para o header do card; `chip` para a linha densa. */
-  variant = "icone",
 }: {
   item: string;
   className?: string;
-  variant?: "icone" | "chip";
 }) {
   const [aberto, setAberto] = React.useState(false);
   const [enviando, setEnviando] = React.useState(false);
@@ -161,6 +158,9 @@ export function BugButton({
 
   return (
     <div ref={wrap} className={cn("relative shrink-0", className)}>
+      {/* Mora no painel da ficha, ao lado do fechar: sempre visível ali, porque
+          a ficha é o lugar onde se olha a peça de perto. Com reporte aberto, o
+          número fica do lado — aí ele é estado, não gesto. */}
       <button
         type="button"
         onClick={(e) => {
@@ -168,53 +168,34 @@ export function BugButton({
           setAberto((v) => !v);
         }}
         aria-expanded={aberto}
+        aria-pressed={aberto}
         aria-label={`Reportar problema em ${item}`}
         title={count ? `${count} reporte(s) aberto(s)` : "Reportar problema"}
         className={cn(
-          "alvo-toque inline-flex items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border px-2 py-1.5 text-apoio outline-none",
-          "transition-[color,border-color,opacity,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-          "active:scale-[0.97] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100",
-          "hover:border-destructive hover:text-destructive focus-visible:border-destructive",
-          // Escondido em repouso, revelado quando a mão (ou o teclado) chega ao
-          // card. Nunca escondido quando há reporte aberto ou quando o painel
-          // está em uso: aí ele é estado, não gesto.
-          "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100",
-          "[@media(hover:none)]:opacity-100",
-          (aberto || count > 0 || feito) && "opacity-100",
-          count > 0 || feito
-            ? "border-destructive/50 text-destructive"
-            : "border-border text-muted-foreground",
-          variant === "chip" && "px-1.5 py-1 text-micro",
+          "casa-icone alvo-toque gap-1 [grid-auto-flow:column]",
+          count > 0 && "w-auto px-2 text-destructive",
         )}
       >
-        <Icon className={cn("h-3.5 w-3.5", variant === "chip" && "h-3 w-3")} />
-        {count > 0 ? <span className="font-mono text-micro tabular-nums">{count}</span> : null}
+        <Icon className="h-4 w-4" />
+        {count > 0 ? <span className="text-casa-sm tabular-nums">{count}</span> : null}
       </button>
 
       {aberto ? (
         <form
           onSubmit={enviar}
           onClick={(e) => e.stopPropagation()}
-          className={cn(
-            "absolute right-0 top-[calc(100%+0.5rem)] z-40 w-[min(22rem,80vw)] space-y-2",
-            "rounded-[var(--r-surface,0.875rem)] border border-border bg-card p-3 [box-shadow:var(--e-raised)]",
-          )}
+          className="casa absolute right-0 top-[calc(100%+0.5rem)] z-40 w-[min(22rem,80vw)] space-y-3 rounded-tile bg-casa-tile-2 p-3 [box-shadow:var(--casa-shadow)]"
         >
-          <p className="font-mono text-micro uppercase tracking-wider text-muted-foreground">
-            bug em {item}
-          </p>
-
-          <div className="flex gap-1.5">
+          <div className="flex items-center gap-4">
             {SEVERIDADES.map((s) => (
               <button
                 key={s.value}
                 type="button"
                 onClick={() => setSeveridade(s.value)}
+                aria-pressed={severidade === s.value}
                 className={cn(
-                  "rounded-[var(--r-pill,9999px)] border px-2.5 py-1 text-micro transition-colors [transition-duration:var(--dur-fast)]",
-                  severidade === s.value
-                    ? "border-[var(--brand)] text-foreground"
-                    : "border-border text-muted-foreground hover:text-foreground",
+                  "rounded-control text-casa-base transition-colors [transition-duration:var(--dur-fast)]",
+                  severidade === s.value ? "text-casa-fg" : "text-casa-fg-2 hover:text-casa-fg",
                 )}
               >
                 {s.label}
@@ -233,24 +214,19 @@ export function BugButton({
             }}
             rows={3}
             placeholder="O que quebrou? Ex.: o knob não gira no toque."
-            className="w-full resize-none rounded-[var(--r-control,0.5rem)] border border-border bg-background px-2.5 py-2 text-apoio outline-none placeholder:text-muted-foreground focus:border-[var(--brand)]"
+            className="w-full resize-none rounded-control bg-casa-tile px-3 py-2 text-casa-base text-casa-fg outline-none placeholder:text-casa-fg-3"
           />
 
-          {erro ? <p className="text-micro text-destructive">{erro}</p> : null}
+          {erro ? <p className="text-casa-sm text-destructive">{erro}</p> : null}
 
-          <div className="flex items-center justify-between gap-2">
-            <span className="truncate font-mono text-micro text-muted-foreground">
-              vai pra bugs/REPORTS.md
-            </span>
-            <button
-              type="submit"
-              disabled={!mensagem.trim() || enviando}
-              className="alvo-toque inline-flex items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2.5 py-1.5 text-apoio outline-none transition-colors [transition-duration:var(--dur-fast)] hover:border-[var(--brand)] hover:text-foreground disabled:opacity-40"
-            >
-              {enviando ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
-              Registrar
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={!mensagem.trim() || enviando}
+            className="alvo-toque flex h-9 w-full items-center justify-center gap-2 rounded-control bg-casa-cta text-casa-base text-casa-cta-fg transition-opacity [transition-duration:var(--dur-fast)] hover:opacity-90 disabled:opacity-40"
+          >
+            {enviando ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+            Registrar
+          </button>
         </form>
       ) : null}
     </div>

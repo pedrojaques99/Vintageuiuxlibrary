@@ -88,14 +88,14 @@ export default function CodigoRealcado({
   return (
     <Highlight code={codigo.replace(/\n$/, "")} language={linguagem} theme={tema}>
       {({ tokens, getLineProps, getTokenProps }) => (
-        <pre className={cn("overflow-auto text-apoio leading-relaxed", className)}>
-          <code className="font-mono">
+        <pre className={cn("overflow-auto text-casa-sm leading-relaxed", className)}>
+          <code className="font-casa-mono">
             {tokens.map((linha, i) => (
               <div key={i} {...getLineProps({ line: linha })}>
                 {numerado ? (
                   <span
                     aria-hidden
-                    className="mr-4 inline-block w-8 select-none text-right text-muted-foreground/60 tabular-nums"
+                    className="mr-4 inline-block w-8 select-none text-right text-casa-fg-3 tabular-nums"
                   >
                     {i + 1}
                   </span>

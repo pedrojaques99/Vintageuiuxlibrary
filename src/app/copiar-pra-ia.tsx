@@ -126,10 +126,10 @@ async function buscarFonte(name: string) {
 }
 
 const ITENS = [
-  { chave: "prompt", label: "Copiar prompt", icon: Sparkles },
-  { chave: "uso", label: "Copiar código configurado", icon: Code2 },
-  { chave: "fonte", label: "Copiar a fonte", icon: FileCode },
-  { chave: "comando", label: "Copiar o comando", icon: Terminal },
+  { chave: "prompt", label: "Prompt pronto", icon: Sparkles },
+  { chave: "uso", label: "Código como está", icon: Code2 },
+  { chave: "fonte", label: "Arquivo-fonte", icon: FileCode },
+  { chave: "comando", label: "Comando de instalar", icon: Terminal },
 ] as const;
 
 type Chave = (typeof ITENS)[number]["chave"];
@@ -170,25 +170,27 @@ export function CopiarPraIA({
 
   return (
     <Menu.Root>
+      {/* O segundo botão da ficha: tom de superfície, nunca o destaque — esse é
+          do comando de instalar, logo abaixo. */}
       <Menu.Trigger
         className={cn(
-          "alvo-toque flex h-8 items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2 text-muted-foreground",
+          "alvo-toque flex h-10 w-full items-center justify-center gap-2 rounded-control bg-casa-tile-2 px-3 text-casa-base text-casa-fg",
           "transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-          "hover:border-[var(--brand)] hover:text-foreground data-[state=open]:border-[var(--brand)]",
+          "hover:bg-[color-mix(in_oklch,var(--casa-tile-2),var(--casa-fg)_6%)] data-[state=open]:bg-[color-mix(in_oklch,var(--casa-tile-2),var(--casa-fg)_6%)]",
         )}
       >
-        <Sparkles className="h-3.5 w-3.5" />
-        <span className="hidden text-rotulo sm:inline">Copiar pra IA</span>
-        <ChevronDown className="h-3 w-3" />
+        <Sparkles className="h-4 w-4 text-casa-fg-2" />
+        Copiar pra IA
+        <ChevronDown className="h-3.5 w-3.5 text-casa-fg-3" />
       </Menu.Trigger>
 
       <Menu.Portal>
         <Menu.Content
-          align="end"
+          align="center"
           sideOffset={6}
           className={cn(
-            "z-[70] min-w-[240px] overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-background p-1 shadow-xl",
-            "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+            "casa z-[70] w-[var(--radix-dropdown-menu-trigger-width)] overflow-hidden rounded-tile bg-casa-tile-2 p-1.5 [box-shadow:var(--casa-shadow)]",
+            "data-[state=open]:animate-in data-[state=open]:fade-in-0",
           )}
         >
           {ITENS.map(({ chave, label, icon: Icon }) => (
@@ -200,14 +202,14 @@ export function CopiarPraIA({
                 e.preventDefault();
                 void copiar(chave, acao(chave));
               }}
-              className="flex cursor-pointer items-center gap-2 rounded-[var(--r-control,0.5rem)] px-2 py-1.5 text-rotulo text-muted-foreground outline-none data-[highlighted]:bg-muted data-[highlighted]:text-foreground"
+              className="flex cursor-pointer items-center gap-2.5 rounded-control px-2.5 py-2 text-casa-base text-casa-fg-2 outline-none data-[highlighted]:bg-casa-tile data-[highlighted]:text-casa-fg"
             >
               {feito === chave ? (
-                <Check className="h-3.5 w-3.5 shrink-0 text-[var(--brand)]" />
+                <Check className="h-4 w-4 shrink-0 text-casa-fg" />
               ) : (
-                <Icon className="h-3.5 w-3.5 shrink-0" />
+                <Icon className="h-4 w-4 shrink-0" />
               )}
-              {feito === chave ? "copiado" : label}
+              {feito === chave ? "Copiado" : label}
             </Menu.Item>
           ))}
         </Menu.Content>

@@ -19,14 +19,13 @@
  */
 
 import * as React from "react";
-import { Moon, Sun, Rows3, Rows4 } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { BrandThemeProvider } from "@/lib/brand-theme";
 import { Solo, fundoDoSolo, propsDaQuery } from "./Solo";
 import { Busca, BotaoDeBusca, useAtalhoDeBusca } from "./busca";
-import { Sidebar } from "./sidebar";
 import { ComponentFocus } from "./ComponentFocus";
 import { BrandSelector } from "../../registry/visant/ui/brand-selector";
-import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import { Gallery } from "./Gallery";
 import { CATALOG, FAMILIES, type Family } from "./catalog";
 
@@ -93,15 +92,10 @@ const familiaDaPeca = (nome: string | null): Family | null =>
  * instala uma mesa de trabalho inteira. O catálogo continua a um clique, para
  * quem já sabe o nome do que quer.
  */
-const VIEWS: { value: View; label: string; short: string }[] = [
-  { value: "kits", label: "Kits", short: "Kits" },
-  { value: "catalogo", label: "Catálogo", short: "Catálogo" },
-  { value: "marca", label: "Marca", short: "Marca" },
-];
-
-const DENSITIES = [
-  { value: "comfortable" as const, icon: Rows3, ariaLabel: "Densidade confortável" },
-  { value: "compact" as const, icon: Rows4, ariaLabel: "Densidade compacta" },
+const VIEWS: { value: View; label: string }[] = [
+  { value: "kits", label: "Kits" },
+  { value: "catalogo", label: "Catálogo" },
+  { value: "marca", label: "Marca" },
 ];
 
 // --- rota --------------------------------------------------------------------
@@ -194,12 +188,27 @@ function useRoute() {
   return [route, navigate] as const;
 }
 
+/*
+ * Escuro por padrão, e a escolha fica.
+ *
+ * A vitrine é de peça sobre fundo escuro — é onde componente de interface se lê
+ * melhor e é a referência (Bench, Apple Developer). Quem prefere claro troca uma
+ * vez; sem guardar, a casa voltava ao padrão a cada visita. A classe é aplicada
+ * no `main.tsx` antes do primeiro quadro, então aqui só se lê e se grava.
+ */
+const CHAVE_TEMA = "visant:ui:tema";
+
 function useDarkMode() {
   const [dark, setDark] = React.useState(() =>
     document.documentElement.classList.contains("dark"),
   );
   React.useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
+    try {
+      localStorage.setItem(CHAVE_TEMA, dark ? "escuro" : "claro");
+    } catch {
+      /* janela anônima: a escolha vale só pra esta visita */
+    }
   }, [dark]);
   return [dark, setDark] as const;
 }
@@ -209,11 +218,6 @@ function useDarkMode() {
 function Shell() {
   const [route, navigate] = useRoute();
   const [dark, setDark] = useDarkMode();
-  const [density, setDensity] = React.useState<"comfortable" | "compact">("comfortable");
-
-  React.useEffect(() => {
-    document.documentElement.dataset.density = density;
-  }, [density]);
 
   const setView = React.useCallback(
     // Clicar na aba "Catálogo" volta ao índice das categorias, nunca à última
@@ -282,85 +286,55 @@ function Shell() {
   );
 
   return (
-    <div
-      className="min-h-screen bg-background text-foreground"
-      style={{ fontFamily: "var(--font-sans, ui-sans-serif, system-ui)" }}
-    >
-      <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
-        <div className="shell flex h-[var(--shell-header-h)] items-center gap-3">
+    <div className="min-h-screen bg-casa-bg text-casa-fg">
+      {/*
+       * O cabeçalho da casa.
+       *
+       * Logo, as três seções, a busca, o tema, a marca e entrar — e nada mais.
+       * Era o lugar de nove controles: densidade, dois segmentados, um seletor de
+       * marca com cinco informações e uma tecla de atalho anunciada. Fundo sólido
+       * e sem linha embaixo: o que separa o cabeçalho do resto é o próprio scroll.
+       */}
+      <header className="casa sticky top-0 z-40 bg-casa-bg">
+        <div className="shell flex h-[var(--shell-header-h)] items-center gap-6">
           <button
             type="button"
-            onClick={() => setView("catalogo")}
-            className="flex items-center gap-2"
+            onClick={() => setView("kits")}
+            className="flex shrink-0 items-center gap-2 rounded-control text-casa-base font-medium"
           >
-            <span
-              className="h-5 w-5 rounded-[6px]"
-              style={{ background: "var(--brand, var(--foreground))" }}
-            />
-            <span className="font-mono text-apoio tracking-tight">@visant/ui</span>
+            <span className="h-4 w-4 rounded-[5px] bg-casa-fg" aria-hidden />
+            visant/ui
           </button>
 
-          {/* As abas ficam pro intervalo em que a sidebar ainda não cabe:
-              acima de `lg` quem diz onde a pessoa está é a coluna da esquerda,
-              e ter as duas coisas seria o mesmo controle desenhado duas vezes. */}
-          <div className="ml-2 hidden sm:block lg:hidden">
-            <SegmentedControl
-              value={route.view}
-              onChange={setView}
-              aria-label="Seção"
-              options={VIEWS.map(({ value, label }) => ({ value, label }))}
-            />
-          </div>
+          <Secoes view={route.view} onView={setView} className="hidden sm:flex" />
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-1.5">
             <BotaoDeBusca onClick={abrirBusca} />
-            {/* A densidade sai no celular: lá a grade é de uma coluna, onde
-                densidade quase não muda nada — e o espaço que ela ocupava é o
-                que faltava para o botão de entrar caber sem estourar a linha. */}
-            <div className="hidden sm:block">
-              <SegmentedControl
-                value={density}
-                onChange={setDensity}
-                variant="compact"
-                aria-label="Densidade"
-                options={DENSITIES}
-              />
-            </div>
             <button
               type="button"
               onClick={() => setDark(!dark)}
               aria-label={dark ? "Tema claro" : "Tema escuro"}
-              className="alvo-toque grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
+              className="casa-icone alvo-toque"
             >
-              {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
-            <BrandSelector />
+            {/*
+              O seletor do registry, em versão de cabeçalho: a marca e o nome.
+              A fonte, a versão, as amostras e o atalho continuam lá dentro do
+              diálogo, que é onde se escolhe; no gatilho eram ruído. O atalho
+              segue valendo, só não é anunciado.
+            */}
+            <BrandSelector className={GATILHO_DE_MARCA} />
             <MinhasMarcas />
           </div>
         </div>
 
-        {/* no celular as abas descem para uma segunda linha em vez de sumirem */}
+        {/* No celular as seções descem para uma segunda linha em vez de sumirem. */}
         <div className="shell pb-2 sm:hidden">
-          <SegmentedControl
-            value={route.view}
-            onChange={setView}
-            aria-label="Seção"
-            options={VIEWS.map(({ value, short }) => ({ value, label: short }))}
-          />
+          <Secoes view={route.view} onView={setView} />
         </div>
       </header>
 
-      <div className="flex items-start">
-        <Sidebar
-          view={route.view}
-          familia={route.familia}
-          focus={route.focus}
-          onView={setView}
-          onFamilia={setFamilia}
-          onFocus={setFocus}
-        />
-
-        <div className="min-w-0 flex-1">
       {route.view === "kits" && (
         <KitRoom
           slug={route.kit ?? KITS[0].slug}
@@ -374,9 +348,9 @@ function Shell() {
        * A ficha é uma ROTA, não um estado por cima da grade.
        *
        * `/c/<item>` renderiza a ficha no lugar do catálogo, dentro da mesma
-       * casca — mesma sidebar, mesmo cabeçalho. Enquanto ela era um diálogo, a
-       * grade continuava montada atrás do overlay: oitenta demos vivas gastando
-       * CPU embaixo de uma peça que ninguém estava vendo.
+       * casca. Enquanto ela era um diálogo, a grade continuava montada atrás do
+       * overlay: oitenta demos vivas gastando CPU embaixo de uma peça que ninguém
+       * estava vendo.
        *
        * A lista que as setas percorrem é a FAMÍLIA da peça, e não o resultado do
        * filtro que estava na grade. Filtro é estado da outra página; herdá-lo
@@ -397,10 +371,10 @@ function Shell() {
           />
         ) : (
           <Gallery
-            focus={null}
             onFocus={setFocus}
             familia={route.familia}
             onFamilia={setFamilia}
+            onBuscar={abrirBusca}
           />
         ))}
 
@@ -409,11 +383,62 @@ function Shell() {
       <React.Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
         {route.view === "marca" && <BrandStudioBody />}
       </React.Suspense>
-        </div>
-      </div>
 
       <Busca aberto={buscando} onAberto={setBuscando} onEscolher={escolherNaBusca} />
     </div>
+  );
+}
+
+/*
+ * O gatilho do seletor de marca, enxuto por fora.
+ *
+ * O `BrandSelector` é peça publicada: clientes instalam aquele botão com nome,
+ * fonte, versão, amostras e atalho, e está certo para um painel de produto. No
+ * cabeçalho de uma vitrine ele era o controle mais barulhento da tela. Em vez de
+ * editar a peça (o que mudaria o que o `add` entrega), a casa esconde por fora o
+ * que não decide nada aqui: a linha de fonte e versão, as amostras e a tecla.
+ */
+const GATILHO_DE_MARCA = [
+  "h-8 gap-2 !rounded-control !border-0 !bg-transparent !py-0 !pl-1 !pr-2.5 !backdrop-blur-none",
+  "hover:!bg-casa-tile hover:![box-shadow:none] active:!scale-100",
+  "[&>span:first-child]:!h-5 [&>span:first-child]:!w-5 [&>span:first-child]:!rounded-[6px] [&>span:first-child]:!border-0",
+  "[&>span:nth-child(2)>span:last-child]:hidden [&>span:nth-child(2)>span:first-child]:!text-casa-base [&>span:nth-child(2)>span:first-child]:!font-normal",
+  "[&>span:nth-child(3)]:!hidden [&>kbd]:!hidden",
+].join(" ");
+
+/**
+ * As três portas da casa, em texto.
+ *
+ * Eram um `SegmentedControl` (abaixo de `lg`) e uma coluna de sidebar (acima) —
+ * o mesmo controle desenhado duas vezes. Agora são três palavras: a ativa em
+ * tom cheio, as outras no tom de apoio. Sem fundo, sem borda, sem pílula.
+ */
+function Secoes({
+  view,
+  onView,
+  className,
+}: {
+  view: View;
+  onView: (v: View) => void;
+  className?: string;
+}) {
+  return (
+    <nav aria-label="Seção" className={cn("flex items-center gap-5", className)}>
+      {VIEWS.map((v) => (
+        <button
+          key={v.value}
+          type="button"
+          onClick={() => onView(v.value)}
+          aria-current={view === v.value ? "page" : undefined}
+          className={cn(
+            "rounded-control text-casa-base transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+            view === v.value ? "text-casa-fg" : "text-casa-fg-2 hover:text-casa-fg",
+          )}
+        >
+          {v.label}
+        </button>
+      ))}
+    </nav>
   );
 }
 

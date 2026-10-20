@@ -1,0 +1,172 @@
+/*
+ * A casa: os tokens da casca da vitrine.
+ *
+ * Até aqui a casca não tinha identidade própria. O header, a sidebar e os cards
+ * liam `--brand`, `--r-control` e `--r-pill` — tokens que o PRESET DA MARCA do
+ * cliente escreve no `:root`. Trocar para "Vega Noturno" repintava a library
+ * inteira: borda rosa no card ativo, contorno grosso no menu, raio que mudava de
+ * marca pra marca. A vitrine se vestia com o que deveria só estar mostrando.
+ *
+ * A regra agora: a casca lê `--casa-*` e nada mais; a marca aparece só no palco.
+ *
+ * Por que um prefixo próprio, e não reescrever `--background`: as peças do
+ * registry leem as variáveis do preset em `document.documentElement`
+ * (`book-material.ts`, `css-color.ts`). Isolar a marca num wrapper quebraria
+ * essas peças. O preset continua no `:root`, intocado — é contrato de quem
+ * instala — e a casca simplesmente para de ouvi-lo.
+ *
+ * Referência de desenho: Bench (basement.studio). Separação por TOM e ESPAÇO,
+ * nunca por linha; um raio para superfície, um para controle; um destaque só.
+ */
+
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+:root {
+  --casa-bg: oklch(0.985 0 0);
+  --casa-tile: oklch(0.955 0 0);
+  --casa-tile-2: oklch(0.925 0 0);
+  --casa-fg: oklch(0.17 0 0);
+  --casa-fg-2: oklch(0.45 0 0);
+  --casa-fg-3: oklch(0.6 0 0);
+  /* Divisor de painel. Nunca contorno de card. */
+  --casa-line: oklch(0 0 0 / 0.08);
+  /* O único destaque da casa: o botão que instala. */
+  --casa-cta: oklch(0.17 0 0);
+  --casa-cta-fg: oklch(0.985 0 0);
+  --casa-shadow: 0 1px 2px oklch(0 0 0 / 0.06), 0 12px 32px oklch(0 0 0 / 0.12);
+}
+
+.dark {
+  --casa-bg: oklch(0.13 0 0);
+  --casa-tile: oklch(0.195 0 0);
+  --casa-tile-2: oklch(0.24 0 0);
+  --casa-fg: oklch(0.97 0 0);
+  --casa-fg-2: oklch(0.7 0 0);
+  --casa-fg-3: oklch(0.52 0 0);
+  --casa-line: oklch(1 0 0 / 0.07);
+  --casa-cta: oklch(0.98 0 0);
+  --casa-cta-fg: oklch(0.15 0 0);
+  --casa-shadow: 0 1px 2px oklch(0 0 0 / 0.4), 0 16px 40px oklch(0 0 0 / 0.5);
+}
+
+@theme inline {
+  --color-casa-bg: var(--casa-bg);
+  --color-casa-tile: var(--casa-tile);
+  --color-casa-tile-2: var(--casa-tile-2);
+  --color-casa-fg: var(--casa-fg);
+  --color-casa-fg-2: var(--casa-fg-2);
+  --color-casa-fg-3: var(--casa-fg-3);
+  --color-casa-line: var(--casa-line);
+  --color-casa-cta: var(--casa-cta);
+  --color-casa-cta-fg: var(--casa-cta-fg);
+
+  --radius-tile: 20px;
+  --radius-control: 10px;
+
+  --font-casa: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-casa-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  /* Quatro degraus. Pesos 400 e 500, nada acima. */
+  --text-casa-sm: 0.75rem;
+  --text-casa-sm--line-height: 1rem;
+  --text-casa-base: 0.875rem;
+  --text-casa-base--line-height: 1.25rem;
+  --text-casa-lg: 1rem;
+  --text-casa-lg--line-height: 1.5rem;
+  --text-casa-xl: 2rem;
+  --text-casa-xl--line-height: 2.25rem;
+  --text-casa-xl--letter-spacing: -0.02em;
+}
+
+@layer base {
+  body {
+    background: var(--casa-bg);
+  }
+}
+
+@layer components {
+  /*
+   * O escopo da casca.
+   *
+   * Dentro de `.casa`, os tokens que a marca escreve no `:root` são redeclarados
+   * com os valores da casa. Variável declarada no descendente vence a herdada,
+   * seja qual for a especificidade lá em cima — então um `SegmentedControl` ou um
+   * `Chip` do registry usado no cabeçalho sai neutro sem ninguém editar o item.
+   *
+   * O palco NUNCA fica dentro de `.casa`: lá a peça tem de ler a marca.
+   */
+  .casa {
+    --background: var(--casa-bg);
+    --foreground: var(--casa-fg);
+    --card: var(--casa-tile);
+    --card-foreground: var(--casa-fg);
+    --popover: var(--casa-tile);
+    --popover-foreground: var(--casa-fg);
+    --muted: var(--casa-tile);
+    --muted-foreground: var(--casa-fg-2);
+    --secondary: var(--casa-tile-2);
+    --secondary-foreground: var(--casa-fg);
+    --accent: var(--casa-tile-2);
+    --accent-foreground: var(--casa-fg);
+    --border: var(--casa-line);
+    --input: var(--casa-line);
+    --ring: var(--casa-fg-2);
+    --brand: var(--casa-fg);
+    --brand-foreground: var(--casa-bg);
+    --accent-ink: var(--casa-fg);
+    --r-control: 10px;
+    --r-pill: 10px;
+    --r-surface: 20px;
+    --e-flat: none;
+    --e-raised: none;
+    --e-overlay: var(--casa-shadow);
+    --e-modal: var(--casa-shadow);
+    --focus: 0 0 0 2px var(--casa-bg), 0 0 0 4px var(--casa-fg-2);
+    --font-sans: var(--font-casa);
+    --font-display: var(--font-casa);
+    --font-mono: var(--font-casa-mono);
+
+    font-family: var(--font-casa);
+    color: var(--casa-fg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .casa code,
+  .casa kbd,
+  .casa pre,
+  .casa .font-mono {
+    font-family: var(--font-casa-mono);
+  }
+
+  /*
+   * O palco: devolve a voz da marca.
+   *
+   * A casca define a família da página inteira; sem isto a peça herdaria a Geist
+   * em vez da fonte do cliente, e o palco mentiria sobre o que o `add` entrega.
+   */
+  .palco {
+    font-family: var(--font-sans, ui-sans-serif, system-ui);
+    color: var(--foreground);
+    background: var(--background);
+  }
+
+  /* Botão de ícone da casa: sem contorno, o tom é o estado. */
+  .casa-icone {
+    display: inline-grid;
+    place-items: center;
+    height: 2rem;
+    width: 2rem;
+    border-radius: var(--radius-control);
+    color: var(--casa-fg-2);
+    transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+  }
+  .casa-icone:hover {
+    color: var(--casa-fg);
+    background: var(--casa-tile);
+  }
+  .casa-icone[aria-pressed="true"] {
+    color: var(--casa-fg);
+    background: var(--casa-tile-2);
+  }
+}

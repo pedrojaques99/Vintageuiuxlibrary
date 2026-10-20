@@ -34,9 +34,20 @@
  */
 
 import * as React from "react";
-import { Check, ChevronLeft, ChevronRight, Copy, Monitor, Smartphone, Tablet, X } from "lucide-react";
+import {
+  Box,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Code2,
+  Copy,
+  ListTree,
+  Monitor,
+  Smartphone,
+  Tablet,
+  X,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import { FitStage, useElementWidth } from "./stage";
 import { MSG_ALTURA, MSG_PROPS } from "./Solo";
 import {
@@ -48,14 +59,14 @@ import {
   type ValorDeKnob,
 } from "./controls";
 import { useBrandTheme } from "@/lib/brand-theme";
-import { TYPE_LABEL, familyLabel, previewOf, stageSurfaceOf, type CatalogItem } from "./catalog";
+import { previewOf, stageSurfaceOf, type CatalogItem } from "./catalog";
 import { useCopy } from "./copy-command";
 import { Instalar } from "./instalar";
 import { CopiarPraIA } from "./copiar-pra-ia";
 import { DepResumo } from "./dep-badges";
-import { ehNovo } from "./novidades";
 import { CodigoDoItem, TabelaDeProps } from "./ItemDocs";
 import { Codigo } from "./codigo";
+import { BugButton } from "./bug-report";
 
 /** Larguras de teste. `0` = o que couber na tela. */
 const VIEWPORTS = [
@@ -71,9 +82,9 @@ type ViewportKey = (typeof VIEWPORTS)[number]["value"];
  * como se escreve, o que aceita.
  */
 const ABAS = [
-  { value: "demo" as const, label: "Demo" },
-  { value: "codigo" as const, label: "Código" },
-  { value: "props" as const, label: "Props" },
+  { value: "demo" as const, rotulo: "Peça", icon: Box },
+  { value: "codigo" as const, rotulo: "Código", icon: Code2 },
+  { value: "props" as const, rotulo: "Props", icon: ListTree },
 ];
 
 type Aba = (typeof ABAS)[number]["value"];
@@ -149,7 +160,7 @@ function SoloFrame({
 
   return (
     <div
-      className="overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card"
+      className="overflow-hidden rounded-control"
       // A caixa encolhe junto com a escala, senão sobra um buraco do tamanho da
       // diferença embaixo da peça.
       style={{ width: largura * escala, height: altura * escala }}
@@ -177,10 +188,9 @@ function SoloFrame({
  * O código que escreve a peça do jeito que ela está no palco agora.
  *
  * É a diferença entre uma vitrine e um catálogo: a pessoa mexeu até chegar no
- * que queria, e a linha pra colar no projeto já está pronta ali — sem ela ter
- * de traduzir de cabeça três knobs em três props. Só o que fugiu do padrão
- * aparece; despejar as nove props com o valor que o componente já tem faria
- * quem colasse congelar padrões que deveriam continuar chegando de graça.
+ * que queria, e a linha pra colar no projeto já está pronta — sem traduzir de
+ * cabeça três knobs em três props. Só o que fugiu do padrão aparece. Mora no
+ * topo da aba de código, que é onde quem quer código vai procurar.
  */
 function UsoAoVivo({
   componente,
@@ -195,22 +205,50 @@ function UsoAoVivo({
   const { done, copy } = useCopy(codigo);
 
   return (
-    <div className="overflow-hidden rounded-[var(--r-control,0.5rem)] border border-border">
-      <div className="flex items-center gap-2 border-b border-border bg-muted/20 px-3 py-1.5">
-        <span className="font-mono text-micro uppercase tracking-wider text-muted-foreground">
-          uso
-        </span>
+    <div className="mx-5 mt-5 rounded-control bg-casa-tile-2 sm:mx-6">
+      <div className="flex items-center gap-2 pl-4 pr-1 pt-1">
+        <span className="text-casa-sm text-casa-fg-3">Com os seus ajustes</span>
         <button
           type="button"
           onClick={copy}
-          className="ml-auto flex items-center gap-1.5 font-mono text-micro text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] hover:text-foreground"
+          aria-label={done ? "Copiado" : "Copiar"}
+          title="Copiar"
+          className="casa-icone alvo-toque ml-auto"
         >
-          {done ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-          {done ? "copiado" : "copiar"}
+          {done ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
         </button>
       </div>
-      <Codigo codigo={codigo} className="px-3 py-2" />
+      <Codigo codigo={codigo} className="px-4 pb-3" />
     </div>
+  );
+}
+
+/** Botão de ícone num grupo sobre o palco: o ativo é um tom acima. */
+function IconeDoPalco({
+  ativo,
+  onClick,
+  rotulo,
+  children,
+}: {
+  ativo: boolean;
+  onClick: () => void;
+  rotulo: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={ativo}
+      aria-label={rotulo}
+      title={rotulo}
+      className={cn(
+        "alvo-toque grid h-8 w-8 place-items-center rounded-[8px] transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+        ativo ? "bg-casa-tile-2 text-casa-fg" : "text-casa-fg-3 hover:text-casa-fg",
+      )}
+    >
+      {children}
+    </button>
   );
 }
 
@@ -240,7 +278,7 @@ export function ComponentFocus({
   const controles = controlesDe(item.name, item.knobs);
   const knobs = useKnobs(controles?.controles ?? []);
 
-  // Setas percorrem o catálogo. Ignoradas enquanto alguém digita dentro da demo —
+  // Setas percorrem a família. Ignoradas enquanto alguém digita dentro da demo —
   // várias peças aqui têm input, e roubar a seta do cursor seria hostil.
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -254,8 +292,7 @@ export function ComponentFocus({
         e.preventDefault();
         onNext();
       }
-      // `Esc` era o "fechar" do diálogo. Como página ele continua existindo, e
-      // continua indo pro mesmo lugar — a categoria de onde a peça foi aberta.
+      // `Esc` volta pra categoria de onde a peça foi aberta.
       if (e.key === "Escape") {
         e.preventDefault();
         onClose();
@@ -266,252 +303,178 @@ export function ComponentFocus({
   }, [onPrev, onNext, onClose]);
 
   const preset = VIEWPORTS.find((v) => v.value === viewport)!;
-  const frameW = preset.px || Math.max(available, 320);
+  // O palco tem respiro de 32px de cada lado; a peça mede o que sobra.
+  const util = Math.max(available - 64, 0);
+  const frameW = preset.px || Math.max(util, 320);
   const frameH = Math.max(natural.h, MIN_STAGE_H);
 
   return (
     <article
-      /* Âncora única da ficha. `article` sozinho não serve mais: os cards da
-         grade também são `article`, e um seletor que casa com os dois não
-         consegue provar que a ficha FECHOU. */
+      /* Âncora única da ficha: os cards da grade também são `article`. */
       data-ficha={item.name}
       aria-labelledby="ficha-titulo"
       /*
-       * `min-w-0` em cada nível que é `flex-1`.
-       *
-       * O diálogo era `fixed inset-0` e a largura vinha da janela. Como página,
-       * a largura vem do pai — e item de flex nasce com `min-width: auto`, que
-       * significa "não encolho abaixo do meu conteúdo". O palco de 1370px então
-       * empurrava a ficha inteira pra fora da tela: barra de rolagem horizontal
-       * na página e a coluna da direita cortada ao meio.
+       * `min-w-0` em cada nível que é `flex-1`: item de flex nasce com
+       * `min-width: auto`, e o palco de 1370px empurraria a ficha inteira pra
+       * fora da tela.
        */
-      className="flex min-h-[calc(100dvh-var(--shell-header-h))] min-w-0 flex-col"
+      className="shell flex min-w-0 flex-col gap-3 py-4 lg:flex-row lg:items-start"
     >
-          {/* cabeçalho */}
-          <div className="sticky top-[var(--shell-header-h)] z-20 flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border bg-background/85 px-4 py-3 backdrop-blur-xl sm:px-5">
-            <h1 id="ficha-titulo" className="font-mono text-corpo">
-              {item.name}
-            </h1>
-            <span className="rounded-full border border-border px-1.5 py-px font-mono text-micro uppercase tracking-wider text-muted-foreground">
-              {TYPE_LABEL[item.type]}
-            </span>
-            <span className="hidden text-rotulo text-muted-foreground sm:inline">
-              {familyLabel(item.family)}
-            </span>
+      {/*
+       * O palco: um ladrilho grande, no fundo da MARCA (`.palco`) quando mostra a
+       * peça, e no tom da casa quando mostra código ou props.
+       *
+       * Os controles do palco (o que ver, largura de teste) flutuam no canto,
+       * dentro dele, como no Bench — em vez de duas barras de cromo empilhadas
+       * acima da peça.
+       */}
+      <section
+        ref={stageRef}
+        className={cn(
+          "relative min-w-0 flex-1 overflow-hidden rounded-tile",
+          aba === "demo" && Demo ? "palco" : "casa bg-casa-tile",
+        )}
+        style={aba === "demo" && Demo ? stageSurfaceOf(item) : undefined}
+      >
+        <div className="casa pointer-events-none absolute inset-x-3 top-3 z-10 flex items-start justify-between gap-2">
+          <div className="pointer-events-auto flex gap-0.5 rounded-[12px] bg-casa-bg p-1">
+            {ABAS.filter((a) => a.value !== "demo" || Demo).map(({ value, rotulo, icon: Icone }) => (
+              <IconeDoPalco key={value} ativo={aba === value} onClick={() => setAba(value)} rotulo={rotulo}>
+                <Icone className="h-4 w-4" />
+              </IconeDoPalco>
+            ))}
+          </div>
 
-            <div className="ml-auto flex items-center gap-1">
-              <CopiarPraIA
+          {aba === "demo" && Demo ? (
+            <div className="pointer-events-auto flex gap-0.5 rounded-[12px] bg-casa-bg p-1">
+              {VIEWPORTS.map(({ value, ariaLabel, icon: Icone }) => (
+                <IconeDoPalco
+                  key={value}
+                  ativo={viewport === value}
+                  onClick={() => setViewport(value)}
+                  rotulo={ariaLabel}
+                >
+                  <Icone className="h-4 w-4" />
+                </IconeDoPalco>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
+        {aba === "codigo" ? (
+          <div className="pt-12">
+            <CodigoDoItem
+              name={item.name}
+              antes={
+                controles && knobs.sujo ? (
+                  <UsoAoVivo
+                    componente={item.knobs!}
+                    controles={controles.controles}
+                    props={knobs.props}
+                  />
+                ) : null
+              }
+            />
+          </div>
+        ) : null}
+
+        {aba === "props" ? (
+          <div className="overflow-auto pt-12">
+            <TabelaDeProps name={item.name} />
+          </div>
+        ) : null}
+
+        {aba === "demo" && Demo ? (
+          <div
+            /*
+             * O palco cresce com a peça, com piso — não com a tela. Esticar até
+             * o fim da viewport dava 200px de vazio em cima de peça pequena.
+             */
+            className="flex min-h-[min(72vh,640px)] items-center justify-center overflow-auto px-8 pb-8 pt-16"
+          >
+            {preset.px ? (
+              /*
+               * Preset de largura = iframe, sem discussão: media query lê o
+               * viewport, não o container. Com `scale` a peça encolhia na tela e
+               * `sm:` continuava valendo dentro do "celular". O iframe tem
+               * viewport próprio; quando não cabe, encolhe inteiro por
+               * `transform` e a largura INTERNA continua a do preset.
+               */
+              <SoloFrame
                 item={item}
-                controles={controles?.controles ?? []}
+                largura={preset.px}
+                escala={Math.min(1, (util || preset.px) / preset.px)}
+                alturaMinima={MIN_STAGE_H}
                 props={knobs.props}
               />
-              <span className="mx-1 hidden font-mono text-rotulo tabular-nums text-muted-foreground sm:inline">
-                {index + 1}/{total}
-              </span>
-              <button
-                type="button"
-                onClick={onPrev}
-                aria-label="Item anterior"
-                className="alvo-toque grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={onNext}
-                aria-label="Próximo item"
-                className="alvo-toque grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Voltar para a categoria"
-                className="alvo-toque ml-1 grid h-8 w-8 place-items-center rounded-[var(--r-control,0.5rem)] border border-border text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:text-foreground"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
+            ) : (
+              <div style={{ width: Math.min(frameW, util || frameW) }}>
+                {/* Escala só entra quando a peça não cabe — nunca amplia. */}
+                <FitStage w={frameW} h={frameH} maxScale={1}>
+                  <React.Suspense fallback={<div className="h-full w-full" />}>
+                    <Demo props={knobs.props} />
+                  </React.Suspense>
+                </FitStage>
+              </div>
+            )}
           </div>
+        ) : null}
+      </section>
 
-          <div className="flex min-h-0 min-w-0 flex-1">
-            <div className="flex min-h-0 min-w-0 flex-1 flex-col lg:flex-row">
-            {/* palco / código / props */}
-            <div className="flex min-w-0 flex-1 flex-col">
-              <div className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-2 sm:px-5">
-                <SegmentedControl
-                  value={aba}
-                  onChange={setAba}
-                  aria-label="O que ver deste item"
-                  className="w-full max-w-[300px]"
-                  options={ABAS}
-                />
-              </div>
-
-              {/* O código tem altura própria: como página, a lista de arquivos
-                  rola com o documento em vez de ter a barra dela. */}
-              {aba === "codigo" ? <CodigoDoItem name={item.name} /> : null}
-              {aba === "props" ? (
-                <div className="min-h-0 flex-1 overflow-auto">
-                  <TabelaDeProps name={item.name} />
-                </div>
-              ) : null}
-
-              {aba === "demo" && Demo ? (
-                <>
-                  <div className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-2 sm:px-5">
-                    <SegmentedControl
-                      value={viewport}
-                      onChange={setViewport}
-                      variant="compact"
-                      aria-label="Largura de teste"
-                      options={VIEWPORTS}
-                    />
-                    <span className="ml-auto font-mono text-micro tabular-nums text-muted-foreground">
-                      {Math.round(Math.min(frameW, available || frameW))}px
-                    </span>
-                  </div>
-
-                  <div
-                    ref={stageRef}
-                    /*
-                     * O palco cresce com a peça, não com a tela.
-                     *
-                     * Como diálogo ele era `flex-1` dentro de uma caixa de
-                     * altura fixa, e esticar preenchia o que sobrava. Como
-                     * página, `flex-1` dentro de `min-h-screen` esticou o palco
-                     * até o fim da tela: o `quote-block` ficava com 200px de
-                     * vazio em cima e 120 embaixo, e o painel de controles caía
-                     * inteiro abaixo da dobra. Piso, e não esticão.
-                     */
-                    className="flex min-h-[24rem] items-start justify-center overflow-auto p-4 sm:p-8"
-                    style={{
-                      backgroundImage:
-                        "radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0)",
-                      backgroundSize: "18px 18px",
-                    }}
-                  >
-                    {preset.px ? (
-                      /*
-                       * Preset de largura = iframe, sem discussão.
-                       *
-                       * A versão anterior desenhava a peça no tamanho declarado e
-                       * aplicava `scale` para caber em 360px. Isso muda o tamanho
-                       * na tela e NÃO muda nada para o CSS: media query lê o
-                       * viewport, não o container — com a janela em 1440, `sm:`
-                       * continuava valendo dentro do "celular". A barra do
-                       * `cta-surface` não empilhava no preset de 360 e o título
-                       * espremia em cinco linhas: o palco é que estava mentindo.
-                       *
-                       * O iframe tem viewport próprio, então o breakpoint vale. E
-                       * quando o preset não cabe na tela, quem encolhe é o iframe
-                       * inteiro por `transform` — a largura INTERNA continua 360,
-                       * então a peça segue reagindo como reagiria no celular.
-                       */
-                      <SoloFrame
-                        item={item}
-                        largura={preset.px}
-                        escala={Math.min(1, (available || preset.px) / preset.px)}
-                        alturaMinima={MIN_STAGE_H}
-                        props={knobs.props}
-                      />
-                    ) : (
-                      <div
-                        className="overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card"
-                        style={{
-                          width: Math.min(frameW, available || frameW),
-                          ...stageSurfaceOf(item),
-                        }}
-                      >
-                        {/* Escala só entra quando o preset não cabe — nunca amplia. */}
-                        <FitStage w={frameW} h={frameH} maxScale={1}>
-                          <React.Suspense fallback={<div className="h-full w-full animate-pulse bg-muted/40" />}>
-                            <Demo props={knobs.props} />
-                          </React.Suspense>
-                        </FitStage>
-                      </div>
-                    )}
-                  </div>
-
-                  {/*
-                   * O painel vem DEPOIS do palco, sempre.
-                   *
-                   * Knob antes da peça é a página se explicando em vez de se
-                   * mostrar: a pessoa chega pra ver o componente e encontra um
-                   * formulário. Aqui o primeiro pixel abaixo da barra de largura
-                   * é a peça rodando, e o painel espera embaixo pra quem quer
-                   * mexer.
-                   */}
-                  {controles ? (
-                    <div className="shrink-0 space-y-3 border-t border-border p-4 sm:p-5">
-                      <Customize
-                        controles={controles.controles}
-                        presets={controles.presets}
-                        {...knobs}
-                      />
-                      <UsoAoVivo
-                        componente={item.knobs!}
-                        controles={controles.controles}
-                        props={knobs.props}
-                      />
-                    </div>
-                  ) : null}
-                </>
-              ) : null}
-
-              {aba === "demo" && !Demo ? (
-                <div className="grid flex-1 place-items-center p-10 text-center">
-                  <p className="max-w-sm text-corpo leading-relaxed text-muted-foreground">
-                    Este item não tem superfície visual própria. É{" "}
-                    <span className="font-mono">{TYPE_LABEL[item.type]}</span>. O que ele entrega
-                    está na aba de código.
-                  </p>
-                </div>
-              ) : null}
-            </div>
-
-            {/* ficha */}
-            <aside className="shrink-0 space-y-4 border-t border-border p-4 sm:p-5 lg:w-[300px] lg:border-l lg:border-t-0 xl:w-[320px]">
-              <div>
-                <h2
-                  className="text-titulo font-semibold tracking-[-0.02em]"
-                  style={{ fontFamily: "var(--font-display, inherit)" }}
-                >
-                  {item.title}
-                </h2>
-                <p className="mt-2 text-corpo leading-relaxed text-muted-foreground">
-                  {item.description}
-                </p>
-              </div>
-
-              <Instalar name={item.name} />
-
-              {/* Logo abaixo do comando, de propósito: a conta do que esse `add`
-                  traz junto tem de estar do lado do gesto de instalar, não no
-                  fim da ficha, depois das tags. */}
-              <DepResumo name={item.name} className="border-t border-border pt-4" />
-
-              <div className="flex flex-wrap gap-1.5">
-                {item.tags.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-[var(--r-pill,9999px)] border border-border px-2 py-0.5 text-rotulo text-muted-foreground"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-
-              <p className="text-rotulo leading-relaxed text-muted-foreground">
-                <kbd className="rounded border border-border px-1 font-mono">←</kbd>{" "}
-                <kbd className="rounded border border-border px-1 font-mono">→</kbd> percorre o
-                catálogo · <kbd className="rounded border border-border px-1 font-mono">Esc</kbd>{" "}
-                volta pra grade
-              </p>
-            </aside>
-            </div>
+      {/*
+       * O painel da peça, no modelo do Bench: nome e fechar no topo, uma frase,
+       * os controles, e as duas ações no pé — o destaque único é o comando de
+       * instalar. Gruda no topo enquanto o palco rola.
+       */}
+      <aside className="casa flex w-full shrink-0 flex-col gap-5 rounded-tile bg-casa-tile p-5 lg:sticky lg:top-[calc(var(--shell-header-h)+1rem)] lg:min-h-[min(72vh,640px)] lg:w-[340px]">
+        <header className="flex items-start gap-2">
+          <h1 id="ficha-titulo" className="min-w-0 flex-1 pt-1 text-casa-lg font-medium">
+            {item.title}
+          </h1>
+          <div className="-mr-1.5 -mt-0.5 flex shrink-0 items-center">
+            <BugButton item={item.name} />
+            <button
+              type="button"
+              onClick={onPrev}
+              aria-label="Peça anterior"
+              title={`Anterior (${index + 1} de ${total})`}
+              className="casa-icone alvo-toque"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={onNext}
+              aria-label="Próxima peça"
+              title={`Próxima (${index + 1} de ${total})`}
+              className="casa-icone alvo-toque"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Voltar pra grade"
+              title="Voltar pra grade"
+              className="casa-icone alvo-toque"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
+        </header>
+
+        <p className="-mt-3 text-casa-base text-casa-fg-2">{item.description}</p>
+
+        {controles && aba === "demo" ? (
+          <Customize controles={controles.controles} presets={controles.presets} {...knobs} />
+        ) : null}
+
+        <div className="mt-auto space-y-3">
+          <DepResumo name={item.name} />
+          <CopiarPraIA item={item} controles={controles?.controles ?? []} props={knobs.props} />
+          <Instalar name={item.name} />
+        </div>
+      </aside>
     </article>
   );
 }

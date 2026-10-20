@@ -30,7 +30,7 @@ import * as React from "react";
 import { RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
-import { Slider } from "@/components/ui/slider";
+import * as SliderPrimitive from "@radix-ui/react-slider";
 import controlesGerados from "./controls.generated.json";
 
 export type ValorDeKnob = string | number | boolean;
@@ -122,10 +122,14 @@ export const valorAtual = (c: Controle, props: Record<string, ValorDeKnob>) => {
 
 /* ────────────────────────────────────────────────────────────────────────── */
 
-function Rotulo({ controle }: { controle: Controle }) {
+function Rotulo({ controle, mexido }: { controle: Controle; mexido: boolean }) {
   return (
     <span
-      className="font-mono text-rotulo text-foreground"
+      className={cn(
+        "min-w-0 truncate text-casa-base transition-colors [transition-duration:var(--dur-fast)]",
+        // Mexido em tom cheio, padrão em tom de apoio: o estado sem moldura.
+        mexido ? "text-casa-fg" : "text-casa-fg-2",
+      )}
       title={controle.resumo ?? undefined}
     >
       {controle.rotulo ?? controle.prop}
@@ -150,49 +154,65 @@ function Chave({
       aria-label={controle.prop}
       onClick={() => onChange(!valor)}
       className={cn(
-        "relative h-5 w-9 shrink-0 rounded-full border transition-colors",
+        // casa-lint/pilula: interruptor é trilho; a forma redonda é o que diz que ele desliza
+        "relative h-5 w-9 shrink-0 rounded-full transition-colors",
         "[transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-        // Marca como fundo e borda, nunca como cor de texto: `--brand` sobre o
-        // papel claro dá 1,29:1, e isso some pra quem lê.
-        valor ? "border-[var(--brand)] bg-[var(--brand)]" : "border-border bg-muted",
+        valor ? "bg-casa-fg" : "bg-casa-tile-2",
       )}
     >
       <span
         className={cn(
-          "absolute top-1/2 block h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-background shadow-sm transition-[left]",
+          // casa-lint/pilula: o botão do interruptor acompanha o trilho redondo
+          "absolute top-1/2 block h-3.5 w-3.5 -translate-y-1/2 rounded-full transition-[left]",
           "[transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-          valor ? "left-[1.125rem]" : "left-0.5",
+          valor ? "left-[1.125rem] bg-casa-tile" : "left-0.5 bg-casa-fg-2",
         )}
       />
     </button>
   );
 }
 
+/**
+ * O número é uma barra que se enche, com o nome dentro.
+ *
+ * Rótulo, trilho e valor em três colunas davam três coisas pra ler por knob.
+ * Aqui é uma: a própria barra é o controle, o nome fica à esquerda dentro dela e
+ * o valor à direita. Radix por baixo — teclado, toque e `aria-valuenow` vêm de
+ * graça; só o desenho é da casa.
+ */
 function Numero({
   controle,
   valor,
+  mexido,
   onChange,
 }: {
   controle: Controle;
   valor: number;
+  mexido: boolean;
   onChange: (v: number) => void;
 }) {
   const { min = 0, max = 100, step = 1 } = controle;
   return (
-    <div className="flex flex-1 items-center gap-2">
-      <Slider
-        value={[valor]}
-        min={min}
-        max={max}
-        step={step}
-        onValueChange={([v]) => onChange(v)}
-        aria-label={controle.prop}
-        className="flex-1"
-      />
-      <span className="w-10 shrink-0 text-right font-mono text-micro tabular-nums text-muted-foreground">
-        {Number.isInteger(step) ? valor : valor.toFixed(2)}
+    <SliderPrimitive.Root
+      value={[valor]}
+      min={min}
+      max={max}
+      step={step}
+      onValueChange={([v]) => onChange(v)}
+      aria-label={controle.prop}
+      className="group/barra relative flex h-10 w-full cursor-ew-resize touch-none select-none items-center overflow-hidden rounded-control bg-casa-tile-2"
+    >
+      <SliderPrimitive.Track className="absolute inset-0">
+        <SliderPrimitive.Range className="absolute inset-y-0 bg-[color-mix(in_oklch,var(--casa-fg)_14%,transparent)]" />
+      </SliderPrimitive.Track>
+      <SliderPrimitive.Thumb className="block h-10 w-0.5 bg-casa-fg-3 outline-none transition-colors [transition-duration:var(--dur-fast)] group-hover/barra:bg-casa-fg-2 focus-visible:bg-casa-fg" />
+      <span className="pointer-events-none absolute inset-x-3 flex items-center justify-between gap-3">
+        <Rotulo controle={controle} mexido={mexido} />
+        <span className="shrink-0 text-casa-base tabular-nums text-casa-fg">
+          {Number.isInteger(step) ? valor : valor.toFixed(2)}
+        </span>
       </span>
-    </div>
+    </SliderPrimitive.Root>
   );
 }
 
@@ -227,7 +247,7 @@ function Escolha({
       value={valor}
       onChange={(e) => onChange(e.target.value)}
       aria-label={controle.prop}
-      className="min-w-0 flex-1 rounded-[var(--r-control,0.5rem)] border border-border bg-background px-2 py-1 font-mono text-rotulo text-foreground"
+      className="h-8 min-w-0 max-w-[60%] rounded-control bg-casa-tile-2 px-2.5 text-casa-sm text-casa-fg outline-none"
     >
       {valores.map((v) => (
         <option key={v} value={v}>
@@ -253,7 +273,7 @@ function Texto({
       value={valor}
       onChange={(e) => onChange(e.target.value)}
       aria-label={controle.prop}
-      className="min-w-0 flex-1 rounded-[var(--r-control,0.5rem)] border border-border bg-background px-2 py-1 font-mono text-rotulo text-foreground"
+      className="h-8 w-28 min-w-0 shrink-0 rounded-control bg-casa-tile-2 px-2.5 text-casa-sm text-casa-fg outline-none"
     />
   );
 }
@@ -270,27 +290,25 @@ function Linha({
   const valor = valorAtual(controle, props);
   const mexido = controle.prop in props;
 
+  if (controle.tipo === "numero") {
+    return (
+      <Numero
+        controle={controle}
+        valor={Number(valor)}
+        mexido={mexido}
+        onChange={(v) => set(controle.prop, v)}
+      />
+    );
+  }
+
   return (
-    <div
-      className={cn(
-        "flex items-center gap-3 rounded-[var(--r-control,0.5rem)] border px-3 py-2 transition-colors",
-        "[transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-        mexido ? "border-[var(--brand)] bg-muted/30" : "border-border",
-      )}
-    >
-      <Rotulo controle={controle} />
-      <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-2">
+    <div className="flex min-h-10 items-center gap-3">
+      <Rotulo controle={controle} mexido={mexido} />
+      <div className="ml-auto flex min-w-0 items-center justify-end">
         {controle.tipo === "chave" && (
           <Chave
             controle={controle}
             valor={Boolean(valor)}
-            onChange={(v) => set(controle.prop, v)}
-          />
-        )}
-        {controle.tipo === "numero" && (
-          <Numero
-            controle={controle}
-            valor={Number(valor)}
             onChange={(v) => set(controle.prop, v)}
           />
         )}
@@ -318,6 +336,9 @@ function Linha({
  *
  * Prop pública nunca some do painel — some da *primeira tela*. Esconder de vez
  * seria a vitrine mentindo por omissão sobre o que a peça aceita.
+ *
+ * Sem título "Controles": um slider com nome não precisa de cabeçalho dizendo
+ * que é controle.
  */
 export function Customize({
   controles,
@@ -349,63 +370,58 @@ export function Customize({
   );
 
   return (
-    <section className={cn("flex flex-col gap-3", className)}>
-      <div className="flex flex-wrap items-center gap-2">
-        <h3 className="font-mono text-rotulo uppercase tracking-wider text-muted-foreground">
-          Controles
-        </h3>
+    <section className={cn("flex flex-col gap-2", className)}>
+      {presets.length || sujo ? (
+        <div className="flex min-h-8 flex-wrap items-center gap-x-4 gap-y-1">
+          {presets.map((p) => (
+            <button
+              key={p.nome}
+              type="button"
+              onClick={() => aplicar(p.props)}
+              aria-pressed={presetAtivo?.nome === p.nome}
+              className={cn(
+                "rounded-control text-casa-base transition-colors",
+                "[transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+                presetAtivo?.nome === p.nome ? "text-casa-fg" : "text-casa-fg-2 hover:text-casa-fg",
+              )}
+            >
+              {p.nome}
+            </button>
+          ))}
 
-        {presets.map((p) => (
-          <button
-            key={p.nome}
-            type="button"
-            onClick={() => aplicar(p.props)}
-            className={cn(
-              "rounded-full border px-2.5 py-0.5 text-rotulo transition-colors",
-              "[transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-              presetAtivo?.nome === p.nome
-                ? "border-[var(--brand)] bg-[var(--brand)]/10 text-foreground"
-                : "border-border text-muted-foreground hover:border-[var(--brand)] hover:text-foreground",
-            )}
-          >
-            {p.nome}
-          </button>
-        ))}
+          {sujo ? (
+            <button
+              type="button"
+              onClick={limpar}
+              aria-label="Restaurar o padrão"
+              title="Restaurar o padrão"
+              className="casa-icone alvo-toque ml-auto"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
-        {sujo ? (
-          <button
-            type="button"
-            onClick={limpar}
-            className="ml-auto flex items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2 py-1 font-mono text-micro text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground"
-          >
-            <RotateCcw className="h-3 w-3" />
-            restaurar
-          </button>
-        ) : null}
-      </div>
-
-      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-        {destaque.map((c) => (
-          <Linha key={c.prop} controle={c} props={props} set={set} />
-        ))}
-        {abertoExtra
-          ? extras.map((c) => <Linha key={c.prop} controle={c} props={props} set={set} />)
-          : null}
-      </div>
+      {destaque.map((c) => (
+        <Linha key={c.prop} controle={c} props={props} set={set} />
+      ))}
+      {abertoExtra
+        ? extras.map((c) => <Linha key={c.prop} controle={c} props={props} set={set} />)
+        : null}
 
       {extras.length ? (
         <button
           type="button"
           onClick={() => setAbertoExtra((v) => !v)}
-          className="self-start font-mono text-rotulo text-muted-foreground underline underline-offset-4 transition-colors [transition-duration:var(--dur-fast)] hover:text-foreground"
+          className="self-start rounded-control py-1 text-casa-sm text-casa-fg-2 transition-colors [transition-duration:var(--dur-fast)] hover:text-casa-fg"
         >
-          {abertoExtra ? "menos controles" : `mais ${extras.length} controles`}
+          {abertoExtra ? "Menos controles" : `Mais ${extras.length} controles`}
         </button>
       ) : null}
     </section>
   );
 }
-
 /* ────────────────────────────────────────────────────────────────────────── */
 
 /**

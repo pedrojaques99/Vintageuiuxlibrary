@@ -20,7 +20,6 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import { CopyCommand } from "./copy-command";
 import {
   GERENCIADORES,
@@ -66,47 +65,51 @@ export function Instalar({ name, className }: { name: string; className?: string
   const [modo, setModo] = React.useState<Modo>("cli");
   const [gerenciador, setGerenciador] = useGerenciador();
 
+  /*
+   * Uma linha de palavras e o comando. O gerenciador é texto, não segmentado:
+   * quatro palavras curtas que ninguém precisa ler duas vezes. "Manual" fica no
+   * canto, no tom mais baixo — é a porta de quem não tem `components.json`.
+   */
   return (
     <section className={cn("space-y-2", className)}>
-      <div className="flex items-center gap-2">
-        <h3 className="font-mono text-micro uppercase tracking-wider text-muted-foreground">
-          instalar
-        </h3>
-        <SegmentedControl
-          value={modo}
-          onChange={setModo}
-          size="sm"
-          aria-label="Como instalar"
-          className="ml-auto"
-          options={[
-            { value: "cli" as const, label: "CLI" },
-            { value: "manual" as const, label: "manual" },
-          ]}
-        />
+      <div className="flex items-center gap-4">
+        {modo === "cli"
+          ? GERENCIADORES.map((g) => (
+              <button
+                key={g}
+                type="button"
+                onClick={() => setGerenciador(g)}
+                aria-pressed={gerenciador === g}
+                className={cn(
+                  "rounded-control text-casa-sm transition-colors [transition-duration:var(--dur-fast)]",
+                  gerenciador === g ? "text-casa-fg" : "text-casa-fg-3 hover:text-casa-fg",
+                )}
+              >
+                {g}
+              </button>
+            ))
+          : null}
+        <button
+          type="button"
+          onClick={() => setModo(modo === "cli" ? "manual" : "cli")}
+          className="ml-auto rounded-control text-casa-sm text-casa-fg-3 transition-colors [transition-duration:var(--dur-fast)] hover:text-casa-fg"
+        >
+          {modo === "cli" ? "Manual" : "Pela CLI"}
+        </button>
       </div>
 
       {modo === "cli" ? (
-        <>
-          <SegmentedControl
-            value={gerenciador}
-            onChange={setGerenciador}
-            size="sm"
-            aria-label="Gerenciador de pacotes"
-            options={GERENCIADORES.map((g) => ({ value: g, label: g }))}
-          />
-          <CopyCommand text={installCommandFor(name, gerenciador)} />
-        </>
+        <CopyCommand variant="cta" text={installCommandFor(name, gerenciador)} />
       ) : (
         <div className="space-y-2">
-          <p className="text-rotulo leading-relaxed text-muted-foreground">
-            Sem <span className="font-mono">components.json</span>: os arquivos estão na aba
-            Código, prontos pra colar. O JSON do item também é público —
+          <p className="text-casa-sm text-casa-fg-2">
+            Sem <code>components.json</code>, os arquivos estão na aba de código, prontos pra
+            colar. O JSON do item também é público:
           </p>
           <CopyCommand text={registryItemUrl(name, REGISTRY_PUBLIC_URL)} />
-          <p className="text-rotulo leading-relaxed text-muted-foreground">
-            Pra usar o <span className="font-mono">{REGISTRY_NAMESPACE}</span> nos próximos, aponte
-            o <span className="font-mono">components.json</span> pra{" "}
-            <span className="font-mono">{REGISTRY_PUBLIC_LABEL}</span>.
+          <p className="text-casa-sm text-casa-fg-2">
+            Pra usar o <code>{REGISTRY_NAMESPACE}</code> nos próximos, aponte o{" "}
+            <code>components.json</code> pra <code>{REGISTRY_PUBLIC_LABEL}</code>.
           </p>
         </div>
       )}
