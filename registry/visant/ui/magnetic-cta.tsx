@@ -147,6 +147,26 @@ export function MagneticCta({
 
   const Comp = asChild ? Slot : "button";
 
+  const brilho =
+    sheen && variant === "solid" ? (
+      <span aria-hidden="true" className="magnet-sheen pointer-events-none absolute inset-0 -z-10" />
+    ) : null;
+  const rotulo = (filhos: React.ReactNode) => (
+    <span className="magnet-label inline-flex items-center gap-2">{filhos}</span>
+  );
+  // Slot exige UM filho. Com asChild o brilho e o rótulo entram DENTRO do
+  // elemento do consumidor (o <a>), em vez de irmãos dele: senão o Slot recebe
+  // dois filhos e quebra, ou fatia o rótulo como se fosse o link.
+  const content =
+    asChild && React.isValidElement<{ children?: React.ReactNode }>(children)
+      ? React.cloneElement(children, undefined, brilho, rotulo(children.props.children))
+      : (
+          <>
+            {brilho}
+            {rotulo(children)}
+          </>
+        );
+
   React.useEffect(() => {
     const host = fieldRef.current;
     if (!host || disabled) return;
@@ -273,13 +293,7 @@ export function MagneticCta({
         )}
         {...props}
       >
-        {sheen && variant === "solid" && (
-          <span
-            aria-hidden="true"
-            className="magnet-sheen pointer-events-none absolute inset-0 -z-10"
-          />
-        )}
-        <span className="magnet-label inline-flex items-center gap-2">{children}</span>
+        {content}
       </Comp>
     </span>
   );
