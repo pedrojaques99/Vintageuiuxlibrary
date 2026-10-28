@@ -3156,6 +3156,68 @@
       ]
     }
   ],
+  "tempo-clock": [
+    {
+      "nome": "createTempoClock",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "bpm",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "decay",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Quão rápido o envelope cai (maior = mais seco)."
+        },
+        {
+          "nome": "div",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "1 = semínima, 2 = colcheia, 4 = semicolcheia.",
+          "valores": [
+            "1",
+            "2",
+            "4"
+          ]
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        },
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": null
+        }
+      ]
+    }
+  ],
+  "fader": [
+    {
+      "nome": "definirFader",
+      "descricao": "Registra o `<visant-fader>` (uma vez só, mesmo chamado várias vezes).",
+      "props": []
+    }
+  ],
+  "tempo-bar": [
+    {
+      "nome": "definirTempoBar",
+      "descricao": "Registra o `<visant-tempo-bar>` (uma vez só, mesmo chamado várias vezes).",
+      "props": []
+    }
+  ],
   "grid-dots": [
     {
       "nome": "GridDots",

@@ -424,6 +424,34 @@ texto, a foto e o modal precisam dissolver do mesmo jeito.
 No repo de origem os tipos já estavam instalados, então só o `test:install` em
 projeto limpo pegou. Corrigido também em `book-3d` e `carousel-3d`.
 
+### De `@Clients - Web/Refuge` (FX designer) — COLHIDO em 28/10/2026
+
+**Os primeiros itens vanilla da casa.** O Refuge é Vite + TS sem framework e o
+dono vetou trazer React só pra usar os controles daqui. Então a colheita saiu
+no formato que já existia no `anatomia`: **web component** (`definirX()`
+registra a tag uma vez), Shadow DOM, só tokens com fallback em cor de sistema.
+Roda em página sem framework e em React 19 igual. Com `"tsx": false` no
+`components.json` o shadcn entrega `.js` já transpilado, o que é o caso de uso.
+
+| Item | Origem | Por que vale |
+|---|---|---|
+| `tempo-clock` | `src/tempo.ts` | Relógio de BPM perguntado (não empurra): serve até export quadro a quadro. Troca de BPM sem pular o compasso; tap faz da última batida o tempo 1 |
+| `fader` | sliders da aba de ajustes (`style.css` + `scrub()` em `main.ts`) | `<visant-fader>`: marca a cada 10%, tampa quadrada, arrastar o NOME muda o valor, duplo clique volta pro `default` |
+| `tempo-bar` | barra de tempo do painel | `<visant-tempo-bar>`: LED na batida, número arrastável, luzes de compasso (tempo 1 na cor da marca), divisão e tap. Aceita o relógio do host (`el.clock = …`) |
+
+**Verificado em consumidor limpo e vanilla** (sem React, sem Tailwind):
+`shadcn add @visant/fader @visant/tempo-bar` criou os três `.js` (o
+`tempo-clock` veio pela dependência), zero hex, e os elementos renderizaram com
+fallback de sistema e com o tema Visant.
+
+**Não colhidos**: `scrub` solto (`scrub-input` já existe em React; a versão
+vanilla mora dentro do fader e da barra), o banco de presets numerado e a chave
+quadrada (um uso só, ainda arquivo, não padrão).
+
+**Próximo passo natural**: versões vanilla dos controles mais usados
+(`segmented-control`, `liquid-toggle`) no mesmo formato, pra projeto sem React
+ter a mesma casa.
+
 ### Dos outros repos (levantamento raso — confirmar antes de colher)
 
 - **visantlabs-os** → `packages/brand-tokens` é candidato natural a `registry:theme`

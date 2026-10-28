@@ -106,6 +106,9 @@ const VintageTvFrameDemo = React.lazy(() => import("./demos/vintage-tv-frame-dem
 const InlineEditFileDemo = React.lazy(() => import("./demos/inline-edit-demo"));
 const SegmentedControlDemo = React.lazy(() => import("./demos/segmented-control-demo"));
 const ScrubInputDemo = React.lazy(() => import("./demos/scrub-input-demo"));
+const FaderDemo = React.lazy(() => import("./demos/fader-demo"));
+const TempoBarDemo = React.lazy(() => import("./demos/tempo-bar-demo"));
+const TempoClockDemo = React.lazy(() => import("./demos/tempo-clock-demo"));
 const NavDrawerDemo = React.lazy(() => import("./demos/nav-drawer-demo"));
 const StatusTickerDemo = React.lazy(() => import("./demos/status-ticker-demo"));
 const WorkingGlyphDemo = React.lazy(() => import("./demos/working-glyph-demo"));
@@ -590,6 +593,39 @@ export const CATALOG: CatalogItem[] = [
       "Número que se arrasta na horizontal, como nos editores gráficos. Teclado continua funcionando.",
     tags: ["número", "gesto"],
     demo: ScrubInputDemo,
+    preview: { w: 360, h: 240 },
+  },
+  {
+    name: "fader",
+    title: "Fader",
+    type: "lib",
+    family: "controles",
+    description:
+      "Slider de console em web component, sem framework: marca a cada 10%, tampa quadrada, arrastar o nome muda o valor e duplo clique volta pro padrão.",
+    tags: ["slider", "vanilla", "web component", "gesto"],
+    demo: () => <FaderDemo />,
+    preview: { w: 380, h: 280 },
+  },
+  {
+    name: "tempo-bar",
+    title: "Tempo Bar",
+    type: "lib",
+    family: "controles",
+    description:
+      "Controle de BPM em web component, sem framework: LED na batida, número que se arrasta, luzes de compasso, divisão e tap.",
+    tags: ["bpm", "ritmo", "música", "vanilla", "web component"],
+    demo: () => <TempoBarDemo />,
+    preview: { w: 380, h: 240 },
+  },
+  {
+    name: "tempo-clock",
+    title: "Tempo Clock",
+    type: "lib",
+    family: "base",
+    description:
+      "Relógio de BPM sem interface: passo na divisão, envelope de bumbo, tap tempo e troca de BPM sem pular o compasso.",
+    tags: ["bpm", "ritmo", "música", "tempo", "vanilla"],
+    demo: () => <TempoClockDemo />,
     preview: { w: 360, h: 240 },
   },
   {

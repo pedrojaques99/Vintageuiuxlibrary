@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tempo-clock",
+  "title": "Tempo Clock",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Relógio de BPM sem interface e sem framework: passo na divisão (1/4, 1/8, 1/16), envelope de bumbo, tap tempo e troca de BPM que não pula o compasso.",
+  "files": [
+    {
+      "path": "registry/visant/lib/tempo-clock.ts",
+      "content": "/**\n * Tempo Clock, um relógio de BPM sem interface e sem framework.\n *\n * Colhido do Refuge FX (motor de efeito no ritmo de techno). Serve a qualquer\n * coisa que precise andar no tempo de uma música: visual de festa, metrônomo,\n * sequenciador, animação presa a um set.\n *\n * Decisões que não se veem de primeira:\n *\n * 1. **O relógio é perguntado, não empurra.** `tick(now)` devolve o estado no\n *    instante pedido. Quem desenha já tem um laço de quadros (rAF, vídeo,\n *    gravação quadro a quadro); um segundo timer interno brigaria com ele e\n *    derivaria. Por isso também funciona fora de tempo real: é só passar o\n *    `now` do quadro que está sendo exportado.\n * 2. **Trocar o BPM não pula o compasso.** `setBpm` recalcula a origem pra\n *    manter a posição atual na batida. Sem isso, arrastar o BPM de 128 pra 129\n *    teleporta o passo e o visual dá um soluço.\n * 3. **O envelope é de bumbo, não de onda.** `env` vai a 1 no passo e cai em\n *    exponencial (decay ~200ms a 128bpm). Seno parece respiração; techno pede\n *    ataque seco.\n * 4. **No tap, a última batida vira o tempo 1.** Quem bate no ritmo espera que\n *    o desenho caia junto com o dedo, não só que a velocidade fique certa.\n * 5. **`beat` é verdadeiro uma vez por passo**, mesmo se o laço atrasar e pular\n *    quadros: a comparação é com o último passo visto, não com o tempo.\n *\n * Instância por relógio (não um singleton de módulo): dois decks, dois tempos.\n */\n\nexport type TempoDivision = 1 | 2 | 4;\n\nexport interface TempoTick {\n  /** Verdadeiro no primeiro tick de cada passo. */\n  beat: boolean;\n  /** Passo absoluto desde a origem, na divisão atual. */\n  step: number;\n  /** Tempo (semínima) dentro do compasso de 4, de 0 a 3. */\n  beatInBar: number;\n  /** Compasso absoluto, a partir de 0. */\n  bar: number;\n  /** Envelope 0..1: 1 no passo, decai até o próximo. */\n  env: number;\n}\n\nexport interface TempoClockOptions {\n  bpm?: number;\n  /** 1 = semínima, 2 = colcheia, 4 = semicolcheia. */\n  div?: TempoDivision;\n  min?: number;\n  max?: number;\n  /** Quão rápido o envelope cai (maior = mais seco). */\n  decay?: number;\n}\n\nexport interface TempoClock {\n  readonly bpm: number;\n  div: TempoDivision;\n  tick(now: number): TempoTick;\n  setBpm(bpm: number, now: number): number;\n  /** Registra uma batida do dedo; devolve o BPM novo quando já há batidas suficientes. */\n  tap(now: number): number | null;\n  /** Põe o tempo 1 do compasso em `now`. */\n  restart(now: number): void;\n}\n\nexport function createTempoClock(opts: TempoClockOptions = {}): TempoClock {\n  const min = opts.min ?? 60;\n  const max = opts.max ?? 180;\n  const decay = opts.decay ?? 5;\n  const clamp = (v: number) => Math.round(Math.min(max, Math.max(min, v)));\n  let bpm = clamp(opts.bpm ?? 128);\n  let t0 = 0;\n  let lastStep = -1;\n  let taps: number[] = [];\n\n  const clock: TempoClock = {\n    get bpm() {\n      return bpm;\n    },\n    div: opts.div ?? 1,\n    tick(now) {\n      const beats = (now - t0) / (60000 / bpm);\n      const stepPos = beats * clock.div;\n      const step = Math.floor(stepPos);\n      const beat = step !== lastStep;\n      lastStep = step;\n      const whole = Math.floor(beats);\n      return {\n        beat,\n        step,\n        beatInBar: ((whole % 4) + 4) % 4,\n        bar: Math.floor(whole / 4),\n        env: Math.exp(-(stepPos - step) * decay),\n      };\n    },\n    setBpm(next, now) {\n      const pos = (now - t0) / (60000 / bpm);\n      bpm = clamp(next);\n      t0 = now - pos * (60000 / bpm);\n      return bpm;\n    },\n    tap(now) {\n      // pausa longa começa uma contagem nova\n      if (taps.length && now - taps[taps.length - 1] > 2000) taps = [];\n      taps = [...taps, now].slice(-5);\n      clock.restart(now);\n      if (taps.length < 2) return null;\n      const avg = (taps[taps.length - 1] - taps[0]) / (taps.length - 1);\n      bpm = clamp(60000 / avg);\n      return bpm;\n    },\n    restart(now) {\n      t0 = now;\n      lastStep = -1;\n    },\n  };\n  return clock;\n}\n",
+      "type": "registry:lib"
+    }
+  ],
+  "meta": {
+    "uso": {
+      "quando": "Visual, animação ou sequenciador que precisa andar no tempo de uma música, inclusive em export quadro a quadro",
+      "evite": "Sincronizar com áudio real tocando: aí a batida vem de um analisador de áudio, não de um relógio"
+    }
+  },
+  "categories": [
+    "base",
+    "ritmo",
+    "bpm",
+    "musica",
+    "tempo",
+    "vanilla"
+  ],
+  "type": "registry:lib"
+}

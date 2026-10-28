@@ -2179,6 +2179,59 @@
       ]
     }
   },
+  "tempo-clock": {
+    "componentes": {
+      "createTempoClock": [
+        {
+          "prop": "div",
+          "tipo": "escolha",
+          "valores": [
+            "1",
+            "2",
+            "4"
+          ],
+          "padrao": null,
+          "resumo": "1 = semínima, 2 = colcheia, 4 = semicolcheia."
+        },
+        {
+          "prop": "bpm",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "decay",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": "Quão rápido o envelope cai (maior = mais seco)."
+        },
+        {
+          "prop": "max",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        },
+        {
+          "prop": "min",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": null,
+          "resumo": null
+        }
+      ]
+    }
+  },
   "grid-dots": {
     "componentes": {
       "GridDots": [
