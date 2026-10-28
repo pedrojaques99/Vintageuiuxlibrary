@@ -166,6 +166,29 @@ Testei e tirei: pré-carregar o chunk da demo no ocioso. A medição não mudou
 (20–22% com e sem), e a versão quebrava em demo que é componente e não função.
 Complexidade sem retorno medido não fica.
 
+### Rodada 5: shader compilado em paralelo
+
+Corrigindo a rodada 4: medi cada peça sozinha com GPU real, e `spine-card`,
+`reels-rail` e `erase-field` montam sem nenhuma tarefa longa. Elas só caíam na
+conta por montarem ao lado de quem pesa. Quem pesa é a `book-shelf`: 4 contextos
+WebGL, cada um compilando os mesmos shaders, e o three.js **bloqueando a thread**
+em `getProgramParameter(LINK_STATUS)` até o driver terminar.
+
+- [x] `book-stage`: `renderer.compileAsync` (`KHR_parallel_shader_compile`). O
+      canvas nasce com `frameloop` "never" e só desenha depois de compilar; o
+      livro 2D de reserva cobre a espera, como já cobria. Cache frio, 4 rodadas:
+      tempo bloqueado **357 → 200 ms**, pior tarefa **314 → 143 ms**.
+- [ ] **Próximo:** na grade, as cenas WebGL desenham **3 a 4,4x mais pixels do que
+      aparecem**. O palco escala a peça com `transform: scale`, mas o canvas usa
+      o `devicePixelRatio` cheio no tamanho natural (fog-tree: buffer 638×518 →
+      305×247 na tela). A correção é o canvas calcular a própria escala visual
+      (`getBoundingClientRect().width / offsetWidth`) e multiplicar no DPR. Isso
+      vale para qualquer consumidor que escale a peça, não só a vitrine, mas mexe
+      em 6 componentes.
+- Testei e descartei: trocar a book-shelf por `<View>` do drei. O `View` posiciona
+  pelo retângulo já escalado, o canvas mede o layout sem escala, e na grade os
+  livros sairiam desalinhados. O `compileAsync` resolve o custo sem esse risco.
+
 ## Resultado (produção, mesma régua)
 
 | Perfil | Quadros > 33ms antes → depois | Bloqueado antes → depois |
