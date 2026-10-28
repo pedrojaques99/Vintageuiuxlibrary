@@ -86,7 +86,14 @@ for (const nome of ITENS) {
       }
     });
 
-    const sumidos = await page.evaluate(() => {
+    /*
+     * Mede, e mede de novo se reprovar (até 4x, 300 ms entre uma e outra). Peça
+     * que anima para sempre (o countdown vira um dígito por segundo) só repousa
+     * em janelas curtas, e sob a carga da suíte paralela a amostra às vezes caía
+     * no meio da virada. Texto ilegível de verdade reprova em TODAS as amostras;
+     * o que passa numa é o estado de repouso, que é o que este teste julga.
+     */
+    const medir = () => page.evaluate(() => {
       const canal = (c: number) => {
         const s = c / 255;
         return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
@@ -242,6 +249,11 @@ for (const nome of ITENS) {
       }
       return achados;
     });
+    let sumidos = await medir();
+    for (let tentativa = 1; sumidos.length && tentativa < 4; tentativa++) {
+      await page.waitForTimeout(300);
+      sumidos = await medir();
+    }
 
     expect(
       sumidos,

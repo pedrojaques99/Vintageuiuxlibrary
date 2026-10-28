@@ -109,7 +109,10 @@ function Face({ card }: { card: WalletCard }) {
         <div className="min-w-0">
           {card.last4 && (
             <div className="font-mono text-[15px] tabular-nums">
-              <span className="opacity-50">•••• </span>
+              {/* 60, não 50: com o claro neutro (fundo branco puro) o texto da marca
+                  ficou um pouco mais claro, e a 50% os pontos caíam a 2,98:1. A
+                  opacidade é relativa à cor da FACE do cartão, por isso não vira token. */}
+              <span className="opacity-60">•••• </span>
               {card.last4}
             </div>
           )}

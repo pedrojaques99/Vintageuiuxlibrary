@@ -123,8 +123,8 @@ importers:
         specifier: ^8.18.0
         version: 8.18.0(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.170.0)
       '@visant/brand-tokens':
-        specifier: 0.2.0
-        version: 0.2.0
+        specifier: 0.2.2
+        version: 0.2.2
       canvas-confetti:
         specifier: 1.9.4
         version: 1.9.4
@@ -2013,8 +2013,8 @@ packages:
     peerDependencies:
       react: '>= 16.8.0'
 
-  '@visant/brand-tokens@0.2.0':
-    resolution: {integrity: sha512-CNH6JDFLueKY7E/lOaWZKHbZFHv0TgkMUIVcYbFkpZxCXnQURraXY7ihOvsKkYB/UcwLqK0xQzJit3zWIPuFxQ==}
+  '@visant/brand-tokens@0.2.2':
+    resolution: {integrity: sha512-/gqsV5IOMOo3zvJrV36xF8QLgNRc8R+Tqn2yUDMXkwMERCE8uSd0B0iZhJUeSIXhciiJejBXEO4wD7Mli3h8YQ==}
 
   '@vitejs/plugin-react@4.7.0':
     resolution: {integrity: sha512-gUu9hwfWvvEDBBmgtAowQCojwZmJ5mcLn3aufeCsitijs3+f2NsrPtlAWIR6OPiqljl96GVCUbLe0HyqIpVaoA==}
@@ -4764,7 +4764,7 @@ snapshots:
       '@use-gesture/core': 10.3.1
       react: 18.3.1
 
-  '@visant/brand-tokens@0.2.0':
+  '@visant/brand-tokens@0.2.2':
     dependencies:
       '@adobe/leonardo-contrast-colors': 1.1.0
       culori: 4.0.2
