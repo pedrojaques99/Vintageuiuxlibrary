@@ -6590,6 +6590,20 @@
           "descricao": "Cor das varetas. Qualquer cor CSS ou `var(--token)`."
         },
         {
+          "nome": "onCanvas",
+          "tipo": "(canvas: HTMLCanvasElement) => void",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Recebe o canvas da peça (e `null` ao desmontar), pra usá-lo como fonte de outro efeito."
+        },
+        {
+          "nome": "preserveDrawingBuffer",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Mantém o último quadro no buffer. Ligue quando outro efeito lê este canvas\n(ex.: `shader-riso` com `source`): sem isso o navegador pode entregar o buffer\njá limpo. Custa um pouco de desempenho, por isso vem desligado."
+        },
+        {
           "nome": "profile",
           "tipo": "LatheProfile",
           "obrigatoria": false,
@@ -6609,6 +6623,118 @@
       "nome": "DIFFUSER_PROFILE",
       "descricao": "O frasco do difusor: base arredondada, ombro, gargalo e tampa.",
       "props": []
+    }
+  ],
+  "lathe-riso": [
+    {
+      "nome": "LatheRiso",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "aria-label",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Objeto em 3D impresso em risografia, arraste para girar",
+          "descricao": "Descrição para leitor de tela."
+        },
+        {
+          "nome": "autoRotate",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Gira sozinho enquanto ninguém arrasta. Ignorado com movimento reduzido."
+        },
+        {
+          "nome": "body",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--muted-foreground)",
+          "descricao": "Cor do corpo da peça antes da tinta (só o valor tonal conta)."
+        },
+        {
+          "nome": "cell",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "4",
+          "descricao": "Tamanho da célula de tinta, em px.",
+          "faixa": {
+            "min": 2,
+            "max": 16,
+            "step": 1
+          }
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas do riso: papel, primeira tinta e segunda tinta. Qualquer cor CSS ou token.\nPadrão: `--background`, `--brand` e a marca escurecida."
+        },
+        {
+          "nome": "detail",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "var(--foreground)",
+          "descricao": "Cor das varetas antes da tinta."
+        },
+        {
+          "nome": "interactive",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "O cursor puxa a folha: perto dele as tintas escorregam do registro."
+        },
+        {
+          "nome": "misregistration",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "35",
+          "descricao": "Quanto as duas tintas saem do registro.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "mode",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "grain",
+          "descricao": "Como a tinta assenta: grão de riso, ponto de retícula ou Bayer.",
+          "valores": [
+            "grain",
+            "halftone",
+            "bayer"
+          ]
+        },
+        {
+          "nome": "paper",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "40",
+          "descricao": "Textura do papel.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "profile",
+          "tipo": "LatheProfile",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Meia silhueta, de baixo para cima: `[raio, altura]`. Feche no eixo (`x = 0`) nas pontas."
+        },
+        {
+          "nome": "sticks",
+          "tipo": "boolean | LatheSticks",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Varetas de difusor saindo do topo. Ausente = só o objeto."
+        }
+      ]
     }
   ],
   "mist-text": [
@@ -12213,13 +12339,6 @@
       "descricao": null,
       "props": [
         {
-          "nome": "src",
-          "tipo": "string",
-          "obrigatoria": true,
-          "padrao": null,
-          "descricao": "A imagem a imprimir. Fundo branco ou transparente vira papel."
-        },
-        {
           "nome": "alt",
           "tipo": "string",
           "obrigatoria": false,
@@ -12287,6 +12406,20 @@
             "max": 100,
             "step": 1
           }
+        },
+        {
+          "nome": "source",
+          "tipo": "HTMLCanvasElement | HTMLVideoElement",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Fonte viva no lugar de `src`: um canvas ou vídeo que muda, relido a cada quadro.\nO alfa da fonte vira papel. Com `source`, o cursor é lido na janela inteira,\nentão dá pra pôr o riso por cima de uma peça arrastável com `pointer-events: none`."
+        },
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "A imagem a imprimir. Fundo branco ou transparente vira papel."
         }
       ]
     }

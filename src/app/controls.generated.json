@@ -4314,6 +4314,12 @@
           "resumo": "Gira sozinho enquanto ninguém arrasta. Ignorado com movimento reduzido."
         },
         {
+          "prop": "preserveDrawingBuffer",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Mantém o último quadro no buffer. Ligue quando outro efeito lê este canvas"
+        },
+        {
           "prop": "body",
           "tipo": "texto",
           "padrao": "var(--muted-foreground)",
@@ -4324,6 +4330,76 @@
           "tipo": "texto",
           "padrao": "var(--foreground)",
           "resumo": "Cor das varetas. Qualquer cor CSS ou `var(--token)`."
+        }
+      ]
+    }
+  },
+  "lathe-riso": {
+    "componentes": {
+      "LatheRiso": [
+        {
+          "prop": "mode",
+          "tipo": "escolha",
+          "valores": [
+            "grain",
+            "halftone",
+            "bayer"
+          ],
+          "padrao": "grain",
+          "resumo": "Como a tinta assenta: grão de riso, ponto de retícula ou Bayer."
+        },
+        {
+          "prop": "autoRotate",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Gira sozinho enquanto ninguém arrasta. Ignorado com movimento reduzido."
+        },
+        {
+          "prop": "interactive",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "O cursor puxa a folha: perto dele as tintas escorregam do registro."
+        },
+        {
+          "prop": "cell",
+          "tipo": "numero",
+          "min": 2,
+          "max": 16,
+          "step": 1,
+          "padrao": 4,
+          "resumo": "Tamanho da célula de tinta, em px."
+        },
+        {
+          "prop": "misregistration",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 35,
+          "resumo": "Quanto as duas tintas saem do registro."
+        },
+        {
+          "prop": "paper",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "Textura do papel."
+        },
+        {
+          "prop": "body",
+          "tipo": "texto",
+          "padrao": "var(--muted-foreground)",
+          "resumo": "Cor do corpo da peça antes da tinta (só o valor tonal conta).",
+          "secundario": true
+        },
+        {
+          "prop": "detail",
+          "tipo": "texto",
+          "padrao": "var(--foreground)",
+          "resumo": "Cor das varetas antes da tinta.",
+          "secundario": true
         }
       ]
     }

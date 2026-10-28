@@ -161,6 +161,9 @@
   "lathe-object": [
     "three@^0.170.0"
   ],
+  "lathe-riso": [
+    "three@^0.170.0"
+  ],
   "mist-text": [
     "framer-motion"
   ],
