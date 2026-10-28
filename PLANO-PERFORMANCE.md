@@ -305,8 +305,13 @@ O reload do P0 é a rede de proteção. A correção é não apagar o chunk velh
 ### P7 — Portão ✔
 
 - `npm run perf` → `perf-catalogo.mjs`; `--teto` julga e sai com código 1.
-- Teto: quadros > 33ms **< 20%** no celular e **< 10%** no notebook, 0 erro de
-  console, 0 chunk 404. Roda no `ship.mjs` depois do deploy, como aviso.
+- Teto: quadros > 33ms **< 20%** no celular e **< 15%** no notebook, 0 erro de
+  console, 0 chunk 404, julgado pela **mediana de 3** medições. Roda no
+  `ship.mjs` depois do deploy, como aviso.
+- Por que 15 e não 10: o notebook (médio) roda sem peça viva nenhuma, e o piso
+  da página rolando a CPU 4x mediu 8–15%. Com o teto em 10%, o portão reprovava
+  deploy bom pelo ruído (9, 10, 10 na mediana). 15% ainda pega a regressão que o
+  portão existe para pegar: a grade viva no notebook era 56%.
 
 ## 4. Como medir antes e depois
 

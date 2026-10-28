@@ -139,7 +139,22 @@ const saida = [];
 for (const [nome, p] of Object.entries(PERFIS)) {
   if (SO && SO !== nome) continue;
   process.stdout.write(`medindo ${nome}… `);
-  const r = await medir(nome, NIVEL ? { ...p, nivel: NIVEL } : p);
+  /*
+   * Com `--teto`, a mediana de 3. Uma amostra só oscila alguns pontos de
+   * medição pra medição (o notebook deu 10, 11 e 9% seguidos), e em volta do
+   * teto isso fazia o portão aprovar ou reprovar o mesmo deploy pelo ruído.
+   * Erro de console e chunk 404 contam se aparecerem em QUALQUER rodada.
+   */
+  const REPETE = process.argv.includes("--teto") ? 3 : 1;
+  const rodadas = [];
+  for (let i = 0; i < REPETE; i++) rodadas.push(await medir(nome, NIVEL ? { ...p, nivel: NIVEL } : p));
+  rodadas.sort((x, y) => x.quadrosPerdidosPct - y.quadrosPerdidosPct);
+  const r = {
+    ...rodadas[Math.floor(rodadas.length / 2)],
+    erros: [...new Set(rodadas.flatMap((x) => x.erros))],
+    notFound: [...new Set(rodadas.flatMap((x) => x.notFound))],
+    ...(REPETE > 1 ? { rodadasPct: rodadas.map((x) => x.quadrosPerdidosPct) } : {}),
+  };
   saida.push(r);
   const { notFound, erros, ...resumo } = r;
   console.log(JSON.stringify(resumo));
@@ -156,7 +171,15 @@ console.log(`→ ${arq}`);
  * se passar. É o que o `ship` chama depois do deploy. Desktop fica de fora: o
  * headless não mede o desktop direito (ver `--janela`).
  */
-const TETO = { celular: 20, notebook: 10 };
+/*
+ * Calibrado pelo piso medido, não pelo desejo. No notebook (nível médio) não há
+ * peça viva nenhuma (`vivasPico` 0): o que sobra é a página rolando a CPU 4x,
+ * e esse piso mediu 8–15% em rodadas diferentes (só fotos, `?nivel=baixo`).
+ * O teto de 10% do plano caía em cima do ruído do piso e reprovava deploy bom.
+ * 15% fica acima do piso e ainda pega com folga o que o portão existe para pegar:
+ * a grade viva no notebook era 56%.
+ */
+const TETO = { celular: 20, notebook: 15 };
 if (process.argv.includes("--teto")) {
   const falhas = [];
   for (const r of saida) {
