@@ -52,7 +52,14 @@ input:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px var(--fd-bg), 
 
 let sheet: CSSStyleSheet | null = null;
 
-export class VisantFader extends HTMLElement {
+/* SSR: no servidor não existe `HTMLElement`, e `extends HTMLElement` no topo
+   do módulo derruba a renderização de servidor de toda página que importe este
+   arquivo (visto no curso do Club, 28/10/2026). Fora do navegador a classe
+   estende uma vazia; o `customElements.define` já não roda lá. É o mesmo
+   truque do shim de SSR do Lit. */
+const ElementoBase = (typeof HTMLElement === "undefined" ? class {} : HTMLElement) as typeof HTMLElement;
+
+export class VisantFader extends ElementoBase {
   static observedAttributes = ["label", "min", "max", "step", "value", "disabled"];
   #input!: HTMLInputElement;
   #out!: HTMLOutputElement;

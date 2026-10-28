@@ -122,7 +122,14 @@ button{font:inherit;color:inherit}
 @media (prefers-reduced-motion:reduce){.va *,.va *::before{transition:none!important;animation:none!important}}
 `;
 
-export class VisantAnatomia extends HTMLElement {
+/* SSR: no servidor não existe `HTMLElement`, e `extends HTMLElement` no topo
+   do módulo derruba a renderização de servidor de toda página que importe este
+   arquivo (visto no curso do Club, 28/10/2026). Fora do navegador a classe
+   estende uma vazia; o `customElements.define` já não roda lá. É o mesmo
+   truque do shim de SSR do Lit. */
+const ElementoBase = (typeof HTMLElement === "undefined" ? class {} : HTMLElement) as typeof HTMLElement;
+
+export class VisantAnatomia extends ElementoBase {
   static observedAttributes = ["figura", "modo"];
   #fig: FiguraDef | null = null;
   #controle: Controle | null = null;

@@ -396,6 +396,51 @@ function useThemeEpoch(): number {
   return epoch;
 }
 
+/* ── Compilar antes de desenhar ─────────────────────────────────────────── */
+
+/**
+ * Compila os shaders em paralelo, e só então libera o primeiro quadro.
+ *
+ * Medido com GPU real: montar a estante custava 6 tarefas longas (até 315 ms).
+ * Quase todo esse tempo era o three.js esperando a validação do programa
+ * (`getProgramParameter(LINK_STATUS)`), que BLOQUEIA a thread até o driver
+ * terminar de compilar. Com quatro livros são quatro contextos, e programa não
+ * se compartilha entre contextos.
+ *
+ * `compileAsync` (three r158+) compila pela `KHR_parallel_shader_compile` e
+ * espera o `COMPLETION_STATUS` sem travar. O canvas nasce com `frameloop`
+ * "never", e o livro 2D de reserva (`Book3D`) segue na tela até o primeiro
+ * quadro inteiro, como já era. Só a espera deixa de ser uma tarefa longa.
+ */
+function CompilarAntes({ onCompilado }: { onCompilado: () => void }) {
+  const { gl, scene, camera } = useThree();
+  React.useEffect(() => {
+    let vivo = true;
+    gl.compileAsync(scene, camera)
+      .catch(() => undefined) // sem a extensão, o three compila no primeiro quadro, como antes
+      .then(() => vivo && onCompilado());
+    return () => {
+      vivo = false;
+    };
+  }, [gl, scene, camera, onCompilado]);
+  return null;
+}
+
+/**
+ * O primeiro quadro depois da compilação. Com `frameloop` "never" o r3f ignora
+ * `invalidate()`, então quem invalidou durante a espera (a palheta, a arte) não
+ * deixou pedido nenhum. O `requestAnimationFrame` é porque o efeito do filho
+ * roda antes de o `Canvas` aplicar o `frameloop` novo.
+ */
+function Acordar() {
+  const invalidate = useThree((s) => s.invalidate);
+  React.useEffect(() => {
+    const r = requestAnimationFrame(() => invalidate());
+    return () => cancelAnimationFrame(r);
+  }, [invalidate]);
+  return null;
+}
+
 /* ── Movimento reduzido ─────────────────────────────────────────────────── */
 
 /** Seis linhas em vez de uma dependência: o item já pesa three + fiber + drei,
@@ -444,6 +489,8 @@ export default function BookStage({ art, onReady, ...rest }: BookStageProps) {
   }, []);
 
   const shared = { ...rest, target, reduced, onReady, epoch };
+  const [compilado, setCompilado] = React.useState(false);
+  const liberar = React.useCallback(() => setCompilado(true), []);
 
   /**
    * O que o ambiente reflete na capa é a SUPERFÍCIE DA MARCA, não um cinza
@@ -467,7 +514,7 @@ export default function BookStage({ art, onReady, ...rest }: BookStageProps) {
       onPointerUp={release}
     >
       <Canvas
-        frameloop="demand"
+        frameloop={compilado ? "demand" : "never"}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true }}
         camera={{ position: [...CAMERA.position], fov: CAMERA.fov }}
@@ -480,6 +527,7 @@ export default function BookStage({ art, onReady, ...rest }: BookStageProps) {
         }}
         style={{ touchAction: "pan-y" }}
       >
+        {compilado ? <Acordar /> : <CompilarAntes onCompilado={liberar} />}
         <Studio backdrop={backdrop} />
         {/* A reserva do Suspense é o LIVRO INTEIRO com a capa desenhada, não um
             vazio nem um esqueleto. Enquanto a arte desce já há um objeto com
