@@ -68,6 +68,14 @@ export interface LatheObjectProps extends React.HTMLAttributes<HTMLCanvasElement
   autoRotate?: boolean;
   /** Descrição para leitor de tela. O canvas é `role="img"`. */
   "aria-label"?: string;
+  /**
+   * Mantém o último quadro no buffer. Ligue quando outro efeito lê este canvas
+   * (ex.: `shader-riso` com `source`): sem isso o navegador pode entregar o buffer
+   * já limpo. Custa um pouco de desempenho, por isso vem desligado.
+   */
+  preserveDrawingBuffer?: boolean;
+  /** Recebe o canvas da peça (e `null` ao desmontar), pra usá-lo como fonte de outro efeito. */
+  onCanvas?: (canvas: HTMLCanvasElement | null) => void;
 }
 
 interface Cena {
@@ -84,6 +92,7 @@ async function criarCena(
     sticks: Required<LatheSticks> | null;
     autoRotate: boolean;
     reduce: boolean;
+    preserveDrawingBuffer: boolean;
   },
 ): Promise<Cena> {
   const [THREE, { OrbitControls }] = await Promise.all([
@@ -91,7 +100,12 @@ async function criarCena(
     import("three/examples/jsm/controls/OrbitControls.js"),
   ]);
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: true,
+    preserveDrawingBuffer: opts.preserveDrawingBuffer,
+  });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   // Transparente: o fundo é o da página, então a peça vive em qualquer tema.
@@ -260,6 +274,8 @@ export function LatheObject({
   detail = "var(--foreground)",
   autoRotate = true,
   "aria-label": ariaLabel = "Objeto em 3D, arraste para girar",
+  preserveDrawingBuffer = false,
+  onCanvas,
   className,
   onPointerEnter,
   onPointerLeave,
@@ -272,7 +288,13 @@ export function LatheObject({
 
   // Geometria entra por valor: um `profile` literal no JSX muda de identidade a
   // cada render, e recriar o renderer por isso derrubaria o contexto WebGL.
-  const chave = JSON.stringify({ profile, sticks, autoRotate });
+  const chave = JSON.stringify({ profile, sticks, autoRotate, preserveDrawingBuffer });
+  const onCanvasRef = React.useRef(onCanvas);
+  onCanvasRef.current = onCanvas;
+  React.useEffect(() => {
+    onCanvasRef.current?.(canvasRef.current);
+    return () => onCanvasRef.current?.(null);
+  }, []);
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -281,6 +303,7 @@ export function LatheObject({
       profile: LatheProfile;
       sticks?: LatheSticks | boolean;
       autoRotate: boolean;
+      preserveDrawingBuffer: boolean;
     };
     const st = cfg.sticks
       ? { count: 7, length: 3.2, ...(cfg.sticks === true ? {} : cfg.sticks) }
@@ -303,6 +326,7 @@ export function LatheObject({
             sticks: st,
             autoRotate: cfg.autoRotate,
             reduce,
+            preserveDrawingBuffer: cfg.preserveDrawingBuffer,
           });
           // Desmontou enquanto o three baixava: descarta em vez de vazar o contexto.
           if (!vivo) return nova.dispose();

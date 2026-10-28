@@ -34,6 +34,12 @@ import { onThemeChange, resolveCssColor } from "@/lib/css-color";
  * 5. **Desenha sob demanda.** Imagem parada não pede quadro: desenha na carga,
  *    no tema, no tamanho e no knob. O laço só existe enquanto o puxão entra ou
  *    sai, e com movimento reduzido ele aparece sem transição.
+ * 6. **Fonte viva.** Com `source` (um canvas ou vídeo, por exemplo o do
+ *    `lathe-object`), a textura sobe a cada quadro, só com a peça na tela e a aba
+ *    visível. O alfa da fonte vira papel. Com movimento reduzido, sobe um quadro
+ *    só, e outro a cada gesto do ponteiro. Canvas WebGL como fonte precisa de
+ *    `preserveDrawingBuffer` (no lathe-object, a prop de mesmo nome), senão o
+ *    navegador pode entregar o buffer já limpo.
  */
 
 const VERT = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0.0,1.0);}`;
@@ -144,7 +150,13 @@ const MODOS = { grain: 0, halftone: 1, bayer: 2 } as const;
 
 export interface ShaderRisoProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
   /** A imagem a imprimir. Fundo branco ou transparente vira papel. */
-  src: string;
+  src?: string;
+  /**
+   * Fonte viva no lugar de `src`: um canvas ou vídeo que muda, relido a cada quadro.
+   * O alfa da fonte vira papel. Com `source`, o cursor é lido na janela inteira,
+   * então dá pra pôr o riso por cima de uma peça arrastável com `pointer-events: none`.
+   */
+  source?: HTMLCanvasElement | HTMLVideoElement | null;
   /** Texto alternativo da imagem. */
   alt?: string;
   /** Como a tinta assenta: grão de riso, ponto de retícula ou Bayer. */
@@ -198,6 +210,7 @@ function compilar(gl: WebGLRenderingContext, frag: string): WebGLProgram | null 
 
 export function ShaderRiso({
   src,
+  source,
   alt = "Imagem em risografia",
   mode = "grain",
   cell = 4,
@@ -302,6 +315,7 @@ export function ShaderRiso({
       raf = ponta.forca !== ponta.alvo ? requestAnimationFrame(quadro) : 0;
     };
     const pedirQuadro = () => {
+      if (rafFonte) return; // o laço da fonte já desenha todo quadro
       if (mq.matches) {
         ponta.forca = ponta.alvo;
         desenhar();
@@ -329,6 +343,7 @@ export function ShaderRiso({
     };
 
     let vivo = true;
+    let rafFonte = 0;
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.decoding = "async";
@@ -339,7 +354,7 @@ export function ShaderRiso({
       gl.uniform2f(U.img, img.naturalWidth || 1, img.naturalHeight || 1);
       desenhar();
     };
-    img.src = src;
+    if (src && !source) img.src = src;
 
     cores();
     medir();
@@ -354,8 +369,71 @@ export function ShaderRiso({
       cores();
       desenhar();
     });
-    wrap.addEventListener("pointermove", mover);
-    wrap.addEventListener("pointerleave", sair);
+    // Com fonte viva, o riso costuma ficar por cima de algo arrastável e com
+    // `pointer-events: none`: o cursor é lido na janela e vale dentro do quadro.
+    const moverJanela = (e: PointerEvent) => {
+      const r = wrap.getBoundingClientRect();
+      const dentro =
+        e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (dentro) mover(e);
+      else if (ponta.alvo) sair();
+      if (source && mq.matches) subir();
+    };
+    if (source) window.addEventListener("pointermove", moverJanela);
+    else {
+      wrap.addEventListener("pointermove", mover);
+      wrap.addEventListener("pointerleave", sair);
+    }
+
+    // ── fonte viva ──────────────────────────────────────────────────────────
+    const larguraFonte = () =>
+      source instanceof HTMLVideoElement ? source.videoWidth : (source?.width ?? 0);
+    const alturaFonte = () =>
+      source instanceof HTMLVideoElement ? source.videoHeight : (source?.height ?? 0);
+    const subir = () => {
+      if (!source) return;
+      const w = larguraFonte();
+      const h = alturaFonte();
+      if (!w || !h) return;
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      try {
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
+      } catch {
+        return; // fonte de outra origem sem CORS: fica o último quadro bom
+      }
+      gl.uniform2f(U.img, w, h);
+      desenhar();
+    };
+    let naTela = false;
+    const laco = () => {
+      // O puxão do cursor tem laço próprio; aqui só a textura, e o desenho junto.
+      ponta.forca += (ponta.alvo - ponta.forca) * 0.18;
+      if (Math.abs(ponta.alvo - ponta.forca) < 0.005) ponta.forca = ponta.alvo;
+      subir();
+      rafFonte = requestAnimationFrame(laco);
+    };
+    const ligarFonte = () => {
+      const deve = !!source && naTela && !document.hidden && !mq.matches;
+      if (deve && !rafFonte) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+        rafFonte = requestAnimationFrame(laco);
+      } else if (!deve && rafFonte) {
+        cancelAnimationFrame(rafFonte);
+        rafFonte = 0;
+        subir();
+      }
+    };
+    const io = new IntersectionObserver(([e]) => {
+      naTela = e.isIntersecting;
+      ligarFonte();
+    });
+    if (source) {
+      io.observe(wrap);
+      document.addEventListener("visibilitychange", ligarFonte);
+      mq.addEventListener?.("change", ligarFonte);
+      subir();
+    }
 
     return () => {
       vivo = false;
@@ -363,6 +441,11 @@ export function ShaderRiso({
       ro.disconnect();
       offTema();
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafFonte);
+      io.disconnect();
+      document.removeEventListener("visibilitychange", ligarFonte);
+      mq.removeEventListener?.("change", ligarFonte);
+      window.removeEventListener("pointermove", moverJanela);
       wrap.removeEventListener("pointermove", mover);
       wrap.removeEventListener("pointerleave", sair);
       redesenhar.current = () => {};
@@ -372,7 +455,7 @@ export function ShaderRiso({
       gl.getExtension("WEBGL_lose_context")?.loseContext();
       canvas.remove();
     };
-  }, [src, coresChave]);
+  }, [src, source, coresChave]);
 
   React.useEffect(() => {
     redesenhar.current();

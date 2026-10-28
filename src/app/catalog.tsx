@@ -64,6 +64,7 @@ const MistDialogDemo = React.lazy(() => import("./demos/mist-dialog-demo"));
 const InkWordmarkDemo = React.lazy(() => import("./demos/ink-wordmark-demo"));
 const FogHeroDemo = React.lazy(() => import("./demos/fog-hero-demo"));
 const LatheObjectDemo = React.lazy(() => import("./demos/lathe-object-demo"));
+const LatheRisoDemo = React.lazy(() => import("./demos/lathe-riso-demo"));
 const CssColorDemo = React.lazy(() => import("./demos/css-color-demo"));
 const FogTreeDemo = React.lazy(() => import("./demos/fog-tree-demo"));
 const FogGardenDemo = React.lazy(() => import("./demos/fog-garden-demo"));
@@ -1452,6 +1453,17 @@ export const CATALOG: CatalogItem[] = [
     demo: LatheObjectDemo,
     // Palco em retrato, como o book-3d: o objeto é alto e estreito.
     preview: { w: 360, h: 440 },
+  },
+  {
+    name: "lathe-riso",
+    title: "Lathe Riso",
+    type: "ui",
+    family: "3d",
+    description:
+      "A peça 3D de revolução do lathe-object impressa ao vivo em duas tintas de risografia: gira, orbita no arrasto e sai do registro onde o cursor passa.",
+    tags: ["3d", "webgl", "shader", "riso", "produto", "impressão"],
+    demo: LatheRisoDemo,
+    preview: { w: 440, h: 440 },
   },
   {
     name: "fog-tree",

@@ -3630,6 +3630,44 @@
       }
     },
     {
+      "name": "lathe-riso",
+      "type": "registry:ui",
+      "title": "Lathe Riso",
+      "description": "A peça 3D de revolução do lathe-object impressa ao vivo em duas tintas de risografia: gira, orbita no arrasto e sai do registro onde o cursor passa.",
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "dependencies": [
+        "three@^0.170.0"
+      ],
+      "registryDependencies": [
+        "utils",
+        "@visant/lathe-object",
+        "@visant/shader-riso"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/lathe-riso.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "devDependencies": [
+        "@types/three@^0.170.0"
+      ],
+      "categories": [
+        "3d",
+        "webgl",
+        "shader",
+        "riso",
+        "produto",
+        "impressao"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Hero com objeto 3D (fruta, frasco, pote) que precisa de cara de impresso, em duas tintas, arrastável",
+          "evite": "Foto estática em riso: shader-riso; produto em 3D sem efeito: lathe-object"
+        }
+      }
+    },
+    {
       "name": "mist-text",
       "type": "registry:ui",
       "title": "Mist Text",
