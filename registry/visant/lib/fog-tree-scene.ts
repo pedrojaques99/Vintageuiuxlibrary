@@ -27,6 +27,7 @@ import {
   contactShadowTexture,
   createFogPost,
   createFogRenderer,
+  densidadeDoCanvas,
   disposeTree,
   gray,
   grayTint,
@@ -220,6 +221,7 @@ export function createFogTreeScene(
   const resize = () => {
     const w = Math.max(1, canvas.clientWidth);
     const h = Math.max(1, canvas.clientHeight);
+    renderer.setPixelRatio(densidadeDoCanvas(canvas, opts.light));
     renderer.setSize(w, h, false);
     post.setSize(w, h);
     camera.aspect = w / h;
@@ -228,6 +230,8 @@ export function createFogTreeScene(
   };
   const ro = new ResizeObserver(resize);
   ro.observe(canvas);
+  // A escala do palco muda com a janela sem mudar o tamanho de layout do canvas.
+  window.addEventListener("resize", resize);
 
   const alvo = { p: 0 };
   const atual = { p: 0 };
@@ -303,6 +307,7 @@ export function createFogTreeScene(
       visivel = false;
       if (raf) cancelAnimationFrame(raf);
       ro.disconnect();
+      window.removeEventListener("resize", resize);
       controls.removeEventListener("start", pegar);
       controls.removeEventListener("end", soltar);
       controls.dispose();

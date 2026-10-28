@@ -441,6 +441,36 @@ function Acordar() {
   return null;
 }
 
+/* ── Densidade de pixels ─────────────────────────────────────────────────── */
+
+/**
+ * Pixels de desenho por pixel de layout, contando a escala VISUAL do palco.
+ *
+ * Mostrado reduzido por `transform: scale` (uma vitrine, um card de preview), o
+ * livro pintava 3x os pixels que apareciam. Sem GPU forte, seguindo o cursor:
+ * 51 fps e p95 de 50 ms. Desenhando no tamanho que aparece, a nitidez na tela é
+ * a mesma; fora de escala o resultado é o `[1, 2]` de antes. Recalcula no
+ * `resize` da janela, porque a escala do ancestral muda sem mudar o layout.
+ */
+function useDensidade(): [(el: HTMLDivElement | null) => void, number] {
+  const [el, setEl] = React.useState<HTMLDivElement | null>(null);
+  const [dpr, setDpr] = React.useState(1);
+  React.useEffect(() => {
+    if (!el) return;
+    const medir = () => {
+      const teto = Math.min(window.devicePixelRatio || 1, 2);
+      const layout = el.offsetWidth;
+      const visivel = el.getBoundingClientRect().width;
+      const escala = layout > 0 && visivel > 0 ? Math.min(1, visivel / layout) : 1;
+      setDpr(Math.max(0.5, Math.max(1, teto) * escala));
+    };
+    medir();
+    window.addEventListener("resize", medir);
+    return () => window.removeEventListener("resize", medir);
+  }, [el]);
+  return [setEl, dpr];
+}
+
 /* ── Movimento reduzido ─────────────────────────────────────────────────── */
 
 /** Seis linhas em vez de uma dependência: o item já pesa three + fiber + drei,
@@ -490,6 +520,7 @@ export default function BookStage({ art, onReady, ...rest }: BookStageProps) {
 
   const shared = { ...rest, target, reduced, onReady, epoch };
   const [compilado, setCompilado] = React.useState(false);
+  const [refDensidade, dpr] = useDensidade();
   const liberar = React.useCallback(() => setCompilado(true), []);
 
   /**
@@ -505,6 +536,7 @@ export default function BookStage({ art, onReady, ...rest }: BookStageProps) {
 
   return (
     <div
+      ref={refDensidade}
       className="h-full w-full"
       onPointerMove={move}
       onPointerLeave={release}
@@ -515,7 +547,7 @@ export default function BookStage({ art, onReady, ...rest }: BookStageProps) {
     >
       <Canvas
         frameloop={compilado ? "demand" : "never"}
-        dpr={[1, 2]}
+        dpr={dpr}
         gl={{ antialias: true, alpha: true }}
         camera={{ position: [...CAMERA.position], fov: CAMERA.fov }}
         // `offsetSize`: dentro de um layout escalado (`transform: scale`) o

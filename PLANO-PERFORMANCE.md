@@ -178,13 +178,25 @@ em `getProgramParameter(LINK_STATUS)` até o driver terminar.
       canvas nasce com `frameloop` "never" e só desenha depois de compilar; o
       livro 2D de reserva cobre a espera, como já cobria. Cache frio, 4 rodadas:
       tempo bloqueado **357 → 200 ms**, pior tarefa **314 → 143 ms**.
-- [ ] **Próximo:** na grade, as cenas WebGL desenham **3 a 4,4x mais pixels do que
-      aparecem**. O palco escala a peça com `transform: scale`, mas o canvas usa
-      o `devicePixelRatio` cheio no tamanho natural (fog-tree: buffer 638×518 →
-      305×247 na tela). A correção é o canvas calcular a própria escala visual
-      (`getBoundingClientRect().width / offsetWidth`) e multiplicar no DPR. Isso
-      vale para qualquer consumidor que escale a peça, não só a vitrine, mas mexe
-      em 6 componentes.
+- [x] **Pixels a mais na grade.** As cenas desenhavam 3 a 4,4x os pixels que
+      apareciam: o palco reduz com `transform: scale`, e o canvas usava o
+      `devicePixelRatio` cheio no tamanho de layout. Medi antes de mexer, e o
+      resultado foi diferente por máquina:
+      - desktop com GPU real: as 5 cenas pesadas vivas juntas, com o cursor
+        passando, a 119–140 fps e 0% de quadros lentos. Ali o excesso não custa
+        nada;
+      - sem GPU forte, acordada no nível médio: a fog-tree a 9 fps, e metade dos
+        pixels já levava de 13 a 20 fps. Ali custa.
+      O `fog-post` ganhou `densidadeDoCanvas` (DPR × escala visual), usado pela
+      fog-tree e pela fog-garden: **9 → 21 fps**, p95 de 133 para 67 ms, buffer
+      638×518 → 319×259 para 305×247 na tela. Fora de escala nada muda. O grão de
+      filme fica como na ficha (antes ele saía borrado na grade).
+- [x] **As outras 4 peças 3D**, medidas uma a uma sem GPU forte e acordadas no
+      médio: lathe-object, carousel-3d e lathe-riso rodam a 72–73 fps com p95
+      de 16,7 ms, e o excesso não custa nada a elas, então ficaram como estavam.
+      O book-3d tinha p95 de 33 ms seguindo o cursor: ganhou a mesma regra
+      (`useDensidade` no book-stage) e caiu para **16,7 ms**, com buffer 288×360
+      → 166×207, o tamanho da tela. Na ficha continua 288×360.
 - Testei e descartei: trocar a book-shelf por `<View>` do drei. O `View` posiciona
   pelo retângulo já escalado, o canvas mede o layout sem escala, e na grade os
   livros sairiam desalinhados. O `compileAsync` resolve o custo sem esse risco.

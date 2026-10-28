@@ -249,12 +249,35 @@ export function createFogRenderer(canvas: HTMLCanvasElement, light: boolean) {
       antialias: !light,
       powerPreference: "high-performance",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, light ? 1 : 1.5));
+    renderer.setPixelRatio(densidadeDoCanvas(canvas, light));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     return renderer;
   } catch {
     return null;
   }
+}
+
+/**
+ * Pixels de desenho por pixel de layout, contando a escala VISUAL do canvas.
+ *
+ * Quem mostra a cena reduzida com `transform: scale` (uma vitrine, um card de
+ * preview) não muda o tamanho de layout do canvas, só o desenhado. Com o
+ * `devicePixelRatio` cheio no tamanho de layout, a cena pintava 3 a 4,4x mais
+ * pixels do que apareciam. Medido sem GPU forte: a fog-tree acordada caía a
+ * 9 fps, e metade dos pixels já levava de 13 a 20 fps. Desenhando no tamanho
+ * que aparece, a nitidez na tela é a mesma, porque o bitmap e a redução se
+ * anulam. Fora de escala (`1`), o resultado é o de antes.
+ *
+ * Quem chama de novo no `resize` da janela: o `ResizeObserver` não dispara
+ * quando só a escala de um ancestral muda.
+ */
+export function densidadeDoCanvas(canvas: HTMLCanvasElement, light: boolean) {
+  const teto = Math.min(window.devicePixelRatio || 1, light ? 1 : 1.5);
+  const layout = canvas.offsetWidth;
+  const visivel = canvas.getBoundingClientRect().width;
+  const escala = layout > 0 && visivel > 0 ? Math.min(1, visivel / layout) : 1;
+  // Piso em 0,5: abaixo disso a cena vira borrão mesmo reduzida.
+  return Math.max(0.5, teto * escala);
 }
 
 /**

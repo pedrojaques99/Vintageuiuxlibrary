@@ -7602,6 +7602,11 @@
       "props": []
     },
     {
+      "nome": "densidadeDoCanvas",
+      "descricao": "Pixels de desenho por pixel de layout, contando a escala VISUAL do canvas.\n\nQuem mostra a cena reduzida com `transform: scale` (uma vitrine, um card de\npreview) não muda o tamanho de layout do canvas, só o desenhado. Com o\n`devicePixelRatio` cheio no tamanho de layout, a cena pintava 3 a 4,4x mais\npixels do que apareciam. Medido sem GPU forte: a fog-tree acordada caía a\n9 fps, e metade dos pixels já levava de 13 a 20 fps. Desenhando no tamanho\nque aparece, a nitidez na tela é a mesma, porque o bitmap e a redução se\nanulam. Fora de escala (`1`), o resultado é o de antes.\n\nQuem chama de novo no `resize` da janela: o `ResizeObserver` não dispara\nquando só a escala de um ancestral muda.",
+      "props": []
+    },
+    {
       "nome": "releaseRenderer",
       "descricao": "Devolve o contexto ao navegador já, em vez de esperar o GC.\n\nO teto é ≈16 contextos vivos no Chrome. Uma SPA que entra e sai de rota com\ncena 3D estoura esse teto sem nunca ter duas cenas na tela — e o sintoma é a\ncena MAIS ANTIGA perdendo o contexto, sem erro que aponte para cá.",
       "props": [

@@ -56,6 +56,35 @@ for (const nome of ITENS) {
       ]),
     );
     await page.waitForTimeout(150);
+    /*
+     * Animação por JS não aparece em `getAnimations()`. O streamgraph cresce
+     * com o `animate()` do motion, e sob a carga da suíte paralela o teste
+     * media os rótulos no meio do caminho (contraste ~2,5) e reprovava a peça
+     * certa. O que este teste quer é o estado FINAL: espera a pintura do texto
+     * parar de mudar (duas leituras iguais seguidas), com teto de 4s, e mede
+     * LOGO EM SEGUIDA. Peça que anima para sempre (o countdown vira um dígito
+     * por segundo) só tem janelas curtas de repouso entre uma virada e outra:
+     * esperar mais um pouco antes de medir caía na virada seguinte, com o
+     * dígito no meio do fade. O texto entra na leitura para enxergar a troca.
+     */
+    await page.evaluate(async () => {
+      const foto = () =>
+        [...document.querySelectorAll("body *")]
+          .filter((el) => el.childNodes.length && [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent?.trim()))
+          .map((el) => {
+            const cs = getComputedStyle(el);
+            return `${el.textContent}|${cs.color}|${cs.opacity}|${cs.fill}`;
+          })
+          .join(";");
+      const fim = performance.now() + 4000;
+      let antes = foto();
+      while (performance.now() < fim) {
+        await new Promise((r) => setTimeout(r, 120));
+        const agora = foto();
+        if (agora === antes) return;
+        antes = agora;
+      }
+    });
 
     const sumidos = await page.evaluate(() => {
       const canal = (c: number) => {
