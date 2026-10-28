@@ -20,13 +20,19 @@ const arg = (k, d) => {
 const URL_BASE = arg("url", "https://ui.visantlabs.com");
 const SO = arg("perfil", null);
 
+/*
+ * `nivel` força o nível de aparelho (`src/app/aparelho.ts`). A emulação
+ * estrangula a CPU mas não muda `hardwareConcurrency` nem `deviceMemory`, então
+ * sem isto o "notebook" herdava os núcleos da máquina que mede e caía no nível
+ * alto. O celular não precisa: toque e tela estreita já são emulados.
+ */
 const PERFIS = {
   desktop: { device: devices["Desktop Chrome"], cpu: 1 },
-  notebook: { device: devices["Desktop Chrome"], cpu: 4 },
+  notebook: { device: devices["Desktop Chrome"], cpu: 4, nivel: "medio" },
   celular: { device: devices["Pixel 7"], cpu: 6 },
 };
 
-async function medir(nome, { device, cpu }) {
+async function medir(nome, { device, cpu, nivel }) {
   const browser = await chromium.launch({ args: ["--enable-precise-memory-info"] });
   const ctx = await browser.newContext({ ...device });
   const page = await ctx.newPage();
@@ -72,7 +78,7 @@ async function medir(nome, { device, cpu }) {
   await cdp.send("Emulation.setCPUThrottlingRate", { rate: cpu });
 
   const t = Date.now();
-  await page.goto(URL_BASE + "/", { waitUntil: "networkidle", timeout: 90_000 });
+  await page.goto(URL_BASE + (nivel ? `/?nivel=${nivel}` : "/"), { waitUntil: "networkidle", timeout: 90_000 });
   const carregou = Date.now() - t;
 
   // Rola em passos de meia tela, como alguém lendo, e anota o pico de peças vivas.
