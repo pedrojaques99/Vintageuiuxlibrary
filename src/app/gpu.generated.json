@@ -1,17 +1,62 @@
 {
-  "book-3d": 1,
-  "book-shelf": 4,
-  "carousel-3d": 1,
-  "fog-hero": 1,
-  "lathe-object": 1,
-  "lathe-riso": 2,
-  "fog-tree": 1,
-  "fog-garden": 1,
-  "eye-tracker": 1,
-  "shader-ascii": 1,
-  "shader-halftone": 1,
-  "shader-neon": 1,
-  "shader-riso": 1,
-  "shader-tunnel": 1,
-  "shader-voronoi": 1
+  "book-3d": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "book-shelf": {
+    "contextos": 4,
+    "pesada": true
+  },
+  "carousel-3d": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "fog-hero": {
+    "contextos": 1,
+    "pesada": true
+  },
+  "lathe-object": {
+    "contextos": 1,
+    "pesada": true
+  },
+  "lathe-riso": {
+    "contextos": 2,
+    "pesada": false
+  },
+  "fog-tree": {
+    "contextos": 1,
+    "pesada": true
+  },
+  "fog-garden": {
+    "contextos": 1,
+    "pesada": true
+  },
+  "eye-tracker": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-ascii": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-halftone": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-neon": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-riso": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-tunnel": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-voronoi": {
+    "contextos": 1,
+    "pesada": false
+  }
 }

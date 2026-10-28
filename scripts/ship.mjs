@@ -5,6 +5,7 @@
  *   npm run ship -- -m "mensagem do commit"
  *   npm run ship -- --no-deploy        # só até o push
  *   npm run ship -- --dry              # mostra o que faria, não faz
+ *   npm run ship -- --no-perf          # pula o orçamento de performance pós-deploy
  *
  * A ordem existe por um motivo: os portões rodam ANTES do commit. Publicar um
  * item quebrado é pior que não publicar — o consumidor instala, não funciona, e
@@ -297,3 +298,21 @@ ${c.green("Publicado.")}
 ${c.dim("O único teste que prova a colheita é instalar num projeto LIMPO —")}
 ${c.dim("no repo de origem o CSS e as deps já estão lá, então ele não prova nada.")}
 `);
+
+/*
+ * Orçamento de performance, depois do deploy (PLANO-PERFORMANCE.md, P7).
+ *
+ * Avisa, não mata, pelo mesmo motivo do DNS: o deploy já aconteceu. Mede
+ * celular e notebook na produção, onde o número é o que quem visita sente, e o
+ * julgamento mora na régua (`perf-catalogo.mjs --teto`), não aqui. `--no-perf`
+ * pula os ~2 minutos.
+ */
+if (!DRY && !has("--no-perf")) {
+  say("Orçamento de performance (produção)");
+  try {
+    execSync(`node scripts/perf-catalogo.mjs --url ${base} --perfil celular --teto`, { cwd: ROOT, stdio: "inherit" });
+    execSync(`node scripts/perf-catalogo.mjs --url ${base} --perfil notebook --teto`, { cwd: ROOT, stdio: "inherit" });
+  } catch {
+    console.log(c.yellow("⚠ a produção saiu do orçamento de performance. O deploy está no ar; veja acima o que passou."));
+  }
+}

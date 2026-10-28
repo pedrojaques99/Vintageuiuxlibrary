@@ -175,12 +175,15 @@ const Ladrilho = React.memo(function Ladrilho({
   const { w, h } = previewOf(item);
   const { ref: refLazy, mounted, active } = useLazyDemo<HTMLElement>();
   const [refPerto, perto] = useInView<HTMLElement>(PERTO);
+  // Visibilidade real, sem margem: é ela que dá prioridade na fila de vagas.
+  const [refVista, naVista] = useInView<HTMLElement>("0px");
   const ref = React.useCallback(
     (el: HTMLElement | null) => {
       refLazy.current = el;
       refPerto.current = el;
+      refVista.current = el;
     },
-    [refLazy, refPerto],
+    [refLazy, refPerto, refVista],
   );
   const escuro = useFundoEscuro();
   // Foto que ainda não foi gerada não pode virar moldura vazia: a peça fica viva.
@@ -213,7 +216,7 @@ const Ladrilho = React.memo(function Ladrilho({
     Boolean(Demo) &&
     !soFoto &&
     (nivel === "medio" ? acordada && active : gpu ? active : foto ? perto : mounted);
-  const viva = useVaga(item.name, quer);
+  const viva = useVaga(item.name, quer, naVista);
 
   React.useEffect(() => {
     if (!viva) setPronto(false);

@@ -127,20 +127,61 @@ montar: não ajudou na medição e saiu.
       porque a emulação não muda `hardwareConcurrency`. `--nivel` e
       `--query vivas=N` servem para A/B.
 
+### Rodada 4: a régua mentia sobre o desktop
+
+O desktop parecia preso em 20–25%. Fui atrás e descobri que o Chromium headless
+desenha WebGL com **SwiftShader** (GPU emulada na CPU): o perfil desktop media
+uma máquina sem GPU. Calibrado na mesma máquina, na mesma rolagem do nível alto:
+
+| Modo | Quadros > 33ms |
+|---|---|
+| headless + SwiftShader | 22% |
+| headless + GPU | 35% (desenha fora da tela e copia cada quadro) |
+| **Chrome com janela + GPU** | **11–12%** |
+
+Parado, os três dão 60 fps. O número que vale para o desktop é o da janela
+(`--janela`). Nesse modo, a produção antes desta rodada já dava 12%, e a nova dá
+11%: os "25% do desktop" eram quase todos artefato.
+
+O que entrou mesmo assim, porque garante coisas que a régua não mostrava:
+
+- [x] **Máquina sem GPU de verdade** (VM, driver bloqueado, desktop remoto) é
+      detectada pelo nome do renderer (`swiftshader`, `llvmpipe`,
+      `basic render`) e cai no médio. É o caso que mais sofria.
+- [x] **Alto com teto de 12 vivas**, sem comer a tela: o que está visível sempre
+      entra, e a faixa de pré-aquecimento usa as vagas que sobram, uma por janela
+      ociosa (`requestIdleCallback`). O pico caiu de 27 para 12 peças vivas.
+- [x] **Cenas pesadas** (perdem ≥20% dos quadros sozinhas, flag gerada pelo
+      `gpu-extract.mjs`): no máximo 2 vivas juntas no alto. São book-shelf,
+      fog-hero, lathe-object, fog-tree e fog-garden.
+- [x] As réguas usam GPU real por padrão; `--sem-gpu` simula a máquina sem GPU.
+- [x] `tests/marquee.spec.ts` e `tests/vitrine.spec.ts` declaram `?nivel=alto`,
+      porque testam a grade viva e o Chromium do teste não tem GPU real.
+- [x] **P7 feito:** `perf-catalogo.mjs --teto` julga contra o orçamento (celular
+      < 20%, notebook < 10%, 0 erro de console, 0 chunk 404) e sai com código 1.
+      O `ship` roda isso na produção depois do deploy, como aviso
+      (`--no-perf` pula).
+
+Testei e tirei: pré-carregar o chunk da demo no ocioso. A medição não mudou
+(20–22% com e sem), e a versão quebrava em demo que é componente e não função.
+Complexidade sem retorno medido não fica.
+
 ## Resultado (produção, mesma régua)
 
 | Perfil | Quadros > 33ms antes → depois | Bloqueado antes → depois |
 |---|---|---|
-| desktop (alto) | 25% → 25% | 9,1 s → **3,3 s** |
+| desktop (alto, Chrome com janela) | 12% → **11%** | → **1,9 s** |
 | notebook (médio, CPU 4x) | 56% → **8%** | 28,8 s → **1,0 s** |
 | celular (baixo, CPU 6x) | 85% → **1%** | 42,3 s → **1,8 s** |
 
 E, nos três perfis: 0 chunk 404, 0 erro de console, heap de 43–67 MB para
 10–48 MB.
 
-No desktop a grade continua inteira viva, como antes. Os 25% de quadros acima
-de 33ms são o custo de 27 peças animando juntas; o tempo bloqueado caiu para um
-terço com a entrada menor e o teto de GPU. O pico de contextos WebGL medido foi
+No desktop a grade continua viva na tela, como antes. A linha "antes" do
+desktop na tabela da seção 1 (25%) foi medida em SwiftShader (ver rodada 4).
+No Chrome real, o que sobra é o pior quadro de ~330 ms, que é a montagem de
+peças específicas (`spine-card`, `reels-rail`, `erase-field`). Mexer nisso é
+mexer dentro do componente, e isso é decisão sua. O pico de contextos WebGL medido foi
 9 com teto de 6: na troca, o contexto da peça que sai só é liberado no tick
 seguinte (`ContextLossGuard`), então dois se sobrepõem por um instante. Continua
 longe do limite de ≈16.
@@ -226,12 +267,11 @@ O reload do P0 é a rede de proteção. A correção é não apagar o chunk velh
   que dá 268 na página. Trocar por um observer compartilhado com
   `rootMargin` por nível. Ganho pequeno, mas de graça.
 
-### P7 — Portão
+### P7 — Portão ✔
 
-- `npm run perf` → `perf-catalogo.mjs --perfil celular`
-- Teto inicial: quadros > 33ms **< 20%** no celular e **< 10%** no notebook,
-  0 erro de console, WebGL no pico ≤ 4. Entra no `ship.mjs` como aviso, não como
-  bloqueio, até estabilizar.
+- `npm run perf` → `perf-catalogo.mjs`; `--teto` julga e sai com código 1.
+- Teto: quadros > 33ms **< 20%** no celular e **< 10%** no notebook, 0 erro de
+  console, 0 chunk 404. Roda no `ship.mjs` depois do deploy, como aviso.
 
 ## 4. Como medir antes e depois
 
@@ -240,11 +280,21 @@ node scripts/perf-catalogo.mjs                              # produção, 3 perf
 node scripts/perf-catalogo.mjs --url http://localhost:5182  # local (pnpm preview)
 node scripts/perf-pecas.mjs --cpu 4 --top 30                # ranking por peça
 node scripts/perf-pecas.mjs --pular 80                      # continua de onde parou
+node scripts/perf-catalogo.mjs --perfil desktop --janela     # o número real do desktop
+node scripts/perf-catalogo.mjs --perfil notebook --query vivas=2  # A/B do teto
+node scripts/perf-catalogo.mjs --teto                        # julga contra o orçamento
 ```
 
 ## 5. Decisões que são suas
 
-1. **Nível baixo só com foto na grade**, com a peça acordando no toque: ok?
-2. `book-shelf` com um canvas só (P2) e as texturas da fog-tree fora do JS (P5)
-   mexem em componente do registry. Autoriza?
-3. A Skew Protection está habilitada no projeto da Vercel?
+O que é de engenharia na casca do catálogo está feito e medido. O que resta
+mexe em componente do registry ou em configuração paga:
+
+1. **Montagem das peças mais caras** (`spine-card`, `reels-rail`,
+   `erase-field`): é o pior quadro de ~330 ms do desktop. Mexe no componente.
+2. **book-shelf com um canvas só** (`<View>` do drei): 4 contextos → 1. Mexe no
+   componente.
+3. **fog-tree**: os 4 MB são texturas em base64 no `dist` do `ez-tree`. Só
+   desce quando a peça monta, e no celular nunca monta.
+4. **Skew Protection da Vercel**: está desligada no projeto e é paga. A
+   recarga do `vite:preloadError` cobre o caso.

@@ -16,7 +16,7 @@
  *   peso é o maior número de contextos medido em `perf/pecas-*.json` (ou o já
  *   gravado no arquivo de saída). Sem medição nenhuma, o peso é 1.
  *
- * Saída: `src/app/gpu.generated.json` — `{ "<item>": <contextos> }`.
+ * Saída: `src/app/gpu.generated.json` — `{ "<item>": { contextos, pesada } }`.
  */
 
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
@@ -74,16 +74,24 @@ function itemUsaGpu(nome, vistos = new Set()) {
   });
 }
 
-// Maior número de contextos já medido por peça, somando todas as rodadas. O
-// ponto de partida é o arquivo já gravado: o build da Vercel não tem `perf/`, e
-// sem isso ele devolveria a book-shelf ao peso 1.
+/*
+ * O que a medição sabe de cada peça, somando todas as rodadas de
+ * `perf/pecas-*.json`: o maior número de contextos e se ela é PESADA (perde
+ * `PESADA_PCT`% ou mais dos quadros sozinha, na CPU da medição). O ponto de
+ * partida é o arquivo já gravado: o build da Vercel não tem `perf/`, e sem isso
+ * ele esqueceria a medição.
+ */
+const PESADA_PCT = 20;
 const DESTINO = join(ROOT, "src", "app", "gpu.generated.json");
 const medido = existsSync(DESTINO) ? JSON.parse(readFileSync(DESTINO, "utf8")) : {};
 const PERF = join(ROOT, "perf");
 if (existsSync(PERF)) {
   for (const f of readdirSync(PERF).filter((f) => f.startsWith("pecas-"))) {
     for (const r of JSON.parse(readFileSync(join(PERF, f), "utf8")).res ?? []) {
-      if (r.webgl) medido[r.nome] = Math.max(medido[r.nome] ?? 0, r.webgl);
+      if (!r.webgl) continue;
+      const m = (medido[r.nome] ??= { contextos: 1, pesada: false });
+      m.contextos = Math.max(m.contextos, r.webgl);
+      m.pesada ||= (r.lentosPct ?? 0) >= PESADA_PCT;
     }
   }
 }
@@ -92,12 +100,12 @@ const saida = {};
 for (const item of registry.items) {
   const demo = join(ROOT, "src", "app", "demos", `${item.name}-demo.tsx`);
   const usa = itemUsaGpu(item.name) || (existsSync(demo) && arquivoUsaGpu(demo));
-  if (usa) saida[item.name] = medido[item.name] ?? 1;
+  if (usa) saida[item.name] = medido[item.name] ?? { contextos: 1, pesada: false };
 }
 
 writeFileSync(DESTINO, JSON.stringify(saida, null, 2) + "\n");
 console.log(
   `gpu: ${Object.keys(saida).length} peças de GPU → src/app/gpu.generated.json\n  ${Object.entries(saida)
-    .map(([n, c]) => (c > 1 ? `${n}×${c}` : n))
+    .map(([n, m]) => n + (m.contextos > 1 ? `×${m.contextos}` : "") + (m.pesada ? " (pesada)" : ""))
     .join(", ")}`,
 );

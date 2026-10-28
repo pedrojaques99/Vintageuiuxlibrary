@@ -104,7 +104,12 @@ async function centralizarFaixa(page: Page) {
    * procurando `.marquee-track` roda 200 vezes e não acha nada, porque não há
    * marquee nenhum para achar. O marquee mora em seções.
    */
-  await page.goto("/catalogo/secoes");
+  /*
+   * `?nivel=alto` porque este arquivo testa a peça viva na grade. O Chromium do
+   * teste desenha WebGL na CPU (SwiftShader), e o `aparelho.ts` põe máquina sem
+   * GPU real no nível médio, onde a grade é foto até a intenção.
+   */
+  await page.goto("/catalogo/secoes?nivel=alto");
   /*
    * Rede parada antes de medir velocidade.
    *

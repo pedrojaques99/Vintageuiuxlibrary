@@ -13,6 +13,14 @@
 import { chromium, devices } from "@playwright/test";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
+/*
+ * GPU real por padrão. O Chromium headless desenha WebGL com SwiftShader (GPU
+ * emulada na CPU), e o perfil desktop chegou a medir renderização por software,
+ * quando quem visita tem GPU. `--sem-gpu` volta ao SwiftShader, que é o caso real de
+ * VM, driver bloqueado e desktop remoto (o `aparelho.ts` põe esses no médio).
+ */
+const ARGS_GPU = process.argv.includes("--sem-gpu") ? [] : ["--enable-gpu", "--ignore-gpu-blocklist", "--use-angle=default"];
+
 const arg = (k, d) => {
   const i = process.argv.indexOf(`--${k}`);
   return i > -1 ? process.argv[i + 1] : d;
@@ -28,7 +36,7 @@ const nomes = JSON.parse(readFileSync("registry.json", "utf8"))
   .map((i) => i.name)
   .slice(PULAR);
 
-const browser = await chromium.launch({ args: ["--enable-precise-memory-info"] });
+const browser = await chromium.launch({ args: ["--enable-precise-memory-info", ...ARGS_GPU] });
 const ctx = await browser.newContext({ ...devices["Desktop Chrome"] });
 await ctx.addInitScript(() => {
   const w = window;

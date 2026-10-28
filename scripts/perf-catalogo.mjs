@@ -13,6 +13,29 @@
 import { chromium, devices } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
 
+/*
+ * GPU real por padrão. O Chromium headless desenha WebGL com SwiftShader (GPU
+ * emulada na CPU), e o perfil desktop chegou a medir renderização por software,
+ * quando quem visita tem GPU. `--sem-gpu` volta ao SwiftShader, que é o caso real de
+ * VM, driver bloqueado e desktop remoto (o `aparelho.ts` põe esses no médio).
+ */
+const ARGS_GPU = process.argv.includes("--sem-gpu") ? [] : ["--enable-gpu", "--ignore-gpu-blocklist", "--use-angle=default"];
+
+/*
+ * `--janela`: Chrome com janela de verdade. É o número que vale para o desktop.
+ * Calibrado na mesma máquina e na mesma rolagem do nível alto: janela + GPU deu
+ * 13–19% de quadros lentos; headless + GPU, 35% (o headless desenha fora da tela
+ * e copia cada quadro); headless + SwiftShader, 22% (mede outra máquina). Parado,
+ * os três dão 60 fps. Headless continua sendo o padrão porque CI não tem tela, e
+ * para notebook e celular, que são limitados pela CPU estrangulada, a diferença
+ * de modo não muda a leitura.
+ *
+ * Com `--janela`, não cubra a janela de teste: o Chrome estrangula janela
+ * encoberta para 1 quadro por segundo, e a medição se enche de tarefas longas de
+ * ~1.012 ms que não são da página.
+ */
+const JANELA = process.argv.includes("--janela");
+
 const arg = (k, d) => {
   const i = process.argv.indexOf(`--${k}`);
   return i > -1 ? process.argv[i + 1] : d;
@@ -35,7 +58,7 @@ const PERFIS = {
 };
 
 async function medir(nome, { device, cpu, nivel }) {
-  const browser = await chromium.launch({ args: ["--enable-precise-memory-info"] });
+  const browser = await chromium.launch({ headless: !JANELA, args: ["--enable-precise-memory-info", ...ARGS_GPU] });
   const ctx = await browser.newContext({ ...device });
   const page = await ctx.newPage();
   const erros = [];
@@ -127,3 +150,26 @@ mkdirSync("perf", { recursive: true });
 const arq = `perf/catalogo-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-")}.json`;
 writeFileSync(arq, JSON.stringify({ url: URL_BASE, saida }, null, 2));
 console.log(`→ ${arq}`);
+
+/*
+ * `--teto`: julga contra o orçamento do PLANO-PERFORMANCE.md e sai com código 1
+ * se passar. É o que o `ship` chama depois do deploy. Desktop fica de fora: o
+ * headless não mede o desktop direito (ver `--janela`).
+ */
+const TETO = { celular: 20, notebook: 10 };
+if (process.argv.includes("--teto")) {
+  const falhas = [];
+  for (const r of saida) {
+    if (TETO[r.perfil] != null && r.quadrosPerdidosPct >= TETO[r.perfil])
+      falhas.push(`${r.perfil}: ${r.quadrosPerdidosPct}% de quadros lentos (teto ${TETO[r.perfil]}%)`);
+    const erros = r.erros.filter((e) => !/Failed to load resource/.test(e));
+    if (erros.length) falhas.push(`${r.perfil}: ${erros.length} erro(s) de console — ${erros[0]}`);
+    const chunks = r.notFound.filter((u) => u.includes("/assets/"));
+    if (chunks.length) falhas.push(`${r.perfil}: chunk 404 — ${chunks[0]}`);
+  }
+  if (falhas.length) {
+    console.log("\n✗ fora do orçamento:\n  " + falhas.join("\n  "));
+    process.exit(1);
+  }
+  console.log("\n✓ dentro do orçamento de performance");
+}

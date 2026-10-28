@@ -52,7 +52,13 @@ const ficha = (page: Page) => page.locator("[data-ficha]");
  * `secoes` é a fatia usada como cobaia de propósito: é a que carrega
  * scroll-driven, pin e loop — se algum layout quebra, quebra ali.
  */
-const INDICE = "/catalogo";
+/*
+ * `?nivel=alto`: estes testes provam a grade VIVA (monta perto da tela,
+ * desmonta longe). O Chromium do teste não tem GPU real e cairia no nível médio
+ * (`aparelho.ts`), onde a grade é foto até a intenção. Esse caso tem a própria
+ * suíte, `aparelho.spec.ts`.
+ */
+const INDICE = "/catalogo?nivel=alto";
 const FATIA = "/catalogo/secoes";
 /** Peça de OUTRA família (`dados`), para provar que a fatia não vaza. */
 const FORA_DA_FATIA = "kanban";
