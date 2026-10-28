@@ -3,7 +3,7 @@
   "name": "tempo-clock",
   "title": "Tempo Clock",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Relógio de BPM sem interface e sem framework: passo na divisão (1/4, 1/8, 1/16), envelope de bumbo, tap tempo e troca de BPM que não pula o compasso.",
+  "description": "Relógio de BPM sem interface: passo na divisão, envelope de bumbo, tap tempo e troca de BPM sem pular o compasso.",
   "files": [
     {
       "path": "registry/visant/lib/tempo-clock.ts",
@@ -19,8 +19,8 @@
   },
   "categories": [
     "base",
-    "ritmo",
     "bpm",
+    "ritmo",
     "musica",
     "tempo",
     "vanilla"

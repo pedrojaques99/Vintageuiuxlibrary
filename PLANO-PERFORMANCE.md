@@ -1,0 +1,209 @@
+# Plano — performance do catálogo (134 peças vivas)
+
+Data: 2026-10-28. Medido em produção (`ui.visantlabs.com`) com
+`scripts/perf-catalogo.mjs` (página inteira, 3 perfis) e `scripts/perf-pecas.mjs`
+(cada peça sozinha, CPU 4x). JSONs brutos em `perf/`.
+
+## 1. O que a medição mostrou
+
+### Página inteira, rolando do topo ao fim
+
+| Perfil | CPU | Peças vivas no pico | WebGL no pico | Tarefas longas | Tempo bloqueado | Pior quadro | Quadros > 33ms |
+|---|---|---|---|---|---|---|---|
+| desktop | 1x | 27 | 11 | 33 | 9,1 s | 1,2 s | 25% |
+| notebook fraco | 4x | 27 | 9 | 198 | 28,8 s | 2,3 s | **56%** |
+| celular (Pixel 7) | 6x | 11 | 8 | 351 | 42,3 s | 2,2 s | **85%** |
+
+O desktop parece ok. Notebook e celular não estão ok: com 85% dos quadros
+perdidos, o celular rola travando o tempo todo.
+
+### A tela preta do print
+
+Ela se reproduziu sozinha na medição desktop: um deploy entrou durante a rolagem
+(`Age` do HTML bate com o horário). A aba tinha os nomes de chunk antigos,
+`expanding-search-demo-*.js`, `gauge-demo-*.js`, `icon-morph-demo-*.js` e
+`plus-*.js` deram 404, o `React.lazy` lançou o erro, nenhum boundary pegou e a
+árvore inteira desmontou (0 peças na tela).
+
+Isso é **version skew**. O cache do HTML está certo (`max-age=0, must-revalidate`).
+O catálogo é especialmente exposto porque busca ~130 chunks sob demanda conforme a
+pessoa rola, então a janela de risco é a sessão inteira, e não só o carregamento.
+
+### Quem pesa (cada peça sozinha, CPU 4x)
+
+| Peça | Quadros lentos | Pior quadro | Bloqueado | WebGL |
+|---|---|---|---|---|
+| fog-hero | 98% | 300 ms | 2,7 s | 1 |
+| fog-garden | 67% | 1,4 s | 4,5 s | 1 |
+| lathe-object | 83% | 1,0 s | 2,1 s | 1 |
+| book-shelf | 25% | 1,1 s | 4,8 s | **4** |
+| fog-tree | 43% | 1,1 s | 3,1 s | 1 |
+| carousel-3d | 10% | 1,0 s | 1,7 s | 1 |
+| book-3d | 7% | 950 ms | 1,6 s | 1 |
+| lathe-riso | 11% | 183 ms | 209 ms | 2 |
+| ink-wordmark / mist-* / dot-cursor | 11–13% | ≤200 ms | ≤370 ms | 0 |
+| erase-field | 4% | 400 ms | 1,1 s | 0 |
+
+No resto do acervo, só duas peças passam de 5% de quadros lentos: `countdown`
+(10%) e `activity-heatmap` (6%). A `hold-to-confirm` tem um pico de 550 ms na
+montagem. A medição cobriu 112 das 128 peças. As 16 que faltam são os seis
+`shader-*` (WebGL, provavelmente também entram no grupo pesado), mais
+`mist-dialog`, `reactions`, `signature-pad`, `slide-to-confirm`, `sticker-peel`,
+`streamgraph`, `time-dial`, `voice-note`, `wallet-stack` e `anatomia`. Para
+completar: `node scripts/perf-pecas.mjs --pular 112`.
+
+Umas 10 peças (todas WebGL ou canvas em tela cheia) respondem pela maior parte do
+custo. As outras ~120 ficam abaixo de 3% de quadros lentos. **O problema não é
+"140 peças", e sim deixar as 10 pesadas vivas juntas, em qualquer aparelho.**
+
+### Bundle
+
+| Arquivo | Peso | Por quê |
+|---|---|---|
+| `index-*.js` (entrada) | **764 KB** | `props.generated.json` (442 KB) e `controls.generated.json` (180 KB) entram por import estático (`ItemDocs`, `copiar-pra-ia`, `controls`). Só a ficha usa esses arquivos. |
+| `fog-tree-scene-*.js` | **3,9 MB** | 20 texturas em base64 (16 JPEG, 4 PNG) embutidas pelo `@dgreenheck/ez-tree`. Só é baixado quando a fog-tree monta, mas no celular isso pesa. |
+| `index-*.css` | 304 KB | Tailwind de 134 peças. Aceitável por ora. |
+| `/shots/*.webp` | 28 KB em média | Ok. Faltam 4 fotos: `lathe-riso`, `fader`, `tempo-bar`, `tempo-clock`. |
+
+### Ruído em produção
+
+- `GET /__bugs` dava 404 em toda visita (o endpoint é do plugin do dev server).
+- 4 fotos 404 (as que faltam acima).
+
+## 2. O que já foi feito nesta rodada (P0)
+
+- [x] `src/main.tsx`: o listener `vite:preloadError` recarrega a página uma vez
+      (é o caminho que a doc do Vite indica). Uma trava de 10s em
+      `sessionStorage` evita laço.
+- [x] `src/app/Gallery.tsx`: um `ErrorBoundary` (lib `react-error-boundary`) em
+      volta de cada ladrilho. Uma peça que quebra cai sozinha e a foto fica no
+      lugar.
+- [x] `src/app/ComponentFocus.tsx`: o mesmo boundary no palco da ficha.
+- [x] `src/app/bug-report.tsx`: `/__bugs` só é buscado em `import.meta.env.DEV`.
+- [x] `scripts/perf-catalogo.mjs` e `scripts/perf-pecas.mjs`: as réguas de antes
+      e depois.
+
+### Rodada 2 (mesmo dia)
+
+- [x] P4: a ficha (`ComponentFocus`) virou lazy, com prefetch no ocioso. A
+      entrada caiu de **764 KB para 304 KB** (97 KB gzip).
+- [x] P1 + P2: `src/app/aparelho.ts` define o nível (alto/médio/baixo, ou
+      `?nivel=` para forçar) e a fila de vagas de GPU (teto 6/3/2). A grade
+      (`Gallery`) usa os dois.
+- [x] `scripts/gpu-extract.mjs` gera `gpu.generated.json` (15 peças, com
+      book-shelf×4 e lathe-riso×2). Roda no `build`.
+- [x] P6: um `IntersectionObserver` por `rootMargin` (`stage.tsx`).
+- [x] P7 parcial: `npm run perf` e `npm run perf:pecas`.
+- [~] P3: a Skew Protection não está ligada no projeto e é configuração paga do
+      painel. O reload do P0 cobre o caso.
+- [~] P5: o base64 vem do `dist` publicado do `ez-tree`. Trade-off aceito: o
+      chunk só carrega sob demanda, e no nível baixo ele nem carrega.
+
+Pendente:
+- `tests/pecas-fundo-branco.spec.ts › streamgraph` falhou com as mudanças e
+  passou sem elas. Investigar se é instável ou efeito da vaga/foto.
+- Rodar `npm run perf -- --url http://localhost:5182` com o build novo (o
+  `vite preview` não subiu: a porta 5182 já estava ocupada) e comparar com a
+  tabela da seção 1.
+- Gerar as 4 fotos que faltam (`npm run build:shots`, que só faz o que não existe).
+- Fazer commit e deploy.
+
+## 3. O plano
+
+Ordem: primeiro o que mais muda a experiência com menos código. Nenhuma peça do
+design system é redesenhada. As mudanças ficam na casca do catálogo (`Gallery`,
+`stage`), com uma exceção: a da seção 3.4, que mexe dentro de `fog-tree-scene`.
+
+### P1 — Perfil de aparelho decide quanto fica vivo
+
+Hoje a regra é a mesma para todo mundo: tudo a até uma tela de distância
+(`PERTO = "100% 0px"`) fica vivo. A proposta é um `useNivelAparelho()` em
+`stage.tsx`, lido uma vez, que só usa sinais de API padrão:
+
+| Sinal | API |
+|---|---|
+| núcleos | `navigator.hardwareConcurrency` |
+| memória | `navigator.deviceMemory` (só Chromium; sem ele, cai no médio) |
+| toque | `matchMedia("(pointer: coarse)")` |
+| economia | `navigator.connection?.saveData`, `prefers-reduced-motion`, `prefers-reduced-data` |
+
+| Nível | Quem | Regra na grade |
+|---|---|---|
+| **alto** | desktop ≥ 8 núcleos | como hoje |
+| **médio** | notebook, tablet | vivo só no viewport (`rootMargin` 0, sem a faixa de uma tela); **WebGL no máximo 2 vivos** |
+| **baixo** | celular, `saveData`, reduced-motion | **grade só com foto** (`/shots` já existe). A peça monta com o toque no ladrilho ou na ficha. |
+
+O nível baixo reaproveita a foto que a grade já usa como espera. Não precisa de
+componente novo.
+
+### P2 — Orçamento de WebGL (vale para todos os níveis)
+
+- A grade marca as peças pesadas (as ~10 da tabela) com um campo `pesada: true`
+  no `catalog.tsx`, ou deriva isso de `deps.generated.json` (quem importa
+  `three`, `@react-three/*` ou `webgl-stage`).
+- Um contador simples em `stage.tsx` limita quantas pesadas ficam vivas ao mesmo
+  tempo (alto: 4, médio: 2, baixo: 0). As que passam do teto ficam na foto até
+  uma vaga abrir. Hoje o pico é 11 contextos, e o Chrome derruba o mais antigo a
+  partir de ≈16 (no celular, menos que isso).
+- `book-shelf` abre **4 contextos** sozinha. Vale trocar por um canvas só, com
+  `<View>` do drei, que é o caminho da própria lib. **Isso mexe no componente,
+  então só com sua aprovação.**
+
+### P3 — Version skew de verdade (além do reload)
+
+O reload do P0 é a rede de proteção. A correção é não apagar o chunk velho:
+
+- **Vercel Skew Protection**: o projeto `visant-ui` usa Vite puro, sem suporte
+  embutido, então a doc manda anexar `?dpl=<VERCEL_DEPLOYMENT_ID>` nos assets.
+  No Vite, isso se faz com `experimental.renderBuiltUrl` lendo
+  `process.env.VERCEL_DEPLOYMENT_ID` no build. Antes de mexer: confirmar no
+  painel que a Skew Protection está habilitada (Settings → Advanced), porque ela
+  depende do plano.
+- Sem Skew Protection, o reload do P0 continua sendo a solução, e basta.
+
+### P4 — Tirar 620 KB da entrada
+
+- `ItemDocs.tsx`, `copiar-pra-ia.tsx` e `controls.tsx` passam a carregar
+  `props.generated.json` e `controls.generated.json` com `import()` dinâmico,
+  quando a ficha abre. A expectativa é a entrada cair de 764 KB para algo perto
+  de 150 KB.
+- Conferência: `dist/assets/index-*.js` antes e depois, e
+  `grep vintage-meter` não pode mais achar a chave no chunk de entrada.
+
+### P5 — fog-tree: texturas fora do JS
+
+- Os 3,9 MB vêm de base64 dentro do `ez-tree`. A ideia é servir as texturas como
+  arquivo (`public/` ou `?url`) e passar as URLs para a cena, que é a API de
+  textura do `three` (`TextureLoader`).
+- **Mexe em `registry/visant/lib/fog-tree-scene.ts`, que é do registry, então só
+  com sua aprovação.**
+
+### P6 — Miúdos
+
+- Gerar as 4 fotos que faltam: `npm run build:shots` só para elas.
+- Cada ladrilho cria 2 `IntersectionObserver` (`useLazyDemo` e `useInView`), o
+  que dá 268 na página. Trocar por um observer compartilhado com
+  `rootMargin` por nível. Ganho pequeno, mas de graça.
+
+### P7 — Portão
+
+- `npm run perf` → `perf-catalogo.mjs --perfil celular`
+- Teto inicial: quadros > 33ms **< 20%** no celular e **< 10%** no notebook,
+  0 erro de console, WebGL no pico ≤ 4. Entra no `ship.mjs` como aviso, não como
+  bloqueio, até estabilizar.
+
+## 4. Como medir antes e depois
+
+```bash
+node scripts/perf-catalogo.mjs                              # produção, 3 perfis
+node scripts/perf-catalogo.mjs --url http://localhost:5182  # local (pnpm preview)
+node scripts/perf-pecas.mjs --cpu 4 --top 30                # ranking por peça
+node scripts/perf-pecas.mjs --pular 80                      # continua de onde parou
+```
+
+## 5. Decisões que são suas
+
+1. **Nível baixo só com foto na grade**, com a peça acordando no toque: ok?
+2. `book-shelf` com um canvas só (P2) e as texturas da fog-tree fora do JS (P5)
+   mexem em componente do registry. Autoriza?
+3. A Skew Protection está habilitada no projeto da Vercel?

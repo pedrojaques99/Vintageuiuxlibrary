@@ -24,7 +24,6 @@ import { cn } from "@/lib/utils";
 import { BrandThemeProvider } from "@/lib/brand-theme";
 import { Solo, fundoDoSolo, propsDaQuery } from "./Solo";
 import { Busca, BotaoDeBusca, useAtalhoDeBusca } from "./busca";
-import { ComponentFocus } from "./ComponentFocus";
 import { BrandSelector } from "../../registry/visant/ui/brand-selector";
 import { SfxToggle } from "../../registry/visant/ui/sfx-toggle";
 import { Conectar } from "./conectar";
@@ -44,6 +43,19 @@ import { CATALOG, FAMILIA_ANTIGA, FAMILIES, type Family } from "./catalog";
 const BrandStudioBody = React.lazy(() =>
   import("./BrandStudio").then((m) => ({ default: m.BrandStudioBody })),
 );
+
+/*
+ * A ficha também sai da entrada. Ela arrasta `props.generated.json` (442 KB) e
+ * `controls.generated.json` (180 KB), que a grade nunca lê, e isso era 80% do
+ * chunk de entrada. Para o clique não pagar a espera, o chunk é buscado quando o
+ * navegador fica ocioso depois do load.
+ */
+const carregarFicha = () => import("./ComponentFocus");
+const ComponentFocus = React.lazy(() => carregarFicha().then((m) => ({ default: m.ComponentFocus })));
+if (typeof window !== "undefined") {
+  const ocioso = window.requestIdleCallback ?? ((fn: () => void) => window.setTimeout(fn, 1500));
+  window.addEventListener("load", () => ocioso(() => void carregarFicha()), { once: true });
+}
 import { KitRoom } from "./KitRoom";
 import { KITS } from "./kits";
 import { DEFAULT_BRAND, REGISTRY_URL } from "./registry-meta";
@@ -378,15 +390,17 @@ function Shell() {
        */}
       {route.view === "catalogo" &&
         (route.focus && pecaEmFoco ? (
-          <ComponentFocus
-            key={pecaEmFoco.name}
-            item={pecaEmFoco}
-            index={indiceEmFoco}
-            total={irmas.length}
-            onClose={() => navigate({ view: "catalogo", focus: null, kit: null, familia: route.familia })}
-            onPrev={() => andarNaFamilia(-1)}
-            onNext={() => andarNaFamilia(1)}
-          />
+          <React.Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
+            <ComponentFocus
+              key={pecaEmFoco.name}
+              item={pecaEmFoco}
+              index={indiceEmFoco}
+              total={irmas.length}
+              onClose={() => navigate({ view: "catalogo", focus: null, kit: null, familia: route.familia })}
+              onPrev={() => andarNaFamilia(-1)}
+              onNext={() => andarNaFamilia(1)}
+            />
+          </React.Suspense>
         ) : (
           <Gallery
             onFocus={setFocus}

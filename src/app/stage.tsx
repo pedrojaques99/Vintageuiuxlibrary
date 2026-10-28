@@ -37,6 +37,35 @@ export function usePageVisible() {
   return visible;
 }
 
+/*
+ * Um observer por `rootMargin`, dividido por todos os palcos.
+ *
+ * Cada ladrilho da grade observa duas distâncias, e com um observer por chamada
+ * eram 268 observers vivos numa página de 134 peças. O navegador agrupa o
+ * cálculo de interseção por observer, então um só para todos faz a mesma conta
+ * uma vez por quadro.
+ */
+const observadores = new Map<string, { io: IntersectionObserver; avisos: Map<Element, (v: boolean) => void> }>();
+
+function observar(el: Element, rootMargin: string, aviso: (v: boolean) => void) {
+  let o = observadores.get(rootMargin);
+  if (!o) {
+    const avisos = new Map<Element, (v: boolean) => void>();
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => avisos.get(e.target)?.(e.isIntersecting)),
+      { rootMargin },
+    );
+    o = { io, avisos };
+    observadores.set(rootMargin, o);
+  }
+  o.avisos.set(el, aviso);
+  o.io.observe(el);
+  return () => {
+    o.avisos.delete(el);
+    o.io.unobserve(el);
+  };
+}
+
 export function useInView<T extends HTMLElement>(rootMargin = "300px") {
   const ref = React.useRef<T | null>(null);
   const [inView, setInView] = React.useState(false);
@@ -48,12 +77,7 @@ export function useInView<T extends HTMLElement>(rootMargin = "300px") {
       setInView(true);
       return;
     }
-    const io = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { rootMargin },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    return observar(el, rootMargin, setInView);
   }, [rootMargin]);
 
   return [ref, inView] as const;

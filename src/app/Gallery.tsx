@@ -26,6 +26,7 @@
  */
 
 import * as React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { ArrowUpRight, Grid2x2, Grid3x3, LayoutGrid, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -49,6 +50,7 @@ import { WireframeToggle } from "./media";
 import { Aba } from "./casa-ui";
 import { abrirConectar } from "./conectar";
 import { Miniatura } from "./miniatura";
+import { nivelDoAparelho, pesoGpu, useVagaGpu } from "./aparelho";
 import { BugButton } from "./bug-report";
 import { CURADORIA_ATIVA, arquivada, useNotas } from "./curadoria";
 
@@ -186,9 +188,24 @@ const Ladrilho = React.memo(function Ladrilho({
   const [pronto, setPronto] = React.useState(false);
   const marcarPronto = React.useCallback(() => setPronto(true), []);
 
-  const comFoto = foto && Boolean(Demo) && !semFoto;
-  // Na fatia a peça monta uma vez e fica; no acervo ela vive enquanto está perto.
-  const viva = Boolean(Demo) && (foto ? perto : mounted);
+  /*
+   * Quanto fica vivo depende do aparelho (`aparelho.ts`):
+   * - alto: como sempre. No acervo, vivo a uma tela de distância; na fatia,
+   *   monta uma vez e fica.
+   * - médio: vivo só perto do viewport (`active`), sem a faixa de uma tela.
+   * - baixo: a grade é foto. A peça vive na ficha, que abre no toque.
+   * Peça de GPU, em qualquer nível, só vive na tela e com vaga no orçamento de
+   * contextos; fora disso, mostra a foto.
+   */
+  const nivel = nivelDoAparelho();
+  const gpu = pesoGpu(item.name) > 0;
+  const comFoto = (foto || gpu || nivel === "baixo") && Boolean(Demo) && !semFoto;
+  const soFoto = nivel === "baixo" && comFoto;
+  const quer =
+    Boolean(Demo) &&
+    !soFoto &&
+    (gpu ? active : nivel === "medio" ? active && mounted : foto ? perto : mounted);
+  const viva = useVagaGpu(item.name, quer);
 
   React.useEffect(() => {
     if (!viva) setPronto(false);
@@ -217,10 +234,15 @@ const Ladrilho = React.memo(function Ladrilho({
         <div onClick={fotoVisivel ? onOpen : undefined} className={fotoVisivel ? "cursor-pointer" : undefined}>
           <PalcoFixo w={w} h={h} ratio={16 / 10} active={active} style={stageSurfaceOf(item)}>
             {viva ? (
-              <React.Suspense fallback={null}>
-                <Demo />
-                {comFoto ? <Pronto onPronto={marcarPronto} /> : null}
-              </React.Suspense>
+              /* Peça que quebra (ou chunk que o deploy novo apagou) cai sozinha:
+                 o fallback é nada, a foto continua no lugar e a grade segue. Sem
+                 isso, um import falho subia até a raiz e a página ficava preta. */
+              <ErrorBoundary fallback={null}>
+                <React.Suspense fallback={null}>
+                  <Demo />
+                  {comFoto ? <Pronto onPronto={marcarPronto} /> : null}
+                </React.Suspense>
+              </ErrorBoundary>
             ) : null}
             {comFoto ? (
               <img

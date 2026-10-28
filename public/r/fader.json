@@ -3,7 +3,7 @@
   "name": "fader",
   "title": "Fader",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Slider de console em web component (<visant-fader>), sem framework: trilho com marca a cada 10%, tampa quadrada, arrastar o nome muda o valor e duplo clique volta pro padrão.",
+  "description": "Slider de console em web component, sem framework: marca a cada 10%, tampa quadrada, arrastar o nome muda o valor e duplo clique volta pro padrão.",
   "files": [
     {
       "path": "registry/visant/lib/fader.ts",
@@ -22,8 +22,7 @@
     "slider",
     "vanilla",
     "web-component",
-    "gesto",
-    "ferramenta"
+    "gesto"
   ],
   "type": "registry:lib"
 }

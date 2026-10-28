@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/kits-pecas.mjs && node scripts/registry-meta.mjs && node scripts/registry-css.mjs && node scripts/build-docs.mjs && vite build && node scripts/prerender.mjs && node scripts/llms.mjs",
+    "build": "node scripts/kits-pecas.mjs && node scripts/registry-meta.mjs && node scripts/gpu-extract.mjs && node scripts/registry-css.mjs && node scripts/build-docs.mjs && vite build && node scripts/prerender.mjs && node scripts/llms.mjs",
     "build:registry": "npx shadcn@latest build",
     "preview": "vite preview",
     "check:catalog": "node scripts/catalog-check.mjs",
@@ -40,7 +40,10 @@
     "bugs": "node scripts/bugs.mjs",
     "curadoria": "node scripts/curadoria.mjs",
     "build:registry-css": "node scripts/registry-css.mjs",
-    "anatomia": "node scripts/anatomia-build.mjs && vite build -c anatomia/vite.web.config.mjs"
+    "anatomia": "node scripts/anatomia-build.mjs && vite build -c anatomia/vite.web.config.mjs",
+    "build:gpu": "node scripts/gpu-extract.mjs",
+    "perf": "node scripts/perf-catalogo.mjs",
+    "perf:pecas": "node scripts/perf-pecas.mjs"
   },
   "dependencies": {
     "@dgreenheck/ez-tree": "1.1.0",
@@ -95,6 +98,7 @@
     "react-day-picker": "8.10.1",
     "react-dnd": "16.0.1",
     "react-dnd-html5-backend": "16.0.1",
+    "react-error-boundary": "^4.1.2",
     "react-hook-form": "7.55.0",
     "react-popper": "2.3.0",
     "react-resizable-panels": "2.1.7",

@@ -32,6 +32,7 @@
  */
 
 import * as React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import {
   Box,
   Check,
@@ -411,9 +412,11 @@ export function ComponentFocus({
               <div style={{ width: Math.min(frameW, util || frameW) }}>
                 {/* Escala só entra quando a peça não cabe — nunca amplia. */}
                 <FitStage w={frameW} h={frameH} maxScale={1}>
-                  <React.Suspense fallback={<div className="h-full w-full" />}>
-                    <Demo props={knobs.props} />
-                  </React.Suspense>
+                  <ErrorBoundary fallback={<div className="h-full w-full" />}>
+                    <React.Suspense fallback={<div className="h-full w-full" />}>
+                      <Demo props={knobs.props} />
+                    </React.Suspense>
+                  </ErrorBoundary>
                 </FitStage>
               </div>
             )}

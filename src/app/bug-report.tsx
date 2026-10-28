@@ -51,6 +51,11 @@ function avisar() {
 }
 
 async function recarregar() {
+  // O endpoint é do plugin do dev server; em produção a busca era um 404 por visita.
+  if (!import.meta.env.DEV) {
+    carregado = true;
+    return;
+  }
   try {
     const r = await fetch("/__bugs");
     counts = (await r.json()).counts ?? {};

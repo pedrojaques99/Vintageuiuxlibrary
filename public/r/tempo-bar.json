@@ -3,7 +3,7 @@
   "name": "tempo-bar",
   "title": "Tempo Bar",
   "author": "Visant Labs <visantsupply@gmail.com>",
-  "description": "Controle de BPM em web component (<visant-tempo-bar>), sem framework: LED que pisca na batida, número que se arrasta, quatro luzes de compasso, divisão e tap.",
+  "description": "Controle de BPM em web component, sem framework: LED na batida, número que se arrasta, luzes de compasso, divisão e tap.",
   "registryDependencies": [
     "@visant/tempo-clock"
   ],
@@ -22,8 +22,8 @@
   },
   "categories": [
     "controles",
-    "ritmo",
     "bpm",
+    "ritmo",
     "musica",
     "vanilla",
     "web-component"

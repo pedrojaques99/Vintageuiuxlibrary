@@ -32,6 +32,26 @@ import "@fontsource/oswald/500.css";
   document.documentElement.classList.toggle("dark", escuro);
 }
 
+/*
+ * Chunk que sumiu no deploy novo: recarrega a página uma vez.
+ *
+ * A aba aberta antes do deploy ainda conhece os nomes de chunk antigos, e o
+ * catálogo busca ~130 demos sob demanda conforme a pessoa rola — então a janela
+ * pra isso acontecer é a sessão inteira. É o tratamento que a doc do Vite indica
+ * (`vite:preloadError`). A trava de 10s impede laço se o chunk faltar de verdade.
+ */
+window.addEventListener("vite:preloadError", (event) => {
+  try {
+    const ultima = Number(sessionStorage.getItem("visant:ui:recarga") || 0);
+    if (Date.now() - ultima < 10_000) return;
+    sessionStorage.setItem("visant:ui:recarga", String(Date.now()));
+  } catch {
+    /* sem storage: recarrega mesmo assim */
+  }
+  event.preventDefault();
+  window.location.reload();
+});
+
 import App from "./app/App.tsx";
 import { MediaProvider } from "./app/media.tsx";
 import "./styles/index.css";
