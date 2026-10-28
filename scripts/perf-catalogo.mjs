@@ -19,6 +19,8 @@ const arg = (k, d) => {
 };
 const URL_BASE = arg("url", "https://ui.visantlabs.com");
 const SO = arg("perfil", null);
+const NIVEL = arg("nivel", null);
+const EXTRA = arg("query", ""); // ex.: --query vivas=2
 
 /*
  * `nivel` força o nível de aparelho (`src/app/aparelho.ts`). A emulação
@@ -78,7 +80,7 @@ async function medir(nome, { device, cpu, nivel }) {
   await cdp.send("Emulation.setCPUThrottlingRate", { rate: cpu });
 
   const t = Date.now();
-  await page.goto(URL_BASE + (nivel ? `/?nivel=${nivel}` : "/"), { waitUntil: "networkidle", timeout: 90_000 });
+  await page.goto(URL_BASE + "/?" + [nivel && `nivel=${nivel}`, EXTRA].filter(Boolean).join("&"), { waitUntil: "networkidle", timeout: 90_000 });
   const carregou = Date.now() - t;
 
   // Rola em passos de meia tela, como alguém lendo, e anota o pico de peças vivas.
@@ -114,7 +116,7 @@ const saida = [];
 for (const [nome, p] of Object.entries(PERFIS)) {
   if (SO && SO !== nome) continue;
   process.stdout.write(`medindo ${nome}… `);
-  const r = await medir(nome, p);
+  const r = await medir(nome, NIVEL ? { ...p, nivel: NIVEL } : p);
   saida.push(r);
   const { notFound, erros, ...resumo } = r;
   console.log(JSON.stringify(resumo));

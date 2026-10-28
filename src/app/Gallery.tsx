@@ -50,7 +50,7 @@ import { WireframeToggle } from "./media";
 import { Aba } from "./casa-ui";
 import { abrirConectar } from "./conectar";
 import { Miniatura } from "./miniatura";
-import { nivelDoAparelho, pesoGpu, useVagaGpu } from "./aparelho";
+import { nivelDoAparelho, pesoGpu, useVaga } from "./aparelho";
 import { BugButton } from "./bug-report";
 import { CURADORIA_ATIVA, arquivada, useNotas } from "./curadoria";
 
@@ -192,20 +192,28 @@ const Ladrilho = React.memo(function Ladrilho({
    * Quanto fica vivo depende do aparelho (`aparelho.ts`):
    * - alto: como sempre. No acervo, vivo a uma tela de distância; na fatia,
    *   monta uma vez e fica.
-   * - médio: vivo só perto do viewport (`active`), sem a faixa de uma tela.
+   * - médio: foto, e a peça acorda por intenção: cursor, foco ou toque no
+   *   ladrilho. Acordada, fica viva enquanto estiver perto da tela (`active`);
+   *   tirar o cursor não a devolve pra foto, que seria a troca no pior momento.
    * - baixo: a grade é foto. A peça vive na ficha, que abre no toque.
    * Peça de GPU, em qualquer nível, só vive na tela e com vaga no orçamento de
-   * contextos; fora disso, mostra a foto.
+   * contextos; no médio, toda peça também disputa uma das 6 vagas de viva. Sem
+   * vaga, mostra a foto.
    */
   const nivel = nivelDoAparelho();
   const gpu = pesoGpu(item.name) > 0;
-  const comFoto = (foto || gpu || nivel === "baixo") && Boolean(Demo) && !semFoto;
+  const comFoto = (foto || gpu || nivel !== "alto") && Boolean(Demo) && !semFoto;
   const soFoto = nivel === "baixo" && comFoto;
+  const [acordada, setAcordada] = React.useState(false);
+  React.useEffect(() => {
+    if (!active) setAcordada(false);
+  }, [active]);
+  const acordar = nivel === "medio" && !acordada ? () => setAcordada(true) : undefined;
   const quer =
     Boolean(Demo) &&
     !soFoto &&
-    (gpu ? active : nivel === "medio" ? active && mounted : foto ? perto : mounted);
-  const viva = useVagaGpu(item.name, quer);
+    (nivel === "medio" ? acordada && active : gpu ? active : foto ? perto : mounted);
+  const viva = useVaga(item.name, quer);
 
   React.useEffect(() => {
     if (!viva) setPronto(false);
@@ -223,6 +231,9 @@ const Ladrilho = React.memo(function Ladrilho({
          `data-palco` dele não distingue mais as duas: é por aqui que a suíte
          prova que só o que está perto da tela fica montado. */
       data-viva={viva ? "" : undefined}
+      onPointerEnter={acordar}
+      onFocus={acordar}
+      onTouchStart={acordar}
       className="palco group relative isolate overflow-hidden rounded-tile [contain:paint] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--casa-fg-2)]"
     >
       {Demo ? (

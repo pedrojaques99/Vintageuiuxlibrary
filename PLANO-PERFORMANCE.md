@@ -99,14 +99,45 @@ custo. As outras ~120 ficam abaixo de 3% de quadros lentos. **O problema não é
 - [~] P5: o base64 vem do `dist` publicado do `ez-tree`. Trade-off aceito: o
       chunk só carrega sob demanda, e no nível baixo ele nem carrega.
 
-Pendente:
-- `tests/pecas-fundo-branco.spec.ts › streamgraph` falhou com as mudanças e
-  passou sem elas. Investigar se é instável ou efeito da vaga/foto.
-- Rodar `npm run perf -- --url http://localhost:5182` com o build novo (o
-  `vite preview` não subiu: a porta 5182 já estava ocupada) e comparar com a
-  tabela da seção 1.
-- Gerar as 4 fotos que faltam (`npm run build:shots`, que só faz o que não existe).
-- Fazer commit e deploy.
+### Rodada 3: o nível médio acorda por intenção
+
+A primeira versão do médio ("vivo só perto da tela") não moveu o notebook:
+56% → 46% → 63% conforme o ajuste. Medir a curva (`?vivas=N`, CPU 4x) mostrou
+por quê:
+
+| Peças vivas | Quadros > 33ms | Bloqueado |
+|---|---|---|
+| 0 (só foto) | 15% | 1,1 s |
+| 2 | 55% | 4,1 s |
+| 4 | 60% | 7,0 s |
+
+Uma ou duas peças em animação contínua (o topo da grade tem `tempo-bar`,
+`tempo-clock` e `lathe-riso`) já derrubam uma CPU fraca. Então, no médio, a
+peça fica em foto até o cursor, o foco ou o toque chegar no ladrilho, e depois
+segue viva enquanto estiver perto da tela. O teto de 6 vivas segura quem passa o
+cursor pela grade inteira. Também testei esperar a rolagem assentar antes de
+montar: não ajudou na medição e saiu.
+
+- [x] Fotos de `fader`, `tempo-bar`, `tempo-clock` e `lathe-riso` (conferidas,
+      não vieram em branco).
+- [x] O `streamgraph` passou 3 de 3 isolado: a falha anterior foi instabilidade
+      sob carga da suíte paralela.
+- [x] `tests/aparelho.spec.ts` prende as regras dos níveis baixo e médio.
+- [x] O `perf-catalogo.mjs` força o nível por perfil (`notebook` = médio),
+      porque a emulação não muda `hardwareConcurrency`. `--nivel` e
+      `--query vivas=N` servem para A/B.
+
+## Resultado (produção, mesma régua)
+
+| Perfil | Quadros > 33ms antes → depois | Bloqueado antes → depois |
+|---|---|---|
+| desktop (alto) | 25% → 27% | 9,1 s → 3,7 s |
+| notebook (médio, CPU 4x) | 56% → **8%** (local) | 28,8 s → **1,0 s** |
+| celular (baixo, CPU 6x) | 85% → **2%** | 42,3 s → **2,4 s** |
+
+No desktop a grade continua inteira viva, como antes. Os 27% de quadros acima de
+33ms são o custo de 27 peças animando juntas a 1x; o tempo bloqueado caiu pela
+metade com a entrada menor e o teto de GPU.
 
 ## 3. O plano
 
