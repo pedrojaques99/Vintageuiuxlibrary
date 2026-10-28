@@ -131,13 +131,23 @@ montar: não ajudou na medição e saiu.
 
 | Perfil | Quadros > 33ms antes → depois | Bloqueado antes → depois |
 |---|---|---|
-| desktop (alto) | 25% → 27% | 9,1 s → 3,7 s |
-| notebook (médio, CPU 4x) | 56% → **8%** (local) | 28,8 s → **1,0 s** |
-| celular (baixo, CPU 6x) | 85% → **2%** | 42,3 s → **2,4 s** |
+| desktop (alto) | 25% → 25% | 9,1 s → **3,3 s** |
+| notebook (médio, CPU 4x) | 56% → **8%** | 28,8 s → **1,0 s** |
+| celular (baixo, CPU 6x) | 85% → **1%** | 42,3 s → **1,8 s** |
 
-No desktop a grade continua inteira viva, como antes. Os 27% de quadros acima de
-33ms são o custo de 27 peças animando juntas a 1x; o tempo bloqueado caiu pela
-metade com a entrada menor e o teto de GPU.
+E, nos três perfis: 0 chunk 404, 0 erro de console, heap de 43–67 MB para
+10–48 MB.
+
+No desktop a grade continua inteira viva, como antes. Os 25% de quadros acima
+de 33ms são o custo de 27 peças animando juntas; o tempo bloqueado caiu para um
+terço com a entrada menor e o teto de GPU. O pico de contextos WebGL medido foi
+9 com teto de 6: na troca, o contexto da peça que sai só é liberado no tick
+seguinte (`ContextLossGuard`), então dois se sobrepõem por um instante. Continua
+longe do limite de ≈16.
+
+Se o desktop precisar descer mais, a alavanca é a mesma do médio (acordar por
+intenção), mas isso muda a experiência de quem tem máquina boa, e é decisão de
+produto, não de engenharia.
 
 ## 3. O plano
 
