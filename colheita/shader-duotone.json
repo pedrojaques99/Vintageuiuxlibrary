@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-duotone",
+    "title": "Shader Duotone",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem refeita em duas cores do tema, a mais escura nas sombras e a outra nas luzes, sem sair em negativo no escuro.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "duotone",
+      "duas cores"
+    ],
+    "demoImport": "./demos/shader-duotone-demo",
+    "knobs": "ShaderDuotone",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-duotone",
+    "type": "registry:ui",
+    "title": "Shader Duotone",
+    "description": "Uma imagem refeita em duas cores do tema, a mais escura nas sombras e a outra nas luzes, sem sair em negativo no escuro.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-duotone.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/duotone.ts (Visant Labs)"
+}

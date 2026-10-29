@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-chromatic-aberration",
+    "title": "Shader Chromatic Aberration",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Os canais de cor de uma imagem fora do registro, com a separação apontando para o cursor e crescendo longe do centro.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "aberração cromática",
+      "rgb"
+    ],
+    "demoImport": "./demos/shader-chromatic-aberration-demo",
+    "knobs": "ShaderChromaticAberration",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-chromatic-aberration",
+    "type": "registry:ui",
+    "title": "Shader Chromatic Aberration",
+    "description": "Os canais de cor de uma imagem fora do registro, com a separação apontando para o cursor e crescendo longe do centro.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-chromatic-aberration.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/chromaticAberration.ts (Visant Labs)"
+}

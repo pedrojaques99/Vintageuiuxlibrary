@@ -113,6 +113,14 @@ const SECOES = [
     titulo: "Lab — @visant/ui",
     descricao: "Bancada de interações: uma nova por dia, e só fica a que presta.",
   },
+  /* `/callback` é a volta do OAuth do Visant Labs (`visant-auth.tsx`). Mesmo
+     buraco do `/lab`: sem HTML próprio a Vercel responde 404 antes do app
+     ler o `?code=`, e o login nunca fecha. */
+  {
+    slug: "callback",
+    titulo: "Entrando — @visant/ui",
+    descricao: "Conectando sua conta Visant Labs.",
+  },
 ];
 
 /*

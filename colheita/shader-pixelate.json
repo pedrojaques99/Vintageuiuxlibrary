@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-pixelate",
+    "title": "Shader Pixelate",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem em blocos de cor chapada, com uma janela redonda que mostra a foto nítida debaixo do cursor.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "pixel",
+      "revelar"
+    ],
+    "demoImport": "./demos/shader-pixelate-demo",
+    "knobs": "ShaderPixelate",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-pixelate",
+    "type": "registry:ui",
+    "title": "Shader Pixelate",
+    "description": "Uma imagem em blocos de cor chapada, com uma janela redonda que mostra a foto nítida debaixo do cursor.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-pixelate.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/pixelate.ts (Visant Labs)"
+}

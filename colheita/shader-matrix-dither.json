@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "shader-matrix-dither",
+    "title": "Shader Matrix Dither",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem em 1 bit pelo dither de Bayer, só papel e tinta da marca, numa trama 2×2, 4×4 ou 8×8.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "dither",
+      "1 bit",
+      "bayer"
+    ],
+    "demoImport": "./demos/shader-matrix-dither-demo",
+    "knobs": "ShaderMatrixDither",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-matrix-dither",
+    "type": "registry:ui",
+    "title": "Shader Matrix Dither",
+    "description": "Uma imagem em 1 bit pelo dither de Bayer, só papel e tinta da marca, numa trama 2×2, 4×4 ou 8×8.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-matrix-dither.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/matrixDither.ts (Visant Labs)"
+}

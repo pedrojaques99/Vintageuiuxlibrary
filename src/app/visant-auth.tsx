@@ -113,6 +113,9 @@ export function VisantAuthProvider({ children }: { children: React.ReactNode }) 
       sessionStorage.removeItem(CHAVE_DESTINO);
       sessionStorage.removeItem(CHAVE_VERIFIER);
       window.history.replaceState(null, "", volta);
+      // replaceState não avisa ninguém: o roteador do App ainda acha que está
+      // em `/callback` (que cai no catálogo) até ouvir um popstate.
+      window.dispatchEvent(new PopStateEvent("popstate"));
     };
 
     (async () => {

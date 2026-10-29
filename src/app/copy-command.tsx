@@ -68,7 +68,10 @@ export function CopyCommand({
           "h-10 w-full gap-3 rounded-control bg-casa-cta px-3.5 text-casa-cta-fg hover:opacity-90",
         variant === "line" &&
           "h-10 w-full gap-3 rounded-control bg-casa-tile-2 px-3.5 text-casa-fg-2 hover:text-casa-fg",
-        variant === "chip" && "casa-icone shrink-0",
+        // O `flex` da base (camada utilities) vence o `inline-grid` + `place-items`
+        // do `.casa-icone` (camada components): sem o `justify-center` o ícone
+        // encostava na esquerda do quadrado.
+        variant === "chip" && "casa-icone shrink-0 justify-center",
         className,
       )}
     >

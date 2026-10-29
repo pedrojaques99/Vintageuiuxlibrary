@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "shader-crt",
+    "title": "Shader CRT",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem num monitor de tubo, com linhas de varredura, vinheta, tela abaulada e uma faixa de luz que desce devagar.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "crt",
+      "tubo",
+      "retrô"
+    ],
+    "demoImport": "./demos/shader-crt-demo",
+    "knobs": "ShaderCrt",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-crt",
+    "type": "registry:ui",
+    "title": "Shader CRT",
+    "description": "Uma imagem num monitor de tubo, com linhas de varredura, vinheta, tela abaulada e uma faixa de luz que desce devagar.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-crt.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/crtScanlines.ts (Visant Labs)"
+}

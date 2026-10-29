@@ -58,5 +58,53 @@
   "shader-voronoi": {
     "contextos": 1,
     "pesada": false
+  },
+  "shader-chromatic-aberration": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-crt": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-dither": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-duotone": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-edge-detect": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-film-grain": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-glitch": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-matrix-dither": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-pixelate": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-posterize": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-upscale": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "shader-vhs": {
+    "contextos": 1,
+    "pesada": false
   }
 }

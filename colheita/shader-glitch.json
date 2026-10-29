@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-glitch",
+    "title": "Shader Glitch",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem que falha em faixas, com os canais de cor separados e linhas que pulam, e falha mais quando o mouse passa rápido.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "glitch",
+      "falha"
+    ],
+    "demoImport": "./demos/shader-glitch-demo",
+    "knobs": "ShaderGlitch",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-glitch",
+    "type": "registry:ui",
+    "title": "Shader Glitch",
+    "description": "Uma imagem que falha em faixas, com os canais de cor separados e linhas que pulam, e falha mais quando o mouse passa rápido.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-glitch.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/glitch.ts (Visant Labs)"
+}

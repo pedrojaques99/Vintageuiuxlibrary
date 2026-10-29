@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-edge-detect",
+    "title": "Shader Edge Detect",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Só os contornos de uma imagem, traçados pelo filtro de Sobel na cor da marca, sozinhos ou por cima da foto.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "contorno",
+      "traço"
+    ],
+    "demoImport": "./demos/shader-edge-detect-demo",
+    "knobs": "ShaderEdgeDetect",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-edge-detect",
+    "type": "registry:ui",
+    "title": "Shader Edge Detect",
+    "description": "Só os contornos de uma imagem, traçados pelo filtro de Sobel na cor da marca, sozinhos ou por cima da foto.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-edge-detect.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/edgeDetect.ts (Visant Labs)"
+}

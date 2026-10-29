@@ -345,5 +345,65 @@
   },
   "shader-voronoi": {
     "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-chromatic-aberration": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante com as cores fora do registro",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-crt": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante num monitor de tubo",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-dither": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante em poucos tons pontilhados",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-duotone": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante em duas cores",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-edge-detect": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Contornos da caixa e do diamante",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-film-grain": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante com grão de filme",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-glitch": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante com falha de sinal",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-matrix-dither": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante pontilhados em 1 bit",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-pixelate": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante em blocos de cor",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-posterize": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante posterizados",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-upscale": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante ampliados de uma versão pequena",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-vhs": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante tocados de fita VHS",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
   }
 }

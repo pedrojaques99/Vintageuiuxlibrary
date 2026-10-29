@@ -53,6 +53,7 @@ import { Miniatura } from "./miniatura";
 import { nivelDoAparelho, pesoGpu, useVaga } from "./aparelho";
 import { BugButton } from "./bug-report";
 import { CURADORIA_ATIVA, arquivada, useNotas } from "./curadoria";
+import LANG from "./lang.generated.json";
 
 /**
  * O tamanho do card, num clique só. A lista em texto saiu (2026-10-20): o
@@ -76,6 +77,18 @@ function tamanhoSalvo(): Tamanho {
   }
 }
 type TipoFilter = CatalogItem["type"] | null;
+
+/**
+ * React ou vanilla — sai dos arquivos do registry (`scripts/lang-extract.mjs`),
+ * não de tag escrita à mão. Item que o script ainda não viu é React: é a regra.
+ */
+type Linguagem = "react" | "vanilla";
+const LINGUAGENS: { key: Linguagem; label: string }[] = [
+  { key: "react", label: "React" },
+  { key: "vanilla", label: "Vanilla" },
+];
+const linguagemDe = (name: string) => (LANG as Record<string, string>)[name] ?? "react";
+const matchesLang = (name: string, lang: Linguagem | null) => lang === null || linguagemDe(name) === lang;
 
 /**
  * A distância da tela em que a peça do acervo monta (e além da qual desmonta).
@@ -376,6 +389,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
   /** `null` = não filtra por dependência. `SEM_DEPS` = só o que não puxa nada. */
   const [dep, setDep] = React.useState<string | null>(null);
   const [tipo, setTipo] = React.useState<TipoFilter>(null);
+  const [lang, setLang] = React.useState<Linguagem | null>(null);
   const [tamanho, setTamanho] = React.useState<Tamanho>(tamanhoSalvo);
   const trocarTamanho = () => {
     const proximo = PROXIMO[tamanho];
@@ -415,8 +429,11 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
   );
 
   const results = React.useMemo(
-    () => pool.filter((i) => (tipo === null || i.type === tipo) && matchesDep(i.name, dep)),
-    [pool, dep, tipo],
+    () =>
+      pool.filter(
+        (i) => (tipo === null || i.type === tipo) && matchesDep(i.name, dep) && matchesLang(i.name, lang),
+      ),
+    [pool, dep, tipo, lang],
   );
   const comPalco = React.useMemo(() => results.filter((i) => i.demo), [results]);
   const semPalco = React.useMemo(() => results.filter((i) => !i.demo), [results]);
@@ -428,8 +445,8 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
    * seguinte desmente contamina a confiança em todos os outros.
    */
   const escopoDep = React.useMemo(
-    () => pool.filter((i) => tipo === null || i.type === tipo),
-    [pool, tipo],
+    () => pool.filter((i) => (tipo === null || i.type === tipo) && matchesLang(i.name, lang)),
+    [pool, tipo, lang],
   );
   const depsDoEscopo = React.useMemo(() => allDeps(escopoDep.map((i) => i.name)), [escopoDep]);
   const semDepsCount = React.useMemo(
@@ -449,19 +466,38 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
   const countByTipo = React.useMemo(
     () =>
       pool
-        .filter((i) => matchesDep(i.name, dep))
+        .filter((i) => matchesDep(i.name, dep) && matchesLang(i.name, lang))
         .reduce<Record<string, number>>((acc, i) => {
           acc[i.type] = (acc[i.type] ?? 0) + 1;
           return acc;
         }, {}),
-    [pool, dep],
+    [pool, dep, lang],
   );
 
   React.useEffect(() => {
     if (tipo && !countByTipo[tipo]) setTipo(null);
   }, [countByTipo, tipo]);
 
-  const secundariosAtivos = (tipo ? 1 : 0) + (dep ? 1 : 0);
+  /** A linguagem conta dentro do tipo e do npm escolhidos, como os outros eixos. */
+  const escopoLang = React.useMemo(
+    () => pool.filter((i) => (tipo === null || i.type === tipo) && matchesDep(i.name, dep)),
+    [pool, tipo, dep],
+  );
+  const countByLang = React.useMemo(
+    () =>
+      escopoLang.reduce<Record<string, number>>((acc, i) => {
+        const l = linguagemDe(i.name);
+        acc[l] = (acc[l] ?? 0) + 1;
+        return acc;
+      }, {}),
+    [escopoLang],
+  );
+
+  React.useEffect(() => {
+    if (lang && !countByLang[lang]) setLang(null);
+  }, [countByLang, lang]);
+
+  const secundariosAtivos = (tipo ? 1 : 0) + (dep ? 1 : 0) + (lang ? 1 : 0);
 
   /*
    * Filtrar encolhe a página embaixo de quem está rolando.
@@ -486,7 +522,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
     const headerH = document.querySelector("header")?.offsetHeight ?? 0;
     const target = Math.max(0, hero.getBoundingClientRect().bottom + window.scrollY - headerH);
     if (window.scrollY > target) window.scrollTo({ top: target, behavior: "auto" });
-  }, [familia, dep, tipo, tamanho, results.length]);
+  }, [familia, dep, tipo, lang, tamanho, results.length]);
 
   // Atalhos da grade. `/` abre a busca — convenção de quem usa o teclado — e as
   // setas percorrem os cards a partir do que estiver focado, com o número de
@@ -593,8 +629,8 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
               onClick={() => setAbertos((v) => !v)}
               aria-expanded={abertos}
               aria-pressed={abertos || secundariosAtivos > 0}
-              aria-label="Filtrar por tipo e dependência"
-              title="Tipo e dependência"
+              aria-label="Filtrar por linguagem, tipo e dependência"
+              title="Linguagem, tipo e dependência"
               className="casa-icone alvo-toque relative"
             >
               <SlidersHorizontal className="h-4 w-4" />
@@ -621,6 +657,23 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
         */}
         {abertos ? (
           <div className="shell space-y-1 pb-3">
+            <div className="flex items-center gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <span className="w-16 shrink-0 text-casa-sm text-casa-fg-3">Linguagem</span>
+              <Aba ativa={lang === null} count={escopoLang.length} onClick={() => setLang(null)}>
+                Todos
+              </Aba>
+              {LINGUAGENS.filter((l) => countByLang[l.key]).map((l) => (
+                <Aba
+                  key={l.key}
+                  ativa={lang === l.key}
+                  count={countByLang[l.key]}
+                  onClick={() => setLang((atual) => (atual === l.key ? null : l.key))}
+                >
+                  {l.label}
+                </Aba>
+              ))}
+            </div>
+
             <div className="flex items-center gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <span className="w-16 shrink-0 text-casa-sm text-casa-fg-3">Tipo</span>
               {(Object.keys(TYPE_LABEL) as CatalogItem["type"][])
@@ -747,6 +800,7 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
               onClick={() => {
                 setTipo(null);
                 setDep(null);
+                setLang(null);
               }}
               className="mt-3 rounded-control text-casa-base text-casa-fg-2 underline-offset-4 hover:text-casa-fg hover:underline"
             >

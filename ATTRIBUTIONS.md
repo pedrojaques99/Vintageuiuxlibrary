@@ -45,10 +45,22 @@ Refeitos em sala limpa (código próprio, a partir só da interação pública; 
 - `page-curl`: Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/page-curl
 - `pull-to-refresh`: Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/pull
 - `shader-ascii`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/ascii.ts (Visant Labs)
+- `shader-chromatic-aberration`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/chromaticAberration.ts (Visant Labs)
+- `shader-crt`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/crtScanlines.ts (Visant Labs)
+- `shader-dither`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/dither.ts (Visant Labs)
+- `shader-duotone`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/duotone.ts (Visant Labs)
+- `shader-edge-detect`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/edgeDetect.ts (Visant Labs)
+- `shader-film-grain`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/filmGrain.ts (Visant Labs)
+- `shader-glitch`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/glitch.ts (Visant Labs)
 - `shader-halftone`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/halftone.ts (Visant Labs)
+- `shader-matrix-dither`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/matrixDither.ts (Visant Labs)
 - `shader-neon`: Colhido de 7panel_studio/keyboard-ui/src/lib/visualizers/shaders.ts (SHADER_NEON) (Visant Labs)
+- `shader-pixelate`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/pixelate.ts (Visant Labs)
+- `shader-posterize`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/posterize.ts (Visant Labs)
 - `shader-riso`: Colhido de visantlabs-os/packages/print-fx/src/riso/shaders.ts (Visant Labs)
 - `shader-tunnel`: Colhido de 7panel_studio/keyboard-ui/src/lib/visualizers/shaders.ts (SHADER_WARP) (Visant Labs)
+- `shader-upscale`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/upscale.ts (Visant Labs)
+- `shader-vhs`: Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/vhs.ts (Visant Labs)
 - `shader-voronoi`: Colhido de 7panel_studio/keyboard-ui/src/lib/visualizers/shaders.ts (SHADER_VORONOI) (Visant Labs)
 - `slide-to-confirm`: Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/slide-confirm
 - `slosh-slider`: Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/slosh

@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "shader-vhs",
+    "title": "Shader VHS",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem tocada de fita VHS, com a linha ondulando, um vinco que rasga, ruído no pé do quadro e a cor sangrando para o lado.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "vhs",
+      "fita",
+      "retrô"
+    ],
+    "demoImport": "./demos/shader-vhs-demo",
+    "knobs": "ShaderVhs",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-vhs",
+    "type": "registry:ui",
+    "title": "Shader VHS",
+    "description": "Uma imagem tocada de fita VHS, com a linha ondulando, um vinco que rasga, ruído no pé do quadro e a cor sangrando para o lado.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-vhs.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/vhs.ts (Visant Labs)"
+}

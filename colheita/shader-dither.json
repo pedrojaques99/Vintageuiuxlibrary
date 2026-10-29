@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "shader-dither",
+    "title": "Shader Dither",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem pixelada em poucos tons da rampa da marca, com o dither de Bayer fazendo a passagem entre um tom e outro.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "dither",
+      "8 bits",
+      "pixel"
+    ],
+    "demoImport": "./demos/shader-dither-demo",
+    "knobs": "ShaderDither",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-dither",
+    "type": "registry:ui",
+    "title": "Shader Dither",
+    "description": "Uma imagem pixelada em poucos tons da rampa da marca, com o dither de Bayer fazendo a passagem entre um tom e outro.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-dither.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/dither.ts (Visant Labs)"
+}

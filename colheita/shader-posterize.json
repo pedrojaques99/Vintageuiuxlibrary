@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-posterize",
+    "title": "Shader Posterize",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem reduzida a poucos tons por canal, com as transições suaves virando degraus chapados de serigrafia.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "posterizar",
+      "serigrafia"
+    ],
+    "demoImport": "./demos/shader-posterize-demo",
+    "knobs": "ShaderPosterize",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-posterize",
+    "type": "registry:ui",
+    "title": "Shader Posterize",
+    "description": "Uma imagem reduzida a poucos tons por canal, com as transições suaves virando degraus chapados de serigrafia.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-posterize.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/posterize.ts (Visant Labs)"
+}

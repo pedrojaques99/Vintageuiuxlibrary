@@ -13237,5 +13237,752 @@
         }
       ]
     }
+  ],
+  "shader-chromatic-aberration": [
+    {
+      "nome": "ShaderChromaticAberration",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a separar. Fundo transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem com as cores fora do registro",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "angle",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Direção da separação em repouso, em graus.",
+          "faixa": {
+            "min": 0,
+            "max": 360,
+            "step": 1
+          }
+        },
+        {
+          "nome": "follow",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "A separação aponta para o cursor e cresce longe do centro."
+        },
+        {
+          "nome": "offset",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "6",
+          "descricao": "Quanto os canais se afastam, em px.",
+          "faixa": {
+            "min": 0,
+            "max": 40,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-crt": [
+    {
+      "nome": "ShaderCrt",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a pôr no tubo. Fundo transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem num monitor de tubo",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "curvature",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "40",
+          "descricao": "O quanto a tela é abaulada.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "intensity",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "30",
+          "descricao": "O quanto as linhas escurecem a imagem.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "lineWidth",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2",
+          "descricao": "Espessura de cada linha de varredura, em px.",
+          "faixa": {
+            "min": 1,
+            "max": 8,
+            "step": 1
+          }
+        },
+        {
+          "nome": "roll",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "30",
+          "descricao": "Velocidade da faixa de luz que desce. Zero deixa a tela parada.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "vignette",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "30",
+          "descricao": "Escurecimento dos cantos.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-dither": [
+    {
+      "nome": "ShaderDither",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a pontilhar. Fundo branco ou transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem pontilhada em poucos tons",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Rampa de duas a quatro paradas, do papel à tinta mais funda. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "contrast",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "Contraste antes de reduzir os tons.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "levels",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "4",
+          "descricao": "Quantos tons a imagem usa, espalhados pela rampa.",
+          "faixa": {
+            "min": 2,
+            "max": 8,
+            "step": 1
+          }
+        },
+        {
+          "nome": "offset",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Desvio: positivo escurece a imagem (mais tinta), negativo clareia.",
+          "faixa": {
+            "min": -50,
+            "max": 50,
+            "step": 1
+          }
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "4",
+          "descricao": "Tamanho do pixel da imagem e do ponto da trama, em px.",
+          "faixa": {
+            "min": 1,
+            "max": 16,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-duotone": [
+    {
+      "nome": "ShaderDuotone",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a refazer em duas cores. Fundo transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem em duotone",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "brightness",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Brilho antes de mapear: puxa a foto para a sombra ou para a luz.",
+          "faixa": {
+            "min": -50,
+            "max": 50,
+            "step": 1
+          }
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "As duas cores, em qualquer ordem: a mais escura vira sombra. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "contrast",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "Contraste antes de mapear nas duas cores.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "intensity",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "100",
+          "descricao": "Quanto do duotone cobre a foto original.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-edge-detect": [
+    {
+      "nome": "ShaderEdgeDetect",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a traçar. Fundo transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Contornos da imagem",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas: fundo e traço. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "overlay",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Quanto da foto aparece por baixo do traço.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "strength",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "40",
+          "descricao": "Força do traço.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "threshold",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "20",
+          "descricao": "Limiar: quanto mais alto, só as bordas fortes viram traço.",
+          "faixa": {
+            "min": 1,
+            "max": 100,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-film-grain": [
+    {
+      "nome": "ShaderFilmGrain",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a granular. Fundo transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem com grão de filme",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "colored",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Um grão por canal de cor, em vez de grão cinza."
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": "Tamanho de cada grão, em px.",
+          "faixa": {
+            "min": 1,
+            "max": 8,
+            "step": 1
+          }
+        },
+        {
+          "nome": "strength",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "Força do grão.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-glitch": [
+    {
+      "nome": "ShaderGlitch",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a estragar. Fundo transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem com falha de sinal",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "amount",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "30",
+          "descricao": "O quanto as faixas saem do lugar.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "blocks",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "20",
+          "descricao": "Em quantas faixas a imagem se divide.",
+          "faixa": {
+            "min": 2,
+            "max": 60,
+            "step": 1
+          }
+        },
+        {
+          "nome": "speed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "30",
+          "descricao": "Quantas vezes por segundo a falha muda.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-matrix-dither": [
+    {
+      "nome": "ShaderMatrixDither",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a pontilhar. Fundo branco ou transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem pontilhada em 1 bit",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "bias",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Viés do limiar: positivo puxa para a tinta, negativo para o papel.",
+          "faixa": {
+            "min": -50,
+            "max": 50,
+            "step": 1
+          }
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas: papel e tinta. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "matrix",
+          "tipo": "enum",
+          "obrigatoria": false,
+          "padrao": "4x4",
+          "descricao": "Tamanho da matriz de Bayer: muda o desenho da trama.",
+          "valores": [
+            "2x2",
+            "4x4",
+            "8x8"
+          ]
+        },
+        {
+          "nome": "scale",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "2",
+          "descricao": "Tamanho de cada ponto da trama, em px.",
+          "faixa": {
+            "min": 1,
+            "max": 8,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-pixelate": [
+    {
+      "nome": "ShaderPixelate",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a pixelar. Fundo transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem pixelada",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "reveal",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Janela de nitidez que segue o cursor."
+        },
+        {
+          "nome": "size",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "16",
+          "descricao": "Tamanho de cada bloco, em px.",
+          "faixa": {
+            "min": 2,
+            "max": 64,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-posterize": [
+    {
+      "nome": "ShaderPosterize",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a posterizar. Fundo transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem posterizada",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "levels",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "4",
+          "descricao": "Quantos tons por canal de cor.",
+          "faixa": {
+            "min": 2,
+            "max": 16,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-upscale": [
+    {
+      "nome": "ShaderUpscale",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a reduzir e ampliar de volta. Fundo transparente vira papel."
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem pequena ampliada",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "colors",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "padrao": null,
+          "descricao": "Paradas: papel e linha do comparador. Qualquer cor CSS ou token."
+        },
+        {
+          "nome": "compare",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Mostra o antes (vizinho mais próximo) à esquerda de uma linha que segue o cursor."
+        },
+        {
+          "nome": "resolution",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "64",
+          "descricao": "Lado maior da versão pequena, em px: quanto menor, mais a ampliação trabalha.",
+          "faixa": {
+            "min": 16,
+            "max": 256,
+            "step": 1
+          }
+        },
+        {
+          "nome": "sharpening",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "30",
+          "descricao": "Nitidez depois de ampliar.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        }
+      ]
+    }
+  ],
+  "shader-vhs": [
+    {
+      "nome": "ShaderVhs",
+      "descricao": null,
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": true,
+          "padrao": null,
+          "descricao": "A imagem a tocar na fita. Fundo transparente vira papel."
+        },
+        {
+          "nome": "acBeat",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "Batimento de brilho da rede elétrica.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "alt",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "Imagem tocada de fita VHS",
+          "descricao": "Texto alternativo da imagem."
+        },
+        {
+          "nome": "bloom",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "25",
+          "descricao": "Sangria da cor para o lado.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "speed",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "Velocidade da fita.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "switchingNoise",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "Ruído de troca de cabeça no pé do quadro.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "tapeCrease",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "Vinco que passa rasgando a imagem.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        },
+        {
+          "nome": "tapeWave",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "50",
+          "descricao": "Ondulação da linha com a fita.",
+          "faixa": {
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        }
+      ]
+    }
   ]
 }

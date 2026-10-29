@@ -551,6 +551,54 @@
     "quando": "Fundo de textura orgânica em células que derivam e reagem ao ponteiro, na cor da marca",
     "evite": "Fundo leve sem WebGL: spring-dots ou turbulence-field; ondas de luz, shader-neon"
   },
+  "shader-vhs": {
+    "quando": "Foto com cara de fita VHS gasta, em clipe, capa de música ou campanha retrô anos 90",
+    "evite": "Tela de tubo com linhas de varredura: shader-crt; falha digital em faixas, shader-glitch"
+  },
+  "shader-matrix-dither": {
+    "quando": "Foto em 1 bit com trama xadrez de Mac antigo, em hero tech, zine ou capa de produto",
+    "evite": "Vários tons pixelados: shader-dither; pontos redondos de retícula, shader-halftone"
+  },
+  "shader-upscale": {
+    "quando": "Mostrar o ganho de uma ampliação lado a lado, em página de ferramenta de imagem ou de IA",
+    "evite": "Comparar duas fotos diferentes: photo-compare; foto em blocos como estilo, shader-pixelate"
+  },
+  "shader-dither": {
+    "quando": "Foto com cara de jogo de 8 bits em poucos tons da marca, em landing de game, evento ou campanha retrô",
+    "evite": "Só papel e tinta: shader-matrix-dither; blocos de cor sem trama, shader-pixelate"
+  },
+  "shader-duotone": {
+    "quando": "Foto de banco com a cara da marca em duas cores, em capa, hero ou card de campanha",
+    "evite": "Duas tintas com grão de impressão: shader-riso; poucos tons por canal, shader-posterize"
+  },
+  "shader-film-grain": {
+    "quando": "Dar textura de filme a foto limpa de banco, em hero editorial, portfólio ou campanha",
+    "evite": "Fita gasta com onda e vinco: shader-vhs; tela de tubo, shader-crt"
+  },
+  "shader-pixelate": {
+    "quando": "Capa de lançamento a revelar ou teaser em que o cursor descobre a foto, em landing ou campanha",
+    "evite": "Poucos tons com trama: shader-dither; mostrar uma ampliação de verdade, shader-upscale"
+  },
+  "shader-posterize": {
+    "quando": "Foto em degraus chapados de cor com cara de cartaz serigrafado, em evento, música ou editorial",
+    "evite": "Duas cores da marca: shader-duotone; tons da marca com trama de pixel, shader-dither"
+  },
+  "shader-chromatic-aberration": {
+    "quando": "Foto com franja de cor de lente barata que reage ao cursor, em hero de música, moda ou tech",
+    "evite": "Falha digital animada em faixas: shader-glitch; fita gasta, shader-vhs"
+  },
+  "shader-crt": {
+    "quando": "Foto ou print dentro de um monitor de tubo, em landing de game, retrô ou produto tech",
+    "evite": "Fita com onda e vinco: shader-vhs; grão de filme sem tubo, shader-film-grain"
+  },
+  "shader-edge-detect": {
+    "quando": "Foto virando desenho a traço na cor da marca, em hero técnico, blueprint ou capa de manual",
+    "evite": "Imagem em caracteres: shader-ascii; retícula de pontos, shader-halftone"
+  },
+  "shader-glitch": {
+    "quando": "Foto com falha digital que piora com o mouse rápido, em hero de música, evento ou tech",
+    "evite": "Franja de cor parada que segue o cursor: shader-chromatic-aberration; fita analógica, shader-vhs"
+  },
   "anatomia": {
     "quando": "Montar figura didática interativa com pinos e passo a passo; é a base de toda anatomia-*",
     "evite": "Diagrama estático ou explicação sem interação: imagem ou SVG simples"

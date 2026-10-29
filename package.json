@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/kits-pecas.mjs && node scripts/registry-meta.mjs && node scripts/gpu-extract.mjs && node scripts/registry-css.mjs && node scripts/build-docs.mjs && vite build && node scripts/prerender.mjs && node scripts/llms.mjs",
+    "build": "node scripts/kits-pecas.mjs && node scripts/registry-meta.mjs && node scripts/lang-extract.mjs && node scripts/gpu-extract.mjs && node scripts/registry-css.mjs && node scripts/build-docs.mjs && vite build && node scripts/prerender.mjs && node scripts/llms.mjs",
     "build:registry": "npx shadcn@latest build",
     "preview": "vite preview",
     "check:catalog": "node scripts/catalog-check.mjs",

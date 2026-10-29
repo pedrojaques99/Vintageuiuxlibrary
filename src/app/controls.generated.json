@@ -7662,5 +7662,589 @@
         }
       ]
     }
+  },
+  "shader-chromatic-aberration": {
+    "componentes": {
+      "ShaderChromaticAberration": [
+        {
+          "prop": "follow",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "A separação aponta para o cursor e cresce longe do centro."
+        },
+        {
+          "prop": "angle",
+          "tipo": "numero",
+          "min": 0,
+          "max": 360,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Direção da separação em repouso, em graus."
+        },
+        {
+          "prop": "offset",
+          "tipo": "numero",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "padrao": 6,
+          "resumo": "Quanto os canais se afastam, em px."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem com as cores fora do registro",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante com as cores fora do registro"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a separar. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "shader-crt": {
+    "componentes": {
+      "ShaderCrt": [
+        {
+          "prop": "curvature",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "O quanto a tela é abaulada."
+        },
+        {
+          "prop": "intensity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 30,
+          "resumo": "O quanto as linhas escurecem a imagem."
+        },
+        {
+          "prop": "lineWidth",
+          "tipo": "numero",
+          "min": 1,
+          "max": 8,
+          "step": 1,
+          "padrao": 2,
+          "resumo": "Espessura de cada linha de varredura, em px."
+        },
+        {
+          "prop": "roll",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 30,
+          "resumo": "Velocidade da faixa de luz que desce. Zero deixa a tela parada."
+        },
+        {
+          "prop": "vignette",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 30,
+          "resumo": "Escurecimento dos cantos."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem num monitor de tubo",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante num monitor de tubo"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a pôr no tubo. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp",
+          "secundario": true
+        }
+      ]
+    }
+  },
+  "shader-dither": {
+    "componentes": {
+      "ShaderDither": [
+        {
+          "prop": "contrast",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "Contraste antes de reduzir os tons."
+        },
+        {
+          "prop": "levels",
+          "tipo": "numero",
+          "min": 2,
+          "max": 8,
+          "step": 1,
+          "padrao": 4,
+          "resumo": "Quantos tons a imagem usa, espalhados pela rampa."
+        },
+        {
+          "prop": "offset",
+          "tipo": "numero",
+          "min": -50,
+          "max": 50,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Desvio: positivo escurece a imagem (mais tinta), negativo clareia."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 1,
+          "max": 16,
+          "step": 1,
+          "padrao": 4,
+          "resumo": "Tamanho do pixel da imagem e do ponto da trama, em px."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem pontilhada em poucos tons",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante em poucos tons pontilhados"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a pontilhar. Fundo branco ou transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "shader-duotone": {
+    "componentes": {
+      "ShaderDuotone": [
+        {
+          "prop": "brightness",
+          "tipo": "numero",
+          "min": -50,
+          "max": 50,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Brilho antes de mapear: puxa a foto para a sombra ou para a luz."
+        },
+        {
+          "prop": "contrast",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "Contraste antes de mapear nas duas cores."
+        },
+        {
+          "prop": "intensity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 100,
+          "resumo": "Quanto do duotone cobre a foto original."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem em duotone",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante em duas cores"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a refazer em duas cores. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "shader-edge-detect": {
+    "componentes": {
+      "ShaderEdgeDetect": [
+        {
+          "prop": "overlay",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Quanto da foto aparece por baixo do traço."
+        },
+        {
+          "prop": "strength",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "Força do traço."
+        },
+        {
+          "prop": "threshold",
+          "tipo": "numero",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "padrao": 20,
+          "resumo": "Limiar: quanto mais alto, só as bordas fortes viram traço."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Contornos da imagem",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Contornos da caixa e do diamante"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a traçar. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "shader-film-grain": {
+    "componentes": {
+      "ShaderFilmGrain": [
+        {
+          "prop": "colored",
+          "tipo": "chave",
+          "padrao": false,
+          "resumo": "Um grão por canal de cor, em vez de grão cinza."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 1,
+          "max": 8,
+          "step": 1,
+          "padrao": 1,
+          "resumo": "Tamanho de cada grão, em px."
+        },
+        {
+          "prop": "strength",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "Força do grão."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem com grão de filme",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante com grão de filme"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a granular. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "shader-glitch": {
+    "componentes": {
+      "ShaderGlitch": [
+        {
+          "prop": "amount",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 30,
+          "resumo": "O quanto as faixas saem do lugar."
+        },
+        {
+          "prop": "blocks",
+          "tipo": "numero",
+          "min": 2,
+          "max": 60,
+          "step": 1,
+          "padrao": 20,
+          "resumo": "Em quantas faixas a imagem se divide."
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 30,
+          "resumo": "Quantas vezes por segundo a falha muda."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem com falha de sinal",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante com falha de sinal"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a estragar. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "shader-matrix-dither": {
+    "componentes": {
+      "ShaderMatrixDither": [
+        {
+          "prop": "matrix",
+          "tipo": "escolha",
+          "valores": [
+            "2x2",
+            "4x4",
+            "8x8"
+          ],
+          "padrao": "4x4",
+          "resumo": "Tamanho da matriz de Bayer: muda o desenho da trama."
+        },
+        {
+          "prop": "bias",
+          "tipo": "numero",
+          "min": -50,
+          "max": 50,
+          "step": 1,
+          "padrao": 0,
+          "resumo": "Viés do limiar: positivo puxa para a tinta, negativo para o papel."
+        },
+        {
+          "prop": "scale",
+          "tipo": "numero",
+          "min": 1,
+          "max": 8,
+          "step": 1,
+          "padrao": 2,
+          "resumo": "Tamanho de cada ponto da trama, em px."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem pontilhada em 1 bit",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante pontilhados em 1 bit"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a pontilhar. Fundo branco ou transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "shader-pixelate": {
+    "componentes": {
+      "ShaderPixelate": [
+        {
+          "prop": "reveal",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Janela de nitidez que segue o cursor."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 2,
+          "max": 64,
+          "step": 1,
+          "padrao": 16,
+          "resumo": "Tamanho de cada bloco, em px."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem pixelada",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante em blocos de cor"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a pixelar. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "shader-posterize": {
+    "componentes": {
+      "ShaderPosterize": [
+        {
+          "prop": "levels",
+          "tipo": "numero",
+          "min": 2,
+          "max": 16,
+          "step": 1,
+          "padrao": 4,
+          "resumo": "Quantos tons por canal de cor."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem posterizada",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante posterizados"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a posterizar. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "shader-upscale": {
+    "componentes": {
+      "ShaderUpscale": [
+        {
+          "prop": "compare",
+          "tipo": "chave",
+          "padrao": true,
+          "resumo": "Mostra o antes (vizinho mais próximo) à esquerda de uma linha que segue o cursor."
+        },
+        {
+          "prop": "resolution",
+          "tipo": "numero",
+          "min": 16,
+          "max": 256,
+          "step": 1,
+          "padrao": 64,
+          "resumo": "Lado maior da versão pequena, em px: quanto menor, mais a ampliação trabalha."
+        },
+        {
+          "prop": "sharpening",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 30,
+          "resumo": "Nitidez depois de ampliar."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem pequena ampliada",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante ampliados de uma versão pequena"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a reduzir e ampliar de volta. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "shader-vhs": {
+    "componentes": {
+      "ShaderVhs": [
+        {
+          "prop": "acBeat",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "Batimento de brilho da rede elétrica."
+        },
+        {
+          "prop": "bloom",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 25,
+          "resumo": "Sangria da cor para o lado."
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "Velocidade da fita."
+        },
+        {
+          "prop": "switchingNoise",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "Ruído de troca de cabeça no pé do quadro."
+        },
+        {
+          "prop": "tapeCrease",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "Vinco que passa rasgando a imagem."
+        },
+        {
+          "prop": "tapeWave",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "Ondulação da linha com a fita."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem tocada de fita VHS",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante tocados de fita VHS",
+          "secundario": true
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a tocar na fita. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp",
+          "secundario": true
+        }
+      ]
+    }
   }
 }

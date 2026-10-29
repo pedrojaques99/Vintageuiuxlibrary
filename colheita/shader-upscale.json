@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-upscale",
+    "title": "Shader Upscale",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem pequena ampliada em bicúbico com nitidez, e uma linha que segue o cursor mostrando o antes em blocos.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "ampliação",
+      "antes e depois"
+    ],
+    "demoImport": "./demos/shader-upscale-demo",
+    "knobs": "ShaderUpscale",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-upscale",
+    "type": "registry:ui",
+    "title": "Shader Upscale",
+    "description": "Uma imagem pequena ampliada em bicúbico com nitidez, e uma linha que segue o cursor mostrando o antes em blocos.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-upscale.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/upscale.ts (Visant Labs)"
+}

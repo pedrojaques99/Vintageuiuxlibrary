@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-film-grain",
+    "title": "Shader Film Grain",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Grão de película correndo sobre uma imagem a 24 quadros por segundo, em cinza ou com um grão por canal de cor.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "grão",
+      "filme"
+    ],
+    "demoImport": "./demos/shader-film-grain-demo",
+    "knobs": "ShaderFilmGrain",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-film-grain",
+    "type": "registry:ui",
+    "title": "Shader Film Grain",
+    "description": "Grão de película correndo sobre uma imagem a 24 quadros por segundo, em cinza ou com um grão por canal de cor.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-film-grain.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/shaders/shaders/filmGrain.ts (Visant Labs)"
+}

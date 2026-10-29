@@ -448,6 +448,18 @@ const ShaderNeonColheitaDemo = React.lazy(() => import("./demos/shader-neon-demo
 const ShaderRisoColheitaDemo = React.lazy(() => import("./demos/shader-riso-demo"));
 const ShaderTunnelColheitaDemo = React.lazy(() => import("./demos/shader-tunnel-demo"));
 const ShaderVoronoiColheitaDemo = React.lazy(() => import("./demos/shader-voronoi-demo"));
+const ShaderChromaticAberrationColheitaDemo = React.lazy(() => import("./demos/shader-chromatic-aberration-demo"));
+const ShaderCrtColheitaDemo = React.lazy(() => import("./demos/shader-crt-demo"));
+const ShaderDitherColheitaDemo = React.lazy(() => import("./demos/shader-dither-demo"));
+const ShaderDuotoneColheitaDemo = React.lazy(() => import("./demos/shader-duotone-demo"));
+const ShaderEdgeDetectColheitaDemo = React.lazy(() => import("./demos/shader-edge-detect-demo"));
+const ShaderFilmGrainColheitaDemo = React.lazy(() => import("./demos/shader-film-grain-demo"));
+const ShaderGlitchColheitaDemo = React.lazy(() => import("./demos/shader-glitch-demo"));
+const ShaderMatrixDitherColheitaDemo = React.lazy(() => import("./demos/shader-matrix-dither-demo"));
+const ShaderPixelateColheitaDemo = React.lazy(() => import("./demos/shader-pixelate-demo"));
+const ShaderPosterizeColheitaDemo = React.lazy(() => import("./demos/shader-posterize-demo"));
+const ShaderUpscaleColheitaDemo = React.lazy(() => import("./demos/shader-upscale-demo"));
+const ShaderVhsColheitaDemo = React.lazy(() => import("./demos/shader-vhs-demo"));
 
 /** Mesmo trato do marquee: GSAP só chega quando o card chega. */
 function PinnedSceneDemoCard() {
@@ -2369,6 +2381,150 @@ export const CATALOG: CatalogItem[] = [
     description:
       "Regras pro seu agente de IA (Cursor, Claude Code, Copilot): procurar no @visant antes de escrever UI do zero e escolher a peça certa pela situação.",
     tags: ["ia", "agente", "mcp", "cursor", "claude", "copilot", "regras"],
+  },
+  {
+    name: "shader-chromatic-aberration",
+    title: "Shader Chromatic Aberration",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Os canais de cor de uma imagem fora do registro, com a separação apontando para o cursor e crescendo longe do centro.",
+    tags: ["shader","webgl","imagem","aberração cromática","rgb"],
+    demo: ShaderChromaticAberrationColheitaDemo,
+    knobs: "ShaderChromaticAberration",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-crt",
+    title: "Shader CRT",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem num monitor de tubo, com linhas de varredura, vinheta, tela abaulada e uma faixa de luz que desce devagar.",
+    tags: ["shader","webgl","imagem","crt","tubo","retrô"],
+    demo: ShaderCrtColheitaDemo,
+    knobs: "ShaderCrt",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-dither",
+    title: "Shader Dither",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem pixelada em poucos tons da rampa da marca, com o dither de Bayer fazendo a passagem entre um tom e outro.",
+    tags: ["shader","webgl","imagem","dither","8 bits","pixel"],
+    demo: ShaderDitherColheitaDemo,
+    knobs: "ShaderDither",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-duotone",
+    title: "Shader Duotone",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem refeita em duas cores do tema, a mais escura nas sombras e a outra nas luzes, sem sair em negativo no escuro.",
+    tags: ["shader","webgl","imagem","duotone","duas cores"],
+    demo: ShaderDuotoneColheitaDemo,
+    knobs: "ShaderDuotone",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-edge-detect",
+    title: "Shader Edge Detect",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Só os contornos de uma imagem, traçados pelo filtro de Sobel na cor da marca, sozinhos ou por cima da foto.",
+    tags: ["shader","webgl","imagem","contorno","traço"],
+    demo: ShaderEdgeDetectColheitaDemo,
+    knobs: "ShaderEdgeDetect",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-film-grain",
+    title: "Shader Film Grain",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Grão de película correndo sobre uma imagem a 24 quadros por segundo, em cinza ou com um grão por canal de cor.",
+    tags: ["shader","webgl","imagem","grão","filme"],
+    demo: ShaderFilmGrainColheitaDemo,
+    knobs: "ShaderFilmGrain",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-glitch",
+    title: "Shader Glitch",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem que falha em faixas, com os canais de cor separados e linhas que pulam, e falha mais quando o mouse passa rápido.",
+    tags: ["shader","webgl","imagem","glitch","falha"],
+    demo: ShaderGlitchColheitaDemo,
+    knobs: "ShaderGlitch",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-matrix-dither",
+    title: "Shader Matrix Dither",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem em 1 bit pelo dither de Bayer, só papel e tinta da marca, numa trama 2×2, 4×4 ou 8×8.",
+    tags: ["shader","webgl","imagem","dither","1 bit","bayer"],
+    demo: ShaderMatrixDitherColheitaDemo,
+    knobs: "ShaderMatrixDither",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-pixelate",
+    title: "Shader Pixelate",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem em blocos de cor chapada, com uma janela redonda que mostra a foto nítida debaixo do cursor.",
+    tags: ["shader","webgl","imagem","pixel","revelar"],
+    demo: ShaderPixelateColheitaDemo,
+    knobs: "ShaderPixelate",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-posterize",
+    title: "Shader Posterize",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem reduzida a poucos tons por canal, com as transições suaves virando degraus chapados de serigrafia.",
+    tags: ["shader","webgl","imagem","posterizar","serigrafia"],
+    demo: ShaderPosterizeColheitaDemo,
+    knobs: "ShaderPosterize",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-upscale",
+    title: "Shader Upscale",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem pequena ampliada em bicúbico com nitidez, e uma linha que segue o cursor mostrando o antes em blocos.",
+    tags: ["shader","webgl","imagem","ampliação","antes e depois"],
+    demo: ShaderUpscaleColheitaDemo,
+    knobs: "ShaderUpscale",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "shader-vhs",
+    title: "Shader VHS",
+    type: "ui",
+    family: "shaders",
+    description:
+      "Uma imagem tocada de fita VHS, com a linha ondulando, um vinco que rasga, ruído no pé do quadro e a cor sangrando para o lado.",
+    tags: ["shader","webgl","imagem","vhs","fita","retrô"],
+    demo: ShaderVhsColheitaDemo,
+    knobs: "ShaderVhs",
+    preview: { w: 440, h: 440 },
   },
 ];
 
