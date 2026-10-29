@@ -31,6 +31,7 @@ const ESCOPO = "read";
 const CHAVE_VERIFIER = "visant:pkce";
 const CHAVE_REFRESH = "visant:refresh";
 const CHAVE_DESTINO = "visant:volta-para";
+const CHAVE_STATE = "visant:state";
 
 // --- PKCE --------------------------------------------------------------------
 
@@ -107,11 +108,15 @@ export function VisantAuthProvider({ children }: { children: React.ReactNode }) 
     const url = new URL(window.location.href);
     const code = url.searchParams.get("code");
     const verifier = sessionStorage.getItem(CHAVE_VERIFIER);
+    // O `state` que volta tem que ser o que esta aba sorteou; senão o código
+    // foi plantado por outra página (CSRF de login) e não é trocado.
+    const stateOk = url.searchParams.get("state") === sessionStorage.getItem(CHAVE_STATE);
 
     const limparUrl = () => {
       const volta = sessionStorage.getItem(CHAVE_DESTINO) || "/";
       sessionStorage.removeItem(CHAVE_DESTINO);
       sessionStorage.removeItem(CHAVE_VERIFIER);
+      sessionStorage.removeItem(CHAVE_STATE);
       window.history.replaceState(null, "", volta);
       // replaceState não avisa ninguém: o roteador do App ainda acha que está
       // em `/callback` (que cai no catálogo) até ouvir um popstate.
@@ -121,6 +126,7 @@ export function VisantAuthProvider({ children }: { children: React.ReactNode }) 
     (async () => {
       try {
         if (code && verifier) {
+          if (!stateOk) throw new Error("state não confere — login descartado");
           await trocar({
             grant_type: "authorization_code",
             code,
@@ -161,8 +167,10 @@ export function VisantAuthProvider({ children }: { children: React.ReactNode }) 
     url.searchParams.set("scope", ESCOPO);
     url.searchParams.set("code_challenge", await desafioDe(verifier));
     url.searchParams.set("code_challenge_method", "S256");
-    // `state` fecha a porta de CSRF no retorno.
-    url.searchParams.set("state", sortearVerifier().slice(0, 24));
+    // `state` fecha a porta de CSRF no retorno: conferido no efeito de entrada.
+    const state = sortearVerifier().slice(0, 24);
+    sessionStorage.setItem(CHAVE_STATE, state);
+    url.searchParams.set("state", state);
 
     window.location.href = url.toString();
   }, []);
