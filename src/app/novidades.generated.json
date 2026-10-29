@@ -153,5 +153,17 @@
   "filter-menu": "2026-08-11",
   "filter-bar": "2026-08-11",
   "searchable-select": "2026-08-11",
-  "command-search": "2026-08-11"
+  "command-search": "2026-08-11",
+  "shader-chromatic-aberration": "2026-10-20",
+  "shader-crt": "2026-10-29",
+  "shader-dither": "2026-10-29",
+  "shader-duotone": "2026-10-29",
+  "shader-edge-detect": "2026-10-29",
+  "shader-film-grain": "2026-10-29",
+  "shader-glitch": "2026-10-20",
+  "shader-matrix-dither": "2026-10-29",
+  "shader-pixelate": "2026-10-20",
+  "shader-posterize": "2026-10-29",
+  "shader-upscale": "2026-10-29",
+  "shader-vhs": "2026-10-29"
 }
