@@ -1,4 +1,10 @@
 {
+  "carousel-3d": {
+    "nota": 2,
+    "comentario": "aposentado: duplica o cover-flow (audit de categorias)",
+    "excluir": false,
+    "data": "2026-10-29"
+  },
   "cover-art": {
     "nota": 2,
     "comentario": "mt slop, pode esconder",

@@ -70,9 +70,35 @@ function escrever(caminhoRelativo, html) {
 
 /* A home é o catálogo. Os kits foram a porta de entrada por um tempo, e saíram
    dela até serem redesenhados — ainda não se explicavam sozinhos. */
+/*
+ * A mesma conta da vitrine (`contaComoComponente` em catalog.tsx): peça fora
+ * das famílias ocultas e não arquivada pela curadoria. Antes este número saía
+ * de `registry.items.length` e dizia 183 enquanto a página dizia 176.
+ */
+const catalogSrc = readFileSync(join(ROOT, "src", "app", "catalog.tsx"), "utf8");
+const notas = JSON.parse(readFileSync(join(ROOT, "curadoria", "notas.json"), "utf8"));
+const arquivada = (n) => Boolean(n && (n.excluir || n.nota <= 2));
+const familias = [
+  ...catalogSrc
+    .slice(catalogSrc.indexOf("export const FAMILIES"), catalogSrc.indexOf("export const MIN_ABA"))
+    .matchAll(/key:\s*"([^"]+)",\s*label:\s*"([^"]+)"[^}]*?(oculta: true)?\s*\}/g),
+].map(([, key, label, oculta]) => ({ key, label, oculta: Boolean(oculta) }));
+
+const catalogBlock = catalogSrc.slice(catalogSrc.indexOf("export const CATALOG"));
+const pecasPorFamilia = new Map();
+for (const [, nome, key] of catalogBlock.matchAll(
+  /^\s{4}name: "([^"]+)",(?:(?!\n\s{4}name: ")[\s\S])*?family: "([^"]+)"/gm,
+)) {
+  if (arquivada(notas[nome])) continue;
+  pecasPorFamilia.set(key, (pecasPorFamilia.get(key) ?? 0) + 1);
+}
+const totalComponentes = familias
+  .filter((f) => !f.oculta)
+  .reduce((n, f) => n + (pecasPorFamilia.get(f.key) ?? 0), 0);
+
 const HOME = {
   titulo: "@visant/ui — a library da Visant",
-  descricao: `${registry.items.length} componentes React em registry shadcn. Cada um veste a marca que você escolher.`,
+  descricao: `${totalComponentes} componentes React em registry shadcn. Cada um veste a marca que você escolher.`,
 };
 
 writeFileSync(
@@ -159,18 +185,6 @@ if (!KITS.length) {
  * `/catalogo/marca` é a FAMÍLIA marca. O estúdio de marca é `/marca`, em SECOES
  * — dois endereços, dois documentos, sem sobreposição.
  */
-const catalogSrc = readFileSync(join(ROOT, "src", "app", "catalog.tsx"), "utf8");
-const familias = [
-  ...catalogSrc
-    .slice(catalogSrc.indexOf("export const FAMILIES"), catalogSrc.indexOf("export const familyLabel"))
-    .matchAll(/key:\s*"([^"]+)",\s*label:\s*"([^"]+)"/g),
-].map(([, key, label]) => ({ key, label }));
-
-const catalogBlock = catalogSrc.slice(catalogSrc.indexOf("export const CATALOG"));
-const pecasPorFamilia = new Map();
-for (const [, key] of catalogBlock.matchAll(/^\s{4}family: "([^"]+)"/gm)) {
-  pecasPorFamilia.set(key, (pecasPorFamilia.get(key) ?? 0) + 1);
-}
 
 const FAMILIAS = familias.map(({ key, label }) => {
   const n = pecasPorFamilia.get(key) ?? 0;

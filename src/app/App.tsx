@@ -72,7 +72,7 @@ interface Route {
   focus: string | null;
   /** Sala aberta. Só existe nos kits. */
   kit: string | null;
-  /** Fatia do catálogo. `null` = o índice das seis categorias. */
+  /** Fatia do catálogo. `null` = "Tudo". */
   familia: Family | null;
 }
 

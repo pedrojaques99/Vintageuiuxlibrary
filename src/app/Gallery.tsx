@@ -32,7 +32,9 @@ import { cn } from "@/lib/utils";
 import {
   CATALOG,
   FAMILIES,
+  MIN_ABA,
   TYPE_LABEL,
+  contaComoComponente,
   familyLabel,
   previewOf,
   stageSurfaceOf,
@@ -487,7 +489,13 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
 
   const pool = React.useMemo(
     () =>
-      porNovidade((familia ? CATALOG.filter((i) => i.family === familia) : CATALOG).filter(naVitrine)),
+      // "Tudo" deixa de fora só a Anatomia (figura de aula, não peça de produto);
+      // Fundação continua no fim, no bloco das peças sem palco.
+      porNovidade(
+        (familia ? CATALOG.filter((i) => i.family === familia) : CATALOG.filter((i) => i.family !== "anatomia")).filter(
+          naVitrine,
+        ),
+      ),
     [familia, naVitrine],
   );
 
@@ -647,9 +655,9 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
         </h1>
         {familia ? null : (
           <p className="mt-3 max-w-xl text-casa-lg text-casa-fg-2">
-            {/* Conta componente, não tema: o mesmo número que a descrição de SEO
-                (`prerender.mjs`) tira do registry. */}
-            {CATALOG.filter((i) => i.type !== "theme" && !arquivada(notas[i.name])).length} componentes pra React. Cada um
+            {/* Conta componente (fora Fundação e Anatomia): o mesmo número da aba
+                "Tudo" e da descrição de SEO (`prerender.mjs`). */}
+            {CATALOG.filter((i) => contaComoComponente(i) && !arquivada(notas[i.name])).length} componentes pra React. Cada um
             veste a marca que você escolher.
           </p>
         )}
@@ -664,11 +672,20 @@ export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: Galler
           <div className="flex min-w-0 flex-1 items-center gap-5 overflow-x-auto [mask-image:linear-gradient(to_right,black_85%,transparent)] [scrollbar-width:none] sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
             {/* A categoria NAVEGA: cada palavra é uma rota (`/catalogo/motion`),
                 então o link de uma fatia pode ser mandado no chat. */}
-            <Aba ativa={!familia} onClick={() => onFamilia?.(null)} count={CATALOG.filter(naVitrine).length}>
+            <Aba
+              ativa={!familia}
+              onClick={() => onFamilia?.(null)}
+              count={CATALOG.filter((i) => contaComoComponente(i) && naVitrine(i)).length}
+            >
               Tudo
             </Aba>
-            {/* Categoria sem peça na vitrine não vira palavra morta na barra. */}
-            {FAMILIES.filter((f) => CATALOG.some((i) => i.family === f.key && naVitrine(i))).map((f) => (
+            {/* Família oculta ou com menos de MIN_ABA peças não vira aba: as peças
+                seguem em "Tudo" e na busca. A aberta por link continua visível. */}
+            {FAMILIES.filter(
+              (f) =>
+                familia === f.key ||
+                (!f.oculta && CATALOG.filter((i) => i.family === f.key && naVitrine(i)).length >= MIN_ABA),
+            ).map((f) => (
               <Aba
                 key={f.key}
                 ativa={familia === f.key}

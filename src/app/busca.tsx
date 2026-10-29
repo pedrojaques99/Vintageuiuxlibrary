@@ -52,6 +52,9 @@ function nota(entrada: { item: CatalogItem; texto: string }, termo: string) {
   if (titulo.startsWith(t)) return 70;
   if (nome.includes(t)) return 60;
   if (titulo.includes(t)) return 50;
+  // Tag e estilo são intenção declarada; a descrição só menciona. "slider" põe
+  // quem é slider acima de quem cita slider de passagem.
+  if ([...entrada.item.tags, ...(entrada.item.estilo ?? [])].some((tag) => fold(tag).includes(t))) return 40;
   // O último degrau é o texto inteiro da ficha: descrição, tags, dependências,
   // com radical em português — `matches` é o mesmo casamento que a busca da
   // grade usava, e é o que faz "arrastar" achar a peça que "se arrasta". Sem

@@ -79,6 +79,32 @@ const missingFromRegistry = catalogNames.filter(
   (n) => !registryNames.includes(n) && !ALLOW_UNPUBLISHED[n],
 );
 
+/*
+ * A família é o eixo "o que é isso?" (ver FAMILIES em catalog.tsx). Duas
+ * regras seguram a barra de abas honesta: família tem de existir, e o que não
+ * tem interface (hook, tema, CSS base, regra) mora em Fundação — senão volta a
+ * aba que mistura peça com utilitário. `lib` fica livre: há web component com
+ * demo (fader, tempo-bar) que é controle de verdade.
+ */
+const familiasValidas = [
+  ...catalogSrc
+    .slice(catalogSrc.indexOf("export const FAMILIES"), catalogSrc.indexOf("export const MIN_ABA"))
+    .matchAll(/key:\s*"([^"]+)"/g),
+].map((m) => m[1]);
+const SEM_INTERFACE = ["hook", "theme", "base", "item"];
+const itens = [
+  ...catalogBlock.matchAll(
+    /^\s{4}name: "([^"]+)",(?:(?!\n\s{4}name: ")[\s\S])*?type: "([^"]+)",(?:(?!\n\s{4}name: ")[\s\S])*?family: "([^"]+)"/gm,
+  ),
+].map(([, name, type, family]) => ({ name, type, family }));
+const familiaInvalida = itens
+  .filter((i) => !familiasValidas.includes(i.family))
+  .map((i) => `${i.name}: "${i.family}"`);
+const foraDaFundacao = itens
+  .filter((i) => SEM_INTERFACE.includes(i.type) && i.family !== "fundacao")
+  .map((i) => `${i.name} (${i.type}) em "${i.family}"`);
+const semFamilia = catalogNames.filter((n) => !itens.some((i) => i.name === n));
+
 const c = {
   red: (s) => `\x1b[31m${s}\x1b[0m`,
   green: (s) => `\x1b[32m${s}\x1b[0m`,
@@ -93,6 +119,10 @@ if (divergentes.length)
   problems.push(["Descrição diferente entre catálogo e registry", divergentes]) && null;
 if (missingFromRegistry.length)
   problems.push(["Na vitrine, sem item no registry (o `add` vai falhar)", missingFromRegistry]);
+if (!familiasValidas.length) problems.push(["FAMILIES não lida de catalog.tsx — o formato mudou?", ["-"]]);
+if (semFamilia.length) problems.push(["Sem type/family legível no catálogo", semFamilia]);
+if (familiaInvalida.length) problems.push(["Família fora de FAMILIES", familiaInvalida]);
+if (foraDaFundacao.length) problems.push(["Sem interface própria e fora de Fundação", foraDaFundacao]);
 
 console.log(
   c.dim(

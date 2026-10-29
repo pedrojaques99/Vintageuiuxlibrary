@@ -143,20 +143,22 @@ const VintageSliderDemo = React.lazy(() => import("./demos/vintage-slider-demo")
  */
 export type Family =
   | "controles"
-  | "dados"
   | "navegacao"
-  | "cards"
+  | "dados"
   | "feedback"
+  | "conteudo"
   | "secoes"
-  | "midia"
   | "texto"
   | "efeitos"
-  | "3d"
-  | "shaders"
-  | "texturas"
-  | "vintage"
-  | "anatomia"
-  | "base";
+  | "fundacao"
+  | "anatomia";
+
+/**
+ * Estilo é o outro eixo: COMO a peça se parece, não o que ela é. Até
+ * 2026-10-29 "Vintage" era aba, e um knob vintage não aparecia em Controles pra
+ * quem procurava knob. Agora o knob mora em Controles e carrega o estilo.
+ */
+export type Estilo = "vintage";
 
 /**
  * O que uma demo recebe.
@@ -175,6 +177,8 @@ export interface CatalogItem {
   title: string;
   type: "ui" | "block" | "lib" | "hook" | "theme" | "base" | "item";
   family: Family;
+  /** Eixo visual, independente da família. Decide o palco (`stageSurfaceOf`) e entra na busca. */
+  estilo?: Estilo[];
   description: string;
   tags: string[];
   /** Demo viva. Ausente = item sem superfície visual própria (lib, tema, hook). */
@@ -215,7 +219,7 @@ export const previewOf = (item: CatalogItem) => item.preview ?? DEFAULT_PREVIEW;
  * exatamente sobre o fundo do projeto de quem instala. Esse é o palco neutro.
  */
 export const stageSurfaceOf = (item: CatalogItem) =>
-  item.family === "vintage"
+  item.estilo?.includes("vintage")
     ? {
         background:
           "radial-gradient(120% 100% at 50% 0%, var(--vintage-surface-2), var(--vintage-surface-1))",
@@ -236,32 +240,61 @@ export const TYPE_LABEL: Record<CatalogItem["type"], string> = {
   item: "Regras",
 };
 
-export const FAMILIES: { key: Family; label: string }[] = [
-  { key: "controles", label: "Controles" },
-  { key: "dados", label: "Dados" },
-  { key: "navegacao", label: "Navegação" },
-  { key: "cards", label: "Cards" },
-  { key: "feedback", label: "Feedback" },
-  { key: "secoes", label: "Seções" },
-  { key: "midia", label: "Mídia" },
-  { key: "texto", label: "Texto" },
-  { key: "efeitos", label: "Efeitos" },
-  { key: "3d", label: "3D" },
-  { key: "shaders", label: "Shaders" },
-  { key: "texturas", label: "Texturas" },
-  { key: "vintage", label: "Vintage" },
-  { key: "anatomia", label: "Anatomia" },
-  { key: "base", label: "Base" },
+/**
+ * As abas respondem uma pergunta só: "o que é isso?". A `regra` é o critério
+ * de quem cataloga uma peça nova — e o `catalog-check` barra família fora daqui.
+ *
+ * `oculta`: a família existe (rota, busca, portão), mas não vira aba nem entra
+ * na contagem de componentes. Fundação são libs, hooks e temas; Anatomia são as
+ * figuras de aula do curso.
+ */
+export const FAMILIES: { key: Family; label: string; regra: string; oculta?: boolean }[] = [
+  { key: "controles", label: "Controles", regra: "a pessoa entra um valor ou dispara uma ação" },
+  { key: "navegacao", label: "Navegação", regra: "leva a outro lugar ou estrutura o app" },
+  { key: "dados", label: "Dados", regra: "mostra número, métrica ou coleção estruturada" },
+  { key: "feedback", label: "Feedback", regra: "responde a uma ação ou a uma espera" },
+  { key: "conteudo", label: "Conteúdo", regra: "apresenta uma coisa: card, foto, galeria, vídeo, capa, objeto 3D" },
+  { key: "secoes", label: "Seções", regra: "é uma dobra inteira de página" },
+  { key: "texto", label: "Texto", regra: "a peça é a tipografia animada" },
+  { key: "efeitos", label: "Efeitos", regra: "atmosfera visual sem função de UI: fundo, filtro de imagem, cursor" },
+  { key: "fundacao", label: "Fundação", regra: "lib, hook, tema ou regra, sem interface própria", oculta: true },
+  { key: "anatomia", label: "Anatomia", regra: "figura didática do curso", oculta: true },
 ];
+
+/** Aba com menos peças que isto não aparece; as peças seguem em "Tudo" e na busca. */
+export const MIN_ABA = 4;
 
 /** Os nomes de antes, pra `/catalogo/motion` mandado ontem ainda abrir algo. */
 export const FAMILIA_ANTIGA: Record<string, Family> = {
   trabalho: "controles",
   aquisicao: "secoes",
   motion: "efeitos",
-  marca: "base",
+  marca: "fundacao",
+  base: "fundacao",
+  cards: "conteudo",
+  midia: "conteudo",
+  "3d": "conteudo",
+  shaders: "efeitos",
+  texturas: "efeitos",
+  vintage: "controles",
+};
+
+/**
+ * O rótulo antigo de cada família nova entra na busca: quem digita "shader" ou
+ * "card" depois da migração continua achando a vizinhança certa.
+ */
+const ALIAS: Partial<Record<Family, string>> = {
+  conteudo: "cards midia 3d",
+  efeitos: "shaders texturas fundo",
   fundacao: "base",
 };
+
+/**
+ * A pergunta "quantos componentes?" tem uma resposta só. Hero, aba "Tudo" e o
+ * prerender contam igual: na vitrine e fora das famílias ocultas.
+ */
+export const contaComoComponente = (i: CatalogItem) =>
+  !FAMILIES.find((f) => f.key === i.family)?.oculta;
 
 export const familyLabel = (key: Family) => FAMILIES.find((f) => f.key === key)?.label ?? key;
 
@@ -299,6 +332,8 @@ export const haystack = (i: CatalogItem) => {
     i.description,
     i.type,
     familyLabel(i.family),
+    ALIAS[i.family] ?? "",
+    ...(i.estilo ?? []),
     ...i.tags,
     ...depKeysOf(i.name),
   ].join(" ");
@@ -519,7 +554,7 @@ export const CATALOG: CatalogItem[] = [
     name: "brand-theme",
     title: "Brand Theme Runtime",
     type: "lib",
-    family: "base",
+    family: "fundacao",
     description:
       "Provider e hook que aplicam em runtime o tema compilado de uma brand guideline. Uma folha de estilo só, trocada sem recarregar a página.",
     tags: ["marca", "tokens", "runtime", "provider"],
@@ -528,7 +563,7 @@ export const CATALOG: CatalogItem[] = [
     name: "css-color",
     title: "CSS Color",
     type: "lib",
-    family: "base",
+    family: "fundacao",
     description:
       "Resolve qualquer cor CSS ou token (var(--x), oklch, color-mix) para sRGB 0..1 e avisa na troca de tema, para shader e canvas pintarem com a cor da marca.",
     tags: ["marca", "tokens", "webgl", "canvas", "oklch", "tema"],
@@ -539,7 +574,7 @@ export const CATALOG: CatalogItem[] = [
     name: "theme-visant",
     title: "Temas de marca",
     type: "theme",
-    family: "base",
+    family: "fundacao",
     description:
       "Tema compilado de uma brand guideline: cor com contraste AA por construção, par tipográfico e o esqueleto de craft invariante. O da casa é público. Os de cliente saem do vault de cada conta.",
     tags: ["tema", "tokens", "oklch", "aa"],
@@ -654,7 +689,7 @@ export const CATALOG: CatalogItem[] = [
     name: "tempo-clock",
     title: "Tempo Clock",
     type: "lib",
-    family: "base",
+    family: "fundacao",
     description:
       "Relógio de BPM sem interface: passo na divisão, envelope de bumbo, tap tempo e troca de BPM sem pular o compasso.",
     tags: ["bpm", "ritmo", "música", "tempo", "vanilla"],
@@ -761,7 +796,7 @@ export const CATALOG: CatalogItem[] = [
     name: "plate",
     title: "Plate",
     type: "ui",
-    family: "midia",
+    family: "conteudo",
     description:
       "A placa onde a foto de catálogo senta. Resolve o recorte branco sobre fundo colorido.",
     tags: ["produto", "foto"],
@@ -851,7 +886,7 @@ export const CATALOG: CatalogItem[] = [
     name: "masonry-gallery",
     title: "Masonry Gallery",
     type: "ui",
-    family: "midia",
+    family: "conteudo",
     description:
       "Mosaico por round-robin: anexar página nova não reordena o que já estava na tela.",
     tags: ["galeria", "grid"],
@@ -953,7 +988,7 @@ export const CATALOG: CatalogItem[] = [
     name: "motion-layer",
     title: "Motion Layer",
     type: "lib",
-    family: "efeitos",
+    family: "fundacao",
     description:
       "O ciclo de scroll do editor Shopify em GSAP/ScrollTrigger, com limpeza de instância.",
     tags: ["gsap", "scroll"],
@@ -962,7 +997,7 @@ export const CATALOG: CatalogItem[] = [
     name: "smooth-scroll-provider",
     title: "Smooth Scroll Provider",
     type: "lib",
-    family: "efeitos",
+    family: "fundacao",
     description:
       "Lenis + GSAP num relógio só, com bail-out em prefers-reduced-motion. A instância sai por callback.",
     tags: ["lenis", "gsap"],
@@ -973,7 +1008,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-knob",
     title: "Vintage Knob",
     type: "ui",
-    family: "vintage",
+    family: "controles",
+    estilo: ["vintage"],
     description: "Potenciômetro com arraste vertical e trava de curso.",
     tags: ["áudio", "knob"],
     demo: VintageKnobDemo,
@@ -983,7 +1019,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-large-knob",
     title: "Vintage Large Knob",
     type: "ui",
-    family: "vintage",
+    family: "controles",
+    estilo: ["vintage"],
     description: "O irmão grande: marcação de escala e leitura de valor.",
     tags: ["áudio", "knob"],
     demo: LargeKnobDemo,
@@ -993,7 +1030,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-meter",
     title: "Vintage Meter",
     type: "ui",
-    family: "vintage",
+    family: "dados",
+    estilo: ["vintage"],
     description: "VU analógico com balística de ponteiro.",
     tags: ["áudio", "medidor"],
     demo: VintageMeterDemo,
@@ -1004,7 +1042,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-slider",
     title: "Vintage Slider",
     type: "ui",
-    family: "vintage",
+    family: "controles",
+    estilo: ["vintage"],
     description: "Fader de console com curso e trilho gravados.",
     tags: ["áudio", "fader"],
     demo: VintageSliderDemo,
@@ -1015,7 +1054,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-button",
     title: "Vintage Button",
     type: "ui",
-    family: "vintage",
+    family: "controles",
+    estilo: ["vintage"],
     description: "Botão de painel que afunda no clique.",
     tags: ["áudio", "botão"],
     demo: () => (
@@ -1030,7 +1070,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-toggle",
     title: "Vintage Toggle",
     type: "ui",
-    family: "vintage",
+    family: "controles",
+    estilo: ["vintage"],
     description: "Chave de duas posições com estalo visual.",
     tags: ["áudio", "chave"],
     demo: () => (
@@ -1044,7 +1085,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-led",
     title: "Vintage LED",
     type: "ui",
-    family: "vintage",
+    family: "feedback",
+    estilo: ["vintage"],
     description: "LED de painel com halo. Quatro cores, estado on/off.",
     tags: ["áudio", "estado"],
     demo: VintageLedDemo,
@@ -1054,7 +1096,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-eq",
     title: "Vintage EQ",
     type: "ui",
-    family: "vintage",
+    family: "controles",
+    estilo: ["vintage"],
     description: "Banco de faders com curva desenhada.",
     tags: ["áudio", "eq", "faders", "gráfico"],
     demo: () => (
@@ -1068,7 +1111,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-parametric-eq",
     title: "Vintage Parametric EQ",
     type: "ui",
-    family: "vintage",
+    family: "controles",
+    estilo: ["vintage"],
     description:
       "O EQ paramétrico: cada banda é um sino, e a curva grossa é a soma em dB. Arraste um ponto, roda muda o Q, e o BYPASS achata sem perder os valores.",
     tags: ["áudio", "eq", "curva", "paramétrico", "filtro"],
@@ -1084,7 +1128,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-oscilloscope",
     title: "Vintage Oscilloscope",
     type: "ui",
-    family: "vintage",
+    family: "dados",
+    estilo: ["vintage"],
     description: "Traço de osciloscópio alimentado por um buffer de amostras.",
     tags: ["áudio", "canvas"],
     // Um tubo, um modo por vez, e o PLAY liga um som de verdade que o tubo desenha.
@@ -1096,7 +1141,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-soundboard-pad",
     title: "Soundboard Pad",
     type: "ui",
-    family: "vintage",
+    family: "controles",
+    estilo: ["vintage"],
     description: "Pad de disparo com estado aceso e retorno tátil.",
     tags: ["áudio", "pad"],
     demo: PadDemo,
@@ -1107,7 +1153,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-xy-pad",
     title: "Vintage XY Pad",
     type: "ui",
-    family: "vintage",
+    family: "controles",
+    estilo: ["vintage"],
     description: "Campo de dois eixos para controlar dois parâmetros num gesto só.",
     tags: ["áudio", "gesto"],
     demo: ({ props }) => (
@@ -1127,7 +1174,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-tv-frame",
     title: "Vintage TV Frame",
     type: "ui",
-    family: "vintage",
+    family: "conteudo",
+    estilo: ["vintage"],
     description: "Moldura de tubo com curvatura e brilho de varredura.",
     tags: ["moldura", "crt"],
     // O tubo toca um programa e o seletor troca de canal; o botão de força é o da peça.
@@ -1138,7 +1186,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-command-palette",
     title: "Vintage Command Palette",
     type: "ui",
-    family: "vintage",
+    family: "controles",
+    estilo: ["vintage"],
     description: "Paleta de comandos no vocabulário do painel.",
     tags: ["comando", "teclado"],
     /*
@@ -1169,7 +1218,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-base",
     title: "Vintage Base",
     type: "base",
-    family: "vintage",
+    family: "fundacao",
+    estilo: ["vintage"],
     description: "A fundação do kit: variáveis de painel, texturas e as regras em @layer.",
     tags: ["css", "base"],
   },
@@ -1177,7 +1227,8 @@ export const CATALOG: CatalogItem[] = [
     name: "vintage-theme",
     title: "Vintage Theme",
     type: "theme",
-    family: "vintage",
+    family: "fundacao",
+    estilo: ["vintage"],
     description: "O tema do kit de áudio, o contraponto escuro aos temas de marca.",
     tags: ["tema", "css"],
   },
@@ -1185,7 +1236,7 @@ export const CATALOG: CatalogItem[] = [
     name: "use-media-query",
     title: "useMediaQuery",
     type: "hook",
-    family: "base",
+    family: "fundacao",
     description:
       "Media query como estado de React, via useSyncExternalStore: leitura síncrona no primeiro render, sem piscar, e segura em SSR.",
     tags: ["hook", "responsivo", "ssr"],
@@ -1194,7 +1245,7 @@ export const CATALOG: CatalogItem[] = [
     name: "use-debounce",
     title: "useDebounce",
     type: "hook",
-    family: "base",
+    family: "fundacao",
     description:
       "Atrasa um valor até ele parar de mudar. Só borda de saída, e o valor inicial não é atrasado.",
     tags: ["hook", "busca", "debounce"],
@@ -1203,7 +1254,7 @@ export const CATALOG: CatalogItem[] = [
     name: "use-knob-drag",
     title: "useKnobDrag",
     type: "hook",
-    family: "base",
+    family: "fundacao",
     description:
       "O gesto de arrastar um knob isolado do desenho: pointer capture, trava de curso e passo fino com shift.",
     tags: ["hook", "gesto"],
@@ -1251,7 +1302,7 @@ export const CATALOG: CatalogItem[] = [
     name: "showcase-card",
     title: "Showcase Card",
     type: "ui",
-    family: "cards",
+    family: "conteudo",
     description:
       "Card de serviço: mídia com selo de seta, título que cobre o card inteiro e a lista do que está incluso como texto, não como filtro.",
     tags: ["serviço", "card", "vitrine"],
@@ -1331,7 +1382,7 @@ export const CATALOG: CatalogItem[] = [
     name: "sfx-bus",
     title: "SFX Bus",
     type: "lib",
-    family: "base",
+    family: "fundacao",
     description:
       "Cliques de objeto analógico em WebAudio puro, sem arquivo: botão de câmera, dente de knob, alavanca e agulha pousando, com throttle, contexto armado no primeiro gesto e mudo sob prefers-reduced-motion.",
     tags: ["som", "áudio", "webaudio", "feedback", "tato", "clique", "analógico"],
@@ -1371,7 +1422,7 @@ export const CATALOG: CatalogItem[] = [
     name: "use-pointer-parallax",
     title: "Pointer Parallax",
     type: "hook",
-    family: "base",
+    family: "fundacao",
     description:
       "Escreve --px e --py uma vez por quadro e deixa o CSS decidir a profundidade de cada objeto. Só em ponteiro fino, volta ao repouso ao sair da janela.",
     tags: ["paralaxe", "ponteiro", "profundidade", "colagem", "hero"],
@@ -1382,7 +1433,7 @@ export const CATALOG: CatalogItem[] = [
     name: "fold-motion",
     title: "Fold Motion",
     type: "lib",
-    family: "efeitos",
+    family: "fundacao",
     description:
       "Hierarquia de entradas por dobra: rise, drift, mask, settle, climax, invert e mist em vez de trinta entradas iguais. O esconderijo é aplicado pelo componente, nunca por CSS estático.",
     tags: ["scroll", "entrada", "reveal", "dobra", "hierarquia"],
@@ -1422,7 +1473,7 @@ export const CATALOG: CatalogItem[] = [
     name: "photo-frame",
     title: "Photo Frame",
     type: "ui",
-    family: "midia",
+    family: "conteudo",
     description:
       "A moldura que revela a foto: a máscara abre, a foto assenta mais devagar que a máscara, e opcionalmente deriva na rolagem. Proporção declarada pra não haver salto de layout, e mídia por slot.",
     tags: ["foto", "moldura", "imagem", "reveal", "paralaxe", "scroll", "gsap"],
@@ -1445,7 +1496,7 @@ export const CATALOG: CatalogItem[] = [
     name: "photo-flip",
     title: "Photo Flip",
     type: "ui",
-    family: "midia",
+    family: "conteudo",
     description:
       "A foto atravessa da grade para a tela cheia — mesmo nó do DOM, reparentado e animado por GSAP Flip com ease-in-out. A vaga segura a proporção pra grade não desabar, e o foco volta pra foto que abriu.",
     tags: ["foto", "galeria", "lightbox", "flip", "morph", "grade", "gsap"],
@@ -1457,7 +1508,7 @@ export const CATALOG: CatalogItem[] = [
     name: "photo-compare",
     title: "Photo Compare",
     type: "ui",
-    family: "midia",
+    family: "conteudo",
     description:
       "A cortina entre o antes e o depois: a camada de cima é RECORTADA, nunca redimensionada, então as duas fotos ficam na mesma escala. O arrasto, o teclado e o leitor de tela vêm de um input range invisível.",
     tags: ["foto", "antes", "depois", "comparar", "cortina", "rebrand", "slider"],
@@ -1469,7 +1520,7 @@ export const CATALOG: CatalogItem[] = [
     name: "reels-rail",
     title: "Reels Rail",
     type: "ui",
-    family: "midia",
+    family: "conteudo",
     description:
       "O trilho de vídeo vertical: cartões 9:16 com encaixe, tocando o do meio ou o que está sob o cursor. Som opcional, um card por vez, e fora da tela pausa tudo.",
     tags: ["vídeo", "reels", "shorts", "vertical", "carrossel", "trilho"],
@@ -1503,7 +1554,7 @@ export const CATALOG: CatalogItem[] = [
     name: "carousel-3d",
     title: "Carousel 3D",
     type: "ui",
-    family: "3d",
+    family: "conteudo",
     description:
       "Capas num carrossel circular em WebGL: o card da frente cresce no hover, o botão central abre o item e o canvas só nasce perto da dobra. Aposentado da listagem — bom em vitrine de poucas peças.",
     tags: ["carrossel", "3d", "webgl", "portfólio", "capa", "vitrine"],
@@ -1515,7 +1566,7 @@ export const CATALOG: CatalogItem[] = [
     name: "book-3d",
     title: "Book 3D",
     type: "ui",
-    family: "3d",
+    family: "conteudo",
     description:
       "O item de catálogo como objeto: capa dura em WebGL com lombada curva, espessura vinda da contagem de páginas e praça. Cor derivada dos tokens da marca e do matiz da própria arte, sem asset baixado.",
     tags: ["livro", "3d", "webgl", "catálogo", "capa", "objeto"],
@@ -1534,7 +1585,7 @@ export const CATALOG: CatalogItem[] = [
     preview: { w: 560, h: 300 },
   },
   {
-    name: "mist-swap", title: "Mist Swap", type: "ui", family: "midia",
+    name: "mist-swap", title: "Mist Swap", type: "ui", family: "conteudo",
     description: "Troca de slides em névoa: o que sai se desfaz no desfoque enquanto o próximo assenta no mesmo lugar, só gira em tela e para sob movimento reduzido; preenche o pai, que precisa ter tamanho.",
     tags: ["foto", "slideshow", "crossfade", "blur", "névoa", "troca", "atmosfera"],
     demo: MistSwapDemo,
@@ -1570,7 +1621,7 @@ export const CATALOG: CatalogItem[] = [
     name: "fog-hero",
     title: "Fog Hero",
     type: "block",
-    family: "shaders",
+    family: "secoes",
     description: "Hero de tela cheia que abre uma clareira na névoa, troca uma playlist de vídeo P&B pela própria fumaça e sai em desfoque no scroll, com papel e tinta vindos dos tokens.",
     tags: ["hero", "névoa", "webgl", "shader", "vídeo", "abertura", "grão"],
     demo: FogHeroDemo,
@@ -1580,7 +1631,7 @@ export const CATALOG: CatalogItem[] = [
     name: "lathe-object",
     title: "Lathe Object",
     type: "ui",
-    family: "3d",
+    family: "conteudo",
     description: "Produto de revolução em WebGL a partir de um perfil de meia silhueta (frasco, vela, pote, difusor com varetas), com giro sozinho, arrasto para orbitar e vento no hover.",
     tags: ["3d", "webgl", "produto", "embalagem", "objeto", "difusor"],
     demo: LatheObjectDemo,
@@ -1591,7 +1642,7 @@ export const CATALOG: CatalogItem[] = [
     name: "lathe-riso",
     title: "Lathe Riso",
     type: "ui",
-    family: "3d",
+    family: "conteudo",
     description:
       "A peça 3D de revolução do lathe-object impressa ao vivo em duas tintas de risografia: gira, orbita no arrasto e sai do registro onde o cursor passa.",
     tags: ["3d", "webgl", "shader", "riso", "produto", "impressão"],
@@ -1602,7 +1653,7 @@ export const CATALOG: CatalogItem[] = [
     name: "fog-tree",
     title: "Fog Tree",
     type: "ui",
-    family: "3d",
+    family: "efeitos",
     description:
       "Uma árvore procedural sozinha na névoa, em duotone da marca: a cena é cinza e o último passe pinta com --background e --foreground, então o tema escuro inverte a foto sem segunda paleta.",
     tags: ["3d", "webgl", "névoa", "árvore", "scroll", "duotone", "ez-tree"],
@@ -1614,7 +1665,7 @@ export const CATALOG: CatalogItem[] = [
     name: "fog-garden",
     title: "Fog Garden",
     type: "block",
-    family: "3d",
+    family: "secoes",
     description:
       "A caminhada por um jardim na névoa presa ao scroll: cada parada de texto sai da névoa e volta para ela, em mix-blend-difference sobre as copas, com clareiras derivadas das paradas e plantio semeado.",
     tags: ["3d", "webgl", "scroll", "sticky", "névoa", "storytelling", "jardim"],
@@ -1626,7 +1677,7 @@ export const CATALOG: CatalogItem[] = [
     name: "book-shelf",
     title: "Book Shelf",
     type: "ui",
-    family: "3d",
+    family: "conteudo",
     description:
       "Estante em vez de vitrine: os itens soltos, sem moldura, e o rótulo só no hover — porque o objeto já tem silhueta e a moldura passa a competir com ela.",
     tags: ["estante", "prateleira", "catálogo", "grade", "hover"],
@@ -1640,7 +1691,7 @@ export const CATALOG: CatalogItem[] = [
     name: "spine-card",
     title: "Spine Card",
     type: "ui",
-    family: "cards",
+    family: "conteudo",
     description:
       "O retângulo que lê como objeto: lombada de luz na borda, tombo apoiado na base que endireita no hover, e capa em duotone que só ganha cor onde a atenção está.",
     tags: ["card", "livro", "estante", "produto", "lombada"],
@@ -1652,7 +1703,7 @@ export const CATALOG: CatalogItem[] = [
     name: "cover-art",
     title: "Cover Art",
     type: "ui",
-    family: "midia",
+    family: "conteudo",
     description:
       "Capa determinística em CSS pra item sem arte: três famílias (livro, app, placa), monograma, e rampa tonal derivada da marca por color-mix. Zero byte de imagem, SSR igual ao cliente.",
     tags: ["capa", "placeholder", "catálogo", "determinístico", "sem imagem"],
@@ -1694,7 +1745,7 @@ export const CATALOG: CatalogItem[] = [
     name: "use-local-search",
     title: "useLocalSearch",
     type: "hook",
-    family: "base",
+    family: "fundacao",
     description:
       "Busca em memória tolerante a acento: índice montado uma vez por lista, todos os termos batendo em qualquer ordem, e termo vazio devolvendo a lista inteira.",
     tags: ["busca", "filtro", "acento", "catálogo"],
@@ -1772,7 +1823,7 @@ export const CATALOG: CatalogItem[] = [
     name: "card-stack",
     title: "Card Stack",
     type: "ui",
-    family: "cards",
+    family: "conteudo",
     description:
       "Pilha de cards em que o de cima vai pro fundo quando você arrasta e solta, como baralho de verdade.",
     tags: ["pilha","arrastar","gesto","depoimentos","cards"],
@@ -1808,7 +1859,7 @@ export const CATALOG: CatalogItem[] = [
     name: "expandable-card",
     title: "Expandable Card",
     type: "ui",
-    family: "cards",
+    family: "conteudo",
     description:
       "Card de resumo que cresce pros lados e pra baixo ao abrir, e rola só a palavra que mudou no resumo.",
     tags: ["card","expandir","detalhe","resumo","layout"],
@@ -1894,7 +1945,7 @@ export const CATALOG: CatalogItem[] = [
     name: "swipe-actions",
     title: "Swipe Actions",
     type: "ui",
-    family: "cards",
+    family: "controles",
     description:
       "Lista em que a linha arrasta pro lado e mostra as ações, com o mesmo menu pra quem usa teclado.",
     tags: ["lista","gesto","arrastar","triagem"],
@@ -1943,7 +1994,7 @@ export const CATALOG: CatalogItem[] = [
     name: "folding-bill",
     title: "Folding Bill",
     type: "ui",
-    family: "cards",
+    family: "conteudo",
     description:
       "Uma conta que dobra em três como papel e abre quando você puxa ou toca, com o total sempre à vista no cabeçalho.",
     tags: ["recibo","pedido","3d","arrastar","acordeão"],
@@ -2015,7 +2066,7 @@ export const CATALOG: CatalogItem[] = [
     name: "tilt-card",
     title: "Tilt Card",
     type: "ui",
-    family: "efeitos",
+    family: "conteudo",
     description:
       "O card que inclina em 3D seguindo o mouse, com um brilho que corre pela superfície.",
     tags: ["card","3d","tilt","hover","brilho","foto"],
@@ -2040,7 +2091,7 @@ export const CATALOG: CatalogItem[] = [
     // palco-check: a barra de desfazer nasce embaixo depois de apagar, e a caixa reserva o lugar dela
     title: "Black Hole",
     type: "ui",
-    family: "cards",
+    family: "feedback",
     description:
       "Apagar em lote com as linhas sugadas para um ponto só, a lista se inclinando em volta e o desfazer devolvendo tudo do mesmo lugar.",
     tags: ["lista","apagar","desfazer","inbox","canvas","transição"],
@@ -2065,7 +2116,7 @@ export const CATALOG: CatalogItem[] = [
     // palco-check: a perspectiva das capas laterais puxa o centro medido; a capa da vez está no meio
     title: "Cover Flow",
     type: "ui",
-    family: "midia",
+    family: "conteudo",
     description:
       "Uma prateleira de capas em perspectiva: a da vez fica de frente, as vizinhas giram de lado e você arrasta ou joga pra trocar.",
     tags: ["galeria","carrossel","3d","portfólio","arrastar","capas"],
@@ -2113,7 +2164,7 @@ export const CATALOG: CatalogItem[] = [
     name: "page-curl",
     title: "Page Curl",
     type: "ui",
-    family: "midia",
+    family: "conteudo",
     description:
       "Uma revistinha que você folheia puxando o canto da página, com a dobra, o verso do papel e a próxima página aparecendo por baixo.",
     tags: ["revista","catálogo","página","dobra","arrastar","editorial"],
@@ -2209,7 +2260,7 @@ export const CATALOG: CatalogItem[] = [
     name: "voice-note",
     title: "Voice Note",
     type: "ui",
-    family: "midia",
+    family: "conteudo",
     description:
       "Nota de voz de chat com forma de onda, play e pausa, e busca clicando ou arrastando na onda.",
     tags: ["áudio","chat","player","forma de onda"],
@@ -2222,7 +2273,7 @@ export const CATALOG: CatalogItem[] = [
     // palco-check: o detalhe do cartão abre embaixo da pilha, e a caixa reserva o lugar dele
     title: "Wallet Stack",
     type: "ui",
-    family: "cards",
+    family: "conteudo",
     description:
       "Carteira de cartões empilhados em que um sobe pra mostrar saldo e movimento e os outros se recolhem no pé.",
     tags: ["carteira","cartões","fintech","pilha","saldo"],
@@ -2234,7 +2285,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-ascii",
     title: "Shader ASCII",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem redesenhada em caracteres, com seis jogos de glifo e as células mais cheias na cor da marca.",
     tags: ["shader","webgl","imagem","ascii","caracteres"],
@@ -2246,7 +2297,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-halftone",
     title: "Shader Halftone",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Retícula de uma tinta só sobre uma imagem, em pontos, quadrados ou linhas, com uma lupa que amplia debaixo do cursor.",
     tags: ["shader","webgl","imagem","retícula","impressão"],
@@ -2258,7 +2309,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-neon",
     title: "Shader Neon",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Fios de luz que ondulam num campo liso na cor da marca e engrossam quando o ponteiro passa rápido.",
     tags: ["shader","webgl","fundo","neon","onda"],
@@ -2270,7 +2321,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-riso",
     title: "Shader Riso",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem impressa em duas tintas de risografia, com grão, ângulo próprio por tinta e registro fora do lugar.",
     tags: ["shader","webgl","imagem","riso","impressão"],
@@ -2282,7 +2333,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-tunnel",
     title: "Shader Tunnel",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Túnel de anéis em espiral que corre pro centro na cor da marca e acelera com o ponteiro.",
     tags: ["shader","webgl","fundo","tunel","espiral"],
@@ -2294,7 +2345,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-voronoi",
     title: "Shader Voronoi",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Mosaico de células que derivam devagar com um núcleo aceso na cor da marca, empurradas pelo ponteiro.",
     tags: ["shader","webgl","fundo","voronoi","textura"],
@@ -2393,7 +2444,7 @@ export const CATALOG: CatalogItem[] = [
     name: "agent-rules",
     title: "Agent Rules",
     type: "item",
-    family: "base",
+    family: "fundacao",
     description:
       "Regras pro seu agente de IA (Cursor, Claude Code, Copilot): procurar no @visant antes de escrever UI do zero e escolher a peça certa pela situação.",
     tags: ["ia", "agente", "mcp", "cursor", "claude", "copilot", "regras"],
@@ -2402,7 +2453,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-chromatic-aberration",
     title: "Shader Chromatic Aberration",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Os canais de cor de uma imagem fora do registro, com a separação apontando para o cursor e crescendo longe do centro.",
     tags: ["shader","webgl","imagem","aberração cromática","rgb"],
@@ -2414,7 +2465,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-crt",
     title: "Shader CRT",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem num monitor de tubo, com linhas de varredura, vinheta, tela abaulada e uma faixa de luz que desce devagar.",
     tags: ["shader","webgl","imagem","crt","tubo","retrô"],
@@ -2426,7 +2477,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-dither",
     title: "Shader Dither",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem pixelada em poucos tons da rampa da marca, com o dither de Bayer fazendo a passagem entre um tom e outro.",
     tags: ["shader","webgl","imagem","dither","8 bits","pixel"],
@@ -2438,7 +2489,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-duotone",
     title: "Shader Duotone",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem refeita em duas cores do tema, a mais escura nas sombras e a outra nas luzes, sem sair em negativo no escuro.",
     tags: ["shader","webgl","imagem","duotone","duas cores"],
@@ -2450,7 +2501,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-edge-detect",
     title: "Shader Edge Detect",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Só os contornos de uma imagem, traçados pelo filtro de Sobel na cor da marca, sozinhos ou por cima da foto.",
     tags: ["shader","webgl","imagem","contorno","traço"],
@@ -2462,7 +2513,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-film-grain",
     title: "Shader Film Grain",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Grão de película correndo sobre uma imagem a 24 quadros por segundo, em cinza ou com um grão por canal de cor.",
     tags: ["shader","webgl","imagem","grão","filme"],
@@ -2474,7 +2525,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-glitch",
     title: "Shader Glitch",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem que falha em faixas, com os canais de cor separados e linhas que pulam, e falha mais quando o mouse passa rápido.",
     tags: ["shader","webgl","imagem","glitch","falha"],
@@ -2486,7 +2537,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-matrix-dither",
     title: "Shader Matrix Dither",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem em 1 bit pelo dither de Bayer, só papel e tinta da marca, numa trama 2×2, 4×4 ou 8×8.",
     tags: ["shader","webgl","imagem","dither","1 bit","bayer"],
@@ -2498,7 +2549,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-pixelate",
     title: "Shader Pixelate",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem em blocos de cor chapada, com uma janela redonda que mostra a foto nítida debaixo do cursor.",
     tags: ["shader","webgl","imagem","pixel","revelar"],
@@ -2510,7 +2561,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-posterize",
     title: "Shader Posterize",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem reduzida a poucos tons por canal, com as transições suaves virando degraus chapados de serigrafia.",
     tags: ["shader","webgl","imagem","posterizar","serigrafia"],
@@ -2522,7 +2573,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-upscale",
     title: "Shader Upscale",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem pequena ampliada em bicúbico com nitidez, e uma linha que segue o cursor mostrando o antes em blocos.",
     tags: ["shader","webgl","imagem","ampliação","antes e depois"],
@@ -2534,7 +2585,7 @@ export const CATALOG: CatalogItem[] = [
     name: "shader-vhs",
     title: "Shader VHS",
     type: "ui",
-    family: "shaders",
+    family: "efeitos",
     description:
       "Uma imagem tocada de fita VHS, com a linha ondulando, um vinco que rasga, ruído no pé do quadro e a cor sangrando para o lado.",
     tags: ["shader","webgl","imagem","vhs","fita","retrô"],
@@ -2546,7 +2597,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-beam",
     title: "Textura Beam",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "Facho de luz que desce do alto com poeira boiando dentro e que mira o cursor.",
     tags: ["textura","webgl","fundo","ponteiro","facho","luz","poeira"],
@@ -2558,7 +2609,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-current",
     title: "Textura Current",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "Linhas de correnteza com traços que descem pela água e abrem caminho em volta do cursor como de uma pedra.",
     tags: ["textura","webgl","fundo","ponteiro","fluxo","correnteza","linhas"],
@@ -2570,7 +2621,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-curtain",
     title: "Textura Curtain",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "Cortina de dobras verticais que ondula onde o cursor passa, com a onda morrendo sozinha.",
     tags: ["textura","webgl","fundo","ponteiro","cortina","dobras","tecido"],
@@ -2582,7 +2633,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-gaze",
     title: "Textura Gaze",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "Grade de olhos cujas pupilas seguem o cursor e que piscam de vez em quando, cada um no seu tempo.",
     tags: ["textura","webgl","fundo","ponteiro","olhos","pupila","grade"],
@@ -2594,7 +2645,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-glow",
     title: "Textura Glow",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "Brilho macio na cor da marca que segue o cursor sobre grão fino, esticando no rumo do movimento.",
     tags: ["textura","webgl","fundo","ponteiro","brilho","grao","luz"],
@@ -2606,7 +2657,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-magnet",
     title: "Textura Magnet",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "Limalha de ferro em traços curtos que se alinham ao campo de um ímã preso ao cursor.",
     tags: ["textura","webgl","fundo","ponteiro","ima","limalha","campo"],
@@ -2618,7 +2669,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-pillars",
     title: "Textura Pillars",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "Campo de pilares em pseudo-3D que sobem perto do cursor e descem ao sair.",
     tags: ["textura","webgl","fundo","ponteiro","pilares","3d","campo"],
@@ -2630,7 +2681,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-pinch",
     title: "Textura Pinch",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "A imagem é sugada para o ponteiro como pele beliscada, e solta devagar quando ele sai.",
     tags: ["textura","webgl","ponteiro","imagem","beliscar","distorção"],
@@ -2642,7 +2693,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-settle",
     title: "Textura Settle",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "Areia rastelada que o cursor espalha e que assenta de volta devagar, com os sulcos reaparecendo.",
     tags: ["textura","webgl","fundo","ponteiro","areia","grao","rastelo"],
@@ -2654,7 +2705,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-sphere",
     title: "Textura Sphere",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "Uma bolha de vidro passeia sob o ponteiro e amplia a imagem como olho de peixe.",
     tags: ["textura","webgl","ponteiro","imagem","lupa","fisheye"],
@@ -2666,7 +2717,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-tiles",
     title: "Textura Tiles",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "A imagem em ladrilhos que encolhem, se afastam e se inclinam perto do ponteiro.",
     tags: ["textura","webgl","ponteiro","imagem","ladrilho","grade"],
@@ -2678,7 +2729,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-twist",
     title: "Textura Twist",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "A imagem gira em redemoinho em volta do ponteiro e se desfaz devagar quando ele sai.",
     tags: ["textura","webgl","ponteiro","imagem","redemoinho","distorção"],
@@ -2690,7 +2741,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-warp",
     title: "Textura Warp",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "A imagem escorre em ruído como reflexo na água, e o ponteiro rápido agita a superfície.",
     tags: ["textura","webgl","ponteiro","imagem","ruído","domain warp"],
@@ -2702,7 +2753,7 @@ export const CATALOG: CatalogItem[] = [
     name: "textura-watch",
     title: "Textura Watch",
     type: "ui",
-    family: "texturas",
+    family: "efeitos",
     description:
       "Grade de mostradores de relógio cujos ponteiros apontam para o cursor; o curto chega atrasado, como hora.",
     tags: ["textura","webgl","fundo","ponteiro","relogio","grade"],

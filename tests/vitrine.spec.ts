@@ -516,8 +516,8 @@ test.describe("dependências npm", () => {
   });
 
   test("recolhido nunca esconde filtro ativo, e o eixo de tipo filtra", async ({ page }) => {
-    // `base` é a fatia que tem hook: o eixo de tipo precisa de mais de um tipo pra filtrar.
-    await page.goto("/catalogo/base");
+    // `fundacao` é a fatia que tem hook: o eixo de tipo precisa de mais de um tipo pra filtrar.
+    await page.goto("/catalogo/fundacao");
     await esperarGrade(page);
 
     const botao = page.getByRole("button", { name: "Filtrar por tipo e dependência" });
