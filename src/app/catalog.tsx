@@ -277,6 +277,7 @@ export const FAMILIA_ANTIGA: Record<string, Family> = {
   shaders: "efeitos",
   texturas: "efeitos",
   vintage: "controles",
+  didatica: "anatomia",
 };
 
 /**

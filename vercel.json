@@ -96,12 +96,42 @@
     },
     {
       "source": "/catalogo/marca",
-      "destination": "/catalogo/base",
+      "destination": "/catalogo/fundacao",
       "permanent": true
     },
     {
-      "source": "/catalogo/fundacao",
-      "destination": "/catalogo/base",
+      "source": "/catalogo/base",
+      "destination": "/catalogo/fundacao",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/cards",
+      "destination": "/catalogo/conteudo",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/midia",
+      "destination": "/catalogo/conteudo",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/3d",
+      "destination": "/catalogo/conteudo",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/shaders",
+      "destination": "/catalogo/efeitos",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/texturas",
+      "destination": "/catalogo/efeitos",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/vintage",
+      "destination": "/catalogo/controles",
       "permanent": true
     },
     {

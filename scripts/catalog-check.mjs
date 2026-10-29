@@ -105,6 +105,30 @@ const foraDaFundacao = itens
   .map((i) => `${i.name} (${i.type}) em "${i.family}"`);
 const semFamilia = catalogNames.filter((n) => !itens.some((i) => i.name === n));
 
+/*
+ * O site é pré-renderizado: só existe HTML pra família atual. O nome antigo
+ * (`/catalogo/shaders`) só abre se a Vercel redirecionar — a `FAMILIA_ANTIGA`
+ * resolve dentro do app, mas o link de fora bate no 404 antes do app carregar.
+ */
+const vercel = JSON.parse(readFileSync(join(ROOT, "vercel.json"), "utf8"));
+const antigas = [
+  ...catalogSrc
+    .slice(catalogSrc.indexOf("export const FAMILIA_ANTIGA"), catalogSrc.indexOf("const ALIAS"))
+    .matchAll(/^\s+"?([\w-]+)"?:\s*"([^"]+)"/gm),
+].map(([, de, para]) => ({ de, para }));
+const semRedirect = antigas
+  .filter(
+    ({ de, para }) =>
+      !(vercel.redirects ?? []).some(
+        (r) => r.source === `/catalogo/${de}` && r.destination === `/catalogo/${para}`,
+      ),
+  )
+  .map(({ de, para }) => `/catalogo/${de} → /catalogo/${para}`);
+const redirectPraFamiliaMorta = (vercel.redirects ?? [])
+  .filter((r) => r.destination.startsWith("/catalogo/"))
+  .filter((r) => !familiasValidas.includes(r.destination.slice("/catalogo/".length)))
+  .map((r) => `${r.source} → ${r.destination}`);
+
 const c = {
   red: (s) => `\x1b[31m${s}\x1b[0m`,
   green: (s) => `\x1b[32m${s}\x1b[0m`,
@@ -123,6 +147,10 @@ if (!familiasValidas.length) problems.push(["FAMILIES não lida de catalog.tsx �
 if (semFamilia.length) problems.push(["Sem type/family legível no catálogo", semFamilia]);
 if (familiaInvalida.length) problems.push(["Família fora de FAMILIES", familiaInvalida]);
 if (foraDaFundacao.length) problems.push(["Sem interface própria e fora de Fundação", foraDaFundacao]);
+if (!antigas.length) problems.push(["FAMILIA_ANTIGA não lida de catalog.tsx — o formato mudou?", ["-"]]);
+if (semRedirect.length) problems.push(["Família antiga sem redirect no vercel.json (link velho dá 404)", semRedirect]);
+if (redirectPraFamiliaMorta.length)
+  problems.push(["Redirect no vercel.json pra família que não existe mais", redirectPraFamiliaMorta]);
 
 console.log(
   c.dim(
