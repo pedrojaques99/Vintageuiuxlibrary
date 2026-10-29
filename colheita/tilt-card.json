@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "tilt-card",
+    "title": "Tilt Card",
+    "type": "ui",
+    "family": "efeitos",
+    "description": "O card que inclina em 3D seguindo o mouse, com um brilho que corre pela superfície.",
+    "tags": [
+      "card",
+      "3d",
+      "tilt",
+      "hover",
+      "brilho",
+      "foto"
+    ],
+    "demoImport": "./demos/tilt-card-demo",
+    "knobs": "TiltCard",
+    "preview": {
+      "w": 320,
+      "h": 420
+    }
+  },
+  "registry": {
+    "name": "tilt-card",
+    "type": "registry:ui",
+    "title": "Tilt Card",
+    "description": "O card que inclina em 3D seguindo o mouse, com um brilho que corre pela superfície.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/tilt-card.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/tilt"
+}

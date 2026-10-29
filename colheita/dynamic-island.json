@@ -1,0 +1,45 @@
+{
+  "catalogo": {
+    "name": "dynamic-island",
+    "title": "Dynamic Island",
+    "type": "ui",
+    "family": "feedback",
+    "description": "A pílula que mostra a atividade em curso e cresce no lugar com os controles quando alguém toca nela.",
+    "tags": [
+      "pílula",
+      "atividade",
+      "morph",
+      "spring",
+      "timer",
+      "player",
+      "chamada"
+    ],
+    "demoImport": "./demos/dynamic-island-demo",
+    "knobs": "DynamicIsland",
+    "preview": {
+      "w": 380,
+      "h": 200
+    }
+  },
+  "registry": {
+    "name": "dynamic-island",
+    "type": "registry:ui",
+    "title": "Dynamic Island",
+    "description": "A pílula que mostra a atividade em curso e cresce no lugar com os controles quando alguém toca nela.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/dynamic-island.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/dynamic-island",
+  "palcoCheck": "o seletor de modo mora no pé do palco, embaixo da ilha"
+}

@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "billing-toggle",
+    "title": "Billing Toggle",
+    "type": "ui",
+    "family": "controles",
+    "description": "Interruptor mensal e anual com o selo de desconto que vira recibo quando o anual é escolhido, e o preço rolando junto.",
+    "tags": [
+      "preço",
+      "pricing",
+      "toggle",
+      "assinatura",
+      "desconto",
+      "radiogroup"
+    ],
+    "demoImport": "./demos/billing-toggle-demo",
+    "knobs": "BillingToggle",
+    "preview": {
+      "w": 420,
+      "h": 200
+    }
+  },
+  "registry": {
+    "name": "billing-toggle",
+    "type": "registry:ui",
+    "title": "Billing Toggle",
+    "description": "Interruptor mensal e anual com o selo de desconto que vira recibo quando o anual é escolhido, e o preço rolando junto.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/billing-toggle.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Billing Toggle (https://uiarc.dev/components/billing-toggle), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

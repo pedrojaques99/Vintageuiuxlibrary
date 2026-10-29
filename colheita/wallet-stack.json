@@ -1,0 +1,44 @@
+{
+  "catalogo": {
+    "name": "wallet-stack",
+    "title": "Wallet Stack",
+    "type": "ui",
+    "family": "cards",
+    "description": "Carteira de cartões empilhados em que um sobe pra mostrar saldo e movimento e os outros se recolhem no pé.",
+    "tags": [
+      "carteira",
+      "cartões",
+      "fintech",
+      "pilha",
+      "saldo"
+    ],
+    "demoImport": "./demos/wallet-stack-demo",
+    "knobs": "WalletStack",
+    "preview": {
+      "w": 352,
+      "h": 516
+    }
+  },
+  "registry": {
+    "name": "wallet-stack",
+    "type": "registry:ui",
+    "title": "Wallet Stack",
+    "description": "Carteira de cartões empilhados em que um sobe pra mostrar saldo e movimento e os outros se recolhem no pé.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/wallet-stack.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/wallet-stack",
+  "palcoCheck": "o detalhe do cartão abre embaixo da pilha, e a caixa reserva o lugar dele"
+}

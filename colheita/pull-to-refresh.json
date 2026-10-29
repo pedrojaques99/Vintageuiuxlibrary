@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "pull-to-refresh",
+    "title": "Pull to Refresh",
+    "type": "ui",
+    "family": "feedback",
+    "description": "Painel que estica quando você puxa pra baixo, conta os pontos até a marca e gira enquanto atualiza.",
+    "tags": [
+      "atualizar",
+      "arrasto",
+      "widget",
+      "carregando"
+    ],
+    "demoImport": "./demos/pull-to-refresh-demo",
+    "knobs": "PullToRefresh",
+    "preview": {
+      "w": 340,
+      "h": 300
+    }
+  },
+  "registry": {
+    "name": "pull-to-refresh",
+    "type": "registry:ui",
+    "title": "Pull to Refresh",
+    "description": "Painel que estica quando você puxa pra baixo, conta os pontos até a marca e gira enquanto atualiza.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils",
+      "@visant/sfx-bus"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/pull-to-refresh.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/pull"
+}

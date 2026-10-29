@@ -26,12 +26,15 @@ export function KanbanCard<T>({
   selected?: boolean;
   onSelectToggle?: (id: string) => void;
 }) {
+  // `transition` do useSortable é lido de propósito e NÃO aplicado no style: o
+  // valor que a lib devolve é `transform 200ms` (e `linear` nos vizinhos), tempo
+  // e curva que não vêm do arquivo de tokens da casa. Quem manda no deslocamento
+  // agora é `.kanban-card` no kanban.css, com `--dur-base` e `--ease-in-out`.
   const {
     setNodeRef,
     attributes,
     listeners,
     transform,
-    transition,
     isDragging,
   } = useSortable({ id: item.id, disabled: !enabled });
 
@@ -42,10 +45,7 @@ export function KanbanCard<T>({
       data-kanban-card-id={item.id}
       data-selected={selectable && selected ? "" : undefined}
       aria-selected={selectable ? selected : undefined}
-      style={{
-        transform: CSS.Translate.toString(transform),
-        transition,
-      }}
+      style={{ transform: CSS.Translate.toString(transform) }}
       // Modifier-clique = toggle na seleção (não abre o card). Capture pra
       // interceptar ANTES do onClick do conteúdo (render do consumidor).
       onClickCapture={
@@ -66,8 +66,12 @@ export function KanbanCard<T>({
         // começa em cima de um card, ou seja, quase sempre.
         "kanban-card touch-manipulation",
         enabled && "cursor-grab active:cursor-grabbing",
-        // A origem "esvazia" enquanto o overlay viaja — coesão do movimento.
-        isDragging && "opacity-40"
+        // O card de origem vira o ALVO em vez de sumir. Era `opacity-40` aqui —
+        // e como a demo pintava outro `.4` no conteúdo, dava 0.16 na tela: o
+        // lugar de destino existia e ninguém enxergava. Agora ele se desenha
+        // como buraco tracejado (ver `.is-drop-slot` no kanban.css), que é o
+        // ponto exato onde o card cai e o que faz o gesto ter imã.
+        isDragging && "is-drop-slot"
       )}
       {...(enabled ? attributes : {})}
       {...(enabled ? listeners : {})}

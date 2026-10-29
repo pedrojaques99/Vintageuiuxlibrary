@@ -47,8 +47,16 @@ for (const largura of [360, 768]) {
       test(`${nome} não estoura`, async ({ page }) => {
         await page.setViewportSize({ width: largura, height: 900 });
         await page.goto(`/c/${nome}?solo=1`);
-        // A peça monta e a fonte assenta; medir antes pega o texto na métrica
-        // errada e a largura muda depois do assert.
+        /*
+         * A peça monta, a mídia chega e a fonte assenta.
+         *
+         * Os 500ms sozinhos bastavam com a máquina livre e piscavam vermelho com
+         * três workers disputando CPU — sempre numa peça diferente, que é a
+         * assinatura de flake e não de defeito. `networkidle` espera o que de
+         * fato muda a largura aqui: foto e webfont. O timeout continua depois
+         * dele, pro que monta em JS após a última resposta.
+         */
+        await page.waitForLoadState("networkidle").catch(() => {});
         await page.waitForTimeout(500);
 
         const { scrollW, clientW, culpados } = await page.evaluate(() => {

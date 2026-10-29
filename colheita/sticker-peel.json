@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "sticker-peel",
+    "title": "Sticker Peel",
+    "type": "ui",
+    "family": "efeitos",
+    "description": "Um adesivo que levanta o canto quando o mouse chega perto, arrasta pra mudar de lugar e, com um clique, descola inteiro da página.",
+    "tags": [
+      "adesivo",
+      "arrastar",
+      "dobra",
+      "papel",
+      "sticker"
+    ],
+    "demoImport": "./demos/sticker-peel-demo",
+    "knobs": "StickerPeel",
+    "preview": {
+      "w": 380,
+      "h": 280
+    }
+  },
+  "registry": {
+    "name": "sticker-peel",
+    "type": "registry:ui",
+    "title": "Sticker Peel",
+    "description": "Um adesivo que levanta o canto quando o mouse chega perto, descola ao arrastar mostrando o verso e cola onde você soltar.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/sticker-peel.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/sticker-peel"
+}

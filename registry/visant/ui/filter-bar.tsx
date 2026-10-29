@@ -98,7 +98,7 @@ export function FilterBar({
       {hasChips || showCount ? (
         <div className="flex flex-wrap items-center gap-1.5">
           {chips.map((chip) => (
-            <Chip key={chip.key} pressed onRemove={chip.onRemove} className="px-2.5 py-1 text-xs">
+            <Chip key={chip.key} size="sm" pressed onRemove={chip.onRemove}>
               {chip.label}
             </Chip>
           ))}

@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "text-morph",
+    "title": "Text Morph",
+    "type": "ui",
+    "family": "texto",
+    "description": "Rótulo que vira a próxima palavra letra por letra, com as letras em comum deslizando e a largura indo junto numa mola.",
+    "tags": [
+      "texto",
+      "morph",
+      "botao",
+      "estado",
+      "micro-interacao"
+    ],
+    "demoImport": "./demos/text-morph-demo",
+    "knobs": "TextMorph",
+    "preview": {
+      "w": 300,
+      "h": 150
+    }
+  },
+  "registry": {
+    "name": "text-morph",
+    "type": "registry:ui",
+    "title": "Text Morph",
+    "description": "Rótulo que vira a próxima palavra letra por letra, com as letras em comum deslizando e a largura indo junto numa mola.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/text-morph.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Text Morph (https://uiarc.dev/components/text-morph), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

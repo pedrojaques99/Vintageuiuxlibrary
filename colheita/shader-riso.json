@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-riso",
+    "title": "Shader Riso",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Uma imagem impressa em duas tintas de risografia, com grão, ângulo próprio por tinta e registro fora do lugar.",
+    "tags": [
+      "shader",
+      "webgl",
+      "imagem",
+      "riso",
+      "impressão"
+    ],
+    "demoImport": "./demos/shader-riso-demo",
+    "knobs": "ShaderRiso",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "shader-riso",
+    "type": "registry:ui",
+    "title": "Shader Riso",
+    "description": "Uma imagem impressa em duas tintas de risografia, com grão, ângulo próprio por tinta e registro fora do lugar.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-riso.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de visantlabs-os/packages/print-fx/src/riso/shaders.ts (Visant Labs)"
+}

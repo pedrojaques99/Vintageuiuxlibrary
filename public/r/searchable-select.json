@@ -19,5 +19,11 @@
       "type": "registry:ui"
     }
   ],
+  "categories": [
+    "controles",
+    "combobox",
+    "busca",
+    "formulario"
+  ],
   "type": "registry:ui"
 }

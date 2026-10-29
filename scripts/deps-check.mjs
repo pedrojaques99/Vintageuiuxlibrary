@@ -15,7 +15,9 @@
  *   - `./types`, `./inline-edit`         → outro arquivo do próprio item, ou
  *                                          um item nosso em `registryDependencies`
  *
- * `--fix` escreve as dependências npm que faltam direto no `registry.json`.
+ * `--fix` escreve as dependências npm que faltam direto no `registry.json`, e
+ * também os itens nossos importados por `@/` (`@visant/<dono>`). Peça de colheita
+ * recebe a mesma linha no `colheita/<nome>.json`, senão o merge desfazia o conserto.
  * O resto é decisão humana: pode ser arquivo esquecido, pode ser import morto.
  */
 
@@ -41,6 +43,29 @@ const IMPORT_RE = /(?:from|import)\s+["']([^"']+)["']/g;
 const problemas = [];
 let corrigidos = 0;
 
+/*
+ * Quem ENTREGA cada arquivo.
+ *
+ * O nome do arquivo não é o nome do item: o `cover-art` envia
+ * `lib/cover-look.ts`, e um item que importa `@/lib/cover-look` depende do
+ * `cover-art`, não de um item "cover-look" — que não existe.
+ *
+ * Sem este mapa o portão exigia a declaração literal, e obedecer a ele
+ * QUEBRARIA o consumidor: `registryDependencies: ["cover-look"]` faz o
+ * `shadcn add` procurar um item inexistente e falhar na instalação. Portão que
+ * só passa com uma declaração inválida é pior que portão nenhum, porque ele
+ * ensina a mentir na configuração.
+ *
+ * É a mesma classe do conserto anterior (o ramo de alias não olhava os arquivos
+ * do próprio item): a resolução tem que ser por ARQUIVO, não por nome.
+ */
+const donoDoArquivo = new Map();
+for (const item of registry.items) {
+  for (const f of item.files ?? []) {
+    donoDoArquivo.set(basename(f.path).replace(/\.\w+$/, ""), item.name);
+  }
+}
+
 for (const item of registry.items) {
   const arquivos = (item.files ?? []).filter((f) => /\.(tsx?|jsx?)$/.test(f.path));
   if (!arquivos.length) continue;
@@ -50,7 +75,18 @@ for (const item of registry.items) {
   const nomesDeArquivo = new Set(
     (item.files ?? []).map((f) => basename(f.path).replace(/\.\w+$/, "")),
   );
-  const declaradas = new Set(item.dependencies ?? []);
+  /*
+   * A declaração pode vir com faixa de versão — `@tanstack/react-table@^8.21.3`
+   * é sintaxe válida e recomendada do shadcn, e é o que o `add` instala.
+   * Comparar a string inteira com o nome importado acusava o item de não
+   * declarar exatamente o que ele declara. Corta a faixa antes de comparar,
+   * cuidando do `@` inicial do escopo, que não é separador.
+   */
+  const semVersao = (d) => {
+    const at = d.lastIndexOf("@");
+    return at > 0 ? d.slice(0, at) : d;
+  };
+  const declaradas = new Set((item.dependencies ?? []).map(semVersao));
   const declaradasRegistry = new Set(
     (item.registryDependencies ?? []).map((d) => d.replace(/^@visant\//, "")),
   );
@@ -68,9 +104,42 @@ for (const item of registry.items) {
     for (const [, spec] of src.matchAll(IMPORT_RE)) {
       if (spec.startsWith("@/")) {
         // Alias do projeto: `@/components/ui/button` → item `button`.
+        //
+        // `nomesDeArquivo` entra aqui pela mesma razão que já entrava no ramo
+        // relativo abaixo: um item pode enviar mais de um arquivo, e o `.tsx`
+        // importar o `.ts` irmão pelo alias — que é como o consumidor vai ver
+        // os dois depois do `add`, já que ambos aterrissam em `src/`. Sem isto,
+        // `cover-art` (lib + ui no mesmo item) era acusado de não declarar
+        // dependência de si mesmo, e a "correção" seria partir o item em dois
+        // só pra agradar o portão.
         const alvo = spec.split("/").pop();
-        if (alvo && !declaradasRegistry.has(alvo) && alvo !== "utils") {
-          problemas.push(`${item.name}: importa ${spec} sem declarar "${alvo}" em registryDependencies`);
+        // O item que ENTREGA o arquivo é quem tem de estar declarado. Ver
+        // `donoDoArquivo`.
+        const dono = alvo ? (donoDoArquivo.get(alvo) ?? alvo) : alvo;
+        if (
+          alvo &&
+          !declaradasRegistry.has(alvo) &&
+          !declaradasRegistry.has(dono) &&
+          !nomesDeArquivo.has(alvo) &&
+          dono !== item.name &&
+          alvo !== "utils"
+        ) {
+          const pedido = dono === alvo ? `"${alvo}"` : `"${dono}" (dono de ${alvo})`;
+          if (FIX) {
+            const dep = `@visant/${dono}`;
+            item.registryDependencies = [...new Set([...(item.registryDependencies ?? []), dep])];
+            declaradasRegistry.add(dono);
+            const frag = join(ROOT, "colheita", `${item.name}.json`);
+            if (existsSync(frag)) {
+              const f = JSON.parse(readFileSync(frag, "utf8"));
+              f.registry.registryDependencies = [...new Set([...(f.registry.registryDependencies ?? []), dep])];
+              writeFileSync(frag, JSON.stringify(f, null, 2) + "\n");
+            }
+            corrigidos += 1;
+            console.log(`  + ${item.name}: ${dep}`);
+          } else {
+            problemas.push(`${item.name}: importa ${spec} sem declarar ${pedido} em registryDependencies`);
+          }
         }
         continue;
       }
@@ -105,7 +174,7 @@ for (const item of registry.items) {
 
 if (FIX) {
   writeFileSync(join(ROOT, "registry.json"), JSON.stringify(registry, null, 2) + "\n");
-  console.log(`\n${corrigidos} dependência(s) npm declarada(s).`);
+  console.log(`\n${corrigidos} dependência(s) declarada(s).`);
 }
 
 if (!problemas.length) {

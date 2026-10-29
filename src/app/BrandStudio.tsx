@@ -12,11 +12,14 @@ import * as React from "react";
 import { useBrandTheme } from "@/lib/brand-theme";
 import { CopyCommand } from "./copy-command";
 import { DEFAULT_BRAND, installCommand } from "./registry-meta";
-import { Chip } from "../../registry/visant/ui/chip";
-import { Plate } from "../../registry/visant/ui/plate";
+import { cn } from "@/lib/utils";
 import { Marquee } from "../../registry/visant/ui/marquee";
 import { StatusTicker } from "../../registry/visant/ui/status-ticker";
-import { WorkingGlyph } from "../../registry/visant/ui/working-glyph";
+
+/* As demos da vitrine, lazy: só esta página paga por elas. */
+const GaugeDemo = React.lazy(() => import("./demos/gauge-demo"));
+const BillingDemo = React.lazy(() => import("./demos/billing-toggle-demo"));
+const HeatmapDemo = React.lazy(() => import("./demos/activity-heatmap-demo"));
 
 // --- leitura dos tokens vivos ------------------------------------------------
 
@@ -63,204 +66,174 @@ function useLiveTokens(dep: unknown) {
 
 // --- peças da página ---------------------------------------------------------
 
-function Section({
-  label,
-  title,
-  children,
-}: {
-  label: string;
-  title: string;
-  children: React.ReactNode;
-}) {
+/**
+ * Uma seção da casa: título em texto, sem numeral nem rótulo em caixa-alta.
+ * "01 · Tokens resolvidos no browser" dizia a ordem duas vezes — a página já
+ * está na ordem.
+ */
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="border-t border-border py-14">
-      <div className="mb-7 flex items-baseline gap-3">
-        <span className="font-mono text-micro uppercase tracking-[0.18em] text-muted-foreground">
-          {label}
-        </span>
-        <h2
-          className="text-destaque font-medium"
-          style={{ fontFamily: "var(--font-display, inherit)" }}
-        >
-          {title}
-        </h2>
-      </div>
+    <section className="pt-16">
+      <h2 className="casa mb-5 text-casa-lg font-medium">{title}</h2>
       {children}
     </section>
   );
 }
+
+/** O ladrilho onde a marca acontece. Fora dele, tudo é casa. */
+function Palco({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn("palco overflow-hidden rounded-tile", className)}>{children}</div>;
+}
+
+/*
+ * As duas ações do espécime. Ficam aqui, nomeadas, porque são a única coisa da
+ * página que pinta com a cor e o raio da marca por escrito.
+ */
+// casa-lint/marca-na-casca,raio-da-marca: o espécime é palco; os botões SÃO a marca aplicada
+const ACAO_PRINCIPAL: React.CSSProperties = {
+  background: "var(--brand)",
+  color: "var(--brand-foreground)",
+  borderRadius: "var(--r-control)",
+};
+// casa-lint/raio-da-marca: idem, a secundária mostra o raio de controle da marca
+const ACAO_SECUNDARIA: React.CSSProperties = {
+  color: "var(--accent-ink)",
+  boxShadow: "inset 0 0 0 1px var(--border)",
+  borderRadius: "var(--r-control)",
+};
 
 // --- studio ------------------------------------------------------------------
 
 export function BrandStudioBody() {
   const { active, brand, status } = useBrandTheme();
   const tokens = useLiveTokens(active?.slug ?? "none");
-  const [filters, setFilters] = React.useState<Set<string>>(new Set(["Tudo"]));
 
   const shown = active ?? brand;
 
   return (
     <main className="shell pb-24">
-        {/* hero */}
-        <section className="py-16">
-          <p className="mb-4 font-mono text-micro uppercase tracking-[0.18em] text-muted-foreground">
-            {status === "loading"
-              ? "lendo o vault…"
-              : shown
-                ? `brand guideline · v${shown.version ?? "?"} · vault ${shown.completeness ?? "?"}%`
-                : "nenhuma marca aplicada"}
-          </p>
-          <h1
-            className="text-[clamp(2.6rem,7vw,5rem)] font-semibold leading-[0.95] tracking-[-0.03em]"
-            style={{ fontFamily: "var(--font-display, inherit)" }}
-          >
-            {shown?.name ?? "Escolha uma marca"}
-          </h1>
-          <p className="mt-5 max-w-2xl text-destaque leading-relaxed text-muted-foreground">
-            {shown?.tagline ??
-              "Os componentes abaixo não sabem a cor de ninguém. Trocar a marca no seletor troca só os tokens — e a interface inteira responde."}
-          </p>
+      {/* A dobra é da casa: o nome da marca e a frase dela. A prova vem logo
+          abaixo, no palco. */}
+      <section className="casa pb-8 pt-12 sm:pt-16">
+        <h1 className="text-casa-xl font-medium">
+          {status === "loading" ? "Lendo o vault" : (shown?.name ?? "Escolha uma marca")}
+        </h1>
+        <p className="mt-3 max-w-2xl text-casa-lg text-casa-fg-2">
+          {shown?.tagline ??
+            "Os componentes não sabem a cor de ninguém. Trocar a marca troca só os tokens, e a interface inteira responde."}
+        </p>
+      </section>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <span
-              className="inline-flex items-center gap-2 rounded-[var(--r-pill,9999px)] px-4 py-2 text-corpo font-medium"
-              style={{ background: "var(--brand)", color: "var(--brand-foreground)" }}
-            >
-              Ação principal
-            </span>
-            <span
-              className="inline-flex items-center gap-2 rounded-[var(--r-pill,9999px)] border border-border px-4 py-2 text-corpo font-medium"
-              style={{ color: "var(--accent-ink)" }}
-            >
-              Ação secundária
-            </span>
-            {shown && <StatusTicker className="ml-1" />}
-          </div>
-        </section>
+      {/*
+        O espécime: a marca inteira numa tela — a face de título, a de texto e
+        as duas ações. É o que a pessoa compara ao trocar de marca no seletor.
+      */}
+      <Palco className="px-6 py-16 sm:px-12 sm:py-24">
+        <p
+          className="max-w-3xl text-[clamp(2.4rem,6vw,4.5rem)] leading-[0.98] tracking-[-0.03em]"
+          style={{ fontFamily: "var(--font-display, inherit)" }}
+        >
+          Uma decisão por tela
+        </p>
+        <p className="mt-5 max-w-xl leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
+          O corpo de texto herda a face de leitura da guideline. Quando a face é licenciada fora
+          do Google Fonts, a pilha de fallback do token assume e a hierarquia continua de pé.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <span className="inline-flex items-center px-4 py-2 font-medium" style={ACAO_PRINCIPAL}>
+            Ação principal
+          </span>
+          <span className="inline-flex items-center px-4 py-2 font-medium" style={ACAO_SECUNDARIA}>
+            Ação secundária
+          </span>
+          {shown ? <StatusTicker className="ml-1" /> : null}
+        </div>
+      </Palco>
 
-        {/* tokens */}
-        <Section label="01" title="Tokens resolvidos no browser">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {TOKENS.map((t) => (
-              <div
-                key={t}
-                className="overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card"
-              >
-                <div
-                  className="h-14 w-full border-b border-border"
-                  style={{ background: `var(--${t})` }}
-                />
-                <div className="px-3 py-2.5">
-                  <div className="font-mono text-rotulo">--{t}</div>
-                  <div className="truncate font-mono text-micro text-muted-foreground">
-                    {tokens[t] || "—"}
-                  </div>
-                </div>
+      <Section title="Tokens">
+        {/*
+          O valor resolvido pelo browser, não o do JSON: se um token não chegar,
+          a página mostra o buraco em vez de repetir o índice.
+        */}
+        {/* A amostra fica FORA de `.casa`: lá dentro `--brand` é redeclarado com o
+            tom da casa, e a amostra mostraria a casca em vez da marca. */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {TOKENS.map((t) => (
+            <div key={t} className="overflow-hidden rounded-tile bg-casa-tile">
+              <div className="h-16 w-full" style={{ background: `var(--${t})` }} />
+              <div className="casa px-4 py-3">
+                <code className="block text-casa-sm text-casa-fg">--{t}</code>
+                <code className="block truncate text-casa-sm text-casa-fg-3">
+                  {tokens[t] || "—"}
+                </code>
               </div>
-            ))}
-          </div>
-        </Section>
-
-        {/* tipografia */}
-        <Section label="02" title="Par tipográfico da marca">
-          <div className="grid gap-8 md:grid-cols-2">
-            <div>
-              <p className="mb-3 font-mono text-micro uppercase tracking-[0.14em] text-muted-foreground">
-                display · {shown?.fonts.display ?? "—"}
-              </p>
-              <p
-                className="text-[2.6rem] leading-[1.05] tracking-[-0.02em]"
-                style={{ fontFamily: "var(--font-display, inherit)" }}
-              >
-                Uma decisão por tela
-              </p>
             </div>
-            <div>
-              <p className="mb-3 font-mono text-micro uppercase tracking-[0.14em] text-muted-foreground">
-                sans · {shown?.fonts.sans ?? "—"}
-              </p>
-              <p className="text-destaque leading-relaxed text-muted-foreground">
-                O corpo de texto herda a face de leitura da guideline. Quando a face é
-                licenciada fora do Google Fonts, a pilha de fallback do token assume e a
-                hierarquia continua de pé — muda o desenho da letra, não a estrutura.
-              </p>
+          ))}
+        </div>
+        <p className="casa mt-3 text-casa-sm text-casa-fg-3">
+          {shown?.fonts.display ?? "—"} nos títulos, {shown?.fonts.sans ?? "—"} no texto
+          {shown?.version ? `. Guideline v${shown.version}` : ""}
+          {shown?.completeness != null ? `, vault ${shown.completeness}% completo.` : "."}
+        </p>
+      </Section>
+
+      <Section title="Componentes, repintados">
+        <Palco className="p-4 sm:p-6">
+          {/*
+            Peças de verdade, não placas com nome. Eram três `Plate` vazias com
+            "Plate", "Rail" e "Kanban" escritos — duas delas nem eram o que
+            diziam ser. A promessa da seção é "os componentes repintam", e a
+            prova é trocar a marca no seletor e ver o arco do medidor, o selo
+            de desconto e os dias do heatmap mudarem de cor. São as mesmas
+            demos da vitrine, carregadas só quando esta página abre.
+          */}
+          <React.Suspense fallback={<div className="h-[420px]" aria-busy="true" />}>
+            {/* casa-lint/raio-da-marca: estas superfícies estão no palco; vestir o raio da marca é a prova */}
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid h-60 place-items-center rounded-[var(--r-surface)] bg-card">
+                <GaugeDemo props={{}} />
+              </div>
+              <div className="grid h-60 place-items-center rounded-[var(--r-surface)] bg-card">
+                <BillingDemo props={{}} />
+              </div>
+              <div className="grid min-h-60 place-items-center overflow-x-auto rounded-[var(--r-surface)] bg-card p-4 md:col-span-2">
+                <HeatmapDemo props={{}} />
+              </div>
             </div>
-          </div>
-        </Section>
+          </React.Suspense>
 
-        {/* componentes */}
-        <Section label="03" title="Componentes colhidos, repintados">
-          <div className="mb-6 flex flex-wrap gap-2">
-            {["Tudo", "Superfície de trabalho", "Aquisição", "Motion"].map((f) => (
-              <Chip
-                key={f}
-                pressed={filters.has(f)}
-                onClick={() =>
-                  setFilters((prev) => {
-                    const next = new Set(prev);
-                    next.has(f) ? next.delete(f) : next.add(f);
-                    return next;
-                  })
-                }
-              >
-                {f}
-              </Chip>
-            ))}
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-3">
-            {[
-              { t: "Plate", d: "placa de catálogo" },
-              { t: "Rail", d: "trilho horizontal" },
-              { t: "Kanban", d: "board com marquee" },
-            ].map((c) => (
-              <Plate key={c.t} ratio="4/3">
-                <div className="flex h-full flex-col items-start justify-end p-5">
-                  <WorkingGlyph size={18} />
-                  <p
-                    className="mt-3 text-destaque font-medium"
-                    style={{ fontFamily: "var(--font-display, inherit)" }}
-                  >
-                    {c.t}
-                  </p>
-                  <p className="text-rotulo text-muted-foreground">{c.d}</p>
-                </div>
-              </Plate>
-            ))}
-          </div>
-
-          <div className="mt-6 overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border">
+          <div className="mt-4">
             <Marquee
               band
               speed={38}
               items={(shown?.palette ?? []).map((c, i) => (
                 <span key={i} className="flex items-center gap-2 whitespace-nowrap">
-                  <span
-                    className="h-3 w-3 rounded-full ring-1 ring-background"
-                    style={{ background: c.hex }}
-                  />
-                  <span className="font-mono text-rotulo uppercase tracking-[0.1em]">
-                    {c.name ?? c.hex}
-                  </span>
+                  <span className="h-3 w-3 rounded-[4px]" style={{ background: c.hex }} />
+                  <span className="text-sm">{c.name ?? c.hex}</span>
                 </span>
               ))}
             />
           </div>
-        </Section>
+        </Palco>
+      </Section>
 
-        {/* instalação */}
-        <Section label="04" title="Instalar esta marca num projeto">
-          <div className="grid gap-3 md:grid-cols-2">
-            <CopyCommand text={installCommand(`theme-${shown?.slug ?? DEFAULT_BRAND}`)} />
-            <CopyCommand text={installCommand("brand-selector")} />
+      <Section title="Levar pra um projeto">
+        <div className="casa grid gap-3 md:grid-cols-2">
+          <div className="space-y-2">
+            <CopyCommand variant="cta" text={installCommand(`theme-${shown?.slug ?? DEFAULT_BRAND}`)} />
+            <p className="text-casa-sm text-casa-fg-2">
+              Escreve os tokens da marca no <code>globals.css</code>. É o caminho de quem tem um
+              cliente só.
+            </p>
           </div>
-          <p className="mt-4 max-w-2xl text-apoio leading-relaxed text-muted-foreground">
-            O primeiro escreve os tokens da marca no <code>globals.css</code> — é o caminho
-            de quem tem um cliente só. O segundo instala este seletor e o runtime, para o
-            app trocar de marca com ele no ar.
-          </p>
-        </Section>
+          <div className="space-y-2">
+            <CopyCommand text={installCommand("brand-selector")} />
+            <p className="text-casa-sm text-casa-fg-2">
+              Instala o seletor e o runtime, pro app trocar de marca no ar.
+            </p>
+          </div>
+        </div>
+      </Section>
     </main>
   );
 }
-

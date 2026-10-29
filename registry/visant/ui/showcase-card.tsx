@@ -17,6 +17,15 @@ import { cn } from "@/lib/utils";
  *    escolhe por você e não faz `fetch`.
  *
  * Sem `href` o card vira estático (vitrine sem destino), e o selo some junto.
+ *
+ * ── O card mede a si mesmo, não a janela ───────────────────────────────────
+ *
+ * O título usava `clamp(..., 0.8vw, ...)`. `vw` é a largura da JANELA, então o
+ * mesmo card de 360px saía com título de 20px num celular e de 28px num desktop
+ * — medido: 360px de card, 20px de tipo a 390 de viewport, 28px a 1440. Card é
+ * peça de grade: numa coluna de 300px do desktop ele ganhava o tipo do herói, e
+ * num herói de 900px ganhava o tipo da coluna. Com `@container` + `cqi` a régua
+ * passa a ser a largura do PRÓPRIO card, que é a única que o desenho conhece.
  */
 
 export interface ShowcaseCardProps extends Omit<React.HTMLAttributes<HTMLElement>, "title"> {
@@ -45,7 +54,10 @@ export function ShowcaseCard({
   // `relative` no article não é enfeite: é a âncora do `::after` do título, que
   // é o que faz o card inteiro virar alvo de clique sem um segundo link.
   return (
-    <article className={cn("group relative flex flex-col gap-5", className)} {...props}>
+    <article
+      className={cn("group @container relative flex flex-col gap-5", className)}
+      {...props}
+    >
       <div
         className={cn(
           "relative isolate overflow-hidden rounded-[var(--r-surface,1rem)] bg-[var(--muted)]",
@@ -88,7 +100,9 @@ export function ShowcaseCard({
       </div>
 
       <div className="flex flex-col gap-3">
-        <h3 className="text-balance [font-family:var(--font-display,inherit)] text-[clamp(1.25rem,1.05rem+0.8vw,1.75rem)] font-medium leading-[1.15] tracking-[-0.015em]">
+        {/* `cqi` = 1% da largura do card. Ver a nota do cabeçalho: com `vw` o
+            título lia a janela e mentia em toda grade de mais de uma coluna. */}
+        <h3 className="text-balance [font-family:var(--font-display,inherit)] text-[clamp(1.25rem,0.95rem+2.6cqi,1.75rem)] font-medium leading-[1.15] tracking-[-0.015em]">
           {href ? (
             <a
               href={href}

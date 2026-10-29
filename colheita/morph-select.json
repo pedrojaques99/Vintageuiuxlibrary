@@ -1,0 +1,44 @@
+{
+  "catalogo": {
+    "name": "morph-select",
+    "title": "Morph Select",
+    "type": "ui",
+    "family": "controles",
+    "description": "Select em que o próprio gatilho cresce e vira a lista, sem uma segunda caixa aparecendo embaixo.",
+    "tags": [
+      "select",
+      "listbox",
+      "formulário",
+      "morph",
+      "teclado"
+    ],
+    "demoImport": "./demos/morph-select-demo",
+    "knobs": "MorphSelect",
+    "preview": {
+      "w": 320,
+      "h": 330
+    }
+  },
+  "registry": {
+    "name": "morph-select",
+    "type": "registry:ui",
+    "title": "Morph Select",
+    "description": "Select em que o próprio gatilho cresce e vira a lista, sem uma segunda caixa aparecendo embaixo.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/morph-select.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Morph Select (https://uiarc.dev/components/morph-select), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null,
+  "palcoCheck": "o gatilho fica no terço de cima de propósito, a lista abre pra baixo e precisa do espaço"
+}

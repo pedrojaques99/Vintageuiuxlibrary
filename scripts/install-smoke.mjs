@@ -200,8 +200,27 @@ createRoot(document.getElementById("root")!).render(<div />);
 
 // --- execução ----------------------------------------------------------------
 
+/*
+ * Nem todo `.json` em `public/r` é item instalável. `registry.json` é o índice,
+ * `brands.json` e `demo-brands.json` são DADO — o resumo das marcas que a vitrine
+ * lê, escrito por `scripts/demo-brands.mjs`. A lista de exceções por nome já
+ * tinha deixado `demo-brands` passar, e o teste gastava uma rodada inteira pra
+ * falhar num `shadcn add` de um arquivo que nunca foi componente.
+ *
+ * A regra por FORMA não deixa isso repetir: item de registry tem `type`, dado
+ * não tem. O próximo arquivo de dado que aparecer aqui já entra excluído.
+ */
+const ehItem = (f) => {
+  if (f === "registry.json") return false;
+  try {
+    return typeof JSON.parse(readFileSync(join(R_DIR, f), "utf8")).type === "string";
+  } catch {
+    return false;
+  }
+};
+
 const items = readdirSync(R_DIR)
-  .filter((f) => f.endsWith(".json") && f !== "registry.json" && f !== "brands.json")
+  .filter((f) => f.endsWith(".json") && ehItem(f))
   .map((f) => f.replace(/\.json$/, ""))
   // Temas de marca são 21 arquivos do mesmo formato: provar um prova todos, e
   // instalar os 21 só faria o teste demorar 3x sem cobrir mais nada.

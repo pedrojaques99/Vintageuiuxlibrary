@@ -70,12 +70,12 @@ const titulo = (dep: DepInfo, acao: string) =>
 function Marca({ dep, compacto }: { dep: DepInfo; compacto: boolean }) {
   if (dep.icon) return <Logo icon={dep.icon} className={compacto ? "h-3.5 w-3.5" : "h-3 w-3"} />;
   if (compacto)
-    return <span className="font-mono text-micro leading-none tracking-tight">{dep.label}</span>;
+    return <span className="text-casa-sm leading-none">{dep.label}</span>;
   return null;
 }
 
 const INTERACAO =
-  "transition-colors [transition-duration:var(--dur-fast,160ms)] [transition-timing-function:var(--ease-out)] hover:text-[var(--brand)] focus-visible:text-[var(--brand)] outline-none";
+  "transition-colors [transition-duration:var(--dur-fast,160ms)] [transition-timing-function:var(--ease-out)] hover:text-casa-fg focus-visible:text-casa-fg outline-none";
 
 export function DepBadges({
   name,
@@ -115,7 +115,7 @@ export function DepBadges({
           ) : (
             <span
               key={dep.key}
-              title={dep.packages.join(" · ")}
+              title={dep.packages.join(", ")}
               className="inline-flex items-center"
             >
               <Marca dep={dep} compacto />
@@ -127,7 +127,7 @@ export function DepBadges({
   }
 
   return (
-    <div className={cn("flex flex-wrap gap-1.5", className)}>
+    <div className={cn("flex flex-wrap gap-x-3 gap-y-1", className)}>
       {deps.map((dep) => (
         <a
           key={dep.key}
@@ -135,15 +135,9 @@ export function DepBadges({
           target="_blank"
           rel="noreferrer"
           title={titulo(dep, dep.href)}
-          className={cn(
-            // Mono e com fundo, ao contrário das tags logo abaixo: as duas
-            // faixas são pastilha e ficam coladas, e sem essa diferença a
-            // pessoa lê "dnd-kit" como se fosse tag de busca. Nome de pacote é
-            // identificador — a fonte mono diz isso sem precisar de rótulo.
-            "inline-flex items-center gap-1.5 rounded-[var(--r-pill,9999px)] border border-border bg-muted/60 px-2 py-0.5 font-mono text-micro text-muted-foreground",
-            "hover:border-[var(--brand)] focus-visible:border-[var(--brand)]",
-            INTERACAO,
-          )}
+          // Logo e nome, em texto: nome de pacote é identificador, e o logo
+          // já o separa de uma palavra comum sem precisar de pastilha.
+          className={cn("inline-flex items-center gap-1.5 rounded-control text-casa-sm text-casa-fg-2", INTERACAO)}
         >
           <Marca dep={dep} compacto={false} />
           {dep.label}
@@ -162,16 +156,12 @@ export function DepBadges({
 export function DepResumo({ name, className }: { name: string; className?: string }) {
   const deps = depsOf(name);
   return (
-    <div className={className}>
-      <h3 className="text-rotulo uppercase tracking-wider text-muted-foreground">
-        Dependências npm
-      </h3>
+    <div className={cn("flex items-baseline gap-3", className)}>
+      <span className="shrink-0 text-casa-sm text-casa-fg-3">Pacotes</span>
       {deps.length ? (
-        <DepBadges name={name} className="mt-2" />
+        <DepBadges name={name} />
       ) : (
-        <p className="mt-2 text-rotulo leading-relaxed text-muted-foreground">
-          Nenhuma. Só os tokens da marca e o <span className="font-mono">cn</span> do projeto.
-        </p>
+        <span className="text-casa-sm text-casa-fg-2">Nenhum, só os tokens da marca</span>
       )}
     </div>
   );

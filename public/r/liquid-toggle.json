@@ -1,0 +1,34 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "liquid-toggle",
+  "title": "Liquid Toggle",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Um interruptor cuja bolinha escorre como gota de um lado pro outro, esticando no caminho e se recolhendo ao chegar.",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/liquid-toggle.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { animate, motion, useMotionValue, useReducedMotion, useTransform } from \"motion/react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Liquid Toggle — o interruptor cuja bolinha escorre de um lado ao outro.\n *\n * Um switch comum desliza um círculo rígido. Aqui a bolinha se comporta como\n * gota: a frente sai primeiro, o fundo vem atrás, ela se alonga no meio do\n * caminho e se recolhe ao chegar. O estado é o mesmo de qualquer switch; o que\n * muda é que a troca TEM peso, e o olho lê a direção antes de ler a cor.\n *\n * ── Como a gota é feita ────────────────────────────────────────────────────\n *\n * Não há forma animada nem SVG. A bolinha é uma pílula definida por DUAS\n * bordas, cada uma com a sua mola: a borda da frente usa a mola rápida, a de\n * trás a lenta. A largura é a distância entre elas, e é dela que sai o\n * alongamento — ninguém anima \"esticar\", ele acontece porque as duas molas\n * chegam em tempos diferentes. `stretch` só afasta as duas rigidezes.\n *\n * A altura encolhe na mesma proporção em que a largura cresce (volume quase\n * constante), senão a gota vira um retângulo inchado.\n *\n * Com movimento reduzido as duas bordas saltam juntas: o estado final chega,\n * sem viagem.\n */\n\nexport interface LiquidToggleProps\n  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, \"onChange\" | \"value\"> {\n  /** Controlado. */\n  checked?: boolean;\n  /** Estado inicial quando não controlado. */\n  defaultChecked?: boolean;\n  onCheckedChange?: (checked: boolean) => void;\n  /** 0–100. Rapidez da mola da frente. */\n  speed?: number;\n  /** 0–100. O quanto a gota se alonga no caminho. */\n  stretch?: number;\n  /** Contorno na trilha, para fundos onde o `bg-muted` some. */\n  stroke?: boolean;\n}\n\n// Medidas da trilha, em px. A gota é um círculo de `D` com folga `P`.\nconst W = 56;\nconst H = 32;\nconst P = 3;\nconst D = H - P * 2;\nconst CURSO = W - P * 2 - D;\n\nexport function LiquidToggle({\n  checked,\n  defaultChecked = false,\n  onCheckedChange,\n  speed = 50,\n  stretch = 50,\n  stroke = false,\n  disabled,\n  className,\n  onClick,\n  ...props\n}: LiquidToggleProps) {\n  const reduzir = useReducedMotion() ?? false;\n  const [interno, setInterno] = React.useState(defaultChecked);\n  const ligado = checked ?? interno;\n\n  // As duas bordas da gota, em px a partir da folga esquerda.\n  const esq = useMotionValue(ligado ? CURSO : 0);\n  const dir = useMotionValue(ligado ? CURSO + D : D);\n  const largura = useTransform(() => dir.get() - esq.get());\n  const altura = useTransform(largura, (w) => D * Math.pow(D / Math.max(D, w), 0.45));\n\n  const primeira = React.useRef(true);\n  React.useEffect(() => {\n    if (primeira.current) {\n      primeira.current = false;\n      return;\n    }\n    const alvoEsq = ligado ? CURSO : 0;\n    const alvoDir = alvoEsq + D;\n    if (reduzir) {\n      esq.jump(alvoEsq);\n      dir.jump(alvoDir);\n      return;\n    }\n    // Frente rápida, fundo lento: a diferença entre as duas é o alongamento.\n    const rigida = 380 + (speed / 100) * 620;\n    const mole = rigida * Math.pow(1 - (stretch / 100) * 0.95, 2.2);\n    const frente = { type: \"spring\" as const, stiffness: rigida, damping: 2 * Math.sqrt(rigida) * 0.72 };\n    const fundo = { type: \"spring\" as const, stiffness: mole, damping: 2 * Math.sqrt(mole) * 0.8 };\n    const a = animate(dir, alvoDir, ligado ? frente : fundo);\n    const b = animate(esq, alvoEsq, ligado ? fundo : frente);\n    return () => {\n      a.stop();\n      b.stop();\n    };\n  }, [ligado, reduzir, speed, stretch, esq, dir]);\n\n  return (\n    <button\n      type=\"button\"\n      role=\"switch\"\n      aria-checked={ligado}\n      data-state={ligado ? \"on\" : \"off\"}\n      disabled={disabled}\n      onClick={(e) => {\n        onClick?.(e);\n        if (e.defaultPrevented) return;\n        const novo = !ligado;\n        if (checked === undefined) setInterno(novo);\n        onCheckedChange?.(novo);\n      }}\n      className={cn(\n        \"group relative inline-flex flex-none items-center rounded-[var(--r-pill)] outline-none\",\n        \"bg-muted transition-[background-color,border-color] [transition-duration:var(--dur-base)] ease-[var(--ease-out)]\",\n        \"data-[state=on]:bg-[var(--brand)]\",\n        \"focus-visible:[box-shadow:var(--focus)] disabled:cursor-not-allowed disabled:opacity-50\",\n        stroke ? \"border border-border data-[state=on]:border-[var(--brand)]\" : \"border border-transparent\",\n        className,\n      )}\n      style={{ width: W, height: H }}\n      {...props}\n    >\n      <motion.span\n        aria-hidden=\"true\"\n        className={cn(\n          \"absolute top-1/2 block rounded-[var(--r-pill)] [box-shadow:var(--e-raised)]\",\n          // A gota pinta com o par da trilha: `--brand-foreground` sobre a marca\n          // (contraste garantido pelo tema) e `--muted-foreground` sobre o cinza.\n          // `bg-background` some no escuro, onde trilha e gota ficam quase iguais.\n          \"bg-muted-foreground transition-[background-color] [transition-duration:var(--dur-base)] ease-[var(--ease-out)]\",\n          \"group-data-[state=on]:bg-[var(--brand-foreground)]\",\n        )}\n        style={{ left: P - 1, x: esq, width: largura, height: altura, y: \"-50%\" }}\n      />\n    </button>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "meta": {
+    "uso": {
+      "quando": "Switch de liga e desliga em configuração ou formulário, com a bolinha escorrendo como gota",
+      "evite": "Tema claro e escuro: eclipse-switch; mais de duas opções, segmented-control"
+    }
+  },
+  "categories": [
+    "controles",
+    "switch",
+    "toggle",
+    "formulario",
+    "mola"
+  ],
+  "type": "registry:ui"
+}

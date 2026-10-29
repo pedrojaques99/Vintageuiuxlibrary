@@ -29,15 +29,86 @@
  */
 
 import * as React from "react";
-import { CATALOG } from "./catalog";
+import { CATALOG, previewOf } from "./catalog";
+import { CAIXA_DO_PALCO } from "./stage";
 
 /** O pai escuta por este nome; mudar aqui quebra a medição do iframe. */
 export const MSG_ALTURA = "visant:solo:altura";
 
-export function Solo({ name }: { name: string }) {
+/**
+ * O pai manda por este nome os valores dos knobs.
+ *
+ * Podia ir tudo pela URL, e a primeira versão foi assim — mas mudar a query
+ * recarrega o iframe, e recarregar a cada quadro de um slider transforma o
+ * controle numa apresentação de slides. A query entra uma vez, no primeiro
+ * paint (é o que faz um link com knobs configurados abrir configurado); daí em
+ * diante quem fala é o `postMessage`.
+ */
+export const MSG_PROPS = "visant:solo:props";
+
+/** `?p={"gap":32}` — o estado inicial dos knobs, pra link compartilhado abrir igual. */
+export function propsDaQuery(params: URLSearchParams): Record<string, unknown> {
+  const bruto = params.get("p");
+  if (!bruto) return {};
+  try {
+    const lido = JSON.parse(decodeURIComponent(bruto));
+    // Só objeto raso de valores primitivos: aceitar qualquer JSON aqui seria
+    // deixar a URL montar as props de um componente.
+    if (!lido || typeof lido !== "object" || Array.isArray(lido)) return {};
+    return Object.fromEntries(
+      Object.entries(lido).filter(([, v]) => ["string", "number", "boolean"].includes(typeof v)),
+    );
+  } catch {
+    return {};
+  }
+}
+
+export function Solo({
+  name,
+  props: iniciais,
+  caixa = false,
+}: {
+  name: string;
+  props?: Record<string, unknown>;
+  /**
+   * `?caixa=1`: a peça na caixa `w×h` do palco, no canto, sem fundo.
+   *
+   * É o enquadramento da captura (`npm run build:shots`). O ladrilho da grade
+   * mostra a foto dentro do MESMO `PalcoFixo` que depois monta a peça viva —
+   * então a foto precisa ter exatamente a geometria daquela caixa. Fotografada
+   * no viewport solto, recortada no conteúdo e encaixada com `object-contain`,
+   * ela tinha outra escala e outro centro, e o hover dava um pulo.
+   *
+   * Sem fundo pelo mesmo motivo: a foto sai na marca padrão, e o ladrilho veste
+   * a marca escolhida. Transparente, a foto herda o chão da marca atual.
+   */
+  caixa?: boolean;
+}) {
   const item = CATALOG.find((i) => i.name === name);
   const Demo = item?.demo;
   const ref = React.useRef<HTMLDivElement>(null);
+  const [props, setProps] = React.useState<Record<string, unknown>>(iniciais ?? {});
+
+  React.useEffect(() => {
+    if (typeof window === "undefined" || window.parent === window) return;
+    const ouvir = (e: MessageEvent) => {
+      // `e.origin` não é checado de propósito: o pai e o iframe são o MESMO
+      // documento servido do mesmo host, e o conteúdo aceito é filtrado abaixo
+      // — só chave de prop e valor primitivo entram.
+      if (e.data?.type !== MSG_PROPS || e.data?.name !== name) return;
+      const recebido = e.data.props;
+      if (!recebido || typeof recebido !== "object") return;
+      setProps(
+        Object.fromEntries(
+          Object.entries(recebido).filter(([, v]) =>
+            ["string", "number", "boolean"].includes(typeof v),
+          ),
+        ),
+      );
+    };
+    window.addEventListener("message", ouvir);
+    return () => window.removeEventListener("message", ouvir);
+  }, [name]);
 
   React.useEffect(() => {
     const el = ref.current;
@@ -69,9 +140,24 @@ export function Solo({ name }: { name: string }) {
     );
   }
 
+  if (caixa) {
+    const { w, h } = previewOf(item!);
+    return (
+      <div data-caixa style={{ width: w, height: h, position: "relative", ...CAIXA_DO_PALCO }}>
+        <React.Suspense fallback={null}>
+          <Demo props={props} />
+        </React.Suspense>
+      </div>
+    );
+  }
+
   return (
     <div ref={ref} className="p-4">
-      <Demo />
+      {/* A demo é um `React.lazy`. Sem esta fronteira o documento do iframe
+          suspende inteiro e o pai mede altura zero. */}
+      <React.Suspense fallback={<div className="h-40 w-full animate-pulse bg-muted/40" />}>
+        <Demo props={props} />
+      </React.Suspense>
     </div>
   );
 }

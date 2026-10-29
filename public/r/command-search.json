@@ -19,5 +19,11 @@
       "type": "registry:ui"
     }
   ],
+  "categories": [
+    "controles",
+    "busca",
+    "comando",
+    "teclado"
+  ],
   "type": "registry:ui"
 }

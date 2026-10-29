@@ -1,0 +1,44 @@
+{
+  "catalogo": {
+    "name": "cover-flow",
+    "title": "Cover Flow",
+    "type": "ui",
+    "family": "midia",
+    "description": "Uma prateleira de capas em perspectiva: a da vez fica de frente, as vizinhas giram de lado e você arrasta ou joga pra trocar.",
+    "tags": [
+      "galeria",
+      "carrossel",
+      "3d",
+      "portfólio",
+      "arrastar",
+      "capas"
+    ],
+    "demoImport": "./demos/cover-flow-demo",
+    "knobs": "CoverFlow",
+    "preview": {
+      "w": 640,
+      "h": 420
+    }
+  },
+  "registry": {
+    "name": "cover-flow",
+    "type": "registry:ui",
+    "title": "Cover Flow",
+    "description": "Uma prateleira de capas em perspectiva: a da vez fica de frente, as vizinhas giram de lado e você arrasta ou joga pra trocar.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/cover-flow.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/cover-flow",
+  "palcoCheck": "a perspectiva das capas laterais puxa o centro medido; a capa da vez está no meio"
+}

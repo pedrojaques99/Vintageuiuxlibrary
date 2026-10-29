@@ -1,274 +1,435 @@
 "use client";
 
 /**
- * A vitrine do registry: todo item, com demo viva, busca, filtro e vista de foco.
+ * A vitrine do registry: o acervo em foto, as fatias vivas e a porta pra ficha.
  *
- * O que a página precisa responder em cinco segundos: *o que existe aqui, e
- * isso serve para o meu caso?* Por isso a busca casa também com tag e descrição
- * — quem procura "arrastar" tem de achar o `scrub-input` sem saber o nome dele —
- * e por isso o comando de instalação fica em cada card, não numa página de doc
- * separada: o passo seguinte ao reconhecer a peça é instalar a peça.
+ * O que a página precisa responder em cinco segundos: *o que existe aqui?* A
+ * resposta é a própria grade. Tudo o que não é peça saiu do caminho até ela:
  *
- * Três coisas que a versão anterior errava e que mandam no desenho desta:
+ * - **Uma busca só.** Havia duas na mesma tela (a do cabeçalho e uma da grade),
+ *   escrevendo em lugares diferentes — a pessoa escolhia por sorte. Ficou a do
+ *   cabeçalho, `⌘K`, que já casa nome, tag e descrição; `/` abre a mesma.
+ * - **Filtro em texto, não em chip.** Categoria é a pergunta que todo mundo faz
+ *   e fica à vista como uma linha de palavras. Tipo, peso de bundle e mídia são
+ *   perguntas de quem já está decidindo, e ficam atrás de um ícone.
+ * - **O ladrilho é o palco.** Nome, categoria, tipo, "add" e selo saíram do
+ *   card: são da ficha, que abre num clique. O nome aparece no hover.
  *
- * - **Palco de altura fixa cortava as peças grandes.** Agora cada item declara
- *   seu tamanho natural no catálogo e o palco escala pra caber (`FitStage`).
- *   A altura do card passa a ser consequência da peça, e é daí que vem o ritmo
- *   da grade — não de um `h-48` chutado igual pra board e pra knob.
- * - **45 demos montavam juntas no load**, uma dúzia delas em `setInterval`
- *   eterno. Agora a demo monta ao entrar na tela e o relógio dela para quando
- *   sai (ou quando a aba é escondida).
- * - **Não dava pra usar a peça.** O card mostra; a vista de foco deixa usar,
- *   em tamanho real e nos presets de viewport.
+ * Três decisões antigas continuam mandando aqui:
  *
- * Os controles desta página são componentes do próprio registry (`Chip`,
- * `SegmentedControl`). Vitrine que desenha o próprio filtro à mão está dizendo
- * que a library não serve nem para a casa.
+ * - **Palco de moldura fixa** (`PalcoFixo`): a peça cabe na moldura em vez de a
+ *   moldura medir a peça. É o que deixa sessenta peças comparáveis numa varrida.
+ * - **Foto em repouso, peça viva no hover** no acervo inteiro: oitenta demos
+ *   vivas numa rota davam 26.253px e uma dúzia de `setInterval` competindo.
+ * - **A fatia por categoria é viva**: lá são dez ou vinte demos, o número em que
+ *   montar tudo ainda é barato.
  */
 
 import * as React from "react";
-import { Expand, List, Rows3, Search, X } from "lucide-react";
+import { ErrorBoundary } from "react-error-boundary";
+import { ArrowUpRight, Grid2x2, Grid3x3, LayoutGrid, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useBrandTheme } from "@/lib/brand-theme";
-import { Chip } from "../../registry/visant/ui/chip";
-import { SegmentedControl } from "../../registry/visant/ui/segmented-control";
 import {
   CATALOG,
   FAMILIES,
   TYPE_LABEL,
-  fold,
-  matches,
+  familyLabel,
   previewOf,
   stageSurfaceOf,
   type CatalogItem,
   type Family,
 } from "./catalog";
-import { REGISTRY_PUBLIC_LABEL, installCommand } from "./registry-meta";
+import { installCommand } from "./registry-meta";
 import { CopyCommand } from "./copy-command";
-import { DepBadges, DepLogo } from "./dep-badges";
+import { DepLogo } from "./dep-badges";
 import { SEM_DEPS, allDeps, matchesDep } from "./deps";
-import { FitStage, useLazyDemo } from "./stage";
-import { ComponentFocus } from "./ComponentFocus";
-
-type Mode = "vitrine" | "lista";
-type FamilyFilter = Family | "todos";
-type Tab = "interface" | "sem-interface";
-
-const MODES = [
-  { value: "vitrine" as const, icon: Rows3, ariaLabel: "Ver uma peça por linha" },
-  { value: "lista" as const, icon: List, ariaLabel: "Ver em lista" },
-];
+import { PalcoFixo, useInView, useLazyDemo } from "./stage";
+import { GRID_GAP, useFundoEscuro } from "./mosaic";
+import { ehNovo } from "./novidades";
+import { WireframeToggle } from "./media";
+import { Aba } from "./casa-ui";
+import { abrirConectar } from "./conectar";
+import { Miniatura } from "./miniatura";
+import { nivelDoAparelho, pesoGpu, useVaga } from "./aparelho";
+import { BugButton } from "./bug-report";
+import { CURADORIA_ATIVA, arquivada, useNotas } from "./curadoria";
 
 /**
- * Quem tem demo aparece na vitrine; quem não tem, na outra aba.
- *
- * A grade de quatro colunas misturava as duas coisas, e o resultado era uma peça
- * desenhada ao lado de um cartão escrito "sem superfície visual própria" — o
- * mesmo peso visual para o que se olha e para o que só se instala. Um hook não
- * fica melhor num palco vazio: ele fica melhor numa lista onde o que importa é
- * o nome e o comando.
+ * O tamanho do card, num clique só. A lista em texto saiu (2026-10-20): o
+ * catálogo vende peça viva, e uma linha de descrição sem palco não vendia nada.
+ * No lugar, a pessoa escolhe quanto de cada peça quer ver de uma vez.
  */
-const TEM_INTERFACE = (i: CatalogItem) => Boolean(i.demo);
+type Tamanho = "g" | "m" | "p";
+const TAMANHOS: Record<Tamanho, { colunas: string; rotulo: string; Icone: typeof LayoutGrid }> = {
+  g: { colunas: "grid-cols-1 lg:grid-cols-2", rotulo: "grandes", Icone: Grid2x2 },
+  m: { colunas: "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3", rotulo: "médios", Icone: Grid3x3 },
+  p: { colunas: "grid-cols-2 sm:grid-cols-3 xl:grid-cols-4", rotulo: "pequenos", Icone: LayoutGrid },
+};
+const PROXIMO: Record<Tamanho, Tamanho> = { m: "g", g: "p", p: "m" };
+const CHAVE_TAMANHO = "visant:ui:tamanho";
+function tamanhoSalvo(): Tamanho {
+  try {
+    const v = localStorage.getItem(CHAVE_TAMANHO);
+    return v === "g" || v === "p" ? v : "m";
+  } catch {
+    return "m";
+  }
+}
+type TipoFilter = CatalogItem["type"] | null;
 
-const SEM_INTERFACE_COUNT = CATALOG.filter((i) => !TEM_INTERFACE(i)).length;
+/**
+ * A distância da tela em que a peça do acervo monta (e além da qual desmonta).
+ *
+ * Uma tela inteira acima e abaixo: quem rola em velocidade normal nunca alcança
+ * uma peça que ainda está montando, e o que fica vivo de uma vez são umas três
+ * fileiras — o custo que a página aguenta, mesmo com as peças WebGL.
+ */
+const PERTO = "100% 0px";
 
-function TypeBadge({ type }: { type: CatalogItem["type"] }) {
-  return (
-    <span className="shrink-0 rounded-full border border-border px-1.5 py-px font-mono text-micro uppercase tracking-wider text-muted-foreground">
-      {TYPE_LABEL[type]}
-    </span>
-  );
+/**
+ * A ordem do acervo: o que entrou por último primeiro.
+ *
+ * A ordem do arquivo é a ordem em que as peças foram escritas, que não diz nada
+ * a quem lê. Quem volta à vitrine volta pra ver o que mudou.
+ */
+const porNovidade = (lista: CatalogItem[]) =>
+  [...lista].sort((a, b) => Number(ehNovo(b.name)) - Number(ehNovo(a.name)));
+
+/**
+ * O nome curto de cada categoria, na linha de filtro.
+ *
+ * O rótulo longo ("Superfície de trabalho", "Motion e estado") continua sendo o
+ * título da fatia; na linha de sete palavras ele virava a palavra mais comprida
+ * da tela e empurrava as outras pra segunda linha no laptop.
+ */
+const CURTO: Record<Family, string> = Object.fromEntries(FAMILIES.map((f) => [f.key, f.label])) as Record<Family, string>;
+
+/**
+ * Avisa quando a peça viva já pintou.
+ *
+ * Mora DENTRO do `Suspense`, depois da demo: só monta quando o chunk dela
+ * resolveu e a árvore foi commitada. Dois quadros depois disso a peça está na
+ * tela — e só aí a foto pode sair, senão a troca passa por um quadro vazio.
+ */
+function Pronto({ onPronto }: { onPronto: () => void }) {
+  React.useEffect(() => {
+    let r2 = 0;
+    const r1 = requestAnimationFrame(() => {
+      r2 = requestAnimationFrame(onPronto);
+    });
+    return () => {
+      cancelAnimationFrame(r1);
+      cancelAnimationFrame(r2);
+    };
+  }, [onPronto]);
+  return null;
 }
 
 /**
- * A placa da vitrine: uma peça por linha, e nada disputando a linha com ela.
+ * O ladrilho da grade: o palco, e mais nada.
  *
- * A grade de quatro colunas tratava 52 itens como resultado de busca — três ou
- * quatro peças na mesma linha, cada uma escalada até caber numa coluna, e as de
- * `span` maior deixando buracos entre as vizinhas. Peça de biblioteca não é
- * resultado de busca: ou ela aparece no tamanho em que foi desenhada, ou não
- * dá para julgar se serve.
+ * A moldura é fixa e a peça cabe dentro dela (`PalcoFixo`). O fundo é o da
+ * MARCA (`.palco`): a peça foi desenhada para viver sobre ele.
  *
- * Os dois botões ficam **sempre visíveis**, não no hover. Focar e copiar o
- * comando são as duas únicas coisas que se faz aqui; esconder as duas atrás de
- * um `group-hover` custa uma descoberta e não devolve nada — e no toque não
- * existe hover nenhum.
+ * O nome aparece no canto quando o cursor chega (e fica fixo no toque, via
+ * `no-hover`). Ele é o botão de verdade do card: é por ele que o teclado entra e
+ * que as setas percorrem a grade.
+ *
+ * ── A peça acorda ANTES de aparecer, não no hover ───────────────────────────
+ *
+ * A primeira versão do acervo mostrava foto em repouso e montava a peça viva no
+ * hover. A troca pulava duas vezes: a foto vinha de outro enquadramento (escala
+ * e centro diferentes) e de outra marca (a captura sai na padrão, o ladrilho
+ * veste a escolhida). Por mais bem feita que fosse a transição, o hover era o
+ * instante em que a pessoa olhava fixo pro card — o pior momento pra qualquer
+ * coisa mudar.
+ *
+ * Agora a troca acontece fora da tela. A peça monta quando o ladrilho chega a
+ * uma tela de distância do viewport (`PERTO`) e desmonta quando se afasta além
+ * disso — então quem rola encontra a peça já viva, na marca certa, e o hover
+ * não troca nada: só mostra o nome. O custo continua limitado ao que está perto
+ * da tela (umas três fileiras), e os relógios das peças param fora do viewport
+ * (`active`).
+ *
+ * A foto sobra como espera do primeiro carregamento. Ela é capturada no mesmo
+ * enquadramento da caixa do palco e sem fundo (`?solo=1&caixa=1`), mora dentro
+ * do mesmo `PalcoFixo`, e só desbota quando a peça já pintou (`Pronto`) —
+ * nenhum quadro mostra as duas fora de registro, e nenhum mostra o palco vazio.
  */
-const Showcase = React.memo(function Showcase({
+const Ladrilho = React.memo(function Ladrilho({
   item,
   onOpen,
-  onPickDep,
   index,
+  foto = false,
+  nota,
 }: {
   item: CatalogItem;
   onOpen: () => void;
-  onPickDep: (dep: string) => void;
   index: number;
+  /** Acervo inteiro: a peça monta e desmonta com a distância da tela. */
+  foto?: boolean;
+  /** Nota da curadoria (só em dev): aparece ao lado do nome. */
+  nota?: number;
 }) {
-  const Demo = item.demo!;
+  const Demo = item.demo;
   const { w, h } = previewOf(item);
-  const { ref, mounted, active } = useLazyDemo<HTMLElement>();
+  const { ref: refLazy, mounted, active } = useLazyDemo<HTMLElement>();
+  const [refPerto, perto] = useInView<HTMLElement>(PERTO);
+  // Visibilidade real, sem margem: é ela que dá prioridade na fila de vagas.
+  const [refVista, naVista] = useInView<HTMLElement>("0px");
+  const ref = React.useCallback(
+    (el: HTMLElement | null) => {
+      refLazy.current = el;
+      refPerto.current = el;
+      refVista.current = el;
+    },
+    [refLazy, refPerto, refVista],
+  );
+  const escuro = useFundoEscuro();
+  // Foto que ainda não foi gerada não pode virar moldura vazia: a peça fica viva.
+  const [semFoto, setSemFoto] = React.useState(false);
+  const [pronto, setPronto] = React.useState(false);
+  const marcarPronto = React.useCallback(() => setPronto(true), []);
+
+  /*
+   * Quanto fica vivo depende do aparelho (`aparelho.ts`):
+   * - alto: como sempre. No acervo, vivo a uma tela de distância; na fatia,
+   *   monta uma vez e fica.
+   * - médio: foto, e a peça acorda por intenção: cursor, foco ou toque no
+   *   ladrilho. Acordada, fica viva enquanto estiver perto da tela (`active`);
+   *   tirar o cursor não a devolve pra foto, que seria a troca no pior momento.
+   * - baixo: a grade é foto. A peça vive na ficha, que abre no toque.
+   * Peça de GPU, em qualquer nível, só vive na tela e com vaga no orçamento de
+   * contextos; no médio, toda peça também disputa uma das 6 vagas de viva. Sem
+   * vaga, mostra a foto.
+   */
+  const nivel = nivelDoAparelho();
+  const gpu = pesoGpu(item.name) > 0;
+  const comFoto = (foto || gpu || nivel !== "alto") && Boolean(Demo) && !semFoto;
+  const soFoto = nivel === "baixo" && comFoto;
+  const [acordada, setAcordada] = React.useState(false);
+  React.useEffect(() => {
+    if (!active) setAcordada(false);
+  }, [active]);
+  const acordar = nivel === "medio" && !acordada ? () => setAcordada(true) : undefined;
+  const quer =
+    Boolean(Demo) &&
+    !soFoto &&
+    (nivel === "medio" ? acordada && active : gpu ? active : foto ? perto : mounted);
+  const viva = useVaga(item.name, quer, naVista);
+
+  React.useEffect(() => {
+    if (!viva) setPronto(false);
+  }, [viva]);
+
+  const fotoVisivel = comFoto && !(viva && pronto);
 
   return (
     <article
       ref={ref}
-      className={cn(
-        "overflow-hidden rounded-[var(--r-surface,0.875rem)] border border-border bg-card",
-        "transition-[border-color,box-shadow] [transition-duration:var(--dur-fast,160ms)] [transition-timing-function:var(--ease-out)]",
-        "focus-within:border-[var(--brand)] hover:border-[var(--brand)]",
-        // A placa levanta um degrau no hover. Sem mover nada: a peça viva lá
-        // dentro é que manda no palco, e um card que desliza rouba a cena dela.
-        "hover:[box-shadow:var(--e-raised)]",
-      )}
+      /* Âncora é atributo, não texto: o card mostra o TÍTULO, e o nome do
+         registry é o que a suíte usa pra achar a peça. */
+      data-name={item.name}
+      /* Peça viva montada agora. A foto mora no mesmo `PalcoFixo`, então o
+         `data-palco` dele não distingue mais as duas: é por aqui que a suíte
+         prova que só o que está perto da tela fica montado. */
+      data-viva={viva ? "" : undefined}
+      onPointerEnter={acordar}
+      onFocus={acordar}
+      onTouchStart={acordar}
+      className="palco group relative isolate overflow-hidden rounded-tile [contain:paint] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--casa-fg-2)]"
     >
+      {Demo ? (
+        /*
+          A moldura abre a ficha enquanto mostra a foto. Com a peça viva, o
+          clique é DELA (arrastar o knob de dentro da grade) — e o nome no canto
+          continua sendo o botão que sempre abre.
+        */
+        <div onClick={fotoVisivel ? onOpen : undefined} className={fotoVisivel ? "cursor-pointer" : undefined}>
+          <PalcoFixo w={w} h={h} ratio={16 / 10} active={active} style={stageSurfaceOf(item)}>
+            {viva ? (
+              /* Peça que quebra (ou chunk que o deploy novo apagou) cai sozinha:
+                 o fallback é nada, a foto continua no lugar e a grade segue. Sem
+                 isso, um import falho subia até a raiz e a página ficava preta. */
+              <ErrorBoundary fallback={null}>
+                <React.Suspense fallback={null}>
+                  <Demo />
+                  {comFoto ? <Pronto onPronto={marcarPronto} /> : null}
+                </React.Suspense>
+              </ErrorBoundary>
+            ) : null}
+            {comFoto ? (
+              <img
+                src={`/shots/${item.name}-${escuro ? "escuro" : "claro"}.webp`}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                onError={() => setSemFoto(true)}
+                className="pointer-events-none absolute inset-0 h-full w-full transition-opacity [transition-duration:var(--dur-base)] [transition-timing-function:var(--ease-out)]"
+                style={{ opacity: fotoVisivel ? 1 : 0 }}
+              />
+            ) : null}
+          </PalcoFixo>
+        </div>
+      ) : null}
+
+      {/* Reportar bug: só existe com o reporte ligado (modo dev), e aparece
+          junto com o nome. Nunca é ação de quem visita a vitrine. */}
+      <div className="casa no-hover absolute right-3 top-3 rounded-[10px] bg-casa-bg empty:hidden">
+        <BugButton item={item.name} />
+      </div>
+
       {/*
-        No celular o cabeçalho é uma coluna: identificação em cima, ações
-        embaixo em linha cheia. Espremer nome, descrição, comando e botão na
-        mesma linha de 390px reduz os dois alvos de toque a nada.
+        O rodapé do ladrilho: abrir a ficha e copiar o comando.
+
+        O nome era uma etiqueta parada e não dizia que levava a algum lugar. Agora
+        é um botão: no hover (e no foco de teclado) ele acende e uma seta abre
+        espaço e desliza pra dentro — o "ver mais" sem escrever "ver mais". Ao
+        lado, a cópia rápida do `add`, pra quem já sabe que quer a peça e não
+        precisa abrir a ficha. Os dois aparecem com o cursor no ladrilho e ficam
+        fixos no toque (`no-hover`).
       */}
-      <header className="flex flex-col gap-3 border-b border-border px-4 py-3 sm:flex-row sm:items-start sm:gap-4 sm:px-5">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              data-card-index={index}
-              onClick={onOpen}
-              className="truncate font-mono text-destaque outline-none hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:underline"
-            >
-              {item.name}
-            </button>
-            <TypeBadge type={item.type} />
-            {/* Ao lado do tipo, não embaixo da descrição: "o que é" e "o que
-                custa" são a mesma leitura, feita antes de olhar a peça. */}
-            <DepBadges
-              name={item.name}
-              variant="icones"
-              onPick={onPickDep}
-              className="ml-0.5 border-l border-border pl-2"
-            />
-          </div>
-          <p className="mt-1 max-w-[74ch] text-apoio leading-relaxed text-muted-foreground">
-            {item.description}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 sm:shrink-0">
-          {/* `min-w-0` + `truncate` no código: o comando é longo e, sem isso, ele
-              empurra o botão de foco para fora da tela em vez de encurtar. */}
-          {/* Borda transparente em repouso: o comando precisa estar à mão, mas
-              não pode brigar com o nome da peça pela primeira leitura. Ele ganha
-              contorno quando a mão chega perto. */}
-          <CopyCommand
-            variant="line"
-            text={installCommand(item.name)}
-            className="min-w-0 flex-1 border-transparent bg-muted/60 hover:border-[var(--brand)] sm:w-[min(22rem,26vw)] sm:flex-none"
-          />
-          <button
-            type="button"
-            onClick={onOpen}
-            className="alvo-toque inline-flex shrink-0 items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2.5 py-1.5 text-apoio text-muted-foreground outline-none transition-[color,border-color,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground focus-visible:border-[var(--brand)] focus-visible:text-foreground active:scale-[0.97] active:[transition-duration:var(--dur-press)] motion-reduce:active:scale-100"
+      <div className="casa no-hover pointer-events-none absolute inset-x-3 bottom-3 flex items-end justify-between gap-2">
+        <button
+          type="button"
+          data-card-index={index}
+          onClick={onOpen}
+          aria-label={`Ver ${item.title}`}
+          className={cn(
+            "group/abrir pointer-events-auto flex min-w-0 cursor-pointer items-center gap-1.5 rounded-[8px] bg-casa-bg py-1 pl-2 pr-2 text-casa-sm text-casa-fg outline-none",
+            "transition-[background-color,padding] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+            "hover:bg-casa-tile-2 hover:pr-1.5 focus-visible:pr-1.5 focus-visible:[box-shadow:var(--focus)]",
+          )}
+        >
+          <span className="truncate">{item.title}</span>
+          {nota ? <span className="shrink-0 tabular-nums text-casa-fg-3">{nota}/5</span> : null}
+          {/* O que entrou por último ganha um ponto, não um selo gritado. */}
+          {ehNovo(item.name) ? (
+            <span className="h-1.5 w-1.5 shrink-0 rounded-[2px] bg-casa-fg-2" aria-label="novo" />
+          ) : null}
+          <span
+            aria-hidden
+            className={cn(
+              "grid w-0 shrink-0 -translate-x-1 place-items-center overflow-hidden opacity-0",
+              "transition-[width,opacity,transform] [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+              "group-hover/abrir:w-3.5 group-hover/abrir:translate-x-0 group-hover/abrir:opacity-100",
+              "group-focus-visible/abrir:w-3.5 group-focus-visible/abrir:translate-x-0 group-focus-visible/abrir:opacity-100",
+            )}
           >
-            <Expand className="h-3.5 w-3.5" />
-            Focar
-          </button>
-        </div>
-      </header>
-
-      {/* O palco: a peça desenha no tamanho declarado e só encolhe se não couber.
-          `mx-auto` com `maxWidth` centraliza a peça estreita em vez de deixá-la
-          encostada na margem esquerda de uma faixa de 1200px. */}
-      {/* `overflow-x-auto`: a peça grande para de encolher no piso da escala e
-          passa a transbordar — quem está no celular rola de lado e continua
-          conseguindo LER o depoimento, em vez de olhar texto de 6px. */}
-      <div
-        className="overflow-x-auto bg-background px-3 py-4 sm:px-6 sm:py-6"
-        style={stageSurfaceOf(item)}
-      >
-        <div className="mx-auto w-full" style={{ maxWidth: w }}>
-          <FitStage w={w} h={h} minScale={0.62} active={active} label={item.name}>
-            {mounted ? <Demo /> : <div className="h-full w-full animate-pulse bg-muted/40" />}
-          </FitStage>
-        </div>
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </span>
+        </button>
+        <span className="pointer-events-auto shrink-0 rounded-[8px] bg-casa-bg">
+          <CopyCommand variant="chip" text={installCommand(item.name)} className="size-7" />
+        </span>
       </div>
     </article>
   );
 });
 
+/**
+ * A linha da lista: nome, frase e o comando, e nada que a grade já não diga.
+ *
+ * Copiar fica atrás do hover (e visível no toque, via `no-hover`): uma palavra
+ * "add" repetida em cada uma das noventa linhas era textura, não ação.
+ */
 function Row({ item, onOpen, index }: { item: CatalogItem; onOpen: () => void; index: number }) {
   return (
-    <div className="group flex items-center gap-3 border-b border-border px-2 py-2.5 transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:bg-muted/40">
+    <div className="group flex items-center gap-4 rounded-control px-3 py-2.5 transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:bg-casa-tile">
       <button
         type="button"
         data-card-index={index}
         onClick={onOpen}
-        className="min-w-0 flex-1 text-left outline-none"
+        className="flex min-w-0 flex-1 items-baseline gap-3 text-left outline-none"
       >
-        <span className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-apoio group-hover:text-[var(--brand)]">{item.name}</span>
-          <TypeBadge type={item.type} />
-          {/* Sem `onPick` aqui: a linha inteira já é um botão, e um botão dentro
-              de outro é HTML inválido antes de ser problema de teclado. */}
-          <DepBadges name={item.name} variant="icones" />
-        </span>
-        <span className="mt-0.5 line-clamp-1 block text-apoio text-muted-foreground">
+        <Miniatura item={item} className="h-10 w-16 self-center" />
+        <span className="w-40 shrink-0 truncate text-casa-base text-casa-fg">{item.title}</span>
+        <span className="min-w-0 flex-1 truncate text-casa-base text-casa-fg-2">
           {item.description}
         </span>
+        <span className="hidden shrink-0 text-casa-sm text-casa-fg-3 sm:inline">
+          {TYPE_LABEL[item.type]}
+        </span>
       </button>
-      {/*
-        Sem `no-hover`: numa linha de item que não tem o que mostrar, copiar o
-        comando é a ÚNICA ação que existe. Escondê-la atrás do hover é esconder
-        a linha inteira — e no toque não há hover para revelar nada.
-      */}
-      <CopyCommand variant="chip" text={installCommand(item.name)} />
+      <CopyCommand variant="chip" text={installCommand(item.name)} className="no-hover" />
     </div>
   );
 }
 
-export function Gallery({
-  focus,
-  onFocus,
-}: {
-  focus: string | null;
+/**
+ * O catálogo, em dois modos — e é a rota que decide qual.
+ *
+ * `familia = null` é o acervo inteiro, em foto. `familia = "motion"` é aquela
+ * família, viva. Quem chama é o `App.tsx` (a rota); quem desenha é este arquivo.
+ */
+export interface GalleryProps {
   onFocus: (name: string | null) => void;
-}) {
-  const [q, setQ] = React.useState("");
-  const [family, setFamily] = React.useState<FamilyFilter>("todos");
+  /** `null` = o acervo inteiro. Uma família = aquela fatia, com demo viva. */
+  familia?: Family | null;
+  onFamilia?: (f: Family | null) => void;
+  /** Abre a busca do cabeçalho — a única da casa. */
+  onBuscar?: () => void;
+}
+
+export function Gallery({ onFocus, familia = null, onFamilia, onBuscar }: GalleryProps) {
   /** `null` = não filtra por dependência. `SEM_DEPS` = só o que não puxa nada. */
   const [dep, setDep] = React.useState<string | null>(null);
-  const [mode, setMode] = React.useState<Mode>("vitrine");
-  const [tab, setTab] = React.useState<Tab>("interface");
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const listRef = React.useRef<HTMLDivElement>(null);
+  const [tipo, setTipo] = React.useState<TipoFilter>(null);
+  const [tamanho, setTamanho] = React.useState<Tamanho>(tamanhoSalvo);
+  const trocarTamanho = () => {
+    const proximo = PROXIMO[tamanho];
+    setTamanho(proximo);
+    try {
+      localStorage.setItem(CHAVE_TAMANHO, proximo);
+    } catch {
+      /* sem armazenamento: vale só nesta visita */
+    }
+  };
+  const { Icone: IconeTamanho } = TAMANHOS[tamanho];
+  /**
+   * Os eixos secundários ficam recolhidos atrás de um ícone, que mostra quantos
+   * estão ligados: recolher nunca esconde um filtro ATIVO.
+   */
+  const [abertos, setAbertos] = React.useState(false);
+  const listRef = React.useRef<HTMLDivElement | null>(null);
   const heroRef = React.useRef<HTMLElement>(null);
-  const { brands } = useBrandTheme();
-
-  const pool = React.useMemo(
-    () => CATALOG.filter((i) => (tab === "interface" ? TEM_INTERFACE(i) : !TEM_INTERFACE(i))),
-    [tab],
-  );
-
-  const results = React.useMemo(() => {
-    const needle = fold(q.trim());
-    return pool.filter(
-      (i) =>
-        (family === "todos" || i.family === family) && matchesDep(i.name, dep) && matches(i, needle),
-    );
-  }, [q, family, dep, pool]);
 
   /*
-   * O filtro de dependência se monta do que EXISTE ali, com a contagem junto.
-   *
-   * A alternativa era uma lista fixa de libs escrita à mão — e ela envelheceria
-   * no dia em que alguém colhesse a primeira peça com `three`, oferecendo um
-   * filtro que não existe e escondendo o que passou a existir.
-   *
-   * O escopo é a aba MAIS a família escolhida, pelo mesmo motivo que a contagem
-   * de família não olha o catálogo inteiro: número de chip que o clique seguinte
-   * desmente contamina a confiança em todos os outros.
+   * A curadoria entra antes de tudo: peça arquivada (nota ≤ 2 ou marcada pra
+   * excluir) sai da vitrine. Em dev, o filtro "Arquivadas" inverte — mostra só
+   * elas, que é a pilha de trabalho de quem está curando o acervo.
+   */
+  const notas = useNotas();
+  const [verArquivadas, setVerArquivadas] = React.useState(false);
+  const naVitrine = React.useCallback(
+    (i: CatalogItem) => (verArquivadas ? arquivada(notas[i.name]) : !arquivada(notas[i.name])),
+    [notas, verArquivadas],
+  );
+  const qtdArquivadas = CATALOG.filter((i) => arquivada(notas[i.name])).length;
+
+  const pool = React.useMemo(
+    () =>
+      porNovidade((familia ? CATALOG.filter((i) => i.family === familia) : CATALOG).filter(naVitrine)),
+    [familia, naVitrine],
+  );
+
+  const results = React.useMemo(
+    () => pool.filter((i) => (tipo === null || i.type === tipo) && matchesDep(i.name, dep)),
+    [pool, dep, tipo],
+  );
+  const comPalco = React.useMemo(() => results.filter((i) => i.demo), [results]);
+  const semPalco = React.useMemo(() => results.filter((i) => !i.demo), [results]);
+
+  /*
+   * O filtro de dependência se monta do que EXISTE ali, com a contagem junto —
+   * uma lista fixa escrita à mão envelheceria no dia em que alguém colhesse a
+   * primeira peça com `three`. O escopo é o tipo escolhido: número que o clique
+   * seguinte desmente contamina a confiança em todos os outros.
    */
   const escopoDep = React.useMemo(
-    () => pool.filter((i) => family === "todos" || i.family === family),
-    [pool, family],
+    () => pool.filter((i) => tipo === null || i.type === tipo),
+    [pool, tipo],
   );
   const depsDoEscopo = React.useMemo(() => allDeps(escopoDep.map((i) => i.name)), [escopoDep]);
   const semDepsCount = React.useMemo(
@@ -284,48 +445,35 @@ export function Gallery({
     if (!existe) setDep(null);
   }, [depsDoEscopo, semDepsCount, dep]);
 
-  const pickDep = React.useCallback(
-    // Clicar de novo na mesma dependência desfaz: o ícone do card é o mesmo
-    // controle, ligado e desligado, e não um caminho só de ida.
-    (chave: string) => setDep((atual) => (atual === chave ? null : chave)),
-    [],
-  );
-
-  /*
-   * A contagem do filtro é da aba, não do catálogo inteiro.
-   *
-   * Um chip escrito "Fundação 4" numa aba onde só existe 1 é uma promessa que a
-   * própria tela desmente no clique seguinte — e some com a confiança no resto
-   * dos números.
-   */
-  const escopoFamilia = React.useMemo(
-    () => pool.filter((i) => matchesDep(i.name, dep)),
+  /** O eixo de tipo conta dentro do npm escolhido. */
+  const countByTipo = React.useMemo(
+    () =>
+      pool
+        .filter((i) => matchesDep(i.name, dep))
+        .reduce<Record<string, number>>((acc, i) => {
+          acc[i.type] = (acc[i.type] ?? 0) + 1;
+          return acc;
+        }, {}),
     [pool, dep],
   );
 
-  const countByFamily = React.useMemo(
-    () =>
-      escopoFamilia.reduce<Record<string, number>>((acc, i) => {
-        acc[i.family] = (acc[i.family] ?? 0) + 1;
-        return acc;
-      }, {}),
-    [escopoFamilia],
-  );
-
-  /* Família vazia na aba nova deixaria a pessoa olhando um nada que ela não pediu. */
   React.useEffect(() => {
-    if (family !== "todos" && !countByFamily[family]) setFamily("todos");
-  }, [countByFamily, family]);
+    if (tipo && !countByTipo[tipo]) setTipo(null);
+  }, [countByTipo, tipo]);
+
+  const secundariosAtivos = (tipo ? 1 : 0) + (dep ? 1 : 0);
 
   /*
    * Filtrar encolhe a página embaixo de quem está rolando.
    *
-   * Sair de "Todos" (46 itens, ~5100px) para uma família de 9 corta o documento
-   * para ~1500px. O navegador prende o scroll no novo fim e a pessoa fica
-   * centenas de pixels ABAIXO do primeiro resultado, olhando um vazio — parece
-   * bug de layout e é só posição de scroll órfã. Então, quando o resultado muda
-   * e a barra de controle já saiu por cima, a página volta para ela (não para o
-   * topo absoluto: o herói já foi lido, os controles é que precisam estar à mão).
+   * Sair de uma lista longa para uma curta corta o documento, e o navegador
+   * prende o scroll no novo fim: a pessoa fica centenas de pixels ABAIXO do
+   * primeiro resultado, olhando um vazio. Então, quando o resultado muda e a
+   * barra já saiu por cima, a página volta para ela.
+   *
+   * `useLayoutEffect`: roda antes da pintura, e (ao contrário de rAF) roda em
+   * aba de segundo plano. Medimos o HERÓI, não a barra: a barra é `sticky` e o
+   * Chrome já devolve a posição dela deslocada pela grudada.
    */
   const first = React.useRef(true);
   React.useLayoutEffect(() => {
@@ -335,58 +483,29 @@ export function Gallery({
     }
     const hero = heroRef.current;
     if (!hero) return;
-
-    /*
-     * `useLayoutEffect`, e não `useEffect` + `requestAnimationFrame`.
-     *
-     * Roda depois de o DOM novo existir e ANTES da pintura, então a pessoa nunca
-     * vê o quadro errado. A versão com rAF parecia equivalente e não é: quadro
-     * não é entregue em aba de segundo plano, e o corretivo simplesmente não
-     * acontecia (foi assim que o bug sobreviveu ao primeiro conserto).
-     *
-     * Medimos o HERÓI, não a barra de controle: a barra é `sticky`, e no Chrome
-     * tanto o `getBoundingClientRect` quanto o `offsetTop` dela já vêm deslocados
-     * pela grudada — a conta se anulava e o alvo saía igual ao scroll atual. O
-     * fim do herói é onde a barra começa no layout, e ele não gruda.
-     */
     const headerH = document.querySelector("header")?.offsetHeight ?? 0;
     const target = Math.max(0, hero.getBoundingClientRect().bottom + window.scrollY - headerH);
-    // Salto seco: a lista mudou inteira, rolagem suave aqui só atrasaria o que a
-    // pessoa pediu — e ainda seria cancelada pelo reflow do próprio filtro.
     if (window.scrollY > target) window.scrollTo({ top: target, behavior: "auto" });
-  }, [family, dep, mode, results.length]);
+  }, [familia, dep, tipo, tamanho, results.length]);
 
-  const focusIndex = focus ? results.findIndex((i) => i.name === focus) : -1;
-  const focusItem = focusIndex >= 0 ? results[focusIndex] : CATALOG.find((i) => i.name === focus);
-
-  const step = React.useCallback(
-    (delta: number) => {
-      if (!results.length) return;
-      const from = focusIndex >= 0 ? focusIndex : 0;
-      onFocus(results[(from + delta + results.length) % results.length].name);
-    },
-    [results, focusIndex, onFocus],
-  );
-
-  // Atalhos da grade. `/` foca a busca — convenção de quem usa o teclado — e as
+  // Atalhos da grade. `/` abre a busca — convenção de quem usa o teclado — e as
   // setas percorrem os cards a partir do que estiver focado, com o número de
   // colunas lido do próprio grid em vez de chutado por breakpoint.
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = document.activeElement;
-      const typing = el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement;
+      const typing =
+        el instanceof HTMLInputElement ||
+        el instanceof HTMLTextAreaElement ||
+        (el instanceof HTMLElement && el.isContentEditable);
+      if (typing) return;
 
-      if (e.key === "/" && !typing) {
+      if (e.key === "/") {
         e.preventDefault();
-        inputRef.current?.focus();
+        onBuscar?.();
         return;
       }
-      if (e.key === "Escape" && typing) {
-        if (q) setQ("");
-        else inputRef.current?.blur();
-        return;
-      }
-      if (typing || !listRef.current) return;
+      if (!listRef.current) return;
 
       const cards = Array.from(listRef.current.querySelectorAll<HTMLElement>("[data-card-index]"));
       if (!cards.length) return;
@@ -400,215 +519,242 @@ export function Gallery({
         cards[target]?.scrollIntoView({ block: "nearest" });
       };
 
-      // Uma peça por linha nos dois modos: percorrer é sempre para cima e para
-      // baixo, e não há mais coluna para ler do grid.
-      if (e.key === "ArrowRight" || e.key === "ArrowDown") move(1);
-      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") move(-1);
+      const grade = listRef.current.querySelector<HTMLElement>("[data-grade]");
+      const cols =
+        grade && el && grade.contains(el)
+          ? getComputedStyle(grade).gridTemplateColumns.split(" ").length
+          : 1;
+      if (e.key === "ArrowRight") move(1);
+      else if (e.key === "ArrowLeft") move(-1);
+      else if (e.key === "ArrowDown") move(cols);
+      else if (e.key === "ArrowUp") move(-cols);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [q, mode]);
+  }, [onBuscar]);
 
   return (
-    <div className="shell pb-24">
-      <section ref={heroRef} className="pt-10 pb-7 sm:pt-14 sm:pb-8">
-        <h1
-          className="text-[clamp(1.75rem,5vw,3.2rem)] font-semibold leading-[1.02] tracking-[-0.03em]"
-          style={{ fontFamily: "var(--font-display, inherit)" }}
-        >
-          A library da Visant
+    <div className="pb-24">
+      {/*
+       * A dobra: o título e, no acervo, uma frase. Nada mais antes da grade.
+       *
+       * Eram quatro blocos de texto antes do primeiro componente — volta,
+       * título, tese com número de marcas e a contagem repetida na barra. Numa
+       * página cuja única promessa é mostrar componente, a tese cabe numa linha.
+       */}
+      <section ref={heroRef} className="casa shell pt-12 pb-8 sm:pt-16">
+        <h1 className="text-casa-xl font-medium">
+          {familia ? familyLabel(familia) : "A library da Visant"}
         </h1>
-        <p className="mt-4 max-w-2xl text-corpo leading-relaxed text-muted-foreground sm:text-destaque">
-          {/* Conta a lista que está na tela, e não um número escrito à mão que
-              envelhece: o portão `npm run check:catalog` garante que esta lista
-              e o registry.json não divergem. */}
-          {CATALOG.length} peças nesta vitrine, servidas por{" "}
-          <code className="font-mono text-corpo">{REGISTRY_PUBLIC_LABEL}</code>, mais{" "}
-          {/*
-            O número de temas vem do índice do vault — o sync publica marca nova e
-            a frase acompanha sozinha. A frase inteira fica no ar desde o primeiro
-            quadro, com o número reservado num slot de largura fixa: antes ela
-            APARECIA quando o vault respondia, e o parágrafo ganhava uma linha
-            com a pessoa já lendo.
-          */}
-          <span className="inline-block min-w-[1.6ch] tabular-nums">{brands.length || "…"}</span>{" "}
-          marcas de demonstração. Nenhum componente sabe a cor de um cliente — trocar a marca no
-          seletor repinta esta página inteira. As marcas reais ficam na conta de quem entra.
-        </p>
+        {familia ? null : (
+          <p className="mt-3 max-w-xl text-casa-lg text-casa-fg-2">
+            {/* Conta componente, não tema: o mesmo número que a descrição de SEO
+                (`prerender.mjs`) tira do registry. */}
+            {CATALOG.filter((i) => i.type !== "theme" && !arquivada(notas[i.name])).length} componentes pra React. Cada um
+            veste a marca que você escolher.{" "}
+            <button
+              type="button"
+              onClick={abrirConectar}
+              className="rounded-control text-casa-fg underline decoration-casa-line underline-offset-4 transition-colors [transition-duration:var(--dur-fast)] hover:decoration-casa-fg focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]"
+            >
+              Use no seu agente de IA
+            </button>
+          </p>
+        )}
       </section>
 
       {/* controles */}
-      <div className="shell-bleed sticky top-[var(--shell-header-h)] z-30 border-b border-border bg-background/85 py-3 backdrop-blur-xl">
-        <div className="flex items-center gap-2">
-          <div className="relative flex min-w-0 flex-1 items-center gap-2 rounded-[var(--r-pill,9999px)] border border-border bg-card px-3 py-1.5">
-            <Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-            <input
-              ref={inputRef}
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Buscar por nome, uso ou tag…"
-              aria-label="Buscar no catálogo"
-              className="w-full min-w-0 bg-transparent text-corpo outline-none placeholder:text-muted-foreground"
-            />
-            {q ? (
-              <button
-                type="button"
-                onClick={() => setQ("")}
-                aria-label="Limpar busca"
-                className="text-muted-foreground hover:text-foreground"
+      <div className="casa sticky top-[var(--shell-header-h)] z-30 bg-casa-bg">
+        <div className="shell flex items-center gap-5 py-2">
+          {/* No celular a linha rola de lado; o esmaecido na borda é o que diz
+              que tem mais palavra depois da última visível. */}
+          <div className="flex min-w-0 flex-1 items-center gap-5 overflow-x-auto [mask-image:linear-gradient(to_right,black_85%,transparent)] [scrollbar-width:none] sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
+            {/* A categoria NAVEGA: cada palavra é uma rota (`/catalogo/motion`),
+                então o link de uma fatia pode ser mandado no chat. */}
+            <Aba ativa={!familia} onClick={() => onFamilia?.(null)} count={CATALOG.filter(naVitrine).length}>
+              Tudo
+            </Aba>
+            {/* Categoria sem peça na vitrine não vira palavra morta na barra. */}
+            {FAMILIES.filter((f) => CATALOG.some((i) => i.family === f.key && naVitrine(i))).map((f) => (
+              <Aba
+                key={f.key}
+                ativa={familia === f.key}
+                onClick={() => onFamilia?.(f.key)}
+                count={CATALOG.filter((i) => i.family === f.key && naVitrine(i)).length}
               >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            ) : (
-              <kbd className="hidden rounded border border-border px-1.5 font-mono text-micro text-muted-foreground sm:block">
-                /
-              </kbd>
-            )}
+                {CURTO[f.key]}
+              </Aba>
+            ))}
           </div>
 
-          {tab === "interface" ? (
-            <SegmentedControl
-              value={mode}
-              onChange={setMode}
-              variant="compact"
-              aria-label="Modo de visualização"
-              options={MODES}
-            />
-          ) : null}
-        </div>
-
-        {/* famílias: rolam na horizontal no celular em vez de virar quatro linhas */}
-        <div className="shell-bleed mt-2 flex gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
-          <Chip
-            pressed={family === "todos"}
-            // A contagem do "Todos" também obedece ao filtro de npm — senão ele
-            // anuncia 43 e entrega 5, que é o tipo de número que ensina a pessoa
-            // a não confiar em nenhum outro na barra.
-            count={escopoFamilia.length}
-            onClick={() => setFamily("todos")}
-            className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
-          >
-            Todos
-          </Chip>
-          {FAMILIES.filter((f) => countByFamily[f.key]).map((f) => (
-            <Chip
-              key={f.key}
-              pressed={family === f.key}
-              count={countByFamily[f.key] ?? 0}
-              onClick={() => setFamily(f.key)}
-              className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
+          <div className="flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setAbertos((v) => !v)}
+              aria-expanded={abertos}
+              aria-pressed={abertos || secundariosAtivos > 0}
+              aria-label="Filtrar por tipo e dependência"
+              title="Tipo e dependência"
+              className="casa-icone alvo-toque relative"
             >
-              {f.label}
-            </Chip>
-          ))}
-
-          {/*
-            A aba do que não tem interface fica na mesma barra, à direita e
-            separada: é o mesmo gesto de filtrar, e promovê-la a aba de topo
-            faria a library parecer dois produtos.
-          */}
-          <span className="shrink-0 sm:ml-auto sm:pl-3">
-            <Chip
-              pressed={tab === "sem-interface"}
-              count={SEM_INTERFACE_COUNT}
-              onClick={() => setTab(tab === "interface" ? "sem-interface" : "interface")}
-              className="rounded-[var(--r-pill,9999px)] py-1.5 text-apoio"
+              <SlidersHorizontal className="h-4 w-4" />
+              {secundariosAtivos ? (
+                <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-[2px] bg-casa-fg" />
+              ) : null}
+            </button>
+            <button
+              type="button"
+              onClick={trocarTamanho}
+              aria-label={`Tamanho dos cards: ${TAMANHOS[tamanho].rotulo}`}
+              title={`Tamanho dos cards: ${TAMANHOS[tamanho].rotulo}`}
+              className="casa-icone alvo-toque"
             >
-              Sem interface
-            </Chip>
-          </span>
+              <IconeTamanho className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
         {/*
-          Segunda linha: o que a peça CUSTA.
-
-          Fica separada da família de propósito — são duas perguntas diferentes
-          ("onde isso se usa?" e "isso pesa no meu bundle?") e misturá-las numa
-          barra só faria a pessoa ler quinze pastilhas para achar as seis dela.
-          A linha inteira só existe quando há o que filtrar.
+          Os eixos secundários, recolhidos: "que tipo de peça é?", "isso pesa no
+          meu bundle?" e "quero ver a mídia ou o wireframe?". Uma linha de texto
+          cada, com o nome do eixo no tom mais baixo.
         */}
-        {depsDoEscopo.length ? (
-          <div className="shell-bleed mt-1.5 flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <span className="shrink-0 pr-0.5 font-mono text-micro uppercase tracking-wider text-muted-foreground">
-              npm
-            </span>
-            {semDepsCount ? (
-              <Chip
-                pressed={dep === SEM_DEPS}
-                count={semDepsCount}
-                onClick={() => pickDep(SEM_DEPS)}
-                className="rounded-[var(--r-pill,9999px)] px-2.5 py-1 text-micro font-normal"
-              >
-                Nenhuma
-              </Chip>
+        {abertos ? (
+          <div className="shell space-y-1 pb-3">
+            <div className="flex items-center gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <span className="w-16 shrink-0 text-casa-sm text-casa-fg-3">Tipo</span>
+              {(Object.keys(TYPE_LABEL) as CatalogItem["type"][])
+                .filter((t) => countByTipo[t])
+                .map((t) => (
+                  <Aba
+                    key={t}
+                    ativa={tipo === t}
+                    count={countByTipo[t]}
+                    // Clicar de novo desfaz: o mesmo controle, ligado e desligado.
+                    onClick={() => setTipo((atual) => (atual === t ? null : t))}
+                  >
+                    {TYPE_LABEL[t]}
+                  </Aba>
+                ))}
+            </div>
+
+            {depsDoEscopo.length ? (
+              <div className="flex items-center gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <span className="w-16 shrink-0 text-casa-sm text-casa-fg-3">Pacotes</span>
+                {semDepsCount ? (
+                  <Aba
+                    ativa={dep === SEM_DEPS}
+                    count={semDepsCount}
+                    onClick={() => setDep((d) => (d === SEM_DEPS ? null : SEM_DEPS))}
+                  >
+                    Nenhum
+                  </Aba>
+                ) : null}
+                {depsDoEscopo.map(({ info, count }) => (
+                  <Aba
+                    key={info.key}
+                    ativa={dep === info.key}
+                    count={count}
+                    onClick={() => setDep((d) => (d === info.key ? null : info.key))}
+                  >
+                    <span className="flex items-center gap-1.5" title={info.packages.join(", ")}>
+                      {info.icon ? <DepLogo icon={info.icon} className="h-3.5 w-3.5" /> : null}
+                      {info.label}
+                    </span>
+                  </Aba>
+                ))}
+              </div>
             ) : null}
-            {depsDoEscopo.map(({ info, count }) => (
-              <Chip
-                key={info.key}
-                pressed={dep === info.key}
-                count={count}
-                onClick={() => pickDep(info.key)}
-                icon={info.icon ? <DepLogo icon={info.icon} className="h-3 w-3" /> : undefined}
-                title={info.packages.join(" · ")}
-                className="gap-1.5 rounded-[var(--r-pill,9999px)] px-2.5 py-1 text-micro font-normal"
-              >
-                {info.label}
-              </Chip>
-            ))}
+
+            <div className="flex items-center gap-4">
+              <span className="w-16 shrink-0 text-casa-sm text-casa-fg-3">Mídia</span>
+              <WireframeToggle className="-ml-2" />
+            </div>
+
+            {/* Só pra quem cura o acervo (dev): a pilha das arquivadas. */}
+            {CURADORIA_ATIVA ? (
+              <div className="flex items-center gap-4">
+                <span className="w-16 shrink-0 text-casa-sm text-casa-fg-3">Curadoria</span>
+                <Aba ativa={verArquivadas} onClick={() => setVerArquivadas((v) => !v)} count={qtdArquivadas}>
+                  Arquivadas
+                </Aba>
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>
 
-      {results.length ? (
-        mode === "vitrine" && tab === "interface" ? (
-          <div
-            ref={listRef}
-            // `overflow-anchor: none`: o Chrome tenta manter na tela o elemento
-            // "âncora" quando o conteúdo acima muda, e ao filtrar ele desfaz a
-            // reposição logo depois de nós a fazermos — a página voltava para o
-            // fim do documento novo. Aqui a âncora não ajuda: os itens de cima
-            // não mudaram de tamanho, sumiram.
-            style={{ overflowAnchor: "none" }}
-            className="mt-6 flex flex-col gap-5"
-          >
-            {results.map((item, i) => (
-              <Showcase
-                key={item.name}
-                item={item}
-                index={i}
-                onOpen={() => onFocus(item.name)}
-                onPickDep={pickDep}
-              />
-            ))}
-          </div>
-        ) : (
-          <div ref={listRef} style={{ overflowAnchor: "none" }} className="mt-6 border-t border-border">
-            {results.map((item, i) => (
-              <Row key={item.name} item={item} index={i} onOpen={() => onFocus(item.name)} />
-            ))}
-          </div>
-        )
-      ) : (
-        <div className="mt-16 text-center">
-          <p className="text-destaque">Nada com “{q}”.</p>
-          <p className="mx-auto mt-2 max-w-md text-corpo text-muted-foreground">
-            Se a peça não existe aqui e você está prestes a escrevê-la, ela provavelmente deveria
-            virar item — é assim que o registry cresce.
-          </p>
-        </div>
-      )}
+      <div className="shell">
+        {results.length ? (
+          <div ref={listRef} style={{ overflowAnchor: "none" }}>
+              {/*
+                Uma grade de verdade, e nada de mosaico: com a moldura fixa do
+                `PalcoFixo` não há altura diferente pra encaixar. `overflow-anchor:
+                none` fica — ao filtrar, a âncora do Chrome desfazia a reposição
+                logo depois de nós a fazermos.
 
-      {focusItem && (
-        <ComponentFocus
-          key={focusItem.name}
-          item={focusItem}
-          index={focusIndex >= 0 ? focusIndex : 0}
-          total={results.length}
-          onClose={() => onFocus(null)}
-          onPrev={() => step(-1)}
-          onNext={() => step(1)}
-        />
-      )}
+                Só entra na grade quem tem palco. Hook, lib, tema e base não têm
+                superfície: num ladrilho viravam um nome em código no meio de
+                fotos, e liam como peça quebrada.
+              */}
+              {comPalco.length ? (
+                <div
+                  data-grade
+                  style={{ gap: GRID_GAP }}
+                  className={cn("mt-4 grid", TAMANHOS[tamanho].colunas)}
+                >
+                  {comPalco.map((item, i) => (
+                    <Ladrilho
+                      key={item.name}
+                      item={item}
+                      index={i}
+                      foto={!familia}
+                      nota={CURADORIA_ATIVA ? notas[item.name]?.nota : undefined}
+                      onOpen={() => onFocus(item.name)}
+                    />
+                  ))}
+                </div>
+              ) : null}
+
+              {/* O que não tem superfície: uma lista de texto depois da grade.
+                  Continua na busca e na fatia da família — só não finge ser
+                  uma imagem. */}
+              {semPalco.length ? (
+                <section className="casa mt-16">
+                  <h2 className="flex items-baseline gap-2 text-casa-lg font-medium">
+                    Hooks, temas e utilitários
+                    <span className="text-casa-sm tabular-nums text-casa-fg-3">{semPalco.length}</span>
+                  </h2>
+                  <div className="-mx-3 mt-3">
+                    {semPalco.map((item, i) => (
+                      <Row
+                        key={item.name}
+                        item={item}
+                        index={comPalco.length + i}
+                        onOpen={() => onFocus(item.name)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+            </div>
+
+        ) : (
+          <div className="casa mt-20 text-center">
+            <p className="text-casa-lg">Nada com esses filtros.</p>
+            <button
+              type="button"
+              onClick={() => {
+                setTipo(null);
+                setDep(null);
+              }}
+              className="mt-3 rounded-control text-casa-base text-casa-fg-2 underline-offset-4 hover:text-casa-fg hover:underline"
+            >
+              Limpar filtros
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

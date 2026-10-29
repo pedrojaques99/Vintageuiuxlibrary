@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-local-search",
+  "title": "useLocalSearch",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Busca em memória tolerante a acento: índice montado uma vez por lista, todos os termos batendo em qualquer ordem, e termo vazio devolvendo a lista inteira.",
+  "dependencies": [
+    "react"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/hooks/use-local-search.ts",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\n/**\n * Busca em memória, tolerante a acento — a que quase todo catálogo precisa e\n * quase toda base reescreve.\n *\n * ── Quando ela é a resposta certa ──────────────────────────────────────────\n *\n * Até alguns milhares de registros já carregados, filtrar em memória é\n * **instantâneo** e evita um round-trip por tecla. Endpoint de busca vale a\n * pena quando o corpus não cabe no cliente; abaixo disso ele só adiciona\n * latência, estado de carregamento, condição de corrida entre respostas fora de\n * ordem, e uma rota pra manter.\n *\n * ── As três decisões que fazem diferença ───────────────────────────────────\n *\n * 1. **Dobra acento e caixa.** \"tipografia\" tem que achar \"tipografía\", e\n *    \"acao\" tem que achar \"ação\". Num produto em português, busca que exige\n *    acento correto é busca que não funciona pra metade de quem digita — e o\n *    diagnóstico \"não tem esse conteúdo\" nunca chega a quem poderia consertar.\n * 2. **O índice é montado uma vez.** Normalizar a base inteira a cada tecla é\n *    trabalho de CPU no exato instante em que a pessoa está digitando. O índice\n *    se refaz quando a lista muda, e não quando o termo muda.\n * 3. **Todos os termos precisam bater, em qualquer ordem.** \"brand tipo\" acha\n *    \"tipografia de marca\". `AND` sobre termos separados é o que faz a busca\n *    parecer inteligente sem nenhum ranqueamento — e ranqueamento aqui seria\n *    peso pra ordenar uma lista que a pessoa já consegue varrer com o olho.\n *\n * ── O contrato de vazio ────────────────────────────────────────────────────\n *\n * Termo vazio devolve a lista **inteira**, não vazia. Parece óbvio e é o bug\n * mais comum do padrão: a tela nasce sem nada e a pessoa acha que o catálogo\n * está vazio.\n */\n\n/** Remove diacrítico e normaliza caixa. Exportada porque a mesma dobra costuma\n *  ser precisa fora do hook (num `<option>`, num agrupamento). */\nexport function fold(s: string): string {\n  return s\n    .toLowerCase()\n    .normalize(\"NFD\")\n    // Escapes e não os caracteres literais: um bloco de combining marks colado\n    // no fonte sobrevive mal a copiar, colar e reformatar.\n    .replace(new RegExp(\"[\\u0300-\\u036f]\", \"g\"), \"\");\n}\n\nexport interface UseLocalSearchOptions<T> {\n  /** Os campos que entram no índice, na ordem em que importam. */\n  fields: (item: T) => Array<string | null | undefined>;\n  /** O termo. Componente controlado por fora — o hook não guarda input. */\n  query: string;\n}\n\nexport function useLocalSearch<T>(items: readonly T[], { fields, query }: UseLocalSearchOptions<T>) {\n  // O índice acompanha a LISTA, não o termo. É a linha que segura o custo.\n  const indice = React.useMemo(\n    () =>\n      items.map((item) =>\n        fold(\n          fields(item)\n            .filter(Boolean)\n            .join(\" \"),\n        ),\n      ),\n    // `fields` costuma ser inline; depender dela remontaria o índice a cada\n    // render. A lista é a dependência honesta.\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n    [items],\n  );\n\n  const termos = React.useMemo(() => fold(query).trim().split(/\\s+/).filter(Boolean), [query]);\n\n  return React.useMemo(() => {\n    if (!termos.length) return items as T[];\n    return items.filter((_, i) => termos.every((t) => indice[i].includes(t)));\n  }, [items, indice, termos]);\n}\n",
+      "type": "registry:hook",
+      "target": "@hooks/use-local-search.ts"
+    }
+  ],
+  "meta": {
+    "uso": {
+      "quando": "Filtrar lista em memória tolerando acento e termos em qualquer ordem, como catálogo ou menu",
+      "evite": "Base grande ou paginada no servidor: busque na API; o campo visual da busca, expanding-search"
+    }
+  },
+  "categories": [
+    "base",
+    "busca",
+    "filtro",
+    "acento",
+    "catalogo"
+  ],
+  "type": "registry:hook"
+}

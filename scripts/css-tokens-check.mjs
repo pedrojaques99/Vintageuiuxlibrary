@@ -77,7 +77,13 @@ function cssConstruido() {
     .replace(/\s*([:,{};])\s*/g, "$1");
 }
 
-const escapar = (cls) => cls.replace(/[.[\]()#,%:&>+~*/!'"$^=|?]/g, (c) => "\\" + c);
+/*
+ * `@` entra na lista: o Tailwind escapa a arroba no seletor
+ * (`.\[\@media\(hover\:none\)\]\:text-…`) e sem ela a busca montava um seletor
+ * que não existe em CSS nenhum. O portão acusava de "não gerou regra" uma
+ * classe cuja regra estava lá — falso positivo em toda variante `[@media…]`.
+ */
+const escapar = (cls) => cls.replace(/[.[\]()#,%:&>+~*/!'"$^=|?@]/g, (c) => "\\" + c);
 
 /*
  * A classe é fatiada por ESPAÇO, não por regex de forma.
@@ -89,11 +95,28 @@ const escapar = (cls) => cls.replace(/[.[\]()#,%:&>+~*/!'"$^=|?]/g, (c) => "\\" 
  * Tailwind nunca tem espaço, então o pedaço entre delimitadores é a classe
  * inteira, sempre.
  */
+/*
+ * Comentário não é regra de estilo.
+ *
+ * O portão lia o arquivo inteiro, então um comentário que CITA uma classe
+ * derrubava o build. Caso real: o `book-3d` documenta que
+ * `rounded-[var(--r-surface,4px)]` não gera regra nenhuma — a vírgula do
+ * fallback quebra o parser de valor arbitrário do Tailwind — e explica por que
+ * o valor foi pro `style`. Apagar a citação apagaria a única pista que impede
+ * a próxima pessoa de reintroduzir exatamente o mesmo defeito.
+ *
+ * É a mesma decisão, e pelo mesmo motivo, do portão de hex em `ship.mjs`: a
+ * regra continua cega para intenção no CÓDIGO, que é onde ela precisa ser cega.
+ * Ela só para de acusar prosa.
+ */
+const semComentario = (src) =>
+  src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/[^\n]*/g, "$1");
+
 const achados = new Map();
 for (const raiz of RAIZES) {
   if (!fs.existsSync(raiz)) continue;
   for (const arq of arquivosTsx(raiz)) {
-    for (const pedaco of fs.readFileSync(arq, "utf8").split(/[\s"'`{}]+/)) {
+    for (const pedaco of semComentario(fs.readFileSync(arq, "utf8")).split(/[\s"'`{}]+/)) {
       if (!pedaco.includes("-[var(--")) continue;
       const token = pedaco.match(/-\[var\((--[a-z0-9-]+)/)?.[1];
       if (!token || IGNORAR.test(token)) continue;

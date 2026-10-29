@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "confirm-morph",
+    "title": "Confirm Morph",
+    "type": "ui",
+    "family": "controles",
+    "description": "Botão de apagar que vira a pergunta no próprio lugar, depois o andamento e o resultado com desfazer.",
+    "tags": [
+      "botão",
+      "confirmação",
+      "destrutivo",
+      "desfazer"
+    ],
+    "demoImport": "./demos/confirm-morph-demo",
+    "knobs": "ConfirmMorph",
+    "preview": {
+      "w": 500,
+      "h": 120
+    }
+  },
+  "registry": {
+    "name": "confirm-morph",
+    "type": "registry:ui",
+    "title": "Confirm Morph",
+    "description": "Botão de apagar que vira a pergunta no próprio lugar, depois o andamento e o resultado com desfazer.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/confirm-morph.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Confirm morph (https://uiarc.dev/components/confirm-morph), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

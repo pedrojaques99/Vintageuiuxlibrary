@@ -1,0 +1,49 @@
+{
+  "catalogo": {
+    "name": "eye-tracker",
+    "title": "Agent Bot",
+    "type": "ui",
+    "family": "efeitos",
+    "description": "Avatar de bot ou agente de IA: a cabeça é um shader vivo na cor da marca, com visor e antena, e os olhos seguem o cursor e o foco, piscam e cumprimentam no clique. Três peles (neon, voronoi, túnel) e quatro formas.",
+    "tags": [
+      "bot",
+      "agent",
+      "agente",
+      "ia",
+      "assistente",
+      "avatar",
+      "mascote",
+      "chat",
+      "shader",
+      "cursor",
+      "estado vazio"
+    ],
+    "demoImport": "./demos/eye-tracker-demo",
+    "knobs": "EyeTracker",
+    "preview": {
+      "w": 400,
+      "h": 300
+    }
+  },
+  "registry": {
+    "name": "eye-tracker",
+    "type": "registry:ui",
+    "title": "Agent Bot",
+    "description": "Avatar de bot ou agente de IA com shader vivo no corpo: os olhos seguem o cursor e o foco do teclado, piscam sozinhos e cumprimentam no clique.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/eye-tracker.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/eye-tracker"
+}

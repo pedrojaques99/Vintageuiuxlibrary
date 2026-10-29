@@ -1,0 +1,44 @@
+{
+  "cover-art": {
+    "nota": 2,
+    "comentario": "mt slop, pode esconder",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
+  "css-color": {
+    "nota": 2,
+    "comentario": "pode esconder",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
+  "dot-cursor": {
+    "nota": 2,
+    "comentario": "posicao do cursor super bugada, e ta com scroll horizontal e vertical, refaça o shell disso",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
+  "fog-garden": {
+    "nota": 3,
+    "comentario": "tem que ser mais compacta e com texto genérico, 2 posicoes, bem mais reduzido, mantém a estética, tirar o scroll bar (ta aprecendo texto do meu cliente, tem q ser agnostico, todos os da library)",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
+  "plate": {
+    "nota": 2,
+    "comentario": "inutil quase",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
+  "sfx-toggle": {
+    "nota": 2,
+    "comentario": "deixar fora do cat�logo (segue no cabe�alho)",
+    "excluir": false,
+    "data": "2026-10-20"
+  },
+  "vintage-command-palette": {
+    "nota": 1,
+    "comentario": "mal apresentado, meio inutil; fica s� como a paleta do Rig vintage, fora da vitrine",
+    "excluir": false,
+    "data": "2026-10-20"
+  }
+}

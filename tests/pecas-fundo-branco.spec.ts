@@ -34,8 +34,66 @@ for (const nome of ITENS) {
     await page.setViewportSize({ width: 900, height: 900 });
     await page.goto(`/c/${nome}?solo=1&bg=${BRANCO}`);
     await page.waitForTimeout(500);
+    /*
+     * Mede o estado ASSENTADO, não o meio da entrada.
+     *
+     * Peça que entra por opacidade (o `line-reveal`) passa uns quadros com o
+     * texto a 40% — e um tempo fixo de espera mede esse quadro ou não conforme
+     * a página carrega mais rápido ou mais devagar. Foi assim que ela ficou
+     * vermelha no dia em que a casa parou de puxar fonte do Google no load: a
+     * peça não mudou, o relógio do teste é que caiu no meio da animação.
+     * Esperam-se as animações FINITAS; as em loop (marquee) nunca terminam.
+     */
+    await page.evaluate(() =>
+      Promise.race([
+        Promise.all(
+          document
+            .getAnimations()
+            .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+            .map((a) => a.finished.catch(() => undefined)),
+        ),
+        new Promise((r) => setTimeout(r, 4000)),
+      ]),
+    );
+    await page.waitForTimeout(150);
+    /*
+     * Animação por JS não aparece em `getAnimations()`. O streamgraph cresce
+     * com o `animate()` do motion, e sob a carga da suíte paralela o teste
+     * media os rótulos no meio do caminho (contraste ~2,5) e reprovava a peça
+     * certa. O que este teste quer é o estado FINAL: espera a pintura do texto
+     * parar de mudar (duas leituras iguais seguidas), com teto de 4s, e mede
+     * LOGO EM SEGUIDA. Peça que anima para sempre (o countdown vira um dígito
+     * por segundo) só tem janelas curtas de repouso entre uma virada e outra:
+     * esperar mais um pouco antes de medir caía na virada seguinte, com o
+     * dígito no meio do fade. O texto entra na leitura para enxergar a troca.
+     */
+    await page.evaluate(async () => {
+      const foto = () =>
+        [...document.querySelectorAll("body *")]
+          .filter((el) => el.childNodes.length && [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent?.trim()))
+          .map((el) => {
+            const cs = getComputedStyle(el);
+            return `${el.textContent}|${cs.color}|${cs.opacity}|${cs.fill}`;
+          })
+          .join(";");
+      const fim = performance.now() + 4000;
+      let antes = foto();
+      while (performance.now() < fim) {
+        await new Promise((r) => setTimeout(r, 120));
+        const agora = foto();
+        if (agora === antes) return;
+        antes = agora;
+      }
+    });
 
-    const sumidos = await page.evaluate(() => {
+    /*
+     * Mede, e mede de novo se reprovar (até 4x, 300 ms entre uma e outra). Peça
+     * que anima para sempre (o countdown vira um dígito por segundo) só repousa
+     * em janelas curtas, e sob a carga da suíte paralela a amostra às vezes caía
+     * no meio da virada. Texto ilegível de verdade reprova em TODAS as amostras;
+     * o que passa numa é o estado de repouso, que é o que este teste julga.
+     */
+    const medir = () => page.evaluate(() => {
       const canal = (c: number) => {
         const s = c / 255;
         return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
@@ -118,6 +176,62 @@ for (const nome of ITENS) {
         })();
         if (sobreImagem) continue;
 
+        /*
+         * O mesmo vale para texto sobre uma <img>, <video> ou <canvas> que está
+         * ATRÁS dele (o card do carrossel: título branco sobre a foto). A cor
+         * computada do pai é a do papel, mas o que está pintado é a foto —
+         * medir contra o papel acusava 1:1 em texto perfeitamente legível.
+         */
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+
+        /*
+         * Texto recortado pelo próprio contêiner não está na tela: a parada 3 de
+         * um scroller interno (o fog-garden) existe no DOM e ninguém a vê até
+         * rolar. Medir esse texto contra o papel dava 1:1 em nada visível.
+         */
+        const recortado = (() => {
+          if (cx < 0 || cy < 0 || cx > innerWidth || cy > innerHeight) return true;
+          for (let p = el.parentElement; p; p = p.parentElement) {
+            const o = getComputedStyle(p);
+            if (o.overflowX === "visible" && o.overflowY === "visible") continue;
+            const k = p.getBoundingClientRect();
+            if (cx < k.left || cx > k.right || cy < k.top || cy > k.bottom) return true;
+          }
+          return false;
+        })();
+        if (recortado) continue;
+
+        /*
+         * Texto em `mix-blend-mode` (o negativo do fog-garden: cor do papel em
+         * `difference` sobre a névoa) pinta a DIFERENÇA com o que está atrás. A
+         * cor computada é o papel por desenho, e a conta daria 1:1 sempre.
+         */
+        let mistura = false;
+        for (let p: Element | null = el; p; p = p.parentElement) {
+          if (getComputedStyle(p).mixBlendMode !== "normal") {
+            mistura = true;
+            break;
+          }
+        }
+        if (mistura) continue;
+        const sobreMidia = document
+          .elementsFromPoint(cx, cy)
+          .some((m) => m !== el && /^(IMG|VIDEO|CANVAS)$/.test(m.tagName));
+        if (sobreMidia) continue;
+
+        /*
+         * Controle desabilitado não entra na conta.
+         *
+         * Apagar é como um controle desligado diz que está desligado — e a
+         * própria WCAG 1.4.3 isenta componente inativo do mínimo de contraste.
+         * Sem esta linha o portão reprova exatamente o desenho correto: o
+         * `profile-form` abre com "Salvar" e "Desfazer" desabilitados (não há
+         * mudança a salvar), a 40% de opacidade, e virava dois falsos
+         * positivos. Portão que acusa o certo é portão que o time desliga.
+         */
+        if (el.closest("[disabled],[aria-disabled='true']")) continue;
+
         const [cr, cg, cb, ca] = parse(cs.color);
         const fundo = fundoEfetivo(el);
         // A opacidade do próprio elemento entra na conta: `opacity-70` num
@@ -135,6 +249,11 @@ for (const nome of ITENS) {
       }
       return achados;
     });
+    let sumidos = await medir();
+    for (let tentativa = 1; sumidos.length && tentativa < 4; tentativa++) {
+      await page.waitForTimeout(300);
+      sumidos = await medir();
+    }
 
     expect(
       sumidos,

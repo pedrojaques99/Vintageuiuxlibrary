@@ -1,0 +1,44 @@
+{
+  "catalogo": {
+    "name": "elastic-slider",
+    "title": "Elastic Slider",
+    "type": "ui",
+    "family": "controles",
+    "description": "Slider que estica feito elástico quando você puxa além do limite e volta com a velocidade da soltura.",
+    "tags": [
+      "slider",
+      "range",
+      "física",
+      "mola",
+      "formulário",
+      "teclado"
+    ],
+    "demoImport": "./demos/elastic-slider-demo",
+    "knobs": "ElasticSlider",
+    "preview": {
+      "w": 368,
+      "h": 140
+    }
+  },
+  "registry": {
+    "name": "elastic-slider",
+    "type": "registry:ui",
+    "title": "Elastic Slider",
+    "description": "Slider que estica feito elástico quando você puxa além do limite e volta com a velocidade da soltura.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils",
+      "@visant/sfx-bus"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/elastic-slider.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Elastic Slider (https://uiarc.dev/components/elastic-slider), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

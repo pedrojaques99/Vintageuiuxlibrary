@@ -20,7 +20,7 @@
 
 import * as React from "react";
 import { Command } from "cmdk";
-import { Check, Palette, Search, Sparkles } from "lucide-react";
+import { Check, Palette, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useBrandTheme, type BrandSummary } from "@/lib/brand-theme";
 
@@ -163,6 +163,19 @@ export function BrandSelector({ className, shortcut = "b" }: BrandSelectorProps)
             {brand ? `${brand.fonts.display} · v${brand.version ?? "?"}` : `${brands.length} no vault`}
           </span>
         </span>
+        {/*
+         * A paleta no gatilho, e não só dentro da lista.
+         *
+         * Fechado, o botão dizia "Marca · Geist" — nome e fonte, nenhuma cor.
+         * Só que a coisa que ele troca é justamente a COR do produto inteiro, e
+         * o único lugar onde ela aparecia era atrás do clique. Três amostras
+         * custam 30px e fazem o controle dizer o que ele é sem abrir nada.
+         */}
+        {brand && brand.palette.length > 0 && (
+          <span className="ml-0.5 hidden sm:block">
+            <Swatches brand={brand} max={3} />
+          </span>
+        )}
         {shortcut && (
           <kbd className="ml-1 hidden rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:block">
             ⌘{shortcut.toUpperCase()}
@@ -204,7 +217,7 @@ export function BrandSelector({ className, shortcut = "b" }: BrandSelectorProps)
 
         <Command.List className="max-h-[52vh] overflow-y-auto overscroll-contain p-1.5">
           <Command.Empty className="px-3 py-8 text-center text-sm text-muted-foreground">
-            {error ? `Vault indisponível — ${error}` : "Nenhuma marca com esse nome."}
+            {error ? `Vault indisponível: ${error}` : "Nenhuma marca com esse nome."}
           </Command.Empty>
 
           {brands.map((b) => (
@@ -244,13 +257,11 @@ export function BrandSelector({ className, shortcut = "b" }: BrandSelectorProps)
           ))}
         </Command.List>
 
-        <div className="flex items-center justify-between border-t border-border px-3.5 py-2 text-[10px] text-muted-foreground">
-          <span className="flex items-center gap-1.5">
-            <Sparkles className="h-3 w-3" />
-            tokens compilados do vault — contraste AA por construção
-          </span>
-          <span className="hidden font-mono sm:block">
-            {highlight ? `npx shadcn add @visant/theme-${highlight}` : "↑↓ percorre · ↵ aplica"}
+        {/* Rodapé de uma linha só: a instrução enquanto nada está em foco, o
+            comando de instalar o tema quando uma marca está. */}
+        <div className="border-t border-border px-3.5 py-2 text-[10px] text-muted-foreground">
+          <span className="block truncate font-mono">
+            {highlight ? `npx shadcn add @visant/theme-${highlight}` : "Setas percorrem, Enter aplica"}
           </span>
         </div>
       </Command.Dialog>

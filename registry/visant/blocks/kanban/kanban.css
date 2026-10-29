@@ -44,14 +44,23 @@
   /* Inerte sem um snap container — o wrapper mobile do KanbanBoard liga
      `snap-x`; no desktop (sm:snap-none) isto não faz nada. */
   scroll-snap-align: start;
-  transition:
-    background-color 150ms ease,
-    box-shadow 150ms ease;
 }
 
+/*
+ * A COLUNA NÃO ACENDE MAIS. Era o defeito central do arraste.
+ *
+ * Antes, passar por cima pintava a coluna inteira de fundo e punha um anel de
+ * 2px em volta dela. Isso responde a pergunta errada: a pessoa já sabe sobre
+ * qual coluna está o cursor — ela quer saber ONDE o card vai parar, entre quais
+ * dois vizinhos. Uma coluna de 500px acesa por causa de um card de 34px é ruído
+ * do tamanho da tela, e é exatamente o que fazia o gesto parecer impreciso.
+ *
+ * O alvo agora é o slot (`.kanban-card.is-drop-slot`, abaixo): o próprio buraco
+ * onde o card vai cair, no tamanho e no lugar exatos. A classe fica como gancho
+ * pra quem quiser marcar a coluna no projeto do cliente, sem pintura por padrão.
+ */
 .kanban-column.is-drop-target {
-  background: var(--kanban-drop-bg);
-  box-shadow: inset 0 0 0 2px var(--kanban-drop-ring);
+  /* sem pintura — ver comentário acima */
 }
 
 .kanban-column-body {
@@ -84,9 +93,138 @@
   }
 }
 
-/* O card fantasma que segue o cursor/dedo. */
+/*
+ * O deslocamento dos vizinhos abrindo espaço, na SSoT da casa.
+ *
+ * O dnd-kit escrevia `transition: transform 200ms` (e `transform linear` nos
+ * vizinhos) direto no atributo style — dois tempos e duas curvas que ninguém
+ * desta casa escolheu, e que nenhum arquivo de tokens alcançava. O KanbanCard
+ * parou de repassar aquele valor pro style inline e o tempo passou a morar
+ * aqui. Curva `in-out` porque isto é movimento DENTRO da tela (um vizinho
+ * andando pro lado), não uma entrada nem uma saída.
+ */
+.kanban-card {
+  transition-property: transform, outline-color, background-color;
+  transition-duration: var(--dur-base, 200ms);
+  transition-timing-function: var(--ease-in-out, cubic-bezier(0.77, 0, 0.175, 1));
+
+  /*
+   * O contorno do slot existe SEMPRE, transparente — e é isso que faz a entrada
+   * e a saída do buraco serem suaves.
+   *
+   * `outline-style` não é animável: enquanto o repouso era `outline: none`, o
+   * tracejado do slot aparecia e sumia em um quadro, no meio de um gesto em que
+   * todo o resto desliza. Declarado aqui com cor transparente, só a COR muda de
+   * estado, e ela transiciona. `outline` não ocupa espaço, então o card parado
+   * continua com a mesma caixa de antes.
+   */
+  border-radius: var(--kanban-card-radius);
+  outline: 1.5px dashed transparent;
+  outline-offset: -1px;
+  background-color: transparent;
+}
+
+/*
+ * O foco de teclado. O `outline` do card é do slot (tracejado do encaixe), então
+ * o anel de foco mora no `box-shadow` — os dois nunca disputam a mesma
+ * propriedade. Sem isto o card focado pelo Tab (o dnd-kit põe `tabindex=0` pra
+ * mover pelo teclado) não mostrava onde o foco estava.
+ */
+.kanban-card:focus-visible {
+  box-shadow: var(--focus, 0 0 0 2px var(--background), 0 0 0 4px var(--brand));
+}
+
+/*
+ * O SLOT: o buraco onde o card vai cair, no lugar exato.
+ *
+ * Enquanto arrasta, o card de origem já vive na posição de destino (o
+ * `onDragOver` move ele ao vivo). Antes ele ficava só com `opacity: .4` — e
+ * como a demo aplicava OUTRO `.4` no conteúdo, o resultado real era 0.16:
+ * um borrão que não se via. Ou seja, o alvo existia e era invisível; daí a
+ * sensação de arrastar sem imã.
+ *
+ * Agora ele se desenha como um encaixe: contorno tracejado no accent da marca e
+ * o conteúdo apagado. `outline`, e não `border`, porque outline não ocupa
+ * espaço — o buraco fica com o tamanho EXATO do card, que é a única forma de o
+ * overlay pousar em cima dele sem sobrar nem faltar pixel.
+ */
+.kanban-card.is-drop-slot,
+.kanban-card.is-landing {
+  outline-color: var(--kanban-drop-ring);
+  background-color: var(--kanban-drop-bg);
+}
+
+.kanban-card > * {
+  transition-property: opacity;
+  transition-duration: var(--dur-fast, 160ms);
+  transition-timing-function: var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+}
+
+.kanban-card.is-drop-slot > *,
+.kanban-card.is-landing > * {
+  opacity: 0.12;
+}
+
+/*
+ * `is-landing` é o conserto do PULO AO SOLTAR, e vale explicar o defeito.
+ *
+ * Ao soltar, o React zerava o `activeId` no mesmo instante — então `isDragging`
+ * virava false, o card de origem voltava a ficar 100% opaco IMEDIATAMENTE, e o
+ * overlay ainda tinha 250ms de viagem pela frente. Por um quarto de segundo
+ * existiam dois cards iguais na tela; quando o overlay finalmente sumia, o
+ * conjunto estalava. Era isso o "motion pulando de flicker".
+ *
+ * A classe é posta pelo `sideEffects` da drop animation (Kanban.tsx), no nó de
+ * destino, e só sai quando o overlay termina de pousar. O buraco continua sendo
+ * buraco durante a viagem inteira, e o conteúdo acende no fim — um fade curto
+ * que entra exatamente onde o overlay sai, em vez de uma troca num frame.
+ */
 .kanban-card-overlay {
   cursor: grabbing;
+  /* Fallback no ponto de uso, e não herança: o overlay é portalizado no `body`
+     (ver a nota do bloco contenedor em Kanban.tsx), então ele não é descendente
+     do `.kanban-root` e não alcança nenhum `--kanban-*` declarado lá. */
+  border-radius: var(--kanban-card-radius, var(--t-card-radius, 0.75rem));
+  /* A sombra é o que diz "este está no ar e os outros no papel". Sem ela o card
+     que viaja tem o mesmo peso visual dos parados e o gesto parece um bug de
+     render. Nada de `scale` aqui: o dnd-kit LÊ o transform computado deste nó
+     pra calcular o pouso, e uma escala nossa entraria na conta e erraria o alvo. */
+  box-shadow:
+    0 1px 2px color-mix(in oklch, black 8%, transparent),
+    0 12px 28px -6px color-mix(in oklch, black 22%, transparent);
+  /* A ENTRADA do gesto. O overlay nascia já com a sombra inteira: o card não era
+     "pego", ele aparecia no ar de um quadro pro outro, e o começo do arraste
+     ficava com a mesma dureza que o fim tinha antes de o pouso ser animado.
+     Agora a sombra CRESCE — o card sobe do papel em vez de já estar em cima.
+
+     Só `box-shadow` anima, e o motivo está no comentário acima: o dnd-kit lê o
+     transform computado DESTE nó pra calcular o pouso, então escala ou
+     deslocamento nossos entrariam na conta e errariam o alvo. */
+  animation: kanban-overlay-erguer var(--dur-fast, 160ms)
+    var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+}
+
+@keyframes kanban-overlay-erguer {
+  from {
+    box-shadow:
+      0 0 0 color-mix(in oklch, black 0%, transparent),
+      0 0 0 -6px color-mix(in oklch, black 0%, transparent);
+  }
+}
+
+/* Quem pediu menos movimento recebe o resultado, não o percurso — o pouso já é
+   zerado no JS (ver `readDropAnimation`), e aqui vai a metade CSS do mesmo
+   acordo, pra quem instalar o bloco num projeto sem o guard global da casa. */
+@media (prefers-reduced-motion: reduce) {
+  .kanban-card {
+    transition-duration: 0.001ms;
+  }
+  .kanban-card > * {
+    transition-duration: 0.001ms;
+  }
+  .kanban-card-overlay {
+    animation-duration: 0.001ms;
+  }
 }
 
 /* Card na seleção múltipla — anel no accent da marca (fallback neutro). O ring

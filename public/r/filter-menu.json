@@ -18,5 +18,11 @@
       "type": "registry:ui"
     }
   ],
+  "categories": [
+    "controles",
+    "filtro",
+    "menu",
+    "facetas"
+  ],
   "type": "registry:ui"
 }

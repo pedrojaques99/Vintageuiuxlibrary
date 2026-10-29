@@ -5,6 +5,7 @@
  *   npm run ship -- -m "mensagem do commit"
  *   npm run ship -- --no-deploy        # só até o push
  *   npm run ship -- --dry              # mostra o que faria, não faz
+ *   npm run ship -- --no-perf          # pula o orçamento de performance pós-deploy
  *
  * A ordem existe por um motivo: os portões rodam ANTES do commit. Publicar um
  * item quebrado é pior que não publicar — o consumidor instala, não funciona, e
@@ -125,6 +126,23 @@ run("node scripts/privacy-check.mjs");
 // ── Portão 2: componente não tem cor própria ─────────────────────────────────
 say("Portão de hex em registry/visant/");
 const HEX = /#[0-9a-fA-F]{6}\b/;
+
+/*
+ * Comentário não é regra de estilo.
+ *
+ * O portão lia o arquivo inteiro, então uma explicação que CITA um hex derrubava
+ * o ship. Caso real: o comentário do `erase-field` documenta que o tema claro
+ * deste repo declara `--muted-foreground` como hex e o escuro como `oklch(...)`,
+ * que é a causa-raiz de um bug de sonda de cor. Apagar o valor apagaria a única
+ * pista que explica o conserto para quem ler depois.
+ *
+ * A regra continua cega para intenção no CÓDIGO, que é onde ela precisa ser
+ * cega: "esta cor aqui pode" é como um portão morre. Ela só para de acusar prosa.
+ */
+const semComentario = (src) =>
+  src
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/(^|[^:])\/\/[^\n]*/g, "$1");
 const walk = (dir) =>
   readdirSync(dir).flatMap((n) => {
     const p = join(dir, n);
@@ -135,7 +153,7 @@ const visantDir = join(ROOT, "registry", "visant");
 const offenders = existsSync(visantDir)
   ? walk(visantDir)
       .filter((p) => /\.(tsx?|jsx?|css)$/.test(p))
-      .filter((p) => HEX.test(readFileSync(p, "utf8")))
+      .filter((p) => HEX.test(semComentario(readFileSync(p, "utf8"))))
       .map((p) => p.slice(ROOT.length + 1))
   : [];
 
@@ -168,14 +186,28 @@ run("node scripts/deps-extract.mjs");
 say("Portão de tipos (tsc)");
 run("npx tsc --noEmit");
 
+// ── Portão 6: a casca ────────────────────────────────────────────────────────
+// Cor e raio da marca, pílula, caixa-alta, contorno e vidro voltam na casca uma
+// classe por vez, e nenhum portão acima vê. Ver PLANO-REDESIGN-CASA.md.
+say("Portão da casca (casa-lint)");
+run("node scripts/casa-lint.mjs");
+
 // ── Builds ───────────────────────────────────────────────────────────────────
 say("Build do registry (shadcn)");
 run("npx shadcn@latest build");
 
-// A tabela de props sai do TypeScript dos itens — regerar aqui é o que impede a
-// documentação de descrever uma API que já mudou.
-say("Extração de props");
-run("node scripts/props-extract.mjs");
+// A tabela de props, os knobs do painel e as fichas em markdown saem todos do
+// TypeScript dos itens. Regerar aqui é o que impede a documentação de descrever
+// uma API que já mudou — e a ordem entre eles mora no `build-docs`.
+say("Documentação derivada (props, knobs, novidades)");
+run("node scripts/build-docs.mjs");
+
+// Preset é o único pedaço da doc escrito à mão. O portão confere cada um contra
+// os controles derivados: prop que sumiu, valor fora da faixa e chip que não
+// muda nada não passam. Sem isto o defeito é invisível — o chip aparece, a
+// pessoa clica, e nada acontece.
+say("Portão dos controles");
+run("node scripts/controls-check.mjs");
 
 say("Build do site (vite)");
 run("npx vite build");
@@ -266,3 +298,21 @@ ${c.green("Publicado.")}
 ${c.dim("O único teste que prova a colheita é instalar num projeto LIMPO —")}
 ${c.dim("no repo de origem o CSS e as deps já estão lá, então ele não prova nada.")}
 `);
+
+/*
+ * Orçamento de performance, depois do deploy (PLANO-PERFORMANCE.md, P7).
+ *
+ * Avisa, não mata, pelo mesmo motivo do DNS: o deploy já aconteceu. Mede
+ * celular e notebook na produção, onde o número é o que quem visita sente, e o
+ * julgamento mora na régua (`perf-catalogo.mjs --teto`), não aqui. `--no-perf`
+ * pula os ~2 minutos.
+ */
+if (!DRY && !has("--no-perf")) {
+  say("Orçamento de performance (produção)");
+  try {
+    execSync(`node scripts/perf-catalogo.mjs --url ${base} --perfil celular --teto`, { cwd: ROOT, stdio: "inherit" });
+    execSync(`node scripts/perf-catalogo.mjs --url ${base} --perfil notebook --teto`, { cwd: ROOT, stdio: "inherit" });
+  } catch {
+    console.log(c.yellow("⚠ a produção saiu do orçamento de performance. O deploy está no ar; veja acima o que passou."));
+  }
+}

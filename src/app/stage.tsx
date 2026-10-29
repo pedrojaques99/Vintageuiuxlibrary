@@ -37,6 +37,35 @@ export function usePageVisible() {
   return visible;
 }
 
+/*
+ * Um observer por `rootMargin`, dividido por todos os palcos.
+ *
+ * Cada ladrilho da grade observa duas distâncias, e com um observer por chamada
+ * eram 268 observers vivos numa página de 134 peças. O navegador agrupa o
+ * cálculo de interseção por observer, então um só para todos faz a mesma conta
+ * uma vez por quadro.
+ */
+const observadores = new Map<string, { io: IntersectionObserver; avisos: Map<Element, (v: boolean) => void> }>();
+
+function observar(el: Element, rootMargin: string, aviso: (v: boolean) => void) {
+  let o = observadores.get(rootMargin);
+  if (!o) {
+    const avisos = new Map<Element, (v: boolean) => void>();
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => avisos.get(e.target)?.(e.isIntersecting)),
+      { rootMargin },
+    );
+    o = { io, avisos };
+    observadores.set(rootMargin, o);
+  }
+  o.avisos.set(el, aviso);
+  o.io.observe(el);
+  return () => {
+    o.avisos.delete(el);
+    o.io.unobserve(el);
+  };
+}
+
 export function useInView<T extends HTMLElement>(rootMargin = "300px") {
   const ref = React.useRef<T | null>(null);
   const [inView, setInView] = React.useState(false);
@@ -48,12 +77,7 @@ export function useInView<T extends HTMLElement>(rootMargin = "300px") {
       setInView(true);
       return;
     }
-    const io = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { rootMargin },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    return observar(el, rootMargin, setInView);
   }, [rootMargin]);
 
   return [ref, inView] as const;
@@ -219,6 +243,106 @@ export function FitStage({
         <StageActiveCtx.Provider value={active && pageVisible}>
           {children}
         </StageActiveCtx.Provider>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Palco de proporção fixa: a peça inteira, centrada numa moldura sempre igual.
+ *
+ * O `FitStage` deixa a ALTURA seguir a peça — cada card do catálogo ficava com
+ * uma altura, e a grade virava um mosaico que só fecha com medição de linha,
+ * `gridRow: span`, degraus de altura e um `ResizeObserver` por card. Funcionava
+ * e nunca pareceu uma vitrine: card de tamanho variável é lista de conteúdo, e
+ * o olho não consegue comparar duas peças que não estão na mesma moldura.
+ *
+ * Aqui a moldura manda. Toda peça recebe a mesma caixa, a escala é a que faz a
+ * peça CABER inteira dentro dela (largura E altura), e o que sobra é respiro —
+ * nunca corte. Uma cena de 1280px vira miniatura, e isso é honesto: quem
+ * precisa ler a peça abre o foco, que a desenha em tamanho real.
+ *
+ * Nunca amplia. Peça de 380px numa caixa de 420 fica em 380, centrada; esticar
+ * pra preencher mostraria a peça num tamanho em que ela não foi desenhada.
+ */
+/**
+ * O miolo da caixa `w×h` do palco — o mesmo na grade e na captura da foto.
+ *
+ * Medido no acervo inteiro (2026-10-19): onze peças apareciam descentradas no
+ * ladrilho, e por três causas que esta caixa resolve de uma vez:
+ *
+ * - **Trilho que pinta além da caixa** (rail, marquee, logo-wall): o conteúdo
+ *   começava na borda esquerda da caixa e escorria até a borda do ladrilho, e a
+ *   peça parecia empurrada pra direita. `overflow: hidden` recorta na caixa,
+ *   e as margens ficam iguais dos dois lados.
+ * - **Demo mais baixa que a caixa** (testimonial-wall, kanban): encostava no
+ *   topo. Coluna flex com `justify-content: center` centra na vertical —
+ *   e, ao contrário de `place-items`, mantém a largura cheia dos filhos e não
+ *   quebra quem usa `h-full` (a altura da caixa é definida).
+ * - **Demo mais alta que a caixa**: recortada embaixo em vez de vazar.
+ *
+ * A captura (`Solo` com `?caixa=1`) usa o MESMO objeto: se os dois divergirem,
+ * a foto sai fora de registro com a peça viva e o crossfade volta a pular.
+ */
+export const CAIXA_DO_PALCO: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  overflow: "hidden",
+};
+
+export function PalcoFixo({
+  w,
+  h,
+  ratio = 4 / 3,
+  active = true,
+  className,
+  style,
+  children,
+}: {
+  w: number;
+  h: number;
+  /** Largura ÷ altura da moldura. Igual para todos os cards da grade. */
+  ratio?: number;
+  active?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}) {
+  const [ref, largura] = useElementWidth<HTMLDivElement>();
+  const pageVisible = usePageVisible();
+
+  const altura = largura / ratio;
+  // Antes da primeira medição a escala é 0 e a peça fica invisível por um quadro
+  // — melhor que aparecer em tamanho natural e encolher na frente de quem olha.
+  const escala = largura ? Math.min(1, largura / w, altura / h) : 0;
+
+  return (
+    <div
+      ref={ref}
+      /* A marca de "aqui tem peça VIVA montada".
+       *
+       * A grade do acervo mostra foto em repouso e monta a peça no hover; sem um
+       * marcador no DOM não há como um teste provar a diferença — foto e peça
+       * desenham coisas parecidas, e "não montou nada" é justamente o invariante
+       * que mantém a página de oitenta e duas peças leve. */
+      data-palco=""
+      className={className}
+      style={{ ...style, aspectRatio: String(ratio), position: "relative", overflow: "hidden" }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          width: w,
+          height: h,
+          transform: `translate(-50%, -50%) scale(${escala})`,
+          willChange: escala === 1 ? undefined : "transform",
+          ...CAIXA_DO_PALCO,
+        }}
+      >
+        <StageActiveCtx.Provider value={active && pageVisible}>{children}</StageActiveCtx.Provider>
       </div>
     </div>
   );

@@ -5,13 +5,325 @@
   "use-media-query": [
     "react"
   ],
-  "use-debounce": [
+  "vintage-slider": [
     "react"
   ],
   "vintage-knob": [
     "react"
   ],
   "vintage-large-knob": [
+    "react"
+  ],
+  "vintage-toggle": [
+    "react"
+  ],
+  "vintage-eq": [
+    "react"
+  ],
+  "vintage-tv-frame": [
+    "react"
+  ],
+  "vintage-soundboard-pad": [
+    "react"
+  ],
+  "vintage-xy-pad": [
+    "react"
+  ],
+  "marquee": [
+    "gsap"
+  ],
+  "logo-wall": [
+    "gsap"
+  ],
+  "reels-rail": [
+    "lucide-react"
+  ],
+  "motion-layer": [
+    "gsap"
+  ],
+  "kanban": [
+    "@air/react-drag-to-select",
+    "@dnd-kit/core",
+    "@dnd-kit/sortable",
+    "@dnd-kit/utilities",
+    "framer-motion"
+  ],
+  "data-table": [
+    "@tanstack/react-table@^8.21.3",
+    "class-variance-authority",
+    "lucide-react",
+    "next",
+    "next-auth",
+    "react"
+  ],
+  "segmented-control": [
+    "lucide-react"
+  ],
+  "inline-edit": [
+    "lucide-react"
+  ],
+  "auth-button": [
+    "lucide-react"
+  ],
+  "profile-form": [
+    "lucide-react"
+  ],
+  "timeline": [
+    "framer-motion"
+  ],
+  "repulsive-hover": [
+    "framer-motion"
+  ],
+  "smooth-scroll-provider": [
+    "gsap",
+    "lenis"
+  ],
+  "working-glyph": [
+    "lucide-react"
+  ],
+  "paper-shuttle": [
+    "framer-motion"
+  ],
+  "drop-overlay": [
+    "lucide-react"
+  ],
+  "brand-selector": [
+    "cmdk",
+    "lucide-react"
+  ],
+  "sfx-bus": [
+    "react"
+  ],
+  "sfx-toggle": [
+    "react"
+  ],
+  "use-pointer-parallax": [
+    "react"
+  ],
+  "fold-motion": [
+    "react"
+  ],
+  "use-local-search": [
+    "react"
+  ],
+  "line-reveal": [
+    "gsap"
+  ],
+  "sim-slider": [
+    "react"
+  ],
+  "magnetic-cta": [
+    "@radix-ui/react-slot"
+  ],
+  "nav-drawer": [
+    "@radix-ui/react-dialog"
+  ],
+  "pinned-scene": [
+    "gsap"
+  ],
+  "photo-frame": [
+    "gsap"
+  ],
+  "photo-split": [
+    "gsap",
+    "react"
+  ],
+  "photo-flip": [
+    "gsap"
+  ],
+  "photo-compare": [
+    "gsap",
+    "lucide-react"
+  ],
+  "book-3d": [
+    "@react-three/drei@^9.122.0",
+    "@react-three/fiber@^8.18.0",
+    "three@^0.170.0"
+  ],
+  "book-shelf": [
+    "@react-three/drei@^9.122.0",
+    "@react-three/fiber@^8.18.0",
+    "three@^0.170.0"
+  ],
+  "carousel-3d": [
+    "@react-three/drei@^9.122.0",
+    "@react-three/fiber@^8.18.0",
+    "lucide-react",
+    "three@^0.170.0"
+  ],
+  "ink-wordmark": [
+    "framer-motion"
+  ],
+  "fog-hero": [
+    "framer-motion",
+    "three@^0.170.0"
+  ],
+  "lathe-object": [
+    "three@^0.170.0"
+  ],
+  "lathe-riso": [
+    "three@^0.170.0"
+  ],
+  "mist-text": [
+    "framer-motion"
+  ],
+  "mist-swap": [
+    "framer-motion"
+  ],
+  "dot-cursor": [
+    "framer-motion"
+  ],
+  "fog-tree": [
+    "@dgreenheck/ez-tree@^1.1.0",
+    "framer-motion",
+    "three@^0.170.0"
+  ],
+  "fog-garden": [
+    "@dgreenheck/ez-tree@^1.1.0",
+    "framer-motion",
+    "three@^0.170.0"
+  ],
+  "activity-heatmap": [
+    "motion"
+  ],
+  "billing-toggle": [
+    "motion"
+  ],
+  "card-stack": [
+    "motion"
+  ],
+  "confirm-morph": [
+    "lucide-react",
+    "motion"
+  ],
+  "elastic-slider": [
+    "motion",
+    "react"
+  ],
+  "expandable-card": [
+    "lucide-react",
+    "motion"
+  ],
+  "expanding-search": [
+    "lucide-react",
+    "motion"
+  ],
+  "gauge": [
+    "motion"
+  ],
+  "hold-to-confirm": [
+    "lucide-react",
+    "motion",
+    "react"
+  ],
+  "icon-morph": [
+    "motion"
+  ],
+  "morph-select": [
+    "lucide-react",
+    "motion"
+  ],
+  "slot-text": [
+    "motion"
+  ],
+  "swipe-actions": [
+    "@radix-ui/react-dropdown-menu",
+    "lucide-react",
+    "motion"
+  ],
+  "text-morph": [
+    "motion"
+  ],
+  "toast-stack": [
+    "lucide-react",
+    "motion"
+  ],
+  "dynamic-island": [
+    "motion"
+  ],
+  "folding-bill": [
+    "motion"
+  ],
+  "liquid-toggle": [
+    "motion"
+  ],
+  "magnetic-select": [
+    "motion"
+  ],
+  "magnify-dock": [
+    "motion",
+    "react"
+  ],
+  "slosh-slider": [
+    "motion",
+    "react"
+  ],
+  "tilt-card": [
+    "motion"
+  ],
+  "eclipse-switch": [
+    "motion"
+  ],
+  "black-hole": [
+    "lucide-react",
+    "motion"
+  ],
+  "countdown": [
+    "motion"
+  ],
+  "cover-flow": [
+    "motion"
+  ],
+  "date-reel": [
+    "motion"
+  ],
+  "eye-tracker": [
+    "motion"
+  ],
+  "orbit-menu": [
+    "lucide-react",
+    "motion"
+  ],
+  "page-curl": [
+    "lucide-react",
+    "motion"
+  ],
+  "pull-to-refresh": [
+    "motion",
+    "react"
+  ],
+  "reactions": [
+    "@radix-ui/react-popover",
+    "lucide-react",
+    "motion"
+  ],
+  "signature-pad": [
+    "lucide-react",
+    "motion"
+  ],
+  "slide-to-confirm": [
+    "lucide-react",
+    "motion",
+    "react"
+  ],
+  "sticker-peel": [
+    "motion"
+  ],
+  "streamgraph": [
+    "motion"
+  ],
+  "time-dial": [
+    "motion"
+  ],
+  "voice-note": [
+    "lucide-react",
+    "motion"
+  ],
+  "wallet-stack": [
+    "lucide-react",
+    "motion"
+  ],
+  "use-debounce": [
     "react"
   ],
   "search-field": [
@@ -32,56 +344,5 @@
   "command-search": [
     "cmdk",
     "react"
-  ],
-  "motion-layer": [
-    "gsap"
-  ],
-  "kanban": [
-    "@air/react-drag-to-select",
-    "@dnd-kit/core",
-    "@dnd-kit/sortable",
-    "@dnd-kit/utilities",
-    "framer-motion"
-  ],
-  "data-table": [
-    "@tanstack/react-table",
-    "class-variance-authority",
-    "lucide-react",
-    "next",
-    "next-auth",
-    "react"
-  ],
-  "segmented-control": [
-    "lucide-react"
-  ],
-  "octahedron-loader": [
-    "@lottiefiles/dotlottie-react",
-    "framer-motion"
-  ],
-  "inline-edit": [
-    "lucide-react"
-  ],
-  "timeline": [
-    "framer-motion"
-  ],
-  "repulsive-hover": [
-    "framer-motion"
-  ],
-  "smooth-scroll-provider": [
-    "gsap",
-    "lenis"
-  ],
-  "working-glyph": [
-    "lucide-react"
-  ],
-  "paper-shuttle": [
-    "framer-motion"
-  ],
-  "generating-tile": [
-    "lucide-react"
-  ],
-  "brand-selector": [
-    "cmdk",
-    "lucide-react"
   ]
 }

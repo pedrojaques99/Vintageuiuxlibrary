@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "icon-morph",
+    "title": "Icon Morph",
+    "type": "ui",
+    "family": "controles",
+    "description": "Ícone de dois estados que vira o outro em vez de trocar, como menu e fechar ou copiar e copiado.",
+    "tags": [
+      "ícone",
+      "botão",
+      "estado",
+      "micro-interação"
+    ],
+    "demoImport": "./demos/icon-morph-demo",
+    "knobs": "IconMorph",
+    "preview": {
+      "w": 340,
+      "h": 120
+    }
+  },
+  "registry": {
+    "name": "icon-morph",
+    "type": "registry:ui",
+    "title": "Icon Morph",
+    "description": "Ícone de dois estados que vira o outro em vez de trocar, como menu e fechar ou copiar e copiado.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/icon-morph.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Icon morph (https://uiarc.dev/components/icon-morph), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

@@ -1,0 +1,590 @@
+{
+  "vintage-theme": {
+    "quando": "Montar app ou ferramenta de áudio com o kit vintage: é o tema escuro de painel que as peças vintage-* pressupõem",
+    "evite": "Projeto de marca de cliente: use o tema da marca via brand-theme e deixe o kit vintage de fora"
+  },
+  "vintage-base": {
+    "quando": "Instalar qualquer peça vintage-*: traz as variáveis de painel, texturas e regras em @layer que elas leem",
+    "evite": "Interface fora do kit vintage: não precisa, as peças @visant leem os tokens do tema da marca"
+  },
+  "use-knob-drag": {
+    "quando": "Criar um controle giratório próprio com arraste vertical, trava de curso e passo fino no shift",
+    "evite": "Se um knob pronto serve, use vintage-knob ou vintage-large-knob; número em campo de editor, scrub-input"
+  },
+  "use-media-query": {
+    "quando": "Trocar layout ou comportamento por breakpoint em React, sem piscar no primeiro render e seguro em SSR",
+    "evite": "Mudança só visual por largura: resolva com media query no CSS, sem hook nem re-render"
+  },
+  "vintage-button": {
+    "quando": "Botão de painel que afunda no clique, em app de áudio, synth ou ferramenta com cara de hardware",
+    "evite": "Botão comum de produto ou landing: use o botão do tema; CTA de conversão, magnetic-cta"
+  },
+  "vintage-slider": {
+    "quando": "Fader de console pra volume ou mix em interface de áudio do kit vintage",
+    "evite": "Slider de formulário ou produto: elastic-slider ou slosh-slider; simular conta, sim-slider"
+  },
+  "vintage-meter": {
+    "quando": "Mostrar nível de sinal ao vivo com ponteiro de VU num painel de áudio",
+    "evite": "Métrica de dashboard ou cota: gauge; número com régua e evidência, measure-bar"
+  },
+  "vintage-knob": {
+    "quando": "Ajustar parâmetro contínuo num painel de áudio onde vários knobs dividem pouco espaço",
+    "evite": "Parâmetro principal com escala e leitura: vintage-large-knob; número em editor, scrub-input"
+  },
+  "vintage-large-knob": {
+    "quando": "Parâmetro principal do painel que pede escala marcada e leitura do valor, como ganho ou master",
+    "evite": "Vários parâmetros secundários lado a lado: use vintage-knob, que ocupa menos"
+  },
+  "vintage-toggle": {
+    "quando": "Ligar e desligar função num painel de áudio, como bypass ou phantom, com cara de chave física",
+    "evite": "Switch de configuração em produto comum: liquid-toggle; tema claro e escuro, eclipse-switch"
+  },
+  "vintage-eq": {
+    "quando": "Equalizador gráfico de bandas fixas em app de áudio, cada banda um fader com a curva desenhada",
+    "evite": "Precisa de sino, Q e frequência livre por banda: use vintage-parametric-eq"
+  },
+  "vintage-parametric-eq": {
+    "quando": "Editar curva de EQ com bandas móveis, Q na roda e bypass, em DAW ou plugin web",
+    "evite": "Ajuste simples de graves e agudos em bandas fixas: vintage-eq resolve com menos curva de aprendizado"
+  },
+  "vintage-led": {
+    "quando": "Indicar estado on/off num painel do kit vintage, como clip, gravando ou ligado",
+    "evite": "Status de sistema em produto comum: store-status ou um ponto do tema, não o LED com halo"
+  },
+  "vintage-command-palette": {
+    "quando": "Paleta de comandos por teclado dentro de app no kit vintage, como lista de efeitos ou presets",
+    "evite": "App de produto comum: use o command menu do tema; só buscar no cabeçalho, expanding-search"
+  },
+  "vintage-tv-frame": {
+    "quando": "Emoldurar vídeo, preview ou tela em interface retrô com cara de tubo CRT",
+    "evite": "Moldura de foto em landing ou editorial: use photo-frame"
+  },
+  "vintage-soundboard-pad": {
+    "quando": "Disparar sample ou efeito sonoro com toque, numa grade de pads tipo MPC",
+    "evite": "Botão de ação comum: vintage-button dentro do kit, ou o botão do tema fora dele"
+  },
+  "vintage-xy-pad": {
+    "quando": "Controlar dois parâmetros juntos num gesto só, como filtro e ressonância, em app de áudio",
+    "evite": "Um parâmetro só: vintage-knob ou vintage-slider"
+  },
+  "vintage-oscilloscope": {
+    "quando": "Desenhar forma de onda ao vivo a partir de um buffer de áudio, em synth ou analisador",
+    "evite": "Áudio gravado com play e busca: voice-note; série de dados no tempo, streamgraph"
+  },
+  "marquee": {
+    "quando": "Faixa infinita de texto ou itens numa landing, com ritmo empurrado ou amarrado ao scroll",
+    "evite": "Faixa de logos de clientes: use logo-wall, que já normaliza tamanho e cor"
+  },
+  "logo-wall": {
+    "quando": "Seção de clientes ou parceiros numa landing, com logos de proporções diferentes normalizados",
+    "evite": "Texto ou itens que não são logo: marquee; prova social com citação, testimonial-wall"
+  },
+  "rail": {
+    "quando": "Trilho horizontal de cards ou produtos com snap, arrasto e teclado, em loja ou catálogo",
+    "evite": "Vídeos verticais: reels-rail; capas em perspectiva, cover-flow; fotos em mosaico, masonry-gallery"
+  },
+  "reels-rail": {
+    "quando": "Trilho de vídeos 9:16 em landing ou loja, tocando um por vez como reels",
+    "evite": "Cards estáticos ou produtos: use rail; vídeo de abertura em tela cheia, fog-hero"
+  },
+  "plate": {
+    "quando": "Assentar foto de produto recortada sobre branco num fundo colorido de loja, sem o retângulo branco",
+    "evite": "Foto com fundo próprio ou editorial: photo-frame; item sem foto nenhuma, cover-art"
+  },
+  "chip": {
+    "quando": "Filtro de loja ou catálogo com contagem por faceta, apagando a que não tem resultado",
+    "evite": "Escolha única entre poucas opções: segmented-control; tag só de leitura, badge do tema"
+  },
+  "sticky-filterbar": {
+    "quando": "Barra de filtros que gruda sob o cabeçalho numa listagem longa de loja ou catálogo",
+    "evite": "Navegação principal do app: side-nav; poucos filtros no topo de página curta, chip sem grudar"
+  },
+  "store-status": {
+    "quando": "Mostrar aberto ou fechado de loja física calculado no fuso dela, em site de varejo ou restaurante",
+    "evite": "Status de processo ou sistema: status-ticker; contagem até um horário, countdown"
+  },
+  "measure-picker": {
+    "quando": "Loja que recomenda tamanho ou modelo a partir de uma medida que o cliente sabe, como a altura",
+    "evite": "Valor livre sem recomendação: elastic-slider; projeção de ROI com premissa, sim-slider"
+  },
+  "motion-layer": {
+    "quando": "Ligar reveal, parallax e magnético por data-attribute em tema Shopify ou página montada em builder",
+    "evite": "App React com componentes: use fold-motion, line-reveal e magnetic-cta direto, sem camada global"
+  },
+  "kanban": {
+    "quando": "Board de tarefas ou pipeline com arrastar entre colunas e multi-seleção, em ferramenta interna",
+    "evite": "Lista densa pra ordenar e editar: data-table; triagem rápida no celular, swipe-actions"
+  },
+  "data-table": {
+    "quando": "Tabela densa de admin ou dashboard com ordenação, seleção e edição inline, em app Next",
+    "evite": "Fluxo por etapas visível: kanban; fora de Next ainda depende de next-auth, adapte antes de usar"
+  },
+  "segmented-control": {
+    "quando": "Alternar entre 2 a 5 opções que cabem na tela, como lista ou grade, ou o período de um gráfico",
+    "evite": "Mensal e anual com desconto: billing-toggle; muitas opções, morph-select; liga e desliga, liquid-toggle"
+  },
+  "inline-edit": {
+    "quando": "Editar nome ou campo curto onde ele aparece, em tabela, card ou cabeçalho de página",
+    "evite": "Vários campos com validação: profile-form; número arrastável, scrub-input"
+  },
+  "auth-button": {
+    "quando": "Canto da conta no cabeçalho do app: entrar, carregando e avatar com menu, sem pular de tamanho",
+    "evite": "Tela de cadastro ou edição dos dados da conta: profile-form"
+  },
+  "profile-form": {
+    "quando": "Página de configurações da conta com foto, nome e e-mail verificado, erro no próprio campo",
+    "evite": "Editar um campo solto no lugar: inline-edit; só o acesso à conta no cabeçalho, auth-button"
+  },
+  "timeline": {
+    "quando": "Changelog, história da empresa ou processo longo com progresso amarrado ao scroll",
+    "evite": "Poucos passos de como funciona: step-cards; arte presa avançando por passos, pinned-scene"
+  },
+  "assignee-stack": {
+    "quando": "Mostrar responsáveis de tarefa ou projeto em pilha de avatares com excedente contado",
+    "evite": "Lista de pessoas com detalhe e ação: lista do tema; contagem de reações, reactions"
+  },
+  "repulsive-hover": {
+    "quando": "Decoração viva de hero que foge do cursor, como selo ou peça de colagem",
+    "evite": "Qualquer coisa clicável ou formulário; pra atrair o cursor pro botão, use magnetic-cta"
+  },
+  "smooth-scroll-provider": {
+    "quando": "Landing ou editorial com rolagem suave Lenis sincronizada ao GSAP ScrollTrigger",
+    "evite": "App de produto, dashboard ou formulário longo: deixe a rolagem nativa, scroll suave atrapalha ali"
+  },
+  "glitch-chars": {
+    "quando": "Textura de caracteres trocando ou palavra decodificando, em hero tech, terminal ou espera curta",
+    "evite": "Título que precisa ser lido de primeira: line-reveal ou mist-text; rótulo trocando, text-morph"
+  },
+  "status-ticker": {
+    "quando": "Espera longa de IA ou processamento, segurando a pessoa com texto, etapas ou cronômetro",
+    "evite": "Mover arquivo: paper-shuttle; layout carregando, skeleton-rail; espera curta ao lado do rótulo, working-glyph"
+  },
+  "turbulence-field": {
+    "quando": "Fundo de névoa leve em tile de espera, inclusive vários na mesma grade, sem WebGL",
+    "evite": "Fundo de hero que reage ao ponteiro: spring-dots ou um shader-*; malha parada, grid-dots"
+  },
+  "working-glyph": {
+    "quando": "Ícone pequeno mostrando que algo trabalha, ao lado de rótulo ou botão, numa espera curta",
+    "evite": "Espera longa que pede explicação: status-ticker; transferência de arquivo, paper-shuttle"
+  },
+  "paper-shuttle": {
+    "quando": "Espera de operação que move dados: importar, exportar, converter ou sincronizar",
+    "evite": "Espera de IA com etapas: status-ticker; conteúdo da tela carregando, skeleton-rail"
+  },
+  "masonry-gallery": {
+    "quando": "Galeria de fotos de alturas diferentes com rolagem infinita, sem reordenar o que já carregou",
+    "evite": "Abrir foto em tela cheia: photo-flip; trilho horizontal, rail; poucas capas em destaque, cover-flow"
+  },
+  "scrub-input": {
+    "quando": "Campo numérico arrastável em editor ou ferramenta de design, como tamanho, opacidade ou ângulo",
+    "evite": "Valor numa faixa visível pro público geral: elastic-slider ou slosh-slider"
+  },
+  "grid-dots": {
+    "quando": "Fundo parado de malha de pontos que dá profundidade sem competir com o conteúdo",
+    "evite": "Fundo que reage ao ponteiro: spring-dots; textura animada, turbulence-field ou shader-voronoi"
+  },
+  "drop-overlay": {
+    "quando": "Área de upload que mostra a camada de soltar quando um arquivo é arrastado por cima",
+    "evite": "Upload só por botão, sem arrasto; a área vazia antes do primeiro upload, empty-state"
+  },
+  "brand-theme": {
+    "quando": "App que troca de marca em runtime, como multi-cliente ou white-label, aplicando o tema compilado",
+    "evite": "Projeto de uma marca só: importe o CSS do tema da marca direto, sem provider"
+  },
+  "brand-selector": {
+    "quando": "Ferramenta interna ou vitrine multi-marca em que a pessoa escolhe a marca e vê o tema aplicado",
+    "evite": "Site de uma marca só; pra alternar claro e escuro, use eclipse-switch"
+  },
+  "section-intro": {
+    "quando": "Abrir uma dobra de landing com rótulo, título grande e linha de contexto",
+    "evite": "Título de hero animado: line-reveal ou mist-text; chamada com ação de conversão, cta-surface"
+  },
+  "cta-surface": {
+    "quando": "Bloco de conversão no fim de dobra ou página: barra, painel ou card com a ação principal",
+    "evite": "Só o botão ganhar presença: magnetic-cta; abertura de seção sem ação, section-intro"
+  },
+  "showcase-card": {
+    "quando": "Card de serviço ou pacote com mídia, título clicável e lista do que está incluso, em site de agência",
+    "evite": "Produto com cara de objeto: spine-card; card que abre detalhe no lugar, expandable-card"
+  },
+  "step-cards": {
+    "quando": "Seção de como funciona em passos numerados com arte por passo, em landing ou onboarding",
+    "evite": "História longa ou changelog: timeline; passos com a arte presa no scroll, pinned-scene"
+  },
+  "testimonial-wall": {
+    "quando": "Parede de prova social com citação, número, retrato e vídeo misturados numa landing",
+    "evite": "Um depoimento forte só: quote-block; logos de clientes, logo-wall"
+  },
+  "quote-block": {
+    "quando": "Um depoimento só em tamanho de dobra, citação em corpo de manchete e assinatura depois",
+    "evite": "Vários depoimentos de tipos diferentes: testimonial-wall; pilha arrastável, card-stack"
+  },
+  "erase-field": {
+    "quando": "Hero ou CTA com fundo em canvas que a pessoa raspa pra revelar a luz, convidando a mexer",
+    "evite": "Malha que só reage ao ponteiro: spring-dots; fundo calmo atrás de texto longo, grid-dots"
+  },
+  "spring-dots": {
+    "quando": "Fundo de hero com malha de pontos que o ponteiro empurra e acende na cor da marca",
+    "evite": "Fundo parado: grid-dots; revelar raspando, erase-field; textura mais densa em WebGL, shader-voronoi"
+  },
+  "sfx-bus": {
+    "quando": "Dar som de clique analógico a botões, knobs e alavancas sem arquivo de áudio, em site com tato",
+    "evite": "Produto de uso diário ou ambiente de trabalho: sem som; e nunca sem sfx-toggle pra desligar"
+  },
+  "sfx-toggle": {
+    "quando": "Botão de ligar e desligar o som da interface, obrigatório quando o site usa sfx-bus",
+    "evite": "Site sem som de interface; mute de vídeo ou música fica no controle do próprio player"
+  },
+  "count-up": {
+    "quando": "Estatística de landing que apura até o valor ao entrar na tela, como 120 projetos entregues",
+    "evite": "Número que muda ao vivo: slot-text; contagem até data, countdown; número com régua, measure-bar"
+  },
+  "use-pointer-parallax": {
+    "quando": "Hero de colagem em que várias camadas se movem com o ponteiro, profundidade decidida no CSS",
+    "evite": "Luz por card numa grade: gleam; um card que inclina sozinho, tilt-card"
+  },
+  "fold-motion": {
+    "quando": "Dar hierarquia às entradas de uma landing, cada dobra com seu tipo de entrada ao rolar",
+    "evite": "Só um título: line-reveal ou mist-text; app ou dashboard não pede entrada por scroll"
+  },
+  "measure-bar": {
+    "quando": "Mostrar métrica com régua, qualificador e evidência, em landing de prova ou relatório",
+    "evite": "Medidor de cota em arco: gauge; número que só apura ao entrar, count-up"
+  },
+  "spine-card": {
+    "quando": "Card de livro, disco ou produto que lê como objeto na estante, com lombada e tombo no hover",
+    "evite": "Livro em 3D de verdade: book-3d; card de serviço com lista, showcase-card"
+  },
+  "cover-art": {
+    "quando": "Gerar capa de livro, app ou placa para item sem imagem, a partir do nome e da cor da marca",
+    "evite": "Item com foto real: plate ou photo-frame; imagem ainda carregando, skeleton-rail"
+  },
+  "empty-state": {
+    "quando": "Lista, painel ou busca sem conteúdo ainda: frase do que vai aparecer ali e no máximo uma ação",
+    "evite": "Conteúdo carregando: skeleton-rail; vazio com personalidade, ponha eye-tracker no slot da arte"
+  },
+  "skeleton-rail": {
+    "quando": "Placeholder com a medida exata de cards, listas ou mídia enquanto o conteúdo carrega",
+    "evite": "Lista que voltou vazia: empty-state; operação longa em segundo plano, status-ticker"
+  },
+  "use-local-search": {
+    "quando": "Filtrar lista em memória tolerando acento e termos em qualquer ordem, como catálogo ou menu",
+    "evite": "Base grande ou paginada no servidor: busque na API; o campo visual da busca, expanding-search"
+  },
+  "line-reveal": {
+    "quando": "Título de hero ou dobra que sobe linha por linha de dentro do próprio corte",
+    "evite": "Texto saindo do desfoque por palavra: mist-text; rótulo curto trocando, text-morph"
+  },
+  "gleam": {
+    "quando": "Grade de cards em que cada um acende luz sob o cursor e inclina leve, em vitrine ou pricing",
+    "evite": "Card único que inclina forte em 3D: tilt-card; profundidade da cena inteira, use-pointer-parallax"
+  },
+  "sim-slider": {
+    "quando": "Simulador de ROI ou economia numa landing: o visitante move o valor e vê a projeção com premissa",
+    "evite": "Escolher valor sem projeção: elastic-slider; recomendar produto por medida, measure-picker"
+  },
+  "magnetic-cta": {
+    "quando": "Botão principal de landing que vem buscar o ponteiro, numa dobra de conversão com espaço em volta",
+    "evite": "Botão em formulário ou lista densa: botão do tema; bloco completo de conversão, cta-surface"
+  },
+  "nav-drawer": {
+    "quando": "Menu mobile de site ou landing, em gaveta lateral ou página inteira com imagem",
+    "evite": "Navegação lateral fixa de app no desktop: side-nav; atalhos de ícone, magnify-dock"
+  },
+  "side-nav": {
+    "quando": "Navegação lateral de app ou dashboard, colapsável por atalho e com a rota ativa marcada",
+    "evite": "Menu de site no celular: nav-drawer; poucas ações num botão flutuante, orbit-menu"
+  },
+  "pinned-scene": {
+    "quando": "Dobra de storytelling que prende a arte e avança em passos enquanto o texto rola",
+    "evite": "Passos sem prender a tela: step-cards; caminhada 3D na névoa, fog-garden"
+  },
+  "photo-frame": {
+    "quando": "Foto editorial ou de case que se revela por máscara ao entrar na tela, com proporção fixa",
+    "evite": "Foto ao lado de texto alternando lados: photo-split; foto de produto recortada, plate"
+  },
+  "photo-split": {
+    "quando": "Seções alternadas de foto e texto em landing ou case, invertendo o lado a cada dobra",
+    "evite": "Foto sozinha com reveal: photo-frame; arte presa avançando em passos, pinned-scene"
+  },
+  "photo-flip": {
+    "quando": "Abrir foto da grade em tela cheia com transição contínua, como lightbox de portfólio",
+    "evite": "Só exibir a grade: masonry-gallery; comparar duas versões, photo-compare"
+  },
+  "photo-compare": {
+    "quando": "Comparar antes e depois de rebrand, retoque ou obra com cortina arrastável",
+    "evite": "Fotos diferentes em sequência: mist-swap; uma foto em tela cheia, photo-flip"
+  },
+  "book-3d": {
+    "quando": "Mostrar livro, revista ou catálogo como objeto 3D com capa, lombada e espessura reais",
+    "evite": "Muitos itens numa grade leve: spine-card ou book-shelf; item sem arte de capa, cover-art"
+  },
+  "book-shelf": {
+    "quando": "Catálogo de livros ou produtos com silhueta, soltos como numa estante, rótulo só no hover",
+    "evite": "Item que precisa de moldura e texto visível: showcase-card; objeto único em 3D, book-3d"
+  },
+  "carousel-3d": {
+    "quando": "Vitrine de poucas capas num carrossel circular em WebGL, como portfólio curto",
+    "evite": "Está aposentado da listagem: prefira cover-flow, mais leve; muitos itens, rail"
+  },
+  "css-color": {
+    "quando": "Pintar shader, canvas ou WebGL com a cor dos tokens da marca e reagir à troca de tema",
+    "evite": "Cor só no CSS ou Tailwind: use var(--token) direto, sem converter"
+  },
+  "ink-wordmark": {
+    "quando": "Assinatura grande de rodapé ou abertura que condensa da fumaça ao entrar na tela",
+    "evite": "Título de seção que precisa ler rápido: line-reveal ou mist-text; logo oficial, use o SVG da marca"
+  },
+  "fog-hero": {
+    "quando": "Hero de tela cheia com névoa em shader, vídeo P&B e saída em desfoque, pra abertura de marca",
+    "evite": "Hero leve ou de produto: section-intro com spring-dots; fundo abstrato sem vídeo, shader-neon"
+  },
+  "lathe-object": {
+    "quando": "Mostrar produto de revolução, como frasco, vela ou pote, em 3D que gira e orbita no arrasto",
+    "evite": "Livro ou catálogo: book-3d; produto com foto real, plate ou tilt-card"
+  },
+  "mist-text": {
+    "quando": "Texto que sai da névoa por palavra ou letra, uma vez ou acompanhando a rolagem",
+    "evite": "Título que sobe linha por linha: line-reveal; troca de palavra em rótulo, text-morph"
+  },
+  "mist-swap": {
+    "quando": "Slideshow atmosférico de fotos que se trocam em névoa, em hero ou dobra editorial",
+    "evite": "Galeria que a pessoa navega: rail ou cover-flow; antes e depois, photo-compare"
+  },
+  "dot-cursor": {
+    "quando": "Cursor customizado mínimo em site editorial ou portfólio, abrindo anel sobre links",
+    "evite": "App de produto ou formulário: cursor do sistema; efeito de calor sob o cursor, heat-word"
+  },
+  "mist-dialog": {
+    "quando": "Modal de vitrine ou editorial que entra em névoa, como detalhe de projeto ou contato",
+    "evite": "Confirmar ação destrutiva: confirm-morph; aviso passageiro, toast-stack"
+  },
+  "fog-tree": {
+    "quando": "Abertura ou dobra de marca com uma árvore 3D na névoa em duotone que acompanha o scroll",
+    "evite": "Percurso com várias paradas de texto: fog-garden; hero com vídeo, fog-hero"
+  },
+  "fog-garden": {
+    "quando": "Storytelling longo de marca: caminhada 3D na névoa com paradas de texto presas ao scroll",
+    "evite": "Uma imagem só de atmosfera: fog-tree; passos sem 3D, pinned-scene"
+  },
+  "activity-heatmap": {
+    "quando": "Mostrar ritmo diário de atividade ao longo de meses, como entregas ou hábitos, em perfil ou dashboard",
+    "evite": "Mistura de categorias no tempo: streamgraph; um valor só de cota, gauge"
+  },
+  "billing-toggle": {
+    "quando": "Alternar mensal e anual numa página de preços, com selo de desconto e preço rolando junto",
+    "evite": "Alternar opções que não são cobrança: segmented-control"
+  },
+  "card-stack": {
+    "quando": "Pilha de cards arrastáveis pra passar depoimentos ou dicas um a um, em landing ou onboarding",
+    "evite": "Cartões de pagamento com saldo: wallet-stack; depoimentos todos à vista, testimonial-wall"
+  },
+  "confirm-morph": {
+    "quando": "Apagar item com confirmação no próprio botão, andamento e desfazer, quando a ação é reversível",
+    "evite": "Ação irreversível e cara: hold-to-confirm; pagamento ou envio no celular, slide-to-confirm"
+  },
+  "elastic-slider": {
+    "quando": "Slider de formulário ou configuração que estica além do limite e volta com mola",
+    "evite": "Valor com peso visual: slosh-slider; projeção com premissa, sim-slider; editor, scrub-input"
+  },
+  "expandable-card": {
+    "quando": "Card de resumo que abre no lugar pra mostrar detalhe, como pedido, plano ou tarefa",
+    "evite": "Detalhe que pede foco total: mist-dialog; recibo dobrável com total à vista, folding-bill"
+  },
+  "expanding-search": {
+    "quando": "Busca no cabeçalho ou barra de ferramentas que fica num ícone até alguém ir buscar",
+    "evite": "Busca é a ação principal da tela: campo sempre aberto; lógica de filtro local, use-local-search"
+  },
+  "gauge": {
+    "quando": "Medidor de cota ou uso em dashboard, com o nome da faixa trocando ao cruzar o limite",
+    "evite": "Métrica com régua e evidência: measure-bar; nível de áudio ao vivo, vintage-meter"
+  },
+  "hold-to-confirm": {
+    "quando": "Ação irreversível e cara, como excluir conta ou projeto, exigindo segurar o botão",
+    "evite": "Ação reversível e frequente: confirm-morph; pagamento por arrasto no celular, slide-to-confirm"
+  },
+  "icon-morph": {
+    "quando": "Botão de ícone com dois estados que viram um no outro, como menu e fechar ou copiar e copiado",
+    "evite": "Rótulo de texto trocando: text-morph; tema claro e escuro, eclipse-switch"
+  },
+  "morph-select": {
+    "quando": "Select de formulário em que o gatilho cresce e vira a lista, pra listas médias de opções",
+    "evite": "Até 5 opções visíveis: segmented-control; escolha lúdica entre poucas, magnetic-select"
+  },
+  "slot-text": {
+    "quando": "Preço, placar ou contador que muda ao vivo girando como rolo de caça-níquel",
+    "evite": "Número que só apura ao entrar na tela: count-up; palavra de botão trocando, text-morph"
+  },
+  "swipe-actions": {
+    "quando": "Lista de triagem no celular, como inbox ou tarefas, arrastando a linha pra revelar ações",
+    "evite": "Apagar vários de uma vez: black-hole; tabela no desktop, data-table"
+  },
+  "text-morph": {
+    "quando": "Rótulo de botão ou status que vira outra palavra letra por letra, como Salvar pra Salvo",
+    "evite": "Número mudando: slot-text; título de seção entrando, line-reveal ou mist-text"
+  },
+  "toast-stack": {
+    "quando": "Avisos passageiros empilhados no canto, com o carregando que vira feito no lugar",
+    "evite": "Atividade em curso com controles: dynamic-island; erro de formulário vai no próprio campo"
+  },
+  "dynamic-island": {
+    "quando": "Pílula de atividade em curso, como timer, player ou chamada, que cresce com controles ao tocar",
+    "evite": "Aviso que some sozinho: toast-stack; espera de IA com etapas, status-ticker"
+  },
+  "folding-bill": {
+    "quando": "Recibo ou resumo de pedido que dobra em três como papel, com o total sempre à vista",
+    "evite": "Card genérico que expande: expandable-card; lista longa de itens, tabela do tema"
+  },
+  "heat-word": {
+    "quando": "Palavra de destaque ou grade de gotas que derrete num mapa de calor sob o cursor, em hero",
+    "evite": "Fundo de pontos que reage: spring-dots; título que precisa ler animado, line-reveal"
+  },
+  "liquid-toggle": {
+    "quando": "Switch de liga e desliga em configuração ou formulário, com a bolinha escorrendo como gota",
+    "evite": "Tema claro e escuro: eclipse-switch; mais de duas opções, segmented-control"
+  },
+  "magnetic-select": {
+    "quando": "Escolha única lúdica entre poucas opções redondas, como humor, cor ou objetivo no onboarding",
+    "evite": "Formulário sério ou muitas opções: morph-select; opções em linha, segmented-control"
+  },
+  "magnify-dock": {
+    "quando": "Barra de atalhos de ícones que amplia em onda, em portfólio ou app de criação no desktop",
+    "evite": "Navegação principal de app: side-nav; mobile, nav-drawer; poucas ações num botão, orbit-menu"
+  },
+  "slosh-slider": {
+    "quando": "Slider de volume ou intensidade em que o preenchimento tem peso e balança ao soltar",
+    "evite": "Formulário neutro: elastic-slider; simulação com projeção, sim-slider; console de áudio, vintage-slider"
+  },
+  "tilt-card": {
+    "quando": "Card de foto, capa ou cartão de membro que inclina forte em 3D com brilho sob o mouse",
+    "evite": "Grade de muitos cards com luz sutil: gleam; objeto 3D de verdade, book-3d ou lathe-object"
+  },
+  "eclipse-switch": {
+    "quando": "Chave de tema claro e escuro no cabeçalho, com a lua cobrindo o sol",
+    "evite": "Switch de configuração comum: liquid-toggle; trocar de marca, brand-selector"
+  },
+  "black-hole": {
+    "quando": "Apagar em lote numa lista ou inbox, com as linhas sugadas e o desfazer devolvendo tudo",
+    "evite": "Apagar um item só: confirm-morph; triagem linha a linha no celular, swipe-actions"
+  },
+  "countdown": {
+    "quando": "Contagem até lançamento, evento ou prazo que vira aviso de ao vivo quando chega a zero",
+    "evite": "Número que só apura: count-up; horário de loja aberta, store-status"
+  },
+  "cover-flow": {
+    "quando": "Galeria de capas em perspectiva com arrasto, pra portfólio, discos ou livros em destaque",
+    "evite": "Muitos itens pra navegar: rail; fotos em mosaico, masonry-gallery"
+  },
+  "date-reel": {
+    "quando": "Escolher data em rolos de dia, mês e ano, como nascimento ou agendamento no celular",
+    "evite": "Escolher hora: time-dial; intervalo de datas ou mês inteiro, use o date picker do tema"
+  },
+  "eye-tracker": {
+    "quando": "Avatar de agente ou assistente de IA: cabeçalho e estado vazio de chat, onboarding guiado por bot, tela de espera enquanto o agente pensa",
+    "evite": "Interface séria ou densa, foto de perfil de pessoa (use avatar) e mais de um bot vivo na mesma tela"
+  },
+  "orbit-menu": {
+    "quando": "Botão flutuante que abre poucas ações em arco, escolhidas arrastando o dedo, em app mobile",
+    "evite": "Navegação principal: side-nav ou nav-drawer; barra de atalhos no desktop, magnify-dock"
+  },
+  "page-curl": {
+    "quando": "Folhear revista, catálogo ou lookbook puxando o canto da página, em editorial",
+    "evite": "Galeria de fotos: masonry-gallery ou cover-flow; livro como objeto 3D, book-3d"
+  },
+  "pull-to-refresh": {
+    "quando": "Atualizar feed ou widget no celular puxando pra baixo, com a marca girando enquanto carrega",
+    "evite": "Desktop ou conteúdo que atualiza sozinho: botão de atualizar; carga inicial, skeleton-rail"
+  },
+  "reactions": {
+    "quando": "Barra de reações em post, comentário ou mensagem, com a contagem rolando",
+    "evite": "Avaliação formal de produto: estrelas ou nota; quem está numa tarefa, assignee-stack"
+  },
+  "signature-pad": {
+    "quando": "Coletar assinatura à mão em contrato, aceite ou comprovante de entrega, com desfazer e limpar",
+    "evite": "Aceite simples de termos: checkbox do tema; confirmar pagamento, slide-to-confirm"
+  },
+  "slide-to-confirm": {
+    "quando": "Confirmar pagamento, envio ou check-in no celular arrastando até o fim, sem toque acidental",
+    "evite": "Apagar com desfazer: confirm-morph; ação destrutiva no desktop, hold-to-confirm"
+  },
+  "sticker-peel": {
+    "quando": "Adesivo decorativo de marca que levanta o canto e descola, em landing ou página de campanha",
+    "evite": "Conteúdo que precisa ficar parado e legível; card que inclina com o mouse, tilt-card"
+  },
+  "streamgraph": {
+    "quando": "Mostrar como a mistura de várias categorias muda no tempo, em dashboard ou relatório",
+    "evite": "Ritmo diário de uma atividade: activity-heatmap; valor único de cota, gauge"
+  },
+  "time-dial": {
+    "quando": "Escolher hora num mostrador de 24h com o expediente marcado, em agenda ou conversão de fuso",
+    "evite": "Escolher data: date-reel; mostrar se a loja está aberta agora, store-status"
+  },
+  "voice-note": {
+    "quando": "Player de nota de voz em chat ou mensagem, com onda, play e busca arrastando",
+    "evite": "Sinal de áudio ao vivo: vintage-oscilloscope; vídeo vertical, reels-rail"
+  },
+  "wallet-stack": {
+    "quando": "Carteira de cartões em app fintech: um sobe com saldo e movimento, os outros recolhem",
+    "evite": "Pilha de depoimentos ou dicas: card-stack; recibo de pedido, folding-bill"
+  },
+  "shader-ascii": {
+    "quando": "Redesenhar foto em caracteres na cor da marca, em hero tech ou capa de campanha",
+    "evite": "Imagem com cara de impressão: shader-halftone ou shader-riso; fundo sem imagem, shader-neon"
+  },
+  "shader-halftone": {
+    "quando": "Foto com retícula de uma tinta e lupa sob o cursor, em editorial ou campanha com cara de jornal",
+    "evite": "Duas tintas com grão: shader-riso; caracteres em vez de pontos, shader-ascii"
+  },
+  "shader-neon": {
+    "quando": "Fundo abstrato de hero com fios de luz ondulando na cor da marca",
+    "evite": "Espiral com profundidade: shader-tunnel; textura orgânica, shader-voronoi; leve sem WebGL, spring-dots"
+  },
+  "shader-riso": {
+    "quando": "Foto impressa em duas tintas de risografia com grão, em editorial, zine ou evento",
+    "evite": "Uma tinta só com retícula: shader-halftone; caracteres, shader-ascii"
+  },
+  "shader-tunnel": {
+    "quando": "Fundo hipnótico de túnel em espiral pra abertura de evento, lançamento ou música",
+    "evite": "Fundo calmo atrás de texto: shader-neon ou grid-dots; textura em células, shader-voronoi"
+  },
+  "shader-voronoi": {
+    "quando": "Fundo de textura orgânica em células que derivam e reagem ao ponteiro, na cor da marca",
+    "evite": "Fundo leve sem WebGL: spring-dots ou turbulence-field; ondas de luz, shader-neon"
+  },
+  "anatomia": {
+    "quando": "Montar figura didática interativa com pinos e passo a passo; é a base de toda anatomia-*",
+    "evite": "Diagrama estático ou explicação sem interação: imagem ou SVG simples"
+  },
+  "anatomia-como-sobe": {
+    "quando": "Explicar em aula o que vai pro GitHub, o que o .gitignore segura e quando a Vercel publica",
+    "evite": "Falar de chave de API e conector: anatomia-tomadas; de permissão no terminal, anatomia-permissao"
+  },
+  "anatomia-tomadas": {
+    "quando": "Explicar a diferença entre conector do claude.ai e chave de API no .env, em aula ou onboarding",
+    "evite": "Falar de permissão de arquivos: anatomia-permissao; de publicar código, anatomia-como-sobe"
+  },
+  "anatomia-fichario": {
+    "quando": "Explicar como o agente lê só as etiquetas das skills e abre a receita que casa com o pedido",
+    "evite": "Falar de memória do agente: anatomia-memoria; de contexto e tokens, anatomia-tokens"
+  },
+  "anatomia-memoria": {
+    "quando": "Explicar o que o agente esquece ao fechar a conversa e o que fica gravado no CLAUDE.md",
+    "evite": "Falar de custo e contexto da conversa: anatomia-tokens; de skills, anatomia-fichario"
+  },
+  "anatomia-tokens": {
+    "quando": "Explicar que o agente relê a conversa toda a cada volta e por que um print economiza",
+    "evite": "Falar do que persiste entre sessões: anatomia-memoria; de automatizar repetição, anatomia-script"
+  },
+  "anatomia-script": {
+    "quando": "Explicar quando um pedido que se repete deve virar script que roda sem IA",
+    "evite": "Falar de custo por mensagem: anatomia-tokens; de skills e receitas, anatomia-fichario"
+  },
+  "anatomia-permissao": {
+    "quando": "Explicar a caixa de permissão do terminal e o que o don't ask again deixa gravado",
+    "evite": "Falar de chave de API e conector: anatomia-tomadas; de memória, anatomia-memoria"
+  },
+  "agent-rules": {
+    "quando": "Projeto em que um agente de IA escreve a UI: instala as regras que fazem ele buscar a peça @visant certa antes de criar",
+    "evite": "Projeto sem agente de IA escrevendo código; quem escolhe à mão consulta o catálogo direto"
+  }
+}

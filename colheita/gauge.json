@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "gauge",
+    "title": "Gauge",
+    "type": "ui",
+    "family": "dados",
+    "description": "Medidor em arco com ponteiro que enche quando entra em vista e troca o nome da faixa na hora em que a contagem cruza o limite.",
+    "tags": [
+      "dados",
+      "medidor",
+      "cota",
+      "grafico",
+      "meter"
+    ],
+    "demoImport": "./demos/gauge-demo",
+    "knobs": "Gauge",
+    "preview": {
+      "w": 340,
+      "h": 250
+    }
+  },
+  "registry": {
+    "name": "gauge",
+    "type": "registry:ui",
+    "title": "Gauge",
+    "description": "Medidor em arco com ponteiro que enche quando entra em vista e troca o nome da faixa na hora em que a contagem cruza o limite.",
+    "dependencies": [
+      "motion"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/gauge.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": "Gauge (https://uiarc.dev/components/gauge), Copyright (c) 2026 Elia Kuratli, MIT",
+  "inspiracao": null
+}

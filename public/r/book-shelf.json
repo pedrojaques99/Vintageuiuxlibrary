@@ -1,0 +1,54 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "book-shelf",
+  "title": "Book Shelf",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Estante em vez de vitrine: os itens soltos, sem moldura, e o rótulo só no hover — porque o objeto já tem silhueta e a moldura passa a competir com ela.",
+  "registryDependencies": [
+    "utils",
+    "@visant/book-3d"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/book-shelf.tsx",
+      "content": "\"use client\";\n\n/**\n * Book Shelf — os itens como objetos soltos, sem card.\n *\n * ┌─ POR QUE SEM MOLDURA ─────────────────────────────────────────────────────┐\n * │ O card existe pra dar borda a uma imagem que não tem silhueta própria: uma │\n * │ thumb 16:9 sem moldura sangra no fundo e o trilho vira mancha. O livro 3D  │\n * │ TEM silhueta — lombada, espessura, quina iluminada — e a moldura passa a   │\n * │ competir com ela. Duas caixas em volta do mesmo objeto, e a de fora, que   │\n * │ não significa nada, é a que o olho vê primeiro.                            │\n * │                                                                            │\n * │ É a diferença entre vitrine e ESTANTE. Vitrine emoldura; estante mostra o  │\n * │ objeto e some.                                                             │\n * └────────────────────────────────────────────────────────────────────────────┘\n *\n * O rótulo entra só no hover pela mesma razão: com o nome sempre impresso\n * embaixo, o olho lê a LISTA e não a prateleira, e o trabalho de fazer o objeto\n * ter cara vira legenda de tabela. Numa estante real você reconhece a lombada e\n * só chega perto pra ler.\n *\n * Isso é decisão de VITRINE, não de acesso: o mesmo rótulo aparece no\n * `:focus-within` pra quem navega por teclado, e o link continua nomeado pelo\n * título mesmo com o texto invisível — nome acessível não depende de opacidade.\n *\n * ── A aposta que esta peça faz, e quando ela está errada ───────────────────\n *\n * Item COM arte não tem título legível em repouso: só a lombada, pequena. Isso\n * é fiel a uma estante, e é uma aposta — se o catálogo vende por reconhecimento\n * de NOME e não de capa, o rótulo tem que ser fixo, e aí esta peça é a errada.\n * No toque não existe hover: lá o rótulo só aparece durante o arraste.\n */\n\nimport * as React from \"react\";\n\nimport { Book3D } from \"@/components/ui/book-3d\";\nimport { cn } from \"@/lib/utils\";\n\nexport interface ShelfItem {\n  /** Chave ESTÁVEL da arte derivada e da palheta: slug > id. */\n  seed: string;\n  title: string;\n  /** A capa. Sem ela, o livro sai com a capa desenhada — nunca caixa cinza. */\n  art?: string | null;\n  pages?: number | null;\n  /** Cor curada da arte. Ver `artColor` em `book-3d`. */\n  artColor?: string | null;\n  /** Uma linha de contexto, no hover, embaixo do título. */\n  note?: string;\n  href?: string;\n}\n\nfunction Piece({ item }: { item: ShelfItem }) {\n  const { seed, title, art, pages, artColor, note, href } = item;\n\n  const object = (\n    <>\n      <Book3D seed={seed} title={title} art={art} pages={pages} artColor={artColor} />\n\n      {/* O rótulo NÃO empurra layout: `absolute` sobre o pé do objeto. Se\n          ocupasse espaço, cada item reservaria altura pra um texto que quase\n          nunca está lá, e a prateleira ficaria com buracos regulares entre as\n          fileiras — o mesmo defeito que a moldura, por outro caminho.\n\n          O VÉU não é enfeite. Sem ele o nome cai em cima da capa e some: contra\n          o título grande da capa desenhada, ou contra o que a arte tiver ali\n          embaixo — e arte de catálogo é imprevisível por natureza. Ele começa\n          no meio da caixa pra o gradiente ter onde morrer; véu curto vira faixa\n          com borda visível. */}\n      <div className=\"book-shelf-label pointer-events-none absolute inset-x-0 bottom-0 flex flex-col justify-end px-2 pb-2 pt-16 text-center\">\n        <p className=\"line-clamp-2 text-[13px] font-semibold leading-snug\">{title}</p>\n        {note && (\n          <p className=\"mt-0.5 text-[11px] text-[var(--muted-foreground)]\">{note}</p>\n        )}\n      </div>\n    </>\n  );\n\n  return (\n    <article className=\"group relative min-w-0\">\n      {href ? (\n        <>\n          {object}\n          {/* O alvo é a peça inteira e quem anuncia o link é o TÍTULO. O\n              `sr-only` carrega o nome acessível porque o rótulo visível vive em\n              `opacity: 0` na maior parte do tempo, e nome que some no hover não\n              é nome. */}\n          <a\n            href={href}\n            className=\"absolute inset-0 outline-none focus-visible:[box-shadow:var(--focus)]\"\n            style={{ borderRadius: \"var(--r-surface, 4px)\" }}\n          >\n            <span className=\"sr-only\">{title}</span>\n          </a>\n        </>\n      ) : (\n        object\n      )}\n    </article>\n  );\n}\n\nexport interface BookShelfProps {\n  items: ShelfItem[];\n  /** Classes de grade. O default é uma estante confortável em três larguras. */\n  columns?: string;\n  className?: string;\n  /** O que mostrar quando não há nada. Estante vazia sem isto é uma área morta\n   *  que parece carregamento travado. */\n  empty?: React.ReactNode;\n}\n\nexport function BookShelf({\n  items,\n  columns = \"grid-cols-2 sm:grid-cols-3 lg:grid-cols-4\",\n  className,\n  empty,\n}: BookShelfProps) {\n  if (!items.length) return <>{empty ?? null}</>;\n\n  return (\n    /**\n     * `gap-x` menor que `gap-y`: numa estante os livros ficam PRÓXIMOS na\n     * horizontal — é isso que faz ler como fileira — e as prateleiras são bem\n     * separadas na vertical. Espaçamento igual nos dois eixos devolve a grade de\n     * ícones, que é o que a peça está tentando não ser.\n     */\n    <div className={cn(\"grid gap-x-2 gap-y-8\", columns, className)}>\n      {items.map((it) => (\n        <Piece key={it.seed} item={it} />\n      ))}\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "css": {
+    "@layer components": {
+      ".book-shelf-label": {
+        "background": "linear-gradient(to top, color-mix(in oklch, var(--background) 94%, transparent) 38%, transparent)",
+        "transition": "opacity var(--dur-fast, 160ms) var(--ease-out)"
+      }
+    },
+    "@media (hover: hover)": {
+      ".book-shelf-label": {
+        "opacity": "0"
+      },
+      ".group:hover .book-shelf-label, .group:focus-within .book-shelf-label": {
+        "opacity": "1"
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".book-shelf-label": {
+        "transition": "none"
+      }
+    }
+  },
+  "meta": {
+    "uso": {
+      "quando": "Catálogo de livros ou produtos com silhueta, soltos como numa estante, rótulo só no hover",
+      "evite": "Item que precisa de moldura e texto visível: showcase-card; objeto único em 3D, book-3d"
+    }
+  },
+  "categories": [
+    "3d",
+    "estante",
+    "prateleira",
+    "catalogo",
+    "grade",
+    "hover"
+  ],
+  "type": "registry:ui"
+}

@@ -11,7 +11,8 @@
  * O que roda aqui, depois do `vite build`:
  *
  *   1. reescreve `dist/index.html` com as meta tags da home;
- *   2. escreve `dist/c/<item>/index.html` para cada item do registry, e
+ *   2. escreve `dist/c/<item>/index.html` para cada item do registry,
+ *      `dist/catalogo/<familia>/index.html` para cada fatia do catálogo, e
  *      `dist/marca/`, `dist/rig/` para as outras seções;
  *
  * As imagens de prévia são geradas à parte (`npm run build:og`) e versionadas em
@@ -67,9 +68,11 @@ function escrever(caminhoRelativo, html) {
 
 // --- páginas -----------------------------------------------------------------
 
+/* A home é o catálogo. Os kits foram a porta de entrada por um tempo, e saíram
+   dela até serem redesenhados — ainda não se explicavam sozinhos. */
 const HOME = {
   titulo: "@visant/ui — a library da Visant",
-  descricao: `${registry.items.length} componentes React em registry shadcn, com temas de marca compilados: nenhum componente sabe a cor de um cliente.`,
+  descricao: `${registry.items.length} componentes React em registry shadcn. Cada um veste a marca que você escolher.`,
 };
 
 writeFileSync(
@@ -79,10 +82,25 @@ writeFileSync(
 
 const SECOES = [
   {
+    slug: "kits",
+    titulo: "Kits — @visant/ui",
+    descricao: "Cinco composições montadas com as peças do registry: mesa de trabalho, landing, motion, bancada vintage e marca viva.",
+  },
+  {
+    slug: "catalogo",
+    titulo: "Catálogo — @visant/ui",
+    /* `/catalogo` deixou de ser a página com tudo dentro: virou o índice das
+       categorias, e cada fatia tem endereço próprio em `/catalogo/<familia>`. */
+    descricao: `As ${registry.items.length} peças do registry, divididas por categoria — cada fatia com demo viva e comando de instalação.`,
+  },
+  {
     slug: "marca",
     titulo: "Marca — @visant/ui",
     descricao: "Trocar a marca repinta a interface inteira: tokens compilados do vault, em runtime.",
   },
+  /* `/rig` virou apelido de `/kit/rig-vintage`. A página continua existindo
+     porque o endereço circulou — e sem HTML próprio o link colado no chat
+     perderia a prévia que já tinha. */
   {
     slug: "rig",
     titulo: "Rig vintage — @visant/ui",
@@ -90,7 +108,81 @@ const SECOES = [
   },
 ];
 
-for (const s of SECOES) {
+/*
+ * As salas de kit, lidas de `src/app/kits.tsx`.
+ *
+ * Uma cópia da lista aqui envelheceria na primeira sala nova — e o sintoma
+ * seria silencioso: a página existiria no app e não teria prévia ao ser colada
+ * em lugar nenhum. Mesma técnica do portão de catálogo, que lê o `catalog.tsx`.
+ */
+const kitsSrc = readFileSync(join(ROOT, "src", "app", "kits.tsx"), "utf8");
+const KITS = [
+  ...kitsSrc
+    .slice(kitsSrc.indexOf("export const KITS"))
+    .matchAll(/slug:\s*"([^"]+)",[\s\S]*?title:\s*"([^"]+)",[\s\S]*?tese:\s*\n?\s*"((?:[^"\\]|\\.)*)"/g),
+].map(([, slug, title, tese]) => ({
+  slug: `kit/${slug}`,
+  titulo: `${title} — @visant/ui`,
+  descricao: tese.replace(/\\"/g, '"'),
+}));
+
+if (!KITS.length) {
+  console.error("nenhum kit lido de src/app/kits.tsx — o formato do arquivo mudou?");
+  process.exit(1);
+}
+
+/*
+ * As fatias do catálogo, lidas de `src/app/catalog.tsx`.
+ *
+ * O `registry.json` não sabe de família — a taxonomia mora no catálogo, e é lá
+ * que ela tem de continuar morando. Reescrever as seis famílias aqui à mão daria
+ * uma segunda fonte de verdade que envelhece calada: família nova apareceria no
+ * app e a rota `/catalogo/<familia>` não teria HTML, ou seja, nenhuma prévia e
+ * nada indexado. Mesma técnica do `catalog-check.mjs` e da leitura dos kits
+ * acima — regex sobre o fonte, e portão se não vier nada.
+ *
+ * `/catalogo/marca` é a FAMÍLIA marca. O estúdio de marca é `/marca`, em SECOES
+ * — dois endereços, dois documentos, sem sobreposição.
+ */
+const catalogSrc = readFileSync(join(ROOT, "src", "app", "catalog.tsx"), "utf8");
+const familias = [
+  ...catalogSrc
+    .slice(catalogSrc.indexOf("export const FAMILIES"), catalogSrc.indexOf("export const familyLabel"))
+    .matchAll(/key:\s*"([^"]+)",\s*label:\s*"([^"]+)"/g),
+].map(([, key, label]) => ({ key, label }));
+
+const catalogBlock = catalogSrc.slice(catalogSrc.indexOf("export const CATALOG"));
+const pecasPorFamilia = new Map();
+for (const [, key] of catalogBlock.matchAll(/^\s{4}family: "([^"]+)"/gm)) {
+  pecasPorFamilia.set(key, (pecasPorFamilia.get(key) ?? 0) + 1);
+}
+
+const FAMILIAS = familias.map(({ key, label }) => {
+  const n = pecasPorFamilia.get(key) ?? 0;
+  return {
+    slug: `catalogo/${key}`,
+    /* "— catálogo" não é enfeite: a família `marca` e a seção `/marca` (o Brand
+       Studio) têm o mesmo rótulo, e sem isto os dois documentos sairiam com o
+       título "Marca — @visant/ui". Dois links diferentes com a mesma cara no
+       chat e na busca é o defeito que o prerender existe para não ter. */
+    titulo: `${label} — catálogo @visant/ui`,
+    descricao: `${n} ${n === 1 ? "peça" : "peças"} da categoria ${label}, com demo viva e comando de instalação.`,
+  };
+});
+
+/* Família declarada e vazia é rota que abre em branco — o portão é aqui, não
+   na tela de quem abriu o link. */
+const vazias = familias.filter((f) => !pecasPorFamilia.get(f.key)).map((f) => f.key);
+if (!familias.length || vazias.length) {
+  console.error(
+    !familias.length
+      ? "nenhuma família lida de src/app/catalog.tsx — o formato do arquivo mudou?"
+      : `família sem nenhuma peça: ${vazias.join(", ")}`,
+  );
+  process.exit(1);
+}
+
+for (const s of [...SECOES, ...FAMILIAS, ...KITS]) {
   escrever(s.slug, comMeta({ titulo: s.titulo, descricao: s.descricao, url: `${SITE}/${s.slug}`, imagem: `${SITE}/og/home.png` }));
 }
 
@@ -106,7 +198,9 @@ for (const item of registry.items) {
   );
 }
 
-console.log(`páginas: ${registry.items.length + SECOES.length + 1}`);
+console.log(
+  `páginas: ${registry.items.length + SECOES.length + FAMILIAS.length + KITS.length + 1}`,
+);
 
 if (!existsSync(join(DIST, "c"))) {
   console.error("dist/c não foi criado — o prerender rodou antes do build?");

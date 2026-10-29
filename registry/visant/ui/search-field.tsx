@@ -87,64 +87,72 @@ export function SearchField({
   }, [debounced]);
 
   return (
-    <div className={cn("relative min-w-[200px] flex-1", className)}>
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-foreground)]"
-      >
-        <circle cx="7" cy="7" r="4.5" />
-        <path d="M10.5 10.5L14 14" strokeLinecap="round" />
-      </svg>
-
-      <input
-        type="search"
-        value={text}
-        placeholder={placeholder}
-        onChange={(event) => setText(event.target.value)}
-        className={cn(
-          "h-[var(--control-h,2.25rem)] w-full",
-          "rounded-[var(--r-control,0.5rem)] border border-[var(--input,var(--border))]",
-          "bg-[var(--background)] pl-9 pr-9 text-sm text-[var(--foreground)]",
-          "placeholder:text-[var(--muted-foreground)]",
-          "outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]",
-          "transition-[border-color,box-shadow]",
-          "[transition-duration:var(--dur-fast,160ms)]",
-          "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
-          // O × nativo do type=search duplicaria o nosso, e não é estilizável.
-          "[&::-webkit-search-cancel-button]:appearance-none",
-        )}
-        {...props}
-      />
-
-      {text ? (
-        <button
-          type="button"
-          aria-label={clearLabel}
-          onClick={() => setText("")}
-          className={cn(
-            "absolute right-1.5 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center",
-            "rounded-[var(--r-control,0.375rem)] text-[var(--muted-foreground)]",
-            "hover:text-[var(--foreground)]",
-            "outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]",
-          )}
+    /*
+     * Dois níveis de propósito. A raiz cresce no eixo do pai (`flex-1`); quem
+     * posiciona a lupa e o `×` é o invólucro de dentro, que tem a altura exata do
+     * campo. Com os dois papéis na mesma div, numa COLUNA o `flex-1` esticava a
+     * raiz na vertical e o `top-1/2` derrubava a lupa para baixo do campo.
+     */
+    <div className={cn("min-w-[200px] flex-1", className)}>
+      <div className="relative">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-foreground)]"
         >
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.75"
-            strokeLinecap="round"
-            className="h-3 w-3"
+          <circle cx="7" cy="7" r="4.5" />
+          <path d="M10.5 10.5L14 14" strokeLinecap="round" />
+        </svg>
+
+        <input
+          type="search"
+          value={text}
+          placeholder={placeholder}
+          onChange={(event) => setText(event.target.value)}
+          className={cn(
+            "h-[var(--control-h,2.25rem)] w-full",
+            "rounded-[var(--r-control,0.5rem)] border border-[var(--input,var(--border))]",
+            "bg-[var(--background)] pl-9 pr-9 text-sm text-[var(--foreground)]",
+            "placeholder:text-[var(--muted-foreground)]",
+            "outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]",
+            "transition-[border-color,box-shadow]",
+            "[transition-duration:var(--dur-fast,160ms)]",
+            "[transition-timing-function:var(--ease-out,cubic-bezier(0.23,1,0.32,1))]",
+            // O × nativo do type=search duplicaria o nosso, e não é estilizável.
+            "[&::-webkit-search-cancel-button]:appearance-none",
+          )}
+          {...props}
+        />
+
+        {text ? (
+          <button
+            type="button"
+            aria-label={clearLabel}
+            onClick={() => setText("")}
+            className={cn(
+              "absolute right-1.5 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center",
+              "rounded-[var(--r-control,0.375rem)] text-[var(--muted-foreground)]",
+              "hover:text-[var(--foreground)]",
+              "outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]",
+            )}
           >
-            <path d="M2 2l8 8M10 2l-8 8" />
-          </svg>
-        </button>
-      ) : null}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 12 12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              className="h-3 w-3"
+            >
+              <path d="M2 2l8 8M10 2l-8 8" />
+            </svg>
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }

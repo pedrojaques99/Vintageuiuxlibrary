@@ -15,10 +15,11 @@
  */
 
 import * as React from "react";
-import { Check, Copy, FileCode } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { REGISTRY_URL, registryItemUrl } from "./registry-meta";
 import { useCopy } from "./copy-command";
+import { Codigo, linguagemDe } from "./codigo";
 import propsGerados from "./props.generated.json";
 
 interface PropDoc {
@@ -27,6 +28,25 @@ interface PropDoc {
   obrigatoria: boolean;
   padrao: string | null;
   descricao: string | null;
+  /** Os membros da união, quando o tipo é uma união de literais. */
+  valores?: string[];
+  faixa?: { min?: number; max?: number; step?: number };
+}
+
+/**
+ * O tipo como ele responde "o que eu posso passar aqui?".
+ *
+ * A coluna mostrava a palavra `enum` em 48 props — que é o nome da categoria,
+ * não a resposta. Quem lia tinha de abrir o código pra descobrir se `finish`
+ * aceita três valores ou trinta.
+ */
+function tipoLegivel(p: PropDoc) {
+  if (p.valores?.length) return p.valores.map((v) => `"${v}"`).join(" | ");
+  if (p.tipo === "number" && p.faixa) {
+    const { min, max } = p.faixa;
+    if (min !== undefined && max !== undefined) return `number (${min}–${max})`;
+  }
+  return p.tipo;
 }
 
 interface ComponenteDoc {
@@ -44,34 +64,35 @@ export function TabelaDeProps({ name }: { name: string }) {
 
   if (!componentes.length) {
     return (
-      <p className="p-6 text-corpo leading-relaxed text-muted-foreground">
-        Este item não expõe props tipadas — é tema, base de CSS ou utilitário. O que ele entrega
+      <p className="p-6 text-casa-base text-casa-fg-2">
+        Este item não expõe props tipadas: é tema, base de CSS ou utilitário. O que ele entrega
         está no código.
       </p>
     );
   }
 
+  /*
+   * A tabela sem grade: linhas separadas por espaço, cabeçalho no tom mais
+   * baixo e em caixa normal. O nome da prop é código; o resto é texto.
+   */
   return (
-    <div className="divide-y divide-border">
+    <div className="space-y-8 p-5 sm:p-6">
       {componentes.map((c) => (
-        <section key={c.nome} className="p-4 sm:p-5">
-          <h3 className="font-mono text-apoio">{c.nome}</h3>
+        <section key={c.nome}>
+          <h3 className="font-casa-mono text-casa-base text-casa-fg">{c.nome}</h3>
           {c.descricao ? (
-            <p className="mt-1 max-w-2xl text-apoio leading-relaxed text-muted-foreground">
+            <p className="mt-1 max-w-2xl text-casa-base text-casa-fg-2">
               {c.descricao.split("\n")[0]}
             </p>
           ) : null}
 
           {c.props.length ? (
-            <div className="mt-3 overflow-x-auto">
+            <div className="mt-4 overflow-x-auto">
               <table className="w-full min-w-[520px] border-collapse text-left">
                 <thead>
-                  <tr className="border-b border-border">
-                    {["prop", "tipo", "padrão", ""].map((h) => (
-                      <th
-                        key={h}
-                        className="py-1.5 pr-4 font-mono text-micro font-normal uppercase tracking-wider text-muted-foreground"
-                      >
+                  <tr>
+                    {["Prop", "Tipo", "Padrão", ""].map((h) => (
+                      <th key={h} className="pb-2 pr-4 text-casa-sm font-normal text-casa-fg-3">
                         {h}
                       </th>
                     ))}
@@ -79,26 +100,22 @@ export function TabelaDeProps({ name }: { name: string }) {
                 </thead>
                 <tbody>
                   {c.props.map((p) => (
-                    <tr key={p.nome} className="border-b border-border/60 align-top">
-                      <td className="py-2 pr-4 font-mono text-apoio whitespace-nowrap">
+                    <tr key={p.nome} className="border-t border-casa-line align-top">
+                      <td className="whitespace-nowrap py-2.5 pr-4 font-casa-mono text-casa-sm text-casa-fg">
                         {p.nome}
                         {p.obrigatoria ? (
-                          <span
-                            title="obrigatória"
-                            className="ml-1 text-[var(--brand)]"
-                            aria-label="obrigatória"
-                          >
+                          <span title="obrigatória" className="ml-1 text-casa-fg-2" aria-label="obrigatória">
                             *
                           </span>
                         ) : null}
                       </td>
-                      <td className="py-2 pr-4 font-mono text-rotulo text-muted-foreground">
-                        {p.tipo}
+                      <td className="py-2.5 pr-4 font-casa-mono text-casa-sm text-casa-fg-2">
+                        {tipoLegivel(p)}
                       </td>
-                      <td className="py-2 pr-4 font-mono text-rotulo text-muted-foreground">
+                      <td className="py-2.5 pr-4 font-casa-mono text-casa-sm text-casa-fg-2">
                         {p.padrao ?? "—"}
                       </td>
-                      <td className="py-2 text-apoio leading-relaxed text-muted-foreground">
+                      <td className="py-2.5 text-casa-sm text-casa-fg-2">
                         {p.descricao?.split("\n")[0] ?? ""}
                       </td>
                     </tr>
@@ -119,7 +136,7 @@ interface ArquivoDoRegistry {
   target?: string;
 }
 
-export function CodigoDoItem({ name }: { name: string }) {
+export function CodigoDoItem({ name, antes }: { name: string; antes?: React.ReactNode }) {
   const [arquivos, setArquivos] = React.useState<ArquivoDoRegistry[] | null>(null);
   const [erro, setErro] = React.useState<string | null>(null);
   const [ativo, setAtivo] = React.useState(0);
@@ -142,33 +159,32 @@ export function CodigoDoItem({ name }: { name: string }) {
 
   if (erro) {
     return (
-      <p className="p-6 text-corpo text-muted-foreground">
-        Não deu para ler o item no registry ({erro}). O arquivo continua chegando pelo{" "}
-        <span className="font-mono">add</span>.
+      <p className="p-6 text-casa-base text-casa-fg-2">
+        Não deu pra ler o item no registry ({erro}). O arquivo continua chegando pelo{" "}
+        <code>add</code>.
       </p>
     );
   }
 
   if (!arquivos) {
-    return <div className="m-4 h-40 animate-pulse rounded-[var(--r-control,0.5rem)] bg-muted/40" />;
+    return <div className="m-5 h-40 animate-pulse rounded-control bg-casa-tile-2" />;
   }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-border px-4 py-2 sm:px-5">
+      {antes}
+      <div className="flex shrink-0 items-center gap-4 overflow-x-auto px-5 pt-4 sm:px-6">
         {arquivos.map((f, i) => (
           <button
             key={f.path}
             type="button"
             onClick={() => setAtivo(i)}
+            aria-pressed={i === ativo}
             className={cn(
-              "flex shrink-0 items-center gap-1.5 rounded-[var(--r-control,0.5rem)] px-2 py-1 font-mono text-rotulo transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
-              i === ativo
-                ? "bg-muted text-foreground"
-                : "text-muted-foreground hover:text-foreground",
+              "shrink-0 rounded-control font-casa-mono text-casa-sm transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)]",
+              i === ativo ? "text-casa-fg" : "text-casa-fg-3 hover:text-casa-fg",
             )}
           >
-            <FileCode className="h-3 w-3" />
             {f.path.split("/").pop()}
           </button>
         ))}
@@ -176,16 +192,20 @@ export function CodigoDoItem({ name }: { name: string }) {
         <button
           type="button"
           onClick={copy}
-          className="ml-auto flex shrink-0 items-center gap-1.5 rounded-[var(--r-control,0.5rem)] border border-border px-2 py-1 font-mono text-micro text-muted-foreground transition-colors [transition-duration:var(--dur-fast)] [transition-timing-function:var(--ease-out)] hover:border-[var(--brand)] hover:text-foreground"
+          aria-label={done ? "Copiado" : "Copiar arquivo"}
+          title="Copiar arquivo"
+          className="casa-icone alvo-toque ml-auto shrink-0"
         >
-          {done ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-          {done ? "copiado" : "copiar arquivo"}
+          {done ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
         </button>
       </div>
 
-      <pre className="min-h-0 flex-1 overflow-auto bg-muted/20 p-4 text-apoio leading-relaxed sm:p-5">
-        <code className="font-mono">{arquivo?.content ?? ""}</code>
-      </pre>
+      <Codigo
+        codigo={arquivo?.content ?? ""}
+        linguagem={linguagemDe(arquivo?.path ?? "")}
+        numerado
+        className="min-h-0 flex-1 p-5 sm:p-6"
+      />
     </div>
   );
 }

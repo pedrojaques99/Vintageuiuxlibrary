@@ -1,0 +1,206 @@
+[
+  {
+    "id": "retrato-01",
+    "papel": "retrato",
+    "tipo": "imagem",
+    "src": "/media/retrato-01.webp",
+    "alt": "Bastidor de produção",
+    "w": 720,
+    "h": 900
+  },
+  {
+    "id": "retrato-02",
+    "papel": "retrato",
+    "tipo": "imagem",
+    "src": "/media/retrato-02.webp",
+    "alt": "Time em campo",
+    "w": 720,
+    "h": 900
+  },
+  {
+    "id": "retrato-03",
+    "papel": "retrato",
+    "tipo": "imagem",
+    "src": "/media/retrato-03.webp",
+    "alt": "Registro de bastidor",
+    "w": 720,
+    "h": 900
+  },
+  {
+    "id": "retrato-04",
+    "papel": "retrato",
+    "tipo": "imagem",
+    "src": "/media/retrato-04.webp",
+    "alt": "Retrato de equipe",
+    "w": 720,
+    "h": 900
+  },
+  {
+    "id": "retrato-05",
+    "papel": "retrato",
+    "tipo": "imagem",
+    "src": "/media/retrato-05.webp",
+    "alt": "Bastidor de estúdio",
+    "w": 720,
+    "h": 900
+  },
+  {
+    "id": "retrato-06",
+    "papel": "retrato",
+    "tipo": "imagem",
+    "src": "/media/retrato-06.webp",
+    "alt": "Time em reunião",
+    "w": 720,
+    "h": 900
+  },
+  {
+    "id": "retrato-07",
+    "papel": "retrato",
+    "tipo": "imagem",
+    "src": "/media/retrato-07.webp",
+    "alt": "Bastidor de gravação",
+    "w": 720,
+    "h": 900
+  },
+  {
+    "id": "cena-cubo",
+    "papel": "cena",
+    "tipo": "imagem",
+    "src": "/media/cena-cubo.webp",
+    "alt": "Cubo Visant com halo",
+    "w": 1200,
+    "h": 676
+  },
+  {
+    "id": "cena-glare",
+    "papel": "cena",
+    "tipo": "imagem",
+    "src": "/media/cena-glare.webp",
+    "alt": "Render com estouro de luz",
+    "w": 1200,
+    "h": 676
+  },
+  {
+    "id": "cena-radio",
+    "papel": "cena",
+    "tipo": "imagem",
+    "src": "/media/cena-radio.webp",
+    "alt": "Rádio vintage renderizado",
+    "w": 1200,
+    "h": 1200
+  },
+  {
+    "id": "cena-trofeu",
+    "papel": "cena",
+    "tipo": "imagem",
+    "src": "/media/cena-trofeu.webp",
+    "alt": "Troféu renderizado",
+    "w": 1200,
+    "h": 1200
+  },
+  {
+    "id": "cena-produto",
+    "papel": "cena",
+    "tipo": "imagem",
+    "src": "/media/cena-produto.webp",
+    "alt": "Embalagem premium",
+    "w": 1200,
+    "h": 1200
+  },
+  {
+    "id": "cena-terra",
+    "papel": "cena",
+    "tipo": "imagem",
+    "src": "/media/cena-terra.webp",
+    "alt": "Globo renderizado",
+    "w": 1200,
+    "h": 1200
+  },
+  {
+    "id": "cena-estojo",
+    "papel": "cena",
+    "tipo": "imagem",
+    "src": "/media/cena-estojo.webp",
+    "alt": "Estojo de lápis",
+    "w": 1200,
+    "h": 1200
+  },
+  {
+    "id": "cena-cartao",
+    "papel": "cena",
+    "tipo": "imagem",
+    "src": "/media/cena-cartao.webp",
+    "alt": "Cartão de perfil da marca",
+    "w": 900,
+    "h": 1126
+  },
+  {
+    "id": "textura-vidro",
+    "papel": "textura",
+    "tipo": "imagem",
+    "src": "/media/textura-vidro.webp",
+    "alt": "Textura de vidro",
+    "w": 1200,
+    "h": 1800
+  },
+  {
+    "id": "textura-neon",
+    "papel": "textura",
+    "tipo": "imagem",
+    "src": "/media/textura-neon.webp",
+    "alt": "Gradiente neon",
+    "w": 1200,
+    "h": 676
+  },
+  {
+    "id": "textura-papel",
+    "papel": "textura",
+    "tipo": "imagem",
+    "src": "/media/textura-papel.webp",
+    "alt": "Textura de papel",
+    "w": 1200,
+    "h": 1600
+  },
+  {
+    "id": "textura-bruma",
+    "papel": "textura",
+    "tipo": "imagem",
+    "src": "/media/textura-bruma.webp",
+    "alt": "Bruma colorida",
+    "w": 1200,
+    "h": 1496
+  },
+  {
+    "id": "video-loop3d",
+    "papel": "video",
+    "tipo": "video",
+    "src": "/media/video-loop3d.mp4",
+    "webm": "/media/video-loop3d.webm",
+    "poster": "/media/video-loop3d.webp",
+    "alt": "Loop 3D da marca",
+    "w": 960,
+    "h": 428
+  },
+  {
+    "id": "video-vinheta",
+    "papel": "video",
+    "tipo": "video",
+    "src": "/media/video-vinheta.mp4",
+    "webm": "/media/video-vinheta.webm",
+    "poster": "/media/video-vinheta.webp",
+    "alt": "Vinheta Visant",
+    "w": 960,
+    "h": 540
+  },
+  {
+    "id": "video-composicao",
+    "papel": "video",
+    "tipo": "video",
+    "src": "/media/video-composicao.mp4",
+    "webm": "/media/video-composicao.webm",
+    "poster": "/media/video-composicao.webp",
+    "alt": "Composição em movimento",
+    "w": 960,
+    "h": 1200
+  }
+]

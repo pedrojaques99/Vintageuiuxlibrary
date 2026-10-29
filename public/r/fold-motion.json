@@ -1,0 +1,137 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "fold-motion",
+  "title": "Fold Motion",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "Hierarquia de entradas por dobra: rise, drift, mask, settle, climax, invert e mist em vez de trinta entradas iguais. O esconderijo é aplicado pelo componente, nunca por CSS estático.",
+  "dependencies": [
+    "react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/lib/fold-motion.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Fold Motion — hierarquia de entradas, em vez de trinta entradas iguais.\n *\n * ── O diagnóstico que gerou o item ─────────────────────────────────────────\n *\n * As ~30 dobras do `visantismo` tinham TODAS a mesma entrada: `translateY(14px)`\n * em 0.7s. Trinta entradas idênticas não são trinta entradas, são papel de\n * parede — ninguém percebe a segunda. O SSoT de motion já estava disciplinado\n * (zero `cubic-bezier` solto, zero duração local); o que faltava era\n * **hierarquia**.\n *\n * O contrato: cada dobra declara um `variant` e ganha UM movimento próprio.\n * Dobra sem variant fica no genérico, e isso é deliberado — as dobras de\n * respiro têm que ser silenciosas pras dobras de argumento serem ouvidas.\n *\n * | variant | o que faz | pra quando |\n * |---|---|---|\n * | `rise` | sobe 14px (o genérico) | dobra de respiro |\n * | `drift-l` / `drift-r` | entra deslizando, alternando o lado | sequências longas de dobras parecidas |\n * | `mask` | o título é revelado por trás de uma borda (`clip-path`) | quando o argumento é a FRASE |\n * | `settle` | assenta de `scale(1.03)` em vez de subir | dobra de NÚMERO: dado, não espetáculo |\n * | `climax` | sobe menos e demora mais | a dobra que pede dinheiro não deve parecer apressada |\n * | `invert` | o fundo troca de cor ao entrar | uma vez por página, no argumento central |\n * | `mist` | sai da névoa: desfoque + opacidade + subida mínima, nunca desliza | marca contemplativa, foto, atmosfera |\n *\n * ── A armadilha que este item conserta em relação à origem ─────────────────\n *\n * No original, o esconderijo era uma classe `.js` no `<html>` escrita por um\n * script no `<head>`: com JS ligado mas o script de reveal falhando, as trinta\n * dobras ficavam em `opacity: 0` — a página inteira sumia da primeira dobra pra\n * baixo, CTA inclusive. Ficou registrado como pendência aberta na origem.\n *\n * Aqui o esconderijo é aplicado **pelo próprio componente**, num\n * `useLayoutEffect`, e só depois de confirmar que o `IntersectionObserver`\n * existe. Não montou, não observou, não escondeu: o estado de repouso é o\n * conteúdo completo e legível, nunca uma tela em branco.\n *\n * `prefers-reduced-motion` é tratado no CSS **por dobra**, e não pelo guard\n * global com `*`. O guard zera duração e delay mas NÃO desfaz um estado inicial\n * escondido — uma dobra em `opacity: 0` continuaria invisível para sempre. Cada\n * variante nasce no estado final. Zera o movimento, nunca o resultado.\n *\n * `mist` segue a mesma regra e é a mais cuidadosa com ela: sob movimento\n * reduzido ela perde o desfoque e a subida, e NÃO perde a opacidade final —\n * desfoque é movimento para o olho (o foco \"anda\"), opacidade é informação.\n * O estado final é `filter: none`, não `blur(0)`: `blur(0)` ainda mantém a\n * dobra numa camada de filtro, e numa dobra com foto grande isso é custo de\n * composição pago a cada quadro de rolagem, para sempre, por um efeito que já\n * acabou.\n *\n * A entrada é **uma vez só**, não um efeito de ida e volta: o observer desiste\n * do alvo assim que ele entra.\n */\n\nexport type FoldVariant =\n  | \"rise\"\n  | \"drift-l\"\n  | \"drift-r\"\n  | \"mask\"\n  | \"settle\"\n  | \"climax\"\n  | \"invert\"\n  | \"mist\";\n\nconst useIsoLayoutEffect = typeof window === \"undefined\" ? React.useEffect : React.useLayoutEffect;\n\nexport interface FoldProps extends React.HTMLAttributes<HTMLElement> {\n  variant?: FoldVariant;\n  /** Quanto da dobra precisa estar em tela pra ela entrar. */\n  threshold?: number;\n  as?: \"section\" | \"div\" | \"article\" | \"aside\";\n  children?: React.ReactNode;\n}\n\nexport function Fold({\n  variant = \"rise\",\n  threshold = 0.12,\n  as: Tag = \"section\",\n  className,\n  children,\n  ...props\n}: FoldProps) {\n  const ref = React.useRef<HTMLElement>(null);\n  const [armado, setArmado] = React.useState(false);\n  const [dentro, setDentro] = React.useState(false);\n\n  useIsoLayoutEffect(() => {\n    const el = ref.current;\n    // Sem observer não há animação a fazer, e conteúdo escondido pra sempre é\n    // muito pior que conteúdo sem animação.\n    if (!el || !(\"IntersectionObserver\" in window)) return;\n    setArmado(true);\n\n    const io = new IntersectionObserver(\n      (es) => {\n        if (!es[0].isIntersecting) return;\n        io.disconnect(); // entrada é uma vez só\n        setDentro(true);\n      },\n      { threshold },\n    );\n    io.observe(el);\n    return () => io.disconnect();\n  }, [threshold]);\n\n  return (\n    <Tag\n      ref={ref as React.Ref<never>}\n      data-fold={variant}\n      data-armed={armado ? \"\" : undefined}\n      data-in={dentro ? \"\" : undefined}\n      className={cn(\"visant-fold\", className)}\n      {...props}\n    >\n      {children}\n    </Tag>\n  );\n}\n\n/**\n * O filho que a variante move, quando não é a dobra inteira.\n *\n * `settle` move os cartões de número, `drift-*` move o contêiner de conteúdo —\n * e nos dois casos mover a `<section>` seria errado: ela tem a largura da\n * viewport, então `translateX(-22px)` nela põe a borda esquerda em -22 e cria\n * estouro horizontal real. (Medido: -22px numa dobra antes de entrar. O\n * `overflow-x: hidden` do body mascarava o estouro sem resolver.) O\n * deslocamento vai no filho, e a dobra recorta com `overflow-x: clip` — `clip`\n * e não `hidden`, porque `hidden` criaria um contêiner de rolagem.\n */\nexport function FoldPart({\n  className,\n  children,\n  ...props\n}: React.HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div data-fold-part=\"\" className={className} {...props}>\n      {children}\n    </div>\n  );\n}\n",
+      "type": "registry:lib"
+    }
+  ],
+  "css": {
+    "@layer components": {
+      ".visant-fold[data-armed]": {
+        "opacity": "0",
+        "transform": "translateY(14px)",
+        "transition": "opacity var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-out)"
+      },
+      ".visant-fold[data-armed][data-in]": {
+        "opacity": "1",
+        "transform": "none"
+      },
+      ".visant-fold[data-fold=\"drift-l\"][data-armed], .visant-fold[data-fold=\"drift-r\"][data-armed]": {
+        "opacity": "1",
+        "transform": "none",
+        "overflow-x": "clip"
+      },
+      ".visant-fold[data-fold=\"drift-l\"][data-armed] > [data-fold-part], .visant-fold[data-fold=\"drift-r\"][data-armed] > [data-fold-part]": {
+        "opacity": "0",
+        "transition": "opacity var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-drawer)"
+      },
+      ".visant-fold[data-fold=\"drift-l\"][data-armed] > [data-fold-part]": {
+        "transform": "translateX(-22px)"
+      },
+      ".visant-fold[data-fold=\"drift-r\"][data-armed] > [data-fold-part]": {
+        "transform": "translateX(22px)"
+      },
+      ".visant-fold[data-fold=\"drift-l\"][data-armed][data-in] > [data-fold-part], .visant-fold[data-fold=\"drift-r\"][data-armed][data-in] > [data-fold-part]": {
+        "opacity": "1",
+        "transform": "none"
+      },
+      ".visant-fold[data-fold=\"mask\"][data-armed]": {
+        "opacity": "1",
+        "transform": "none"
+      },
+      ".visant-fold[data-fold=\"mask\"][data-armed] :is(h1, h2, h3)": {
+        "clip-path": "inset(0 0 100% 0)",
+        "transform": "translateY(0.24em)",
+        "transition": "clip-path var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-out)"
+      },
+      ".visant-fold[data-fold=\"mask\"][data-armed][data-in] :is(h1, h2, h3)": {
+        "clip-path": "inset(0 0 -0.2em 0)",
+        "transform": "none"
+      },
+      ".visant-fold[data-fold=\"settle\"][data-armed]": {
+        "opacity": "1",
+        "transform": "none"
+      },
+      ".visant-fold[data-fold=\"settle\"][data-armed] > *": {
+        "opacity": "0",
+        "transform": "scale(1.03)",
+        "transition": "opacity var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-out)"
+      },
+      ".visant-fold[data-fold=\"settle\"][data-armed][data-in] > *": {
+        "opacity": "1",
+        "transform": "none"
+      },
+      ".visant-fold[data-fold=\"climax\"][data-armed]": {
+        "transform": "translateY(8px) scale(0.994)",
+        "transition-duration": "var(--dur-climax, 1100ms)"
+      },
+      ".visant-fold[data-fold=\"invert\"][data-armed]": {
+        "opacity": "1",
+        "transform": "none",
+        "background": "var(--background)",
+        "color": "var(--foreground)",
+        "transition": "background-color var(--dur-climax, 1100ms) var(--ease-in-out), color var(--dur-climax, 1100ms) var(--ease-in-out)"
+      },
+      ".visant-fold[data-fold=\"invert\"][data-armed][data-in]": {
+        "background": "var(--foreground)",
+        "color": "var(--background)"
+      },
+      ".visant-fold[data-fold=\"mist\"][data-armed]": {
+        "opacity": "0",
+        "filter": "blur(12px)",
+        "transform": "translateY(12px)",
+        "transition": "opacity var(--dur-slow, 700ms) var(--ease-out), filter var(--dur-slow, 700ms) var(--ease-out), transform var(--dur-slow, 700ms) var(--ease-out)"
+      },
+      ".visant-fold[data-fold=\"mist\"][data-armed][data-in]": {
+        "opacity": "1",
+        "filter": "none",
+        "transform": "none"
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".visant-fold[data-armed], .visant-fold[data-armed] > [data-fold-part], .visant-fold[data-armed] > *": {
+        "opacity": "1",
+        "transform": "none",
+        "transition": "none"
+      },
+      ".visant-fold[data-armed] :is(h1, h2, h3)": {
+        "clip-path": "none",
+        "transform": "none",
+        "transition": "none"
+      },
+      ".visant-fold[data-fold=\"mist\"][data-armed]": {
+        "opacity": "1",
+        "filter": "none",
+        "transform": "none",
+        "transition": "none"
+      }
+    }
+  },
+  "meta": {
+    "uso": {
+      "quando": "Dar hierarquia às entradas de uma landing, cada dobra com seu tipo de entrada ao rolar",
+      "evite": "Só um título: line-reveal ou mist-text; app ou dashboard não pede entrada por scroll"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "scroll",
+    "entrada",
+    "reveal",
+    "dobra",
+    "hierarquia"
+  ],
+  "type": "registry:lib"
+}

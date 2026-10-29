@@ -1,0 +1,349 @@
+{
+  "auth-button": {
+    "hint": "signed-in"
+  },
+  "assignee-stack": {
+    "max": 4,
+    "size": "md"
+  },
+  "sticky-filterbar": {
+    "headerSelector": "[data-demo-header]",
+    "className": "px-6"
+  },
+  "measure-picker": {
+    "min": 130,
+    "max": 200,
+    "label": "Sua altura"
+  },
+  "side-nav": {
+    "storageKey": false
+  },
+  "logo-wall": {
+    "heading": "Confiam na gente",
+    "bleed": 12,
+    "speed": 64
+  },
+  "rail": {
+    "itemWidth": 248,
+    "gap": 16,
+    "label": "Coleção outono",
+    "heading": "Coleção outono",
+    "bleed": 24,
+    "fade": true,
+    "progress": true
+  },
+  "plate": {
+    "ratio": "4/5",
+    "inset": 18,
+    "surface": "photo",
+    "blend": "multiply",
+    "ground": true,
+    "className": "rounded-[var(--r-control,0.5rem)]"
+  },
+  "store-status": {
+    "locale": "pt-BR"
+  },
+  "masonry-gallery": {
+    "cols": 4,
+    "gap": 16
+  },
+  "glitch-chars": {
+    "text": "RENDERIZADO",
+    "className": "text-[length:var(--text-titulo,1.5rem)] font-semibold tracking-[0.08em] text-foreground"
+  },
+  "grid-dots": {
+    "opacity": 0.11,
+    "spacing": 18,
+    "dotSize": 1.4,
+    "spotlight": 170
+  },
+  "drop-overlay": {
+    "message": "Solte pra anexar",
+    "doneMessage": "Anexado"
+  },
+  "vintage-meter": {
+    "label": "PROGRAM"
+  },
+  "vintage-slider": {
+    "dense": true
+  },
+  "vintage-parametric-eq": {
+    "width": 500,
+    "height": 210
+  },
+  "vintage-oscilloscope": {
+    "width": 380,
+    "height": 180
+  },
+  "vintage-soundboard-pad": {
+    "size": 72
+  },
+  "vintage-xy-pad": {
+    "size": 160,
+    "labelX": "FREQ",
+    "labelY": "GLOW",
+    "color": "var(--vintage-accent)"
+  },
+  "section-intro": {
+    "className": "w-full transition-opacity [transition-duration:var(--dur-fast,200ms)] [transition-timing-function:var(--ease-out)] motion-reduce:transition-none",
+    "eyebrow": "Serviços",
+    "index": "02",
+    "title": "Um time só. Todo serviço que a marca precisa.",
+    "lead": "Da estratégia de marca ao desenvolvimento, sem repassar o trabalho para fora no meio do caminho."
+  },
+  "showcase-card": {
+    "className": "mx-auto w-full max-w-[320px]",
+    "href": "#/c/showcase-card",
+    "title": "Identidade que quer dizer alguma coisa"
+  },
+  "step-cards": {
+    "className": "w-full",
+    "columns": 3,
+    "visualHeight": 220
+  },
+  "quote-block": {
+    "tone": "muted",
+    "quote": "Chegaram com a marca já resolvida no primeiro dia. A gente parou de discutir cor e voltou a discutir produto.",
+    "author": "Rafael Moura",
+    "role": "Head de Produto",
+    "company": "Aloro",
+    "source": "https://exemplo.com/cases/aloro",
+    "portraitWidth": 7.5,
+    "ratio": "1/1"
+  },
+  "count-up": {
+    "className": "text-[2rem] font-semibold leading-none tracking-tight"
+  },
+  "fold-motion": {
+    "as": "div",
+    "className": "flex w-full max-w-[34rem] flex-1 flex-col justify-center rounded-[var(--r-surface,0.875rem)] px-8 py-6"
+  },
+  "line-reveal": {
+    "as": "h3",
+    "immediate": true,
+    "className": "text-[clamp(1.6rem,1.2rem+1.6vw,2.25rem)] font-medium leading-[1.12] tracking-[-0.02em]"
+  },
+  "gleam": {
+    "className": "w-full max-w-[300px] shrink-0 overflow-hidden bg-[color-mix(in_oklch,var(--foreground)_5%,var(--card))] p-3"
+  },
+  "photo-flip": {
+    "ratio": "4/5",
+    "className": "grid w-full max-w-[1240px] grid-cols-6 gap-3"
+  },
+  "photo-compare": {
+    "className": "mx-auto w-full max-w-[620px] rounded-[var(--r-surface,0.875rem)] border border-border",
+    "ratio": "3/2",
+    "beforeLabel": "antes",
+    "afterLabel": "depois"
+  },
+  "reels-rail": {
+    "className": "w-full [&_[role=group]]:[scrollbar-width:none] [&_[role=group]::-webkit-scrollbar]:hidden",
+    "arrows": false,
+    "itemWidth": 280,
+    "gap": 20,
+    "driftSpeed": 14
+  },
+  "carousel-3d": {
+    "cta": "Ver projeto",
+    "className": "h-[420px] min-h-0"
+  },
+  "ink-wordmark": {
+    "className": "w-full max-w-[34rem] text-foreground"
+  },
+  "fog-tree": {
+    "className": "h-full min-h-[480px] rounded-[var(--r-surface,0.875rem)] border border-border",
+    "progress": 0.35,
+    "draggable": true
+  },
+  "fog-garden": {
+    "heightPerStop": "420px"
+  },
+  "book-shelf": {
+    "columns": "grid-cols-2 sm:grid-cols-4",
+    "className": "w-full"
+  },
+  "spine-card": {
+    "tilt": true,
+    "href": "#",
+    "className": "w-[168px]"
+  },
+  "empty-state": {
+    "seed": "favoritos-vazio",
+    "className": "size-[72px] rounded-full border border-border"
+  },
+  "skeleton-rail": {
+    "cards": 3,
+    "heading": false,
+    "itemWidth": 140,
+    "gap": 16,
+    "ratio": "4 / 5"
+  },
+  "pinned-scene": {
+    "stepHeight": "520px",
+    "top": "24px",
+    "rail": false
+  },
+  "activity-heatmap": {
+    "label": "Entregas nos últimos seis meses",
+    "period": "seis meses"
+  },
+  "card-stack": {
+    "className": "w-[min(100%,21rem)] [--card-stack-h:18rem]",
+    "label": "Depoimentos"
+  },
+  "confirm-morph": {
+    "label": "Apagar",
+    "prompt": "Tem certeza?",
+    "cancelLabel": "Não",
+    "confirmLabel": "Apagar",
+    "pendingLabel": "Apagando",
+    "doneLabel": "Apagado"
+  },
+  "elastic-slider": {
+    "label": "Volume"
+  },
+  "expandable-card": {
+    "title": "Pedido 2048",
+    "width": 340,
+    "expandedWidth": 440
+  },
+  "expanding-search": {
+    "label": "Buscar projetos e documentos",
+    "expandedWidth": 280
+  },
+  "gauge": {
+    "className": "w-44",
+    "label": "Espaço do plano"
+  },
+  "hold-to-confirm": {
+    "label": "Segure pra apagar",
+    "confirmedLabel": "Apagado"
+  },
+  "icon-morph": {
+    "size": 22
+  },
+  "morph-select": {
+    "label": "Status"
+  },
+  "slot-text": {
+    "className": "text-[3.25rem] font-semibold leading-none tracking-tight"
+  },
+  "swipe-actions": {
+    "label": "Caixa de entrada",
+    "className": "w-full"
+  },
+  "toast-stack": {
+    "position": "bottom-center",
+    "contained": true,
+    "className": "bottom-8"
+  },
+  "folding-bill": {
+    "defaultFolded": false
+  },
+  "heat-word": {
+    "className": "w-[480px] max-w-full"
+  },
+  "liquid-toggle": {
+    "defaultChecked": true
+  },
+  "magnetic-select": {
+    "label": "Como está o seu dia?"
+  },
+  "slosh-slider": {
+    "label": "Água hoje",
+    "step": 5,
+    "className": "max-w-[360px]"
+  },
+  "tilt-card": {
+    "className": "w-64"
+  },
+  "black-hole": {
+    "className": "w-[380px] max-w-full"
+  },
+  "countdown": {
+    "className": "w-full",
+    "label": "A coleção nova abre em"
+  },
+  "cover-flow": {
+    "defaultIndex": 2,
+    "cardWidth": 200,
+    "label": "Projetos",
+    "className": "w-[620px] max-w-full"
+  },
+  "date-reel": {
+    "label": "Data do envio"
+  },
+  "eye-tracker": {
+    "size": 150,
+    "eyes": "pupil"
+  },
+  "orbit-menu": {
+    "label": "Ações da nota"
+  },
+  "page-curl": {
+    "width": 280,
+    "label": "Revista Sem pressa"
+  },
+  "pull-to-refresh": {
+    "label": "Caixa de hoje",
+    "className": "w-[320px] max-w-full",
+    "nudge": true
+  },
+  "reactions": {
+    "label": "Reações à versão 2.4"
+  },
+  "signature-pad": {
+    "signer": "Marina Duarte, Estúdio Orla"
+  },
+  "slide-to-confirm": {
+    "label": "Deslize pra pagar",
+    "confirmedLabel": "Pago",
+    "className": "w-full"
+  },
+  "sticker-peel": {
+    "label": "Selo da marca",
+    "rotate": -6,
+    "radius": "9999px",
+    "peelOff": true
+  },
+  "streamgraph": {
+    "label": "Pedidos de suporte por assunto",
+    "unit": "pedidos",
+    "categoryLabel": "Semana",
+    "height": 200
+  },
+  "time-dial": {
+    "caption": "Expediente",
+    "label": "Horário da reunião"
+  },
+  "voice-note": {
+    "duration": 9
+  },
+  "wallet-stack": {
+    "label": "Cartões da Marina"
+  },
+  "shader-ascii": {
+    "src": "/media/cena-terra.webp",
+    "alt": "Globo em caracteres",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-halftone": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante em retícula",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-neon": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-riso": {
+    "src": "/media/cena-radio.webp",
+    "alt": "Rádio impresso em risografia",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-tunnel": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "shader-voronoi": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  }
+}

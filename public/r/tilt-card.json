@@ -1,0 +1,36 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tilt-card",
+  "title": "Tilt Card",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "O card que inclina em 3D seguindo o mouse, com um brilho que corre pela superfície.",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/tilt-card.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport {\n  motion,\n  useMotionTemplate,\n  useMotionValue,\n  useReducedMotion,\n  useSpring,\n  useTransform,\n} from \"motion/react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Tilt Card — o card que inclina em 3D sob o ponteiro, com o reflexo andando\n * junto.\n *\n * Uma foto de produto, uma capa, um cartão de membro: peças que vendem pela\n * matéria. Numa tela plana elas leem como recorte. Inclinar com o ponteiro e\n * deixar um brilho correr pela superfície dá o que falta, a sensação de objeto\n * que se pega na mão. É o que o card faz, e só isso.\n *\n * ── Decisões que não se veem de primeira ──────────────────────────────────\n *\n * 1. **O ponteiro vira -1…1 e passa por mola.** Inclinar direto no evento\n *    treme e para seco quando o cursor sai. Com mola o card segue com um\n *    respiro e, ao sair, volta deitado sozinho.\n * 2. **`sink` inverte o gesto.** Por padrão o canto sob o ponteiro vem na\n *    direção de quem olha, como cartão levantado pra luz. Com `sink` ele\n *    afunda, como se o dedo apertasse uma almofada: lê mais tátil em foto,\n *    menos vitrine.\n * 3. **O brilho é luz somada, não tinta.** É um gradiente radial com\n *    `mix-blend-mode: plus-lighter` sobre um tom que mistura fundo e frente\n *    do tema: em qualquer marca e nos dois modos ele só clareia, nunca mancha.\n *    Ele fica sob o ponteiro e acende com a inclinação: no centro, card\n *    deitado, não há reflexo nenhum.\n * 4. **A sombra anda contra a inclinação.** Um card que vira sem a sombra\n *    acompanhar parece decalque girando; a sombra deslocada é o que diz\n *    \"levantou do chão\".\n * 5. **Só onde há ponteiro fino.** No toque não existe hover: o card ficaria\n *    preso inclinado no último ponto tocado.\n *\n * `prefers-reduced-motion`: o card fica plano; o conteúdo é o mesmo.\n */\n\nexport interface TiltCardProps extends React.HTMLAttributes<HTMLDivElement> {\n  /** Inclinação máxima, em graus, em cada eixo. */\n  maxTilt?: number;\n  /** Força do brilho, de 0 (sem brilho) a 1. */\n  glare?: number;\n  /** Afunda o canto sob o ponteiro em vez de levantá-lo. */\n  sink?: boolean;\n  /** Distância da câmera, em px. Menor = perspectiva mais forte. */\n  perspective?: number;\n}\n\nconst MOLA = { stiffness: 260, damping: 24, mass: 0.6 };\n\nexport function TiltCard({\n  maxTilt = 10,\n  glare = 0.5,\n  sink = false,\n  perspective = 900,\n  className,\n  children,\n  style,\n  onPointerMove,\n  onPointerLeave,\n  ...props\n}: TiltCardProps) {\n  const reduzir = useReducedMotion();\n  const [fino, setFino] = React.useState(false);\n\n  React.useEffect(() => {\n    try {\n      setFino(window.matchMedia(\"(hover: hover) and (pointer: fine)\").matches);\n    } catch {\n      setFino(false);\n    }\n  }, []);\n\n  const ativo = fino && !reduzir;\n\n  // Ponteiro dentro do card, -1…1 em cada eixo; 0 é repouso.\n  const px = useMotionValue(0);\n  const py = useMotionValue(0);\n  const sx = useSpring(px, MOLA);\n  const sy = useSpring(py, MOLA);\n\n  // Sinais medidos: rotateY positivo traz a borda esquerda pra frente,\n  // rotateX positivo traz a de baixo.\n  const lado = sink ? -1 : 1;\n  const rotateY = useTransform(sx, (v) => -v * maxTilt * lado);\n  const rotateX = useTransform(sy, (v) => v * maxTilt * lado);\n\n  const brilhoX = useTransform(sx, (v) => 50 + v * 50);\n  const brilhoY = useTransform(sy, (v) => 50 + v * 50);\n  const forca = useTransform([sx, sy], ([a, b]) =>\n    Math.min(1, Math.hypot(a as number, b as number)) * Math.max(0, Math.min(1, glare)) * 70,\n  );\n  const brilho = useMotionTemplate`radial-gradient(circle at ${brilhoX}% ${brilhoY}%, color-mix(in oklab, color-mix(in oklab, var(--background) 50%, var(--foreground)) ${forca}%, transparent) 0%, transparent 60%)`;\n\n  const sombraX = useTransform(sx, (v) => v * maxTilt * -0.8 * lado);\n  const sombraY = useTransform(sy, (v) => 14 + v * maxTilt * -0.8 * lado);\n  const sombra = useMotionTemplate`${sombraX}px ${sombraY}px 40px -12px var(--sombra-inclinada)`;\n\n  return (\n    <div\n      {...props}\n      className={cn(\n        // Sombra é ausência de luz nos dois temas: no claro, tinta do texto;\n        // no escuro, o fundo da página, que é o tom mais fundo que existe.\n        // Com `--foreground` no escuro ela virava um halo claro em volta do card.\n        \"relative [--sombra-inclinada:color-mix(in_oklab,var(--foreground)_28%,transparent)]\",\n        \"dark:[--sombra-inclinada:color-mix(in_oklab,var(--background)_85%,transparent)]\",\n        className,\n      )}\n      style={{ perspective, ...style }}\n      onPointerMove={(e) => {\n        onPointerMove?.(e);\n        if (!ativo || e.pointerType !== \"mouse\") return;\n        const r = e.currentTarget.getBoundingClientRect();\n        px.set(((e.clientX - r.left) / r.width) * 2 - 1);\n        py.set(((e.clientY - r.top) / r.height) * 2 - 1);\n      }}\n      onPointerLeave={(e) => {\n        onPointerLeave?.(e);\n        px.set(0);\n        py.set(0);\n      }}\n    >\n      <motion.div\n        className=\"relative h-full w-full overflow-hidden rounded-[var(--r-surface)] bg-card [transform-style:preserve-3d]\"\n        style={\n          ativo\n            ? { rotateX, rotateY, boxShadow: sombra }\n            : { boxShadow: \"var(--e-raised)\" }\n        }\n      >\n        {children}\n        {ativo && glare > 0 && (\n          <motion.span\n            aria-hidden\n            className=\"pointer-events-none absolute inset-0 [mix-blend-mode:plus-lighter]\"\n            style={{ backgroundImage: brilho }}\n          />\n        )}\n      </motion.div>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "meta": {
+    "uso": {
+      "quando": "Card de foto, capa ou cartão de membro que inclina forte em 3D com brilho sob o mouse",
+      "evite": "Grade de muitos cards com luz sutil: gleam; objeto 3D de verdade, book-3d ou lathe-object"
+    }
+  },
+  "categories": [
+    "efeitos",
+    "card",
+    "3d",
+    "tilt",
+    "hover",
+    "brilho",
+    "foto"
+  ],
+  "type": "registry:ui"
+}

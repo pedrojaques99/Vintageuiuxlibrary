@@ -1,6 +1,6 @@
 {
   "$schema": "https://visant-ui.vercel.app/schema/brands.json",
-  "generatedAt": "2026-07-31T22:01:53.792Z",
+  "generatedAt": "2026-10-28T21:21:21.560Z",
   "source": "https://api.visantlabs.com/api/brand-guidelines",
   "engine": "@visant/brand-tokens",
   "count": 4,
@@ -19,60 +19,60 @@
         {
           "hex": "#0d0d0d",
           "name": "Chumbo",
-          "role": "primary"
+          "role": "background"
+        },
+        {
+          "hex": "#ffffff",
+          "name": "Branco",
+          "role": "text"
+        },
+        {
+          "hex": "#161616",
+          "name": "Chumbo Superfície",
+          "role": "secondary"
+        },
+        {
+          "hex": "#8a8a8a",
+          "name": "Cinza Rótulo",
+          "role": "muted"
         },
         {
           "hex": "#52ddeb",
           "name": "Azul Destaque",
           "role": "accent"
-        },
-        {
-          "hex": "#1f7878",
-          "name": "Mid Tone",
-          "role": "secondary"
-        },
-        {
-          "hex": "#f3e9e9",
-          "name": "Offwhite",
-          "role": "background"
-        },
-        {
-          "hex": "#000000",
-          "name": "Escura",
-          "role": "text"
         }
       ],
       "fonts": {
         "display": "Manrope",
-        "sans": "Oswald"
+        "sans": "Manrope"
       },
       "preview": {
         "light": {
-          "background": "oklch(0.9463 0.0087 17.31)",
-          "foreground": "oklch(0.2143 0.018 18.66)",
+          "background": "oklch(1 0 0)",
+          "foreground": "oklch(0.2697 0.0015 17.25)",
           "brand": "oklch(0.8285 0.119 204.63)",
           "brand-foreground": "oklch(0.1448 0 0)",
-          "accent-ink": "oklch(0.5108 0.0768 193.84)",
-          "card": "oklch(0.9237 0.0109 17.35)",
-          "border": "oklch(0.8479 0.0123 17.4)",
-          "muted-foreground": "oklch(0.5212 0.0154 23.38)"
+          "accent-ink": "oklch(0.5504 0.0483 206.94)",
+          "card": "oklch(0.9761 0 0)",
+          "border": "oklch(0.9006 0 0)",
+          "muted-foreground": "oklch(0.5586 0.0015 106.45)"
         },
         "dark": {
-          "background": "oklch(0.2408 0.0077 17.7)",
-          "foreground": "oklch(0.9896 0.0021 17.19)",
+          "background": "oklch(0.2393 0 0)",
+          "foreground": "oklch(0.9881 0 0)",
           "brand": "oklch(0.8285 0.119 204.63)",
           "brand-foreground": "oklch(0.1448 0 0)",
           "accent-ink": "oklch(0.6217 0.0699 205.45)",
-          "card": "oklch(0.2886 0.0104 17.77)",
-          "border": "oklch(0.417 0.0108 17.59)",
-          "muted-foreground": "oklch(0.6319 0.0122 24.4)"
+          "card": "oklch(0.2891 0 0)",
+          "border": "oklch(0.4138 0.0013 17.21)",
+          "muted-foreground": "oklch(0.6301 0 0)"
         }
       },
       "theme": "theme-visant",
       "themeUrl": "/r/theme-visant.json",
       "version": 27,
-      "completeness": 64,
-      "updatedAt": "2026-07-13T20:09:33.600Z"
+      "completeness": 80,
+      "updatedAt": "2026-10-28T20:20:34.690Z"
     },
     {
       "id": "demo-norte-verde",

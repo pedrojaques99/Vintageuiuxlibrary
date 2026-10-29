@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "heat-word",
+    "title": "Heat Word",
+    "type": "ui",
+    "family": "texto",
+    "description": "Uma grade de gotas ou uma palavra que derrete num mapa de calor por onde o cursor passa, pintada com as cores da marca.",
+    "tags": [
+      "canvas",
+      "cursor",
+      "hover",
+      "calor",
+      "efeito"
+    ],
+    "demoImport": "./demos/heat-word-demo",
+    "knobs": "HeatWord",
+    "preview": {
+      "w": 520,
+      "h": 280
+    }
+  },
+  "registry": {
+    "name": "heat-word",
+    "type": "registry:ui",
+    "title": "Heat Word",
+    "description": "Uma grade de gotas ou uma palavra que derrete num mapa de calor por onde o cursor passa, pintada com as cores da marca.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/heat-word.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/heat-word"
+}

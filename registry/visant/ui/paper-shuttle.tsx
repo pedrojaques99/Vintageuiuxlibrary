@@ -3,7 +3,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
-import { GlitchChars } from "@/components/ui/glitch-chars";
 
 /**
  * Papéis voando de uma pasta para outra — o loader de transferência.
@@ -19,7 +18,8 @@ import { GlitchChars } from "@/components/ui/glitch-chars";
  * A parábola (`y` sobe e volta) importa: linha reta lê como barra de progresso
  * disfarçada; o arco lê como objeto atravessando espaço.
  *
- * Sem cor própria — a pasta usa `currentColor` (default: `--brand`) e o papel os
+ * Sem cor própria: a pasta usa `currentColor` (default: `--muted-foreground`,
+ * neutra; passe `className="text-..."` pra tingir) e o papel os
  * tokens de superfície, então o loader troca de marca junto com o tema.
  *
  * `prefers-reduced-motion`: papéis parados no meio do trajeto, texto e barra
@@ -32,14 +32,18 @@ export function PaperShuttle({
 }: {
   /** 0–100. Omitido ⇒ modo indeterminado, só o rótulo. */
   progress?: number;
-  /** Texto sob a animação. Default: a porcentagem, ou "Processando…". */
+  /** Texto sob a animação. Default: "Transferindo" (com a porcentagem ao lado) ou "Processando…". */
   label?: string;
   className?: string;
 }) {
   const reduced = useReducedMotion();
 
+  // Grampeado uma vez só: antes a barra respeitava o limite e o número não, então
+  // um `progress={130}` desenhava a barra cheia com "130%" escrito embaixo.
+  const pct = progress == null ? null : Math.min(100, Math.max(0, progress));
+
   return (
-    <div className={cn("text-brand", className)} role="status" aria-live="polite">
+    <div className={cn("text-muted-foreground", className)} role="status" aria-live="polite">
       <div className="relative mx-auto h-[64px] w-[200px]">
         <div className="absolute bottom-0 left-0">
           <Folder open />
@@ -81,22 +85,36 @@ export function PaperShuttle({
         </div>
       </div>
 
-      <div className="mx-auto mt-3 w-[200px]">
-        {progress != null && (
-          <div className="h-[6px] overflow-hidden rounded-full bg-muted">
+      <div className="mx-auto mt-4 w-[200px]">
+        {pct != null && (
+          <div
+            className="h-1 overflow-hidden rounded-full bg-muted"
+            role="progressbar"
+            aria-valuenow={Math.round(pct)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
             <motion.div
-              className="h-full rounded-full bg-brand"
+              className="h-full rounded-full bg-[var(--brand,var(--foreground))]"
               initial={{ width: 0 }}
-              animate={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+              animate={{ width: `${pct}%` }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             />
           </div>
         )}
-        <p className="mt-1.5 text-center font-mono text-[10px] tabular-nums text-muted-foreground">
-          <GlitchChars className="mr-1 text-[var(--accent-ink,var(--muted-foreground))]" />
-          {label ??
-            (progress != null ? `${Math.round(progress)}%` : "Processando…")}
+        {/* A linha é `aria-hidden` porque ela muda a cada quadro de progresso: numa
+            região viva o leitor de tela leria "41%, 43%, 45%" sem parar. O que a
+            região anuncia é o rótulo, a frase que de fato muda de sentido.
+            Texto comum, sem ruído de máquina: a peça é genérica de propósito e
+            herda a voz da interface onde for instalada. */}
+        <p
+          aria-hidden="true"
+          className="mt-2 flex items-baseline justify-between gap-3 text-xs text-muted-foreground"
+        >
+          <span className="truncate">{label ?? (pct != null ? "Transferindo" : "Processando…")}</span>
+          {pct != null ? <span className="tabular-nums text-foreground">{Math.round(pct)}%</span> : null}
         </p>
+        <span className="sr-only">{label ?? "Processando"}</span>
       </div>
     </div>
   );

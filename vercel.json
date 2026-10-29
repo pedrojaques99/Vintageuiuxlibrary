@@ -3,24 +3,111 @@
   "cleanUrls": true,
   "headers": [
     {
-      "source": "/r/(.*)",
+      "source": "/r/(.*).json",
       "headers": [
-        { "key": "Content-Type", "value": "application/json; charset=utf-8" },
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Cache-Control", "value": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400" }
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/r/(.*).md",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400"
+        }
       ]
     },
     {
       "source": "/og/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, s-maxage=604800, stale-while-revalidate=604800" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=604800, stale-while-revalidate=604800"
+        }
       ]
     }
   ],
   "rewrites": [
     {
-      "source": "/((?!r/|og/|assets/).*)",
+      "source": "/mcp",
+      "destination": "/api/mcp"
+    },
+    {
+      "source": "/((?!r/|og/|assets/|api/|mcp|llms.txt).*)",
       "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/kit/marca-viva",
+      "destination": "/kit/brand-system",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/aquisicao",
+      "destination": "/catalogo/secoes",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/trabalho",
+      "destination": "/catalogo/controles",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/motion",
+      "destination": "/catalogo/efeitos",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/marca",
+      "destination": "/catalogo/base",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/fundacao",
+      "destination": "/catalogo/base",
+      "permanent": true
+    },
+    {
+      "source": "/catalogo/didatica",
+      "destination": "/catalogo/anatomia",
+      "permanent": true
     }
   ]
 }

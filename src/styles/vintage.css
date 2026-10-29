@@ -27,6 +27,16 @@
   --vintage-metal-channel-dark: #a9a9a9;
   --vintage-toggle-track: #403f3f;
   --vintage-grid: #bbbaba;
+  /* A luz do kit (ponteiro, faixa do fader, LED, fósforo, curva) é a MARCA do
+     projeto. Leitura em texto segue no --vintage-value: marca nunca vira texto. */
+  --vintage-light: var(--brand, #ffd700);
+}
+
+/* Marca escura sumiria no painel preto: a luz nunca fica abaixo de L 0,72. */
+@supports (color: oklch(from red l c h)) {
+  :root {
+    --vintage-light: oklch(from var(--brand, #ffd700) max(l, 0.72) c h);
+  }
 }
 
 @theme inline {

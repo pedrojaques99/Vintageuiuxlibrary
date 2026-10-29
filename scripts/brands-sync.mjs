@@ -11,7 +11,7 @@
 // Aqui ela fica: o build lê a API autenticado, o cliente lê JSON público.
 //
 //   node scripts/brands-sync.mjs            # todas as marcas
-//   node scripts/brands-sync.mjs --only visant,kastrup
+//   node scripts/brands-sync.mjs --only visant,outra-marca
 //   node scripts/brands-sync.mjs --dry      # só o relatório, não escreve
 //
 // Fonte da chave: .env.local (VISANT_LABS_API_KEY). Sem chave → falha alto, não
@@ -97,7 +97,7 @@ async function listBrands() {
  * Na amostra real aparecem papéis COMPOSTOS: `background/text`, `accent/cta`,
  * `accent/background`. O motor casa papel por igualdade exata, então
  * `background/text` não resolve o slot `background` — e o fallback (cor mais
- * usada) escolheria o preto da Kastrup como fundo do tema claro. Texto preto
+ * usada) escolheria o preto de uma marca como fundo do tema claro. Texto preto
  * sobre fundo preto, sem erro nenhum no build.
  *
  * A correção é aqui e não no motor de propósito: o motor é SSoT do
@@ -119,7 +119,7 @@ function normalizeBrand(g) {
     for (const role of roles) colors.push({ ...base, role });
   });
 
-  // Desempate dentro de um mesmo papel. A Kastrup® publica DUAS cores que
+  // Desempate dentro de um mesmo papel. Uma marca publica DUAS cores que
   // expandem para `accent`: EQUILÍBRIO (#FAF3DC, um creme) e VIGOR (#7B1F28, o
   // vermelho da marca). O motor pega a primeira do array — e a marca inteira
   // saía pintada de creme, com `--brand` quase indistinguível do fundo.
@@ -149,7 +149,7 @@ function normalizeBrand(g) {
   colors.push(...ordered);
 
   // Duas formas convivem na API: a atual `{family, role, size}` e uma legada
-  // `{fontFamily, name, fontSize}` (Padoo®, Build + Partners®). Ler só a atual
+  // `{fontFamily, name, fontSize}` (marcas antigas do vault). Ler só a atual
   // descartava a tipografia dessas marcas e o motor recusava a marca inteira
   // por "publishes no typography" — com a guideline preenchida.
   const typography = (g.typography ?? [])
@@ -180,7 +180,7 @@ function hexStats(hex) {
   return { lum: 0.2126 * r + 0.7152 * g + 0.0722 * b, sat: max - min };
 }
 
-/** `Kastrup®` → `kastrup`. Mesmo slug do motor, para o nome do item bater. */
+/** `Marca®` → `marca`. Mesmo slug do motor, para o nome do item bater. */
 function slugify(name) {
   return String(name || "brand")
     .normalize("NFD")

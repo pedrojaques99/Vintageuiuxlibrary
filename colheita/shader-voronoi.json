@@ -1,0 +1,41 @@
+{
+  "catalogo": {
+    "name": "shader-voronoi",
+    "title": "Shader Voronoi",
+    "type": "ui",
+    "family": "shaders",
+    "description": "Mosaico de células que derivam devagar com um núcleo aceso na cor da marca, empurradas pelo ponteiro.",
+    "tags": [
+      "shader",
+      "webgl",
+      "fundo",
+      "voronoi",
+      "textura"
+    ],
+    "demoImport": "./demos/shader-voronoi-demo",
+    "knobs": "ShaderVoronoi",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "shader-voronoi",
+    "type": "registry:ui",
+    "title": "Shader Voronoi",
+    "description": "Mosaico de células que derivam devagar com um núcleo aceso na cor da marca, empurradas pelo ponteiro.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/shader-voronoi.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Colhido de 7panel_studio/keyboard-ui/src/lib/visualizers/shaders.ts (SHADER_VORONOI) (Visant Labs)"
+}

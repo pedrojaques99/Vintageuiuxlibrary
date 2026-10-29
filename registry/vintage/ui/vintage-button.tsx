@@ -11,6 +11,16 @@ interface VintageButtonProps {
   className?: string;
 }
 
+/**
+ * Botão de painel: capa de baquelite num poço do painel, lâmpada-piloto em cima.
+ *
+ * Antes a capa inteira virava laranja quando ativa — um disco de cor chapada
+ * que não existe em equipamento nenhum e brigava com o resto do kit, onde o
+ * aceso é sempre uma lâmpada pequena. Aqui o estado mora onde mora num rack:
+ * no LED acima da capa, e na capa que fica travada um pouco mais funda.
+ *
+ * Três alturas, uma luz só (de cima): solta, travada (ativa) e apertada.
+ */
 export function VintageButton({
   label,
   active = false,
@@ -20,68 +30,80 @@ export function VintageButton({
 }: VintageButtonProps) {
   const [pressed, setPressed] = useState(false);
 
-  const accentColor = accent || "var(--vintage-accent)";
-  const glowColor = accent
-    ? `color-mix(in srgb, ${accent} 60%, transparent)`
-    : "var(--vintage-accent-glow)";
+  const lamp = accent || "var(--vintage-light)";
+  // Curso da capa em px: solta, travada, apertada.
+  const curso = pressed ? 3 : active ? 1.5 : 0;
 
   return (
     <button
-      className={cn("relative group", className)}
-      onMouseDown={() => setPressed(true)}
-      onMouseUp={() => setPressed(false)}
-      onMouseLeave={() => setPressed(false)}
+      type="button"
+      aria-pressed={active}
+      className={cn(
+        "group relative inline-flex flex-col items-center gap-2 rounded-[var(--r-control,10px)] p-1.5 outline-none select-none",
+        "focus-visible:[box-shadow:var(--focus,0_0_0_2px_var(--vintage-value))]",
+        className
+      )}
+      onPointerDown={() => setPressed(true)}
+      onPointerUp={() => setPressed(false)}
+      onPointerLeave={() => setPressed(false)}
+      onKeyDown={(e) => {
+        if (e.key === " " || e.key === "Enter") setPressed(true);
+      }}
+      onKeyUp={() => setPressed(false)}
+      onBlur={() => setPressed(false)}
       onClick={onClick}
       style={{ cursor: "pointer" }}
     >
-      <div
-        className="w-20 h-20 rounded-full"
+      {/* Lâmpada-piloto: lente no aro, halo só quando acesa. */}
+      <span
+        aria-hidden
+        className="block h-2 w-2 rounded-full"
         style={{
-          background: pressed
-            ? "linear-gradient(to bottom, var(--vintage-surface-3), var(--vintage-surface-2))"
-            : "linear-gradient(to bottom, var(--vintage-surface-4), var(--vintage-surface-3))",
-          boxShadow: pressed
-            ? "inset 0 4px 8px rgba(0,0,0,0.8)"
-            : "0 6px 0 var(--vintage-surface-2), 0 8px 12px rgba(0,0,0,0.5)",
-          transform: pressed ? "translateY(2px)" : "translateY(0)",
-          transition: "all 0.075s ease",
-          outline: active
-            ? `2px solid ${accentColor}`
-            : "2px solid transparent",
-          outlineOffset: 2,
+          background: active
+            ? `radial-gradient(circle at 50% 35%, color-mix(in srgb, ${lamp} 40%, white) 0%, ${lamp} 45%, color-mix(in srgb, ${lamp} 70%, black) 100%)`
+            : "radial-gradient(circle at 50% 35%, var(--vintage-surface-4) 0%, var(--vintage-surface-2) 100%)",
+          boxShadow: active
+            ? `0 0 0 1px rgba(0,0,0,0.6), 0 0 8px color-mix(in srgb, ${lamp} 70%, transparent)`
+            : "0 0 0 1px rgba(0,0,0,0.6), inset 0 1px 1px rgba(0,0,0,0.6)",
+          transition:
+            "background var(--dur-fast,160ms) var(--ease-out,ease), box-shadow var(--dur-fast,160ms) var(--ease-out,ease)",
+        }}
+      />
+
+      {/* O poço no painel: a capa mora dentro dele. */}
+      <span
+        className="relative block h-16 w-16 rounded-full"
+        style={{
+          background: "var(--vintage-surface-1)",
+          boxShadow:
+            "inset 0 2px 4px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.06)",
         }}
       >
-        <div
-          className="absolute inset-2 rounded-full flex items-center justify-center"
+        <span
+          className="absolute inset-[5px] flex items-center justify-center rounded-full"
           style={{
-            background: active
-              ? `linear-gradient(to bottom, ${accentColor}, color-mix(in srgb, ${accentColor} 70%, black))`
-              : "linear-gradient(to bottom, var(--vintage-surface-3a), var(--vintage-surface-3))",
-            boxShadow: active ? `0 0 20px ${glowColor}` : "none",
-            transition: "all 0.2s ease",
+            background:
+              "radial-gradient(120% 90% at 50% 15%, var(--vintage-surface-4) 0%, var(--vintage-surface-3) 45%, var(--vintage-surface-2) 100%)",
+            // A borda de baixo da capa é o que a faz parecer alta. Ela some
+            // conforme a capa afunda — é isso que o olho lê como curso.
+            boxShadow: `inset 0 1px 0 rgba(255,255,255,0.14), 0 ${4 - curso}px 0 var(--vintage-surface-1), 0 ${6 - curso}px ${8 - curso * 2}px rgba(0,0,0,0.55)`,
+            transform: `translateY(${curso}px)`,
+            transition:
+              "transform var(--dur-press,120ms) var(--ease-out,ease), box-shadow var(--dur-press,120ms) var(--ease-out,ease)",
           }}
         >
           <span
-            className="text-xs font-vintage-display font-bold tracking-wider uppercase"
+            className="font-vintage-mono text-[10px] font-semibold uppercase tracking-[0.16em]"
             style={{
-              color: active ? "#fff" : "var(--vintage-text-muted)",
-              transition: "color 0.2s",
+              color: active ? "var(--vintage-label)" : "var(--vintage-text-muted)",
+              textShadow: "0 -1px 0 rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06)",
+              transition: "color var(--dur-fast,160ms) var(--ease-out,ease)",
             }}
           >
             {label}
           </span>
-        </div>
-      </div>
-
-      {/* Active LED dot */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 w-1.5 h-1.5 rounded-full"
-        style={{
-          background: active ? accentColor : "transparent",
-          boxShadow: active ? `0 0 10px ${glowColor}` : "none",
-          transition: "all 0.2s",
-        }}
-      />
+        </span>
+      </span>
     </button>
   );
 }

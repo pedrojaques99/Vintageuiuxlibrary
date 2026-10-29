@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   DndContext,
   DragOverlay,
@@ -8,6 +9,7 @@ import {
   MouseSensor,
   TouchSensor,
   closestCorners,
+  defaultDropAnimationSideEffects,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -39,6 +41,57 @@ import "./kanban.css";
  * Distribuição: registry estilo shadcn — copia `components/ui/kanban/*` pro
  * projeto do cliente e tematiza pelos tokens. Não conhece Linear/Supabase/auth.
  */
+/*
+ * O pouso do card — o imã, e o fim do pulo ao soltar.
+ *
+ * O `DragOverlay` estava sem configuração, então rodava o padrão da lib: 250ms
+ * de `ease`, e um efeito colateral que zera a opacidade do card de origem
+ * durante a viagem e a devolve de uma vez no fim. Dois problemas nisso:
+ *
+ * 1. O tempo e a curva vinham de dentro do node_modules. Um encaixe é uma
+ *    aterrissagem: `--dur-base` e `--ease-out`, que é como tudo o mais nesta
+ *    casa desacelera ao chegar.
+ * 2. O card de destino voltava do nada pro opaco no frame em que o overlay
+ *    sumia. Aqui trocamos a opacidade crua pela classe `is-landing`: o buraco
+ *    continua desenhado durante a viagem inteira e o conteúdo ACENDE por
+ *    transição quando a classe sai (kanban.css). O overlay termina de pousar e
+ *    o card aparece por baixo dele no mesmo movimento, em vez de os dois
+ *    trocarem de lugar num piscar.
+ *
+ * O tempo e a curva são LIDOS do CSS em vez de escritos aqui. A drop animation
+ * é WAAPI, e a Web Animations API não aceita `var(--ease-out)` — mas ela aceita
+ * a string que a variável guarda. Então a fonte da verdade continua sendo o
+ * arquivo de tokens: quem trocar `--dur-base` na marca troca também o pouso do
+ * card, sem abrir este arquivo.
+ *
+ * Quem pediu menos movimento recebe duração zero: o dnd-kit pula a animação
+ * (`if (!duration) return`) e o card simplesmente ESTÁ no destino. O resultado
+ * acontece, só não há percurso — e essa é a única forma de alcançar isto, já
+ * que o guard global de `prefers-reduced-motion` só enxerga transição CSS.
+ */
+// Sem anotar `: DropAnimation`: aquele tipo é uma união que inclui a forma
+// "função", e por ela o `duration` some — e o guard de pouso abaixo precisa ler
+// essa duração. O objeto inferido continua sendo aceito pelo DragOverlay.
+function readDropAnimation() {
+  const css = typeof window === "undefined" ? null : getComputedStyle(document.documentElement);
+  const token = (name: string, fallback: string) =>
+    (css?.getPropertyValue(name).trim() || "") || fallback;
+
+  const raw = token("--dur-base", "200ms");
+  const ms = raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * 1000;
+  const reduzido =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  return {
+    duration: reduzido ? 0 : Number.isFinite(ms) ? ms : 200,
+    easing: token("--ease-out", "cubic-bezier(0.23, 1, 0.32, 1)"),
+    sideEffects: defaultDropAnimationSideEffects({
+      className: { active: "is-landing" },
+    }),
+  };
+}
+
 export function Kanban<T = unknown, C = unknown>({
   columns,
   items,
@@ -61,6 +114,12 @@ export function Kanban<T = unknown, C = unknown>({
 
   const colMeta = useMemo(() => new Map(columns.map((c) => [c.id, c])), [columns]);
 
+  // Uma vez por board: a config precisa ser a MESMA referência entre renders,
+  // senão o dnd-kit refaz o handler de pouso no meio do gesto e a animação sai
+  // pela metade. `[]` de propósito.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const dropAnimation = useMemo(readDropAnimation, []);
+
   // Ordem vinda das props (a fonte da verdade do consumidor).
   const fromProps = useMemo(() => {
     const map: Record<string, string[]> = {};
@@ -79,9 +138,33 @@ export function Kanban<T = unknown, C = unknown>({
   // falso-positivo/negativo se um refetch (realtime) chegasse durante o drag.
   const fromIndexRef = useRef<number>(-1);
 
+  /*
+   * A ressincronização espera o card POUSAR.
+   *
+   * O efeito abaixo devolve a ordem das props assim que o gesto acaba — e o
+   * gesto acaba no instante do `mouseup`, enquanto o overlay ainda tem a viagem
+   * inteira pela frente. Um consumidor que aplique o `onMove` com qualquer
+   * diferença (o caso comum: guardar a coluna e ignorar o `columnOrder`) fazia o
+   * card SALTAR de volta debaixo do overlay que ainda estava descendo. Ir e
+   * voltar num piscar, com o fantasma ainda no ar.
+   *
+   * Segurar a ressincronização pela duração do pouso resolve pra todo mundo, e
+   * não só pra quem escreve o consumidor certo: o card encosta no lugar, e só
+   * então a verdade das props volta a mandar. Se ela discordar, a correção
+   * aparece — mas aparece sozinha, à vista, e não escondida sob uma animação.
+   */
+  const [pousando, setPousando] = useState(false);
+  const pousoRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const aguardaPouso = useCallback(() => {
+    if (pousoRef.current) clearTimeout(pousoRef.current);
+    setPousando(true);
+    pousoRef.current = setTimeout(() => setPousando(false), dropAnimation.duration ?? 0);
+  }, [dropAnimation.duration]);
+  useEffect(() => () => void (pousoRef.current && clearTimeout(pousoRef.current)), []);
+
   useEffect(() => {
-    if (!activeId) setOrdered(fromProps);
-  }, [fromProps, activeId]);
+    if (!activeId && !pousando) setOrdered(fromProps);
+  }, [fromProps, activeId, pousando]);
 
   const sensors = useSensors(
     // MouseSensor, NÃO PointerSensor: Pointer Events incluem touch — com
@@ -275,6 +358,7 @@ export function Kanban<T = unknown, C = unknown>({
   // handler o activeId nunca zerava: overlay preso, resync com as props
   // bloqueado e o card órfão na coluna errada até um remount.
   const handleDragCancel = () => {
+    aguardaPouso();
     setActiveId(null);
     setOverColumn(null);
     fromColumnRef.current = null;
@@ -286,6 +370,7 @@ export function Kanban<T = unknown, C = unknown>({
     const active = String(e.active.id);
     const overId = e.over ? String(e.over.id) : null;
     const from = fromColumnRef.current;
+    aguardaPouso();
     setActiveId(null);
     setOverColumn(null);
     fromColumnRef.current = null;
@@ -332,6 +417,43 @@ export function Kanban<T = unknown, C = unknown>({
     }
   };
 
+  /*
+   * O CARD QUE VOAVA PRA LONGE DO CURSOR — e por que era o pai, não o dnd-kit.
+   *
+   * O `DragOverlay` é `position: fixed`, e o dnd-kit escreve nele um
+   * `translate3d` em coordenadas de VIEWPORT (o rect que ele mediu no início do
+   * gesto, mais o delta do ponteiro). Isso só bate enquanto o bloco contenedor
+   * do `fixed` for o viewport.
+   *
+   * Qualquer ancestral com `transform`, `filter`, `perspective`, `backdrop-filter`
+   * ou `will-change` dessas propriedades passa a ser o bloco contenedor de
+   * descendentes `fixed` — regra do CSS, não bug de lib. Aí o mesmo
+   * `translate3d(x, y)` deixa de ser medido do canto da janela e passa a ser
+   * medido do canto DAQUELE elemento: o card aparece deslocado exatamente pela
+   * posição do ancestral na página (com a rolagem inteira somada, o que numa
+   * página longa joga o card pra fora da tela). Ao soltar, o overlay some e o
+   * card real reaparece no lugar certo — daí a leitura de "pula pro lugar".
+   *
+   * Isso não é caso de laboratório: um card com `transform: scale()` pra caber
+   * numa vitrine, um painel com `backdrop-filter`, um modal com animação de
+   * entrada — todos produzem o mesmo defeito no projeto de quem instalou.
+   *
+   * O overlay vai pro `body` por portal. Ele não pertence ao fluxo do board (é
+   * um fantasma que voa por cima de tudo), então tirá-lo de lá não muda layout
+   * nenhum — e passa a viver onde a matemática do dnd-kit já supunha que ele
+   * estava. Os tokens `--kanban-*` que o overlay usa têm fallback no ponto de
+   * uso (kanban.css), justamente porque fora do `.kanban-root` não há herança.
+   */
+  const overlay = (
+    <DragOverlay dropAnimation={dropAnimation}>
+      {activeItem ? (
+        <div className="kanban-card-overlay">
+          {renderCard({ item: activeItem, overlay: true })}
+        </div>
+      ) : null}
+    </DragOverlay>
+  );
+
   return (
     <DndContext
       sensors={sensors}
@@ -367,13 +489,7 @@ export function Kanban<T = unknown, C = unknown>({
           />
         ))}
       </div>
-      <DragOverlay>
-        {activeItem ? (
-          <div className="kanban-card-overlay">
-            {renderCard({ item: activeItem, overlay: true })}
-          </div>
-        ) : null}
-      </DragOverlay>
+      {typeof document === "undefined" ? overlay : createPortal(overlay, document.body)}
     </DndContext>
   );
 }

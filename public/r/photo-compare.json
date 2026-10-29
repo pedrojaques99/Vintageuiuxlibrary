@@ -1,0 +1,138 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "photo-compare",
+  "title": "Photo Compare",
+  "author": "Visant Labs <visantsupply@gmail.com>",
+  "description": "A cortina entre o antes e o depois: a camada de cima é RECORTADA, nunca redimensionada, então as duas fotos ficam na mesma escala. O arrasto, o teclado e o leitor de tela vêm de um input range invisível.",
+  "dependencies": [
+    "gsap",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "utils"
+  ],
+  "files": [
+    {
+      "path": "registry/visant/ui/photo-compare.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport gsap from \"gsap\";\nimport { ScrollTrigger } from \"gsap/ScrollTrigger\";\nimport { ChevronsLeftRight } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Photo Compare — a cortina entre o antes e o depois.\n *\n * A peça que toda apresentação de rebrand, retoque e redesenho pede, e que\n * quase sempre é feita errada de dois jeitos diferentes.\n *\n * ── Erro 1: redimensionar em vez de recortar ──────────────────────────────\n *\n * A implementação intuitiva é dar `width` variável à camada de cima. Aí a\n * imagem de cima **encolhe junto** com a cortina: aos 20% você está comparando\n * um \"depois\" espremido a 20% da largura com um \"antes\" inteiro. A comparação\n * fica desonesta exatamente no lugar onde ela é o produto.\n *\n * Aqui a camada de cima tem SEMPRE a caixa inteira, e o que muda é o\n * `clip-path`. As duas fotos ficam na mesma escala, no mesmo lugar, o tempo\n * todo — a cortina só decide qual metade você vê.\n *\n * ── Erro 2: escrever o arrasto na mão ─────────────────────────────────────\n *\n * `pointerdown` + `pointermove` + `setPointerCapture` + limites + `pointerup`\n * é meia tarde de código, e aí falta o teclado, falta o leitor de tela, falta\n * `Home`/`End`, falta RTL, falta o toque que também rola a página.\n *\n * O navegador já implementa tudo isso: é `<input type=\"range\">`. Ele fica\n * invisível por cima da caixa inteira e é ele quem manda no valor — arrastar em\n * qualquer ponto funciona porque o próprio range pula pro ponto do clique e\n * segue o dedo. O que desenhamos é só a alça, e ela é `pointer-events: none`\n * para nunca roubar o gesto do controle de verdade.\n *\n * Consequência boa e de graça: setas movem 1%, `shift` move 10%, `Home`/`End`\n * vão pras pontas, e o leitor de tela anuncia porcentagem.\n *\n * ── As outras decisões ────────────────────────────────────────────────────\n *\n * 1. **`touch-action: pan-y`.** Sem isso o dedo que queria descer a página\n *    arrasta a cortina, e a pessoa fica presa na foto. Com isso, vertical rola\n *    a página e horizontal move a cortina — que é o que a mão espera.\n * 2. **Os rótulos são recortados junto com a foto de que fazem parte.** Cada um\n *    mora na sua camada, então \"depois\" some quando a cortina passa por cima\n *    dele. Um rótulo fixo por fora mentiria na metade do caminho.\n *\n *    O preço disso: o rótulo é filho direto da camada, igual à foto. A regra\n *    que manda a mídia preencher a caixa pegava o `<span>` junto e o\n *    transformava num bloco de 100% com o texto encalhado no canto de cima —\n *    parecia posicionamento errado e era o seletor. Por isso ela exclui o\n *    rótulo por nome. Toda vez que uma camada tem mídia E cromo, o `> *` é\n *    largo demais.\n * 3. **A espiada.** Na primeira vez que a peça entra em tela, a cortina anda\n *    sozinha e volta — é assim que a pessoa descobre que dá pra arrastar.\n *    Sem ela, metade das visitas lê a peça como uma foto só. Acontece UMA vez,\n *    e some inteira sob `prefers-reduced-motion`: quem pediu menos movimento\n *    ainda vê as duas fotos e ainda tem o controle.\n * 4. **A espiada não pode brigar com a mão.** Se a pessoa tocar no controle\n *    antes de a demonstração terminar, ela é morta na hora. Animação que\n *    disputa o dedo do usuário é pior que animação nenhuma.\n * 5. **Proporção declarada.** Duas fotos empilhadas em posição absoluta não têm\n *    altura própria; sem `ratio` a caixa nasce com zero de altura e a peça\n *    \"não aparece\" sem erro nenhum.\n */\n\ngsap.registerPlugin(ScrollTrigger);\n\n/**\n * O punho e a costura, e por que eles moram aqui e não no bloco `css` do item.\n *\n * O bloco `css` desenhava `.photo-compare-grip` como um disco de 2,25rem\n * preenchido com `var(--brand)`, e a costura como um fio da marca. Dois\n * reports em sequência: primeiro \"bola azul gigante\", depois \"seta fora do\n * alinhamento com a linha\" e \"menos azul\". As duas coisas tinham causa.\n *\n * - **O desalinhamento era a grade.** A costura é uma coluna de 2px com\n *   `place-items: center`, e um filho de 28px numa trilha de 2px não centra:\n *   ele transborda pra um lado só, e o punho saía com a borda esquerda colada\n *   na linha. Agora o punho é `absolute` no meio exato da costura\n *   (`left/top 50%` + `translate -50%`), sem depender de alinhamento de grade.\n * - **A cor era a marca em cima da foto.** Sobre imagem, a marca disputa com\n *   o conteúdo que a peça existe pra mostrar. Costura e punho agora são da\n *   superfície (`--background`), com sombra curta pra destacar em qualquer\n *   foto, clara ou escura. A marca fica só no anel de foco, que é estado.\n *\n * Mora em utilitária, e não numa reescrita do bloco `css`, pelo mesmo motivo\n * do `@visant/spine-card`: utilitária ganha de `@layer components` por camada,\n * então quem instalou pelo `shadcn add` recebe ESTE desenho mesmo com o bloco\n * antigo ainda na folha. As classes antigas ficam no lugar para o seletor de\n * foco do bloco continuar casando.\n */\nconst COSTURA = [\n  \"bg-[var(--background)]\",\n  \"[box-shadow:0_0_0_0.5px_color-mix(in_oklab,var(--foreground)_18%,transparent),0_0_10px_color-mix(in_oklab,black_30%,transparent)]\",\n].join(\" \");\n\nconst PUNHO = [\n  \"photo-compare-grip\",\n  \"absolute left-1/2 top-1/2 grid size-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-[var(--r-pill,9999px)]\",\n  \"bg-[var(--background)] text-[var(--foreground)]\",\n  \"[box-shadow:0_0_0_1px_color-mix(in_oklab,var(--foreground)_14%,transparent),0_4px_14px_color-mix(in_oklab,black_32%,transparent)]\",\n].join(\" \");\n\nexport interface PhotoCompareProps extends Omit<React.HTMLAttributes<HTMLDivElement>, \"onChange\"> {\n  /** A foto de baixo — o estado original. */\n  before: React.ReactNode;\n  /** A foto de cima, revelada pela cortina. */\n  after: React.ReactNode;\n  beforeLabel?: React.ReactNode;\n  afterLabel?: React.ReactNode;\n  /** Proporção da caixa, formato CSS. Obrigatória na prática: ver decisão 5. */\n  ratio?: string;\n  /** Posição inicial da cortina, 0 a 100. */\n  defaultValue?: number;\n  /** Desliga a espiada de descoberta. */\n  peek?: boolean;\n  /** Rótulo do controle para leitor de tela. */\n  label?: string;\n  onValueChange?: (v: number) => void;\n}\n\nexport function PhotoCompare({\n  before,\n  after,\n  beforeLabel = \"antes\",\n  afterLabel = \"depois\",\n  ratio = \"3/2\",\n  defaultValue = 50,\n  peek = true,\n  label = \"Comparar antes e depois\",\n  onValueChange,\n  className,\n  style,\n  ...props\n}: PhotoCompareProps) {\n  const [pos, setPos] = React.useState(defaultValue);\n  const raizRef = React.useRef<HTMLDivElement>(null);\n  const tocado = React.useRef(false);\n\n  React.useEffect(() => {\n    const raiz = raizRef.current;\n    if (!raiz || !peek) return;\n    if (window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches) return;\n\n    const alvo = { v: defaultValue };\n    const ctx = gsap.context(() => {\n      gsap.to(alvo, {\n        v: defaultValue > 50 ? defaultValue - 22 : defaultValue + 22,\n        duration: 0.9,\n        // `inOut` porque a cortina está se MOVENDO na tela, com as duas pontas\n        // conhecidas — não é entrada nem saída. É o mesmo critério do\n        // `@visant/photo-flip`, e o contrário do `@visant/photo-frame`.\n        ease: \"power2.inOut\",\n        yoyo: true,\n        repeat: 1,\n        delay: 0.35,\n        scrollTrigger: { trigger: raiz, start: \"top 80%\", once: true },\n        // A cada quadro o React recebe o valor: assim existe UMA fonte para a\n        // posição, e a espiada não é um caminho paralelo que desenha por fora.\n        onUpdate: () => {\n          if (tocado.current) return;\n          setPos(alvo.v);\n        },\n      });\n    }, raiz);\n\n    return () => ctx.revert();\n  }, [peek, defaultValue]);\n\n  const mudar = (v: number) => {\n    // O primeiro toque cala a espiada — ver decisão 4. A guarda vive no\n    // `onUpdate` da timeline, e não num `kill()`: matar o tween no meio\n    // deixaria a cortina parada onde estava, e a posição do dedo já é a\n    // resposta certa. O tween continua rodando pra ninguém, e morre sozinho.\n    tocado.current = true;\n    setPos(v);\n    onValueChange?.(v);\n  };\n\n  return (\n    <div\n      ref={raizRef}\n      className={cn(\"photo-compare\", className)}\n      style={{ \"--ratio\": ratio, \"--p\": `${pos}%`, ...style } as React.CSSProperties}\n      {...props}\n    >\n      <div className=\"photo-compare-layer\">\n        {before}\n        {beforeLabel ? (\n          <span className=\"photo-compare-label photo-compare-label-before\">{beforeLabel}</span>\n        ) : null}\n      </div>\n\n      {/* A camada de cima tem a caixa INTEIRA e é recortada — nunca redimensionada. */}\n      <div className=\"photo-compare-layer photo-compare-after\" aria-hidden=\"true\">\n        {after}\n        {afterLabel ? (\n          <span className=\"photo-compare-label photo-compare-label-after\">{afterLabel}</span>\n        ) : null}\n      </div>\n\n      <span aria-hidden=\"true\" className={cn(\"photo-compare-seam\", COSTURA)}>\n        <span className={PUNHO}>\n          {/* Duas setas, e não um disco liso: a alça precisa DIZER que arrasta\n              de lado. Sem o sinal ela vira um ponto no meio da foto. */}\n          <ChevronsLeftRight className=\"size-4\" strokeWidth={2} />\n        </span>\n      </span>\n\n      {/* O controle de verdade. Invisível, do tamanho da caixa, e é dele que\n          vêm teclado, toque, leitor de tela e o arrasto — nenhum deles escrito\n          aqui dentro. */}\n      <input\n        type=\"range\"\n        min={0}\n        max={100}\n        step={0.1}\n        value={pos}\n        onChange={(e) => mudar(Number(e.target.value))}\n        onPointerDown={() => (tocado.current = true)}\n        className=\"photo-compare-input\"\n        aria-label={label}\n        aria-valuetext={`${Math.round(pos)}% do depois`}\n      />\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "css": {
+    "@layer components": {
+      ".photo-compare": {
+        "position": "relative",
+        "aspect-ratio": "var(--ratio, 3/2)",
+        "overflow": "hidden",
+        "border-radius": "var(--r-surface, 16px)",
+        "background": "var(--muted)",
+        "user-select": "none"
+      },
+      ".photo-compare-layer": {
+        "position": "absolute",
+        "inset": "0"
+      },
+      ".photo-compare-layer img, .photo-compare-layer video": {
+        "width": "100%",
+        "height": "100%",
+        "object-fit": "cover",
+        "display": "block"
+      },
+      ".photo-compare-after": {
+        "clip-path": "inset(0 calc(100% - var(--p, 50%)) 0 0)"
+      },
+      ".photo-compare-seam": {
+        "position": "absolute",
+        "top": "0",
+        "bottom": "0",
+        "left": "var(--p, 50%)",
+        "width": "2px",
+        "margin-left": "-1px",
+        "background": "var(--brand)",
+        "pointer-events": "none",
+        "display": "grid",
+        "place-items": "center"
+      },
+      ".photo-compare-grip": {
+        "width": "2.25rem",
+        "height": "2.25rem",
+        "border-radius": "var(--r-pill, 9999px)",
+        "background": "var(--brand)",
+        "box-shadow": "var(--e-raised, 0 2px 8px rgb(0 0 0 / 0.18))"
+      },
+      ".photo-compare-label": {
+        "position": "absolute",
+        "bottom": "0.75rem",
+        "border-radius": "var(--r-pill, 9999px)",
+        "background": "color-mix(in oklab, var(--background) 82%, transparent)",
+        "color": "var(--foreground)",
+        "padding": "0.25rem 0.7rem",
+        "font-size": "12px",
+        "line-height": "1.4",
+        "pointer-events": "none"
+      },
+      ".photo-compare-label-before": {
+        "right": "0.75rem"
+      },
+      ".photo-compare-label-after": {
+        "left": "0.75rem"
+      },
+      ".photo-compare-input": {
+        "position": "absolute",
+        "inset": "0",
+        "width": "100%",
+        "height": "100%",
+        "margin": "0",
+        "opacity": "0",
+        "appearance": "none",
+        "-webkit-appearance": "none",
+        "background": "transparent",
+        "cursor": "ew-resize",
+        "touch-action": "pan-y"
+      },
+      ".photo-compare-input::-webkit-slider-thumb": {
+        "appearance": "none",
+        "-webkit-appearance": "none",
+        "width": "2.75rem",
+        "height": "100%"
+      },
+      ".photo-compare-input::-moz-range-thumb": {
+        "width": "2.75rem",
+        "height": "100%",
+        "border": "0",
+        "background": "transparent"
+      },
+      ".photo-compare-input:focus-visible ~ .photo-compare-seam .photo-compare-grip": {
+        "outline": "none",
+        "box-shadow": "var(--focus, 0 0 0 2px var(--ring))"
+      },
+      ".photo-compare-layer > :not(.photo-compare-label)": {
+        "width": "100%",
+        "height": "100%",
+        "display": "block"
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".photo-compare-seam": {
+        "transition": "none"
+      }
+    }
+  },
+  "meta": {
+    "uso": {
+      "quando": "Comparar antes e depois de rebrand, retoque ou obra com cortina arrastável",
+      "evite": "Fotos diferentes em sequência: mist-swap; uma foto em tela cheia, photo-flip"
+    }
+  },
+  "categories": [
+    "midia",
+    "foto",
+    "antes",
+    "depois",
+    "comparar",
+    "cortina",
+    "rebrand",
+    "slider"
+  ],
+  "type": "registry:ui"
+}

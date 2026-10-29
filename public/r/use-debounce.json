@@ -15,5 +15,11 @@
       "target": "@hooks/use-debounce.ts"
     }
   ],
+  "categories": [
+    "base",
+    "hook",
+    "busca",
+    "debounce"
+  ],
   "type": "registry:hook"
 }

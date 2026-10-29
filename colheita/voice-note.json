@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "voice-note",
+    "title": "Voice Note",
+    "type": "ui",
+    "family": "midia",
+    "description": "Nota de voz de chat com forma de onda, play e pausa, e busca clicando ou arrastando na onda.",
+    "tags": [
+      "áudio",
+      "chat",
+      "player",
+      "forma de onda"
+    ],
+    "demoImport": "./demos/voice-note-demo",
+    "knobs": "VoiceNote",
+    "preview": {
+      "w": 340,
+      "h": 130
+    }
+  },
+  "registry": {
+    "name": "voice-note",
+    "type": "registry:ui",
+    "title": "Voice Note",
+    "description": "Nota de voz de chat com forma de onda, play e pausa, e busca clicando ou arrastando na onda.",
+    "dependencies": [
+      "motion",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "utils"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/voice-note.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/voice-note"
+}

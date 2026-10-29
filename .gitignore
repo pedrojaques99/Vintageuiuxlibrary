@@ -9,3 +9,9 @@ dist
 
 # Referências visuais de trabalho: entram pra estudar, não pro repo.
 .refs/
+public/anatomia/
+anatomia/web/
+test-results/
+
+# Medições locais de performance (scripts/perf-*.mjs): régua de antes/depois, não código.
+perf/
