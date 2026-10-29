@@ -165,5 +165,19 @@
   "shader-pixelate": "2026-10-20",
   "shader-posterize": "2026-10-29",
   "shader-upscale": "2026-10-29",
-  "shader-vhs": "2026-10-29"
+  "shader-vhs": "2026-10-29",
+  "textura-pinch": "2026-10-20",
+  "textura-sphere": "2026-10-20",
+  "textura-twist": "2026-10-20",
+  "textura-tiles": "2026-10-20",
+  "textura-warp": "2026-10-20",
+  "textura-watch": "2026-10-29",
+  "textura-gaze": "2026-10-29",
+  "textura-magnet": "2026-10-29",
+  "textura-settle": "2026-10-29",
+  "textura-glow": "2026-10-29",
+  "textura-beam": "2026-10-20",
+  "textura-current": "2026-10-20",
+  "textura-curtain": "2026-10-29",
+  "textura-pillars": "2026-10-29"
 }

@@ -16,10 +16,22 @@
 
 import * as React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { ArrowUpRight, Plug, X } from "lucide-react";
+import { ArrowUpRight, ChevronRight, Globe, MessageSquareText, Plug, X } from "lucide-react";
+import { siClaude, siCursor, siGithubcopilot, siOpenai, type SimpleIcon } from "simple-icons";
 import { cn } from "@/lib/utils";
-import { Aba } from "./casa-ui";
 import { CopyCommand } from "./copy-command";
+
+/**
+ * O traço de um logo do `simple-icons`, na cor do texto. Local e não Iconify:
+ * logo que depende de rede vira bolinha vazia quando a API falha.
+ */
+export function LogoAgente({ icone, className = "size-3.5" }: { icone: SimpleIcon; className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden className={cn("shrink-0 fill-current", className)}>
+      <path d={icone.path} />
+    </svg>
+  );
+}
 
 const SITE = "https://ui.visantlabs.com";
 const REGISTRY_URL = `${SITE}/r/{name}.json`;
@@ -49,6 +61,8 @@ type Agente = "claude" | "cursor" | "vscode" | "codex" | "web" | "outro";
 const AGENTES: {
   id: Agente;
   nome: string;
+  /** O logo no seletor: traço do `simple-icons` ou ícone de interface. */
+  logo: SimpleIcon | typeof Globe;
   /** A ação: link de um clique ou texto pra copiar. */
   acao: { link: string; rotulo: string } | { copiar: string };
   /** Uma linha, no máximo, sobre o que acontece depois. */
@@ -58,27 +72,31 @@ const AGENTES: {
 }[] = [
   {
     id: "claude",
+    logo: siClaude,
     nome: "Claude Code",
     acao: { copiar: "claude mcp add shadcn -- npx shadcn@latest mcp" },
-    depois: "Rode no terminal do projeto e reinicie o Claude Code. O /mcp mostra conectado.",
+    depois: "No terminal do projeto. Reinicie o Claude Code; o /mcp mostra conectado.",
     registry: true,
   },
   {
     id: "cursor",
+    logo: siCursor,
     nome: "Cursor",
     acao: { link: cursorLink, rotulo: "Adicionar ao Cursor" },
-    depois: "O Cursor abre e pede pra confirmar. Depois é só ligar o servidor em Settings.",
+    depois: "Confirme no Cursor e ligue o servidor em Settings.",
     registry: true,
   },
   {
     id: "vscode",
+    logo: siGithubcopilot,
     nome: "VS Code",
     acao: { link: vscodeLink, rotulo: "Adicionar ao VS Code" },
-    depois: "O VS Code abre a instalação do servidor pro Copilot.",
+    depois: "O VS Code instala o servidor pro Copilot.",
     registry: true,
   },
   {
     id: "codex",
+    logo: siOpenai,
     nome: "Codex",
     acao: { copiar: `[mcp_servers.shadcn]\ncommand = "npx"\nargs = ["shadcn@latest", "mcp"]` },
     depois: "Cole em ~/.codex/config.toml e reinicie o Codex.",
@@ -86,16 +104,18 @@ const AGENTES: {
   },
   {
     id: "web",
-    nome: "Claude.ai e ChatGPT",
+    logo: Globe,
+    nome: "Apps web",
     acao: { copiar: `${SITE}/mcp` },
-    depois: "Em Configurações, Conectores, adicione um conector personalizado com esta URL. O agente passa a recomendar peças pro seu projeto.",
+    depois: "No Claude.ai ou ChatGPT: Configurações → Conectores → conector personalizado, com esta URL.",
     registry: false,
   },
   {
     id: "outro",
-    nome: "Outro agente",
+    logo: MessageSquareText,
+    nome: "Outro",
     acao: { copiar: PROMPT },
-    depois: "Cole no começo da conversa. Serve pra qualquer agente que lê a web, sem MCP.",
+    depois: "Cole no começo da conversa. Funciona sem MCP.",
     registry: false,
   },
 ];
@@ -159,25 +179,41 @@ export function Conectar({ className }: { className?: string }) {
             "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-[0.98]",
           )}
         >
-          <div className="flex items-start justify-between gap-4">
-            <Dialog.Title className="text-casa-lg font-medium">Conectar ao seu agente</Dialog.Title>
-            <Dialog.Close className="casa-icone alvo-toque -mr-2 -mt-1" aria-label="Fechar">
+          <div className="flex items-center justify-between gap-4">
+            <Dialog.Title className="text-casa-lg font-medium">Conectar seu agente</Dialog.Title>
+            <Dialog.Close className="casa-icone alvo-toque -mr-2" aria-label="Fechar">
               <X className="h-4 w-4" />
             </Dialog.Close>
           </div>
-          <Dialog.Description className="mt-1 text-casa-base text-casa-fg-2">
+          <Dialog.Description className="sr-only">
             Seu agente busca, escolhe e instala as peças sozinho.
           </Dialog.Description>
 
-          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-1" role="group" aria-label="Agente">
-            {AGENTES.map((a) => (
-              <Aba key={a.id} ativa={a.id === agente} onClick={() => setAgente(a.id)}>
-                {a.nome}
-              </Aba>
-            ))}
+          {/* Seis agentes numa grade de logos: o nome cabe sem quebrar em duas
+              linhas de abas, e o logo é o que se reconhece primeiro. */}
+          <div className="mt-5 grid grid-cols-2 gap-1.5 sm:grid-cols-3" role="group" aria-label="Agente">
+            {AGENTES.map((a) => {
+              const ativa = a.id === agente;
+              return (
+                <button
+                  key={a.id}
+                  type="button"
+                  onClick={() => setAgente(a.id)}
+                  aria-pressed={ativa}
+                  className={cn(
+                    "flex min-w-0 items-center gap-2 rounded-control px-2.5 py-2 text-left text-casa-sm transition-colors [transition-duration:var(--dur-fast)]",
+                    "focus-visible:outline-none focus-visible:[box-shadow:var(--focus)]",
+                    ativa ? "bg-casa-tile-2 text-casa-fg" : "text-casa-fg-2 hover:bg-casa-tile-2/50 hover:text-casa-fg",
+                  )}
+                >
+                  {"path" in a.logo ? <LogoAgente icone={a.logo} /> : <a.logo className="size-3.5 shrink-0" aria-hidden />}
+                  <span className="truncate">{a.nome}</span>
+                </button>
+              );
+            })}
           </div>
 
-          <div className="mt-5 space-y-3">
+          <div className="mt-5 space-y-2">
             {"link" in atual.acao ? (
               <a
                 href={atual.acao.link}
@@ -192,20 +228,27 @@ export function Conectar({ className }: { className?: string }) {
             <p className="text-casa-sm text-casa-fg-3">{atual.depois}</p>
           </div>
 
+          {/* O passo do `components.json` é obrigatório até o índice; as regras
+              do agente são opcionais, então ficam fechadas. */}
           {atual.registry ? (
-            <div className="mt-6 space-y-4 border-t border-casa-line pt-5">
+            <div className="mt-5 space-y-3 border-t border-casa-line pt-4">
               {!NO_INDICE ? (
                 <div className="space-y-2">
                   <p className="text-casa-sm text-casa-fg-2">
-                    No <code>components.json</code> do projeto, pro agente achar o <code>@visant</code>:
+                    E no <code>components.json</code> do projeto:
                   </p>
                   <Bloco texto={COMPONENTS_JSON} />
                 </div>
               ) : null}
-              <div className="space-y-2">
-                <p className="text-casa-sm text-casa-fg-2">Pro agente escolher a peça certa sem você pedir:</p>
-                <Bloco texto="npx shadcn@latest add @visant/agent-rules" />
-              </div>
+              <details className="group">
+                <summary className="flex cursor-pointer list-none items-center gap-1 rounded-control text-casa-sm text-casa-fg-3 hover:text-casa-fg-2 focus-visible:outline-none focus-visible:[box-shadow:var(--focus)] [&::-webkit-details-marker]:hidden">
+                  <ChevronRight className="size-3.5 transition-transform [transition-duration:var(--dur-fast)] group-open:rotate-90" aria-hidden />
+                  Opcional: o agente escolhe a peça sem você pedir
+                </summary>
+                <div className="mt-2">
+                  <Bloco texto="npx shadcn@latest add @visant/agent-rules" />
+                </div>
+              </details>
             </div>
           ) : null}
         </Dialog.Content>
