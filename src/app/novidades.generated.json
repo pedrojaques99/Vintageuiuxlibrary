@@ -147,5 +147,11 @@
   "anatomia-tokens": "2026-10-20",
   "anatomia-script": "2026-10-20",
   "anatomia-permissao": "2026-10-20",
-  "agent-rules": "2026-10-20"
+  "agent-rules": "2026-10-20",
+  "use-debounce": "2026-08-11",
+  "search-field": "2026-08-11",
+  "filter-menu": "2026-08-11",
+  "filter-bar": "2026-08-11",
+  "searchable-select": "2026-08-11",
+  "command-search": "2026-08-11"
 }

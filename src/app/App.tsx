@@ -56,13 +56,15 @@ if (typeof window !== "undefined") {
   const ocioso = window.requestIdleCallback ?? ((fn: () => void) => window.setTimeout(fn, 1500));
   window.addEventListener("load", () => ocioso(() => void carregarFicha()), { once: true });
 }
+/* O laboratório de interações (`/lab`): só quem abre a rota paga pelo chunk. */
+const Lab = React.lazy(() => import("./Lab").then((m) => ({ default: m.Lab })));
 import { KitRoom } from "./KitRoom";
 import { KITS } from "./kits";
 import { DEFAULT_BRAND, REGISTRY_URL } from "./registry-meta";
 import { VisantAuthProvider } from "./visant-auth";
 import { MinhasMarcas } from "./MinhasMarcas";
 
-type View = "kits" | "catalogo" | "marca";
+type View = "kits" | "catalogo" | "marca" | "lab";
 
 interface Route {
   view: View;
@@ -137,6 +139,9 @@ function parsePath(loc: Location): Route {
   if (partes[0] === "kit" && partes[1]) {
     return { view: "kits", focus: null, kit: decodeURIComponent(partes[1]), familia: null };
   }
+  /* `/lab` fica fora das três portas do cabeçalho: é bancada de rascunho, não
+     seção da library. Entra por endereço. */
+  if (partes[0] === "lab") return { view: "lab", focus: null, kit: null, familia: null };
   /* `/rig` era a aba da bancada. Hoje a bancada é uma sala, e o link antigo
      entra nela em vez de dar 404 em quem tinha o endereço salvo. */
   if (partes[0] === "rig")
@@ -414,6 +419,7 @@ function Shell() {
           deve fazer a página encolher e voltar a crescer. */}
       <React.Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
         {route.view === "marca" && <BrandStudioBody />}
+        {route.view === "lab" && <Lab />}
       </React.Suspense>
 
       <Busca aberto={buscando} onAberto={setBuscando} onEscolher={escolherNaBusca} />
