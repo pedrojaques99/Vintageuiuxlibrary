@@ -106,6 +106,13 @@ const SECOES = [
     titulo: "Rig vintage — @visant/ui",
     descricao: "A bancada de áudio: knobs, faders, VU, osciloscópio e paleta de comandos.",
   },
+  /* `/lab` não está no cabeçalho, mas entra por endereço: sem HTML próprio ele
+     dá 404 na Vercel, porque o rewrite pro index.html não cobre esta vitrine. */
+  {
+    slug: "lab",
+    titulo: "Lab — @visant/ui",
+    descricao: "Bancada de interações: uma nova por dia, e só fica a que presta.",
+  },
 ];
 
 /*
