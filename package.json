@@ -43,7 +43,11 @@
     "anatomia": "node scripts/anatomia-build.mjs && vite build -c anatomia/vite.web.config.mjs",
     "build:gpu": "node scripts/gpu-extract.mjs",
     "perf": "node scripts/perf-catalogo.mjs",
-    "perf:pecas": "node scripts/perf-pecas.mjs"
+    "perf:pecas": "node scripts/perf-pecas.mjs",
+    "lab:new": "node scripts/lab.mjs new",
+    "lab:check": "node scripts/lab.mjs check",
+    "lab:keep": "node scripts/lab.mjs keep",
+    "lab:discard": "node scripts/lab.mjs discard"
   },
   "dependencies": {
     "@dgreenheck/ez-tree": "1.1.0",

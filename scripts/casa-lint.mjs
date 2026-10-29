@@ -46,6 +46,7 @@ export const CASCA = [
   "src/app/KitRoom.tsx",
   "src/app/BrandStudio.tsx",
   "src/app/avaliacao.tsx",
+  "src/app/Lab.tsx",
 ];
 
 export const REGRAS = [
