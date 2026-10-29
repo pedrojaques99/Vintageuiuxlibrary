@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "textura-settle",
+    "title": "Textura Settle",
+    "type": "ui",
+    "family": "texturas",
+    "description": "Areia rastelada que o cursor espalha e que assenta de volta devagar, com os sulcos reaparecendo.",
+    "tags": [
+      "textura",
+      "webgl",
+      "fundo",
+      "ponteiro",
+      "areia",
+      "grao",
+      "rastelo"
+    ],
+    "demoImport": "./demos/textura-settle-demo",
+    "knobs": "TexturaSettle",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "textura-settle",
+    "type": "registry:ui",
+    "title": "Textura Settle",
+    "description": "Areia rastelada que o cursor espalha e que assenta de volta devagar, com os sulcos reaparecendo.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-settle.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

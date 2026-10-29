@@ -8246,5 +8246,537 @@
         }
       ]
     }
+  },
+  "textura-pinch": {
+    "componentes": {
+      "TexturaPinch": [
+        {
+          "prop": "radius",
+          "tipo": "numero",
+          "min": 10,
+          "max": 60,
+          "step": 1,
+          "padrao": 32,
+          "resumo": "Raio do beliscão, em % do lado menor."
+        },
+        {
+          "prop": "strength",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 70,
+          "resumo": "Força do beliscão, de solto a apertado."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem beliscada pelo cursor",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante beliscados pelo cursor"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a beliscar. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "textura-sphere": {
+    "componentes": {
+      "TexturaSphere": [
+        {
+          "prop": "radius",
+          "tipo": "numero",
+          "min": 10,
+          "max": 50,
+          "step": 1,
+          "padrao": 26,
+          "resumo": "Raio da bolha, em % do lado menor."
+        },
+        {
+          "prop": "strength",
+          "tipo": "numero",
+          "min": 0,
+          "max": 90,
+          "step": 1,
+          "padrao": 55,
+          "resumo": "Quanto a bolha amplia o miolo."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem sob uma bolha de vidro",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante sob uma bolha de vidro"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem debaixo da bolha. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "textura-twist": {
+    "componentes": {
+      "TexturaTwist": [
+        {
+          "prop": "angle",
+          "tipo": "numero",
+          "min": 0,
+          "max": 720,
+          "step": 15,
+          "padrao": 300,
+          "resumo": "Quanto o miolo gira, em graus."
+        },
+        {
+          "prop": "radius",
+          "tipo": "numero",
+          "min": 10,
+          "max": 70,
+          "step": 1,
+          "padrao": 38,
+          "resumo": "Raio do redemoinho, em % do lado menor."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem em redemoinho",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante torcidos em redemoinho"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a torcer. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "textura-tiles": {
+    "componentes": {
+      "TexturaTiles": [
+        {
+          "prop": "gap",
+          "tipo": "numero",
+          "min": 0,
+          "max": 8,
+          "step": 0.5,
+          "padrao": 1.5,
+          "resumo": "Junta de papel entre ladrilhos, em px."
+        },
+        {
+          "prop": "radius",
+          "tipo": "numero",
+          "min": 10,
+          "max": 80,
+          "step": 1,
+          "padrao": 34,
+          "resumo": "Alcance do cursor, em % do lado menor."
+        },
+        {
+          "prop": "size",
+          "tipo": "numero",
+          "min": 12,
+          "max": 80,
+          "step": 1,
+          "padrao": 32,
+          "resumo": "Lado de cada ladrilho, em px."
+        },
+        {
+          "prop": "strength",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 85,
+          "resumo": "Quanto os ladrilhos levantam perto do cursor."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem em ladrilhos",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante em ladrilhos"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a ladrilhar. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "textura-warp": {
+    "componentes": {
+      "TexturaWarp": [
+        {
+          "prop": "scale",
+          "tipo": "numero",
+          "min": 1,
+          "max": 10,
+          "step": 0.5,
+          "padrao": 3,
+          "resumo": "Tamanho dos veios: menor é onda larga, maior é veio fino."
+        },
+        {
+          "prop": "stir",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 60,
+          "resumo": "Quanto o ponteiro rápido agita a superfície."
+        },
+        {
+          "prop": "strength",
+          "tipo": "numero",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "padrao": 10,
+          "resumo": "Quanto a imagem escorre em repouso, em px."
+        },
+        {
+          "prop": "alt",
+          "tipo": "texto",
+          "padrao": "Imagem escorrendo em ruído",
+          "resumo": "Texto alternativo da imagem.",
+          "inicial": "Caixa e diamante escorrendo em ruído"
+        },
+        {
+          "prop": "src",
+          "tipo": "texto",
+          "padrao": null,
+          "resumo": "A imagem a escorrer. Fundo transparente vira papel.",
+          "inicial": "/media/cena-produto.webp"
+        }
+      ]
+    }
+  },
+  "textura-watch": {
+    "componentes": {
+      "TexturaWatch": [
+        {
+          "prop": "rows",
+          "tipo": "numero",
+          "min": 2,
+          "max": 12,
+          "step": 1,
+          "padrao": 5,
+          "resumo": "Quantos mostradores cabem na altura."
+        },
+        {
+          "prop": "trail",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 60,
+          "resumo": "Quanto o ponteiro curto se atrasa atrás do longo."
+        },
+        {
+          "prop": "weight",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "Espessura dos ponteiros."
+        }
+      ]
+    }
+  },
+  "textura-gaze": {
+    "componentes": {
+      "TexturaGaze": [
+        {
+          "prop": "blink",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 35,
+          "resumo": "Frequência das piscadas."
+        },
+        {
+          "prop": "follow",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 75,
+          "resumo": "O quanto a pupila corre atrás do cursor."
+        },
+        {
+          "prop": "iris",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 50,
+          "resumo": "Tamanho da íris."
+        },
+        {
+          "prop": "rows",
+          "tipo": "numero",
+          "min": 2,
+          "max": 10,
+          "step": 1,
+          "padrao": 4,
+          "resumo": "Quantas fileiras de olhos cabem na altura."
+        }
+      ]
+    }
+  },
+  "textura-magnet": {
+    "componentes": {
+      "TexturaMagnet": [
+        {
+          "prop": "density",
+          "tipo": "numero",
+          "min": 10,
+          "max": 60,
+          "step": 1,
+          "padrao": 30,
+          "resumo": "Quantos grãos de limalha na altura."
+        },
+        {
+          "prop": "length",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 55,
+          "resumo": "Comprimento de cada traço."
+        },
+        {
+          "prop": "strength",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 60,
+          "resumo": "Força do ímã: até onde a limalha se alinha."
+        }
+      ]
+    }
+  },
+  "textura-settle": {
+    "componentes": {
+      "TexturaSettle": [
+        {
+          "prop": "grain",
+          "tipo": "numero",
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "padrao": 2,
+          "resumo": "Tamanho do grão, em px."
+        },
+        {
+          "prop": "radius",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 45,
+          "resumo": "Raio do rastro do ponteiro."
+        },
+        {
+          "prop": "ridges",
+          "tipo": "numero",
+          "min": 4,
+          "max": 40,
+          "step": 1,
+          "padrao": 16,
+          "resumo": "Quantos sulcos de rastelo na altura."
+        },
+        {
+          "prop": "settle",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 35,
+          "resumo": "Velocidade com que a areia assenta."
+        }
+      ]
+    }
+  },
+  "textura-glow": {
+    "componentes": {
+      "TexturaGlow": [
+        {
+          "prop": "grain",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 45,
+          "resumo": "Quanto grão sobre a superfície."
+        },
+        {
+          "prop": "intensity",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 70,
+          "resumo": "Força do brilho."
+        },
+        {
+          "prop": "radius",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 45,
+          "resumo": "Raio do brilho."
+        }
+      ]
+    }
+  },
+  "textura-beam": {
+    "componentes": {
+      "TexturaBeam": [
+        {
+          "prop": "dust",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 60,
+          "resumo": "Quanta poeira boia na luz."
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 30,
+          "resumo": "Velocidade da poeira."
+        },
+        {
+          "prop": "width",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 40,
+          "resumo": "Abertura do facho."
+        }
+      ]
+    }
+  },
+  "textura-current": {
+    "componentes": {
+      "TexturaCurrent": [
+        {
+          "prop": "lines",
+          "tipo": "numero",
+          "min": 6,
+          "max": 40,
+          "step": 1,
+          "padrao": 16,
+          "resumo": "Quantas linhas de corrente na altura."
+        },
+        {
+          "prop": "speed",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 35,
+          "resumo": "Velocidade da correnteza."
+        },
+        {
+          "prop": "wake",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 45,
+          "resumo": "Tamanho da pedra que o ponteiro põe na água."
+        }
+      ]
+    }
+  },
+  "textura-curtain": {
+    "componentes": {
+      "TexturaCurtain": [
+        {
+          "prop": "depth",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 65,
+          "resumo": "Profundidade das dobras: o quanto a sombra afunda."
+        },
+        {
+          "prop": "folds",
+          "tipo": "numero",
+          "min": 2,
+          "max": 24,
+          "step": 1,
+          "padrao": 7,
+          "resumo": "Quantas dobras na altura."
+        },
+        {
+          "prop": "ripple",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 55,
+          "resumo": "Força da onda que o ponteiro deixa."
+        }
+      ]
+    }
+  },
+  "textura-pillars": {
+    "componentes": {
+      "TexturaPillars": [
+        {
+          "prop": "height",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 60,
+          "resumo": "Altura máxima do morro sob o ponteiro."
+        },
+        {
+          "prop": "radius",
+          "tipo": "numero",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "padrao": 45,
+          "resumo": "Raio do morro."
+        },
+        {
+          "prop": "rows",
+          "tipo": "numero",
+          "min": 4,
+          "max": 24,
+          "step": 1,
+          "padrao": 10,
+          "resumo": "Quantas fileiras de pilares na altura."
+        }
+      ]
+    }
   }
 }

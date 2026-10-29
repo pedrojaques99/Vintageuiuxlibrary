@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "textura-twist",
+    "title": "Textura Twist",
+    "type": "ui",
+    "family": "texturas",
+    "description": "A imagem gira em redemoinho em volta do ponteiro e se desfaz devagar quando ele sai.",
+    "tags": [
+      "textura",
+      "webgl",
+      "ponteiro",
+      "imagem",
+      "redemoinho",
+      "distorção"
+    ],
+    "demoImport": "./demos/textura-twist-demo",
+    "knobs": "TexturaTwist",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "textura-twist",
+    "type": "registry:ui",
+    "title": "Textura Twist",
+    "description": "A imagem gira em redemoinho em volta do ponteiro e se desfaz devagar quando ele sai.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-twist.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

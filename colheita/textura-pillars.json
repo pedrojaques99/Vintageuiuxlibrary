@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "textura-pillars",
+    "title": "Textura Pillars",
+    "type": "ui",
+    "family": "texturas",
+    "description": "Campo de pilares em pseudo-3D que sobem perto do cursor e descem ao sair.",
+    "tags": [
+      "textura",
+      "webgl",
+      "fundo",
+      "ponteiro",
+      "pilares",
+      "3d",
+      "campo"
+    ],
+    "demoImport": "./demos/textura-pillars-demo",
+    "knobs": "TexturaPillars",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "textura-pillars",
+    "type": "registry:ui",
+    "title": "Textura Pillars",
+    "description": "Campo de pilares em pseudo-3D que sobem perto do cursor e descem ao sair.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-pillars.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

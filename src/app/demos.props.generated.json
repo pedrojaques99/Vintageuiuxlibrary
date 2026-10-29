@@ -405,5 +405,57 @@
     "src": "/media/cena-produto.webp",
     "alt": "Caixa e diamante tocados de fita VHS",
     "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-beam": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-current": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-curtain": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-gaze": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-glow": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-magnet": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-pillars": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-pinch": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante beliscados pelo cursor",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-settle": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-sphere": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante sob uma bolha de vidro",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-tiles": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante em ladrilhos",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-twist": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante torcidos em redemoinho",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-warp": {
+    "src": "/media/cena-produto.webp",
+    "alt": "Caixa e diamante escorrendo em ruído",
+    "className": "w-[400px] max-w-full rounded-[var(--r-surface)]"
+  },
+  "textura-watch": {
+    "className": "w-[560px] max-w-full rounded-[var(--r-surface)]"
   }
 }

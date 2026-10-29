@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "textura-tiles",
+    "title": "Textura Tiles",
+    "type": "ui",
+    "family": "texturas",
+    "description": "A imagem em ladrilhos que encolhem, se afastam e se inclinam perto do ponteiro.",
+    "tags": [
+      "textura",
+      "webgl",
+      "ponteiro",
+      "imagem",
+      "ladrilho",
+      "grade"
+    ],
+    "demoImport": "./demos/textura-tiles-demo",
+    "knobs": "TexturaTiles",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "textura-tiles",
+    "type": "registry:ui",
+    "title": "Textura Tiles",
+    "description": "A imagem em ladrilhos que encolhem, se afastam e se inclinam perto do ponteiro.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-tiles.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

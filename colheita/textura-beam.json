@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "textura-beam",
+    "title": "Textura Beam",
+    "type": "ui",
+    "family": "texturas",
+    "description": "Facho de luz que desce do alto com poeira boiando dentro e que mira o cursor.",
+    "tags": [
+      "textura",
+      "webgl",
+      "fundo",
+      "ponteiro",
+      "facho",
+      "luz",
+      "poeira"
+    ],
+    "demoImport": "./demos/textura-beam-demo",
+    "knobs": "TexturaBeam",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "textura-beam",
+    "type": "registry:ui",
+    "title": "Textura Beam",
+    "description": "Facho de luz que desce do alto com poeira boiando dentro e que mira o cursor.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-beam.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

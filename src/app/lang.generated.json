@@ -167,5 +167,19 @@
   "shader-pixelate": "react",
   "shader-posterize": "react",
   "shader-upscale": "react",
-  "shader-vhs": "react"
+  "shader-vhs": "react",
+  "textura-pinch": "react",
+  "textura-sphere": "react",
+  "textura-twist": "react",
+  "textura-tiles": "react",
+  "textura-warp": "react",
+  "textura-watch": "react",
+  "textura-gaze": "react",
+  "textura-magnet": "react",
+  "textura-settle": "react",
+  "textura-glow": "react",
+  "textura-beam": "react",
+  "textura-current": "react",
+  "textura-curtain": "react",
+  "textura-pillars": "react"
 }

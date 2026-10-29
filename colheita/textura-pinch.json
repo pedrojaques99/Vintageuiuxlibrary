@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "textura-pinch",
+    "title": "Textura Pinch",
+    "type": "ui",
+    "family": "texturas",
+    "description": "A imagem é sugada para o ponteiro como pele beliscada, e solta devagar quando ele sai.",
+    "tags": [
+      "textura",
+      "webgl",
+      "ponteiro",
+      "imagem",
+      "beliscar",
+      "distorção"
+    ],
+    "demoImport": "./demos/textura-pinch-demo",
+    "knobs": "TexturaPinch",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "textura-pinch",
+    "type": "registry:ui",
+    "title": "Textura Pinch",
+    "description": "A imagem é sugada para o ponteiro como pele beliscada, e solta devagar quando ele sai.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-pinch.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "textura-glow",
+    "title": "Textura Glow",
+    "type": "ui",
+    "family": "texturas",
+    "description": "Brilho macio na cor da marca que segue o cursor sobre grão fino, esticando no rumo do movimento.",
+    "tags": [
+      "textura",
+      "webgl",
+      "fundo",
+      "ponteiro",
+      "brilho",
+      "grao",
+      "luz"
+    ],
+    "demoImport": "./demos/textura-glow-demo",
+    "knobs": "TexturaGlow",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "textura-glow",
+    "type": "registry:ui",
+    "title": "Textura Glow",
+    "description": "Brilho macio na cor da marca que segue o cursor sobre grão fino, esticando no rumo do movimento.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-glow.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

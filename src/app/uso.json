@@ -599,6 +599,62 @@
     "quando": "Foto com falha digital que piora com o mouse rápido, em hero de música, evento ou tech",
     "evite": "Franja de cor parada que segue o cursor: shader-chromatic-aberration; fita analógica, shader-vhs"
   },
+  "textura-pinch": {
+    "quando": "Foto de produto ou retrato que a pessoa belisca com o cursor, em hero de moda, beleza ou campanha",
+    "evite": "Redemoinho em volta do cursor: textura-twist; lupa que amplia, textura-sphere"
+  },
+  "textura-sphere": {
+    "quando": "Foto de produto com uma lupa de vidro sob o cursor, pra mostrar detalhe em hero ou página de produto",
+    "evite": "Pele puxada pro cursor: textura-pinch; lupa com retícula de jornal, shader-halftone"
+  },
+  "textura-twist": {
+    "quando": "Foto que gira em redemoinho sob o cursor, em hero de música, evento ou campanha psicodélica",
+    "evite": "Pele beliscada sem giro: textura-pinch; foto escorrendo em ruído, textura-warp"
+  },
+  "textura-tiles": {
+    "quando": "Foto quebrada em ladrilhos que se abrem perto do cursor, em portfólio, capa de projeto ou hero de arquitetura",
+    "evite": "Foto em blocos de cor parados: shader-pixelate; distorção contínua sem grade, textura-pinch"
+  },
+  "textura-warp": {
+    "quando": "Foto que escorre como reflexo na água e agita com o mouse rápido, em hero editorial, música ou moda",
+    "evite": "Redemoinho preso ao cursor: textura-twist; falha digital em faixas, shader-glitch"
+  },
+  "textura-watch": {
+    "quando": "Fundo de hero lúdico com uma grade de relógios que apontam pro cursor, em landing de produto ou evento",
+    "evite": "Olhos que seguem o cursor: textura-gaze; traços finos alinhados ao campo, textura-magnet"
+  },
+  "textura-gaze": {
+    "quando": "Fundo de hero com uma grade de olhos que seguem o cursor, em campanha, portfólio ou página de arte",
+    "evite": "Um avatar só com olhos: eye-tracker; ponteiros de relógio em vez de pupilas, textura-watch"
+  },
+  "textura-magnet": {
+    "quando": "Fundo de hero com limalha de ferro que se alinha ao cursor, em landing tech, ciência ou portfólio",
+    "evite": "Linhas de fluxo que desviam do cursor: textura-current; ponteiros grandes de relógio, textura-watch"
+  },
+  "textura-settle": {
+    "quando": "Fundo calmo de areia rastelada que o cursor espalha e volta a assentar, em bem-estar, spa ou editorial",
+    "evite": "Correnteza que nunca para: textura-current; malha de pontos leve sem WebGL, spring-dots"
+  },
+  "textura-glow": {
+    "quando": "Fundo escuro de hero com um brilho da marca seguindo o cursor sobre grão fino, atrás de título curto",
+    "evite": "Facho de luz vindo do alto: textura-beam; fios de luz ondulando sozinhos, shader-neon"
+  },
+  "textura-beam": {
+    "quando": "Fundo de palco com um facho de luz e poeira que mira o cursor, em abertura de evento, lançamento ou música",
+    "evite": "Brilho macio sem direção: textura-glow; cortina de palco, textura-curtain"
+  },
+  "textura-current": {
+    "quando": "Fundo de hero com linhas de correnteza que abrem caminho em volta do cursor, em landing de dados, clima ou viagem",
+    "evite": "Limalha parada alinhada ao campo: textura-magnet; névoa leve sem WebGL, turbulence-field"
+  },
+  "textura-curtain": {
+    "quando": "Fundo de cortina de dobras que ondula onde o cursor passa, em abertura de evento, teatro ou lançamento",
+    "evite": "Facho de luz de palco: textura-beam; areia que assenta, textura-settle"
+  },
+  "textura-pillars": {
+    "quando": "Fundo de hero com um campo de pilares em pseudo-3D que sobem perto do cursor, em landing tech ou de arquitetura",
+    "evite": "Cena 3D de verdade com objeto: uma peça da família 3d; ladrilhos de foto, textura-tiles"
+  },
   "anatomia": {
     "quando": "Montar figura didática interativa com pinos e passo a passo; é a base de toda anatomia-*",
     "evite": "Diagrama estático ou explicação sem interação: imagem ou SVG simples"

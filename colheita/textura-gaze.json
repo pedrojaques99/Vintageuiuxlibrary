@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "textura-gaze",
+    "title": "Textura Gaze",
+    "type": "ui",
+    "family": "texturas",
+    "description": "Grade de olhos cujas pupilas seguem o cursor e que piscam de vez em quando, cada um no seu tempo.",
+    "tags": [
+      "textura",
+      "webgl",
+      "fundo",
+      "ponteiro",
+      "olhos",
+      "pupila",
+      "grade"
+    ],
+    "demoImport": "./demos/textura-gaze-demo",
+    "knobs": "TexturaGaze",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "textura-gaze",
+    "type": "registry:ui",
+    "title": "Textura Gaze",
+    "description": "Grade de olhos cujas pupilas seguem o cursor e que piscam de vez em quando, cada um no seu tempo.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-gaze.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

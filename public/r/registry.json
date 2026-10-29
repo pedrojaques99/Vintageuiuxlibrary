@@ -6452,6 +6452,476 @@
         "fita",
         "retro"
       ]
+    },
+    {
+      "name": "textura-pinch",
+      "type": "registry:ui",
+      "title": "Textura Pinch",
+      "description": "A imagem é sugada para o ponteiro como pele beliscada, e solta devagar quando ele sai.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-pinch.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "ponteiro",
+        "imagem",
+        "beliscar",
+        "distorcao"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Foto de produto ou retrato que a pessoa belisca com o cursor, em hero de moda, beleza ou campanha",
+          "evite": "Redemoinho em volta do cursor: textura-twist; lupa que amplia, textura-sphere"
+        }
+      }
+    },
+    {
+      "name": "textura-sphere",
+      "type": "registry:ui",
+      "title": "Textura Sphere",
+      "description": "Uma bolha de vidro passeia sob o ponteiro e amplia a imagem como olho de peixe.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-sphere.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "ponteiro",
+        "imagem",
+        "lupa",
+        "fisheye"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Foto de produto com uma lupa de vidro sob o cursor, pra mostrar detalhe em hero ou página de produto",
+          "evite": "Pele puxada pro cursor: textura-pinch; lupa com retícula de jornal, shader-halftone"
+        }
+      }
+    },
+    {
+      "name": "textura-twist",
+      "type": "registry:ui",
+      "title": "Textura Twist",
+      "description": "A imagem gira em redemoinho em volta do ponteiro e se desfaz devagar quando ele sai.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-twist.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "ponteiro",
+        "imagem",
+        "redemoinho",
+        "distorcao"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Foto que gira em redemoinho sob o cursor, em hero de música, evento ou campanha psicodélica",
+          "evite": "Pele beliscada sem giro: textura-pinch; foto escorrendo em ruído, textura-warp"
+        }
+      }
+    },
+    {
+      "name": "textura-tiles",
+      "type": "registry:ui",
+      "title": "Textura Tiles",
+      "description": "A imagem em ladrilhos que encolhem, se afastam e se inclinam perto do ponteiro.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-tiles.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "ponteiro",
+        "imagem",
+        "ladrilho",
+        "grade"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Foto quebrada em ladrilhos que se abrem perto do cursor, em portfólio, capa de projeto ou hero de arquitetura",
+          "evite": "Foto em blocos de cor parados: shader-pixelate; distorção contínua sem grade, textura-pinch"
+        }
+      }
+    },
+    {
+      "name": "textura-warp",
+      "type": "registry:ui",
+      "title": "Textura Warp",
+      "description": "A imagem escorre em ruído como reflexo na água, e o ponteiro rápido agita a superfície.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-warp.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "ponteiro",
+        "imagem",
+        "ruido",
+        "domain-warp"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Foto que escorre como reflexo na água e agita com o mouse rápido, em hero editorial, música ou moda",
+          "evite": "Redemoinho preso ao cursor: textura-twist; falha digital em faixas, shader-glitch"
+        }
+      }
+    },
+    {
+      "name": "textura-watch",
+      "type": "registry:ui",
+      "title": "Textura Watch",
+      "description": "Grade de mostradores de relógio cujos ponteiros apontam para o cursor; o curto chega atrasado, como hora.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-watch.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "fundo",
+        "ponteiro",
+        "relogio",
+        "grade"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Fundo de hero lúdico com uma grade de relógios que apontam pro cursor, em landing de produto ou evento",
+          "evite": "Olhos que seguem o cursor: textura-gaze; traços finos alinhados ao campo, textura-magnet"
+        }
+      }
+    },
+    {
+      "name": "textura-gaze",
+      "type": "registry:ui",
+      "title": "Textura Gaze",
+      "description": "Grade de olhos cujas pupilas seguem o cursor e que piscam de vez em quando, cada um no seu tempo.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-gaze.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "fundo",
+        "ponteiro",
+        "olhos",
+        "pupila",
+        "grade"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Fundo de hero com uma grade de olhos que seguem o cursor, em campanha, portfólio ou página de arte",
+          "evite": "Um avatar só com olhos: eye-tracker; ponteiros de relógio em vez de pupilas, textura-watch"
+        }
+      }
+    },
+    {
+      "name": "textura-magnet",
+      "type": "registry:ui",
+      "title": "Textura Magnet",
+      "description": "Limalha de ferro em traços curtos que se alinham ao campo de um ímã preso ao cursor.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-magnet.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "fundo",
+        "ponteiro",
+        "ima",
+        "limalha",
+        "campo"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Fundo de hero com limalha de ferro que se alinha ao cursor, em landing tech, ciência ou portfólio",
+          "evite": "Linhas de fluxo que desviam do cursor: textura-current; ponteiros grandes de relógio, textura-watch"
+        }
+      }
+    },
+    {
+      "name": "textura-settle",
+      "type": "registry:ui",
+      "title": "Textura Settle",
+      "description": "Areia rastelada que o cursor espalha e que assenta de volta devagar, com os sulcos reaparecendo.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-settle.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "fundo",
+        "ponteiro",
+        "areia",
+        "grao",
+        "rastelo"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Fundo calmo de areia rastelada que o cursor espalha e volta a assentar, em bem-estar, spa ou editorial",
+          "evite": "Correnteza que nunca para: textura-current; malha de pontos leve sem WebGL, spring-dots"
+        }
+      }
+    },
+    {
+      "name": "textura-glow",
+      "type": "registry:ui",
+      "title": "Textura Glow",
+      "description": "Brilho macio na cor da marca que segue o cursor sobre grão fino, esticando no rumo do movimento.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-glow.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "fundo",
+        "ponteiro",
+        "brilho",
+        "grao",
+        "luz"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Fundo escuro de hero com um brilho da marca seguindo o cursor sobre grão fino, atrás de título curto",
+          "evite": "Facho de luz vindo do alto: textura-beam; fios de luz ondulando sozinhos, shader-neon"
+        }
+      }
+    },
+    {
+      "name": "textura-beam",
+      "type": "registry:ui",
+      "title": "Textura Beam",
+      "description": "Facho de luz que desce do alto com poeira boiando dentro e que mira o cursor.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-beam.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "fundo",
+        "ponteiro",
+        "facho",
+        "luz",
+        "poeira"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Fundo de palco com um facho de luz e poeira que mira o cursor, em abertura de evento, lançamento ou música",
+          "evite": "Brilho macio sem direção: textura-glow; cortina de palco, textura-curtain"
+        }
+      }
+    },
+    {
+      "name": "textura-current",
+      "type": "registry:ui",
+      "title": "Textura Current",
+      "description": "Linhas de correnteza com traços que descem pela água e abrem caminho em volta do cursor como de uma pedra.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-current.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "fundo",
+        "ponteiro",
+        "fluxo",
+        "correnteza",
+        "linhas"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Fundo de hero com linhas de correnteza que abrem caminho em volta do cursor, em landing de dados, clima ou viagem",
+          "evite": "Limalha parada alinhada ao campo: textura-magnet; névoa leve sem WebGL, turbulence-field"
+        }
+      }
+    },
+    {
+      "name": "textura-curtain",
+      "type": "registry:ui",
+      "title": "Textura Curtain",
+      "description": "Cortina de dobras verticais que ondula onde o cursor passa, com a onda morrendo sozinha.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-curtain.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "fundo",
+        "ponteiro",
+        "cortina",
+        "dobras",
+        "tecido"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Fundo de cortina de dobras que ondula onde o cursor passa, em abertura de evento, teatro ou lançamento",
+          "evite": "Facho de luz de palco: textura-beam; areia que assenta, textura-settle"
+        }
+      }
+    },
+    {
+      "name": "textura-pillars",
+      "type": "registry:ui",
+      "title": "Textura Pillars",
+      "description": "Campo de pilares em pseudo-3D que sobem perto do cursor e descem ao sair.",
+      "dependencies": [],
+      "registryDependencies": [
+        "utils",
+        "@visant/css-color"
+      ],
+      "files": [
+        {
+          "path": "registry/visant/ui/textura-pillars.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "author": "Visant Labs <visantsupply@gmail.com>",
+      "categories": [
+        "texturas",
+        "textura",
+        "webgl",
+        "fundo",
+        "ponteiro",
+        "pilares",
+        "3d",
+        "campo"
+      ],
+      "meta": {
+        "uso": {
+          "quando": "Fundo de hero com um campo de pilares em pseudo-3D que sobem perto do cursor, em landing tech ou de arquitetura",
+          "evite": "Cena 3D de verdade com objeto: uma peça da família 3d; ladrilhos de foto, textura-tiles"
+        }
+      }
     }
   ]
 }

@@ -153,6 +153,7 @@ export type Family =
   | "efeitos"
   | "3d"
   | "shaders"
+  | "texturas"
   | "vintage"
   | "anatomia"
   | "base";
@@ -247,6 +248,7 @@ export const FAMILIES: { key: Family; label: string }[] = [
   { key: "efeitos", label: "Efeitos" },
   { key: "3d", label: "3D" },
   { key: "shaders", label: "Shaders" },
+  { key: "texturas", label: "Texturas" },
   { key: "vintage", label: "Vintage" },
   { key: "anatomia", label: "Anatomia" },
   { key: "base", label: "Base" },
@@ -460,6 +462,20 @@ const ShaderPixelateColheitaDemo = React.lazy(() => import("./demos/shader-pixel
 const ShaderPosterizeColheitaDemo = React.lazy(() => import("./demos/shader-posterize-demo"));
 const ShaderUpscaleColheitaDemo = React.lazy(() => import("./demos/shader-upscale-demo"));
 const ShaderVhsColheitaDemo = React.lazy(() => import("./demos/shader-vhs-demo"));
+const TexturaBeamColheitaDemo = React.lazy(() => import("./demos/textura-beam-demo"));
+const TexturaCurrentColheitaDemo = React.lazy(() => import("./demos/textura-current-demo"));
+const TexturaCurtainColheitaDemo = React.lazy(() => import("./demos/textura-curtain-demo"));
+const TexturaGazeColheitaDemo = React.lazy(() => import("./demos/textura-gaze-demo"));
+const TexturaGlowColheitaDemo = React.lazy(() => import("./demos/textura-glow-demo"));
+const TexturaMagnetColheitaDemo = React.lazy(() => import("./demos/textura-magnet-demo"));
+const TexturaPillarsColheitaDemo = React.lazy(() => import("./demos/textura-pillars-demo"));
+const TexturaPinchColheitaDemo = React.lazy(() => import("./demos/textura-pinch-demo"));
+const TexturaSettleColheitaDemo = React.lazy(() => import("./demos/textura-settle-demo"));
+const TexturaSphereColheitaDemo = React.lazy(() => import("./demos/textura-sphere-demo"));
+const TexturaTilesColheitaDemo = React.lazy(() => import("./demos/textura-tiles-demo"));
+const TexturaTwistColheitaDemo = React.lazy(() => import("./demos/textura-twist-demo"));
+const TexturaWarpColheitaDemo = React.lazy(() => import("./demos/textura-warp-demo"));
+const TexturaWatchColheitaDemo = React.lazy(() => import("./demos/textura-watch-demo"));
 
 /** Mesmo trato do marquee: GSAP só chega quando o card chega. */
 function PinnedSceneDemoCard() {
@@ -2525,6 +2541,174 @@ export const CATALOG: CatalogItem[] = [
     demo: ShaderVhsColheitaDemo,
     knobs: "ShaderVhs",
     preview: { w: 440, h: 440 },
+  },
+  {
+    name: "textura-beam",
+    title: "Textura Beam",
+    type: "ui",
+    family: "texturas",
+    description:
+      "Facho de luz que desce do alto com poeira boiando dentro e que mira o cursor.",
+    tags: ["textura","webgl","fundo","ponteiro","facho","luz","poeira"],
+    demo: TexturaBeamColheitaDemo,
+    knobs: "TexturaBeam",
+    preview: { w: 600, h: 390 },
+  },
+  {
+    name: "textura-current",
+    title: "Textura Current",
+    type: "ui",
+    family: "texturas",
+    description:
+      "Linhas de correnteza com traços que descem pela água e abrem caminho em volta do cursor como de uma pedra.",
+    tags: ["textura","webgl","fundo","ponteiro","fluxo","correnteza","linhas"],
+    demo: TexturaCurrentColheitaDemo,
+    knobs: "TexturaCurrent",
+    preview: { w: 600, h: 390 },
+  },
+  {
+    name: "textura-curtain",
+    title: "Textura Curtain",
+    type: "ui",
+    family: "texturas",
+    description:
+      "Cortina de dobras verticais que ondula onde o cursor passa, com a onda morrendo sozinha.",
+    tags: ["textura","webgl","fundo","ponteiro","cortina","dobras","tecido"],
+    demo: TexturaCurtainColheitaDemo,
+    knobs: "TexturaCurtain",
+    preview: { w: 600, h: 390 },
+  },
+  {
+    name: "textura-gaze",
+    title: "Textura Gaze",
+    type: "ui",
+    family: "texturas",
+    description:
+      "Grade de olhos cujas pupilas seguem o cursor e que piscam de vez em quando, cada um no seu tempo.",
+    tags: ["textura","webgl","fundo","ponteiro","olhos","pupila","grade"],
+    demo: TexturaGazeColheitaDemo,
+    knobs: "TexturaGaze",
+    preview: { w: 600, h: 390 },
+  },
+  {
+    name: "textura-glow",
+    title: "Textura Glow",
+    type: "ui",
+    family: "texturas",
+    description:
+      "Brilho macio na cor da marca que segue o cursor sobre grão fino, esticando no rumo do movimento.",
+    tags: ["textura","webgl","fundo","ponteiro","brilho","grao","luz"],
+    demo: TexturaGlowColheitaDemo,
+    knobs: "TexturaGlow",
+    preview: { w: 600, h: 390 },
+  },
+  {
+    name: "textura-magnet",
+    title: "Textura Magnet",
+    type: "ui",
+    family: "texturas",
+    description:
+      "Limalha de ferro em traços curtos que se alinham ao campo de um ímã preso ao cursor.",
+    tags: ["textura","webgl","fundo","ponteiro","ima","limalha","campo"],
+    demo: TexturaMagnetColheitaDemo,
+    knobs: "TexturaMagnet",
+    preview: { w: 600, h: 390 },
+  },
+  {
+    name: "textura-pillars",
+    title: "Textura Pillars",
+    type: "ui",
+    family: "texturas",
+    description:
+      "Campo de pilares em pseudo-3D que sobem perto do cursor e descem ao sair.",
+    tags: ["textura","webgl","fundo","ponteiro","pilares","3d","campo"],
+    demo: TexturaPillarsColheitaDemo,
+    knobs: "TexturaPillars",
+    preview: { w: 600, h: 390 },
+  },
+  {
+    name: "textura-pinch",
+    title: "Textura Pinch",
+    type: "ui",
+    family: "texturas",
+    description:
+      "A imagem é sugada para o ponteiro como pele beliscada, e solta devagar quando ele sai.",
+    tags: ["textura","webgl","ponteiro","imagem","beliscar","distorção"],
+    demo: TexturaPinchColheitaDemo,
+    knobs: "TexturaPinch",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "textura-settle",
+    title: "Textura Settle",
+    type: "ui",
+    family: "texturas",
+    description:
+      "Areia rastelada que o cursor espalha e que assenta de volta devagar, com os sulcos reaparecendo.",
+    tags: ["textura","webgl","fundo","ponteiro","areia","grao","rastelo"],
+    demo: TexturaSettleColheitaDemo,
+    knobs: "TexturaSettle",
+    preview: { w: 600, h: 390 },
+  },
+  {
+    name: "textura-sphere",
+    title: "Textura Sphere",
+    type: "ui",
+    family: "texturas",
+    description:
+      "Uma bolha de vidro passeia sob o ponteiro e amplia a imagem como olho de peixe.",
+    tags: ["textura","webgl","ponteiro","imagem","lupa","fisheye"],
+    demo: TexturaSphereColheitaDemo,
+    knobs: "TexturaSphere",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "textura-tiles",
+    title: "Textura Tiles",
+    type: "ui",
+    family: "texturas",
+    description:
+      "A imagem em ladrilhos que encolhem, se afastam e se inclinam perto do ponteiro.",
+    tags: ["textura","webgl","ponteiro","imagem","ladrilho","grade"],
+    demo: TexturaTilesColheitaDemo,
+    knobs: "TexturaTiles",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "textura-twist",
+    title: "Textura Twist",
+    type: "ui",
+    family: "texturas",
+    description:
+      "A imagem gira em redemoinho em volta do ponteiro e se desfaz devagar quando ele sai.",
+    tags: ["textura","webgl","ponteiro","imagem","redemoinho","distorção"],
+    demo: TexturaTwistColheitaDemo,
+    knobs: "TexturaTwist",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "textura-warp",
+    title: "Textura Warp",
+    type: "ui",
+    family: "texturas",
+    description:
+      "A imagem escorre em ruído como reflexo na água, e o ponteiro rápido agita a superfície.",
+    tags: ["textura","webgl","ponteiro","imagem","ruído","domain warp"],
+    demo: TexturaWarpColheitaDemo,
+    knobs: "TexturaWarp",
+    preview: { w: 440, h: 440 },
+  },
+  {
+    name: "textura-watch",
+    title: "Textura Watch",
+    type: "ui",
+    family: "texturas",
+    description:
+      "Grade de mostradores de relógio cujos ponteiros apontam para o cursor; o curto chega atrasado, como hora.",
+    tags: ["textura","webgl","fundo","ponteiro","relogio","grade"],
+    demo: TexturaWatchColheitaDemo,
+    knobs: "TexturaWatch",
+    preview: { w: 600, h: 390 },
   },
 ];
 

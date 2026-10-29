@@ -106,5 +106,61 @@
   "shader-vhs": {
     "contextos": 1,
     "pesada": false
+  },
+  "textura-pinch": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-sphere": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-twist": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-tiles": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-warp": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-watch": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-gaze": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-magnet": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-settle": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-glow": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-beam": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-current": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-curtain": {
+    "contextos": 1,
+    "pesada": false
+  },
+  "textura-pillars": {
+    "contextos": 1,
+    "pesada": false
   }
 }

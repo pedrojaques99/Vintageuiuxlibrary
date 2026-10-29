@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "textura-warp",
+    "title": "Textura Warp",
+    "type": "ui",
+    "family": "texturas",
+    "description": "A imagem escorre em ruído como reflexo na água, e o ponteiro rápido agita a superfície.",
+    "tags": [
+      "textura",
+      "webgl",
+      "ponteiro",
+      "imagem",
+      "ruído",
+      "domain warp"
+    ],
+    "demoImport": "./demos/textura-warp-demo",
+    "knobs": "TexturaWarp",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "textura-warp",
+    "type": "registry:ui",
+    "title": "Textura Warp",
+    "description": "A imagem escorre em ruído como reflexo na água, e o ponteiro rápido agita a superfície.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-warp.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

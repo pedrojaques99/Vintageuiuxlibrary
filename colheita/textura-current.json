@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "textura-current",
+    "title": "Textura Current",
+    "type": "ui",
+    "family": "texturas",
+    "description": "Linhas de correnteza com traços que descem pela água e abrem caminho em volta do cursor como de uma pedra.",
+    "tags": [
+      "textura",
+      "webgl",
+      "fundo",
+      "ponteiro",
+      "fluxo",
+      "correnteza",
+      "linhas"
+    ],
+    "demoImport": "./demos/textura-current-demo",
+    "knobs": "TexturaCurrent",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "textura-current",
+    "type": "registry:ui",
+    "title": "Textura Current",
+    "description": "Linhas de correnteza com traços que descem pela água e abrem caminho em volta do cursor como de uma pedra.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-current.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

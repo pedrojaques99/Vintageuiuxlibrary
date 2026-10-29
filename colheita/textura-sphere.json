@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "textura-sphere",
+    "title": "Textura Sphere",
+    "type": "ui",
+    "family": "texturas",
+    "description": "Uma bolha de vidro passeia sob o ponteiro e amplia a imagem como olho de peixe.",
+    "tags": [
+      "textura",
+      "webgl",
+      "ponteiro",
+      "imagem",
+      "lupa",
+      "fisheye"
+    ],
+    "demoImport": "./demos/textura-sphere-demo",
+    "knobs": "TexturaSphere",
+    "preview": {
+      "w": 440,
+      "h": 440
+    }
+  },
+  "registry": {
+    "name": "textura-sphere",
+    "type": "registry:ui",
+    "title": "Textura Sphere",
+    "description": "Uma bolha de vidro passeia sob o ponteiro e amplia a imagem como olho de peixe.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-sphere.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

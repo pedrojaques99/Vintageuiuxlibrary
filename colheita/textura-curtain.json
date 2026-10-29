@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "textura-curtain",
+    "title": "Textura Curtain",
+    "type": "ui",
+    "family": "texturas",
+    "description": "Cortina de dobras verticais que ondula onde o cursor passa, com a onda morrendo sozinha.",
+    "tags": [
+      "textura",
+      "webgl",
+      "fundo",
+      "ponteiro",
+      "cortina",
+      "dobras",
+      "tecido"
+    ],
+    "demoImport": "./demos/textura-curtain-demo",
+    "knobs": "TexturaCurtain",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "textura-curtain",
+    "type": "registry:ui",
+    "title": "Textura Curtain",
+    "description": "Cortina de dobras verticais que ondula onde o cursor passa, com a onda morrendo sozinha.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-curtain.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

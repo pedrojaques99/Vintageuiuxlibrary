@@ -65,6 +65,20 @@ Refeitos em sala limpa (código próprio, a partir só da interação pública; 
 - `slide-to-confirm`: Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/slide-confirm
 - `slosh-slider`: Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/slosh
 - `sticker-peel`: Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/sticker-peel
+- `textura-beam`: Original da Visant Labs, família texturas
+- `textura-current`: Original da Visant Labs, família texturas
+- `textura-curtain`: Original da Visant Labs, família texturas
+- `textura-gaze`: Original da Visant Labs, família texturas
+- `textura-glow`: Original da Visant Labs, família texturas
+- `textura-magnet`: Original da Visant Labs, família texturas
+- `textura-pillars`: Original da Visant Labs, família texturas
+- `textura-pinch`: Original da Visant Labs, família texturas
+- `textura-settle`: Original da Visant Labs, família texturas
+- `textura-sphere`: Original da Visant Labs, família texturas
+- `textura-tiles`: Original da Visant Labs, família texturas
+- `textura-twist`: Original da Visant Labs, família texturas
+- `textura-warp`: Original da Visant Labs, família texturas
+- `textura-watch`: Original da Visant Labs, família texturas
 - `tilt-card`: Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/tilt
 - `time-dial`: Refeito em sala limpa a partir da interação pública de https://uiarc.dev/components/time-dial
 - `voice-note`: Refeito em sala limpa a partir da interação pública de https://bencho.dev/blocks/voice-note

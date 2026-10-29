@@ -1,0 +1,42 @@
+{
+  "catalogo": {
+    "name": "textura-watch",
+    "title": "Textura Watch",
+    "type": "ui",
+    "family": "texturas",
+    "description": "Grade de mostradores de relógio cujos ponteiros apontam para o cursor; o curto chega atrasado, como hora.",
+    "tags": [
+      "textura",
+      "webgl",
+      "fundo",
+      "ponteiro",
+      "relogio",
+      "grade"
+    ],
+    "demoImport": "./demos/textura-watch-demo",
+    "knobs": "TexturaWatch",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "textura-watch",
+    "type": "registry:ui",
+    "title": "Textura Watch",
+    "description": "Grade de mostradores de relógio cujos ponteiros apontam para o cursor; o curto chega atrasado, como hora.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-watch.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

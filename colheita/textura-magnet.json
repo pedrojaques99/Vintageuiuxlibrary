@@ -1,0 +1,43 @@
+{
+  "catalogo": {
+    "name": "textura-magnet",
+    "title": "Textura Magnet",
+    "type": "ui",
+    "family": "texturas",
+    "description": "Limalha de ferro em traços curtos que se alinham ao campo de um ímã preso ao cursor.",
+    "tags": [
+      "textura",
+      "webgl",
+      "fundo",
+      "ponteiro",
+      "ima",
+      "limalha",
+      "campo"
+    ],
+    "demoImport": "./demos/textura-magnet-demo",
+    "knobs": "TexturaMagnet",
+    "preview": {
+      "w": 600,
+      "h": 390
+    }
+  },
+  "registry": {
+    "name": "textura-magnet",
+    "type": "registry:ui",
+    "title": "Textura Magnet",
+    "description": "Limalha de ferro em traços curtos que se alinham ao campo de um ímã preso ao cursor.",
+    "dependencies": [],
+    "registryDependencies": [
+      "utils",
+      "@visant/css-color"
+    ],
+    "files": [
+      {
+        "path": "registry/visant/ui/textura-magnet.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  "atribuicao": null,
+  "inspiracao": "Original da Visant Labs, família texturas"
+}

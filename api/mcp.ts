@@ -61,7 +61,7 @@ const ASSUNTOS: [RegExp, string[]][] = [
   [/formulario|cadastro|onboarding|configuracao|perfil|conta/, ["controles", "feedback"]],
   [/chat|mensagem|social|comunidade|comentario/, ["cards", "feedback", "controles"]],
   [/ia|gerador|geracao|upload|export|fila|carregando/, ["feedback", "efeitos"]],
-  [/3d|webgl|imersivo|interativo|experiencia/, ["3d", "shaders", "efeitos"]],
+  [/3d|webgl|imersivo|interativo|experiencia/, ["3d", "shaders", "texturas", "efeitos"]],
   [/audio|musica|som|sintetizador|podcast|radio/, ["vintage", "controles"]],
   [/marca|branding|guideline|tokens|tema/, ["base", "texto"]],
   [/aula|curso|didatico|explicacao|tutorial/, ["anatomia"]],
@@ -160,7 +160,7 @@ const handler = createMcpHandler(
           categoria: z
             .string()
             .optional()
-            .describe("controles, dados, navegacao, cards, feedback, secoes, midia, texto, efeitos, 3d, shaders, vintage, anatomia, base"),
+            .describe("controles, dados, navegacao, cards, feedback, secoes, midia, texto, efeitos, 3d, shaders, texturas, vintage, anatomia, base"),
           limite: z.number().int().min(1).max(30).optional(),
         }),
       },
