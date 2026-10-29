@@ -20,7 +20,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "registry"],
+  "include": ["src", "registry", "lab"],
   // Duas exclusões, cada uma com motivo escrito. Exclusão sem motivo é erro
   // escondido, não configuração.
   "exclude": [

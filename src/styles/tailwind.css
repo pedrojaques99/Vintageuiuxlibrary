@@ -4,6 +4,8 @@
    lá (ex.: `top-[12vh]` do BrandSelector) não é gerada — o componente monta,
    não quebra nada no console, e aparece no lugar errado da tela. */
 @source '../../registry/**/*.{ts,tsx}';
+/* O laboratório (/lab) também mora fora de src/, pelo mesmo motivo. */
+@source '../../lab/**/*.{ts,tsx}';
 
 @import 'tw-animate-css';
 
