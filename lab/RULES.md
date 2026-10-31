@@ -48,26 +48,29 @@ Each rule has an id. An experiment lists the ids it follows in `meta.rules`, and
 ## The run
 
 Candidates go straight to production, hidden: the public `/lab` renders only
-`kept`. The owner judges them on `ui.visantlabs.com/lab?admin` ("Entrar com
-GitHub", then "Aprovar" / "Descartar" + an optional reason). `api/lab.ts` commits
-the verdict to `main` as that GitHub user, who needs push on the repo (status
-flip or file delete, plus a line in `PREFERENCES.md`)
-and the Git deploy publishes it in ~1–2 min. No PR, no command for the owner.
+`kept`. A Visant Labs admin judges them on `ui.visantlabs.com/lab?admin`
+("Entrar com Visant Labs", then "Aprovar" / "Descartar" + an optional reason).
+The verdict goes to a store (`api/lab.ts`, Supabase `lab.veredictos`) and the
+page merges it at runtime: an approval is public at once, no deploy. Git
+catches up on the next run (step 2). No PR, no command for the owner.
 
 Work in the worktree `Z:/Cursor/.worktrees/interaction-lab`, never in the main
 checkout (it holds the owner's uncommitted work and has `main` checked out).
 
-1. `git fetch origin && git checkout -B lab/<yyyy-mm-dd>-<slug> origin/main`
-   (fresh from `main`, so the verdicts committed by `/lab` are in).
-2. Read `PREFERENCES.md` first. Repeat what was kept, avoid what was discarded.
-3. Pick an input and a metaphor not already on the board (`lab/experiments/`).
-4. `pnpm lab:new <slug> <drag|tilt|scroll|pointer|press> --label WORD --hint "..."`
-5. Fill in the component and the meta. Status stays `candidate`.
-6. `pnpm lab:check && pnpm typecheck`. Both green, or nothing ships.
-7. `cp -r Z:/Cursor/Vintageuiuxlibrary/.vercel .vercel` (if missing; the
+1. `git fetch origin && git checkout -B lab/<yyyy-mm-dd>-<slug> origin/main`.
+2. `pnpm lab:sync`: pulls the verdicts given on `/lab` into git (kept → status
+   `kept`, discarded → file deleted, reason logged in `PREFERENCES.md`).
+   Idempotent; it ships in the same commit as today's experiment.
+3. Read `PREFERENCES.md` first. Repeat what was kept, avoid what was discarded.
+4. Pick an input and a metaphor not already on the board (`lab/experiments/`).
+5. `pnpm lab:new <slug> <drag|tilt|scroll|pointer|press> --label WORD --hint "..."`
+6. Fill in the component and the meta. Status stays `candidate`.
+7. `pnpm lab:check && pnpm typecheck`. Both green, or nothing ships.
+8. `cp -r Z:/Cursor/Vintageuiuxlibrary/.vercel .vercel` (if missing; the
    worktree has no Vercel link, see VISANT-REGISTRY-PLANO.md §8).
-8. `node scripts/ship.mjs --main --no-perf -m "lab: <LABEL> (<input>), candidate"`
+9. `node scripts/ship.mjs --main --no-perf -m "lab: <LABEL> (<input>), candidate"`
    (all ship gates, commit, push `HEAD:main`, `vercel deploy --prod`). If the
    push is refused (main moved), `git rebase origin/main` and run it again.
-9. Never touch `registry/`, never set `status: "kept"` yourself. A kept
-   experiment only becomes a registry item when the owner says so.
+10. Never touch `registry/`, never set `status: "kept"` by hand (only
+    `lab:sync` does, from the owner's verdict). A kept experiment only becomes
+    a registry item when the owner says so.

@@ -47,7 +47,8 @@
     "lab:new": "node scripts/lab.mjs new",
     "lab:check": "node scripts/lab.mjs check",
     "lab:keep": "node scripts/lab.mjs keep",
-    "lab:discard": "node scripts/lab.mjs discard"
+    "lab:discard": "node scripts/lab.mjs discard",
+    "lab:sync": "node scripts/lab.mjs sync"
   },
   "dependencies": {
     "@dgreenheck/ez-tree": "1.1.0",

@@ -5,10 +5,12 @@
  *
  * One small card per experiment, generated daily by rules (`lab/RULES.md`) and
  * curated by hand (`lab/PREFERENCES.md`). The public sees only what was KEPT.
- * The daily run ships straight to production as `candidate`; the owner opens
- * `/lab?admin`, signs in with GitHub (session in an HttpOnly cookie, see
- * `api/_lab-auth.ts`), and approves or discards each candidate here. `api/lab.ts`
- * commits the verdict to `main` as that user; the Git deploy puts it live in ~1–2 min.
+ * The daily run ships straight to production as `candidate`; a Visant Labs
+ * admin opens `/lab?admin`, signs in ("Entrar com Visant Labs", session in an
+ * HttpOnly cookie, see `api/_lab-auth.ts`) and approves or discards each
+ * candidate here. Verdicts live in a small store (`api/lab.ts`) and are merged
+ * at runtime, so an approval is public at once, no redeploy. The next daily run
+ * writes them back into git.
  *
  * Experiments are discovered by glob, so adding one is adding a file. They live
  * outside `registry/` on purpose: nothing here is a published component, and
@@ -25,51 +27,39 @@ const EXPERIMENTS = Object.values(MODULES)
   .filter((m) => m.meta && typeof m.default === "function")
   .sort((a, b) => b.meta.id.localeCompare(a.meta.id));
 
-const PENDING_KEY = "visant-lab-pending";
-/** A pending verdict older than this is assumed to be live (or lost) and forgotten. */
-const PENDING_TTL = 10 * 60 * 1000;
-
 type Action = "approve" | "discard";
-type Pending = Record<string, { action: Action; at: number }>;
-/** What `GET /api/lab` says about the session cookie (HttpOnly: the page never sees the token). */
-type Status = { configured: boolean; login: string | null; canPush: boolean };
+/** `GET /api/lab`: verdicts from the store + who is signed in (the cookie itself is HttpOnly). */
+type State = { login: boolean; store: boolean; admin: boolean; user: string | null; kept: string[]; discarded: string[] };
 
 const ERROS: Record<string, string> = {
-  "login-nao-configurado": "login GitHub ainda não configurado",
+  "login-nao-configurado": "login Visant Labs ainda não configurado",
   "login-expirou": "o login demorou demais, tente de novo",
-  "login-falhou": "o GitHub recusou o login, tente de novo",
+  "login-falhou": "o Visant Labs recusou o login, tente de novo",
+  "nao-admin": "essa conta não é admin do Visant Labs",
 };
 
-function readPending(): Pending {
-  try {
-    const all = JSON.parse(localStorage.getItem(PENDING_KEY) ?? "{}") as Pending;
-    return Object.fromEntries(Object.entries(all).filter(([, p]) => Date.now() - p.at < PENDING_TTL));
-  } catch {
-    return {};
-  }
-}
-
-function useAdmin() {
+function useLab() {
   const [params] = React.useState(() => new URLSearchParams(window.location.search));
-  const on = params.has("admin");
-  const erro = params.get("erro");
-  const [status, setStatus] = React.useState<Status | null>(null);
-  const [pending, setPending] = React.useState<Pending>(readPending);
+  const [state, setState] = React.useState<State | null>(null);
 
   React.useEffect(() => {
-    if (!on) return;
     fetch("/api/lab", { credentials: "same-origin" })
-      .then((r) => (r.ok ? (r.json() as Promise<Status>) : null))
-      .then((j) => setStatus(j ?? { configured: false, login: null, canPush: false }))
-      .catch(() => setStatus({ configured: false, login: null, canPush: false }));
-  }, [on]);
+      .then((r) => (r.ok ? (r.json() as Promise<State>) : null))
+      .then(setState)
+      .catch(() => setState(null));
+  }, []);
 
-  const mark = (id: string, action: Action) => {
-    const next = { ...pending, [id]: { action, at: Date.now() } };
-    localStorage.setItem(PENDING_KEY, JSON.stringify(next));
-    setPending(next);
-  };
-  return { on, erro: erro ? (ERROS[erro] ?? erro) : null, status, pending, mark };
+  /* The verdict is already public when the POST returns: reflect it right away. */
+  const decide = (id: string, action: Action) =>
+    setState((s) =>
+      s && {
+        ...s,
+        kept: action === "approve" ? [...s.kept, id] : s.kept.filter((k) => k !== id),
+        discarded: action === "discard" ? [...s.discarded, id] : s.discarded.filter((k) => k !== id),
+      },
+    );
+  const erro = params.get("erro");
+  return { on: params.has("admin"), erro: erro ? (ERROS[erro] ?? erro) : null, state, decide };
 }
 
 function Card({ meta, Experiment }: { meta: LabMeta; Experiment: LabModule["default"] }) {
@@ -110,33 +100,15 @@ const FIELD =
 const BUTTON =
   "alvo-toque flex h-8 shrink-0 items-center rounded-control px-3 font-casa-mono text-casa-sm transition-opacity [transition-duration:var(--dur-fast)] hover:opacity-90 disabled:opacity-40 focus-visible:[box-shadow:var(--focus)]";
 
-function Verdict({
-  id,
-  pending,
-  onDone,
-  onLoggedOut,
-}: {
-  id: string;
-  pending?: Action;
-  onDone: (a: Action) => void;
-  onLoggedOut: () => void;
-}) {
+function Verdict({ id, onDone, onLoggedOut }: { id: string; onDone: (a: Action) => void; onLoggedOut: () => void }) {
   const [reason, setReason] = React.useState("");
   const [busy, setBusy] = React.useState<Action | null>(null);
   const [error, setError] = React.useState<string | null>(null);
-
-  if (pending)
-    return (
-      <p className="mt-2 font-casa-mono text-casa-sm text-casa-fg-2" role="status">
-        {pending === "approve" ? "aprovado" : "descartado"} · publicando, ~1–2 min
-      </p>
-    );
 
   const send = async (action: Action) => {
     setBusy(action);
     setError(null);
     try {
-      /* The session rides in the HttpOnly cookie; nothing secret lives in this page. */
       const res = await fetch("/api/lab", {
         method: "POST",
         credentials: "same-origin",
@@ -188,21 +160,21 @@ function Verdict({
 }
 
 /** The admin strip under the title: login state in one mono line. */
-function AdminBar({ status, erro, loggedOut }: { status: Status | null; erro: string | null; loggedOut: boolean }) {
+function AdminBar({ state, erro, admin }: { state: State | null; erro: string | null; admin: boolean }) {
   const note = (t: string) => <span className="text-casa-fg-3">{t}</span>;
   let body: React.ReactNode = note("…");
-  if (status && !status.configured) body = note("login GitHub ainda não configurado");
-  else if (status && (!status.login || loggedOut))
+  if (state && !state.login) body = note("login Visant Labs ainda não configurado");
+  else if (state && !admin)
     body = (
       <a href="/api/lab-login" className={`${BUTTON} bg-casa-cta text-casa-cta-fg`}>
-        Entrar com GitHub
+        Entrar com Visant Labs
       </a>
     );
-  else if (status?.login)
+  else if (state)
     body = (
       <>
-        <span className="text-casa-fg-2">@{status.login}</span>
-        {status.canPush ? null : note("sem push no repo")}
+        <span className="text-casa-fg-2">admin</span>
+        {state.store ? null : note("store do lab não configurado")}
         <a href="/api/lab-login?logout=1" className="rounded-control text-casa-fg-3 hover:text-casa-fg">
           sair
         </a>
@@ -217,12 +189,17 @@ function AdminBar({ status, erro, loggedOut }: { status: Status | null; erro: st
 }
 
 export function Lab() {
-  const admin = useAdmin();
+  const lab = useLab();
   const [loggedOut, setLoggedOut] = React.useState(false);
-  const kept = EXPERIMENTS.filter((e) => e.meta.status === "kept");
-  /* The public never renders a candidate: only a logged-in admin with push on the repo does. */
-  const isAdmin = admin.on && Boolean(admin.status?.login && admin.status.canPush) && !loggedOut;
-  const candidates = isAdmin ? EXPERIMENTS.filter((e) => e.meta.status === "candidate") : [];
+  const kept = new Set(lab.state?.kept);
+  const decided = new Set([...(lab.state?.kept ?? []), ...(lab.state?.discarded ?? [])]);
+  const isKept = (m: LabMeta) => kept.has(m.id) || (m.status === "kept" && !lab.state?.discarded.includes(m.id));
+  const shown = EXPERIMENTS.filter((e) => isKept(e.meta));
+  /* The public never renders a candidate: only a signed-in Visant Labs admin does. */
+  const admin = lab.on && Boolean(lab.state?.admin) && !loggedOut;
+  const candidates = admin
+    ? EXPERIMENTS.filter((e) => e.meta.status === "candidate" && !decided.has(e.meta.id))
+    : [];
 
   return (
     <main className="casa shell pb-24 pt-10">
@@ -234,7 +211,7 @@ export function Lab() {
         </p>
       </div>
 
-      {admin.on ? <AdminBar status={admin.status} erro={admin.erro} loggedOut={loggedOut} /> : null}
+      {lab.on ? <AdminBar state={lab.state} erro={lab.erro} admin={admin} /> : null}
 
       {candidates.length ? (
         <section aria-label="Candidates" className="mt-8">
@@ -245,8 +222,7 @@ export function Lab() {
                 <Card meta={meta} Experiment={Experiment} />
                 <Verdict
                   id={meta.id}
-                  pending={admin.pending[meta.id]?.action}
-                  onDone={(a) => admin.mark(meta.id, a)}
+                  onDone={(a) => lab.decide(meta.id, a)}
                   onLoggedOut={() => setLoggedOut(true)}
                 />
               </li>
@@ -255,15 +231,15 @@ export function Lab() {
         </section>
       ) : null}
 
-      {kept.length === 0 ? (
+      {shown.length === 0 ? (
         <div className="mt-8 grid min-h-64 place-items-center rounded-tile bg-casa-tile p-8 text-center">
           <p className="text-casa-base text-casa-fg-2">Nothing kept yet. A new one is tried every day.</p>
         </div>
       ) : (
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {kept.map(({ meta, default: Experiment }) => (
+          {shown.map(({ meta, default: Experiment }) => (
             <li key={meta.id}>
-              <Card meta={meta} Experiment={Experiment} />
+              <Card meta={{ ...meta, status: "kept" }} Experiment={Experiment} />
             </li>
           ))}
         </ul>

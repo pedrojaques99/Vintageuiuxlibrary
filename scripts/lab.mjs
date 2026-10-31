@@ -9,6 +9,12 @@
  *   pnpm lab:check                       # gate: shape + rules, exit 1 on any error
  *   pnpm lab:keep <id> "why"              # status → kept, reason logged in PREFERENCES.md
  *   pnpm lab:discard <id> "why"          # file deleted, reason logged (git keeps the code)
+ *   pnpm lab:sync                        # pull the verdicts given on /lab?admin into git
+ *
+ * `lab:sync` reads https://ui.visantlabs.com/api/lab (the verdict store) and, for
+ * each verdict not yet in git, does what keep/discard would: kept → status flip,
+ * discarded → file deleted, reason logged either way. Idempotent: a verdict
+ * already reflected in the files is skipped. `--url <base>` points elsewhere.
  *
  * The checks are regex on purpose: an experiment is a small file with a fixed
  * shape, and parsing TSX would mean a new dependency for no extra certainty.
@@ -150,9 +156,37 @@ function verdict(verb, { pos }) {
   console.log(`lab: ${verb === "keep" ? "kept" : "discarded"} ${id}; reason logged in lab/PREFERENCES.md`);
 }
 
+async function cmdSync({ opt }) {
+  const base = (opt.url ?? "https://ui.visantlabs.com").replace(/\/$/, "");
+  const res = await fetch(`${base}/api/lab`);
+  if (!res.ok) die(`GET ${base}/api/lab → ${res.status}`);
+  const { store, veredictos = [] } = await res.json();
+  if (!store) die("the verdict store is not configured in production (SUPABASE_* on Vercel)");
+  let n = 0;
+  for (const v of veredictos) {
+    if (!/^\d{4}-\d{2}-\d{2}-[a-z0-9-]+$/.test(v.id)) continue;
+    const file = path.join(DIR, `${v.id}.tsx`);
+    if (!fs.existsSync(file)) continue; // discarded and already deleted, or never here
+    const src = fs.readFileSync(file, "utf8");
+    const why = `${(v.reason || "(sem motivo)").replace(/\s+/g, " ")} · via /lab`;
+    const line = (verb) => `- ${String(v.at).slice(0, 10)} · ${verb} · \`${v.id}\` · ${why}\n`;
+    if (v.status === "kept" && /status:\s*"candidate"/.test(src)) {
+      fs.writeFileSync(file, src.replace(/status:\s*"candidate"/, 'status: "kept"'));
+      fs.appendFileSync(PREFS, line("kept"));
+    } else if (v.status === "discarded") {
+      fs.unlinkSync(file);
+      fs.appendFileSync(PREFS, line("discarded"));
+    } else continue;
+    n++;
+    console.log(`lab: ${v.status} ${v.id}`);
+  }
+  console.log(`lab: synced ${n} verdict(s) from ${base}`);
+}
+
 const [cmd, ...rest] = process.argv.slice(2);
 const a = args(rest);
 if (cmd === "new") cmdNew(a);
 else if (cmd === "check") cmdCheck();
 else if (cmd === "keep" || cmd === "discard") verdict(cmd, a);
-else die("commands: new | check | keep | discard");
+else if (cmd === "sync") await cmdSync(a);
+else die("commands: new | check | keep | discard | sync");
