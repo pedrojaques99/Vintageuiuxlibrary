@@ -6,6 +6,7 @@
  *   npm run ship -- --no-deploy        # só até o push
  *   npm run ship -- --dry              # mostra o que faria, não faz
  *   npm run ship -- --no-perf          # pula o orçamento de performance pós-deploy
+ *   npm run ship -- --main -m "..."    # de outro branch: push HEAD → origin/main (rodada do lab)
  *
  * A ordem existe por um motivo: os portões rodam ANTES do commit. Publicar um
  * item quebrado é pior que não publicar — o consumidor instala, não funciona, e
@@ -244,8 +245,16 @@ if (!dirty) {
 }
 
 // ── Push ─────────────────────────────────────────────────────────────────────
-say(`Push → origin/${branch}`);
-run(`git push origin ${branch}`);
+/*
+ * `--main`: empurra o HEAD deste branch direto pra `origin/main`.
+ *
+ * É o caminho da rodada diária do lab (lab/RULES.md): ela trabalha num branch
+ * próprio a partir da `main`, num worktree, porque o checkout principal tem a
+ * `main` ocupada. Sem fast-forward o git recusa, e é isso que se quer: a rodada
+ * rebaseia e tenta de novo, nunca sobrescreve trabalho que chegou no meio.
+ */
+say(`Push → origin/${has("--main") ? "main" : branch}`);
+run(has("--main") ? "git push origin HEAD:main" : `git push origin ${branch}`);
 
 // ── Deploy ───────────────────────────────────────────────────────────────────
 if (!DEPLOY) {

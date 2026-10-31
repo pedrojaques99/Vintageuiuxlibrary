@@ -47,10 +47,26 @@ Each rule has an id. An experiment lists the ids it follows in `meta.rules`, and
 
 ## The run
 
-1. Read `PREFERENCES.md` first. Repeat what was kept, avoid what was discarded.
-2. Pick an input and a metaphor not already on the board (`lab/experiments/`).
-3. `pnpm lab:new <slug> <drag|tilt|scroll|pointer|press> --label WORD --hint "..."`
-4. Fill in the component and the meta. Status stays `candidate`.
-5. `pnpm lab:check && pnpm typecheck`. Both green, or no commit.
-6. Never touch `registry/`, never deploy to production. A kept experiment only
-   becomes a registry item when the owner says so.
+Candidates go straight to production, hidden: the public `/lab` renders only
+`kept`. The owner judges them on `ui.visantlabs.com/lab?admin` (token once,
+then "Aprovar" / "Descartar" + an optional reason). `api/lab.ts` commits the
+verdict to `main` (status flip or file delete, plus a line in `PREFERENCES.md`)
+and the Git deploy publishes it in ~1–2 min. No PR, no command for the owner.
+
+Work in the worktree `Z:/Cursor/.worktrees/interaction-lab`, never in the main
+checkout (it holds the owner's uncommitted work and has `main` checked out).
+
+1. `git fetch origin && git checkout -B lab/<yyyy-mm-dd>-<slug> origin/main`
+   (fresh from `main`, so the verdicts committed by `/lab` are in).
+2. Read `PREFERENCES.md` first. Repeat what was kept, avoid what was discarded.
+3. Pick an input and a metaphor not already on the board (`lab/experiments/`).
+4. `pnpm lab:new <slug> <drag|tilt|scroll|pointer|press> --label WORD --hint "..."`
+5. Fill in the component and the meta. Status stays `candidate`.
+6. `pnpm lab:check && pnpm typecheck`. Both green, or nothing ships.
+7. `cp -r Z:/Cursor/Vintageuiuxlibrary/.vercel .vercel` (if missing; the
+   worktree has no Vercel link, see VISANT-REGISTRY-PLANO.md §8).
+8. `node scripts/ship.mjs --main --no-perf -m "lab: <LABEL> (<input>), candidate"`
+   (all ship gates, commit, push `HEAD:main`, `vercel deploy --prod`). If the
+   push is refused (main moved), `git rebase origin/main` and run it again.
+9. Never touch `registry/`, never set `status: "kept"` yourself. A kept
+   experiment only becomes a registry item when the owner says so.
