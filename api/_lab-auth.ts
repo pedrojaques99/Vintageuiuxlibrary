@@ -70,7 +70,14 @@ export async function adminCheck(token: string): Promise<{ isAdmin: boolean; use
   return { isAdmin: j.auth?.isAdmin === true, user: j.auth?.userId ?? null };
 }
 
-export type Veredicto = { id: string; status: "kept" | "discarded"; reason: string; by: string; at: string };
+export type Veredicto = {
+  id: string;
+  status: "kept" | "discarded";
+  reason: string;
+  motivos: string[];
+  by: string;
+  at: string;
+};
 
 async function rpc<T>(fn: string, args: Record<string, unknown> = {}): Promise<T> {
   const { db, key } = env();
@@ -82,8 +89,8 @@ async function rpc<T>(fn: string, args: Record<string, unknown> = {}): Promise<T
   return res.json() as Promise<T>;
 }
 export const listVeredictos = () => rpc<Veredicto[]>("lab_veredictos");
-export const putVeredicto = (id: string, status: Veredicto["status"], reason: string, by: string) =>
-  rpc<Veredicto>("lab_veredicto_put", { p_id: id, p_status: status, p_reason: reason, p_by: by });
+export const putVeredicto = (id: string, status: Veredicto["status"], reason: string, motivos: string[], by: string) =>
+  rpc<Veredicto>("lab_veredicto_put", { p_id: id, p_status: status, p_reason: reason, p_by: by, p_motivos: motivos });
 
 export const redirect = (to: string, headers: Headers) => {
   headers.set("location", to);

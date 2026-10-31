@@ -33,6 +33,8 @@ export const meta: LabMeta = {
     "only-transform",
   ],
   status: "candidate",
+  tags: { input: "pointer", family: "optics", intensity: "subtle", response: "direct" },
+  rationale: "backfill: anterior ao lab:next",
 };
 
 const R = 52; // lens radius, px

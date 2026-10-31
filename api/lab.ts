@@ -8,10 +8,12 @@
  * diária seguinte sincroniza o git (lab/RULES.md, "The run").
  *
  *   GET  /api/lab   → { login, store, admin, user, kept[], discarded[], veredictos[] }
- *   POST /api/lab   { id, action: "approve" | "discard", reason? }
+ *   POST /api/lab   { id, action: "approve" | "discard", motivos?: string[], reason? }
+ *        motivos: chips from lab/motivos.json (anything else is dropped)
  *        401 sem sessão de admin · 403 origem estranha · 503 store não configurado
  */
 
+import MOTIVOS from "../lab/motivos.json" with { type: "json" };
 import { listVeredictos, loginReady, putVeredicto, session, storeReady } from "./_lab-auth.js";
 
 const ID = /^\d{4}-\d{2}-\d{2}-[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -33,11 +35,17 @@ export async function GET(request: Request) {
   }
   /* O motivo é nota de gosto e vai pro PREFERENCES.md (repo público) de qualquer
      jeito; quem decidiu (`by`) não sai daqui. `pnpm lab:sync` lê esta lista. */
-  let veredictos: { id: string; status: string; reason: string; at: string }[] = [];
+  let veredictos: { id: string; status: string; reason: string; motivos: string[]; at: string }[] = [];
   let store = storeReady();
   if (store) {
     try {
-      veredictos = (await listVeredictos()).map(({ id, status, reason, at }) => ({ id, status, reason, at }));
+      veredictos = (await listVeredictos()).map(({ id, status, reason, motivos, at }) => ({
+        id,
+        status,
+        reason,
+        motivos: motivos ?? [],
+        at,
+      }));
     } catch {
       /* Store fora do ar: a página mostra só o que está no git, e `store: false` avisa. */
       store = false;
@@ -61,7 +69,7 @@ export async function POST(request: Request) {
   if (origin && origin !== new URL(request.url).origin) return json({ error: "origem recusada" }, 403, headers);
   if (!storeReady()) return json({ error: "store do lab não configurado" }, 503, headers);
 
-  let body: { id?: unknown; action?: unknown; reason?: unknown };
+  let body: { id?: unknown; action?: unknown; reason?: unknown; motivos?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -72,9 +80,12 @@ export async function POST(request: Request) {
   if (!ID.test(id) || !status) return json({ error: "id ou action inválido" }, 400, headers);
   /* Uma linha, sem quebra nem crase: vai pro PREFERENCES.md na sincronização. */
   const reason = typeof body.reason === "string" ? body.reason.replace(/[\s`]+/g, " ").trim().slice(0, 300) : "";
+  const motivos = Array.isArray(body.motivos)
+    ? [...new Set(body.motivos.filter((m): m is string => typeof m === "string" && MOTIVOS.includes(m)))]
+    : [];
 
   try {
-    const v = await putVeredicto(id, status, reason, s.user ?? "admin");
+    const v = await putVeredicto(id, status, reason, motivos, s.user ?? "admin");
     return json({ ok: true, ...v }, 200, headers);
   } catch (e) {
     return json({ error: (e as Error).message }, 502, headers);

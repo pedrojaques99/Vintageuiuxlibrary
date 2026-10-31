@@ -48,7 +48,9 @@
     "lab:check": "node scripts/lab.mjs check",
     "lab:keep": "node scripts/lab.mjs keep",
     "lab:discard": "node scripts/lab.mjs discard",
-    "lab:sync": "node scripts/lab.mjs sync"
+    "lab:sync": "node scripts/lab.mjs sync",
+    "lab:next": "node scripts/lab.mjs next",
+    "test:lab": "node --test scripts/lab-taste.test.mjs"
   },
   "dependencies": {
     "@dgreenheck/ez-tree": "1.1.0",

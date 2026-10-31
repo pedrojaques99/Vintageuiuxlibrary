@@ -20,6 +20,8 @@
 import * as React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { LabMeta, LabModule } from "../../lab/types";
+import MOTIVOS from "../../lab/motivos.json";
+import { Aba } from "./casa-ui";
 
 const MODULES = import.meta.glob<LabModule>("../../lab/experiments/[0-9]*.tsx", { eager: true });
 
@@ -102,6 +104,9 @@ const BUTTON =
 
 function Verdict({ id, onDone, onLoggedOut }: { id: string; onDone: (a: Action) => void; onLoggedOut: () => void }) {
   const [reason, setReason] = React.useState("");
+  /* One-tap reasons (lab/motivos.json): what `pnpm lab:sync` counts per chip. */
+  const [motivos, setMotivos] = React.useState<string[]>([]);
+  const toggle = (m: string) => setMotivos((cur) => (cur.includes(m) ? cur.filter((x) => x !== m) : [...cur, m]));
   const [busy, setBusy] = React.useState<Action | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -113,7 +118,7 @@ function Verdict({ id, onDone, onLoggedOut }: { id: string; onDone: (a: Action) 
         method: "POST",
         credentials: "same-origin",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ id, action, reason }),
+        body: JSON.stringify({ id, action, reason, motivos }),
       });
       const j = (await res.json().catch(() => ({}))) as { error?: string };
       if (res.status === 401) onLoggedOut();
@@ -128,10 +133,17 @@ function Verdict({ id, onDone, onLoggedOut }: { id: string; onDone: (a: Action) 
 
   return (
     <div className="mt-2 flex flex-col gap-2">
+      <div role="group" aria-label={`Motivos para ${id}`} className="flex flex-wrap gap-x-4 gap-y-1">
+        {MOTIVOS.map((m) => (
+          <Aba key={m} ativa={motivos.includes(m)} onClick={() => toggle(m)} className="font-casa-mono">
+            {m}
+          </Aba>
+        ))}
+      </div>
       <input
         value={reason}
         onChange={(e) => setReason(e.target.value)}
-        placeholder="motivo (opcional)"
+        placeholder="mais algum motivo (opcional)"
         aria-label={`Motivo para ${id}`}
         maxLength={300}
         className={FIELD}
@@ -220,6 +232,11 @@ export function Lab() {
             {candidates.map(({ meta, default: Experiment }) => (
               <li key={meta.id}>
                 <Card meta={meta} Experiment={Experiment} />
+                {meta.rationale ? (
+                  <p className="mt-2 font-casa-mono text-casa-sm text-casa-fg-3" title="pnpm lab:next">
+                    {meta.rationale}
+                  </p>
+                ) : null}
                 <Verdict
                   id={meta.id}
                   onDone={(a) => lab.decide(meta.id, a)}

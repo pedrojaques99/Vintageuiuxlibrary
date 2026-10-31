@@ -32,6 +32,8 @@ export const meta: LabMeta = {
     "only-transform",
   ],
   status: "candidate",
+  tags: { input: "pointer", family: "mechanical", intensity: "subtle", response: "spring" },
+  rationale: "backfill: anterior ao lab:next",
 };
 
 const TICKS = Array.from({ length: 36 }, (_, i) => i * 10);

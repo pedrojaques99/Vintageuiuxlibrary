@@ -32,6 +32,8 @@ export const meta: LabMeta = {
     "only-transform",
   ],
   status: "candidate",
+  tags: { input: "scroll", family: "mechanical", intensity: "medium", response: "snap" },
+  rationale: "backfill: anterior ao lab:next",
 };
 
 const TEETH = 16;

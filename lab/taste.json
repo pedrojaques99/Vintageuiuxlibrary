@@ -1,0 +1,140 @@
+{
+  "updated": "2026-10-31",
+  "n": 0,
+  "kept": 0,
+  "decisions": [],
+  "board": {
+    "input": {
+      "drag": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "tilt": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "scroll": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "pointer": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "press": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      }
+    },
+    "family": {
+      "mechanical": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "ink-print": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "fluid": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "optics": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "typography": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "light": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "material": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "other": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      }
+    },
+    "intensity": {
+      "subtle": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "medium": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "bold": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      }
+    },
+    "response": {
+      "snap": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "spring": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "inertia": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      },
+      "direct": {
+        "kept": 0,
+        "discarded": 0,
+        "n": 0,
+        "rate": 0.5
+      }
+    }
+  },
+  "motivos": {
+    "kept": {},
+    "discarded": {}
+  }
+}

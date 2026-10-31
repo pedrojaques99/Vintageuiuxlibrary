@@ -33,6 +33,8 @@ export const meta: LabMeta = {
     "only-transform",
   ],
   status: "candidate",
+  tags: { input: "press", family: "ink-print", intensity: "bold", response: "spring" },
+  rationale: "backfill: anterior ao lab:next",
 };
 
 const FULL = 700; // ms of hold for a fully inked stamp

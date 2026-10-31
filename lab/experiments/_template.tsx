@@ -16,6 +16,8 @@ export const meta: LabMeta = {
   formula: "x = Δx · k",
   rules: ["one-input", "one-metaphor", "mono-labels", "formula", "no-new-deps", "tokens", "reduced-motion", "touch", "small"],
   status: "candidate",
+  tags: { input: "drag", family: "other", intensity: "medium", response: "spring" }, // lab:new rewrites this line
+  rationale: "__RATIONALE__",
 };
 
 export default function Experiment() {

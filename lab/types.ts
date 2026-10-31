@@ -26,6 +26,17 @@ export interface LabMeta {
   /** Rule ids from lab/RULES.md that this experiment follows. */
   rules: string[];
   status: LabStatus;
+  /** What the taste model learns from (scripts/lab-taste.mjs). One value each. */
+  tags: LabTags;
+  /** Why this combo today: the `pnpm lab:next` line, or the written reason to deviate. */
+  rationale: string;
+}
+
+export interface LabTags {
+  input: "drag" | "tilt" | "scroll" | "pointer" | "press";
+  family: "mechanical" | "ink-print" | "fluid" | "optics" | "typography" | "light" | "material" | "other";
+  intensity: "subtle" | "medium" | "bold";
+  response: "snap" | "spring" | "inertia" | "direct";
 }
 
 export interface LabModule {

@@ -49,21 +49,31 @@ Each rule has an id. An experiment lists the ids it follows in `meta.rules`, and
 
 Candidates go straight to production, hidden: the public `/lab` renders only
 `kept`. A Visant Labs admin judges them on `ui.visantlabs.com/lab?admin`
-("Entrar com Visant Labs", then "Aprovar" / "Descartar" + an optional reason).
-The verdict goes to a store (`api/lab.ts`, Supabase `lab.veredictos`) and the
-page merges it at runtime: an approval is public at once, no deploy. Git
-catches up on the next run (step 2). No PR, no command for the owner.
+("Entrar com Visant Labs", then "Aprovar" / "Descartar", one-tap reason chips
+and optional free text). The verdict goes to a store (`api/lab.ts`, Supabase
+`lab.veredictos`) and the page merges it at runtime: an approval is public at
+once, no deploy. Git catches up on the next run. No PR, no command for the owner.
+
+The lab learns: every experiment carries `meta.tags` (input, family,
+intensity, response). `lab:sync` turns verdicts into a Beta(1,1) approval rate
+per tag value (`lab/taste.json` + the table in `PREFERENCES.md`), and
+`lab:next` Thompson-samples today's combo from it: proven values usually win,
+untested ones still get tried. `lab:check` refuses a candidate whose combo
+matches a discarded one or whose title/metaphor overlaps another (Jaccard > 0.6).
 
 Work in the worktree `Z:/Cursor/.worktrees/interaction-lab`, never in the main
 checkout (it holds the owner's uncommitted work and has `main` checked out).
 
 1. `git fetch origin && git checkout -B lab/<yyyy-mm-dd>-<slug> origin/main`.
 2. `pnpm lab:sync`: pulls the verdicts given on `/lab` into git (kept → status
-   `kept`, discarded → file deleted, reason logged in `PREFERENCES.md`).
-   Idempotent; it ships in the same commit as today's experiment.
-3. Read `PREFERENCES.md` first. Repeat what was kept, avoid what was discarded.
-4. Pick an input and a metaphor not already on the board (`lab/experiments/`).
-5. `pnpm lab:new <slug> <drag|tilt|scroll|pointer|press> --label WORD --hint "..."`
+   `kept`, discarded → file deleted, chips + reason logged in `PREFERENCES.md`)
+   and rewrites the taste scoreboard. Idempotent; it ships in today's commit.
+3. `pnpm lab:next`: prints today's tag combo and a one-line rationale.
+4. Read `PREFERENCES.md` (the generated taste block and the log). Pick a
+   metaphor that fits the combo and is not already on the board.
+5. `pnpm lab:new <slug> <input> --family F --intensity I --response R --rationale "<the lab:next line>" --label WORD --hint "..."`
+   Build on the suggested combo. Deviate only with the reason written in
+   `--rationale` (e.g. `desvio: ... porque ...`).
 6. Fill in the component and the meta. Status stays `candidate`.
 7. `pnpm lab:check && pnpm typecheck`. Both green, or nothing ships.
 8. `cp -r Z:/Cursor/Vintageuiuxlibrary/.vercel .vercel` (if missing; the

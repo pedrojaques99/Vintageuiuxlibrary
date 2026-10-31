@@ -32,6 +32,8 @@ export const meta: LabMeta = {
     "only-transform",
   ],
   status: "candidate",
+  tags: { input: "drag", family: "fluid", intensity: "medium", response: "spring" },
+  rationale: "backfill: anterior ao lab:next",
 };
 
 const MAX = 28;
