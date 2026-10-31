@@ -48,9 +48,10 @@ Each rule has an id. An experiment lists the ids it follows in `meta.rules`, and
 ## The run
 
 Candidates go straight to production, hidden: the public `/lab` renders only
-`kept`. The owner judges them on `ui.visantlabs.com/lab?admin` (token once,
-then "Aprovar" / "Descartar" + an optional reason). `api/lab.ts` commits the
-verdict to `main` (status flip or file delete, plus a line in `PREFERENCES.md`)
+`kept`. The owner judges them on `ui.visantlabs.com/lab?admin` ("Entrar com
+GitHub", then "Aprovar" / "Descartar" + an optional reason). `api/lab.ts` commits
+the verdict to `main` as that GitHub user, who needs push on the repo (status
+flip or file delete, plus a line in `PREFERENCES.md`)
 and the Git deploy publishes it in ~1–2 min. No PR, no command for the owner.
 
 Work in the worktree `Z:/Cursor/.worktrees/interaction-lab`, never in the main

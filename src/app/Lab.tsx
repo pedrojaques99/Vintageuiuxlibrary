@@ -6,9 +6,9 @@
  * One small card per experiment, generated daily by rules (`lab/RULES.md`) and
  * curated by hand (`lab/PREFERENCES.md`). The public sees only what was KEPT.
  * The daily run ships straight to production as `candidate`; the owner opens
- * `/lab?admin`, pastes the admin token once (localStorage), and approves or
- * discards each candidate here. `api/lab.ts` turns that into one commit on
- * `main`, and the Git deploy puts the verdict live in ~1–2 min.
+ * `/lab?admin`, signs in with GitHub (session in an HttpOnly cookie, see
+ * `api/_lab-auth.ts`), and approves or discards each candidate here. `api/lab.ts`
+ * commits the verdict to `main` as that user; the Git deploy puts it live in ~1–2 min.
  *
  * Experiments are discovered by glob, so adding one is adding a file. They live
  * outside `registry/` on purpose: nothing here is a published component, and
@@ -25,53 +25,51 @@ const EXPERIMENTS = Object.values(MODULES)
   .filter((m) => m.meta && typeof m.default === "function")
   .sort((a, b) => b.meta.id.localeCompare(a.meta.id));
 
-const TOKEN_KEY = "visant-lab-admin-token";
 const PENDING_KEY = "visant-lab-pending";
 /** A pending verdict older than this is assumed to be live (or lost) and forgotten. */
 const PENDING_TTL = 10 * 60 * 1000;
 
 type Action = "approve" | "discard";
 type Pending = Record<string, { action: Action; at: number }>;
-type Configured = { admin: boolean; github: boolean };
+/** What `GET /api/lab` says about the session cookie (HttpOnly: the page never sees the token). */
+type Status = { configured: boolean; login: string | null; canPush: boolean };
 
-const read = <T,>(key: string, fallback: T): T => {
-  try {
-    const v = localStorage.getItem(key);
-    return v ? (JSON.parse(v) as T) : fallback;
-  } catch {
-    return fallback;
-  }
+const ERROS: Record<string, string> = {
+  "login-nao-configurado": "login GitHub ainda não configurado",
+  "login-expirou": "o login demorou demais, tente de novo",
+  "login-falhou": "o GitHub recusou o login, tente de novo",
 };
 
-function useAdmin() {
-  const [token, setToken] = React.useState<string | null>(() => read<string | null>(TOKEN_KEY, null));
-  const [asked] = React.useState(() => new URLSearchParams(window.location.search).has("admin"));
-  const [configured, setConfigured] = React.useState<Configured | null>(null);
-  const [pending, setPending] = React.useState<Pending>(() => {
-    const all = read<Pending>(PENDING_KEY, {});
+function readPending(): Pending {
+  try {
+    const all = JSON.parse(localStorage.getItem(PENDING_KEY) ?? "{}") as Pending;
     return Object.fromEntries(Object.entries(all).filter(([, p]) => Date.now() - p.at < PENDING_TTL));
-  });
-  const on = asked || token !== null;
+  } catch {
+    return {};
+  }
+}
+
+function useAdmin() {
+  const [params] = React.useState(() => new URLSearchParams(window.location.search));
+  const on = params.has("admin");
+  const erro = params.get("erro");
+  const [status, setStatus] = React.useState<Status | null>(null);
+  const [pending, setPending] = React.useState<Pending>(readPending);
 
   React.useEffect(() => {
     if (!on) return;
-    fetch("/api/lab")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((j: { configured?: Configured } | null) => setConfigured(j?.configured ?? { admin: false, github: false }))
-      .catch(() => setConfigured({ admin: false, github: false }));
+    fetch("/api/lab", { credentials: "same-origin" })
+      .then((r) => (r.ok ? (r.json() as Promise<Status>) : null))
+      .then((j) => setStatus(j ?? { configured: false, login: null, canPush: false }))
+      .catch(() => setStatus({ configured: false, login: null, canPush: false }));
   }, [on]);
 
-  const save = (t: string | null) => {
-    if (t) localStorage.setItem(TOKEN_KEY, JSON.stringify(t));
-    else localStorage.removeItem(TOKEN_KEY);
-    setToken(t);
-  };
   const mark = (id: string, action: Action) => {
     const next = { ...pending, [id]: { action, at: Date.now() } };
     localStorage.setItem(PENDING_KEY, JSON.stringify(next));
     setPending(next);
   };
-  return { on, token, save, configured, pending, mark };
+  return { on, erro: erro ? (ERROS[erro] ?? erro) : null, status, pending, mark };
 }
 
 function Card({ meta, Experiment }: { meta: LabMeta; Experiment: LabModule["default"] }) {
@@ -112,46 +110,16 @@ const FIELD =
 const BUTTON =
   "alvo-toque flex h-8 shrink-0 items-center rounded-control px-3 font-casa-mono text-casa-sm transition-opacity [transition-duration:var(--dur-fast)] hover:opacity-90 disabled:opacity-40 focus-visible:[box-shadow:var(--focus)]";
 
-function TokenForm({ onSave }: { onSave: (t: string) => void | Promise<void> }) {
-  const [value, setValue] = React.useState("");
-  return (
-    <form
-      className="mt-6 flex max-w-md gap-2"
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (value.trim()) void onSave(value.trim());
-      }}
-    >
-      <input
-        type="password"
-        autoComplete="off"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="admin token"
-        aria-label="Admin token"
-        className={FIELD}
-      />
-      <button type="submit" disabled={!value.trim()} className={`${BUTTON} bg-casa-cta text-casa-cta-fg`}>
-        Entrar
-      </button>
-    </form>
-  );
-}
-
 function Verdict({
   id,
-  token,
-  configured,
   pending,
   onDone,
-  onBadToken,
+  onLoggedOut,
 }: {
   id: string;
-  token: string;
-  configured: Configured | null;
   pending?: Action;
   onDone: (a: Action) => void;
-  onBadToken: () => void;
+  onLoggedOut: () => void;
 }) {
   const [reason, setReason] = React.useState("");
   const [busy, setBusy] = React.useState<Action | null>(null);
@@ -164,25 +132,19 @@ function Verdict({
       </p>
     );
 
-  const missing = configured
-    ? [!configured.admin && "LAB_ADMIN_TOKEN", !configured.github && "LAB_GITHUB_TOKEN"].filter(Boolean)
-    : [];
-  if (missing.length)
-    return (
-      <p className="mt-2 font-casa-mono text-casa-sm text-casa-fg-3">configure {missing.join(" / ")} na Vercel</p>
-    );
-
   const send = async (action: Action) => {
     setBusy(action);
     setError(null);
     try {
+      /* The session rides in the HttpOnly cookie; nothing secret lives in this page. */
       const res = await fetch("/api/lab", {
         method: "POST",
-        headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+        credentials: "same-origin",
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({ id, action, reason }),
       });
       const j = (await res.json().catch(() => ({}))) as { error?: string };
-      if (res.status === 401) onBadToken();
+      if (res.status === 401) onLoggedOut();
       else if (!res.ok) setError(j.error ?? `erro ${res.status}`);
       else onDone(action);
     } catch {
@@ -205,7 +167,7 @@ function Verdict({
       <div className="flex items-center gap-2">
         <button
           type="button"
-          disabled={busy !== null || !configured}
+          disabled={busy !== null}
           onClick={() => void send("approve")}
           className={`${BUTTON} bg-casa-cta text-casa-cta-fg`}
         >
@@ -213,7 +175,7 @@ function Verdict({
         </button>
         <button
           type="button"
-          disabled={busy !== null || !configured}
+          disabled={busy !== null}
           onClick={() => void send("discard")}
           className={`${BUTTON} bg-casa-tile text-casa-fg-2`}
         >
@@ -225,53 +187,56 @@ function Verdict({
   );
 }
 
+/** The admin strip under the title: login state in one mono line. */
+function AdminBar({ status, erro, loggedOut }: { status: Status | null; erro: string | null; loggedOut: boolean }) {
+  const note = (t: string) => <span className="text-casa-fg-3">{t}</span>;
+  let body: React.ReactNode = note("…");
+  if (status && !status.configured) body = note("login GitHub ainda não configurado");
+  else if (status && (!status.login || loggedOut))
+    body = (
+      <a href="/api/lab-login" className={`${BUTTON} bg-casa-cta text-casa-cta-fg`}>
+        Entrar com GitHub
+      </a>
+    );
+  else if (status?.login)
+    body = (
+      <>
+        <span className="text-casa-fg-2">@{status.login}</span>
+        {status.canPush ? null : note("sem push no repo")}
+        <a href="/api/lab-login?logout=1" className="rounded-control text-casa-fg-3 hover:text-casa-fg">
+          sair
+        </a>
+      </>
+    );
+  return (
+    <div className="mt-6 flex flex-wrap items-center gap-3 font-casa-mono text-casa-sm">
+      {erro ? note(erro) : null}
+      {body}
+    </div>
+  );
+}
+
 export function Lab() {
   const admin = useAdmin();
-  const [badToken, setBadToken] = React.useState(false);
+  const [loggedOut, setLoggedOut] = React.useState(false);
   const kept = EXPERIMENTS.filter((e) => e.meta.status === "kept");
-  /* The public never renders a candidate: only an admin with a saved token does. */
-  const candidates = admin.token ? EXPERIMENTS.filter((e) => e.meta.status === "candidate") : [];
+  /* The public never renders a candidate: only a logged-in admin with push on the repo does. */
+  const isAdmin = admin.on && Boolean(admin.status?.login && admin.status.canPush) && !loggedOut;
+  const candidates = isAdmin ? EXPERIMENTS.filter((e) => e.meta.status === "candidate") : [];
 
   return (
     <main className="casa shell pb-24 pt-10">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="max-w-xl">
-          <h1 className="text-casa-xl">Lab</h1>
-          <p className="mt-2 text-casa-base text-casa-fg-2">
-            A new interaction every day, generated from a short list of rules. Only the ones
-            worth keeping stay, so the board drifts toward a taste over time.
-          </p>
-        </div>
-        {admin.token ? (
-          <button
-            type="button"
-            onClick={() => admin.save(null)}
-            className="rounded-control font-casa-mono text-casa-sm text-casa-fg-3 hover:text-casa-fg"
-          >
-            admin · sair
-          </button>
-        ) : null}
+      <div className="max-w-xl">
+        <h1 className="text-casa-xl">Lab</h1>
+        <p className="mt-2 text-casa-base text-casa-fg-2">
+          A new interaction every day, generated from a short list of rules. Only the ones
+          worth keeping stay, so the board drifts toward a taste over time.
+        </p>
       </div>
 
-      {admin.on && (!admin.token || badToken) ? (
-        <div>
-          {badToken ? <p className="mt-6 font-casa-mono text-casa-sm text-casa-fg-3">token recusado</p> : null}
-          <TokenForm
-            onSave={async (t) => {
-              /* 401 = wrong token. 503 = the server has no token yet: keep it, the cards say what to configure. */
-              const res = await fetch("/api/lab", {
-                method: "POST",
-                headers: { "content-type": "application/json", authorization: `Bearer ${t}` },
-                body: JSON.stringify({ action: "verify" }),
-              }).catch(() => null);
-              setBadToken(res?.status === 401);
-              if (res?.status !== 401) admin.save(t);
-            }}
-          />
-        </div>
-      ) : null}
+      {admin.on ? <AdminBar status={admin.status} erro={admin.erro} loggedOut={loggedOut} /> : null}
 
-      {admin.token && candidates.length ? (
+      {candidates.length ? (
         <section aria-label="Candidates" className="mt-8">
           <p className="font-casa-mono text-casa-sm text-casa-fg-2">[ CANDIDATES ] {candidates.length}</p>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -280,11 +245,9 @@ export function Lab() {
                 <Card meta={meta} Experiment={Experiment} />
                 <Verdict
                   id={meta.id}
-                  token={admin.token as string}
-                  configured={admin.configured}
                   pending={admin.pending[meta.id]?.action}
                   onDone={(a) => admin.mark(meta.id, a)}
-                  onBadToken={() => setBadToken(true)}
+                  onLoggedOut={() => setLoggedOut(true)}
                 />
               </li>
             ))}
