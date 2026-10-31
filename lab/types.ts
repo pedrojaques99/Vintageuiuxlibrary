@@ -21,6 +21,8 @@ export interface LabMeta {
   label: string;
   /** Tiny instruction, top-right: the single gesture, in plain words. */
   hint: string;
+  /** The same instruction for a finger, shown under `(pointer: coarse)`: "arraste", "toque", "segure". */
+  hintTouch?: string;
   /** The math behind it, one mono line at the bottom of the card. */
   formula: string;
   /** Rule ids from lab/RULES.md that this experiment follows. */

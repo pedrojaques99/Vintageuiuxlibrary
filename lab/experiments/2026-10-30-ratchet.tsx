@@ -17,6 +17,7 @@ export const meta: LabMeta = {
   title: "Ratchet",
   label: "RATCHET",
   hint: "scroll down to wind",
+  hintTouch: "deslize pra cima pra dar corda",
   formula: "s += max(Δy, 0) · θ = s / 40 · 360/16 · pawl = min(frac(s/40)/0.9, 1) · 15° · k 700 c 14",
   rules: [
     "one-input",
@@ -79,12 +80,14 @@ export default function Ratchet() {
   return (
     <div className="relative h-full w-full select-none">
       {/* The input: a native scroller, so wheel, trackpad and finger all work and
-          the page takes over at either end. */}
+          the page takes over at either end. Short on purpose: on a phone the card
+          is full width, and a long scroller would trap the page under the thumb.
+          Winding on is down, back, down again, like a socket wrench. */}
       <div
         onScroll={onScroll}
         className="absolute inset-0 touch-pan-y overflow-y-scroll [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        <div aria-hidden className="h-[2400px]" />
+        <div aria-hidden className="h-[1400px]" />
       </div>
       <div className="pointer-events-none absolute inset-0 grid place-items-center">
         <svg

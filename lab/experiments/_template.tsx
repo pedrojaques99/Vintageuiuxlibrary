@@ -13,6 +13,7 @@ export const meta: LabMeta = {
   title: "__TITLE__",
   label: "__LABEL__",
   hint: "__HINT__",
+  hintTouch: "__HINT_TOUCH__",
   formula: "x = Δx · k",
   rules: ["one-input", "one-metaphor", "mono-labels", "formula", "no-new-deps", "tokens", "reduced-motion", "touch", "small"],
   status: "candidate",

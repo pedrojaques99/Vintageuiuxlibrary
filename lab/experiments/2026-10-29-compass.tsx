@@ -6,9 +6,14 @@
  * where the needle is now), or crossing from 179° to −179° spins the needle a
  * full lap backwards. And the spring is underdamped on purpose: the overshoot is
  * the magnetism. Under reduced motion the needle just points.
+ *
+ * A phone has no hover, so a finger DRAGS around the dial (pointer capture keeps
+ * it tracking off the dial), and left alone on screen the needle hunts for north
+ * every few seconds, so the idle card still breathes.
  */
 import * as React from "react";
 import { motion, useReducedMotion, useSpring } from "motion/react";
+import { useIdle } from "../hooks";
 import type { LabMeta } from "../types";
 
 export const meta: LabMeta = {
@@ -17,6 +22,7 @@ export const meta: LabMeta = {
   title: "Compass",
   label: "COMPASS",
   hint: "move the pointer around",
+  hintTouch: "arraste o dedo em volta",
   formula: "θ = atan2(Δy, Δx) · k 120 c 7",
   rules: [
     "one-input",
@@ -41,27 +47,39 @@ const TICKS = Array.from({ length: 36 }, (_, i) => i * 10);
 export default function Compass() {
   const reduce = useReducedMotion();
   const dial = React.useRef<HTMLDivElement>(null);
+  const surface = React.useRef<HTMLDivElement>(null);
   // Born pointing somewhere other than straight up: a resting needle reads as broken.
   const angle = useSpring(-62, { stiffness: 120, damping: 7 });
   const target = React.useRef(-62);
 
+  const point = (deg: number) => {
+    target.current += ((deg - target.current + 540) % 360) - 180; // shortest turn
+    if (reduce) angle.jump(target.current);
+    else angle.set(target.current);
+  };
+  // Idle: hunt a few degrees either side of north, like a needle settling.
+  const poke = useIdle(surface, () => point((Math.random() - 0.5) * 120));
+
   const onMove = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse" && e.buttons === 0) return; // finger lifted
+    poke();
     const r = dial.current!.getBoundingClientRect();
     const dx = e.clientX - (r.left + r.width / 2);
     const dy = e.clientY - (r.top + r.height / 2);
     if (Math.hypot(dx, dy) < 6) return; // dead center has no direction
-    const deg = (Math.atan2(dy, dx) * 180) / Math.PI + 90; // 0° = up
-    const delta = ((deg - target.current + 540) % 360) - 180;
-    target.current += delta;
-    if (reduce) angle.jump(target.current);
-    else angle.set(target.current);
+    point((Math.atan2(dy, dx) * 180) / Math.PI + 90); // 0° = up
+  };
+  const onDown = (e: React.PointerEvent) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    onMove(e);
   };
 
   return (
     <div
+      ref={surface}
       className="grid h-full w-full touch-none select-none place-items-center"
       onPointerMove={onMove}
-      onPointerDown={onMove}
+      onPointerDown={onDown}
     >
       <div
         ref={dial}

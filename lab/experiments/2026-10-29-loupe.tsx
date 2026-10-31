@@ -5,11 +5,14 @@
  * corner and shifted so the point under the pointer lands in the lens center:
  * offset = r − p·s. Nothing is re-rendered per frame; the pointer drives three
  * motion values. On touch the lens rides above the finger, or the finger would
- * cover exactly what it is trying to read.
+ * cover exactly what it is trying to read, except near the top edge, where
+ * the lift shrinks so the lens never leaves the card. Left alone on screen (a
+ * phone has no hover) the lens drifts across the page, reading by itself.
  */
 import * as React from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
+import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { cn } from "@/lib/utils";
+import { useIdle } from "../hooks";
 import type { LabMeta } from "../types";
 
 export const meta: LabMeta = {
@@ -18,6 +21,7 @@ export const meta: LabMeta = {
   title: "Loupe",
   label: "LOUPE",
   hint: "read the small print · press to zoom",
+  hintTouch: "arraste · segure pra ampliar",
   formula: "offset = r − p·s · s 2.5 → 4.5 on press",
   rules: [
     "one-input",
@@ -72,12 +76,23 @@ export default function Loupe() {
   }, [px, py]);
 
   const lensX = useTransform(px, (x) => x - R);
-  const lensY = useTransform(() => py.get() - lift.get() - R);
+  const lensY = useTransform(() => py.get() - Math.min(lift.get(), py.get()) - R);
   const innerX = useTransform(() => R - px.get() * s.get());
   const innerY = useTransform(() => R - py.get() * s.get());
 
   const zoom = (v: number) => (reduce ? s.jump(v) : s.set(v));
+  // Idle: glide to another spot of the print, slowly, like an eye reading.
+  const poke = useIdle(box, () => {
+    const el = box.current;
+    if (!el) return;
+    const glide = { type: "spring", stiffness: 30, damping: 12 } as const;
+    animate(px, el.clientWidth * (0.2 + Math.random() * 0.6), glide);
+    animate(py, el.clientHeight * (0.25 + Math.random() * 0.55), glide);
+  });
   const track = (e: React.PointerEvent) => {
+    poke();
+    px.stop();
+    py.stop();
     const r = box.current!.getBoundingClientRect();
     px.set(Math.max(0, Math.min(r.width, e.clientX - r.left)));
     py.set(Math.max(0, Math.min(r.height, e.clientY - r.top)));
@@ -93,7 +108,8 @@ export default function Loupe() {
   return (
     <div
       ref={box}
-      className="relative h-full w-full cursor-zoom-in touch-none select-none overflow-hidden"
+      className="relative h-full w-full cursor-zoom-in touch-none select-none overflow-hidden [-webkit-touch-callout:none]"
+      onContextMenu={(e) => e.preventDefault()}
       onPointerDown={onDown}
       onPointerMove={track}
       onPointerUp={onUp}

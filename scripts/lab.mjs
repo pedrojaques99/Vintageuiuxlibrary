@@ -5,7 +5,7 @@
  *   pnpm lab:next [--seed N]             # today's tag combo (Thompson sampling over lab/taste.json)
  *   pnpm lab:new <slug> <drag|tilt|scroll|pointer|press>
  *                --family F --intensity I --response R --rationale "..."
- *                [--label WORD] [--hint "..."] [--title "..."] [--date yyyy-mm-dd]
+ *                [--label WORD] [--hint "..."] [--hint-touch "..."] [--title "..."] [--date yyyy-mm-dd]
  *   (npm works too: `npm run lab:new -- <slug> <input>`; the input is positional
  *    because npm under PowerShell eats unknown `--flags` before they get here.)
  *   pnpm lab:check                       # gate: shape + rules, exit 1 on any error
@@ -41,7 +41,7 @@ const TASTE = path.join(LAB, "taste.json");
 
 const INPUTS = DIMENSIONS.input;
 const TOO_CLOSE = 0.6;
-const IMPORTS_OK = ["react", "motion/react", "../types", "@/lib/utils"];
+const IMPORTS_OK = ["react", "motion/react", "../types", "../hooks", "@/lib/utils"];
 const SOFT_MAX = 150;
 const HARD_MAX = 175;
 
@@ -136,6 +136,7 @@ function cmdNew({ pos, opt }) {
     .replaceAll("__TITLE__", title)
     .replaceAll("__LABEL__", label)
     .replaceAll("__HINT__", opt.hint ?? `${input} to <verb>`)
+    .replaceAll("__HINT_TOUCH__", opt["hint-touch"] ?? "<arraste|toque|segure> pra <verbo>")
     .replaceAll("__INPUT__", input)
     .replace(/^  tags: .*$/m, `  tags: { input: "${input}", family: "${tags.family}", intensity: "${tags.intensity}", response: "${tags.response}" },`)
     .replaceAll("__RATIONALE__", opt.rationale.replace(/"/g, "'"));
@@ -206,6 +207,27 @@ function cmdCheck() {
     if (/onPointer(Down|Move)/.test(src) && !/touch-none|touchAction/.test(src))
       err("pointer handlers without touch-none (touch)");
     if (/transition-all|cubic-bezier\(/.test(src)) err("transition-all or inline cubic-bezier; use motion tokens");
+
+    // Mobile (RULES.md "touch", "mobile-*"): a finger has no hover, no wheel, and
+    // a long press opens the OS menu. These are the static half; `pnpm lab:mobile`
+    // drives each card with real touch events for the other half.
+    const hintTouch = field(src, "hintTouch");
+    if (!hintTouch?.trim() || /<[^>]+>/.test(hintTouch)) err('meta.hintTouch missing: the hint for a finger ("arraste", "toque", "segure")');
+    if (/hover:|group-hover|onPointer(Enter|Over|Leave|Out)/.test(src))
+      err("hover-only behavior: a phone has no hover (mobile-no-hover)");
+    if (tags?.input === "scroll" && !/overflow-y-(scroll|auto)/.test(src))
+      err("scroll input needs a native scroller (overflow-y-scroll), or a finger can't drive it (mobile-scroll)");
+    if (tags?.input === "scroll" && /touch-none/.test(src)) err("touch-none on a scroll experiment blocks the swipe");
+    if (tags?.input === "press" && !(/touch-callout:none/.test(src) && /onContextMenu/.test(src)))
+      err("press needs [-webkit-touch-callout:none] + onContextMenu preventDefault, or a long press opens the OS menu (mobile-press)");
+    if (tags?.input === "pointer" && !/useIdle\(/.test(src))
+      err("pointer input needs an idle state (useIdle from ../hooks): on a phone nothing hovers (mobile-idle)");
+    if (/requestAnimationFrame/.test(src) && !/cancelAnimationFrame/.test(src))
+      err("requestAnimationFrame without cancelAnimationFrame: the loop never stops (mobile-perf)");
+    if (/setInterval|requestAnimationFrame\(\s*function|requestAnimationFrame\(\s*loop/.test(src) && !/useInView|useIdle/.test(src))
+      err("a running loop must pause off screen (useInView / useIdle from ../hooks) (mobile-perf)");
+    if (/getContext\(/.test(src) && !/Math\.min\([^)]*devicePixelRatio[^)]*2\)|Math\.min\(2,\s*[^)]*devicePixelRatio/.test(src))
+      err("canvas without DPR capped at 2: Math.min(devicePixelRatio, 2) (mobile-perf)");
 
     const lines = src.split("\n").length;
     if (lines > HARD_MAX) err(`${lines} lines (max ~${SOFT_MAX})`);

@@ -22,6 +22,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import type { LabMeta, LabModule } from "../../lab/types";
 import MOTIVOS from "../../lab/motivos.json";
 import { Aba } from "./casa-ui";
+import { useCoarse } from "../../lab/hooks";
 
 const MODULES = import.meta.glob<LabModule>("../../lab/experiments/[0-9]*.tsx", { eager: true });
 
@@ -65,13 +66,19 @@ function useLab() {
 }
 
 function Card({ meta, Experiment }: { meta: LabMeta; Experiment: LabModule["default"] }) {
+  /* A finger can't "move the pointer around": touch gets its own words. */
+  const coarse = useCoarse();
   return (
-    <div className="flex aspect-square flex-col overflow-hidden rounded-tile bg-casa-tile p-4 [contain:paint] isolate">
+    <div
+      data-lab-id={meta.id}
+      data-lab-input={meta.tags?.input}
+      className="flex aspect-square flex-col overflow-hidden rounded-tile bg-casa-tile p-4 [contain:paint] isolate"
+    >
       <div className="flex items-start justify-between gap-3 font-casa-mono text-casa-sm">
         <span className="shrink-0 text-casa-fg-2">[ {meta.label} ]</span>
-        <span className="text-right text-casa-fg-3">{meta.hint}</span>
+        <span className="text-right text-casa-fg-3">{coarse && meta.hintTouch ? meta.hintTouch : meta.hint}</span>
       </div>
-      <div className="relative min-h-0 flex-1 py-3">
+      <div data-lab-surface className="relative min-h-0 flex-1 py-3">
         <ErrorBoundary
           fallback={
             <p className="grid h-full place-items-center font-casa-mono text-casa-sm text-casa-fg-3">
@@ -135,7 +142,7 @@ function Verdict({ id, onDone, onLoggedOut }: { id: string; onDone: (a: Action) 
     <div className="mt-2 flex flex-col gap-2">
       <div role="group" aria-label={`Motivos para ${id}`} className="flex flex-wrap gap-x-4 gap-y-1">
         {MOTIVOS.map((m) => (
-          <Aba key={m} ativa={motivos.includes(m)} onClick={() => toggle(m)} className="font-casa-mono">
+          <Aba key={m} ativa={motivos.includes(m)} onClick={() => toggle(m)} className="alvo-toque font-casa-mono">
             {m}
           </Aba>
         ))}
@@ -187,7 +194,7 @@ function AdminBar({ state, erro, admin }: { state: State | null; erro: string | 
       <>
         <span className="text-casa-fg-2">admin</span>
         {state.store ? null : note("store do lab não configurado")}
-        <a href="/api/lab-login?logout=1" className="rounded-control text-casa-fg-3 hover:text-casa-fg">
+        <a href="/api/lab-login?logout=1" className="alvo-toque rounded-control text-casa-fg-3 hover:text-casa-fg">
           sair
         </a>
       </>

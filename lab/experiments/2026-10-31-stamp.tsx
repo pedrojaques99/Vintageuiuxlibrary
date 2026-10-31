@@ -18,6 +18,7 @@ export const meta: LabMeta = {
   title: "Stamp",
   label: "STAMP",
   hint: "hold to ink · let go to stamp",
+  hintTouch: "segure pra entintar · solte",
   formula: "c = min(t / 700ms, 1) · ink = 0.25 + 0.75c · θ = (37n mod 9) − 4° · k 500 c 28",
   rules: [
     "one-input",
@@ -83,7 +84,8 @@ export default function Stamp() {
 
   return (
     <div
-      className="grid h-full w-full cursor-pointer touch-none select-none place-items-center"
+      className="grid h-full w-full cursor-pointer touch-none select-none place-items-center [-webkit-touch-callout:none]"
+      onContextMenu={(e) => e.preventDefault()}
       onPointerDown={onDown}
       onPointerUp={onUp}
       onPointerCancel={onUp}

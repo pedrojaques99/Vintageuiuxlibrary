@@ -29,7 +29,8 @@ Each rule has an id. An experiment lists the ids it follows in `meta.rules`, and
 ## The code
 
 - **`no-new-deps`**: only what the repo already has. Allowed imports: `react`,
-  `motion/react`, `../types`, `@/lib/utils`. Anything else fails `lab:check`.
+  `motion/react`, `../types`, `../hooks`, `@/lib/utils`. Anything else fails
+  `lab:check`.
 - **`tokens`**: color, type, radius and motion come from the house tokens
   (`--casa-*`, `--ease-out`, `--dur-*`, `font-casa-mono`, `text-casa-*`). Zero
   hex, zero `rgb(` literals. Springs are allowed for gesture (see visant-motion).
@@ -39,6 +40,34 @@ Each rule has an id. An experiment lists the ids it follows in `meta.rules`, and
 - **`touch`**: works with a finger on a phone. Pointer Events only (no mouse
   events), `touch-action: none` on the surface you drag, and nothing hidden behind
   hover.
+
+## Mobile (most people meet the lab on a phone)
+
+Static half in `lab:check`, live half in `pnpm lab:mobile` (iPhone 13 + Pixel 7
+with real touch events, plus desktop 1440). Shared hooks live in `lab/hooks.ts`.
+
+- **`mobile-hint`**: `meta.hintTouch` says the gesture for a finger, in Portuguese
+  ("arraste", "toque", "segure", "deslize"); the page shows it under
+  `(pointer: coarse)`. One line at 375px, or it wraps cleanly.
+- **`mobile-no-hover`**: no `hover:` and no `onPointerEnter/Leave/Over`. A
+  `pointer` experiment maps the finger as a drag (capture the pointer) and has
+  an idle state that moves on its own (`useIdle`), because a phone never hovers.
+- **`mobile-idle`**: `useIdle(ref, fn)` runs only while the card is on screen,
+  untouched, and motion is allowed; any input calls `poke()`.
+- **`mobile-scroll`**: a `scroll` experiment is a native scroller
+  (`overflow-y-scroll` + `touch-pan-y`), so a swipe drives it, never
+  `touch-none`. Keep it short: a full-width card must not trap the page.
+- **`mobile-press`**: a hold needs `[-webkit-touch-callout:none]` and
+  `onContextMenu` preventDefault, or the OS menu opens mid-press.
+- **`mobile-tilt`**: anything that tilts may also read the gyroscope
+  (`useTilt`, enabled inside the first tap so iOS can ask permission), with
+  drag as the fallback.
+- **`mobile-perf`**: 60 fps. No layout properties (`only-transform`), every
+  `requestAnimationFrame` cancelled, loops paused off screen (`useInView` /
+  `useIdle`), canvas DPR capped with `Math.min(devicePixelRatio, 2)`.
+- Hit areas are the whole surface (≥ 44px); the page grid is one column on a
+  phone and never overflows sideways (`lab:mobile` asserts it).
+
 - **`small`**: under ~150 lines per file, including comments. If it doesn't fit,
   the idea is two experiments.
 - **`only-transform`**: animate `transform` / `opacity`, or a paint-only value on
@@ -71,11 +100,12 @@ checkout (it holds the owner's uncommitted work and has `main` checked out).
 3. `pnpm lab:next`: prints today's tag combo and a one-line rationale.
 4. Read `PREFERENCES.md` (the generated taste block and the log). Pick a
    metaphor that fits the combo and is not already on the board.
-5. `pnpm lab:new <slug> <input> --family F --intensity I --response R --rationale "<the lab:next line>" --label WORD --hint "..."`
+5. `pnpm lab:new <slug> <input> --family F --intensity I --response R --rationale "<the lab:next line>" --label WORD --hint "..." --hint-touch "..."`
    Build on the suggested combo. Deviate only with the reason written in
    `--rationale` (e.g. `desvio: ... porque ...`).
 6. Fill in the component and the meta. Status stays `candidate`.
-7. `pnpm lab:check && pnpm typecheck`. Both green, or nothing ships.
+7. `pnpm lab:check && pnpm typecheck && pnpm lab:mobile`. All green, or
+   nothing ships (`lab:mobile` starts Vite itself and drives every card by touch).
 8. `cp -r Z:/Cursor/Vintageuiuxlibrary/.vercel .vercel` (if missing; the
    worktree has no Vercel link, see VISANT-REGISTRY-PLANO.md §8).
 9. `node scripts/ship.mjs --main --no-perf -m "lab: <LABEL> (<input>), candidate"`

@@ -6,9 +6,14 @@
  * gradient too, so the gradient angle is counter-rotated by a LAGGING copy of θ.
  * At rest the two agree and the surface is flat; while they disagree, the
  * surface leans, which reads as slosh. One underdamped spring is the whole fluid.
+ *
+ * On a phone the first tap also asks for the gyroscope (iOS shows its permission
+ * prompt then); granted, tilting the PHONE tilts the word. Drag keeps working
+ * either way, and it is the fallback when there is no sensor or no permission.
  */
 import * as React from "react";
 import { motion, useReducedMotion, useSpring, useTransform } from "motion/react";
+import { useCoarse, useTilt } from "../hooks";
 import type { LabMeta } from "../types";
 
 export const meta: LabMeta = {
@@ -17,6 +22,7 @@ export const meta: LabMeta = {
   title: "Level",
   label: "LEVEL",
   hint: "drag sideways to tilt",
+  hintTouch: "arraste ou incline o celular",
   formula: "θ = Δx/4 (±28°) · surface = 180° − θlag",
   rules: [
     "one-input",
@@ -56,18 +62,27 @@ export default function Level() {
   );
 
   const set = (v: number) => (reduce ? tilt.jump(v) : tilt.set(v));
+  const clamp = (v: number) => Math.max(-MAX, Math.min(MAX, v));
+  const coarse = useCoarse();
+  // The phone's roll (gamma) IS the tilt, unless a finger is dragging.
+  const sensor = React.useRef<number | null>(null);
+  const gyro = useTilt((g) => {
+    sensor.current = clamp(g);
+    if (!drag.current) set(sensor.current);
+  });
   const onDown = (e: React.PointerEvent) => {
+    if (coarse) gyro.enable();
     e.currentTarget.setPointerCapture(e.pointerId);
     drag.current = { x: e.clientX, from: tilt.get() };
   };
   const onMove = (e: React.PointerEvent) => {
     if (!drag.current) return;
     const next = drag.current.from + (e.clientX - drag.current.x) / 4;
-    set(Math.max(-MAX, Math.min(MAX, next)));
+    set(clamp(next));
   };
   const onUp = () => {
     drag.current = null;
-    set(-8);
+    set(sensor.current ?? -8);
   };
 
   return (
